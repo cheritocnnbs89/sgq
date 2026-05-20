@@ -1,0 +1,234 @@
+{# contrato_detalle_fragment.html (REEMPLAZA TODO EL ARCHIVO POR ESTO) #}
+<div class="mb-3 d-flex justify-content-between align-items-start">
+  <div>
+    <div class="text-muted small">Detalle de contrato</div>
+    <div class="h6 mb-0">{{ proveedor or '' }}</div>
+  </div>
+
+  {# mini chips #}
+  {% set tipo_pp = '' %}
+  {% set aj = 'No' %}
+  {% set ag = 'No' %}
+  {% set afg = 'No' %}
+
+  {% for k,v in vista %}
+    {% if k == 'Aprobación Jefatura' %}{% set aj = v %}{% endif %}
+    {% if k == 'Aprobación Jefe finanzas' %}{% set ag = v %}{% endif %}
+    {% if k == 'Aprobación Gerencia Financiera (Final)' %}{% set afg = v %}{% endif %}
+    {% if k == 'Pagaré / Póliza' %}{% set tipo_pp = v %}{% endif %}
+  {% endfor %}
+
+  
+</div>
+
+{# ===== Helper robusto (namespace) ===== #}
+{% set d = namespace(
+  anio='-', pedido='-', proveedor='-', objeto='-',
+  vcontrato='-', vanticipo='-', tipopp='-',
+  fs='-', ft='-', plazo='-', cron='-',
+  fcomp='-', ffirm='-', fsum='-', forig='-',
+  fpantic='-', fentrega='-',
+  usol='-', ucomp='-',
+  obs='-',
+  aj='No', ag='No', afg='No'
+) %}
+
+{% for k,v in vista %}
+  {# Cabecera #}
+  {% if k == 'Año' %}{% set d.anio = v or '-' %}{% endif %}
+  {% if k == 'Pedido' %}{% set d.pedido = v or '-' %}{% endif %}
+  {% if k == 'Proveedor' %}{% set d.proveedor = v or '-' %}{% endif %}
+  {% if k == 'Objeto del contrato' %}{% set d.objeto = v or '-' %}{% endif %}
+
+  {# Valores #}
+  {% if k == 'Valor contrato' %}{% set d.vcontrato = v or '-' %}{% endif %}
+  {% if k == 'Valor anticipo' %}{% set d.vanticipo = v or '-' %}{% endif %}
+  {% if k == 'Pagaré / Póliza' %}{% set d.tipopp = v or '-' %}{% endif %}
+
+  {# Fechas #}
+  {% if k == 'Fecha de suscripción' %}{% set d.fs = v or '-' %}{% endif %}
+  {% if k == 'Fecha de terminación' %}{% set d.ft = v or '-' %}{% endif %}
+  {% if k == 'Plazo (días)' %}{% set d.plazo = v or '-' %}{% endif %}
+  {% if k == 'Cronograma de pagos' %}{% set d.cron = v or '-' %}{% endif %}
+
+  {% if k == 'Fecha entrega a Compras' %}{% set d.fcomp = v or '-' %}{% endif %}
+  {% if k == 'Fecha firma de Gerencia' %}{% set d.ffirm = v or '-' %}{% endif %}
+  {% if k == 'Fecha de entrega a Finanzas (Sumilla)' %}{% set d.fsum = v or '-' %}{% endif %}
+  {% if k == 'Fecha entrega originales a Finanzas' %}{% set d.forig = v or '-' %}{% endif %}
+
+  {% if k == 'Fechas de pago de anticipo' %}{% set d.fpantic = v or '-' %}{% endif %}
+  {% if k == 'Fecha de entrega de pedido' %}{% set d.fentrega = v or '-' %}{% endif %}
+
+  {# Usuarios #}
+  {% if k == 'Usuario solicitante' %}{% set d.usol = v or '-' %}{% endif %}
+  {% if k == 'Usuario de Compras' %}{% set d.ucomp = v or '-' %}{% endif %}
+
+  {# Observaciones #}
+  {% if k == 'Observaciones' %}{% set d.obs = v or '-' %}{% endif %}
+
+  {# Aprobaciones #}
+  {% if k == 'Aprobación jefatura' %}{% set d.aj = v or 'No' %}{% endif %}
+  {% if k == 'Aprobación gerencial' %}{% set d.ag = v or 'No' %}{% endif %}
+  {% if k == 'Aprobación Gerencia Financiera (Final)' %}{% set d.afg = v or 'No' %}{% endif %}
+{% endfor %}
+
+<div class="row g-3">
+
+  <!-- Cabecera -->
+  <div class="col-12">
+    <div class="detail-card">
+      <div class="detail-head"><i class="bi bi-view-list"></i> Cabecera</div>
+      <div class="detail-body">
+        <table class="kv-table">
+          <tr><td class="k">Año</td><td class="v">{{ d.anio }}</td></tr>
+          <tr><td class="k">Pedido</td><td class="v">{{ d.pedido }}</td></tr>
+          <tr><td class="k">Proveedor</td><td class="v">{{ d.proveedor }}</td></tr>
+          <tr><td class="k">Objeto</td><td class="v">{{ d.objeto }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Valores -->
+  <div class="col-12 col-lg-6">
+    <div class="detail-card h-100">
+      <div class="detail-head"><i class="bi bi-cash-coin"></i> Valores</div>
+      <div class="detail-body">
+        <table class="kv-table">
+          <tr><td class="k">Valor contrato</td><td class="v">{{ d.vcontrato }}</td></tr>
+          <tr><td class="k">Valor anticipo</td><td class="v">{{ d.vanticipo }}</td></tr>
+          <tr><td class="k">Pagaré / Póliza</td><td class="v">{{ d.tipopp }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aprobaciones -->
+  <div class="col-12 col-lg-6">
+    <div class="detail-card h-100">
+      <div class="detail-head"><i class="bi bi-check2-circle"></i> Aprobaciones</div>
+      <div class="detail-body">
+        <table class="kv-table">
+          <tr>
+            <td class="k">Aprobación jefatura</td>
+            <td class="v">
+              {% if d.aj == 'Sí' %}<span class="badge badge-ok">Sí</span>
+              {% else %}<span class="badge badge-no">No</span>{% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td class="k">Aprobación gerencial</td>
+            <td class="v">
+              {% if d.ag == 'Sí' %}<span class="badge badge-ok">Sí</span>
+              {% else %}<span class="badge badge-no">No</span>{% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td class="k">Aprobación GF (Final)</td>
+            <td class="v">
+              {% if d.afg == 'Sí' %}<span class="badge badge-ok">Sí</span>
+              {% else %}<span class="badge badge-no">No</span>{% endif %}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fechas y flujo -->
+  <div class="col-12">
+    <div class="detail-card">
+      <div class="detail-head"><i class="bi bi-calendar-event"></i> Fechas y flujo</div>
+      <div class="detail-body">
+
+        <div class="row g-3">
+          <div class="col-12 col-lg-6">
+            <div class="kv-section-title">Hitos del contrato</div>
+            <table class="kv-table">
+              <tr><td class="k">Suscripción</td><td class="v">{{ d.fs }}</td></tr>
+              <tr><td class="k">Terminación</td><td class="v">{{ d.ft }}</td></tr>
+              <tr><td class="k">Plazo (días)</td><td class="v">{{ d.plazo }}</td></tr>
+              <tr><td class="k">Cronograma</td><td class="v">{{ d.cron }}</td></tr>
+            </table>
+          </div>
+
+          <div class="col-12 col-lg-6">
+            <div class="kv-section-title">Flujo interno</div>
+            <table class="kv-table">
+              <tr><td class="k">Entrega a Compras</td><td class="v">{{ d.fcomp }}</td></tr>
+              <tr><td class="k">Firma de Gerencia</td><td class="v">{{ d.ffirm }}</td></tr>
+              <tr><td class="k">Entrega a Finanzas (Sumilla)</td><td class="v">{{ d.fsum }}</td></tr>
+              <tr><td class="k">Originales a Finanzas</td><td class="v">{{ d.forig }}</td></tr>
+              <tr><td class="k">Pago anticipo</td><td class="v">{{ d.fpantic }}</td></tr>
+              <tr><td class="k">Entrega pedido</td><td class="v">{{ d.fentrega }}</td></tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Usuarios -->
+  <div class="col-12 col-lg-6">
+    <div class="detail-card h-100">
+      <div class="detail-head"><i class="bi bi-people"></i> Usuarios</div>
+      <div class="detail-body">
+        <table class="kv-table">
+          <tr><td class="k">Usuario solicitante</td><td class="v">{{ d.usol }}</td></tr>
+          <tr><td class="k">Usuario de Compras</td><td class="v">{{ d.ucomp }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Observaciones -->
+  <div class="col-12 col-lg-6">
+    <div class="detail-card h-100">
+      <div class="detail-head"><i class="bi bi-chat-left-text"></i> Observaciones</div>
+      <div class="detail-body">
+        <div class="text-muted small mb-1">Comentario</div>
+        <div class="fw-semibold">{{ d.obs }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adjuntos -->
+  <div class="col-12">
+    <div class="detail-card">
+      <div class="detail-head"><i class="bi bi-paperclip"></i> Adjuntos</div>
+      <div class="detail-body">
+        {% if archivos and archivos|length %}
+          <div class="list-group">
+            {% for a in archivos %}
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="me-2">
+                  <div class="fw-semibold">
+                    <i class="bi bi-file-earmark-pdf me-1"></i>
+                    {{ a.original_name or a.filename }}
+                  </div>
+                  <div class="text-muted small">Subido: {{ a.uploaded_at or '' }}</div>
+                </div>
+                <div class="btn-group btn-group-sm">
+                  <a class="btn btn-outline-primary" target="_blank"
+                     href="{{ url_for('contratos.ver_archivo_contrato', archivo_id=a.id) }}">
+                    <i class="bi bi-eye"></i> Ver
+                  </a>
+                  {% if can_exportar %}
+                    <a class="btn btn-outline-secondary"
+                       href="{{ url_for('contratos.descargar_archivo_contrato', archivo_id=a.id) }}">
+                      <i class="bi bi-download"></i> Descargar
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="alert alert-light border mb-0">No hay adjuntos cargados.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>

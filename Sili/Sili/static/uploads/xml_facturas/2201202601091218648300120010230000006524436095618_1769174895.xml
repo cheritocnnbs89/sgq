@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2201202601091218648300120010230000006524436095618</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-22T12:28:10-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;VERA PINTA JUAN CARLOS&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;ELECTROVERA&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0912186483001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;2201202601091218648300120010230000006524436095618&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;023&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000000652&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;GUAYAS / GUAYAQUIL / XIMENA / SOLAR 16&lt;/dirMatriz&gt;
+		
+		
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;22/01/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;GUAYAS / GUAYAQUIL / XIMENA / SOLAR 16&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+			&lt;obligadoContabilidad&gt;NO&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;:AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;500.00000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;500.00&lt;/baseImponible&gt;
+				&lt;valor&gt;75.00000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;575.00000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;20&lt;/formaPago&gt;
+	    		&lt;total&gt;575.00&lt;/total&gt;
+	    		&lt;plazo&gt;30&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;MANPOWER&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;MANPOWER&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;MANO DE OBRA&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;150.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;150.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+	  	&lt;detallesAdicionales&gt;
+			
+    			&lt;detAdicional nombre="Detalle" valor="CIRCUITO DE UPS A 120 VOLTIOS."/&gt;
+    		
+      	&lt;/detallesAdicionales&gt;
+      
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;150.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;22.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;MATR-001&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;MATR-001&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;MATERIAL REQUERIDO&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;350.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;350.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+	  	&lt;detallesAdicionales&gt;
+			
+    			&lt;detAdicional nombre="Detalle" valor="INCLUYE: 75MTS DE CABLE 3X12.  3 BREAKER DE 1 POLO 20 AMPERIOS G.E.  3 TOMAS DE TORSION L5-20AMP."/&gt;
+    		
+      	&lt;/detallesAdicionales&gt;
+      
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;350.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;52.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;CIRCUITO ELECTRICO DE UPS A 120 VOLTIOS, 3 ACOMETIDAS PARA EL DATA CENTER. SEGUN Orden: 7500052412  Aceptación: 1001554603&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature971388"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo71334"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID402361" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature971388-SignedProperties614892"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;LnFz5S/W9mZrAdHHWEFG7HxFPLc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate248861"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;3XuljiEH1djaR6R5jvqb5JxicXY=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-813353" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;C+MmU5dJx6nCdHbQAo7mjQtUPeg=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue777074"&gt;
+c4pZb1yGwwa2+jvEta34asY78rYj62dxr42b10TVu6CQCgF1OcCi1gZLLxMSuF0UmJ4iZIp8I1ni
+E3KdwG6jR/MdKMVugWQ3v2t/0hPtbfKP9gc5vV8g9MZWF8pOllNESYxDZbtP6diU5SG/9Q2frAmb
+zdl1IoPnwJnAuy+fqV2ZYJ93wBzAxzO2KsSV548fMvubduj3pBbFh8yYB4sXTWXrFByu69nv3joe
+zIUWHuzBb2RY0OlY9xKeI7TBq/RqrGPm165qV1RIAS8JzGLTP1R8PyqsmD8R6nQv6CTkXvwPcepB
+QSytPeHk2vHO2mKSpux3w4FCyCnxvJ0k8av85w==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate248861"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKcjCCCFqgAwIBAgIEa6hsETANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTA1MTUxOTU4NTRaFw0yNzA1MTUxOTU4NTRaMIGhMR8w
+HQYDVQQDDBZKVUFOIENBUkxPUyBWRVJBIFBJTlRBMSAwHgYDVQQFExcwOTEyMTg2NDgzLTE1MDUy
+NTE1MDg0NTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9O
+MR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQDXFf9IgnWrSv9t9dxCW1QW2ttJ5lL/R9jX+pxtHSNCf+VOOJFq
+P6aNcJcXySpsFbJCGff5smb6OVwl4bKDyMkGX5PS4hpnDtE5EZEJ4hCKXYAVOLNoUEpX8xBXIRy1
+JEIz8PXNM3J9olHD2m89DfPX6sQ54ctPTUgubs7m5F6Bfi8Tp9mQYyuqdnm9qKNopFvnBwiE4vno
+qgzHKeU07s462Oi/1fKF5y/yCwLLE1DVZ5l5j+etkGELlLm+GASLSPknaxpKZp+T5DpXvpxGxWWe
+EjdzL1fiFi/0TMj4h/fqP34wLt+BY7v/SPo2jL6bC4sKG2N1nL/E3UcauA2LviUFAgMBAAGjggW2
+MIIFsjAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsG
+AQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVj
+L2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAiBgNVHREEGzAZgRd2ZXJhcGludGFqdWFuQGdt
+YWlsLmNvbTCCAQYGA1UdIASB/jCB+zBaBgorBgEEAYKmcgIHMEwwSgYIKwYBBQUHAgIwPh48AEMA
+ZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFAAZQByAHMAbwBuAGEAIABOAGEAdAB1AHIAYQBs
+MIGcBgorBgEEAYKmcgIBMIGNMIGKBggrBgEFBQcCARZ+aHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRh
+Lm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9z
+L1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBQZXJzb25hIE5hdHVyYWwucGRmMB0GA1UdJQQWMBQG
+CCsGAQUFBwMCBggrBgEFBQcDBDCCAg8GA1UdHwSCAgYwggICMIHeoDqgOIY2aHR0cDovL2NybDEu
+c2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwxL2NybGZpbGUuY3JsooGfpIGcMIGZMTkwNwYD
+VQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAu
+BgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwU
+U0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMDygOqA4hjZodHRwOi8vY3JsMi5zZWN1
+cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDIvY3JsZmlsZS5jcmwwgeCggd2ggdqGgddodHRwczov
+L3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2Vi
+ZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQU3zZf8Zv0qJ9K
+xqt8+M06C8vo3QQwKwYDVR0QBCQwIoAPMjAyNTA1MTUxOTU4NTRagQ8yMDI3MDUxNTE5NTg1NFow
+CwYDVR0PBAQDAgXgMBoGCisGAQQBgqZyAwEEDAwKMDkxMjE4NjQ4MzAWBgorBgEEAYKmcgMJBAgM
+BlhJTUVOQTARBgorBgEEAYKmcgMiBAMMAS4wGAYKKwYBBAGCpnIDBwQKDAhTT0xBUiAxNjAbBgor
+BgEEAYKmcgMCBA0MC0pVQU4gQ0FSTE9TMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAwOTk1MzU2
+MBEGCisGAQQBgqZyAyMEAwwBLjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkM
+B0VDVUFET1IwFAYKKwYBBAGCpnIDAwQGDARWRVJBMBwGCisGAQQBgqZyAx4EDgwMRUxFQ1RSSUNJ
+U1RBMB0GCisGAQQBgqZyAwsEDwwNMDkxMjE4NjQ4MzAwMTARBgorBgEEAYKmcgMdBAMMAS4wFQYK
+KwYBBAGCpnIDBAQHDAVQSU5UQTAQBgorBgEEAYKmcgMIBAIMADANBgkqhkiG9w0BAQsFAAOCAgEA
+it4wAeyAo/mD5NBj1F/03/1h/JcABFgIYm5JAw0DycM4Rahk/wNYUwKQFrxNso3iarfR0DBfOpX5
+6ZBgfHf7gOL0oeze6dHbp1o2rPRdj9LqG8dnTUS8aTLO72Udc1nSHbs83jSgj2LuJHFHoaUgXtJo
+Z6BR+aqtMNuuzoFAgGFSeVghH6Bh4HfXYmV0flhlBQ/H8bKBo1fNNdIGYa9iMKs7TM8XaJXMDZ/v
+3Urc5gSIm0hLKPQBvMrblP6PdTjxjy78qxIDOSmGXjmT5bvB7GRcibyYJBwh00X/7lUQmr3Xb6bK
+rfwEQlSF9jquIcQzTWggUxU2+LAX7pfJXEZ/SkfEUPUxWhNHoTochmNz6SoIFQ9qdbVJ8XCZKhUR
+t8U2j9iTVKfiIkFhjaxPDmkycMCS6CpaOeWgb+dFg9zRKD9+VeW/FkWTysH64q5QcrhN7eB6wfIm
+sc8buuGb51+Lbg9/7cAAotTRvpGhwZnDuwa/jxhg9wdk3Y8C/KrJhLhcvvCzom3fUtCY6Vxhjc7L
+X+/V1b+IlSlR9QNe0Tbr0s4iBhehKce5gJDf4aClA2t2HEKkkU4O2mLsaVgdMKQkYPGbs7GwlTlN
+05KxiReCUr6UCGPG0Fg45YB5ArT0ZJKdq6TbAH/AYWsOXNUlI19+0rNuPc2wR4o0UETIvKL3QMo=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+1xX/SIJ1q0r/bfXcQltUFtrbSeZS/0fY1/qcbR0jQn/lTjiRaj+mjXCXF8kqbBWyQhn3+bJm+jlc
+JeGyg8jJBl+T0uIaZw7RORGRCeIQil2AFTizaFBKV/MQVyEctSRCM/D1zTNyfaJRw9pvPQ3z1+rE
+OeHLT01ILm7O5uRegX4vE6fZkGMrqnZ5vaijaKRb5wcIhOL56KoMxynlNO7OOtjov9Xyhecv8gsC
+yxNQ1WeZeY/nrZBhC5S5vhgEi0j5J2saSmafk+Q6V76cRsVlnhI3cy9X4hYv9EzI+If36j9+MC7f
+gWO7/0j6Noy+mwuLChtjdZy/xN1HGrgNi74lBQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature971388-Object226530"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature971388"&gt;
+                &lt;etsi:SignedProperties Id="Signature971388-SignedProperties614892"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-22T12:28:07-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;9ri3/iq3ULZccqvGmIwvVSzcNAk=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1806199825&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

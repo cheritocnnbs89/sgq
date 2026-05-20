@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1501202601179306418300120010010000076799985665119</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-15T09:26:28-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;C3P CIA.LTDA.&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;EMPASUM&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;1793064183001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;1501202601179306418300120010010000076799985665119&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000007679&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;PICHINCHA / QUITO / CUMBAYA / LOS LIBERTADORES OE10-106 Y JOAN MIRO&lt;/dirMatriz&gt;
+		
+		
+			&lt;agenteRetencion&gt;10&lt;/agenteRetencion&gt;
+		
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;15/01/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;PICHINCHA / QUITO / CUMBAYA / LOS LIBERTADORES OE10-106 Y JOAN MIRO&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+			&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;GUAYAQUIL - ROSAVIN LOTE 1 Y COBRE KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;214.00000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;214.00&lt;/baseImponible&gt;
+				&lt;valor&gt;32.10000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;246.10000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;20&lt;/formaPago&gt;
+	    		&lt;total&gt;246.10&lt;/total&gt;
+	    		&lt;plazo&gt;0&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;12100003&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;12100003&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;STRETCH FILM MANUAL 50CM x 24MIC&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;40.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;5.350000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;214.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;214.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;32.10&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+	
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;ORDEN DE PEDIDO Nro 1000604090 ENTREGAR EN PLANTA QUIMPAC QUITO SUR SOLO CON GUIA FACTURAR LUEGO DEL NUMERO DE RECIBIDO&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature997649"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo517124"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID540701" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature997649-SignedProperties403624"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;rGC37AUaDC9NrvZHUDFHb7ubMLA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate784691"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;VIjlGUZXyX0X00hW4aRh/QRl8sg=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-954309" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;7xLCXioqJoF8MNjo2QIJdv/yGn4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue946364"&gt;
+B/6EjOvsM9oXlB/CFCWEon+MuUxTs2lsBOkGnzVSaFuQ9uy9fV02REsa1yYN8Ypm/mq2pRO4APfL
+O+VlUqBINO10YeKykVbvFir0EbYF9tagJ0uH0JsLZIG6Wl9v/kEdSwlZEwwBxJgXXfAvsSUJrlry
+81c/qkqXeWsVXgf7jPOd2cXdPSlJHwEOUtshtnL3cBZVQ3cRo91QtRVzzI0im9flS45AfCiB+Nfv
+1EjWvFerPrtf4CIoyp6D5fWKTC90wMLlxWaGQanbnvrtNhOm5bB49U3TbYQ+CAuxDCGcilc2zhfx
+ePh3M8fdxRtqg62pFbLUXB4Ad0mPzqgh9/fiDA==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate784691"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJezCCB2OgAwIBAgIIHRASepQ/JHQwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI1MDcyMjE3MDQwMFoXDTI3MDcyMjE3MDQwMFowgcwxCzAJBgNVBAYTAkVDMRYwFAYDVQQKDA1D
+M1AgQ0lBLkxUREEuMRgwFgYDVQQMDA9HRVJFTlRFIEdFTkVSQUwxHDAaBgNVBAQME0NBU1RSTyBQ
+RcORQUhFUlJFUkExDzANBgNVBCoMBkFMVkFSTzEZMBcGA1UEBRMQSURDRUMtMTcwNzE5MTc4NzEj
+MCEGA1UEAwwaQUxWQVJPIENBU1RSTyBQRcORQUhFUlJFUkExHDAaBgNVBGEME1ZBVEVDLTE3OTMw
+NjQxODMwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCBI+o5BJqfkjFteZ3DqkQf
+0PqO24xVXioHNSI80ACBMvNsTtNTiXdkoTm0/ei3wlgmk1UbKNwbp6B+ZzK3mWFG5BYHWlXC3iJx
+7z5q6LJJ63aA3wjJysl0w2kot/8BpWWEM4pxnTIq76xvDCAK/roLvwLRBCZ4ixJlLsPyfS+k0ans
+RhJ6Sc3D2vEqkvv1MkXN+M9PGxlIjlkC4IbFbK1AJW63Csq1ikbBiRCPfC8R0egRZphgLShVDv9c
+6yBtVBQHqYyLWZuyuDLbWGBln8g3zqVM0J+mXZ0Cj7r2U8aK2/Y8Whdaj1CuzMb3wfJymUhEFN87
+Iw56L8Ylh1PJ6naZAgMBAAGjggRxMIIEbTAbBgsrBgEEAYLxNmYDAQQMDAoxNzA3MTkxNzg3MB4G
+CysGAQQBgvE2ZgMLBA8MDTE3OTMwNjQxODMwMDEwgdcGCCsGAQUFBwEBBIHKMIHHMFUGCCsGAQUF
+BzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMvZG93bmxvYWQvdHNwX2NlcnRpZmlj
+YXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDEudWFuYXRhY2Eu
+Y29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51YW5hdGFjYS5j
+b20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQU1OZiZJOHz17m41GiZM//zZbvi24wDAYDVR0T
+AQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGydJJz/TCBjgYDVR0gBIGGMIGDMIGA
+BgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cudWFuYXRhY2EuY29tL3B1
+YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJUSUZJQ0FETyBERSBSRVBSRVNFTlRB
+TlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6aHR0cDovL2NybDEudWFuYXRhY2Eu
+Y29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDBAoD6gPIY6aHR0cDovL2NybDIu
+dWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDAOBgNVHQ8BAf8E
+BAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIIBsgYDVR0RBIIBqTCCAaWBHm5v
+dGlmaWNhY2lvbmVzZmlybWFzQHNpaWdvLmNvbaAbBgsrBgEEAYLxNmYDAaAMDAoxNzA3MTkxNzg3
+oBcGCysGAQQBgvE2ZgMCoAgMBkFMVkFST6AXBgsrBgEEAYLxNmYDA6AIDAZDQVNUUk+gHQYLKwYB
+BAGC8TZmAwSgDgwMUEXDkUFIRVJSRVJBoCAGCysGAQQBgvE2ZgMFoBEMD0dFUkVOVEUgR0VORVJB
+TKAlBgsrBgEEAYLxNmYDB6AWDBRKT1JHRSBBRE9VTSBPRTEwLTEwNqAfBgsrBgEEAYLxNmYDCKAQ
+DA4wMDU5Mzk2Nzg1MjAwNqAWBgsrBgEEAYLxNmYDCaAHDAVRVUlUT6AeBgsrBgEEAYLxNmYDCqAP
+DA1DM1AgQ0lBLkxUREEuoB4GCysGAQQBgvE2ZgMLoA8MDTE3OTMwNjQxODMwMDGgEwYLKwYBBAGC
+8TZmAwygBAwCRUOgJAYLKwYBBAGC8TZmAzKgFQwTUkVQUkVTRU5UQU5URSBMRUdBTKAYBgsrBgEE
+AYLxNmYDM6AJDAdBUkNISVZPMA0GCSqGSIb3DQEBCwUAA4ICAQCeRXZ2bTXl49FBLsWdnDo/mBIh
+I7RPgeb9XAbo3gm4twnsAdNtZrRVW6NIobeLeWkxHKBWhM+046EU2tCpoZ0fd/hqkLL9cshYxBnd
+a2wXDCsOhokvhQd09wZUDV+BH4IH3ybsW+0A6LN6Y7UHAmFNb0VPbXsOrE46ZALXUlyZ0MiCY83B
+CJk3jCm4Ciq/XtmiLK/xdIsEzJmdYuk5H0kLOk7bT2gQ4cutisi2oXsxWataC0wFAcMyMAST5Ssp
+lV/wdlt8D7sASUKhKqbplEZF45sPwzXcntuqzp133z1o0i6ZP8cD9bQCfMYSn5Bzq1A7/h8D6mWV
+gEoKMq/Y63TRuLnSMjSkoZPZs/3i3vO2vChmPTe9MwXdlTZnj4Ey4EItcSplYFLdkvmb8UwLCL9E
+w7Z2+qZNQwlq37jXPoxBXNsyDmoIQbcYzvDv8hwYVPHjMykBb/IrY1N6WaMjHcbaZnrKWG0TNTqk
+z3u9UZcSJFvXQpHTmTTg3o5yP4T6LTi6l5TQTtcSbzYt5Ol8ty1uwj5nzlaC9cuCUgq0jenUjyHW
+AFZEJoHQpS2U2AaisZBBixKYYHnYDcsln/ndXe/qEIlb8F8YWsPoF2D73CzO8dS2s/xpx7lzWKLb
+rF1D/S0h5ovDn6G6mDQUYYYDO6uEN4opdyrvRTdRDz90dWrFQg==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+gSPqOQSan5IxbXmdw6pEH9D6jtuMVV4qBzUiPNAAgTLzbE7TU4l3ZKE5tP3ot8JYJpNVGyjcG6eg
+fmcyt5lhRuQWB1pVwt4ice8+auiySet2gN8IycrJdMNpKLf/AaVlhDOKcZ0yKu+sbwwgCv66C78C
+0QQmeIsSZS7D8n0vpNGp7EYSeknNw9rxKpL79TJFzfjPTxsZSI5ZAuCGxWytQCVutwrKtYpGwYkQ
+j3wvEdHoEWaYYC0oVQ7/XOsgbVQUB6mMi1mbsrgy21hgZZ/IN86lTNCfpl2dAo+69lPGitv2PFoX
+Wo9QrszG98HycplIRBTfOyMOei/GJYdTyep2mQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature997649-Object554099"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature997649"&gt;
+                &lt;etsi:SignedProperties Id="Signature997649-SignedProperties403624"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-15T09:26:26-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;Wj+TFVBnaFzJyqqKf66bCam60XY=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;2094194144409756788&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

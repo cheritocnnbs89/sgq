@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<autorizacion>
+<estado>AUTORIZADO</estado>
+<numeroAutorizacion>1205202601099097664300120010160001860971234567816</numeroAutorizacion>
+<fechaAutorizacion>2026-05-12T13:01:43-05:00</fechaAutorizacion>
+<ambiente>PRODUCCIÓN</ambiente>
+<comprobante><![CDATA[<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>LA CHIRIPA CHIRS SA</razonSocial>
+    <nombreComercial>LA CHIRIPA CHIRS</nombreComercial>
+    <ruc>0990976643001</ruc>
+    <claveAcceso>1205202601099097664300120010160001860971234567816</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>016</ptoEmi>
+    <secuencial>000186097</secuencial>
+    <dirMatriz>POR DEFINIR</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>12/05/2026</fechaEmision>
+    <dirEstablecimiento>UNTILLA KILOMETRO 1.5 VIA SAMBORONDO</dirEstablecimiento>
+    <contribuyenteEspecial>70E</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QC TERMINALES ECUADOR S. A. QCTE</razonSocialComprador>
+    <identificacionComprador>0990218994001</identificacionComprador>
+    <totalSinImpuestos>13.04</totalSinImpuestos>
+    <totalDescuento>0</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>13.04</baseImponible>
+        <valor>1.96</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0</propina>
+    <importeTotal>15</importeTotal>
+    <moneda>DOLAR</moneda>
+    <placa>GTN4807</placa>
+    <pagos>
+      <pago>
+        <formaPago>01</formaPago>
+        <total>15</total>
+        <plazo>00</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>0121</codigoPrincipal>
+      <codigoAuxiliar>0121</codigoAuxiliar>
+      <descripcion>DIESEL</descripcion>
+      <cantidad>4.83</cantidad>
+      <precioUnitario>2.698261</precioUnitario>
+      <descuento>0</descuento>
+      <precioTotalSinImpuesto>13.04</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>13.04</baseImponible>
+          <valor>1.96</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="PLACA">GTN4807</campoAdicional>
+    <campoAdicional nombre="disputas_arbitrales">En caso de disputas: arbitraje en derecho, ante Centro de Arbitraje Camara de Comercio de Guayaquil. Un arbitro. Confidencial. De existir, se aplicaran normas de procedimiento abreviado sin perjuicio de la cuantia. Asume los costos la parte vencida, incluyendo honorarios de abogados de la parte venc</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature231664">
+<ds:SignedInfo Id="Signature-SignedInfo105150">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID261740" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature231664-SignedProperties522799">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>W3NmUB0oUmLopTUcTXvu+NfHRcw=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1870242">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>Tc41tJkPDggXnno0eu6+hd6ixVk=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-822015" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>153JMFv6/EMU29/DQgrWvCcp03E=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue381381">
+dCZSmscFswiW+/luymPHvnkOuBHIREBAV+rvlq1NX8Yzv64fGX7IpmykSOLXFEIrKGz/eKbomew+
+XfXfqW8NivDApJG49fg0wTsyWKVXxmmQ4xhCYMFSdo3C1/pBsmq9B28XO6E6XQFmV+9hP6h/zfpK
+7s09bjOMm7qa+1UnFnBRO2NSa6jCDTzmExIAvCrFmGwayQ22EP0gZYaovhhlUfKOe81fjMNWuDHt
+N3odAclFqwuKtT75eSFupM8vccI5mtbcrcUjnVyicb9s5L8Cn07vtchaxicbPkxV7Ok1rvJvjAeA
+ReByjT8NgOIGTeP/nprzQ0LwIn6f39J4PH008A==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1870242">
+<ds:X509Data>
+<ds:X509Certificate>
+MIII9DCCB9ygAwIBAgIFAMIEUXkwDQYJKoZIhvcNAQELBQAwRzELMAkGA1UEBhMCRUMxGzAZBgNV
+BAoMEkxhenphdGUgQ2lhLiBMdGRhLjEbMBkGA1UEAwwSTGF6emF0ZSBFbWlzb3IgQ0EyMB4XDTI2
+MDIwMzIzMjYwNFoXDTI3MDIwMzIzMjYwNFowgaQxCzAJBgNVBAYTAkVDMRswGQYDVQQKDBJMYXp6
+YXRlIENpYS4gTHRkYS4xHjAcBgNVBAsMFUVudGUgZGUgQ2VydGlmaWNhY2lvbjErMCkGA1UEAwwi
+RU5SSVFVRSBBTkRSRVMgTEVERVJHRVJCRVIgV0VJU1NPTjErMCkGCSqGSIb3DQEJARYcZW5yaXF1
+ZUBncnVwb2xlZGVyZ2VyYmVyLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJcq
+dpGJ47kaJl1jy2q3NCCvvC6CE5Q8EynsGVsKG0GvXLYnV6TAaeY2kt9w473i1Q00dCyTEp6N09D6
+NToDDfUeqPYenZANNvbdmUeDQyigULbEC2s+wHicL0DrXByDcnzsTrheVvY5e+lKDEz0DiHeFn23
+tojoJUFBc6pILk5eWSJnsBxinzckvionKpVu9SXl/hb8IQ046J6RicLlL6IEWqTYMeh7o7MNXqL+
+Qqiu3pFyKEXHBu2STlyr7fT7bOKU4NK8TD8fWzuOEndbNmmjJgkEBsBsfwT++leb3SdyiFKb/zZM
+ceeY/6fdc2MTygtkLXswJU8xHLck2G7Dz80CAwEAAaOCBYcwggWDMBoGCisGAQQBg892AwEEDAwK
+MDkxNTQwMDc2NjAeBgorBgEEAYPPdgMCBBAMDkVOUklRVUUgQU5EUkVTMBsGCisGAQQBg892AwME
+DQwLTEVERVJHRVJCRVIwFwYKKwYBBAGDz3YDBAQJDAdXRUlTU09OMB8GCisGAQQBg892AwUEEQwP
+R2VyZW50ZSBHZW5lcmFsMF4GCisGAQQBg892AwcEUAxOQVYgU0FNQk9ST05ET04gTsODwrptZXJv
+OiBTL04gSW50ZXJzZWNjacODwrNuOiBOQSBDYXJyZXRlcmE6IFZJQSBBIFNBTUJPUk9ORE9OMBoG
+CisGAQQBg892AwgEDAwKMDk5NDUwMDYwMzAbBgorBgEEAYPPdgMJBA0MC1NhbWJvcm9uZG9uMBcG
+CisGAQQBg892AwwECQwHRUNVQURPUjAdBgorBgEEAYPPdgMLBA8MDTA5OTA5NzY2NDMwMDEwJQYK
+KwYBBAGDz3YDCgQXDBVMQSBDSElSSVBBIENISVJTIFMuQS4wDAYDVR0TAQH/BAIwADAdBgNVHQ4E
+FgQUGSLP221MGR5gBGq5FQOr3YHUnlIwHwYDVR0jBBgwFoAU7XZIsArxyYaGDExGZNIG+MzVvT4w
+DgYDVR0PAQH/BAQDAgXgMDoGA1UdHwQzMDEwL6AtoCuGKWh0dHA6L2VuZXh0Mi54eXovTGF6emF0
+ZUNBMi9lbWlzb3JDQTIuY3JsMIIBhAYDVR0gBIIBezCCAXcwfAYKKwYBBAGDz3YCAjBuMGwGCCsG
+AQUFBwICMGAaXkVsIHByZXNlbnRlIGNlcnRpZmljYWRvIGVzIGVtaXRpZG8gZW4gYmFzZSBhIGxh
+cyBwb2zDrXRpY2FzIGRlIHNlZ3VyaWRhZCBkZSBMYXp6YXRlIENpYS4gTHRkYS4wgfYGCSsGAQQB
+g892AjCB6DBsBggrBgEFBQcCAjBgGl5FbCBwcmVzZW50ZSBjZXJ0aWZpY2FkbyBlcyBlbWl0aWRv
+IGVuIGJhc2UgYSBsYXMgcG9sw610aWNhcyBkZSBzZWd1cmlkYWQgZGUgTGF6emF0ZSBDaWEuIEx0
+ZGEuMHgGCCsGAQUFBwICMGwaakVsIHByZXNlbnRlIGNlcnRpZmljYWRvIHN1Ym9yZGluYWRvIGVz
+IGVtaXRpZG8gZW4gYmFzZSBhIGxhcyBwb2zDrXRpY2FzIGRlIHNlZ3VyaWRhZCBkZSBMYXp6YXRl
+IENpYS4gTHRkYS4wggGUBgNVHREEggGLMIIBh6AaBgorBgEEAYPPdgMBoAwMCjA5MTU0MDA3Njag
+HgYKKwYBBAGDz3YDAqAQDA5FTlJJUVVFIEFORFJFU6AbBgorBgEEAYPPdgMDoA0MC0xFREVSR0VS
+QkVSoBcGCisGAQQBg892AwSgCQwHV0VJU1NPTqAfBgorBgEEAYPPdgMFoBEMD0dlcmVudGUgR2Vu
+ZXJhbKBaBgorBgEEAYPPdgMHoEwMSkFWIFNBTUJPUk9ORE9OIE7Dum1lcm86IFMvTiBJbnRlcnNl
+Y2Npw7NuOiBOQSBDYXJyZXRlcmE6IFZJQSBBIFNBTUJPUk9ORE9OoBoGCisGAQQBg892AwigDAwK
+MDk5NDUwMDYwM6AbBgorBgEEAYPPdgMJoA0MC1NhbWJvcm9uZG9uoBcGCisGAQQBg892AwygCQwH
+RUNVQURPUqAdBgorBgEEAYPPdgMLoA8MDTA5OTA5NzY2NDMwMDGgJQYKKwYBBAGDz3YDCqAXDBVM
+QSBDSElSSVBBIENISVJTIFMuQS4wPAYIKwYBBQUHAQEEMDAuMCwGCCsGAQUFBzABhiBodHRwOi8v
+ZW5leHQyLnh5ejo4Nzc3L2Fkc3Mvb2NzcDANBgkqhkiG9w0BAQsFAAOCAQEAXPwu8sODyvoTw/Pt
+LyK6MxjDOjGeQK474ji0CJQgy/7DpsvQv0JhPzuGSox0L9/5yL3KDSD/+EG3NvxVJBcebUmm+USq
+Iu26TJXpvE4uQw0tqxPzcDCsaXEh+rJrvh9FtQq8gfomIxlT009au/+gW7onDJ71McSTXbxjrfw3
+ofuvY8b1+gnM+s4lKSdyavDbt10uj1/YBbmQyVnlfrwFkQw1uRf4Wsi5jWAomrN3/eoomRWd8yiO
+kiJYFojGDXzauQZbabOsVwm0B8h1yXw/UMKvxAmiHwrd2QX+8s6AHtW3zEB+k1mu2BounD19YsBs
++vJldbSmGSW45RvlERiCGw==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+lyp2kYnjuRomXWPLarc0IK+8LoITlDwTKewZWwobQa9ctidXpMBp5jaS33DjveLVDTR0LJMSno3T
+0Po1OgMN9R6o9h6dkA029t2ZR4NDKKBQtsQLaz7AeJwvQOtcHINyfOxOuF5W9jl76UoMTPQOId4W
+fbe2iOglQUFzqkguTl5ZImewHGKfNyS+KicqlW71JeX+FvwhDTjonpGJwuUvogRapNgx6Hujsw1e
+ov5CqK7ekXIoRccG7ZJOXKvt9Pts4pTg0rxMPx9bO44Sd1s2aaMmCQQGwGx/BP76V5vdJ3KIUpv/
+Nkxx55j/p91zYxPKC2QtezAlTzEctyTYbsPPzQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature231664-Object96927"><etsi:QualifyingProperties Target="#Signature231664"><etsi:SignedProperties Id="Signature231664-SignedProperties522799"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-12T13:01:41-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>h3745uZTVm2Clt00L76UzknZeA0=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=Lazzate Emisor CA2,O=Lazzate Cia. Ltda.,C=EC</ds:X509IssuerName><ds:X509SerialNumber>3255062905</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-822015"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>]]></comprobante>
+<mensajes/>
+</autorizacion>
+

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+<infoTributaria>
+<ambiente>2</ambiente>
+<tipoEmision>1</tipoEmision>
+<razonSocial>MEJIA GARCIA GONZALO ANDRES</razonSocial>
+<nombreComercial>CHALOS BURGERS</nombreComercial>
+<ruc>1312551474001</ruc>
+<claveAcceso>0105202601131255147400120010010000024959220991019</claveAcceso>
+<codDoc>01</codDoc>
+<estab>001</estab>
+<ptoEmi>001</ptoEmi>
+<secuencial>000002495</secuencial>
+<dirMatriz>VIA A BARBASQUILLO 1 S/N</dirMatriz></infoTributaria>
+<infoFactura>
+<fechaEmision>01/05/2026</fechaEmision>
+<dirEstablecimiento>VIA A BARBASQUILLO 1 S/N</dirEstablecimiento><obligadoContabilidad>NO</obligadoContabilidad>
+<tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+<razonSocialComprador>QUIMPAC ECUADOR SA</razonSocialComprador>
+<identificacionComprador>0990344760001</identificacionComprador>
+<direccionComprador>KKM 16.5 VIA A DAULE</direccionComprador>
+<totalSinImpuestos>17.39</totalSinImpuestos>
+<totalDescuento>0.00</totalDescuento>
+<totalConImpuestos><totalImpuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<baseImponible>17.39</baseImponible>
+<tarifa>15.00</tarifa>
+<valor>2.61</valor>
+</totalImpuesto></totalConImpuestos>
+<propina>0.00</propina>
+<importeTotal>20.00</importeTotal>
+<moneda>DOLAR</moneda>
+<pagos>
+<pago>
+<formaPago>19</formaPago>
+<total>20.00</total>
+<plazo>0</plazo>
+<unidadTiempo>dias</unidadTiempo>
+</pago>
+</pagos>
+<valorRetIva>0.00</valorRetIva>
+<valorRetRenta>0.00</valorRetRenta>
+</infoFactura>
+<detalles><detalle>
+<codigoPrincipal>6</codigoPrincipal>
+<codigoAuxiliar>  </codigoAuxiliar>
+<descripcion>PEPPER JACK COMBO</descripcion>
+<cantidad>1.00</cantidad>
+<precioUnitario>7.39</precioUnitario>
+<descuento>0.00</descuento>
+<precioTotalSinImpuesto>7.39</precioTotalSinImpuesto>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15.00</tarifa>
+<baseImponible>7.39</baseImponible>
+<valor>1.11</valor>
+</impuesto></impuestos>
+</detalle><detalle>
+<codigoPrincipal>2</codigoPrincipal>
+<codigoAuxiliar>  </codigoAuxiliar>
+<descripcion>CLASSIC BURGER COMBO</descripcion>
+<cantidad>1.00</cantidad>
+<precioUnitario>5.87</precioUnitario>
+<descuento>0.00</descuento>
+<precioTotalSinImpuesto>5.87</precioTotalSinImpuesto>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15.00</tarifa>
+<baseImponible>5.87</baseImponible>
+<valor>0.88</valor>
+</impuesto></impuestos>
+</detalle><detalle>
+<codigoPrincipal>1</codigoPrincipal>
+<codigoAuxiliar>  </codigoAuxiliar>
+<descripcion>CLASSIC BURGER SOLA</descripcion>
+<cantidad>1.00</cantidad>
+<precioUnitario>4.13</precioUnitario>
+<descuento>0.00</descuento>
+<precioTotalSinImpuesto>4.13</precioTotalSinImpuesto>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15.00</tarifa>
+<baseImponible>4.13</baseImponible>
+<valor>0.62</valor>
+</impuesto></impuestos>
+</detalle></detalles><infoAdicional><campoAdicional nombre="Contribuyente Regimen RIMPE">CONTRIBUYENTE REGIMEN RIMPE</campoAdicional><campoAdicional nombre="Direccion">KKM 16.5 VIA A DAULE</campoAdicional>
+<campoAdicional nombre="Telefono">09999999999</campoAdicional>
+<campoAdicional nombre="Email">SIN@CORREO.COM</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature890507" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo733554">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID115842" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature890507-SignedProperties200254">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>AntLvSP5uvg1HwyxVMBycEUaNZw=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1978988">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>DUBhHVBfwaqtFBz5XVD+QMn7LGQ=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-1028143" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>NhEd1nSzQ6LtCOF8f4eZwqneJxQ=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue695201">
+W8FP6+cRSwQWlX0nomzo4PU1ksGL9mX77HHQPAYlN/0/Oy61l5hovuJbk87VFG1atApKhh2NlGTC
+21CDzG1Mw6FBSlJh66tjU/J9juIkbfsdlcm1IGcmgJ/GTQokfrxvrMfAlYLYT6vgzD4MGCSy+uOn
+v88fo8WeMWdOrUUe1qrPwmuAHRDIGIDWf2RrOEs2wklvCRG6rRJzOuOq0vOf8SlmezEc5pESk3lq
+Pdvsr+f4AUPeatKlHCqDjqi3WL4XaRd7ntMVZWheuSJPN5BzM8VJvWH8pSrHHqaLob+h6is8sEys
+P6tl5ffhYIPwIJ6k27/VdR/fWIZ2fY47J7LyVA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1978988">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJQDCCByigAwIBAgIIL4Vc8zWOX3wwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI1MDMxNDE1MDgwMFoXDTI3MDMxNDE1MDgwMFowgZwxCzAJBgNVBAYTAkVDMRUwEwYDVQQEDAxN
+RUpJQSBHQVJDSUExFzAVBgNVBCoMDkdPTlpBTE8gQU5EUkVTMRkwFwYDVQQFExBJRENFQy0xMzEy
+NTUxNDc0MSQwIgYDVQQDDBtHT05aQUxPIEFORFJFUyBNRUpJQSBHQVJDSUExHDAaBgNVBGEME1RJ
+TkVDLTEzMTI1NTE0NzQwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDDOTX4xP+B
+1uSKxj4Nx3D5bzTCEUOa7yGmQSJHdm9bGZYuRXwTX2tNWTgidSEHIY1sOcftQUsn/mS3oTwiJYr5
+lGfoSsfyX24qCQOes7ZhcsGNeBHd0iINkM/yoeP9XiEFUopA9PoEqBJvWwEnpB0CO8CzT6L/vX3f
+f2V7sw8lFrRZ2jkNjoOjqZnt3DNQUNfiOC8cas6eMvotVP2acxDycHYrAqkjQIOoTw1+mJBSVGFz
+r/TZl2Z24E6H7GkZYc2GlgakzoRp0/tWSVYzy29HbKNw5FjxOzGTV9q80aWuO7n3iorAnwDMHDMj
+8x+uF11wdcL/WnU9xQUUpkkw2ZuPAgMBAAGjggRmMIIEYjAbBgsrBgEEAYLxNmYDAQQMDAoxMzEy
+NTUxNDc0MB4GCysGAQQBgvE2ZgMLBA8MDTEzMTI1NTE0NzQwMDEwgdcGCCsGAQUFBwEBBIHKMIHH
+MFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMvZG93bmxvYWQvdHNw
+X2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDEu
+dWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51
+YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQUSaP1U4wGwGGEsMzD7PoAPjNO
+0KQwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGydJJz/TCBmQYDVR0g
+BIGRMIGOMIGLBgwrBgEEAYLxNmYCAQEwezA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cudWFuYXRh
+Y2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzBABggrBgEFBQcCAjA0DDJDRVJUSUZJQ0FETyBERSBQ
+RVJTT05BIE5BVFVSQUwgTyBGSVNJQ0EgRU4gQVJDSElWTzCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
+dHRwOi8vY3JsMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3JkaW5hZGEuY3Js
+MECgPqA8hjpodHRwOi8vY3JsMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3Jk
+aW5hZGEuY3JsMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQw
+ggGcBgNVHREEggGTMIIBj4EYbWFyaW9vbG1lZG9jQGhvdG1haWwuY29toBsGCysGAQQBgvE2ZgMB
+oAwMCjEzMTI1NTE0NzSgHwYLKwYBBAGC8TZmAwKgEAwOR09OWkFMTyBBTkRSRVOgFgYLKwYBBAGC
+8TZmAwOgBwwFTUVKSUGgFwYLKwYBBAGC8TZmAwSgCAwGR0FSQ0lBoFEGCysGAQQBgvE2ZgMHoEIM
+QEJBUlJJTzogQ09ORE9NSU5JTyBMRU9OQVJETyBEQSBWSU5DSSBDQUxMRTogUFJJTkNJUEFMIE5N
+RVJPOiBTL06gHwYLKwYBBAGC8TZmAwigEAwOMDA1OTM5NjI4NTM2NzigFgYLKwYBBAGC8TZmAwmg
+BwwFTUFOVEGgHgYLKwYBBAGC8TZmAwugDwwNMTMxMjU1MTQ3NDAwMaATBgsrBgEEAYLxNmYDDKAE
+DAJFQ6ApBgsrBgEEAYLxNmYDMqAaDBhQRVJTT05BIE5BVFVSQUwgTyBGSVNJQ0GgGAYLKwYBBAGC
+8TZmAzOgCQwHQVJDSElWTzANBgkqhkiG9w0BAQsFAAOCAgEAwc8M7bL0KXVWkHTjBRYIqu/WW407
+1zMAoAe8zsjxbLN+BSqhCzV2P/PXt6tkkccxjC9T3tqgXiShI7bw1fyMeCxPJqP4wQ3/uk8nbU2P
+rDvYMexjRzvJLx50CNWaA3g4XufWG9AXhWzQqOusXPTl/nKmSpwMmyBWOSVjfppCyv/euVOggMQM
+xBVVynNrg6PWSRe4SQPZW6XV6fF8J2cmfGtK+mAD2uVajc82o80q2/z1MkaYkHGfgk2TyS3QCMUj
+ZHwZ0NQZCoyQ208vB+Aab6dZAhmYvr2oejynS+ltK6l3JquPJTCZBDmcoZ7R4KKImu0X9/s2ebNx
+0Bbs01HP3IJvUqoluTVv0gtM/+AGWPHHvfrP5r6pphVT9+R4tNtDNHt9859Z5dMBN12oX/clq2Pi
+EWZM3BkISCVXYROhp2++pl4IlxdemW5UNr6W2+kSlP0SEOG1WFQNJsQbwCHSICZPo4zVSgaNLkxp
+T0ADnrTYJJUfRaXfKAlUngm9X8jS1u/D5lrB3eKBq0g9XYI+a5ObrTmjUAVwGmhwBTUhWBGscke1
++T91fiZEeGFIIKTd2539vTXBpOahnc0Am8lP/M+ucebn2SHPQunFdceKmdGibKLdXxqDDrnTMaod
+VPPCgYFu4fFibqyuG85bq8jp/Eqeu+k9yuwZA8BBmcYMNZI=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+wzk1+MT/gdbkisY+Dcdw+W80whFDmu8hpkEiR3ZvWxmWLkV8E19rTVk4InUhByGNbDnH7UFLJ/5k
+t6E8IiWK+ZRn6ErH8l9uKgkDnrO2YXLBjXgR3dIiDZDP8qHj/V4hBVKKQPT6BKgSb1sBJ6QdAjvA
+s0+i/719339le7MPJRa0Wdo5DY6Do6mZ7dwzUFDX4jgvHGrOnjL6LVT9mnMQ8nB2KwKpI0CDqE8N
+fpiQUlRhc6/02ZdmduBOh+xpGWHNhpYGpM6EadP7VklWM8tvR2yjcORY8Tsxk1favNGlrju594qK
+wJ8AzBwzI/MfrhddcHXC/1p1PcUFFKZJMNmbjw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature890507-Object105903"><etsi:QualifyingProperties Target="#Signature890507"><etsi:SignedProperties Id="Signature890507-SignedProperties200254"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-01T20:02:22-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>f/9CxPWjO1qTID0ceb0Fqww6FAU=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>3424245291330461564</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-1028143"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

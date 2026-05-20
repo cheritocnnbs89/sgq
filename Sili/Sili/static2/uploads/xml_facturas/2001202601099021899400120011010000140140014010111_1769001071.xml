@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2001202601099021899400120011010000140140014010111</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-20T16:54:07-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;QC TERMINALES ECUADOR&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;QC Terminales Ecuador S.A&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0990218994001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;2001202601099021899400120011010000140140014010111&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;001&lt;/estab&gt;
+    &lt;ptoEmi&gt;101&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000014014&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;GUASMO NORTE, CALLE BARCELONA S/N&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;20/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;AV. BARCELONA S/N&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;6925&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;KM 16.5 VIA A DAULE GUAYAQUIL&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;25245.80&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;25245.80&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+        &lt;valor&gt;3786.87&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;29032.67&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;29032.67&lt;/total&gt;
+        &lt;plazo&gt;30&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;18000311&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Infraestructura Portuaria- Químicos&lt;/descripcion&gt;
+      &lt;cantidad&gt;2999.466&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;4.220000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;12657.75&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Unidad Medida" valor="T"/&gt;
+        &lt;detAdicional nombre="Detalle Servicio" valor="MN PETREL"/&gt;
+        &lt;detAdicional nombre="Detalle Servicio" valor="FP: 25025925 OC 2000029911"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;12657.75&lt;/baseImponible&gt;
+          &lt;valor&gt;1898.67&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;18000308&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Uso de scanner&lt;/descripcion&gt;
+      &lt;cantidad&gt;2999.466&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.150000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;449.92&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Unidad Medida" valor="T"/&gt;
+        &lt;detAdicional nombre="Detalle Servicio" valor="MN PETREL"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;449.92&lt;/baseImponible&gt;
+          &lt;valor&gt;67.49&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;18000371&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Almacenaje Simple Contrato Spot Químico&lt;/descripcion&gt;
+      &lt;cantidad&gt;750.000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;12.120000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;9090.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Unidad Medida" valor="T"/&gt;
+        &lt;detAdicional nombre="Detalle Servicio" valor="PERIODO: ENERO 14 AL 13 FEBRERO.2026"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;9090.00&lt;/baseImponible&gt;
+          &lt;valor&gt;1363.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;18000372&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Despacho - Químicos&lt;/descripcion&gt;
+      &lt;cantidad&gt;975.570&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.590000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;1551.16&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Unidad Medida" valor="T"/&gt;
+        &lt;detAdicional nombre="Detalle Servicio" valor="PRODUCTO: SODA"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;1551.16&lt;/baseImponible&gt;
+          &lt;valor&gt;232.67&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;18000373&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Pesaje - Químicos&lt;/descripcion&gt;
+      &lt;cantidad&gt;975.570&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.220000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;214.63&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Unidad Medida" valor="T"/&gt;
+        &lt;detAdicional nombre="Detalle Servicio" valor="PRODUCTO: SODA"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;214.63&lt;/baseImponible&gt;
+          &lt;valor&gt;32.19&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;18000296&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Lavada de tanques Químicos&lt;/descripcion&gt;
+      &lt;cantidad&gt;2.000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;398.830000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;797.66&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Unidad Medida" valor="M3"/&gt;
+        &lt;detAdicional nombre="Detalle Servicio" valor="PRODUCTO: SODA"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;797.66&lt;/baseImponible&gt;
+          &lt;valor&gt;119.65&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;18000290&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Habilitacion de terminal - L.V.&lt;/descripcion&gt;
+      &lt;cantidad&gt;7.000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;69.240000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;484.68&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Unidad Medida" valor="HRA"/&gt;
+        &lt;detAdicional nombre="Detalle Servicio" valor="PRODUCTO: SODA"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;484.68&lt;/baseImponible&gt;
+          &lt;valor&gt;72.70&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Doc. SAP"&gt;3300014782&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Cod. Cliente"&gt;100938&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Condición de Pago"&gt;Factura a 30 días&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Contrato"&gt;QC-2024-23&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="No.de Liquidación"&gt;4088 001 101 000014014&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Forma de Pago"&gt;Con Util.Sist.Financ&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature704494"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo853363"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID27084" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature704494-SignedProperties601526"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;uPrgTFx00c3zko5AahNeCtg9Z88=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1175752"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;xgMWRyaB0vfburCsGlzy3N6Nzc4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-139027" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;GRHHwBn+AyAwaL2Y5dthabJefv0=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue820379"&gt;
+SM6QI+WjLRtgGHm1QDvQDdV3zhmRadOncd4pVJxJQNHOg/afqd4K5FZfW7OVgXWRI0/3GY/V5MSq
+RmBVdFbIb6ImVjR9TqykdkM4mTyqFJoVkfVbUd62Po31FKqiW+LnqBricj2bxG/TJFERxgYfhBac
+CzZNe0Wxcwjv9Uyu9YVufAUDZmUCswOLsDDrBLYqb7at25B0xrwP8DE9KcKo2cQEY3PQ3rYKA/TB
+ZnSYq1hm29smpwt7HQfXdhwLnBTe/pcYOV9xnjqLXYBDK+UuUg2RyDIpLRm5/ZFpEJk57pa772Lz
+K2la4Lt7juDWpys/6tz7V2qCbraRwPfqacvpLg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1175752"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMNjCCCh6gAwIBAgIEORlARDANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA4MDEyMjE4MzhaFw0yNjA4MDEyMjE4MzhaMIGuMSww
+KgYDVQQDDCNKRU5OSUZFUiBMSVNTRVRURSBDSEFOR08gTUFDSEFDSUxMQTEgMB4GA1UEBRMXMDkx
+OTM2OTA0MS0wMTA4MjQxNzI4MjkxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBE
+RSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVD
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjhzTqwScSLmhWgLWiI7btpvP7PHFQqQ9
+omr5FXnjQPIzRbf4C3sCBPe/TUboA2YjGq0tUTOdIok9KNo7vR6SUvyIMjqAlo0P9bJC+X1FpznO
+IHaqLZjRhwkTEZgw3Fy0uTBOeLa3qMJg9GrgqszWeinU8UJ9t82h3B74Cntg9BPQv2nZoBuiASgE
+hBBqORBYnxDbKn3+uZ8J7f3wyPy0y8HrMAMhoYnTUMSZWS9wjJonFqgCfR04K0MzTjhbllP+SnWJ
+it7cJ+ZhNoEzCk8PbZ/xLITKK9zRGyvRCo1fO7n/bMJhXSuCB4BScmNIBQzOQKWderkDzt7f05Bl
+wcPtPQIDAQABo4IHbTCCB2kwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktV
+v42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJp
+dHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3Awgc8GA1UdLgSBxzCBxDCB
+waCBvqCBu4aBuGxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklE
+QUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBD
+RVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9k
+ZWx0YVJldm9jYXRpb25MaXN0P2Jhc2UwJAYDVR0RBB0wG4EZcmVjb3ZlcnkudGF4Y29uQGdtYWls
+LmNvbTCCARIGA1UdIASCAQkwggEFMGAGCisGAQQBgqZyAgowUjBQBggrBgEFBQcCAjBEHkIAQwBl
+AHIAdABpAGYAaQBjAGEAZABvACAAZABlACAATQBpAGUAbQBiAHIAbwAgAGQAZQAgAEUAbQBwAHIA
+ZQBzAGEwgaAGCisGAQQBgqZyAgQwgZEwgY4GCCsGAQUFBwIBFoGBaHR0cHM6Ly93d3cuc2VjdXJp
+dHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlm
+aWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBNaWVtYnJvIGRlIEVtcHJlc2EucGRmMIIC
+ogYDVR0fBIICmTCCApUwgeWgQaA/hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMv
+ZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQg
+REUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQg
+REUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBT
+LkEuIDIxCzAJBgNVBAYTAkVDMIHHoIHEoIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRh
+dGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkg
+REFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklU
+WSBEQVRBIFMuQS4gMixDPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB
+2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1
+YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQW
+BBQNGvieRzTi/EIgEHCrU+XPxR7WOjArBgNVHRAEJDAigA8yMDI0MDgwMTIyMTgzOFqBDzIwMjYw
+ODAxMjIxODM4WjALBgNVHQ8EBAMCBeAwGQYKKwYBBAGCpnIDBQQLDAlDT05UQURPUkEwGgYKKwYB
+BAGCpnIDAQQMDAowOTE5MzY5MDQxMBYGCisGAQQBgqZyAwkECAwGWElNRU5BMBEGCisGAQQBgqZy
+AyIEAwwBLjBKBgorBgEEAYKmcgMHBDwMOlRFUkNFUiBQQVNBSkUgMTRTRSBTT0xBUiAxMyBZIDFF
+UiBQQVNFTyA1MEEgWSBBTlRPTklPIEFOVEUwIQYKKwYBBAGCpnIDAgQTDBFKRU5OSUZFUiBMSVNT
+RVRURTAfBgorBgEEAYKmcgMgBBEMDzAwMTAwMjAwMDYyMzkzMjATBgorBgEEAYKmcgMhBAUMA1BG
+WDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFgYKKwYBBAGCpnIDAwQIDAZDSEFOR08wLgYKKwYB
+BAGCpnIDCgQgDB5RQyBURVJNSU5BTEVTIEVDVUFET1IgUyBBIFFDVEUwHQYKKwYBBAGCpnIDCwQP
+DA0wOTkwMjE4OTk0MDAxMBEGCisGAQQBgqZyAx0EAwwBLjAaBgorBgEEAYKmcgMEBAwMCk1BQ0hB
+Q0lMTEEwGgYKKwYBBAGCpnIDCAQMDAowOTY4NTM1ODY2MA0GCSqGSIb3DQEBCwUAA4ICAQBmVAbu
+5NyIi868OgrsVbHmo32Va+BpjbP7ZIAURMta/dFynjYypYIe2c5VsF4TI48Eb/4+Vi7WjOpZdAWw
+p4Z7amnuJk9vI4vxTN5eSF7kaMdtbwwh7yC6nRlfa2Nc6vxHArcoYOsk/zpOQx5qOu8I2yfTQglv
+mSwSR816hPqq8dPgHFlAkQ1sqHp8ef82HrADItzlF6yMrf/M6/DFWMC3GunWuKBnytvvw33Q3lml
+4dtx0jjmULqRYU5BiASTkuIZmSmxApmi6HUDBRsPXO/93U0HW0yQvMlnyEKzetjVmEfvRhCoyH1G
+rIvZ+GtmivfdidjE48EM91ooFSU93Q3whpZ6rJWkcAI4d4TWyVvwYaFb40vy3jtLEn8TLJnNQ6KW
+K1wEnooDOtBJSfMuT1Rah7ntOKUqDk+eXz78wlvvVabiOn1VA+ESrBvP+M0KfEppEicn2czFdbUh
+76vykYNIKmjobAsgqFYo+xrERaVIcl9u5gvmEcbseSEJPee0smMR2NiOho72LUQyIcK7w3/km7gT
+K1lv7/wB2Jp3f0EV2i9b7peo3EC/jbV3J0rmV0Yc11KdJKsxrbJ6D6b2ffjyofRRun6t1e1GIipw
+OdzOvgc8f1rO3E4hiKv90P2Ac8L44n5u9Oqx7zJ75KVL8x/jXhRYnksjseN2XRk/6CJNwg==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+jhzTqwScSLmhWgLWiI7btpvP7PHFQqQ9omr5FXnjQPIzRbf4C3sCBPe/TUboA2YjGq0tUTOdIok9
+KNo7vR6SUvyIMjqAlo0P9bJC+X1FpznOIHaqLZjRhwkTEZgw3Fy0uTBOeLa3qMJg9GrgqszWeinU
+8UJ9t82h3B74Cntg9BPQv2nZoBuiASgEhBBqORBYnxDbKn3+uZ8J7f3wyPy0y8HrMAMhoYnTUMSZ
+WS9wjJonFqgCfR04K0MzTjhbllP+SnWJit7cJ+ZhNoEzCk8PbZ/xLITKK9zRGyvRCo1fO7n/bMJh
+XSuCB4BScmNIBQzOQKWderkDzt7f05BlwcPtPQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature704494-Object644788"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature704494"&gt;
+                &lt;etsi:SignedProperties Id="Signature704494-SignedProperties601526"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-20T16:53:29-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;+hLKPajQye8S1YrrXKtIrf67mW4=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;957956164&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-139027"&gt;
+                            &lt;etsi:Description&gt;comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

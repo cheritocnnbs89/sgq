@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0701202601099286101000120010020000050081234567819</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-07T12:21:19-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;PROMAELETRIC S.A.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;PROMAELETRIC S.A.&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0992861010001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0701202601099286101000120010020000050081234567819&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000005008&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;VIA DAULE, KM 4 1/2, MAPASINGUE OESTE AV. 3ERA Y CALLE 2DA #311&lt;/dirMatriz&gt;
+        &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;07/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;VIA DAULE, KM 4 1/2, MAPASINGUE OESTE AV. 3ERA Y CALLE 2DA #311&lt;/dirEstablecimiento&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;VIA A DAULE KM 16.5 S/N&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;1451.03&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;1451.03&lt;/baseImponible&gt;
+                &lt;tarifa&gt;15&lt;/tarifa&gt;
+                &lt;valor&gt;217.65&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;1668.68&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;1668.68&lt;/total&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000000736&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;COD.VIT.1\2&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;CODO PVC 1\2 ECO&lt;/descripcion&gt;
+            &lt;cantidad&gt;20&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.070000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.40&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.40&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.21&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000001121&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;FOC.HA.1250&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;FOCO HALOGENO 12 50W 2PIN JIC&lt;/descripcion&gt;
+            &lt;cantidad&gt;6&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;8.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;48.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;48.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;7.20&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000003315&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;SMD-100W&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LAMPARA LED ALUM/PUBLIC SMD 100W 6500K XILED&lt;/descripcion&gt;
+            &lt;cantidad&gt;8&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;91.780000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;734.24&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;734.24&lt;/baseImponible&gt;
+                    &lt;valor&gt;110.14&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000001022&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;C.T.3\4&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;CONDULET T 3\4&lt;/descripcion&gt;
+            &lt;cantidad&gt;6&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.350000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;14.10&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;14.10&lt;/baseImponible&gt;
+                    &lt;valor&gt;2.12&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000005350&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;V-1551&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TERMINAL TALON SENCILLO  TA-2  2-14 V1551&lt;/descripcion&gt;
+            &lt;cantidad&gt;5&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.220000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.10&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.10&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.17&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000001049&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;GRA.EMT.3/4&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;GRAPA EMT 3/4&lt;/descripcion&gt;
+            &lt;cantidad&gt;60&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.060000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;3.60&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;3.60&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.54&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000002371&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;90L05X2&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;BRAZO LAMPARA 2X2&lt;/descripcion&gt;
+            &lt;cantidad&gt;4&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;35.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;140.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;140.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;21.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000000226&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;ENC.PVC.120&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ENCHUFE VINIL 15A 125V COOPER USA(4867)&lt;/descripcion&gt;
+            &lt;cantidad&gt;12&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.700000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;20.40&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;20.40&lt;/baseImponible&gt;
+                    &lt;valor&gt;3.06&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000005052&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CNF5S02&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ROLLO FUNDASELLADAESPECIAL 3/4 PVC&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;63.550000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;63.55&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;63.55&lt;/baseImponible&gt;
+                    &lt;valor&gt;9.53&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000000175&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;TOMA.SOB.50PG&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TOMACORRIENTE SOB PATA GALLINA 50A COOPER&lt;/descripcion&gt;
+            &lt;cantidad&gt;6&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;5.750000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;34.50&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;34.50&lt;/baseImponible&gt;
+                    &lt;valor&gt;5.18&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000004187&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;TT6&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TERMINAL TALON SENCILLO 6-4AWG&lt;/descripcion&gt;
+            &lt;cantidad&gt;6&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.220000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.32&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.32&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.20&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000002766&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;XB5AS542CG&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PULSADOR XB5A542C HONGO GIRO PVC T/SCHNEIDER&lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;17.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;34.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;34.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;5.10&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000005537&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;3SU11004BF11-1BA0&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;IINTERRUPTOR LLAVE 2 POSICIONES+1NA PLAST 3SU1100-4BF11-1BA0 AN SIEMENS&lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;22.210000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;44.42&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;44.42&lt;/baseImponible&gt;
+                    &lt;valor&gt;6.66&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000005100&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CAJ-I-1/2&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;CAJA INTERPERIE FS 1/2 (Z)&lt;/descripcion&gt;
+            &lt;cantidad&gt;10&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.990000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;29.90&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;29.90&lt;/baseImponible&gt;
+                    &lt;valor&gt;4.49&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000005535&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;EXTR50778&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;EXTRACTOR/AIRE P/PARED EXT.30X30 INT.23X23 GENUINE&lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;85.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;170.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;170.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;25.50&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000000503&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CBC.410M&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;CABLE CONCENTRICO 4X10 AWG&lt;/descripcion&gt;
+            &lt;cantidad&gt;20&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;4.160000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;83.20&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;83.20&lt;/baseImponible&gt;
+                    &lt;valor&gt;12.48&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000000000650&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CBC.214M&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;CABLE CONCENTRICO 2X14 (MT)&lt;/descripcion&gt;
+            &lt;cantidad&gt;30&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.910000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;27.30&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;27.30&lt;/baseImponible&gt;
+                    &lt;valor&gt;4.10&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="Dirección"&gt;VIA A DAULE KM 16.5 S/N&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Teléfono"&gt;2162660&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Email"&gt;compras.electronica@quimpac.com.ec;adominguez@quimpac.com.ec; tesoreria@quimpac.com.ec;recepcion@quimpac.com.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="OrdenCompra"&gt;10006026275000342189&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Vendedor"&gt;JOSE CABRERA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="CondicionDePago"&gt;30 DIAS&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature218731"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo506668"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID633377" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature218731-SignedProperties122059"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Clzr0x6Rs59J/Uu0B97nU92SFLA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1767924"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;hGBy9sqtOn7jzA6LBDm3y2+xFUI=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-361884" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Fb7UofcRO3qzvsIsxcjJx2NxSoQ=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue493643"&gt;
+OREjlEJx/Z/60wu7XreLihR/2E6uZeCoNVqqvyQf12QKQ5U7PN6Pqp33wzlHaXDHU1y8dFVBPUbU
+Hl9Me83PoRcheluywwo57NWfOiuPv+nan8FW3zYxsyhIP+QwJvx7ShzWExnb5eHVAV7UR9/qmuWs
+Ih1V3igsQZL1bh51UxWes1v7LOhrYcpuBrYFy8K0RIVzy/SKQAWhle/jLlO8t1fYwrhgMKHcR38C
+bdW4flouYTDa/CKTomjWxpx3bq7nfOhv2em8QkX5OGiCcJIKbhAc1pw3lJA/pdAYZpHYHCp0GHW5
+sG+++wASdgEhhNmjDoVY4jvBrZnoAvZugUm3zQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1767924"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKATCCB+mgAwIBAgIEZeWYpDANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV
+BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB
+QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTI1MDEyMzE5MDAwNVoXDTI3MDEyMzE5MzAw
+NFowgbYxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw
+NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w
+DAYDVQQHEwVRVUlUTzE6MBEGA1UEBRMKMDAwMDM1Mjc1ODAlBgNVBAMTHlBBT0xBIE1BR0RBTEVO
+QSBCQVJDSUEgVkVMQVNDTzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ0lMs82Tfhg
+q1o/d8Ty7TTkg9A7OGPuQAyWZDRj59OyT2COvQFK4IYHFLbAiunixSqa/m8hO3u9Ah1LcWRtysI6
+ayzpRtng1GPClpu86wIYn7aQko28oB53rjWtxFkKDTXIyqK/sYP/DT16Bc1X8a2/AhSSZicQAA7m
+Z7oDE3/nKZJyY6v9iA1R1L3VKO5UrDZNW+P0/AYZSZklnd4AzDtF2mDI6k6iHqp1tWYaDf3b7ymW
+XCFcLndYYY61oKSYBjVy9Gqb22hRt3o92aF6ibDZp/BPwdhHXXkEvzwonSBEIIHAcRSDxZJTS391
+5sO6OvLZxIbYYw2KiJUjPYDVCikCAwEAAaOCBSgwggUkMAsGA1UdDwQEAwIHgDBnBgNVHSAEYDBe
+MFwGCysGAQQBgqg7AgIBME0wSwYIKwYBBQUHAgEWP2h0dHA6Ly93d3cuZWNpLmJjZS5lYy9wb2xp
+dGljYS1jZXJ0aWZpY2Fkby9wZXJzb25hLWp1cmlkaWNhLnBkZjCBkQYIKwYBBQUHAQEEgYQwgYEw
+PgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmVjaS5iY2UuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1
+cy9vY3NwMD8GCCsGAQUFBzABhjNodHRwOi8vb2NzcDEuZWNpLmJjZS5lYy9lamJjYS9wdWJsaWN3
+ZWIvc3RhdHVzL29jc3AwIQYKKwYBBAGCqDsDCgQTExFQUk9NQUVMRVRSSUMgUy5BLjAdBgorBgEE
+AYKoOwMLBA8TDTA5OTI4NjEwMTAwMDEwGgYKKwYBBAGCqDsDAQQMEwowOTE4NzY0MzY2MB8GCisG
+AQQBgqg7AwIEERMPUEFPTEEgTUFHREFMRU5BMBYGCisGAQQBgqg7AwMECBMGQkFSQ0lBMBcGCisG
+AQQBgqg7AwQECRMHVkVMQVNDTzAfBgorBgEEAYKoOwMFBBETD0dFUkVOVEUgR0VORVJBTDA8Bgor
+BgEEAYKoOwMHBC4TLENJVURBRCBTQU5USUFHTyBNWiA1NzYwIFZJTExBIDI2IEVUQVBBIFBFTkFT
+MBkGCisGAQQBgqg7AwgECxMJMDQ1MTcxNjQ5MBkGCisGAQQBgqg7AwkECxMJR1VBWUFRVUlMMBcG
+CisGAQQBgqg7AwwECRMHRUNVQURPUjAgBgorBgEEAYKoOwMzBBITEFNPRlRXQVJFLUFSQ0hJVk8w
+HwYDVR0RBBgwFoEUcHVibGljaWdlbkBnbWFpbC5jb20wggHhBgNVHR8EggHYMIIB1DCCAdCgggHM
+oIIByIaB1mxkYXA6Ly9iY2VxbGRhcHN1YnAxLmJjZS5lYy9jbj1DUkwyMTU5LGNuPUFDJTIwQkFO
+Q08lMjBDRU5UUkFMJTIwREVMJTIwRUNVQURPUixsPVFVSVRPLG91PUVOVElEQUQlMjBERSUyMENF
+UlRJRklDQUNJT04lMjBERSUyMElORk9STUFDSU9OLUVDSUJDRSxvPUJBTkNPJTIwQ0VOVFJBTCUy
+MERFTCUyMEVDVUFET1IsYz1FQz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2WGNGh0dHA6
+Ly93d3cuZWNpLmJjZS5lYy9DUkwvZWNpX2JjZV9lY19jcmxmaWxlY29tYi5jcmykgbYwgbMxCzAJ
+BgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcwNQYDVQQLEy5F
+TlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4wDAYDVQQHEwVR
+VUlUTzElMCMGA1UEAxMcQUMgQkFOQ08gQ0VOVFJBTCBERUwgRUNVQURPUjEQMA4GA1UEAxMHQ1JM
+MjE1OTArBgNVHRAEJDAigA8yMDI1MDEyMzE5MDAwNVqBDzIwMjcwMTIzMTkzMDA0WjAfBgNVHSME
+GDAWgBRIot8jHx34LFF6jAPNSTKlCcGUqzAdBgNVHQ4EFgQU9M29e6L/HpJQAwbXonuOp3abZdEw
+CQYDVR0TBAIwADAaBgkqhkiG9n0HQQAEDTALGwVWMTAuMAMCBDAwDQYJKoZIhvcNAQELBQADggIB
+ACplYgZFzhDOgO4tW6qqlN+eWKPfRDNYPLDhjw5xd2vq7htPxUltS/XjnCUwgP07UXYPNN7H7doM
+aPaBNJfrEjYUMuaC8Xaza8tO/EvqXjdWZoexfIRtvo8ByLN1DM+DLRppUD6ZO43WzsWZ4fe5bRJ8
+zlgHh10q7z1lrKwB9Da1xCq8Xk/kyMAg+Yx88P+aDQzRne4rCpwnWkMn0arcfDOYiHdcimgJ7j8L
+TUxXaoSOkC4Zr6LERRg2pWau9klKAlOTJhQByHfQbhKJcowzjTF+2W00bw6zoHPVViWI+JZ4b/j8
+mKisnc6/2mJIPt1rnI087ZTN3eRQLWyB59YMmL7jGD5BANihA+bK1lyQ7igscDHsDUM6liIt8MM6
+zaee074F2TmovPSOOBpwzwGXWDNq3X/9W8QXtkVLAoG6u1hKY8HmeS3tcdMpt5uT38vRm6i5ZjDS
+ubeu4E7FWe0qFIWghXmD/WVYOmxbuBynIbG/TuF6VGWNJ9YLyE2oohdndc4MfrXPoMS/GDzy6cPe
+6fIASAZo0Wv0pa8R+vI2NsKtjfPidadaL/Wvg1KealtTbxs7WY1KP8J7yip2Yg/vKqX8EQ64w/+g
+6asmBtQoBUuY0p6Duu82D5dr/mg3/Hk4cKTyV5SzZ4o/CZzyaS5BWTlJ78PPLb5182HdOPvTt+Iy
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+nSUyzzZN+GCrWj93xPLtNOSD0Ds4Y+5ADJZkNGPn07JPYI69AUrghgcUtsCK6eLFKpr+byE7e70C
+HUtxZG3KwjprLOlG2eDUY8KWm7zrAhiftpCSjbygHneuNa3EWQoNNcjKor+xg/8NPXoFzVfxrb8C
+FJJmJxAADuZnugMTf+cpknJjq/2IDVHUvdUo7lSsNk1b4/T8BhlJmSWd3gDMO0XaYMjqTqIeqnW1
+ZhoN/dvvKZZcIVwud1hhjrWgpJgGNXL0apvbaFG3ej3ZoXqJsNmn8E/B2EddeQS/PCidIEQggcBx
+FIPFklNLf3Xmw7o68tnEhthjDYqIlSM9gNUKKQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature218731-Object328088"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature218731"&gt;
+                &lt;etsi:SignedProperties Id="Signature218731-SignedProperties122059"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-07T12:21:17-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;hsT79TrLd/SpmpHpYANgM2fwkfU=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1709545636&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-361884"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

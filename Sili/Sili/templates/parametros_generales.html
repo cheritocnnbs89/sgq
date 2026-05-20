@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Parámetros generales{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Parámetros generales</h4>
+
+  <div class="d-flex gap-2">
+    {% if permissions.get('parametros', {}).get('crear') %}
+    <a href="{{ url_for('nuevo_parametro') }}" class="btn btn-primary btn-sm">
+      Nuevo parámetro
+    </a>
+    {% endif %}
+
+    {% if permissions.get('parametros', {}).get('editar') %}
+    <a href="{{ url_for('param_carga_masiva') }}" class="btn btn-outline-info btn-sm">
+      Carga masiva
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card card-custom">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th style="width:80px">ID</th>
+            <th>Nombre</th>
+            <th style="width:250px">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for g in grupos %}
+          <tr>
+            <td>{{ g.id }}</td>
+            <td>{{ g.nombre }}</td>
+
+            <td>
+              {% if permissions.get('parametros', {}).get('ver') %}
+              <a href="{{ url_for('parametro_items', group_id=g.id) }}"
+                 class="btn btn-sm btn-info">
+                Valores
+              </a>
+              {% endif %}
+
+              {% if permissions.get('parametros', {}).get('editar') %}
+              <a href="{{ url_for('editar_parametro', group_id=g.id) }}"
+                 class="btn btn-sm btn-warning ms-1">
+                Editar
+              </a>
+              {% endif %}
+
+              {% if permissions.get('parametros', {}).get('eliminar') %}
+              <form method="post"
+                    action="{{ url_for('eliminar_parametro', group_id=g.id) }}"
+                    style="display:inline"
+                    onsubmit="return confirm('¿Seguro que desea eliminar este parámetro y todos sus valores asociados?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-sm btn-danger ms-1">
+                  Eliminar
+                </button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+
+          {% else %}
+          <tr>
+            <td colspan="3" class="text-center text-muted">
+              No existen grupos de parámetros.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block title %}Cargar XML (SRI){% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h4 class="mb-3">Cargar XML de factura</h4>
+
+  <div class="mb-3">
+    <input id="xmlFiles" type="file" class="form-control" accept=".xml" multiple>
+  </div>
+  <button id="btnParse" class="btn btn-primary">Leer XML</button>
+
+  <div class="table-responsive mt-4">
+    <table class="table table-sm table-dark align-middle">
+      <thead>
+        <tr>
+          <th>Archivo</th>
+          <th>Proveedor</th>
+          <th>Serie</th>
+          <th>Fecha Aut.</th>
+          <th>Clave Acceso</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts_extra %}
+{{ super() }}
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const input = $('#xmlFiles');
+  const tbody = $('#tbody');
+  const btnParse = $('#btnParse');
+
+  // Normaliza fechas DD/MM/YYYY, YYYY-MM-DD, o toma los primeros 10 chars tipo 2024-05-16T...
+  function ymd(s){
+    if(!s) return '';
+    let m = s.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})/);
+    if (m) return `${m[3]}-${m[2]}-${m[1]}`;
+    m = s.match(/^(\d{4})[\/\-](\d{2})[\/\-](\d{2})/);
+    if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+    if (/\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0,10);
+    return s;
+  }
+
+  function sendToParent(payload){
+    const msg = { type:'sri-invoice', payload };
+    let sent = false;
+    try {
+      if (window.opener) {
+        window.opener.postMessage(msg, window.location.origin);
+        sent = true;
+      }
+    } catch(_) {}
+    if (!sent && 'BroadcastChannel' in window) {
+      new BroadcastChannel('sri-xml').postMessage(msg);
+      sent = true;
+    }
+    if (!sent) {
+      alert('No se encontró el formulario de gastos abierto.');
+    } else {
+      window.close();
+    }
+  }
+
+  function renderRows(rows){
+    if (!Array.isArray(rows) || rows.length === 0){
+      tbody.innerHTML = '<tr><td colspan="6">Sin resultados</td></tr>';
+      return;
+    }
+    tbody.innerHTML = '';
+    rows.forEach((r) => {
+      const tr = document.createElement('tr');
+      const proveedor = (r.EmisorRUC === 'ERROR')
+        ? r.EmisorRazonSocial
+        : `${r.EmisorRUC || ''} ${r.EmisorRazonSocial || ''}`.trim();
+
+      tr.innerHTML = `
+        <td>${r.Archivo || ''}</td>
+        <td>${proveedor || ''}</td>
+        <td>${r.Serie || ''}</td>
+        <td>${r.FechaAutorizacion || r.FechaEmision || ''}</td>
+        <td>${r.ClaveAcceso || r.NumAutorizacion || ''}</td>
+        <td class="text-end">
+          <button type="button" class="btn btn-sm btn-success usar" ${r.EmisorRUC==='ERROR'?'disabled':''}>
+            Usar
+          </button>
+        </td>
+      `;
+
+      tr.querySelector('.usar')?.addEventListener('click', () => {
+        if (r.EmisorRUC === 'ERROR') return;
+        sendToParent({
+          proveedorNombre: proveedor,
+          serie:    r.Serie || '',
+          fechaAut: ymd(r.FechaAutorizacion || r.FechaEmision || ''),
+          clave:    r.ClaveAcceso || r.NumAutorizacion || ''
+        });
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  btnParse.addEventListener('click', async () => {
+    const files = input.files;
+    if (!files || files.length === 0){
+      alert('Selecciona uno o más XML.');
+      return;
+    }
+    const fd = new FormData();
+    for (const f of files) fd.append('files[]', f);
+
+    tbody.innerHTML = '<tr><td colspan="6">Procesando…</td></tr>';
+    try {
+      const resp = await fetch('{{ url_for("xml.api_parse") }}', {
+        method: 'POST',
+        body: fd,
+        credentials: 'same-origin'
+      });
+      const json = await resp.json();
+      renderRows(json.data || []);
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="6" class="text-danger">Error leyendo XML: ${e}</td></tr>`;
+    }
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="bitacora.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="10243"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="areas" custom_title="0" dock_id="1" table="4,5:mainareas"/><dock_state state="000000ff00000000fd0000000100000002000004e700000200fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000004e70000016200ffffff000004e70000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="areas" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="52"/><column index="3" value="43"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">select * from notify_queue;
+select * from notify_templates;
+delete from  notify_queue;
+delete from notify_templates;
+INSERT INTO notify_queue
+(user_id, tipo, canal, template_key, payload_json, scheduled_at, estado, gasto_id, area, event_key)
+VALUES
+(53, 'gasto_aprobado_user', 'email', 'gasto_user_approved',
+ '{&quot;gasto_id&quot;:2210,&quot;area&quot;:&quot;ga&quot;,&quot;approved_by_user_id&quot;:31}',
+ datetime('now'), 'pending',
+ 2210, 'ga', '2210:ga:user');
+
+
+
+ DROP INDEX IF EXISTS uq_notify_queue_once;
+
+ SELECT id, user_id, tipo, estado, gasto_id, area, event_key, scheduled_at
+FROM notify_queue
+WHERE gasto_id IN (2210,2209,2208)
+ORDER BY gasto_id, tipo, user_id;
+
+
+
+
+SELECT q.id, q.template_key, nt.key, nt.subject
+FROM notify_queue q
+LEFT JOIN notify_templates nt ON nt.key = q.template_key
+WHERE q.id IN (6898,6899);
+
+
+CREATE UNIQUE INDEX IF NOT EXISTS uq_notify_queue_event_key
+ON notify_queue(event_key)
+WHERE event_key IS NOT NULL;
+
+DROP INDEX IF EXISTS sqlite_autoindex_notify_queue_1;
+
+
+
+delete from notify_queue;
+
+
+SELECT id, user_id, tipo, canal, estado, scheduled_at, gasto_id, area, event_key
+FROM notify_queue
+WHERE tipo LIKE 'gasto_%'
+ORDER BY id DESC;
+
+
+SELECT g.id, g.usuario_id, u.id AS usuario_existe, u.username, u.email
+FROM gastos_tarjeta g
+LEFT JOIN usuarios u ON u.id = g.usuario_id
+WHERE g.id = 2210;
+
+
+SELECT g.id, g.usuario_id
+FROM gastos_tarjeta g
+LEFT JOIN usuarios u ON u.id = g.usuario_id
+WHERE u.id IS NULL
+LIMIT 50;
+
+
+
+
+PRAGMA index_info('sqlite_autoindex_notify_queue_1');
+
+
+PRAGMA index_list('notify_queue');
+
+SELECT name, sql
+FROM sqlite_master
+WHERE type='index'
+  AND tbl_name='notify_queue';
+
+
+  
+  
+  -- Gasto 2210
+INSERT INTO notify_queue (user_id,tipo,fecha_obj,canal,template_key,payload_json,scheduled_at,estado,gasto_id,area,event_key)
+SELECT g.usuario_id,
+       'gasto_aprobado_user',
+       date('now'),
+       'email',
+       'gasto_user_approved',
+       json_object('gasto_id', g.id, 'area','ga','approved_by_user_id',31),
+       datetime('now'),
+       'pending',
+       g.id,
+       'ga',
+       CAST(g.id AS TEXT) || ':ga:user'
+  FROM gastos_tarjeta g
+ WHERE g.id=2210;
+
+-- Gasto 2209
+INSERT INTO notify_queue (user_id,tipo,fecha_obj,canal,template_key,payload_json,scheduled_at,estado,gasto_id,area,event_key)
+SELECT g.usuario_id,'gasto_aprobado_user',date('now'),'email','gasto_user_approved',
+       json_object('gasto_id', g.id, 'area','ga','approved_by_user_id',31),
+       datetime('now'),'pending',g.id,'ga',CAST(g.id AS TEXT) || ':ga:user'
+  FROM gastos_tarjeta g
+ WHERE g.id=2209;
+
+-- Gasto 2208
+INSERT INTO notify_queue (user_id,tipo,fecha_obj,canal,template_key,payload_json,scheduled_at,estado,gasto_id,area,event_key)
+SELECT g.usuario_id,'gasto_aprobado_user',date('now'),'email','gasto_user_approved',
+       json_object('gasto_id', g.id, 'area','ga','approved_by_user_id',31),
+       datetime('now'),'pending',g.id,'ga',CAST(g.id AS TEXT) || ':ga:user'
+  FROM gastos_tarjeta g
+ WHERE g.id=2208;
+ 
+ 
+ PRAGMA foreign_key_list('notify_queue');
+
+ 
+ PRAGMA foreign_key_check;
+
+ 
+ SELECT g.id, g.usuario_id, u.id AS usuario_existe
+FROM gastos_tarjeta g
+LEFT JOIN usuarios u ON u.id = g.usuario_id
+WHERE g.id = 2210;
+
+
+INSERT INTO notify_queue
+(user_id,tipo,fecha_obj,canal,template_key,payload_json,scheduled_at,estado,gasto_id,area,event_key)
+VALUES
+(53,'gasto_aprobado_user',date('now'),'email','gasto_user_approved',
+ '{&quot;gasto_id&quot;:2210,&quot;area&quot;:&quot;ga&quot;,&quot;approved_by_user_id&quot;:31}',
+ datetime('now'),'pending',2210,'ga','2210:ga:user');
+
+
+
+ 
+ 
+ 
+ 
+          SELECT DISTINCT u.id AS user_id, u.username
+          FROM plan_tareas t
+          JOIN plan_responsables r ON r.id = t.responsable_id
+          JOIN usuarios u ON LOWER(u.username)=LOWER(r.nombre)
+          WHERE t.activo=1
+            AND (
+              t.frecuencia='Diario'
+              OR (t.frecuencia='Semanal' AND (t.dia_semana IS NULL OR t.dia_semana = ((CAST(strftime('%w','now','localtime') AS INTEGER)+6)%7)))
+              OR (t.frecuencia='Mensual' AND (t.dia_mes IS NULL OR t.dia_mes = CAST(strftime('%d','now','localtime') AS INTEGER)))
+            )
+			 SELECT scheduled_at, datetime('now')
+              FROM notify_queue
+             WHERE estado='pending'
+               AND (scheduled_at IS NULL OR scheduled_at &gt;= datetime('now'))       
+             ORDER BY id
+             LIMIT 100
+			 
+			 
+			 
+			 PRAGMA table_info(usuarios_cc);
+
+			 
+			 select * from usuarios_cc
+			drop table  usuarios_cc;
+			
+			select * from configuracion;
+			INSERT INTO configuracion (clave, valor) VALUES ('api_inbound_key', '8StqYmBeOxe5CtMnchg5vR2I9-OMMjxH__7ZZiwljgg');
+
+			
+			
+			SELECT t.*, 
+       p.nombre AS tipo_tarea_nombre,
+       us.nombre_completo AS solicitante_nombre -- 👈 Agregamos esto
+FROM tareas t
+LEFT JOIN param_values p ON t.tipo_tarea_id = p.id
+LEFT JOIN usuarios us ON t.solicitante_id = us.id -- 👈 Unión con el solicitante
+ORDER BY t.id DESC;
+
+select * from tarea_acciones;
+
+
+
+select * from tarea_acciones
+-- Agregar usuario asignado al paso
+ALTER TABLE tarea_acciones ADD COLUMN usuario_asignado_id INTEGER
+
+-- Agregar estado específico para este paso
+ALTER TABLE tarea_acciones ADD COLUMN estado_accion VARCHAR(50) DEFAULT 'En proceso';
+
+-- Agregar fecha inicio (cuando se crea el registro)
+ALTER TABLE tarea_acciones ADD COLUMN fecha_inicio DATETIME;
+
+-- Agregar fecha fin tentativa (planificada)
+ALTER TABLE tarea_acciones ADD COLUMN fecha_fin_tentativa DATETIME;
+
+
+
+
+
+
+
+-- 1. Lo quitamos para desbloquear el ALTER TABLE
+DROP INDEX IF EXISTS uq_notify_gasto_event;
+
+-- 2. Agregamos las columnas de tareas (esto ya no dará error)
+ALTER TABLE tarea_acciones ADD COLUMN usuario_asignado_id INTEGER;
+ALTER TABLE tarea_acciones ADD COLUMN estado_accion TEXT DEFAULT 'En proceso';
+ALTER TABLE tarea_acciones ADD COLUMN fecha_inicio DATETIME;
+ALTER TABLE tarea_acciones ADD COLUMN fecha_fin_tentativa DATETIME;
+
+-- 3. Lo volvemos a crear (aquí te pongo la forma estándar que suele tener)
+-- Si el paso A te dio un SQL diferente, usa ese.
+CREATE UNIQUE INDEX uq_notify_gasto_event 
+ON notify_eventos (referencia_id, tipo_evento) 
+WHERE procesado = 0;
+
+
+
+PRAGMA writable_schema = ON;
+
+
+DELETE FROM sqlite_master 
+WHERE type = 'index' AND name = 'uq_notify_gasto_event';
+
+
+PRAGMA writable_schema = OFF;
+VACUUM;
+
+
+SELECT * FROM sqlite_master 
+WHERE type = 'index' AND sql LIKE '%datetime%';
+
+
+PRAGMA writable_schema = ON;
+
+-- Borramos los dos índices que el sistema nos reportó como &quot;malformed&quot;
+DELETE FROM sqlite_master WHERE name = 'uq_notify_gasto_event';
+DELETE FROM sqlite_master WHERE name = 'uq_notify_queue_once';
+
+PRAGMA writable_schema = OFF;
+
+
+
+ALTER TABLE tarea_acciones ADD COLUMN usuario_asignado_id INTEGER;
+ALTER TABLE tarea_acciones ADD COLUMN estado_accion TEXT DEFAULT 'En proceso';
+ALTER TABLE tarea_acciones ADD COLUMN fecha_inicio DATETIME;
+ALTER TABLE tarea_acciones ADD COLUMN fecha_fin_tentativa DATETIME;
+512026
+
+
+
+ALTER TABLE gastos_tarjeta ADD COLUMN reembolso_vendedor INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE usuarios ADD COLUMN tiene_caja_chica INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE usuarios ADD COLUMN codigo_sap TEXT;
+ALTER TABLE gastos_tarjeta ADD COLUMN es_caja_chica INTEGER DEFAULT 0;
+ALTER TABLE tareas ADD COLUMN porcentaje_avance INTEGER DEFAULT 0;
+ALTER TABLE tareas ADD COLUMN empresa_id INTEGER REFERENCES empresas(id);
+
+
+CREATE TABLE IF NOT EXISTS secuencias_sap (
+    nombre TEXT PRIMARY KEY,
+    ultimo_valor INTEGER
+	
+	
+);
+
+-- Inicializamos con el valor anterior al que necesitas (20781)
+INSERT OR IGNORE INTO secuencias_sap (nombre, ultimo_valor) VALUES ('reembolsos', 20781);
+
+select * from secuencias_sap;
+
+
+     SELECT id, titulo, descripcion, estado, fecha_inicio, 
+                fecha_compromiso, fecha_cierre_real, usuario_id, 
+                fecha_fin, creador_id, solicitante_id,
+                tipo_tarea_id,porcentaje_avance
+            FROM tareas</sql><current_tab id="0"/></tab_sql></sqlb_project>

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1001202601099340265800120010010000002700000042511</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-10T21:28:16-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;LA LIGA DEL ASADO LDA S.A.S.&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;LA LIGA DEL ASADO LDA S.A.S.&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0993402658001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;1001202601099340265800120010010000002700000042511&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000000270&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;GUAYAS / GUAYAQUIL / GUAYAQUIL / VICTOR HUGO SICOURET Y NAHIM ISAIAS&lt;/dirMatriz&gt;
+		
+		
+		
+			&lt;contribuyenteRimpe&gt;CONTRIBUYENTE RÉGIMEN RIMPE&lt;/contribuyenteRimpe&gt;
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;10/01/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;GUAYAS / GUAYAQUIL / GUAYAQUIL / VICTOR HUGO SICOURET Y NAHIM ISAIAS&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+			&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;xxxxxx&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;77.39000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;77.39&lt;/baseImponible&gt;
+				&lt;valor&gt;11.61000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;89.00000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;19&lt;/formaPago&gt;
+	    		&lt;total&gt;89.00&lt;/total&gt;
+	    		&lt;plazo&gt;0&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;CR05&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;CR05&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;PICAÑA BOLIVIANA&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;19.130000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;19.13&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;19.13000&lt;/baseImponible&gt;
+          &lt;valor&gt;2.87&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;CR03&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;CR03&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;RIBEYE ANGUS AMERICANO&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;36.520000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;36.52&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;36.52000&lt;/baseImponible&gt;
+          &lt;valor&gt;5.48&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;H01&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;H01&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;LA TRADICIONAL&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;8.700000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;8.70&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;8.70000&lt;/baseImponible&gt;
+          &lt;valor&gt;1.30&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;B02&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;B02&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;COCA ZERO&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;2.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.740000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.48&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.48000&lt;/baseImponible&gt;
+          &lt;valor&gt;0.52&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;V01&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;V01&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;COPA DE VINO DE LA CASA&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;5.650000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;5.65&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;5.65000&lt;/baseImponible&gt;
+          &lt;valor&gt;0.85&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;POS03&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;POS03&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;HOT BROWNIE CON HELADO&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;3.910000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.91&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.91000&lt;/baseImponible&gt;
+          &lt;valor&gt;0.59&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+	
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;VENTA DESDE PUNTO DE VENTA.&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature53920"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo150627"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID181464" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature53920-SignedProperties813160"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;FpGndby6Thn2p/vhKvzF0aKe9Fs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate753550"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;wHxji72BC1EEJMNMN+czCIE1g5Y=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-71919" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;0rfDLqbssdoJycmGeguICkwyV0o=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue323280"&gt;
+YSYetzRFAWyvOfLAVS9hXFoyabZmLiSIFMGwyhIX/XM+4mCKgGUFUe913RqtRl4AJO+vqTmDyY57
+C7NTs2faB+jbqNV4hYVY8u8/Gq5Zl7HEaR9EiEpmZvGibXQxQnAlmQsEMSiFqmRNdVvOpmtajQZ9
+l4SmTpV2qJKWB/6Ms+9uEcpP8e2V1gYdtQN4gBappN47Pm6n1ALVvFD8O8+QZm48a+ry2/Glw0JM
+ZHj0mF4y+HFRQXXKxVaB3y65jB/j8a8zyUlhBrJal/VJV/Nf/mi5Cka7LUq85MnzL9UxsWB/mg8t
+lHkNt73d/PHdk8YM9o/TjoP1VQly+TGMJThAuA==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate753550"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJtTCCB52gAwIBAgIICBpEWESGSMcwDQYJKoZIhvcNAQELBQAwgYYxCzAJBgNVBAYTAkVTMRIw
+EAYDVQQHDAlCYXJjZWxvbmExFjAUBgNVBAoMDVVBTkFUQUNBIFMuQS4xFTATBgNVBAsMDFRTUC1V
+QU5BVEFDQTEaMBgGA1UEAwwRVUFOQVRBQ0EgQ0EyIDIwMjExGDAWBgNVBGEMD1ZBVEVTLUE2Njcy
+MTQ5OTAeFw0yNTExMjQyMzAxMDBaFw0yNjExMjQyMzAxMDBaMIHZMQswCQYDVQQGEwJFQzElMCMG
+A1UECgwcTEEgTElHQSBERUwgQVNBRE8gTERBIFMuQS5TLjEYMBYGA1UEDAwPR0VSRU5URSBHRU5F
+UkFMMRYwFAYDVQQEDA1GQUxMVSBDRURFw5FPMRQwEgYDVQQqDAtKT1NFIENBUkxPUzEZMBcGA1UE
+BRMQSURDRUMtMDkyMjUyNjQxMzEiMCAGA1UEAwwZSk9TRSBDQVJMT1MgRkFMTFUgQ0VERcORTzEc
+MBoGA1UEYQwTVkFURUMtMDk5MzQwMjY1ODAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAJHyNfeLP43oaXI/ZZvS4C97SeWfyyHnz/RdnFflpQNsaxiGPSm+ipUrkqGGgWqC2F9uVF2V
+SLU0eFwxI7Us7Fzqvu4hzFtuRLebbWUNl5rIJ/Ojl0xHYPeNh3ASNLHM9VnQk3rUBEbkvc56xUX/
+7pT8x5+ywihrpCR5u6m73vliwPw//GHIK+Q3UIqIuqaO2O4kaW/KJ/ZTRR0vKij9IEkIzqP8Teby
+W7i3YMyy3bXHh/0T81lnfIGIq+KnY8DVyyXObWtM6UvN14/4fCIQD6ratROxW5Lc31n2fb2PNhbo
+rBfoh0jBZrMhXeyJdjF+Sk3/n3+3aCYKlnZwvj9aSVECAwEAAaOCBNAwggTMMBsGCysGAQQBgvE2
+ZgMBBAwMCjA5MjI1MjY0MTMwHgYLKwYBBAGC8TZmAwsEDwwNMDk5MzQwMjY1ODAwMTCB7QYIKwYB
+BQUHAQEEgeAwgd0wawYIKwYBBQUHMAKGX2h0dHBzOi8vd2ViLnVhbmF0YWNhLmNvbS9jb21tb24v
+cHJvamVjdC9wZGYvYXV0b3JpZGFkLWNlcnRpZmljYWNpb24vMDhfc3Vib3JkaW5hZGEtY2EyLTIw
+MjEuY2VyMDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kv
+b2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9v
+Y3NwLzAdBgNVHQ4EFgQU4WSaRuJt/siMDJdKhm0ujpba3lwwDAYDVR0TAQH/BAIwADAfBgNVHSME
+GDAWgBTF5zMl2O/UjedTh8qiW3U6i5bdSjAcBgNVHRIEFTATgRFpbmZvQHVhbmF0YWNhLmNvbTCB
+jgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cu
+dWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJUSUZJQ0FE
+TyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgYUGA1UdHwR+MHwwPKA6oDiGNmh0dHA6Ly9j
+cmwxLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC8yMDIxQ0Eyc3ViLmNybDA8oDqgOIY2aHR0
+cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsLzIwMjFDQTJzdWIuY3JsMA4GA1Ud
+DwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggHnBgNVHREEggHeMIIB
+2oEebm90aWZpY2FjaW9uZXNmaXJtYXNAc2lpZ28uY29toBsGCysGAQQBgvE2ZgMBoAwMCjA5MjI1
+MjY0MTOgHAYLKwYBBAGC8TZmAwKgDQwLSk9TRSBDQVJMT1OgFgYLKwYBBAGC8TZmAwOgBwwFRkFM
+TFWgGAYLKwYBBAGC8TZmAwSgCQwHQ0VERcORT6AgBgsrBgEEAYLxNmYDBaARDA9HRVJFTlRFIEdF
+TkVSQUygSAYLKwYBBAGC8TZmAwegOQw3VklDVE9SIEhVR08gU0lDT1VSRVQgSU5URVJTRUNDSU4g
+TkFDSU1JRU5UTyBJU0FJQVMgU0wyMKAfBgsrBgEEAYLxNmYDCKAQDA4wMDU5Mzk2Nzg1MjAwNqAa
+BgsrBgEEAYLxNmYDCaALDAlHVUFZQVFVSUygLQYLKwYBBAGC8TZmAwqgHgwcTEEgTElHQSBERUwg
+QVNBRE8gTERBIFMuQS5TLqAeBgsrBgEEAYLxNmYDC6APDA0wOTkzNDAyNjU4MDAxoBMGCysGAQQB
+gvE2ZgMMoAQMAkVDoCQGCysGAQQBgvE2ZgMyoBUME1JFUFJFU0VOVEFOVEUgTEVHQUygGAYLKwYB
+BAGC8TZmAzOgCQwHQVJDSElWTzANBgkqhkiG9w0BAQsFAAOCAgEApLlDy//3kXj7PwnAdPWPsWX0
+TRv8h73qFDMF9MzuVxLABHRjN9eSkdPfQ7/GIagddvBUc4EBI8/MOuvKOkN51DUdx+mq7d1Bcd3o
+Z+4T8ZSz+wQDFtR+yWpzN2F6iwWR33QIX7YVY356gF1ztsd1+Ht2bY1+Necy2KFFgehULjrehvgg
+sHE4AXoamUjsadpIKJ5ywT0A4ELl+/3Qr+4xnHPsBoYb4muco8lHyQAn+RZZXvi34CApQfEzkwox
+ZN3P/EFCNhLaKslK2oFiyFd+JAodzvsOY/aXEOYz2CmNISwc9NwQo03lfKzeGiWRGLmFQqRyXqrC
+04QJzZ03BsoBW9fSwdt/BbfapBh3mtHG7ZIq2j2a9KlJRJgFHINyzoMhS0eEvmIc14OsVU3k0Td+
+J/aq+q9Z0rpJwV0hPPayjNES4QVJRe9cjtwJOJKAVzNDHk1baSGZjvUqtrn9Ebzt8Od8ZmdYU6/0
+b3RDRhy8FKp1lEkcxJ0liNTOfFrx07AQSn3gcsprPiLPeRFflPeTqq3JqNbl/K2iKMVeVDZU0NM3
+7MEvqD2Tv+lhaZZxZziGmoqZ63PDxhWdDkpevHBw9AQDGQeewITGul6RN/jVaRYUVHupOvFdVWcr
+MJmHyVOHZSmFLZ/pcXST5MD4QgNyfyrHIuXwgx8klBgQ4A15I+k=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+kfI194s/jehpcj9lm9LgL3tJ5Z/LIefP9F2cV+WlA2xrGIY9Kb6KlSuSoYaBaoLYX25UXZVItTR4
+XDEjtSzsXOq+7iHMW25Et5ttZQ2Xmsgn86OXTEdg942HcBI0scz1WdCTetQERuS9znrFRf/ulPzH
+n7LCKGukJHm7qbve+WLA/D/8Ycgr5DdQioi6po7Y7iRpb8on9lNFHS8qKP0gSQjOo/xN5vJbuLdg
+zLLdtceH/RPzWWd8gYir4qdjwNXLJc5ta0zpS83Xj/h8IhAPqtq1E7FbktzfWfZ9vY82FuisF+iH
+SMFmsyFd7Il2MX5KTf+ff7doJgqWdnC+P1pJUQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature53920-Object696799"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature53920"&gt;
+                &lt;etsi:SignedProperties Id="Signature53920-SignedProperties813160"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-10T21:28:13-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;M6ue8FVDCR/T+QMInYbcqJHEDk0=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=UANATACA CA2 2021,C=ES,L=Barcelona,2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;583854247595362503&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if row else 'Nueva' }} plantilla{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h5 mb-0">{{ 'Editar' if row else 'Nueva' }} plantilla</h1>
+  <a class="btn btn-outline-secondary" href="{{ url_for('notifications.tpl_list') }}">Volver</a>
+</div>
+
+<form method="post" class="row g-3">
+  {% if not row %}
+  <div class="col-12">
+    <label class="form-label">Clave (única)</label>
+    <input name="key" class="form-control" required placeholder="p.ej. hoy_default">
+  </div>
+  {% else %}
+  <div class="col-12">
+    <label class="form-label">Clave</label>
+    <input class="form-control" value="{{ row.key }}" disabled>
+  </div>
+  {% endif %}
+
+  <div class="col-md-4">
+    <label class="form-label">Tipo</label>
+    <select name="tipo" class="form-select">
+      <option value="">(Sin tipo)</option>
+      {% for k, label in TPL_TYPES %}
+        <option value="{{ k }}" {{ 'selected' if row and row.tipo==k }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <div class="form-text">Usa el tipo para que el worker elija la plantilla automáticamente.</div>
+  </div>
+
+  <div class="col-md-8">
+    <label class="form-label">Asunto</label>
+    <input name="subject" class="form-control" required
+           value="{{ row.subject if row else '' }}">
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">HTML</label>
+    <textarea name="html" class="form-control" rows="12" required>{{ row.html if row else '' }}</textarea>
+    <div class="form-text">
+      Variables disponibles típicas: <code>{{ "{{ usuario" }}}}</code>, <code>{{ "{{ tarea" }}}}</code>,
+      <code>{{ "{{ fecha" }}}}</code>, <code>{{ "{{ departamento" }}}}</code>, etc.
+    </div>
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Texto plano (opcional)</label>
+    <textarea name="text" class="form-control" rows="3">{{ row.text if row else '' }}</textarea>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Guardar</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('notifications.tpl_list') }}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

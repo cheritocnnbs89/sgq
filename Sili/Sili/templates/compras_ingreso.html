@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% block title %}{% if mode == 'edit' %}Editar{% else %}Nuevo{% endif %} Contrato{% endblock %}
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="theme-compras">
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0">{% if mode == 'edit' %}Editar{% else %}Nuevo{% endif %} Contrato (Compras)</h4>
+    <span class="section-chip">Control de Matriz de Pólizas y Pagaré</span>
+  </div>
+
+  <form id="frm-contrato" class="needs-validation" novalidate method="POST" action="{{ post_url }}"
+    enctype="multipart/form-data">
+    {% if csrf_token %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+    <input type="hidden" name="next" value="{{ request.args.get('next') or '' }}">
+
+    <!-- Contenedor de alertas de validación cliente -->
+    <div id="client-validate-alert" class="mb-2"></div>
+
+    <!-- Cabecera -->
+    <div class="card card-elev accent-left mb-3">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-view-list"></i> Cabecera del registro</div>
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label req">AÑO</label>
+            <input name="anio" data-label="AÑO" type="number" class="form-control" min="2000" max="2100" required
+              value="{{ row.anio if row else '' }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label req">PEDIDO</label>
+            <input name="pedido" data-label="PEDIDO" type="text" class="form-control" required
+              value="{{ row.pedido if row else '' }}">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label req">PROVEEDOR</label>
+            {% if proveedores %}
+            <select name="proveedor_id" data-label="PROVEEDOR" class="form-select" required>
+              <option value="">Selecciona…</option>
+              {% for p in proveedores %}
+              <option value="{{ p.id }}" {% if (row.proveedor_id and row.proveedor_id==p.id) or (row.proveedor and
+                row.proveedor==p.nombre) %} selected {% endif %}>
+                {{ p.nombre }}
+              </option>
+              {% endfor %}
+            </select>
+            <div class="hint">Lista desde Clientes/Proveedores → Proveedores.</div>
+            {% else %}
+            <input name="proveedor" data-label="PROVEEDOR" type="text" class="form-control" required
+              value="{{ row.proveedor if row else '' }}">
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 col-lg-3">
+            <label class="form-label req">Usuario solicitante</label>
+            <select name="usuario_solicitante_id" data-label="Usuario solicitante" class="form-select" required>
+              <option value="">Selecciona…</option>
+              {% for u in usuarios %}
+              <option value="{{ u.id }}" {% if row.usuario_solicitante_id==u.id %}selected{% endif %}>
+                {{ u.nombre }}{% if u.departamento %} — {{ u.departamento }}{% endif %}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6 col-lg-3">
+            <label class="form-label req">Usuario compras</label>
+            <input name="usuario_compras_nombre" class="form-control" value="{{row.usuario_compras_nombre}}" readonly>
+          </div>
+
+
+          <div class="col-md-12">
+            <label class="form-label req">Objeto del contrato</label>
+            <input name="objeto" data-label="Objeto del contrato" type="text" class="form-control" required
+              value="{{ row.objeto if row else '' }}">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Valores -->
+    <div class="card card-elev accent-left mb-3">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-cash-coin"></i> Valores del contrato</div>
+        <div class="row g-3">
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label req">Valor contrato</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input name="valor_contrato" data-label="Valor contrato" type="number" step="0.01" min="0"
+                class="form-control" required value="{{ row.valor_contrato if row else '' }}">
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label">Valor anticipo</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input name="valor_anticipo" type="number" step="0.01" min="0" class="form-control"
+                value="{{ row.valor_anticipo if row else '' }}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fechas -->
+    <div class="card card-elev accent-left mb-3">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-calendar-event"></i> Hitos y fechas</div>
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label req">Fecha de suscripción</label>
+            <input name="fecha_suscripcion" data-label="Fecha de suscripción" type="date" class="form-control" required
+              value="{{ row.fecha_suscripcion if row else '' }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Fecha de terminación</label>
+            <input name="fecha_terminacion" type="date" class="form-control"
+              value="{{ row.fecha_terminacion if row else '' }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Plazo (días)</label>
+            <input name="plazo_dias" type="number" class="form-control" min="0"
+              value="{{ row.plazo_dias if row else '' }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Cronograma de pagos</label>
+            <input name="cronograma_pagos" class="form-control" value="{{ row.cronograma_pagos if row else '' }}">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Fecha de entrega a Compras</label>
+            <input name="fecha_entrega_compras" type="date" class="form-control"
+              value="{{ row.fecha_entrega_compras if row else '' }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Fecha de firma de Gerencia</label>
+            <input name="fecha_firma_gerencia" type="date" class="form-control"
+              value="{{ row.fecha_firma_gerencia if row else '' }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Fecha de entrega a Finanzas (Sumilla)</label>
+            <input name="fecha_entrega_finanzas_sumilla" class="form-control" type="date"
+              value="{{ row.fecha_entrega_finanzas_sumilla if row else '' }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Fecha entrega originales a Finanzas</label>
+            <input name="fecha_entrega_originales_finanzas" type="date" class="form-control"
+              value="{{ row.fecha_entrega_originales_finanzas if row else '' }}">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Fechas de pago de anticipo</label>
+            <input name="fechas_pago_anticipo" class="form-control"
+              value="{{ row.fechas_pago_anticipo if row else '' }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Fecha de entrega de pedido</label>
+            <input name="fecha_entrega_pedido" type="date" class="form-control"
+              value="{{ row.fecha_entrega_pedido if row else '' }}">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Adjuntos -->
+    <div class="card card-elev accent-left mb-3">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-paperclip"></i> Adjuntos (PDF)</div>
+
+        <div class="row g-3">
+          <div class="col-md-12">
+            <label class="form-label">Subir PDFs del contrato</label>
+            <input type="file" class="form-control" name="archivos_pdf" id="archivos_pdf" accept="application/pdf,.pdf"
+              multiple>
+
+            <div class="hint mt-1">
+              Puedes seleccionar varios PDFs. Solo se guardan archivos .pdf.
+            </div>
+          </div>
+
+          {% if mode == 'edit' %}
+          <div class="col-md-12">
+            <div class="mt-2">
+              <div class="fw-semibold mb-2">Archivos cargados</div>
+
+              {% if archivos and archivos|length %}
+              <div class="list-group">
+                {% for a in archivos %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                  <div class="me-2">
+                    <div class="fw-semibold">
+                      <i class="bi bi-file-earmark-pdf me-1"></i>
+                      {{ a.original_name or a.filename }}
+                    </div>
+                    <div class="hint">Subido: {{ a.uploaded_at or '' }}</div>
+                  </div>
+
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-outline-primary" target="_blank"
+                      href="{{ url_for('contratos.ver_archivo_contrato', archivo_id=a.id) }}">
+                      <i class="bi bi-eye"></i> Ver
+                    </a>
+
+                    {% if can_exportar %}
+                    <a class="btn btn-outline-secondary"
+                      href="{{ url_for('contratos.descargar_archivo_contrato', archivo_id=a.id) }}">
+                      <i class="bi bi-download"></i> Descargar
+                    </a>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-light border mb-0">
+                No hay archivos cargados aún.
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- Observaciones -->
+    <div class="card card-elev accent-left mb-4">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-chat-left-text"></i> Observaciones</div>
+        <div class="row g-3">
+          <div class="col-md-12">
+            <label class="form-label">Observaciones</label>
+            <textarea name="observaciones" class="form-control" rows="3"
+              placeholder="Notas internas de Compras…">{{ row.observaciones if row else '' }}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-actions d-flex gap-2 justify-content-end">
+      <a href="{{ back_url or url_for('contratos.compras_lista') }}" class="btn btn-outline-secondary">Volver</a>
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/contrato/contrato.js') }}"></script>
+{% endblock %}

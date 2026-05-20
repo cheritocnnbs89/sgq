@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0402202601099230864800120090030000887820295287411</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-04T13:57:11-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;MARMOI S.A.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;MARMOI S.A.&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0992308648001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0402202601099230864800120090030000887820295287411&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;009&lt;/estab&gt;
+        &lt;ptoEmi&gt;003&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000088782&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;AV. BENJAMIN CARRION  - ALBORADA&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;04/02/2026&lt;/fechaEmision&gt;
+        &lt;contribuyenteEspecial&gt;258E&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA .&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;KM. 16.1/2 VIA A DAULE AV. ROSAVIN Y CALLE COBRE&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;211.99&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.0&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;211.99&lt;/baseImponible&gt;
+                &lt;valor&gt;31.8&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.0&lt;/propina&gt;
+        &lt;importeTotal&gt;243.79&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;243.79&lt;/total&gt;
+                &lt;plazo&gt;30.0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;62102&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY87624&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE TUBO STANLEY 14" (ABRE HASTA 2-1/2") (95IB-87624)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;16.622&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;16.6200&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;16.62&lt;/baseImponible&gt;
+                    &lt;valor&gt;2.49&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;103479&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72828&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY 32MM 72828  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;15.059&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;30.1200&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;30.12&lt;/baseImponible&gt;
+                    &lt;valor&gt;4.51&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;104461&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72839&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY- 0.875" - 7/8" 72839 (STY86481)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;6.5293&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;13.0600&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;13.06&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.95&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;103482&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72834&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY- 0.563" - 9/16" (72834)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;3.0025&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;6.0100&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;6.01&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.9&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;103468&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72816&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY 19MM 72816  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;4.317&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;8.6300&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;8.63&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.29&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;55214&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY69147&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;DESTORN. STANLEY EST. 10" X 0.250" - 1/4" - #2 PRO PTA IMANTADA AZUL/AMARILLO (95IB-69147B)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;4&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.8573&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;11.4300&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;11.43&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.71&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;104711&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72837&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY- 0.750" - 3/4" STM72837 (97-86839)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;4.3023&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;8.6000&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;8.6&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.29&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;57012&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY87432&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE FRANCESA STANLEY 08" CROMADA (95IB-87432)(87368)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;6.2865&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;6.2900&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;6.29&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.94&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;105003&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72835&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY- 0.625" - 5/8" STMT72835 (REEMPLAZO DEL CODIGO STY86837)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;3.3859&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;6.7700&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;6.77&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.01&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;104387&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72831&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY- 0.375" - 3/8" 72831 (STY86833)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.0311&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;4.0600&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;4.06&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.6&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;56993&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY87623&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE TUBO STANLEY 12" (ABRE HASTA 2") (95IB-87623) CTN=12 UND CJ= 6 UND  &lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;12.9094&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;12.9100&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;12.91&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.93&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;103472&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72821&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY 24MM 72821  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;7.2178&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;14.4400&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;14.44&lt;/baseImponible&gt;
+                    &lt;valor&gt;2.16&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;103475&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72824&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY 27MM 72824  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;11.8652&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;23.7300&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;23.73&lt;/baseImponible&gt;
+                    &lt;valor&gt;3.55&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;56981&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY87434&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE FRANCESA STANLEY 12" CROMADA (95IB-87434)(87472) CTN=24 UND CJ=6 6 UND  &lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;10.5857&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;10.5900&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;10.59&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.58&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;103463&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72810&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY 13MM 72810 (REEMP. STY86858)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.3639&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;4.7300&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;4.73&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.7&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;103469&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72817&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY 20MM 72817  &lt;/descripcion&gt;
+            &lt;cantidad&gt;4&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;5.0962&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;20.3800&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;20.38&lt;/baseImponible&gt;
+                    &lt;valor&gt;3.05&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;59262&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY84369&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PLAYO PRESION STANLEY 10" - (254 MM) CURVO (95IB-84369)  &lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;5.9526&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;5.9500&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;5.95&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.89&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;101848&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72811&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY 14 MM  STMT72811  &lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.5317&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.5300&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.53&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.37&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;104388&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;STY72832&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LLAVE MIXTA ANTIDESLIZANTE STANLEY- 0.438" - 7/16" 72832  &lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.5679&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.0000&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;5.1400&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;5.14&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.77&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="DIRECCION"&gt;KM. 16.1/2 VIA A DAULE AV. ROSAVIN Y CALLE COBRE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="VENDEDOR"&gt;FABIAN ALFREDO DELGADO CHAVARRIA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="TELEFONO"&gt;042162660&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="NO_PEDIDO"&gt;148176&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="FECHA DE VENCIMIENTO"&gt;243.79 06/03/2026        &lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="FORMA DE PAGO"&gt;CREDITO&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="SON"&gt;Dos cientos cuarenta y tres con 79/100&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="ORDEN DE COMPRA"&gt;1000606317&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="ORDEN COMPRA"&gt;1000606317&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Order_Reference"&gt;1000606317&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="ordenCompra"&gt;1000606317&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="OC:"&gt;1000606317&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="OBSERVACION"&gt;IB: 5000023398 NO PREPARAR SE ENTREGO C/GUIA EL 28 EN.2026//&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature888598"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo280344"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID36546" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature888598-SignedProperties806999"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;6lwlFDdfwKQOVSPfE5OBVbSI28I=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1974268"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;WSAMvBLAtVmrN9RweS5qzDwwsck=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-619241" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Wa/4adT8yztjv/fblpqnVRT43gM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue359809"&gt;
+Dp4rCxWHAjz7tgTh920x4uuqrxI62gd5Rb5PxtcyIxnIsrrzDVHMedQTeLicYC77Gg2kacyL5pvW
+reQqv23iijnfPlIhHPgPpvQPz8G+KXflTt3gdS2RKLKvWsyWDh4eOAdZgJVbcBTYFteTis/2Sm1O
+24ummfEV4UglESeRtEpH2kNcdryqytG2Y3/52eQpzKkSIhnexlKbmT7bMLz/sawkNYdmUjdJWXRg
+/e7xiNEwls1NBazPFfuuHPoYMHw26zbnWHNypZhuTbcHbAvoYp6QLENdRz4H0RkQTYKbUTlB8Ls4
+D7rAbJQZYyCcUhZn2OEycr9t69BaVnAPzdBvUg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1974268"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKxzCCCK+gAwIBAgIIVzQZv+wVIv0wDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwMTEyMTMxNTQyWhcNMjkwMTExMTMxNTQyWjCB
+pjEkMCIGA1UEAwwbSlVMSU8gQ0VTQVIgRVNQSU5PWkEgQ09SVEVaMSAwHgYDVQQFExcwOTA5MDA3
+NDI5LTEyMDEyNjA4MjUzMTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCp5B+hliXc+6CGd4LIiGMRXxtqpx5zWRvUSafV
+DYoKs60LP7oFsGzGkHvRiewbQv38T6ESr8OtklgFMix68xIfD3DLmhQJQaxo4CgOePn+UJRDV5i8
+qChXTkHUiXi8+Ptb0g5KN5/bQ1KuTyD5hTxyrwRMBGuoUJ17rj+i50IOrL9Go+sK43Pv5cfbviY6
+HtR4oUaQhDFUoOuR6WnpKW3rTQPiV3Q1ScDM+LQdG4DFpF3XPHMi4bocblwEcAdl5V4VTbLGX/wu
+OkQp3xNF6OYFVbF8RdFWL3IhRs/b9PusW+8MpMBP2/UEh8PpzE5xiOrA2SRKsKzEFu+THDhzs/Dv
+AgMBAAGjggYCMIIF/jAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i
+3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRh
+dGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAqBgNVHREEIzAhgR9wYWdvc2lt
+cEBmZXJyZXRlcmlhZXNwaW5vemEuY29tMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBU
+MFIGCCsGAQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUA
+cwBlAG4AdABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcC
+ARaBgmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMv
+Tm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVw
+cmVzZW50YW50ZSBMZWdhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYD
+VR0fBIICBjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNh
+MmNybDEvY3JsZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkG
+A1UEBhMCRUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3Js
+Mi9jcmxmaWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0
+eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNz
+dWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxP
+VT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRB
+IFMuQS4gMixDPUVDMB0GA1UdDgQWBBTXa8nAWXGPxmz0QRe3GpvcRzFupjArBgNVHRAEJDAigA8y
+MDI2MDExMjEzMTU0MlqBDzIwMjkwMTExMTMxNTQyWjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnID
+BQQRDA9HRVJFTlRFIEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQMDAowOTA5MDA3NDI5MBoGCisGAQQB
+gqZyAwkEDAwKUk9DQUZVRVJURTARBgorBgEEAYKmcgMiBAMMAS4wLgYKKwYBBAGCpnIDBwQgDB5S
+VU1JQ0hBQ0EgMTExMCBZIExVUVVFIEFHVUlSUkUwGwYKKwYBBAGCpnIDAgQNDAtKVUxJTyBDRVNB
+UjAfBgorBgEEAYKmcgMgBBEMDzAwMTAwMjAwMTA5MjQ3MjATBgorBgEEAYKmcgMhBAUMA1BGWDAX
+BgorBgEEAYKmcgMMBAkMB0VDVUFET1IwGAYKKwYBBAGCpnIDAwQKDAhFU1BJTk9aQTAaBgorBgEE
+AYKmcgMKBAwMCk1BUk1PSSBTIEEwHQYKKwYBBAGCpnIDCwQPDA0wOTkyMzA4NjQ4MDAxMBEGCisG
+AQQBgqZyAx0EAwwBLjAWBgorBgEEAYKmcgMEBAgMBkNPUlRFWjAaBgorBgEEAYKmcgMIBAwMCjA5
+OTQzODE2NTIwDQYJKoZIhvcNAQELBQADggIBAH1kvtzlfzD5hDIJAMv/ayxLUExobLg9qTtqHLQM
+cFbN8rG6a4x1WMohsSN+3YXokECrOV87NesLUqvcN7DQNHR0P9bSyLk0KqxKdtZwsBmPzpq8IXo7
+UNyXmUF1rzueYp/EIDQE+XcN0ee1QhqZ19B4w3z6mlXeJD7mjt0s5YEQzuPXDL+x6iAL/StgXOBR
+kS4aAu+S/Jdo9+1Wbf0AlaEciQFblRZRJX4w7yCM0DRtlgf6L1/vH0W4C7NPdY2xnP7B5pLDfrsu
+oni7UyILgHkcx4pUUH7DSjdkJ3ZQ9BLPd3QtjS2yNSyy8+3YfVq3qdTJAIeKExLkY1GhbT29XFVR
+uAWqBH1E6hi6ojjh9CQjMZH5JKTcSdVqWDzzEjlypGcadFqz3J75MhqTolAMfP6OrX8DzZQaGk29
+3t4R1oiaeby81ojRaCJuCIl1IiwOoljv+ioSvPEYfj7Nq9/wMLOkWkhheMQBnie/CWDa6qg0d25H
+OCuic7Ou/VM9vK+N0BoJqCzGOuqrsaXalKzTF5YSLB9xxuFiRf9CNiOgIZxhb0H0vu/1vKl60Qh0
+CBl2/C4OTnm5AlEVIX+7ARUHxnoeJUAD8smbyjYtF/owTsJeyQ+ZgzS8iYl8y3hWePuph5jI9y9r
+hFigrH//MOLDoKaK/mngAgvYWLK89tUiIPmd
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+qeQfoZYl3PughneCyIhjEV8baqcec1kb1Emn1Q2KCrOtCz+6BbBsxpB70YnsG0L9/E+hEq/DrZJY
+BTIsevMSHw9wy5oUCUGsaOAoDnj5/lCUQ1eYvKgoV05B1Il4vPj7W9IOSjef20NSrk8g+YU8cq8E
+TARrqFCde64/oudCDqy/RqPrCuNz7+XH274mOh7UeKFGkIQxVKDrkelp6Slt600D4ld0NUnAzPi0
+HRuAxaRd1zxzIuG6HG5cBHAHZeVeFU2yxl/8LjpEKd8TRejmBVWxfEXRVi9yIUbP2/T7rFvvDKTA
+T9v1BIfD6cxOcYjqwNkkSrCsxBbvkxw4c7Pw7w==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature888598-Object826219"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature888598"&gt;
+                &lt;etsi:SignedProperties Id="Signature888598-SignedProperties806999"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-04T13:57:10-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;nIyufPG5l9Ax+wB98F8XDYFX5qE=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;6283675692178940669&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-619241"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

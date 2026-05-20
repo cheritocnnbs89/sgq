@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Editar' if item else 'Nueva' }} opción del menú{% endblock %}
+{% block content %}
+<h4 class="mb-3">{{ 'Editar' if item else 'Nueva' }} opción</h4>
+<form method="post" class="row g-3">
+  
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="col-md-4">
+    <label class="form-label">Etiqueta</label>
+    <input name="label" class="form-control" required value="{{ item.label if item else '' }}">
+  </div>
+  <div class="col-md-4"> 
+    <label class="form-label">Padre (grupo)</label>
+    <select name="parent_id" class="form-select">
+      <option value="">(raíz)</option>
+      {% for p in parents %}
+        <option value="{{p.id}}" {{ 'selected' if item and item.parent_id==p.id else '' }}>{{p.label}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Icono (opcional)</label>
+    <input name="icon" class="form-control" placeholder="bi bi-people" value="{{ item.icon if item else '' }}">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Endpoint Flask</label>
+    <input name="endpoint" class="form-control" value="{{ item.endpoint if item else '' }}">
+    <div class="form-text">Deja vacío si es solo contenedor o si usarás URL externa.</div>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">URL externa</label>
+    <input name="external_url" class="form-control" value="{{ item.external_url if item else '' }}">
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Orden</label>
+    <input name="order_no" type="number" class="form-control" value="{{ item.order_no if item else 0 }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Permiso (clave)</label>
+    <input name="permission" class="form-control" value="{{ item.permission if item else '' }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Active key</label>
+    <input name="active_key" class="form-control" value="{{ item.active_key if item else '' }}">
+    <div class="form-text">Valor que comparas con <code>active_page</code>.</div>
+  </div>
+  <div class="col-md-3 d-flex align-items-end gap-3">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="is_group" value="1"
+             {{ 'checked' if item and item.is_group else '' }}>
+      <label class="form-check-label">Es grupo</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="is_collaps" value="1"
+             {{ 'checked' if item and item.is_collaps else '' }}>
+      <label class="form-check-label">Colapsable</label>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Guardar</button>
+    <a href="{{ url_for('menu.menu_admin') }}" class="btn btn-outline-secondary">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0502202601099129865700120050010000387181234567814</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-05T16:30:23-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;CECUAMAQ, CORPORACION ECUATORIANA INDUSTRIAL DE MAQUINARIA C.A.&lt;/razonSocial&gt;
+        &lt;ruc&gt;0991298657001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0502202601099129865700120050010000387181234567814&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;005&lt;/estab&gt;
+        &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000038718&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;AV. DE LAS AMERICAS MZ 24D S 6 Y AV. CARLOS LUIS PLAZA DAÑIN&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;05/02/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;MAPASINGUE OESTE AV SEGUNDA#113 Y VIA DAULE KM 4.5&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;0011&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;guiaRemision&gt;005-001-000037381&lt;/guiaRemision&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S. A.&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;totalSinImpuestos&gt;456.92&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;195.82&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;456.92&lt;/baseImponible&gt;
+                &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                &lt;valor&gt;68.54&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;525.46&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;525.46&lt;/total&gt;
+                &lt;plazo&gt;30&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;DIAS&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;MIL 2354 20&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;LINTERNA DE BUSQUEDA M18 T/REFLECT.LED 1250 LUMENS MILWAUKEE  S/N H60AB242800739R&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;208.980000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;62.69&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;146.29&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="Detalle Adicional 1" valor="K20"/&gt;
+                &lt;detAdicional nombre="Detalle Adicional 3" valor="A150FA51000038718001"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;146.29&lt;/baseImponible&gt;
+                    &lt;valor&gt;21.94&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;MIL 48 59 1850&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;CARGADOR MILWAUKEE M18-M12 120V + BAT. XC5.0&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;443.760000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;133.13&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;310.63&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="Detalle Adicional 1" valor="K7"/&gt;
+                &lt;detAdicional nombre="Detalle Adicional 3" valor="A150FA51000038718002"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;310.63&lt;/baseImponible&gt;
+                    &lt;valor&gt;46.59&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="emailCliente"&gt;compras.electronica@quimpac.com.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Dirección:"&gt;KM 16 1/2 VIA A DAULE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Forma de Pago:"&gt;30 dias&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Atte.:"&gt;ING DENIA VERA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="OC:"&gt;1000605305&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Vendedor:"&gt;ALBERTO RODRIGUEZ&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Fecha Vencimiento:"&gt;07/03/2026&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Ciudad:"&gt;GUAYAQUIL&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Teléfono(s):"&gt;04 500 0460 ext. 1201&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature983392"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo961911"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID210028" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature983392-SignedProperties306173"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;HeYzMVtps8cS7hnXczM/H/yV9EM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1876858"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;TZPA4sVLvw7jK7BqjoQVR+602T4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-482796" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Wj25SKDJB96TjHfcRkDmZxlu1pc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue955308"&gt;
+PGyM5dlIScmAWqSQcyW2Hh3Aw33NVF2n/zH/4WCqF5H4VdieQS+o3CnisUT86fqrNzz8/G5wWXwG
+9nLiS+rTzAm47rWNqu91u01D2zX3UzYZtIMmUl7NCDdL+TTEN7jEzOKFAk0B7IHa7gLIgLy4iUBa
+wnbpo7C9ghAxRpQWMBX7oW7VVpzwsS5tnbgswulMabMkmoJ4zahslVrnfXDOH2z5fd+lD7/GsDUq
+cA1Fzdxic21j0MOEisqfZcZ0hXD1Ei8MMQLgMz/DTKvtofA3ADUWGK8PhiI/NNKGkW/KjNXtqGK1
+pWaXBbS6opW1ZeB/x1Ys88aonGhx3qiyQm59aw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1876858"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMODCCCiCgAwIBAgIEJDH3cjANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMTExMTgyMTIwNTZaFw0yNjExMTgyMTIwNTZaMIGdMSYw
+JAYDVQQDDB1BRFJJQU5BIENBUk9MSU5BIE5JRVRPIEZMT1JFUzEVMBMGA1UEBRMMMTgxMTIxMTYz
+MDUwMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAb
+BgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEB
+BQADggEPADCCAQoCggEBAK3+V4IANY+lBXXcPOo1ZwBCLcGs4240aofLOZz9+wJwHqsaqzkl5aep
+so6EXwS5zb8O2JmgII2bXDL89lzq2EPhp6J2JamxHxWoXVPmxQcK2yelunZU50DIPls2JDWX29J8
+7rj9c3vHXn5BtcUTsoN+lQeLQrSlO9Zx3AlAZlKmY39mTYGahq3pS3jxn0ESk/BV8lrLm97wRhMR
+Mr2LAncjHg9Ieg6Cv7bISw/XeJxOwmmTS/8ZaP2H5o1h0tzpCZKAxiNYtKNL17RDNn/TuNXECLjL
+V+9vhxsBy47lD0WveipNDTi8R66N8xgQqYkpk9bCRgGtS/8+5G8h0oWbZAECAwEAAaOCB4Awggd8
+MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUH
+AQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpi
+Y2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhsZGFwOi8v
+bGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJ
+T04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0aW9uTGlz
+dD9iYXNlMB8GA1UdEQQYMBaBFGFkcmlhbmFAY2VjdWFtYXEuY29tMIIBEgYDVR0gBIIBCTCCAQUw
+YAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwICMEQeQgBDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABk
+AGUAIABNAGkAZQBtAGIAcgBvACAAZABlACAARQBtAHAAcgBlAHMAYTCBoAYKKwYBBAGCpnICBDCB
+kTCBjgYIKwYBBQUHAgEWgYFodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRl
+bnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENl
+cnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYwggKiBgNVHR8EggKZMIIClTCB5aBBoD+G
+PWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVz
+L29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNB
+LTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceg
+gcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFE
+IERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VS
+VElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2Vy
+dGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3Bl
+cmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRp
+c3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBT
+RUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixP
+PVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFPyY+lNC7lMACWhY1TsmuB0AtX6R
+MCsGA1UdEAQkMCKADzIwMjExMTE4MjEyMDU2WoEPMjAyNjExMTgyMTIwNTZaMAsGA1UdDwQEAwIF
+4DAYBgorBgEEAYKmcgMFBAoMCENPTlRBRE9SMBoGCisGAQQBgqZyAwEEDAwKMDkyNzI3NTYyODAZ
+BgorBgEEAYKmcgMJBAsMCUdVQVlBUVVJTDARBgorBgEEAYKmcgMiBAMMAS4wRQYKKwYBBAGCpnID
+BwQ3DDVBVi4gREUgTEFTIEFNRVJJQ0FTIFNPTEFSIDYgWSBDQVJMT1MgTFVJUyBQTEFaQSBEQU5J
+TjAgBgorBgEEAYKmcgMCBBIMEEFEUklBTkEgQ0FST0xJTkEwHwYKKwYBBAGCpnIDIAQRDA8wMDIw
+MDEwMDAyNzA1MDUwEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9S
+MBUGCisGAQQBgqZyAwMEBwwFTklFVE8wTgYKKwYBBAGCpnIDCgRADD5DRUNVQU1BUSBDT1JQT1JB
+Q0lPTiBFQ1VBVE9SSUFOQSBJTkRVU1RSSUFMIERFIE1BUVVJTkFSSUEgQy5BLjAdBgorBgEEAYKm
+cgMLBA8MDTA5OTEyOTg2NTcwMDEwEgYKKwYBBAGCpnIDHQQEDAJObzAWBgorBgEEAYKmcgMEBAgM
+BkZMT1JFUzAaBgorBgEEAYKmcgMIBAwMCjA5ODkyMTE0NTIwDQYJKoZIhvcNAQELBQADggIBAH1c
+sLPOQ5eCUMp/ZRLhAAv8kTYvSyAMWpkPblvfpUDlzbXgEO/51p8ClSsRv5uElgvbEyABwNa5GEkN
+v/jh7ORt3dUj6o97gUrTOUIghjeQYoj2HOVuQN5QRTSS7GippV8178/1gPuLqTBcqlRfdl/a4VRG
+lspaCs5GbFy3s82sbcwftUS2v4T1NzjyOiD1F8iNptVT2WsmkgVRWCtxzRMUgUJKYYmUVgxtVCZS
+bVvk5SXza7yf2N33ehcb+ID9FQModTxeWc53FmXH4M/bw4UTaVJn11UydEsz9H0qo4s1s+qM4PCn
+PrHymdAOaO09Ew4NOq4n0svA0ugQZC1TqxoFQ3YIaYsP6EDBZrEF/bugm0MtOOdIsTV4V3V8j+Wt
+he14JBba3PWhSgPeF4EhvZHticIjC64TMQuju+wj5UHCyJra6izPeU323r7/S1LH4kEtrBmyEWVB
+xC0ym/x4QTIiFlV3RrFrlVAgYkf6SVpjSnWPYiFlo+an11y12ouH7nWUqRYmRaRESNhdc7FCqL2I
+U4F03EvdhCnQxnBeXauQ06RWK5dAC7fxOT72u4SlQ3/oBjaje6JWT7o+2omy3VpJJ2Vj1pltjVEp
+MzIUwig7kbhiACJsNt1Rq5KlN3uBXaUc2KA9fWAVEXzglAyyKzO7HkCr+BQqT/ysi5BSa6yr
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+rf5XggA1j6UFddw86jVnAEItwazjbjRqh8s5nP37AnAeqxqrOSXlp6myjoRfBLnNvw7YmaAgjZtc
+Mvz2XOrYQ+GnonYlqbEfFahdU+bFBwrbJ6W6dlTnQMg+WzYkNZfb0nzuuP1ze8defkG1xROyg36V
+B4tCtKU71nHcCUBmUqZjf2ZNgZqGrelLePGfQRKT8FXyWsub3vBGExEyvYsCdyMeD0h6DoK/tshL
+D9d4nE7CaZNL/xlo/YfmjWHS3OkJkoDGI1i0o0vXtEM2f9O41cQIuMtX72+HGwHLjuUPRa96Kk0N
+OLxHro3zGBCpiSmT1sJGAa1L/z7kbyHShZtkAQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature983392-Object89564"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature983392"&gt;
+                &lt;etsi:SignedProperties Id="Signature983392-SignedProperties306173"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-05T16:30:22-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;yk3cB0F5b9ZAHbtxAmyw78FE1XA=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;607254386&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-482796"&gt;
+                            &lt;etsi:Description&gt;comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

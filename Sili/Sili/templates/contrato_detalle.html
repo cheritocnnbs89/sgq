@@ -1,0 +1,89 @@
+{# contrato_detalle.html #}
+{% extends 'base.html' %}
+{% block title %}Contrato — Detalle{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato_detalle.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<h4 class="mb-3">Detalle de Contrato</h4>
+
+<div class="card mb-3">
+  <div class="card-body">
+
+    <div class="mb-3">
+      <h6 class="text-muted mb-1">Proveedor:</h6>
+      <strong>{{ proveedor }}</strong>
+    </div>
+
+    <div class="table-responsive mb-3">
+      <table class="table table-sm">
+        <tbody>
+          {% for label, value in vista %}
+          <tr>
+            <th class="contract-detail-label">{{ label }}</th>
+            <td>{{ value if value is not none and value != '' else '-' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <h5 class="mt-4 mb-2">Archivos del contrato</h5>
+
+    {% if archivos %}
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th class="contract-upload-date">Fecha de carga</th>
+              <th class="text-end contract-actions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for a in archivos %}
+            <tr>
+              <td>{{ a.original_name or a.filename }}</td>
+              <td>{{ a.uploaded_at or '-' }}</td>
+              <td class="text-end">
+                <a href="{{ url_for('contratos.ver_archivo_contrato', archivo_id=a.id) }}"
+                   class="btn btn-sm btn-outline-secondary"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                  Ver
+                </a>
+
+                {% if can_exportar %}
+                <a href="{{ url_for('contratos.descargar_archivo_contrato', archivo_id=a.id) }}"
+                   class="btn btn-sm btn-outline-primary ms-1">
+                  Descargar
+                </a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted">No hay archivos asociados a este contrato.</p>
+    {% endif %}
+
+    <div class="mt-4">
+      <a href="{{ request.referrer or url_for('contratos.aprobacion') }}"
+         class="btn btn-secondary">
+        Volver
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/contrato/contrato_detalle.js') }}"></script>
+{% endblock %}

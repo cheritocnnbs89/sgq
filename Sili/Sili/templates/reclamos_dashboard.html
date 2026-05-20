@@ -1,0 +1,462 @@
+{# templates/reclamos_dashboard.html #}
+{% extends "base.html" %}
+{% block title %}Tablero de Reclamos / OM{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planilla_mensual.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reclamos/reclamos_dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h5 mb-1"><i class="bi bi-graph-up-arrow"></i> Tablero de Reclamos / OM</h1>
+    <p class="text-muted small mb-0">
+      Visión general de las Oportunidades de Mejora por estado, tiempo, imputados y procesos.
+    </p>
+  </div>
+
+  <div class="page-toolbar d-flex flex-wrap align-items-end gap-2">
+    <div>
+      <label class="form-label mb-1">Rango de fechas</label>
+      <div class="d-flex gap-1">
+        <input type="date" id="fDesde" class="form-control form-control-sm" value="{{ fecha_desde or '' }}">
+        <input type="date" id="fHasta" class="form-control form-control-sm" value="{{ fecha_hasta or '' }}">
+      </div>
+    </div>
+
+    <!--<div>
+      <label class="form-label mb-1">Departamento</label>
+      <select id="fDepto" class="form-select form-select-sm depto-select">
+        <option value="">Todos</option>
+        {% for d in deptos %}
+        <option value="{{ d }}" {{ 'selected' if d==depto_sel else '' }}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  -->
+    <div>
+      <label class="form-label mb-1">Proceso</label>
+      <select id="fProceso" class="form-select form-select-sm proceso-select">
+        <option value="">Todos</option>
+        {% for p in procesos %}
+        <option value="{{ p }}" {{ 'selected' if p==proceso_sel else '' }}>{{ p }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="d-flex align-items-end gap-2">
+      <button class="btn btn-outline-secondary btn-sm" id="btnFiltrar"><i class="bi bi-funnel"></i> Aplicar</button>
+      <button class="btn btn-outline-secondary btn-sm" id="btnReset"><i
+          class="bi bi-arrow-counterclockwise"></i></button>
+      <button id="themeToggle" class="btn btn-outline-secondary btn-sm"><i class="bi bi-moon-stars"></i> Tema</button>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-6 col-md-3">
+    <div class="section kpi-card">
+      <div class="section-header">OM total</div>
+      <div class="fs-2 fw-bold">{{ kpis.total or 0 }}</div>
+      <div class="text-muted small">En el período seleccionado</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="section kpi-card">
+      <div class="section-header">Pendientes sponsor</div>
+      <div class="fs-2 fw-bold text-warning">{{ kpis.pend_jefe or 0 }}</div>
+      <div class="text-muted small">Pendientes de respuesta / validación del sponsor</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="section kpi-card">
+      <div class="section-header">Pendientes imputados</div>
+      <div class="fs-2 fw-bold text-info">{{ kpis.pend_imputados or 0 }}</div>
+      <div class="text-muted small">Requieren respuesta del imputado</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="section kpi-card section-warning">
+      <div class="section-header">Cerradas</div>
+      <div class="fs-2 fw-bold text-success">{{ kpis.cerradas or 0 }}</div>
+      <div class="text-muted small">OM con respuesta validada</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-2">
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span>Distribución de OM por proceso</span>
+        <div class="chart-toolbar">
+          <span class="badge rounded-pill text-bg-warning me-2">
+            Abiertas: {{ kpis.abiertas or ((kpis.total or 0) - (kpis.cerradas or 0)) }}
+          </span>
+          <span class="badge rounded-pill text-bg-success">
+            Cerradas: {{ kpis.cerradas or 0 }}
+          </span>
+        </div>
+      </div>
+
+
+      <p class="text-muted small mb-3">
+        Se muestra la distribución por proceso separando OM abiertas y cerradas. Los gráficos visualizan los principales
+        procesos, mientras que los badges reflejan el total general filtrado.
+      </p>
+
+      <div class="row g-3">
+        <div class="col-12 col-xl-6">
+          <div class="border rounded-4 p-3 h-100">
+            <div class="fw-semibold mb-2 text-warning">
+              <i class="bi bi-folder2-open me-1"></i>OM abiertas por proceso
+            </div>
+            <div class="chart-box tall">
+              <canvas id="chartProcesosAbiertasPie"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-xl-6">
+          <div class="border rounded-4 p-3 h-100">
+            <div class="fw-semibold mb-2 text-success">
+              <i class="bi bi-check-circle me-1"></i>OM cerradas por proceso
+            </div>
+            <div class="chart-box tall">
+              <canvas id="chartProcesosCerradasPie"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row g-3 mt-2">
+  <div class="col-12">
+    <div class="section">
+<div class="section-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div>
+    <span>
+      <i class="bi bi-diagram-3 me-1"></i>Procesos que participan en las OM filtradas
+    </span>
+    <div class="small text-muted mt-1">
+      Muestra los procesos involucrados dentro del resultado filtrado. Una misma OM puede contar en más de un proceso.
+    </div>
+  </div>
+
+  <div class="chart-toolbar d-flex align-items-center flex-wrap gap-2" data-for="chartProcesosInvolucrados">
+    <span class="badge rounded-pill text-bg-primary">
+      OM únicas filtradas:
+      {{ chart.procesos_involucrados.om_unicas if chart.procesos_involucrados and chart.procesos_involucrados.om_unicas is defined else 0 }}
+    </span>
+
+    <span class="badge rounded-pill text-bg-secondary">
+      Participaciones de procesos:
+      {{ (chart.procesos_involucrados.total | sum) if chart.procesos_involucrados and chart.procesos_involucrados.total else 0 }}
+    </span>
+
+    <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+    <button class="btn btn-light btn-sm ct-zoom"><i class="bi bi-zoom-in"></i></button>
+    <button class="btn btn-light btn-sm ct-reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+    <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+    <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+  </div>
+</div>
+
+<p class="text-muted small mb-2">
+  Ejemplo: si una OM pertenece a COMERCIAL y QUIMITRANSPORT, cuenta como 1 OM única,
+  pero suma 1 participación para COMERCIAL y 1 para QUIMITRANSPORT.
+</p>
+
+      <div class="chart-box tall">
+        <canvas id="chartProcesosInvolucrados"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+
+<div class="row g-3 mt-2">
+  <div class="col-12">
+    <div class="section section-warning">
+      <div class="section-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <span>
+            <i class="bi bi-hourglass-split me-1"></i>Seguimiento de OM abiertas y cuello de botella
+          </span>
+          <div class="small text-muted mt-1">
+            Línea de tiempo de las OM abiertas para identificar si el atraso está en sponsor, equipo o aprobación.
+          </div>
+        </div>
+
+        <div class="chart-toolbar d-flex align-items-center flex-wrap gap-2">
+          <span class="badge rounded-pill text-bg-warning">
+            OM abiertas:
+            {{ chart.linea_abiertas.kpis.total_abiertas if chart.linea_abiertas and chart.linea_abiertas.kpis else 0 }}
+          </span>
+          <span class="badge rounded-pill text-bg-secondary">
+            Promedio días:
+            {{ chart.linea_abiertas.kpis.promedio_dias_abierta if chart.linea_abiertas and chart.linea_abiertas.kpis else 0 }}
+          </span>
+          <span class="badge rounded-pill text-bg-danger">
+            Mayor atraso:
+            {{ chart.linea_abiertas.kpis.mayor_atraso if chart.linea_abiertas and chart.linea_abiertas.kpis else 0 }} días
+          </span>
+          <span class="badge rounded-pill text-bg-primary">
+            Cuello principal:
+            {{ chart.linea_abiertas.kpis.cuello_principal if chart.linea_abiertas and chart.linea_abiertas.kpis else 'Sin datos' }}
+          </span>
+        </div>
+      </div>
+
+      <p class="text-muted small mb-3">
+        La tabla muestra cada OM abierta, su etapa actual y el responsable donde probablemente está detenido el flujo.
+      </p>
+
+      <div class="row g-3">
+        <div class="col-12 col-xl-5">
+          <div class="border rounded-4 p-3 h-100">
+            <div class="fw-semibold mb-2">
+              <i class="bi bi-signpost-split me-1"></i>OM abiertas por cuello de botella
+            </div>
+            <div class="chart-box medium">
+              <canvas id="chartCuellosBotella"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-xl-7">
+          <div class="border rounded-4 p-3 h-100">
+            <div class="fw-semibold mb-2">
+              <i class="bi bi-clock-history me-1"></i>Días promedio por etapa actual
+            </div>
+            <div class="chart-box medium">
+              <canvas id="chartAgingEtapas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 border rounded-4 p-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+          <div>
+            <div class="fw-semibold">
+              <i class="bi bi-list-check me-1"></i>Línea de tiempo por OM abierta
+            </div>
+            <div class="small text-muted">
+              Ordenado por días en la etapa actual, de mayor a menor.
+            </div>
+          </div>
+
+          <div class="small text-muted">
+            ✅ completado · ⏳ pendiente · ❌ no iniciado
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0 table-timeline-om">
+            <thead>
+              <tr>
+                <th style="width: 110px;">OM</th>
+                <th>Proceso / Cliente</th>
+                <th style="width: 110px;" class="text-end">Días abierta</th>
+                <th style="width: 130px;" class="text-end">Días etapa</th>
+                <th style="width: 210px;">Etapa actual</th>
+                <th style="width: 170px;">Cuello</th>
+                <th style="width: 230px;">Responsable actual</th>
+                <th style="min-width: 320px;">Línea de tiempo</th>
+              </tr>
+            </thead>
+            <tbody id="timelineOmBody">
+              <tr>
+                <td colspan="8" class="text-muted small">
+                  No hay OM abiertas para mostrar.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-2">
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span>OM creadas por día</span>
+        <div class="chart-toolbar" data-for="chartDias">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+
+      <p class="text-muted small mb-1">
+        Evolución diaria de las Oportunidades de Mejora registradas.
+      </p>
+
+      <div class="chart-box tall">
+        <canvas id="chartDias"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-2">
+  <div class="col-12">
+    <div class="section section-warning">
+      <div class="chart-toolbar" data-for="chartVencidas">
+        <span class="badge rounded-pill text-bg-danger me-2">
+          Total OM vencidas:
+          {{ (chart.vencidas.total | sum) if chart.vencidas and chart.vencidas.total else 0 }}
+        </span>
+        <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+        <button class="btn btn-light btn-sm ct-zoom"><i class="bi bi-zoom-in"></i></button>
+        <button class="btn btn-light btn-sm ct-reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+        <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+        <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+      </div>
+
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span>Top procesos con más OM sin responder (&gt;5 días sin respuesta)</span>
+        <div class="chart-toolbar" data-for="chartVencidas">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+
+      <p class="text-muted small mb-1">
+        Procesos con mayor cantidad de Oportunidades de Mejora que superan la meta de 5 días sin respuesta del imputado.
+      </p>
+
+      <div class="chart-box tall">
+        <canvas id="chartVencidas"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-2">
+  <div class="col-12">
+    <div class="section section-warning">
+      <div class="chart-toolbar" data-for="chartVencidasEquipo">
+        <span class="badge rounded-pill text-bg-danger me-2">
+          Total OM vencidas:
+          {{ (chart.vencidas.total | sum) if chart.vencidas and chart.vencidas.total else 0 }}
+        </span>
+        <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+        <button class="btn btn-light btn-sm ct-zoom"><i class="bi bi-zoom-in"></i></button>
+        <button class="btn btn-light btn-sm ct-reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+        <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+        <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+      </div>
+
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span>Top miembros de equipo con más de 5 días sin responder</span>
+        <div class="chart-toolbar" data-for="chartVencidasEquipo">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+
+      <p class="text-muted small mb-1">
+        Miembros de equipo con mayor cantidad de OM derivadas que superan la meta de 5 días sin respuesta.
+      </p>
+
+      <div class="chart-box tall">
+        <canvas id="chartVencidasEquipo"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-2">
+  <div class="col-12 col-xl-6">
+    <div class="section h-100">
+      <div class="section-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <span>OM por tipo de reclamo</span>
+          <div class="small text-muted mt-1">
+            Top 10 tipos con distribución entre abiertas y cerradas.
+          </div>
+        </div>
+
+        <div class="chart-toolbar d-flex align-items-center flex-wrap gap-2" data-for="chartTipos">
+          <span class="badge rounded-pill text-bg-primary">
+            Abiertas:
+            {{ kpis.abiertas or ((kpis.total or 0) - (kpis.cerradas or 0)) }}
+          </span>
+          <span class="badge rounded-pill text-bg-success">
+            Cerradas:
+            {{ kpis.cerradas or 0 }}
+          </span>
+
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+
+      <div class="chart-box tall">
+        <canvas id="chartTipos"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-xl-6">
+    <div class="section h-100">
+      <div class="section-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <span>Promedio de días de respuesta de OM por proceso</span>
+          <div class="small text-muted mt-1">
+            Comparativo del tiempo promedio de respuesta frente a la meta de 5 días.
+          </div>
+        </div>
+
+        <div class="chart-toolbar d-flex align-items-center flex-wrap gap-2" data-for="chartTiempos">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+
+      <div class="chart-box tall">
+        <canvas id="chartTiempos"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts_extra %}
+<script id="reclamos-chart-data" type="application/json"
+  data-abiertas="{{ kpis.abiertas or ((kpis.total or 0) - (kpis.cerradas or 0)) }}"
+  data-cerradas="{{ kpis.cerradas or 0 }}">
+  {{ chart | tojson | safe }}
+</script>
+<script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/reclamos/reclamos_dashboard.js') }}"></script>
+{% endblock %}

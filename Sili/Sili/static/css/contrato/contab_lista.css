@@ -1,0 +1,418 @@
+.card-elev {
+  border: 1px solid #eaecef;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.accent-left {
+  border-left: 6px solid var(--brand-primary);
+}
+
+.garantia-objeto {
+  max-width: 360px;
+}
+
+.detail-card {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.detail-head {
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #edf0f2;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 700;
+  color: #495057;
+}
+
+.detail-body {
+  padding: 1rem;
+}
+
+.kv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.kv-table td {
+  padding: .6rem .25rem;
+  vertical-align: top;
+  border-bottom: 1px solid #eef1f3;
+}
+
+.kv-table td.k {
+  width: 180px;
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.kv-table td.v {
+  color: #212529;
+  font-weight: 600;
+}
+
+.kv-section-title {
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: .5rem;
+}
+
+.badge-ok {
+  background: #e9f7ef;
+  color: #198754;
+  border: 1px solid #bde5c8;
+  padding: .25rem .5rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.badge-no {
+  background: #fdecec;
+  color: #dc3545;
+  border: 1px solid #f5c2c7;
+  padding: .25rem .5rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.theme-contab .card-elev {
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.theme-contab .filters-panel {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.theme-contab .filters-panel .form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.theme-contab .filters-panel .form-control,
+.theme-contab .filters-panel .form-select {
+  border-radius: 10px;
+  min-height: 38px;
+}
+
+ 
+ .theme-contab .filters-panel .btn {
+  font-weight: 500;
+}
+
+.theme-contab .contab-filter-actions .btn {
+  min-width: auto;
+  height: 31px;
+  border-radius: 0;
+}
+
+.theme-contab .contab-filter-actions .btn:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.theme-contab .contab-filter-actions .btn:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.theme-contab table tbody tr:nth-child(even) {
+  background-color: #f3f4f6;
+}
+
+.theme-contab table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.theme-contab table tbody tr:hover {
+  background-color: #eaf2ff;
+}
+/* ===== MODO COMPACTO TABLA ===== */
+.theme-contab .table td,
+.theme-contab .table th {
+  padding: 0.45rem 0.6rem;
+  font-size: 0.85rem;
+  vertical-align: middle;
+}
+
+/* reducir altura de filas */
+.theme-contab .table tbody tr {
+  line-height: 1.2;
+}
+
+/* textos largos más compactos */
+.theme-contab .garantia-objeto {
+  max-width: 280px;
+  font-size: 0.82rem;
+}
+
+/* badges más pequeños */
+.theme-contab .pill {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+}
+
+/* botones más compactos */
+.theme-contab .btn-sm {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.75rem;
+}
+
+/* switches más pequeños */
+.theme-contab .form-check-input {
+  transform: scale(0.85);
+}
+
+/* reducir espacio entre filas visualmente */
+.theme-contab .table tbody tr td {
+  border-bottom: 1px solid #eef2f7;
+}
+/* Fondo general más suave */
+.theme-contab {
+  background: #f5f7fb;
+  padding: 18px;
+  border-radius: 16px;
+}
+
+/* Tarjetas con contraste */
+.theme-contab .card-elev {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+/* Cabecera de tabla con color suave */
+.theme-contab .table thead th {
+  background: #eef4ff;
+  color: #0f172a;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* Filas alternadas */
+.theme-contab .table tbody tr:nth-child(odd) td {
+  background: #ffffff;
+}
+
+.theme-contab .table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+/* Hover más visible */
+.theme-contab .table tbody tr:hover td {
+  background: #eaf2ff;
+}
+
+/* Separación visual entre filas */
+.theme-contab .table tbody td {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Barra superior de filtros */
+.theme-contab .card.card-elev.mb-3 {
+  background: #f8fafc;
+}
+
+/* Panel de filtros con contraste suave */
+.theme-contab .filters-panel {
+  background: #f8fafc;
+  border: 1px solid #dbe3ee;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Caja contenedora del acordeón */
+.theme-contab .card.card-elev.mb-3 {
+  background: #eef2f7;
+  border-radius: 16px;
+}
+
+/* Botón Filtros */
+.theme-contab button[data-bs-target="#collapseFiltrosGarantias"] {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+/* Inputs más integrados */
+.theme-contab .filters-panel .form-control,
+.theme-contab .filters-panel .form-select {
+  background-color: #ffffff;
+  border: 1px solid #d5dde8;
+  border-radius: 10px;
+}
+
+/* Labels */
+.theme-contab .filters-panel .form-label {
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+/* Focus más limpio */
+.theme-contab .filters-panel .form-control:focus,
+.theme-contab .filters-panel .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 0.15rem rgba(59, 130, 246, 0.18);
+}
+/* Tipografía uniforme del módulo */
+.theme-contab {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+/* Título */
+.theme-contab h4 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+/* Filtros */
+.theme-contab .filters-panel .form-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.theme-contab .filters-panel .form-control,
+.theme-contab .filters-panel .form-select {
+  font-size: 0.9rem;
+}
+
+/* Tabla */
+ 
+.theme-contab .table {
+  font-size: 0.75rem;
+}
+
+.theme-contab .table thead th {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.theme-contab .table tbody td {
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+/* Botones */
+.theme-contab .btn {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+
+/* Modo ultra compacto para garantías */
+.theme-contab {
+  padding: 10px 14px;
+  font-size: 12px;
+}
+
+.theme-contab h4 {
+  font-size: 1.15rem;
+  margin-bottom: 0;
+}
+
+.theme-contab .card-body {
+  padding: 12px;
+}
+
+.theme-contab .filters-panel {
+  padding: 12px 14px;
+}
+
+.theme-contab .filters-panel .form-label {
+  font-size: 0.72rem;
+  margin-bottom: 4px;
+}
+
+.theme-contab .filters-panel .form-control,
+.theme-contab .filters-panel .form-select {
+  height: 30px;
+  min-height: 30px;
+  font-size: 0.78rem;
+  padding: 3px 8px;
+}
+
+.theme-contab .btn {
+  font-size: 0.75rem;
+  padding: 4px 9px;
+}
+
+.theme-contab .table {
+  font-size: 0.74rem;
+}
+
+.theme-contab .table th,
+.theme-contab .table td {
+  padding: 0.32rem 0.45rem;
+  line-height: 1.15;
+}
+
+.theme-contab .table thead th {
+  font-size: 0.75rem;
+}
+
+.theme-contab .garantia-objeto {
+  max-width: 210px;
+}
+
+.theme-contab .form-check-input {
+  transform: scale(0.75);
+}
+/* Modal detalle garantía compacto */
+#modalGarantiaDetalle .modal-content {
+  border-radius: 14px;
+  font-size: 0.82rem;
+}
+
+#modalGarantiaDetalle .modal-header {
+  padding: 10px 16px;
+}
+
+#modalGarantiaDetalle .modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+#modalGarantiaDetalle .modal-body {
+  padding: 12px 16px;
+}
+
+#modalGarantiaDetalle .modal-footer {
+  padding: 10px 16px;
+}
+
+#garantiaDetalleBody {
+  font-size: 0.82rem;
+}
+
+#garantiaDetalleBody .detail-card {
+  border-radius: 12px;
+}
+
+#garantiaDetalleBody .detail-head {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
+
+#garantiaDetalleBody .detail-body {
+  padding: 10px 12px;
+}
+
+#garantiaDetalleBody .kv-table td {
+  padding: 6px 8px;
+  font-size: 0.8rem;
+}
+
+#garantiaDetalleBody .h6 {
+  font-size: 0.95rem;
+}

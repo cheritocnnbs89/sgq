@@ -1,0 +1,498 @@
+{% extends 'base.html' %}
+{% block title %}Tareas{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/tareas.css') }}">
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}" defer></script>
+
+<div class="container tasks-page mt-3" data-vista="{{ vista }}">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+      <h4 class="mb-1">
+        {% if vista == 'mis' %}
+        Tareas asignadas por mí
+        {% else %}
+        Tareas a realizar
+        {% endif %}
+      </h4>
+      <div class="btn-group btn-group-sm no-print" role="group" aria-label="Vista de tareas">
+        <a href="{{ url_for('listar_tareas', vista='realizar') }}"
+          class="btn btn-outline-secondary {% if vista != 'mis' %}active{% endif %}">
+          Tareas a realizar
+        </a>
+        <a href="{{ url_for('listar_tareas', vista='mis') }}"
+          class="btn btn-outline-secondary {% if vista == 'mis' %}active{% endif %}">
+          Tareas asignadas por mí
+        </a>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2 no-print">
+      <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-moon-stars me-1"></i>Tema
+      </button>
+      {% if permissions.get('tareas', {}).get('crear') %}
+      {% if vista == 'mis' %}
+      <a href="{{ url_for('nueva_tarea', modo='asignar') }}" class="btn btn-cta-blue btn-sm">
+        Nueva asignación
+      </a>
+      {% else %}
+      <a href="{{ url_for('nueva_tarea', modo='para_mi') }}" class="btn btn-cta-blue btn-sm">
+        Nueva tarea
+      </a>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Botón para mostrar / ocultar búsqueda avanzada -->
+  <button id="btnAdv" class="btn btn-outline-secondary btn-sm mb-2 no-print">
+    🔍 Búsqueda avanzada
+  </button>
+
+  <!-- Caja de búsqueda avanzada -->
+  <!-- Caja de búsqueda avanzada -->
+  <div id="advBox" class="toolbar-box advanced-box no-print mb-2">
+    <form method="get" action="{{ url_for('listar_tareas') }}" class="d-flex flex-wrap align-items-end gap-2">
+      <input type="hidden" name="vista" value="{{ vista }}">
+
+      <div class="input-group input-group-sm tareas-maxw-280">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input id="liveFilter" name="q" class="form-control" value="{{ request.args.get('q','') }}"
+          placeholder="Buscar en la tabla">
+      </div>
+
+      {% set _estado = request.args.get('estado','') %}
+      <select id="fEstado" name="estado" class="form-select form-select-sm tareas-maxw-220">
+        <option value="" {{ ''==_estado and 'selected' or '' }}>Estado: Todos</option>
+        <option {{ 'Por iniciar'==_estado and 'selected' or '' }}>Por iniciar</option>
+        <option {{ 'En desarrollo'==_estado and 'selected' or '' }}>En desarrollo</option>
+        <option {{ 'Atrasada'==_estado and 'selected' or '' }}>Atrasada</option>
+        <option {{ 'Terminado'==_estado and 'selected' or '' }}>Terminado</option>
+        <option {{ 'Cerrado por sistema'==_estado and 'selected' or '' }}>Cerrado por sistema</option>
+      </select>
+
+      <input id="fProp" name="prop" class="form-control form-control-sm tareas-maxw-180"
+        value="{{ request.args.get('prop','') }}" placeholder="Responsable">
+
+      <input id="fDepto" name="depto" class="form-control form-control-sm tareas-maxw-180"
+        value="{{ request.args.get('depto','') }}" placeholder="Departamento">
+
+      <input type="date" name="fecha_desde" class="form-control form-control-sm tareas-date"
+        value="{{ request.args.get('fecha_desde','') }}" title="Desde">
+
+      <input type="date" name="fecha_hasta" class="form-control form-control-sm tareas-date"
+        value="{{ request.args.get('fecha_hasta','') }}" title="Hasta">
+
+      <button class="btn btn-outline-secondary btn-sm" type="submit">
+        <i class="bi bi-search me-1"></i>Buscar
+      </button>
+
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('listar_tareas', vista=vista) }}">
+        <i class="bi bi-x-circle me-1"></i>Limpiar
+      </a>
+
+      <div class="ms-auto small tareas-muted">
+        <span id="countTotal">0</span> tareas •
+        <span id="countVisibles">0</span> visibles
+      </div>
+    </form>
+  </div>
+  <!-- Toggle de densidad + Quitar filtros -->
+  <div class="d-flex align-items-center gap-2 mb-2 no-print">
+    <div class="btn-group btn-group-sm" aria-label="Densidad de filas">
+      <button class="btn btn-outline-secondary" id="densityNormal" type="button">Cómoda</button>
+      <button class="btn btn-outline-secondary" id="densityCompact" type="button">Compacta</button>
+      <button class="btn btn-outline-primary" id="btnGerencial" type="button">Vista Gerencial</button>
+    </div>
+    <button id="btnLimpiarTodo" class="btn btn-outline-secondary btn-sm">
+      Quitar filtros
+    </button>
+    <div class="btn-group btn-group-sm">
+      <button class="btn btn-outline-secondary" type="submit">
+        <i class="bi bi-search me-1"></i>Buscar
+      </button>
+      {# BOTÓN DE EXCEL #}
+      <a class="btn btn-outline-success" id="btnExportarExcel" href="#">
+        <i class="bi bi-file-earmark-excel me-1"></i>Exportar Excel
+      </a>
+      <a class="btn btn-outline-secondary" href="{{ url_for('listar_tareas', vista=vista) }}">
+        <i class="bi bi-x-circle me-1"></i>Limpiar
+      </a>
+    </div>
+  </div>
+
+  <div class="card card-custom">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table id="tabla-tareas" class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <!-- Código -->
+              <th class="th-filter">
+                <span class="hdr">
+
+                  <span class="label">Código</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="id"
+                      data-sort-dir="asc" title="Ascendente (menor → mayor)">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="id"
+                      data-sort-dir="desc" title="Descendente (mayor → menor)">▼</button>
+                  </span>
+                </span>
+              </th>
+
+              <!-- Título -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Título</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="titulo"
+                      data-sort-dir="asc" title="Alfabético (A → Z)">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="titulo"
+                      data-sort-dir="desc" title="Alfabético (Z → A)">▼</button>
+                  </span>
+                  <button type="button" class="btn btn-outline-info magnify-btn" data-target="titulo"
+                    title="Buscar por título">🔎</button>
+                </span>
+                <div class="col-search-box" data-col="titulo">
+                  <input type="text" placeholder="Buscar título...">
+                </div>
+              </th>
+
+
+              <th>Descripción</th>
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Tipo</span>
+                  <button type="button" id="btnTipoFilter" class="btn btn-outline-info magnify-btn">▾</button>
+                </span>
+                <div id="tipoMenu" class="estado-menu">
+                  <div class="mb-1 menu-title">Filtrar por tipo</div>
+                  <div id="tipoChecklist" class="filter-checklist"></div>
+                  <div class="d-grid mt-2">
+                    <button id="btnTipoBuscar" class="btn btn-primary btn-sm">Buscar</button>
+                    <button id="btnTipoLimpiar" class="btn btn-outline-secondary btn-sm mt-1">Quitar filtros</button>
+                  </div>
+                </div>
+              </th>
+              <!-- Estado -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Estado</span>
+                  <button type="button" id="btnEstadoFilter" class="btn btn-outline-info magnify-btn"
+                    title="Filtrar por estado">▾</button>
+                </span>
+
+                <div id="estadoMenu" class="estado-menu">
+                  <div class="mb-1 menu-title">
+                    Filtrar por estado
+                  </div>
+                  <label class="estado-check"><input type="checkbox" value="Por iniciar"> Por iniciar</label>
+                  <label class="estado-check"><input type="checkbox" value="En desarrollo"> En desarrollo</label>
+                  <label class="estado-check"><input type="checkbox" value="Atrasada"> Atrasada</label>
+                  <label class="estado-check"><input type="checkbox" value="Terminado"> Terminado</label>
+                  <label class="estado-check"><input type="checkbox" value="Cerrado por sistema"> Cerrado por
+                    sistema</label>
+
+                  <div class="d-grid mt-2">
+                    <button id="btnEstadoBuscar" class="btn btn-primary btn-sm">Buscar</button>
+                    <button id="btnEstadoLimpiar" class="btn btn-outline-secondary btn-sm mt-1">
+                      Quitar filtros
+                    </button>
+                  </div>
+                </div>
+              </th>
+
+              <th class="th-filter">
+                <span class="hdr">
+
+                  <span class="label">Avance</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="id"
+                      data-sort-dir="asc" title="Ascendente (menor → mayor)">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="id"
+                      data-sort-dir="desc" title="Descendente (mayor → menor)">▼</button>
+                  </span>
+                </span>
+              </th>
+
+
+              <!-- Inicio -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Inicio</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio"
+                      data-sort-dir="asc">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio"
+                      data-sort-dir="desc">▼</button>
+                  </span>
+                </span>
+              </th>
+              <!-- Inicio -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Inicio Real</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio Real"
+                      data-sort-dir="asc">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio Real"
+                      data-sort-dir="desc">▼</button>
+                  </span>
+                </span>
+              </th>
+              <!-- Fin -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Fin</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="fin"
+                      data-sort-dir="asc">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="fin"
+                      data-sort-dir="desc">▼</button>
+                  </span>
+                </span>
+              </th>
+
+              <!-- Fin -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Fin Real</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="Fin Real"
+                      data-sort-dir="asc">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="Fin Real"
+                      data-sort-dir="desc">▼</button>
+                  </span>
+                </span>
+              </th>
+              <th>Empresa</th>
+              <th>Solicitante</th>
+
+              <!-- Responsable -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Responsable</span>
+                  <button type="button" class="btn btn-outline-info magnify-btn" data-target="prop"
+                    title="Buscar por responsable">🔎</button>
+                </span>
+                <div class="col-search-box" data-col="prop">
+                  <input type="text" placeholder="Buscar responsable...">
+                </div>
+              </th>
+
+
+
+              <!-- Departamento -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Departamento</span>
+                  <button type="button" class="btn btn-outline-info magnify-btn" data-menu-target="deptoMenu">▾</button>
+                </span>
+
+                <div id="deptoMenu" class="estado-menu">
+                  <div class="mb-1 menu-title">Filtrar Departamento</div>
+
+                  <div id="deptoChecklist" class="filter-checklist">
+                    {% set deptos_unicos = [] %}
+                    {% for t in tareas %}
+                    {% if t.departamento_nombre and t.departamento_nombre not in deptos_unicos %}
+                    {% if deptos_unicos.append(t.departamento_nombre) %}{% endif %}
+                    <label class="estado-check">
+                      <input type="checkbox" value="{{ t.departamento_nombre }}"> {{ t.departamento_nombre }}
+                    </label>
+                    {% endif %}
+                    {% endfor %}
+                  </div>
+
+                  <div class="d-grid mt-2">
+                    <button type="button" id="btnDeptoBuscar" class="btn btn-primary btn-sm">Buscar</button>
+                    <button type="button" id="btnDeptoLimpiar" class="btn btn-outline-secondary btn-sm mt-1">Quitar
+                      filtros</button>
+                  </div>
+                </div>
+              </th>
+
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for t in tareas %}
+            <tr data-row="1">
+
+              <td data-th="Código">{{ "%08d"|format(t['id']) }}</td>
+              <td data-th="Título">{{ t['titulo'] }}</td>
+              <td data-th="Descripción">{{ t['descripcion'] }}</td>
+              <td data-th="Tipo">
+                {% set t_nombre = (t['tipo_tarea_nombre'] or '') | lower %}
+                <span class="badge-tipo 
+        {% if 'proyecto' in t_nombre %}tipo-proyecto
+        {% elif 'soporte' in t_nombre %}tipo-soporte
+        {% elif 'incidencia' in t_nombre or 'error' in t_nombre %}tipo-incidencia
+        {% else %}tipo-default{% endif %}">
+                  {{ t['tipo_tarea_nombre'] or 'N/A' }}
+                </span>
+              </td>
+              <td data-th="Estado">
+                {% set estado = t['estado'] %}
+                <span class="chip
+                  {% if estado == 'Terminado' %}
+                    chip-done
+                  {% elif estado == 'En desarrollo' %}
+                    chip-dev
+                  {% elif estado == 'Atrasada' %}
+                    chip-block
+                  {% elif estado == 'Cerrado por sistema' %}
+                    chip-pend
+                  {% else %}
+                    chip-pend
+                  {% endif %}
+                ">{{ estado }}</span>
+              </td>
+
+
+
+              <td data-th="Avance">
+                <div class="d-flex flex-column avance-cell">
+                  {% set avance = t['porcentaje_avance'] %}
+
+                  {% if avance is none %}
+                  <small class="text-danger avance-error">Campo no encontrado en SQL</small>
+                  {% else %}
+                  <div class="d-flex align-items-center">
+                    <div class="wrap-bar flex-grow-1">
+                      <div class="progress progress-avance">
+                        <div
+                          class="progress-bar js-progress-bar avance-w-{{ avance|int }} {% if avance|int == 100 %}bg-success{% else %}bg-primary{% endif %}"
+                          role="progressbar" aria-valuenow="{{ avance|int }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                      </div>
+                    </div>
+
+                    <span class="wrap-pct ms-2 fw-bold avance-pct">
+                      {{ avance|int }}%
+                    </span>
+                  </div>
+                  {% endif %}
+                </div>
+              </td>
+
+
+              <td data-th="Inicio">
+                {% set fi = t['fecha_inicio'] %}
+                {% if fi %}
+                <span class="dt-date">{{ fi[:10] }}</span>
+                <span class="dt-time">{{ fi[11:16] }}</span>
+                {% endif %}
+              </td>
+              <td data-th="Inicio Real">
+                {% set fi = t['fecha_compromiso'] %}
+                {% if fi %}
+                <span class="dt-date">{{ fi[:10] }}</span>
+                <span class="dt-time">{{ fi[11:16] }}</span>
+                {% endif %}
+              </td>
+              <td data-th="Fin">
+                {% set ff = t['fecha_fin'] %}
+                {% if ff %}
+                <span class="dt-date">{{ ff[:10] }}</span>
+                <span class="dt-time">{{ ff[11:16] }}</span>
+                {% endif %}
+              </td>
+              <td data-th="Fin Real">
+                {% set ff = t['fecha_cierre_real'] %}
+                {% if ff %}
+                <span class="dt-date">{{ ff[:10] }}</span>
+                <span class="dt-time">{{ ff[11:16] }}</span>
+                {% endif %}
+              </td>
+
+              <td data-th="Título">
+                {% if t['empresa_nombre'] %}
+                <div class="text-primary small empresa-text">
+                  <i class="bi bi-building"></i> {{ t['empresa_nombre'] }}
+                </div>
+                {% else %}
+                <div class="text-muted small empresa-text">
+                  <i class="bi bi-person-workspace"></i> Interno
+                </div>
+                {% endif %}
+              </td>
+
+
+
+              <td data-th="Solicitante">
+                {% if t['solicitante_nombre'] %}
+                {{ t['solicitante_nombre'] }} ({{ t['solicitante_username'] }})
+                {% else %}
+                {{ t['solicitante_username'] or 'N/A' }}
+                {% endif %}
+              </td>
+
+
+
+              <td data-th="Responsable">
+                {% if t['propietario_nombre'] %}
+                {{ t['propietario_nombre'] }} ({{ t['propietario'] }})
+                {% else %}
+                {{ t['propietario'] }}
+                {% endif %}
+              </td>
+              <td data-th="Departamento">{{ t['departamento_nombre'] or 'N/A' }}</td>
+
+              <td data-th="Acciones">
+                <!-- Ver detalle / avances -->
+                <a href="{{ url_for('ver_tarea', task_id=t['id']) }}" class="btn btn-sm btn-info me-1"
+                  title="Ver detalle y avances">
+                  <i class="bi bi-eye"></i>
+                </a>
+
+                {% if permissions.get('tareas', {}).get('editar') %}
+                {% if rol == 'admin' or t['editable'] %}
+                <a href="{{ url_for('editar_tarea', task_id=t['id']) }}" class="btn btn-sm btn-warning me-1"
+                  title="Editar tarea">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                {% else %}
+                <button type="button" class="btn btn-sm btn-warning me-1" title="No se puede editar esta tarea"
+                  data-alert="No tienes permiso para editar esta tarea.">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                {% endif %}
+                {% endif %}
+
+
+                {% if (permissions|default({})).get('tareas', {}).get('eliminar') %}
+                <form method="post" action="{{ url_for('eliminar_tarea', task_id=t['id']) }}"
+                  class="form-inline-delete js-delete-tarea-form">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-sm btn-danger" title="Eliminar tarea">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+                {% endif %}
+              </td>
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay resultados -->
+  <div id="noResults" class="text-center py-3 tareas-muted d-none">
+    <b>No se encontraron resultados</b>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-between mt-2">
+    <div id="tableInfo" class="small tareas-muted">Mostrando 0 a 0 de 0</div>
+    <nav class="no-print">
+      <ul id="pagination" class="pagination pagination-sm mb-0"></ul>
+    </nav>
+  </div>
+</div>
+
+{% endblock %}

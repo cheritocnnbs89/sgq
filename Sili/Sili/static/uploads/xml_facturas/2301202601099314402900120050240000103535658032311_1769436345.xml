@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2301202601099314402900120050240000103535658032311</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-23T16:10:34-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.0.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;TOYOCOSTA S.A.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;TOYOCOSTA S.A.&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0993144029001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2301202601099314402900120050240000103535658032311&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;005&lt;/estab&gt;
+        &lt;ptoEmi&gt;024&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000010353&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;AV. CARLOS JULIO AROSEMENA KM. 3.5&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;23/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;VIA DAULE KM 9.5 FRENTE AL FUERTE HUANCAVILCA&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;057&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;totalSinImpuestos&gt;234.20&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;234.2&lt;/baseImponible&gt;
+                &lt;tarifa&gt;15&lt;/tarifa&gt;
+                &lt;valor&gt;35.13&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0&lt;/propina&gt;
+        &lt;importeTotal&gt;269.33&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;19&lt;/formaPago&gt;
+                &lt;total&gt;269.33&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;DIAS&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;AU-MARCOS&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;R&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;MARCOS DE SEGURIDAD&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;55.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;55.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="Franquicia" valor="TN"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;55.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;8.25&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;LAVEXP0&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;M&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LAVADA CORTESIA GRATUITA&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="Franquicia" valor="0"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;P031&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;M&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PUERTA DELANTERA - 11 PANEL REPARADO&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;123.20&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;123.20&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="Franquicia" valor="0"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;123.20&lt;/baseImponible&gt;
+                    &lt;valor&gt;18.48&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;E730&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;M&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ENDEREZADO PUERTA DELANTERA A 100 A 300 CM²&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;56.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;56.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="Franquicia" valor="0"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;56.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;8.40&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;112298&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;M&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PREPARACION TECNICA DE COLOR&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="Franquicia" valor="0"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="granContribuyente"&gt;NAC-AGCOGEC22-00000779-M&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="agencia"&gt;DAULE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Chasis/Motor/ObservacionCierre"&gt;JTMD6RFV9RD144160/A25AV807005/0&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="suman"&gt;234.20/atorres@quimpac.com.ec/VIA DAULE KM 165 ROSAVIN LOTE 1 Y COBRE NA NA/C 0989992053 D042585877 0990/RAMON ANTONIO HERRERA SOLIS/P23970/OTROS CON UTILIZACION DEL SISTEMA FINANCIERO/0/ENTREGA DE VEHICULO&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Atendido por/Ciudad. cliente"&gt;RAMON ANTONIO HERRERA SOLIS/GUAYAQUIL/GUAYAS&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Linea/noCiaCodigoLinea"&gt;SER/TY/40&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Propietario/Km"&gt;QUIMPAC ECUADOR SA QUIMPACSA/15728&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="clavePrimaria"&gt;TY/02/FA/343886/X/9999999999/2018-12-26 00:00&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Vehiculo/Placa"&gt;RAV4 LIMITED AC 2.5/GTS3693&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Tel. cliente/Direccion"&gt;C 0989992053 D042585877 0990/VIA DAULE KM 165 ROSAVIN LOTE 1 Y COBRE NA NA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="descuentoRepuestos/descuentoManoDeObra"&gt;0.00/0.00&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="subtotalRepuestos/subtotalManoDeObra"&gt;55.00/179.20&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="metodoAutorizacion"&gt;OF&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature1012314"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo331815"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID841328" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature1012314-SignedProperties276290"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;LOUq9ZAQIPbOWqb6FZ6J8UHJ1Rs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1881982"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ZFxKe8H1e7uByaTUhEJyAj8ddpY=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-785758" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;cxpub8oZ7WeJkowUiL4wTC1PDg4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue597803"&gt;
+PCe6R25KYKIRsnCodK+dp8lkSfzVEMOyAO/ONS2XtGOVqoiqsd7oy9ZDCXgGnPGyxP0iT896Cqi3
+Oc1X8YWUE4EZHuGEeSfb5QrHIIM0GyK6WRFV7r122kxFZGEZ0usoIJnXcZ2bm+se/OpxaKM3ospR
+r80S4dKqAeQTg0p93VvLIPS34lA+S+Pe1q/bFZBL6nsV9Ygzbn5qQM4IAQmrzIAFDq9Y4n+xr7DL
+1c/Fa+bQYC7BOQeUV1twjF9sbXK8WaNsm/kOWCbP6yyBUUfMJqL2cLWTh4rcY+gds/d+XePo0/S7
+2cgqzcZr2f/UB4dnVJlsH2dxKOwaRgDholQPOg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1881982"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIL+TCCCeGgAwIBAgIERyegPjANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDAyMDIxNjU1NTVaFw0yNjAyMDExNjU1NTVaMIGjMSEw
+HwYDVQQDDBhERVJFSyBTQU1JUiBGRVJFWiBCQUpBTkExIDAeBgNVBAUTFzA5MzE2MDU4ODUtMDIw
+MjI0MTIwNTM4MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJ
+T04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBAJXpTvRdf+YMKPdnWOEq+3usbzhOqgPLkeYkstzj5dQwDd+g
+kUrlVQXEElavqtiMl6lOD5UqZn1RNn5G1GUBV+PhVRG0HV2rBAiA3X5eRsxjMfZq8HJWjOe6Dwrr
+zS/rAOt7QRSAi1ra71oMa99pSkurFqDaS4pHgryH4hz4/Zqa+NQ3FdpckGFQ0bDvYI280O37PzJ7
+RYU6uzX3dci+wDYn0mHFescjgPuGJGGFd6zR89GT4eu+rBhF3dK+2pT6iIj4QItUJ1+x8oiFMeM8
+cAw4ce1QzdgD+/hw1i5dbKQJyyCQF49SVtMQivgQwCViP2fJhCi0bgkiVFy4xjGMQF8CAwEAAaOC
+Bzswggc3MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYI
+KwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQu
+ZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhs
+ZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJ
+RklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0
+aW9uTGlzdD9iYXNlMCIGA1UdEQQbMBmBF2RlcmVrX2ZlcmV6QGhvdG1haWwuY29tMIIBEgYDVR0g
+BIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwICMEQeQgBDAGUAcgB0AGkAZgBpAGMA
+YQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBvACAAZABlACAARQBtAHAAcgBlAHMAYTCBoAYKKwYB
+BAGCpnICBDCBkTCBjgYIKwYBBQUHAgEWgYFodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVj
+L3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRp
+Y2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYwggKiBgNVHR8EggKZMIIC
+lTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3
+ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FD
+SU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FD
+SU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UE
+BhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049
+QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElE
+QUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAy
+LEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9w
+b3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRp
+c3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04g
+U1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZP
+Uk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFDroRwFu3AyxEA4Z
+jIIsb+qXW/8xMCsGA1UdEAQkMCKADzIwMjQwMjAyMTY1NTU1WoEPMjAyNjAyMDExNjU1NTVaMAsG
+A1UdDwQEAwIF4DAYBgorBgEEAYKmcgMFBAoMCENPTlRBRE9SMBoGCisGAQQBgqZyAwEEDAwKMDkz
+MTYwNTg4NTAWBgorBgEEAYKmcgMJBAgMBlhJTUVOQTARBgorBgEEAYKmcgMiBAMMAS4wNwYKKwYB
+BAGCpnIDBwQpDCdBViBDQVJMT1MgSlVMSU8gQVJPU0VNQU5BIFNPTEFSIDI5IFkgTkEwGwYKKwYB
+BAGCpnIDAgQNDAtERVJFSyBTQU1JUjAfBgorBgEEAYKmcgMgBBEMDzAwMTAwMjAwMDUyODE3MDAT
+BgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFQYKKwYBBAGCpnID
+AwQHDAVGRVJFWjAdBgorBgEEAYKmcgMKBA8MDVRPWU9DT1NUQSBTIEEwHQYKKwYBBAGCpnIDCwQP
+DA0wOTkzMTQ0MDI5MDAxMBEGCisGAQQBgqZyAx0EAwwBLjAWBgorBgEEAYKmcgMEBAgMBkJBSkFO
+QTAaBgorBgEEAYKmcgMIBAwMCjA5OTIwMzY2MDYwDQYJKoZIhvcNAQELBQADggIBAMHQLE5WRb2T
+Td7T2h7j+SFlqJzkLXbid9dEA6LfpNHUJZH1yigWkFVtoBtX0s2Bzv/iYRCga/8LIJVrOpvFO+0S
+U2WDk+fbF6S0cy4gL5W7thK5SNhor4IFngA05OV4LS04Zw0wjl8EJ8tYFZnvrWtIicbzCnIpHGEp
+PT8SIdSTSbHmUX8Bnk30zLYExcEYNuq1+Ovt5tet7hgBZZ5TJlqKqWt7WVRoC//qQ3jPVuQ0AluX
+zKBcMXZZLNWqcTIWUQoSIMNN5h3Jgnfutj6V8XbMdWkRtVSWu0sYNao5ZAP8SH0I8tygJifriCrB
+N3l9AlL+duNZmIl5UlbQ436ISLxFJdQY5xDsPtTtkRC1MMFH0ZVpyp6M2CxO2HMKSrAjxRl9GX5t
+PuSUQvnK6k1pAolyonFZZTKPKoRM4BTb3EJMS98mYHi7RAj0J1tKHbJ2hbTFc360si76a+U7BfW0
+wNfDHZ9MxvxXHcvazSlPUPPFJqzWZZ/8CXzf0I56Uc0ti78JVFL3uRP0CGjxfRtf1ex3KWfaNl8o
+0933De1K9K+NxOPImTBYHlR61Q/kq4514WLMAu/UDpDpiVS18QaaeCfoWqzdOoTER8nTylEd9LDE
+wNZ7TiuS8suQQOfyKVdv81tf+Z5P7EIZvRsUgm4POCCxWKdpis8Z0+n3RaNbjxA7
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+lelO9F1/5gwo92dY4Sr7e6xvOE6qA8uR5iSy3OPl1DAN36CRSuVVBcQSVq+q2IyXqU4PlSpmfVE2
+fkbUZQFX4+FVEbQdXasECIDdfl5GzGMx9mrwclaM57oPCuvNL+sA63tBFICLWtrvWgxr32lKS6sW
+oNpLikeCvIfiHPj9mpr41DcV2lyQYVDRsO9gjbzQ7fs/MntFhTq7Nfd1yL7ANifSYcV6xyOA+4Yk
+YYV3rNHz0ZPh676sGEXd0r7alPqIiPhAi1QnX7HyiIUx4zxwDDhx7VDN2AP7+HDWLl1spAnLIJAX
+j1JW0xCK+BDAJWI/Z8mEKLRuCSJUXLjGMYxAXw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature1012314-Object526211"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature1012314"&gt;
+                &lt;etsi:SignedProperties Id="Signature1012314-SignedProperties276290"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-23T16:10:34-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;o6dwp754V8WAQiKobHFAWgDrswU=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1193779262&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-785758"&gt;
+                            &lt;etsi:Description&gt;Contenido Comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

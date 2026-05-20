@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<factura id="comprobante" version="2.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>A   L   V   A   M   E  N        S  A</razonSocial><nombreComercial>ESTACION DE SERVICIO BALOSA</nombreComercial><ruc>0791840533001</ruc><claveAcceso>0205202601079184053300120011030004285130000000116</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>103</ptoEmi><secuencial>000428513</secuencial><dirMatriz>VIA GUARUMAL KM 13.5</dirMatriz><agenteRetencion>10</agenteRetencion></infoTributaria><infoFactura><fechaEmision>02/05/2026</fechaEmision><dirEstablecimiento>VIA GUARUMAL KM 13.5</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR SA QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>VIA A DAULE KM 165LUQUE</direccionComprador><totalSinImpuestos>13.91</totalSinImpuestos><totalSubsidio>2.45</totalSubsidio><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>13.91</baseImponible><valor>2.09</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>16.00</importeTotal><moneda>DOLAR</moneda><placa>GSQ3340</placa><pagos><pago><formaPago>01</formaPago><total>16.00</total><plazo>0</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>0173      </codigoPrincipal><codigoAuxiliar>0173      </codigoAuxiliar><descripcion>EXTRA CON ETANOL</descripcion><cantidad>5.291</cantidad><precioUnitario>2.629565</precioUnitario><precioSinSubsidio>3.093377</precioSinSubsidio><descuento>0.00</descuento><precioTotalSinImpuesto>13.91</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>13.91</baseImponible><valor>2.09</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Vendedor">DD0000014</campoAdicional><campoAdicional nombre="Detalle">Surti:03-B MANG:03</campoAdicional><campoAdicional nombre="Direccion">VIA A DAULE KM 165LUQUE</campoAdicional><campoAdicional nombre="Sodinfo">Facturacion Electronica</campoAdicional><campoAdicional nombre="SODINFO">FACTURACION ELECTRONICA</campoAdicional></infoAdicional><ds:Signature Id="Signature290978" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo546501">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID746778" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature290978-SignedProperties732553">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>I0ohBykilB/y81ZY0siqV6hC/jc=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1100273">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>V4s9TGU1IrT7POZJi8oa5WxAkaY=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-391156" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>zwA7cU8qEd5GXT+eYNgQ5KEpr9s=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue219002">
+HNAmNrnMVuwmBY8WMBhN6ixytr/agvuf6R6hEjSI5cwP4ITdv/M6SzynEF7w/dLraENIr4ibOgA/
+ikz+7Zavaor4/9PePtOtfB8bjPlRfqajX0JsPEJ2wRW5UHcBTrZ/jyReXbqdwqm630m/FB5HBrbB
+ZoqLRE6md/Z21/qjxejHtwzt7DmeMcmt+3BIRrbzvlLeBtpjY6f2S9mQoG87yhwD/vwyU4D3dDp1
+UEhodf2UQCfHk0xARc/yP8JsU0bWxkxMvL/+snazW/USkT0OTsTF4TFsFB7pd098GenkyxkoWDoV
+hkQgIyyZwOKFwjwH2PFgsegWy+vfWGVJ4ciFuA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1100273">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJgzCCB2ugAwIBAgIIdINnM8bPCeYwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTIzMDcyNTE5MDcwMFoXDTI2MDcyNDE5MDcwMFowgdMxCzAJBgNVBAYTAkVDMRUwEwYDVQQKDAxB
+TFZBTUVOIFMuQS4xGDAWBgNVBAwMD0dFUkVOVEUgR0VORVJBTDEYMBYGA1UEBAwPQUxWQVJBRE8g
+UEVMQUVaMRcwFQYDVQQqDA5LTEVCRVIgQVVHVVNUTzEZMBcGA1UEBRMQSURDRUMtMDcwMjExOTQz
+OTEnMCUGA1UEAwweS0xFQkVSIEFVR1VTVE8gQUxWQVJBRE8gUEVMQUVaMRwwGgYDVQRhDBNWQVRF
+Qy0wNzkxODQwNTMzMDAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoLhortrjdwxn
+MmDObSJciatu0Y7KaOPCutOSYrThT3nWyluIvyaHPcdU1f0Ih5FwNtvAG/ljETF4f2D04Ovh3v7M
+P/SfEOk4cQYAxphORTgUlVnrj55mZjG1ceogeUe25Nzrqz2xOGiqRXa1+AlwURue3ct1kx/cpTpf
+o/++3Iu03nHUeBMjvkK1IgbAWADiKg6tbpIN3Lw2bLA8lFOjEmHOukOKzkfklqFMQx+SGKG0go54
+pto2NRz5KH2QDvWXADHIxnhMQ0LrxTLyTqtTgSiHIxfilvJBtSWcP4rmtji0pW4a5TrMk/P2jkWT
+N5PLagTE723w0KdSsBou17CjgQIDAQABo4IEcjCCBG4wGwYLKwYBBAGC8TZmAwEEDAwKMDcwMjEx
+OTQzOTAeBgsrBgEEAYLxNmYDCwQPDA0wNzkxODQwNTMzMDAxMIHXBggrBgEFBQcBAQSByjCBxzBV
+BggrBgEFBQcwAoZJaHR0cDovL3d3dy51YW5hdGFjYS5jb20vcHVibGljL2Rvd25sb2FkL3RzcF9j
+ZXJ0aWZpY2F0ZXMvc3Vib3JkaW5hdGUxLmNydDA2BggrBgEFBQcwAYYqaHR0cDovL29jc3AxLnVh
+bmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDIudWFu
+YXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wHQYDVR0OBBYEFJsTQwWUTMTCD0R7wTrVcziC1Lge
+MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUfVfnYHPOB0ap4qNo8OERsnSSc/0wgY4GA1UdIASB
+hjCBgzCBgAYMKwYBBAGC8TZmAgMBMHAwNwYIKwYBBQUHAgEWK2h0dHBzOi8vd3d3LnVhbmF0YWNh
+LmNvbS9wdWJsaWMvcGtpL2RwYy1lYy8wNQYIKwYBBQUHAgIwKQwnQ0VSVElGSUNBRE8gREUgUkVQ
+UkVTRU5UQU5URSBFTiBBUkNISVZPMIGPBgNVHR8EgYcwgYQwQKA+oDyGOmh0dHA6Ly9jcmwxLnVh
+bmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5jcmwwQKA+oDyGOmh0dHA6
+Ly9jcmwyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5jcmwwDgYD
+VR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAbMGA1UdEQSCAaow
+ggGmgRVhbHZhbWVuMDNAaG90bWFpbC5jb22gGwYLKwYBBAGC8TZmAwGgDAwKMDcwMjExOTQzOaAf
+BgsrBgEEAYLxNmYDAqAQDA5LTEVCRVIgQVVHVVNUT6AZBgsrBgEEAYLxNmYDA6AKDAhBTFZBUkFE
+T6AXBgsrBgEEAYLxNmYDBKAIDAZQRUxBRVqgIAYLKwYBBAGC8TZmAwWgEQwPR0VSRU5URSBHRU5F
+UkFMoCoGCysGAQQBgvE2ZgMHoBsMGUVMIE9STyAvIE1BQ0hBTEEgL01BQ0hBTEGgHwYLKwYBBAGC
+8TZmAwigEAwOMDA1OTM5ODc3Mzg1NDCgGAYLKwYBBAGC8TZmAwmgCQwHTUFDSEFMQaAdBgsrBgEE
+AYLxNmYDCqAODAxBTFZBTUVOIFMuQS6gHgYLKwYBBAGC8TZmAwugDwwNMDc5MTg0MDUzMzAwMaAT
+BgsrBgEEAYLxNmYDDKAEDAJFQ6AkBgsrBgEEAYLxNmYDMqAVDBNSRVBSRVNFTlRBTlRFIExFR0FM
+oBgGCysGAQQBgvE2ZgMzoAkMB0FSQ0hJVk8wDQYJKoZIhvcNAQELBQADggIBADeOl+OErKs4Y2Do
+qQzWs+fzium3uylyYx2AYXJ1lejATd3808NDAqufo1ZFHjgn3cC2mVHTfNg1KxHv+ELQlzKNwBk6
+zmZCqHXCzQ9KBkkvc0OXdhfoZybi2MWWVcRtk+fz4OLEHp16G2SBn/zA3I2duEFj0+vyQIHkiQMm
+CwsuFgnZR+1gdooAXSnd5ZqQytiPK9O7HHc6KH1I6t48MR6TdFaaL/tTBAT8+RjsUb2+z1kMt/Oa
+w0dkBaro9UJ1xu2IoKqkX8nTdiQdEwREKdjRwSCB6dO7tLW+3dp6O9IiKooqKlp+SXmrk31ZqUDl
+cWGS1M/5UyVwBC1/AqUr8tO1tCFNbguQO1lS5O5PYdmzKLfYn+Ho14Ji9NRZjnjFKgPNvjU5vis5
+hNxdLuoHr4aIWuAVehXI6zouDDA0SEiJPtLS4DH5Db9JTFV7a5XeRUxGz89tmEsZTT9K2gvvVqYC
+qRfmdzTMMxR8nTDEiU0TdMaRk+E5XAZnWriI8N2Fl9wjyb8o0jvGMBZW0xQrr2nvnSVYYhF2fyGp
+qk5L2eRomfhICQ+XKUQSXtsF49sc5raKXkql0lRRvfLN/Y8tDRRPEGPfuOByFzfMd7qVzzoNrFzf
+T8GVWS0cxUD+SBPmc2VYC9cUuCzjBulUMQ30ynO+k6kfuTphG4G4kK7uqGKT
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+oLhortrjdwxnMmDObSJciatu0Y7KaOPCutOSYrThT3nWyluIvyaHPcdU1f0Ih5FwNtvAG/ljETF4
+f2D04Ovh3v7MP/SfEOk4cQYAxphORTgUlVnrj55mZjG1ceogeUe25Nzrqz2xOGiqRXa1+AlwURue
+3ct1kx/cpTpfo/++3Iu03nHUeBMjvkK1IgbAWADiKg6tbpIN3Lw2bLA8lFOjEmHOukOKzkfklqFM
+Qx+SGKG0go54pto2NRz5KH2QDvWXADHIxnhMQ0LrxTLyTqtTgSiHIxfilvJBtSWcP4rmtji0pW4a
+5TrMk/P2jkWTN5PLagTE723w0KdSsBou17CjgQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature290978-Object902211"><etsi:QualifyingProperties Target="#Signature290978"><etsi:SignedProperties Id="Signature290978-SignedProperties732553"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-02T09:29:59-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>j7x282XBYj/4FfEaqwPiq3Udjwk=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>8395667602425186790</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-391156"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

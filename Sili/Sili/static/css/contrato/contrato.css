@@ -1,0 +1,78 @@
+.card-elev {
+      border: 1px solid #eaecef;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .05);
+    }
+
+    .req::after {
+      content: " *";
+      color: #dc3545;
+    }
+
+    .hint {
+      font-size: .85rem;
+      color: #6c757d;
+    }
+
+    .sticky-actions {
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      padding: .75rem;
+      border-top: 1px solid #e9ecef;
+    }
+
+    .fieldset-title {
+      font-weight: 600;
+      margin-bottom: .5rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .accent-left {
+      border-left: 6px solid var(--brand-primary);
+    }
+.theme-compras {
+  background: #f5f7fb;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+.theme-compras h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.theme-compras .card-body {
+  padding: 12px 14px;
+}
+
+.theme-compras .form-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.theme-compras .form-control,
+.theme-compras .form-select,
+.theme-compras .input-group-text {
+  height: 32px;
+  min-height: 32px;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+}
+
+.theme-compras textarea.form-control {
+  height: auto;
+  min-height: 70px;
+}
+
+.theme-compras .row.g-3 {
+  --bs-gutter-y: 0.65rem;
+}
+
+.theme-compras .btn {
+  font-size: 0.78rem;
+  padding: 5px 10px;
+}

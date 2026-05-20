@@ -1,0 +1,33 @@
+
+{% extends 'base.html' %}
+{% block title %}Reembolsos{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3><i class="bi bi-wallet2 me-2"></i>Reembolsos — Dashboard</h3>
+    <div class="btn-group">
+      <a href="{{ url_for('nuevo_gasto') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo reembolso</a>
+      <a href="{{ url_for('lista_gastos') }}" class="btn btn-outline-secondary"><i class="bi bi-search me-1"></i>Consultar</a>
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">Registros</div><div class="display-6">{{ kpis.registros }}</div></div></div></div>
+    <div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">Total con IVA</div><div class="display-6">{{ '%.2f'|format(kpis.total_con_iva) }}</div></div></div></div>
+    <div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">Con soporte</div><div class="display-6">{{ '%.2f'|format(kpis.con_soporte) }}</div></div></div></div>
+    <div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">Sin soporte</div><div class="display-6">{{ '%.2f'|format(kpis.sin_soporte) }}</div></div></div></div>
+  </div>
+  <div class="mt-4">
+    <h6 class="text-muted">Últimos 10 reembolsos</h6>
+    <div class="table-responsive">
+      <table class="table table-sm table-striped align-middle">
+        <thead><tr><th>Fecha</th><th>Motivo</th><th>Proveedor</th><th>Centro de costo</th><th class="text-end">Total con IVA</th></tr></thead>
+        <tbody>
+          {% for g in ultimos %}
+          <tr><td>{{ g['fecha'] }}</td><td>{{ g['motivo'] }}</td><td>{{ g['proveedor'] or '' }}</td><td>{{ g['centro_costo'] or '' }}</td><td class="text-end">{{ '%.2f'|format(g['total_con_iva']) }}</td></tr>
+          {% else %}<tr><td colspan="5" class="text-center text-muted">Sin datos</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

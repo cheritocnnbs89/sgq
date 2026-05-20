@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Nuevo' if modo=='nuevo' else 'Editar' }} reembolso de gasto{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reembolsos/nuevo_gasto.css') }}">
+
+{% set tipo_cc = (tipo_caja_chica or 'NINGUNA')|upper %}
+
+<div class="container mt-4">
+  <h3><i class="bi bi-credit-card me-2"></i>{{ 'Nuevo' if modo=='nuevo' else 'Editar' }} reembolso de gasto</h3>
+
+  <form
+    id="frmGasto"
+    method="post"
+    enctype="multipart/form-data"
+    class="row g-3 mt-1"
+    novalidate
+    data-api-param-centros="{{ url_for('api_param_centros') }}"
+    data-api-param-motivos="{{ url_for('api_param_motivos') }}"
+    data-api-facturas-xml-search="{{ url_for('api_facturas_xml_search') }}"
+    data-api-proveedores-search="{{ url_for('api_proveedores_search') }}"
+    data-api-next-caja-chica-factura="{{ url_for('api_next_caja_chica_factura') }}"
+    data-xml-index="{{ url_for('xml.index') }}"
+    data-lista-gastos="{{ url_for('lista_gastos') }}"
+    data-api-factura-xml-resumen-base="/reembolsos/api/factura_xml/"
+    data-detalles="{{ (detalles or []) | tojson | forceescape }}"
+    data-tipo-caja-chica="{{ tipo_cc }}"
+  >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="section section-danger mb-4">
+      <h5 class="mb-3 text-primary"><i class="bi bi-info-circle me-1"></i> Cabecera</h5>
+
+      <div class="row g-3">
+        <div class="col-md-2">
+          <label class="form-label">Año*</label>
+          <input type="number" readonly class="form-control" name="anio" min="2000" max="2100"
+            value="{{ form.get('anio','') if form else '' }}" required>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Mes*</label>
+          <input type="number" readonly class="form-control" name="mes" min="1" max="12"
+            value="{{ form.get('mes','') if form else '' }}" required>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Día*</label>
+          <input type="number" class="form-control" name="dia" min="1" max="31"
+            value="{{ form.get('dia','') if form else '' }}" required>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Detalle *</label>
+          <input type="text" class="form-control" id="descripcion_input" name="descripcion" autocomplete="off"
+            value="{{ form.get('descripcion', form.get('motivo','')) if form else '' }}"
+            placeholder="Descripción general" required>
+          <div class="invalid-feedback">La descripción es obligatoria.</div>
+        </div>
+
+        <div class="col-md-2 d-flex flex-column justify-content-end">
+          {% if tiene_caja_chica %}
+            <div class="form-check mb-1">
+              <input class="form-check-input" type="checkbox" id="reembolso_vendedor" name="reembolso_vendedor" checked disabled>
+
+              <label class="form-check-label fw-bold" for="reembolso_vendedor">
+                Modo: Caja Chica
+                <br>
+
+                {% if tipo_cc == 'DETALLE_FACTURA' %}
+                  <span class="badge bg-success text-light mt-1">
+                    <i class="bi bi-receipt-cutoff"></i> Caja Chica con Detalle
+                  </span>
+                {% else %}
+                  <span class="badge bg-warning text-dark mt-1">
+                    <i class="bi bi-safe-fill"></i> Fondo Fijo Asignado
+                  </span>
+                {% endif %}
+              </label>
+            </div>
+
+            <input type="hidden" name="reembolso_vendedor" value="1">
+            <input type="hidden" name="tipo_registro" value="caja_chica">
+            <input type="hidden" name="tipo_caja_chica" id="tipo_caja_chica" value="{{ tipo_cc if tipo_cc else 'C0' }}">
+
+          {% elif es_comercial_qp %}
+            <input type="hidden" name="tipo_registro" value="reembolso">
+
+            <div class="form-check mb-1">
+              <input class="form-check-input" type="checkbox" id="reembolso_vendedor" name="reembolso_vendedor" checked disabled>
+              <label class="form-check-label fw-bold" for="reembolso_vendedor">
+                Reembolso de Vendedor
+                <br>
+                <span class="badge bg-info text-dark mt-1">
+                  <i class="bi bi-patch-check-fill"></i> Autodetectado
+                </span>
+              </label>
+            </div>
+
+            <input type="hidden" name="reembolso_vendedor" value="1">
+
+          {% else %}
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="ccb" name="ccb"
+                {% if form and (form.get('ccb') in ['1','on',1,true]) %}checked{% elif g and g.get('ccb') %}checked{% endif %}>
+              <label class="form-check-label" for="ccb">Con cargo a bono (CCB)</label>
+            </div>
+          {% endif %}
+
+          {% if not (tiene_caja_chica or es_comercial_qp) %}
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="tarjeta_sin_soporte" name="tarjeta_sin_soporte"
+                {% if form and (form.get('tarjeta_sin_soporte') in ['1','on',1,true]) %}checked{% elif g and g.get('tarjeta_sin_soporte') %}checked{% endif %}>
+              <label class="form-check-label" for="tarjeta_sin_soporte">
+                Tarjeta sin soporte
+              </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="boletos_aereos" name="boletos_aereos"
+                {% if form and (form.get('boletos_aereos') in ['1','on',1,true]) %}checked{% elif g and g.get('boletos_aereos') %}checked{% endif %}>
+              <label class="form-check-label" for="boletos_aereos">
+                Boletos aéreos
+              </label>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if es_comercial_qp %}
+          <input type="hidden" name="reembolso_vendedor" value="1">
+        {% endif %}
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Buscar factura XML (SRI)</label>
+        <input type="text" class="form-control" id="factura_xml_search" list="dl-facturas-xml" autocomplete="off"
+          value="{{ form.get('numero_factura','') if form else (g['numero_factura'] if g and g.get('numero_factura') else '') }}"
+          placeholder="Escriba parte del número de factura o clave de acceso…">
+        <datalist id="dl-facturas-xml"></datalist>
+
+        <input
+          type="hidden"
+          id="factura_xml_id"
+          name="factura_xml_id"
+          value="{% if form and form.get('factura_xml_id') %}{{ form.get('factura_xml_id') }}{% elif g and g.get('factura_xml_id') %}{{ g['factura_xml_id'] }}{% endif %}">
+
+        <small class="text-muted">
+          Selecciona una factura ya cargada desde XML.
+        </small>
+      </div>
+
+      <div class="col-md-3">
+        <label for="proveedor_identificacion" class="form-label">Identificación proveedor</label>
+        <input type="text" class="form-control" id="proveedor_identificacion" name="proveedor_identificacion"
+          value="{{ form.get('proveedor_identificacion','') if form else (g['proveedor_identificacion'] if g and g.get('proveedor_identificacion') else '') }}"
+          {% if not (tiene_caja_chica or es_comercial_qp or (form and (form.get('tarjeta_sin_soporte') in ['1','on',1,true])) or (g and g.get('tarjeta_sin_soporte'))) %} readonly {% endif %}>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Proveedor</label>
+        <input type="text" class="form-control" id="proveedor_nombre" name="proveedor_nombre" list="dl-proveedores"
+          autocomplete="off"
+          value="{% if form %}{{ form.get('proveedor') or '' }}{% elif g %}{{ g['proveedor'] or '' }}{% else %}{% endif %}"
+          placeholder="Escribe para buscar…">
+        <datalist id="dl-proveedores"></datalist>
+
+        <input type="hidden" id="proveedor_id" name="proveedor_id"
+          value="{% if form and form.get('proveedor_id') %}{{ form.get('proveedor_id') }}{% elif g and g['proveedor_id'] %}{{ g['proveedor_id'] }}{% endif %}">
+
+        <input type="hidden" id="proveedor" name="proveedor"
+          value="{% if form %}{{ form.get('proveedor') or '' }}{% elif g %}{{ g['proveedor'] or '' }}{% endif %}">
+
+        <div class="invalid-feedback">Seleccione un proveedor válido de la lista.</div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">N° factura</label>
+
+        <div class="input-group">
+          <input type="text" class="form-control" id="numero_factura" name="numero_factura"
+            value="{{ form.get('numero_factura','') if form else (g['numero_factura'] if g and g.get('numero_factura') else '') }}"
+            placeholder="Ej: 001-001-000123456">
+
+          <button type="button" class="btn btn-outline-secondary" id="btnGenSec"
+            title="Generar consecutivo (Caja Chica)">
+            <i class="bi bi-shuffle"></i>
+          </button>
+
+          <div class="invalid-feedback">El N° de factura es obligatorio.</div>
+        </div>
+
+        <small class="text-muted d-block mt-1">
+          Para Caja Chica si no tienes número de factura.
+        </small>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">N° Orden de compra</label>
+        <input type="text" class="form-control" id="orden_compra" name="orden_compra"
+          value="{{ form.get('orden_compra','') if form else (g['orden_compra'] if g and g.get('orden_compra') else '') }}"
+          placeholder="Número de OC (opcional)" autocomplete="off">
+      </div>
+
+      {% block scripts_extra %}
+      {{ super() }}
+      {% endblock %}
+    </div>
+
+    <div class="section section-danger mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="mb-0 text-warning"><i class="bi bi-calculator me-1"></i> Detalle</h5>
+        <button type="button" id="btnAddDet" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-plus-lg me-1"></i>Agregar línea
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <datalist id="dl-centros"></datalist>
+        <datalist id="dl-motivos"></datalist>
+
+        <table class="table table-sm table-striped align-middle">
+          <thead>
+            <tr>
+              <th class="th-observacion">Observación</th>
+              <th class="th-motivo">Motivo gasto</th>
+              <th class="th-centro">Centro de costo</th>
+              <th class="th-indicador">Indicador</th>
+              <th class="text-end col-hide-soporte">Con Iva</th>
+              <th class="text-end">Sin Iva</th>
+              <th class="text-end col-subtotal-fac">Subtotal fac.</th>
+              <th class="text-end col-hide-soporte">Serv./prop.</th>
+              <th class="text-end col-hide-soporte">Subtotal sin IVA</th>
+              <th class="text-end">IVA</th>
+              <th class="text-end">Total con IVA</th>
+              <th class="th-descripcion">Descripción</th>
+              <th class="th-actions"></th>
+            </tr>
+          </thead>
+          <tbody id="det-body"></tbody>
+        </table>
+      </div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-4 only-soporte">
+          <label class="form-label">Gastos con soporte</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_con_soporte" value="0" readonly>
+        </div>
+
+        <div class="col-md-4 only-soporte">
+          <label class="form-label">Gastos sin soporte</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_sin_soporte" value="0" readonly>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Subtotal factura</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_subtotal_factura" value="0" readonly>
+        </div>
+
+        <div class="col-md-4 col-hide-soporte">
+          <label class="form-label">Servicios y propinas</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_servicios_10" value="0" readonly>
+        </div>
+
+        <div class="col-md-4 col-hide-soporte">
+          <label class="form-label">Subtotal sin IVA</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_subtotal_sin_iva" value="0" readonly>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">IVA</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_iva" value="0" readonly>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Total</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_total_con_iva" value="0" readonly>
+          <div id="totInvalid" class="invalid-feedback">
+            El Total (Total con IVA) debe ser mayor a cero.
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" name="sum_sin_soporte" id="h_sum_sin_soporte"
+        value="{{ form.get('sum_sin_soporte','0') if form else (g.get('sin_soporte') or 0) }}">
+
+      <input type="hidden" name="subtotal_factura" id="h_subtotal_factura"
+        value="{{ form.get('subtotal_factura','0') if form else (g.get('subtotal_factura') or 0) }}">
+
+      <input type="hidden" name="iva" id="h_iva"
+        value="{{ form.get('iva','0') if form else (g.get('iva') or 0) }}">
+
+      <input type="hidden" name="total_con_iva" id="h_total_con_iva"
+        value="{{ form.get('total_con_iva','0') if form else (g.get('total_con_iva') or 0) }}">
+    </div>
+
+    <div class="section section-danger mb-4">
+      <h5 class="mb-3 text-success"><i class="bi bi-paperclip me-1"></i> Adjuntar archivos</h5>
+
+      <label for="archivo" class="form-label">Documentos (PDF, Word, Excel, Imagen)</label>
+
+      {% set lista_adj = (adjuntos if adjuntos is defined and adjuntos else []) %}
+      {% set adj_count = lista_adj|length %}
+
+      <input type="hidden" id="adj_count" value="{{ adj_count }}">
+
+      <input type="file" class="form-control" id="archivo" name="archivo" multiple
+        accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif">
+
+      <div id="archivoInvalid" class="invalid-feedback">
+        Debe adjuntar al menos un archivo para guardar.
+      </div>
+
+      <small class="text-muted d-block mt-1">
+        Puedes seleccionar uno o varios archivos.
+      </small>
+
+      <ul id="selectedFiles" class="mt-2 small"></ul>
+
+      {% if lista_adj %}
+        <div class="mt-2">
+          <span class="text-white">Archivos actuales:</span>
+          <ul class="mb-0">
+            {% for a in lista_adj %}
+              {% set fname = a.filename if a is mapping else a %}
+              <li>
+                <a href="{{ url_for('static', filename='uploads/' ~ fname) }}" target="_blank">{{ fname }}</a>
+                {% if a is mapping and a.uploaded_at %}
+                  <small class="text-muted">({{ a.uploaded_at }})</small>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% elif archivo %}
+        <div class="mt-2">
+          <span class="text-white">Archivo actual:</span>
+          <a href="{{ url_for('static', filename='uploads/' ~ archivo) }}" target="_blank">{{ archivo }}</a>
+        </div>
+      {% endif %}
+
+      <div class="col-12 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-save me-1"></i>Guardar
+        </button>
+        <a href="{{ url_for('lista_gastos') }}" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+
+      <div class="modal fade" id="busyModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              <div class="spinner-border" role="status" aria-hidden="true"></div>
+              <div class="mt-2 fw-semibold">Procesando…</div>
+              <div id="busyMsg" class="small text-muted"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/reembolsos/nuevo_gasto.js') }}"></script>
+
+{% endblock %}

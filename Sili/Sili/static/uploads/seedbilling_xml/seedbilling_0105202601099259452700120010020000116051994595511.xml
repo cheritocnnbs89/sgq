@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>Analisis Semanal (Analisem) S.A.</razonSocial><nombreComercial>Analisis Semanal (Analisem) S.A.</nombreComercial><ruc>0992594527001</ruc><claveAcceso>0105202601099259452700120010020000116051994595511</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>002</ptoEmi><secuencial>000011605</secuencial><dirMatriz>Urb. Río Grande MZ C Solar 65-66</dirMatriz><agenteRetencion>1</agenteRetencion></infoTributaria><infoFactura><fechaEmision>01/05/2026</fechaEmision><dirEstablecimiento>URB. RIO GRANDE MZ C SOLAR 65-66</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>Km. 16 ½ Vía a Daule, Calle Rosavín Lote 1 y Cobre</direccionComprador><totalSinImpuestos>39.80</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>39.80</baseImponible><valor>5.97</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>45.77</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>19</formaPago><total>45.77</total></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>AS-8232</codigoPrincipal><descripcion>Suscripción MENSUAL 'virtual'</descripcion><cantidad>1.000000</cantidad><precioUnitario>39.800000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>39.80</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="periodo" valor="01-05-2026 a 01-06-2026"/></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>39.80</baseImponible><valor>5.97</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Para pagos por transferencia">Cuenta Corriente #0005206377 de Banco Bolivariano - RUC: 0992594527001 - Beneficiario: Análisis Semanal S.A.</campoAdicional><campoAdicional nombre="Sistema">Jet Koala</campoAdicional><campoAdicional nombre="Nombre del suscrito">Dudley Cunninghan</campoAdicional></infoAdicional><ds:Signature Id="Signature135294" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo54429">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID22043" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature135294-SignedProperties268951">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>LQuSxrtbWF8/rDe8OnnEM251PTI=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1364135">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>NzauVKFDArnW4CaecbNow+uXmfI=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-367409" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>zJxRny6tHrmKvM3nkPzCuv749CM=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue5689">
+Ck4BmG2RESmj8ZIYZ/cOPSa+evUbW2HQ1EYHWrn4yr274ZLXEsDAk7GufduieUxyO3mKTLHtfp4R
+Dyx0bs5Vq9CzjtmHmDQW/KhlgyH5A49hW3bgxWdWxzp791Zb8zRNPBJQysEWrh3Y+t7aJzU8Zoig
+CbW0Tl/YUnOLfEolT02zDRGwIivGq06Sel1tTxPZ7mLZVeQimMiW3taQ7iRH+DLsI3JU8yEI2UXk
+3RnBPvKz7Ph7SMN/MmFzMJLdZ21mtGequaG7EoPdh+vytctrHQdjyPJF82CS7L34Z5UVRv8hC01J
+wExNpIdVQj1+JCzUHJ1pjpnaw/FleTtBbvyhjA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1364135">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIITjCCBjagAwIBAgIRAI99NF81KdO9bYu+9OEJ0KEwDQYJKoZIhvcNAQELBQAwgbUxCzAJBgNV
+BAYTAkVDMRgwFgYDVQQKDA9EYXRpbG1lZGlhIFMuQS4xMDAuBgNVBAsMJ0VudGlkYWQgZGUgY2Vy
+dGlmaWNhY2lvbiBkZSBpbmZvcm1hY2lvbjEPMA0GA1UECAwGR3VheWFzMTUwMwYDVQQDDCxEYXRp
+bCBBdXRvcmlkYWQgZGUgQ2VydGlmaWNhY2lvbiBTdWJvcmRpbmFkYTESMBAGA1UEBwwJR3VheWFx
+dWlsMB4XDTI0MDQyNjIxMzYyOVoXDTI5MDQyNTIyMzYyOVowgbIxKDAmBgNVBAMMH1dhbHRlciBS
+ZWV2ZSBTcHVycmllciBCYXF1ZXJpem8xLTArBgkqhkiG9w0BCQEWHmNvbnRhYmlsaWRhZEBncnVw
+b3NwdXJyaWVyLmNvbTEpMCcGA1UECgwgQW5hbGlzaXMgU2VtYW5hbCAoYW5hbGlzZW0pIFMuQS4x
+HzAdBgNVBAsMFkNlcnRpZmljYWRvcyBEaWdpdGFsZXMxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG
+9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4aty6Hprzss3OjzZJrj+20md5s+cV44+0NnyZftDK3EgJmel
+n92GQSgIG7nDoIFSrf1SQ+hwWdq+oIyAJjIbXioqYBXMDZYhrvwRevw4DzoPX3KAEw1lhYn++jZz
+TfHAckSrTqxDsxTouDlSCdOyMODXrF+KUA5rU03mbMruTnHQNSPfoUOIu582lMfoFitBwX7ouGX8
+7wYq5wUTbo0hMsiBhZoyqukW6E4MDQVRfN0DvT1gz6hM3pByMwBrPe0mN7Wv5V1jukvg/o/AJWyv
+orwFaTk7m/ACADbC1aNAhHAMihbTNijifW8LvEArY6OTCg7BEl+LCNpLzNFZJKl4VwIDAQABo4ID
+WDCCA1QwKQYDVR0RBCIwIIEeY29udGFiaWxpZGFkQGdydXBvc3B1cnJpZXIuY29tMAkGA1UdEwQC
+MAAwHwYDVR0jBBgwFoAU5Wb5snh2G2r0z8t4UMUFHzqd4HcwHQYDVR0OBBYEFM6zhiWWF6sUdIZm
+hfIEN5KwIDfwMIGjBgNVHSAEgZswgZgwgZUGCysGAQQBg5sjAgUBMIGFMIGCBggrBgEFBQcCARZ2
+aHR0cHM6Ly9kYXRpbC1vcy1wdWJsaWMuczMudXMtd2VzdC0yLmFtYXpvbmF3cy5jb20vOThlMjFk
+YmQtYjZlYy00ZTgzLWI5ZTktZDRhZTEyYjRkOTY3L0RhdGlsX0NQU19QZXJzb25hX0p1cmlkaWNh
+LnBkZjBvBgNVHR8EaDBmMGSgYqBghl5odHRwOi8vZGF0aWwtc3ViY2EtY3JsLnMzLnVzLXdlc3Qt
+Mi5hbWF6b25hd3MuY29tL2NybC9hMDc4OGVlMC03OGJiLTQwNmItYjM4YS0zMmUzNmFhNGRiZGIu
+Y3JsMEcGCCsGAQUFBwEBBDswOTA3BggrBgEFBQcwAYYraHR0cDovL29jc3AuYWNtLXBjYS51cy13
+ZXN0LTIuYW1hem9uYXdzLmNvbTAOBgNVHQ8BAf8EBAMCBsAwGgYKKwYBBAGDmyMDAQQMDAowOTA0
+MzE5MDQzMBwGCisGAQQBg5sjAwIEDgwMV2FsdGVyIFJlZXZlMBgGCisGAQQBg5sjAwMECgwIU3B1
+cnJpZXIwGQYKKwYBBAGDmyMDBAQLDAlCYXF1ZXJpem8wHwYKKwYBBAGDmyMDBQQRDA9HZXJlbnRl
+IEdlbmVyYWwwGwYKKwYBBAGDmyMDBwQNDAtTYW1ib3JvbmRvbjAaBgorBgEEAYObIwMIBAwMCjA5
+OTIyMjY0MTQwGwYKKwYBBAGDmyMDCQQNDAtTYW1ib3JvbmRvbjAwBgorBgEEAYObIwMKBCIMIEFu
+YWxpc2lzIFNlbWFuYWwgKGFuYWxpc2VtKSBTLkEuMB0GCisGAQQBg5sjAwsEDwwNMDk5MjU5NDUy
+NzAwMTASBgorBgEEAYObIwMMBAQMAkVDMCEGCisGAQQBg5sjAyAEEwwRMDAxLTAwMi0wMDAwMzE3
+NTkwDQYJKoZIhvcNAQELBQADggIBAOmO49+oQoVO9Lv3imV7VitFXS9f4uRehCz5xaRT1omgmbaW
+ZguDegdBYlp7C4mN04vlG6uHIOlEEAblalrefdRLtHXRTbCivq0oSkx6wvNsMhF5xQj/JLmnYMoK
+uf2CJjHgBCewKHsO6tD6MVwj06YZQqv/dMLLh49DofTFyXsduomNZ2MWsPbjlyPWbk3+dM+rSiZM
+UYkTfd12pqnkkb6GrmpK3Q/Q2DoIivddksoWJQVVRhyz5Wpk2Ds8Sa94r+8T9aUwbqlG43FIYrlf
+zeNBQxrmDspKYXxxidv7jw8g0GFg0xFP+V+8v1DQww2SfS0qyDjSOzSnARyRWJm1pwmuSOKBVmo9
+zHV4BoHnVz1UJkqn4hoCLF4CAh1hS6fr1k5SRVnYcj7eEe5IUi1rZAMZ+vl9CsYlwwmciV32iMUi
+3cpaZpSY5qH4SgQON0Dq6hoMvYvq13TEaPKprwoe/qazuZ+LNf7tQgx4qzaH8kvWURzQRe5DlPfR
+J4LTeXI3SqKo665wP+VSDSXTQybJ4gbS6JjFV1akCjvTOjG5iuwQkigtKba68UGO4hHQtvUecKB5
++gT//wnVq5w+t7c+XgbUNnjJ90qukeOdAGgvzFH72X/MsRiv75O6V1tnjFpwJ1hhmZ89ACi0XnMI
+6P1FZe8NFUxSbDFKjTkkPWSiT6Wg
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+4aty6Hprzss3OjzZJrj+20md5s+cV44+0NnyZftDK3EgJmeln92GQSgIG7nDoIFSrf1SQ+hwWdq+
+oIyAJjIbXioqYBXMDZYhrvwRevw4DzoPX3KAEw1lhYn++jZzTfHAckSrTqxDsxTouDlSCdOyMODX
+rF+KUA5rU03mbMruTnHQNSPfoUOIu582lMfoFitBwX7ouGX87wYq5wUTbo0hMsiBhZoyqukW6E4M
+DQVRfN0DvT1gz6hM3pByMwBrPe0mN7Wv5V1jukvg/o/AJWyvorwFaTk7m/ACADbC1aNAhHAMihbT
+NijifW8LvEArY6OTCg7BEl+LCNpLzNFZJKl4Vw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature135294-Object294523"><etsi:QualifyingProperties Target="#Signature135294"><etsi:SignedProperties Id="Signature135294-SignedProperties268951"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-01T13:00:49+00:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>a4iLmc+gA2gbHD4mTzZVPeVf2ks=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>L=Guayaquil,CN=Datil Autoridad de Certificacion Subordinada,ST=Guayas,OU=Entidad de certificacion de informacion,O=Datilmedia S.A.,C=EC</ds:X509IssuerName><ds:X509SerialNumber>190729702732987923413576454900659376289</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-367409"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

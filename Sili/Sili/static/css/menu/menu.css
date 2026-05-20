@@ -1,0 +1,76 @@
+.menu-card .table {
+  font-size: 0.85rem;
+}
+
+.menu-card .table th,
+.menu-card .table td {
+  padding-top: .4rem;
+  padding-bottom: .4rem;
+  vertical-align: middle;
+}
+
+.menu-card thead.table-light th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  padding-top: .45rem;
+  padding-bottom: .45rem;
+}
+
+.menu-header h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.menu-header .btn-primary {
+  font-size: 0.8rem;
+  line-height: 1rem;
+  padding: .4rem .6rem;
+}
+
+.menu-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: .4rem;
+  justify-content: flex-end;
+}
+
+.menu-actions .btn {
+  font-size: 0.7rem;
+  line-height: 1rem;
+  padding: .3rem .5rem;
+  white-space: nowrap;
+}
+
+.menu-col-id {
+  width: 60px;
+}
+
+.menu-col-padre {
+  width: 70px;
+}
+
+.menu-col-endpoint {
+  min-width: 180px;
+}
+
+.menu-col-orden {
+  width: 70px;
+}
+
+.menu-col-permiso {
+  min-width: 110px;
+}
+
+.menu-col-tipo {
+  width: 70px;
+}
+
+.menu-col-acciones {
+  width: 120px;
+}
+
+.menu-endpoint-text {
+  font-family: monospace;
+  font-size: .8rem;
+}

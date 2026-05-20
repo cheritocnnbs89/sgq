@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Plantillas de notificaciones{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h5 mb-0">Plantillas de notificaciones</h1>
+  <a class="btn btn-primary" href="{{ url_for('notifications.tpl_new') }}">Nueva plantilla</a>
+</div>
+
+<div class="section">
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead>
+        <tr>
+          <th>Clave</th>
+          <th>Asunto</th>
+          <th>Tipo</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for r in rows %}
+        <tr>
+          <td><code>{{ r.key }}</code></td>
+          <td>{{ r.subject }}</td>
+          <td>
+            {% set t = (r.tipo or '') %}
+            {% set item = TPL_TYPES|selectattr(0, 'equalto', t)|list|first %}
+            {{ (item and item[1]) or (t or '—') }}
+          </td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-secondary"
+               href="{{ url_for('notifications.tpl_edit', key=r.key) }}">
+              Editar
+            </a>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="text-muted">No hay plantillas</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

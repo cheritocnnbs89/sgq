@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0202202601099132737100120010110006730692307226715</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-02T06:06:47-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.0.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;TELCONET SA&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;TELCONET SA&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0991327371001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0202202601099132737100120010110006730692307226715&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;001&lt;/estab&gt;
+    &lt;ptoEmi&gt;011&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000673069&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;AV LUIS ORRANTIA SOLAR 21 Y AV VICTOR HUGO SICOURET&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;02/02/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;AV LUIS ORRANTIA SOLAR 21 Y AV VICTOR HUGO SICOURET&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;0176&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;totalSinImpuestos&gt;390.00&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;390.00&lt;/baseImponible&gt;
+        &lt;valor&gt;58.50&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt; 0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;448.50&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;448.50&lt;/total&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-VILLACLUBZAVALA&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-CALLEBSANDOVAL&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-AVLASAGUASCHAVEZ&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-PICOAZACISNEROS&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-GUASMOSURRUGEL&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-LEONIDASPLAZAANCHUNDIA&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-VILLAESPANARUIZ&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-CRISOLVALENCIA&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC--SAUCES9MORENO&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-ALBORADA10SANCHEZ&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-HUANCAVILCANORTEDOMING&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-MANUELVALDIVIEZOGODOY&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CONN&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TELCOHOME 150MB QUIMPAC-STAMONICARAMOS&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.00&lt;/baseImponible&gt;
+          &lt;valor&gt;4.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="EMAILCLIENTE"&gt;ALEON@QUIMPAC.COM.EC;JCHAVEZ@QUIMPAC.COM.EC&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="DIRCLIENTE"&gt;PASCUALES   ROSAVIN LOTE 1 Y COBRE&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="TELFCLIENTE"&gt;042162660&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="CIUDADCLIENTE"&gt;GUAYAQUIL&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="CONSUMOCLIENTE"&gt;FEBRERO    2026&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="FMAXPAGO"&gt;20/02/2026&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="FPAGOCLIENTE"&gt;EFECTIVO&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="SUBTOTALDOS"&gt;390.00&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="VALORPAGAR"&gt;448.50&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="NOTIFICACION"&gt;SU SALDO A LA FECHA ES $448.50 DE NO CONFIRMAR DESACUERDO AL CORREO COBRANZAS_GYE@TELCONET.EC EN EL LAPSO DE 72 HS. DE HABER RECIBIDO LA FACTURA, SE CONSIDERARA ACEPTADO FORMALMENTE POR UD.&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="PAIS"&gt;ECUADOR&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="ORDEN DE COMPRA"&gt;7500046448&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="GRAN CONTRIBUYENTE"&gt;OFICIO: NAC-GCFOIOC21-00000904-E&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature878144"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo208258"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID413530" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature878144-SignedProperties315487"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;CzIgehMSF/fGI99uNT52m3v45g4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1681044"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;7smfZvLTZ/tvCwkFFf+P/S+O/XU=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-579826" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;L3SDhEPezC7fz0BpzHoeCjgBFjc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue916210"&gt;
+gx1MnI6aTqEZ4fFpHhPWUdhakgEHu3tz2v7kNWrJXbL84LsSxh+pWO8IMadHiZ6p3lvhb8UCq9gH
+c8vENQQm8HGoYoPfaiZkPFenogzzAHCjJAtRNRuIcamsavjpZIBoRagrDBdIxuMacxoP2wLm9Uuo
+HmllJTawR2R/1UT0JntyBpJoe6xgJCnGivMxllATN5fjD31rpVyfwiRlk9yFTJbWW80mM/uQOpku
+VLWaM0SrcyvoqAEBit4HpkySVXmtIg6fO4xo9U1EEuaqnryH3ryD9uw9pBY34Oa4QOpEasn8V6d+
+5wJXywXgUuGhus44iqY5RoEP3UNrIXITqVI6TA==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1681044"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMCzCCCfOgAwIBAgIEIn0CpDANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMTA4MTgyMDU4NDJaFw0yNjA4MTgyMDU4NDJaMIGdMSYw
+JAYDVQQDDB1GRUxJWCBCWVJPTiBWQUxBUkVaTyBBTFZBUkFETzEVMBMGA1UEBRMMMTgwODIxMTYw
+ODM3MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAb
+BgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEB
+BQADggEPADCCAQoCggEBAL1rx7LukI4bbRELa5ZIUXLTcpBI6wp8sKNBrilcpCy9FqQn1c6WGDgh
+fXCFUhDnwXAV15HueDb2NDQ7QmBLKIAk8LQUv5CiU74uKNC4BlBe5vhyOpXvvcbm9uXke0BkG8Sr
+2VjFE/p+jJPp+9DoRBvrRZB1+zZnXBRFBmH2hItBF2yZUjoBSoBZ7Rbb03CmtiUzpyBr1n1OnogY
+ixWHDs4vQVjKZEd0Hl6/JRpVa6vTkO0ZkvMPofVFRuVr/3WGHAmYfOPYqz7OQHOVN49fr6HNFxED
+0uCvfxLGUihKOFAxBYGjw2G/U4Aa7MSg+N9B5CMragSi78Y+m3NdCineM+UCAwEAAaOCB1MwggdP
+MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUH
+AQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpi
+Y2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhsZGFwOi8v
+bGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJ
+T04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0aW9uTGlz
+dD9iYXNlMCAGA1UdEQQZMBeBFWZ2YWxhcmV6b0B0ZWxjb25ldC5lYzCCARIGA1UdIASCAQkwggEF
+MGAGCisGAQQBgqZyAgowUjBQBggrBgEFBQcCAjBEHkIAQwBlAHIAdABpAGYAaQBjAGEAZABvACAA
+ZABlACAATQBpAGUAbQBiAHIAbwAgAGQAZQAgAEUAbQBwAHIAZQBzAGEwgaAGCisGAQQBgqZyAgQw
+gZEwgY4GCCsGAQUFBwIBFoGBaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250
+ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBD
+ZXJ0aWZpY2FkbyBNaWVtYnJvIGRlIEVtcHJlc2EucGRmMIICogYDVR0fBIICmTCCApUwgeWgQaA/
+hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1
+cy9vY3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJD
+QS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIHH
+oIHEoIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURB
+RCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENF
+UlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2Nl
+cnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9w
+ZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRk
+aXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIg
+U0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04s
+Tz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBQk0iAZK3pmSsHZJL83nF1ujpRi
+8DArBgNVHRAEJDAigA8yMDIxMDgxODIwNTg0MlqBDzIwMjYwODE4MjA1ODQyWjALBgNVHQ8EBAMC
+BeAwGAYKKwYBBAGCpnIDBQQKDAhDT05UQURPUjAaBgorBgEEAYKmcgMBBAwMCjA5MTI1OTIwMjkw
+GQYKKwYBBAGCpnIDCQQLDAlHVUFZQVFVSUwwEQYKKwYBBAGCpnIDIgQDDAEuMEcGCisGAQQBgqZy
+AwcEOQw3QVYuIExVSVMgT1JSQU5USUEgU09MQVIgMjEgWSBBVi4gVklDVE9SIEhVR08gU0lDT1VS
+RVQNCjAbBgorBgEEAYKmcgMCBA0MC0ZFTElYIEJZUk9OMB8GCisGAQQBgqZyAyAEEQwPMDAwMDAw
+MDAwMDAwMDAwMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAY
+BgorBgEEAYKmcgMDBAoMCFZBTEFSRVpPMB0GCisGAQQBgqZyAwoEDwwNVEVMQ09ORVQgUy5BLjAd
+BgorBgEEAYKmcgMLBA8MDTA5OTEzMjczNzEwMDEwEgYKKwYBBAGCpnIDHQQEDAJObzAYBgorBgEE
+AYKmcgMEBAoMCEFMVkFSQURPMBsGCisGAQQBgqZyAwgEDQwLNTkzNDI2ODA1NTUwDQYJKoZIhvcN
+AQELBQADggIBAJgxHNa9yfgkGReRtS61CfpOmdtpwztScHwVyCdAagyDi/ca0XiqBC6P8/epUgAO
+eZLsSgPZ0v0SkagxNmSHH9+3p6GBUS5pFNDANSnxo2alfUt3Mr2guRUMOiKD26oJP8R7b2of1455
+ClFis5Em+aM4fZwcVMcFSeJMX1NmOqJM2gFWluSYLrKavFXZtYinHIMUqN8GVcyLuIZvvwCy/8Iq
+Wcjd/s78Sn3FWxUlCm/8g1LnTHHQ5zdcV6+M0NBLbTKOibEoKhvLCTX9LI+kR2sG0bJbm3mMfoJC
+O1pTwBoCpM0klc632ramWTL6tmuuvzLV/al6D6ihsyIbCJuPZ6W9+wXKzRUyqj/Eh+ezv/0c8/Yz
+jI9iTpE67FDhhEfUfQ2f/ib5GiPwClWwh0Zr/V8AmnPZmVw5ibZIMbVEGTaancKRhgbzGYZPllU+
+HZbL5EIuGnAMZl0TKpMooHVE7PwaLtx6cf68iP1kK4m7yRQq/eFjUWT9XeNL2Aw3nsWKLm0Iltxw
+FszHVaKwq+vp9VDPSAkexRHfEjydjHV8EFZVFggUP55GsWhcGFaB1IGoClTfhHDcoe7TN/qrV7Ua
++2tUKVG6jV9zlRcCvTq7pYZwJEm9jfFud6EWw9FcB98YAB8PLVpZuclH8G1FdFRFNG04muXnuvFK
+u3utWea5DMjQ
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+vWvHsu6QjhttEQtrlkhRctNykEjrCnywo0GuKVykLL0WpCfVzpYYOCF9cIVSEOfBcBXXke54NvY0
+NDtCYEsogCTwtBS/kKJTvi4o0LgGUF7m+HI6le+9xub25eR7QGQbxKvZWMUT+n6Mk+n70OhEG+tF
+kHX7NmdcFEUGYfaEi0EXbJlSOgFKgFntFtvTcKa2JTOnIGvWfU6eiBiLFYcOzi9BWMpkR3QeXr8l
+GlVrq9OQ7RmS8w+h9UVG5Wv/dYYcCZh849irPs5Ac5U3j1+voc0XEQPS4K9/EsZSKEo4UDEFgaPD
+Yb9TgBrsxKD430HkIytqBKLvxj6bc10KKd4z5Q==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature878144-Object506071"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature878144"&gt;
+                &lt;etsi:SignedProperties Id="Signature878144-SignedProperties315487"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-02T06:05:55-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;wXlOG3fY+WYZD/mno2G5XvNdkGQ=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;578618020&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-579826"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

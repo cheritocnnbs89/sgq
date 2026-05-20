@@ -1,0 +1,121 @@
+/* Tokens básicos (mismo estilo que planilla) */
+:root {
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --ink: #111827;
+  --muted: #6B7280;
+  --line: #E5E7EB;
+  --surface-1: #FFFFFF;
+  --surface-2: #F3F4F6;
+  --shadow-soft: 0 6px 20px rgba(2, 6, 23, 0.08);
+}
+
+html.theme-dark {
+  --bg: #0B1220;
+  --card: #0F172A;
+  --ink: #E5E7EB;
+  --muted: #94A3B8;
+  --line: #1F2A44;
+  --surface-1: #0F172A;
+  --surface-2: #0B1629;
+  --shadow-soft: 0 10px 32px rgba(0, 0, 0, 0.45);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.section {
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  padding: 12px;
+}
+
+.section-header {
+  font-weight: 600;
+  color: var(--ink);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.9rem;
+}
+
+.kpi-card {
+  transition: box-shadow 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 8px 22px rgba(16, 24, 40, 0.1);
+  transform: translateY(-1px);
+}
+
+.kpi-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.chart-box {
+  position: relative;
+  width: 100%;
+  height: 260px;
+}
+
+.chart-box canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-toolbar .btn {
+  border-color: var(--line);
+  padding: 0.1rem 0.35rem;
+  font-size: 0.75rem;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  height: 220px;
+}
+
+.kpi-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.kpi-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.table-sm > thead th {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+/* ===== Píldoras de estados ===== */
+.state-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.state-pill {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.state-pill .card-custom {
+  border-radius: 999px;
+  border: 1px solid var(--line);
+}

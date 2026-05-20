@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2301202601179236503100120320410000239010002390114</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-23T18:07:52-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;DISTRIVEHIC DISTRIBUIDORA DE VEHICULOS S.A.S&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;DISTRIVEHIC DISTRIBUIDORA DE VEHICULOS S.A.S&lt;/nombreComercial&gt;
+    &lt;ruc&gt;1792365031001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;2301202601179236503100120320410000239010002390114&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;032&lt;/estab&gt;
+    &lt;ptoEmi&gt;041&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000023901&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;Av. De los Granados E11-67 intersección Las Hiedras Edificio Maresa Center&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;23/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;AV. MARIANA DE JESUS Y AV. AMÉRICA. FRENTE A LA IGLESIA DEL COLEGIO SAN GABRIEL&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;00615&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;totalSinImpuestos&gt;1280.12&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;62.44&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;1280.12&lt;/baseImponible&gt;
+        &lt;valor&gt;192.02&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;1472.14&lt;/importeTotal&gt;
+    &lt;moneda&gt;Dolar&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;19&lt;/formaPago&gt;
+        &lt;total&gt;1472.14&lt;/total&gt;
+        &lt;plazo&gt;1.000000&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;Días&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;133CH-ME712&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;SILENCIADOR&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;477.140000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;23.86&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;453.28&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;453.28&lt;/baseImponible&gt;
+          &lt;valor&gt;67.99&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;133CR-ME733&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;JUNTA FLEXIBLE A5P&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;285.710000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;14.29&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;271.42&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;271.42&lt;/baseImponible&gt;
+          &lt;valor&gt;40.71&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;133MZ-ME772&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;JGO BRIDAS ESCAPE M6&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;285.710000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;14.29&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;271.42&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;271.42&lt;/baseImponible&gt;
+          &lt;valor&gt;40.71&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;480-1012010&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;FILTRO ACEITE 5K&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;9.500000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.48&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;9.03&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;9.03&lt;/baseImponible&gt;
+          &lt;valor&gt;1.35&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;481H1002041&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;ARANDELA TAPON CARTER TIGGO 2 16MM&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.650000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.03&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;0.62&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;0.62&lt;/baseImponible&gt;
+          &lt;valor&gt;0.09&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0001-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;SUSTITUCION ACEITE Y FILTRO MOTOR&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;10.800000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.54&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;10.26&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;10.26&lt;/baseImponible&gt;
+          &lt;valor&gt;1.54&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0002-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;SUSTITUCION LIQUIDO FRENOS Y EMBRAGUE&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;27.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;1.35&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;25.65&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;25.65&lt;/baseImponible&gt;
+          &lt;valor&gt;3.85&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0005-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;ABC DE FRENOS (LIMPIEZA Y REGULACION DE FRENOS)&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;27.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;1.35&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;25.65&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;25.65&lt;/baseImponible&gt;
+          &lt;valor&gt;3.85&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0007-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;LIMPIEZA DE CUERPO DE ACELERACION&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;4.050000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.20&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.85&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.85&lt;/baseImponible&gt;
+          &lt;valor&gt;0.58&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0010-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;SUSTITUCION FILTRO DE AIRE&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;2.700000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.14&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;2.57&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;2.57&lt;/baseImponible&gt;
+          &lt;valor&gt;0.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0018-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;INSPECCION 20 PUNTOS DE SEGURIDAD CH-DF&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;8.100000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.41&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;7.70&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;7.70&lt;/baseImponible&gt;
+          &lt;valor&gt;1.15&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0021-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;DIAGNOSTICO COMPUTARIZADO - CHDS&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;6.750000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.34&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;6.41&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;6.41&lt;/baseImponible&gt;
+          &lt;valor&gt;0.96&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0022-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;ALINEACION BALANCEO Y ROTACION DE NEUMATICOS CH-DF&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;24.300000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;1.22&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;23.09&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;23.09&lt;/baseImponible&gt;
+          &lt;valor&gt;3.46&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;CY-T2-AM-MN0023-N&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;SUSTITUCION FILTRO DE COMBUSTIBLE&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;5.400000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.27&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;5.13&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;5.13&lt;/baseImponible&gt;
+          &lt;valor&gt;0.77&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;I-7000INT000&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;LIMPIA FRENOS SPRAY 22 OZ&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;6.380000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.32&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;6.06&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;6.06&lt;/baseImponible&gt;
+          &lt;valor&gt;0.91&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;I-7000INT001&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;LIMPIADOR CUERPO ACELERACION 22 OZ&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;5.930000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.30&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;5.63&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;5.63&lt;/baseImponible&gt;
+          &lt;valor&gt;0.85&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;I-7000INT002&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;LIMPIADOR PARABRISAS 250 ML&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;3.200000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.16&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.04&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.04&lt;/baseImponible&gt;
+          &lt;valor&gt;0.46&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;I-7000INT004&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;LIQUIDO FRENOS DOT 3 - 4 500 ML&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;6.530000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.33&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;6.20&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;6.20&lt;/baseImponible&gt;
+          &lt;valor&gt;0.93&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;INSUMEC&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;Insumos&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;7.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.35&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;6.65&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;6.65&lt;/baseImponible&gt;
+          &lt;valor&gt;1.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;J691109111&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;FILTRO AIRE T2&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;8.470000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.42&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;8.05&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;8.05&lt;/baseImponible&gt;
+          &lt;valor&gt;1.21&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;L-7055MD002B&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;ACEITE MOTOR GASOLINA QUARTZ 7000 FUT XT 10W30 TQ&lt;/descripcion&gt;
+      &lt;cantidad&gt;5.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;5.870000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;1.47&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;27.88&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;27.88&lt;/baseImponible&gt;
+          &lt;valor&gt;4.18&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;MPPM0413480&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;FILTRO COMBUSTIBLE TIGGO 2 B141117110L&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;6.390000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.32&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;6.07&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;6.07&lt;/baseImponible&gt;
+          &lt;valor&gt;0.91&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;TOT-15% IVA - RET 2.75%&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;0&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;TRABAJOS DE SUELDAS&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;94.500000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;94.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ETIQUETAS" valor="MARCA|MODELO|CHASIS|PLACA|KM|CLASE|COMBUSTIBLE|TIEMPO|UND"/&gt;
+        &lt;detAdicional nombre="VALORES" valor="CHERY|2023 CHERY TIGGO 2 A13T-COM TIGGO 2 AC 1.5 5P 4X2 TM|LVVDB11BXPE006120|PDZ1869|70260km|JEEP|Gasolina|1.00|UND"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;94.50&lt;/baseImponible&gt;
+          &lt;valor&gt;14.18&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="GRANCONTRIBUYENTE"&gt;Gran contribuyente: No. NAC-GCFOIOC21-00000966-E&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="CORREO"&gt;compras.electronica@quimpac.com.ec&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="ETIQUETAS"&gt;MAIL|NRO_SPR|RELACIONADA|TIPO_DOC_ERP|SECUENCIAL_ERP|DIR_CLIENTE|CIUDAD|TELEFONO|F_VENCIMIENTO|TIPO_FACTURA|VALOR_TOTAL&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="VALORES"&gt;compras.electronica@quimpac.com.ec|7384|SI|43612204|23901|16.5 VIA DAULE CALLE ROSAVIN LOTE 1 MZ 385|GUAYAQUIL|0959009601|24/01/2026|3 |1342.56&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="OBSERVACIONES"&gt;Gran contribuyente: No. NAC-GCFOIOC21-00000966-E -  Orden #: 43565045  &lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="VALOR_LETRAS"&gt;Un mil cuatrocientos setenta y dos con 14/100 Dolar***&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="OBSERVACIONES2"&gt;id_doc=7384-N/A&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Gran Contribuyente"&gt;NAC-GCFOIOC21-00000966-E&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature802731"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo762090"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID987024" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature802731-SignedProperties938351"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;8gQY1OF3X7HvnJ92OthcwfWtTIk=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1337544"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;e83+L2bMqUAcgsTH+gpB1aRpTEc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-433835" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ON8keqISvjLkcQ4EhBdYjL7aGas=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue170107"&gt;
+x0390Heyca2aSCPqmVoRXIQHv7xP5jA1ZmtZtDt1x8A+aiGFGFYba398f02sB4bN7VyP7cIKVSW9
+6a+JnLXADrq40XvQGv0tWtSxor7N02CEN5qVtkgmjEzloDUjIftt75Whwt+2SjuGiYTi7MJ0DI4F
+EylJRgPtyLodWnt3KCzM5jGVSm6lw037WCBDVQTTKOTIjWT63T+5P59xxd5fnPTCOomK0Zq0TbSN
+WwPOw/qyHvWvFUiYpN0jKRYbLVFSFDTsyWFUJgIomILMf0ZRkTiB2o7Lb+Sgbe1wSCLLlhoBunGp
+TzH50/epsygoVmm+gBIb4O+Bgq22Vd9ipDEoKQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1337544"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMbzCCClegAwIBAgIETtbjnzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDExMDcxODU3MTZaFw0yNjExMDcxODU3MTZaMIGjMSEw
+HwYDVQQDDBhKT1NFIEVEVUFSRE8gRkFCQVJBIFZFUkExIDAeBgNVBAUTFzE3MDUyOTYxNjYtMDcx
+MTI0MTQwNzA3MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJ
+T04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBAMm5q1I9TFg3mXJlDyCoTnA2galoIJFZQaYYcAAsY4X1yHa5
+u0Id/3hRXzLX6HzvMzpAirMQhqu3Yr8Q9oHCd6YnWniY8HeN2mIH6+iWanI5q25w/h8Zdt9o+5Wb
+nE8WLwGi4VEHtTiTUCFnEWorOcqgYu31mxp5ulz7yzPWPcGzP0Jl/0jFfFbwYf3p0+4VgWBA9Ffq
+P1BbS1sP054UkNn5f7fcL/kEw2iMnuhmQ+zO8pX+fL9CD7zJ8AFNHQlE8f7tXtMrfdoA95WnkL/b
+791IXO62OBiVF+SEUwVsn1eKViZn69M5UdXQsy+2M/jnumJKrQ0ObnDgwcKBW9315EkCAwEAAaOC
+B7EwggetMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYI
+KwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQu
+ZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhs
+ZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJ
+RklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0
+aW9uTGlzdD9iYXNlMCAGA1UdEQQZMBeBFWpmYWJhcmFAYXNlcnRlbmNvLmNvbTCCARUGA1UdIASC
+AQwwggEIMGIGCisGAQQBgqZyAgkwVDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBjAGEA
+ZABvACAAZABlACAAUgBlAHAAcgBlAHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYKKwYB
+BAGCpnICAzCBkjCBjwYIKwYBBQUHAgEWgYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVj
+L3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRp
+Y2FzIGRlIENlcnRpZmljYWRvIFJlcHJlc2VudGFudGUgTGVnYWwucGRmMIICogYDVR0fBIICmTCC
+ApUwgeWgQaA/hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGlj
+d2ViL3N0YXR1cy9vY3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNB
+Q0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNB
+Q0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNV
+BAYTAkVDMIHHoIHEoIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NO
+PUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4g
+MixDPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBzOi8v
+cG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJk
+aXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9O
+IFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5G
+T1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBTKUP8zOAtB7e/o
+5gwEj+qhSBtTzTArBgNVHRAEJDAigA8yMDI0MTEwNzE4NTcxNlqBDzIwMjYxMTA3MTg1NzE2WjAL
+BgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9HRVJFTlRFIEdFTkVSQUwwGgYKKwYBBAGCpnID
+AQQMDAoxNzA1Mjk2MTY2MG8GCisGAQQBgqZyAwkEYQxfUVVJVE8gRElTVFJJVE8gTUVUUk9QT0xJ
+VEFOTyBDQUJFQ0VSQSBDQU5UT05BTCBDQVBJVEFMIFBST1ZJTkNJQUwgWSBERSBMQSBSRVBVQkxJ
+Q0EgREVMIEVDVUFET1IwEQYKKwYBBAGCpnIDIgQDDAEuMDcGCisGAQQBgqZyAwcEKQwnQVYgREUg
+TE9TIEdSQU5BRE9TIEUxMSA2NyBZIExBUyBISUVEUkFTMBwGCisGAQQBgqZyAwIEDgwMSk9TRSBF
+RFVBUkRPMB8GCisGAQQBgqZyAyAEEQwPMDAyMDAxMDAwODkxNTE1MBMGCisGAQQBgqZyAyEEBQwD
+UEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAWBgorBgEEAYKmcgMDBAgMBkZBQkFSQTA8Bgor
+BgEEAYKmcgMKBC4MLERJU1RSSVZFSElDIERJU1RSSUJVSURPUkEgREUgVkVISUNVTE9TIFMgQSBT
+MB0GCisGAQQBgqZyAwsEDwwNMTc5MjM2NTAzMTAwMTARBgorBgEEAYKmcgMdBAMMAS4wFAYKKwYB
+BAGCpnIDBAQGDARWRVJBMBAGCisGAQQBgqZyAwgEAgwAMA0GCSqGSIb3DQEBCwUAA4ICAQCnhczj
+rI4VmgN3+ShtcVUI3Xnnh8XiaGhzBOvDECNavv+rk+S4PJBJ3b80zIRwc/dvTv2Ew4YvzEtEUcsH
+CX/epvfRAeWJiHh2JlifoZTP0tZgb0G+qy62TvgErADYYcPlq+wuDXYLQJ5aN58Ao2Uca9RDqJ0z
+nccemWtvFZELjpz0mLO08Mo9AY6xK2VFvajobmxanwpdv/EWp4TMhNUOEynLDCB6sBGQROXXMmP6
+fMTaa2LCxhwrecCLB4TPF+5yaQ0MALoS39mFPukXbWF/WXZK01gBi2qlJiABkQiO4km/NlHVnPHh
+kEmGjiKuJWyWNeVTSIJpRf0iqVESOLt1R/sboRyAON/DCz5HNljI6m/CkOqNbB951eqJMDO36xPQ
+0ZOSUqv+wdBxgJYezUj+xaEkoCW2QF8Z6GUbVDdSdQivysr8KpoZncsjOsdyQE6iAErRQ06DBYoS
+1jSLTlN1UnpBy1GvxwL+fPDsYJeWgL7w7K39YgI+EGXzZH6ZoUjhuWHrVczSnzvak/CicKtMuC/8
+FLrZrWFXYN54l9y7D0qpUTkxE28m1aJwUnp+EKPNCZCBZJZ37s31jKFCxS8h0AZ6n0xa7HaEGPLS
+6nd5Lx6ZIMepNubxCTRkvZcTEmE/H3KMGc91iRn0u43/FJh6iEgFU4Oa12JzHWyu1yjEPg==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+ybmrUj1MWDeZcmUPIKhOcDaBqWggkVlBphhwACxjhfXIdrm7Qh3/eFFfMtfofO8zOkCKsxCGq7di
+vxD2gcJ3pidaeJjwd43aYgfr6JZqcjmrbnD+Hxl232j7lZucTxYvAaLhUQe1OJNQIWcRais5yqBi
+7fWbGnm6XPvLM9Y9wbM/QmX/SMV8VvBh/enT7hWBYED0V+o/UFtLWw/TnhSQ2fl/t9wv+QTDaIye
+6GZD7M7ylf58v0IPvMnwAU0dCUTx/u1e0yt92gD3laeQv9vv3Uhc7rY4GJUX5IRTBWyfV4pWJmfr
+0zlR1dCzL7Yz+Oe6YkqtDQ5ucODBwoFb3fXkSQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature802731-Object941926"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature802731"&gt;
+                &lt;etsi:SignedProperties Id="Signature802731-SignedProperties938351"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-23T15:55:03-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;YYjcnpkS2lO8QA+Rl+ZtQ+hW5Ds=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1322705823&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-433835"&gt;
+                            &lt;etsi:Description&gt;comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

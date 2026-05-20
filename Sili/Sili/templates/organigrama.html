@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Organigrama{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios/organigrama.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3 px-md-4 py-3">
+
+    <h4 class="mb-1">Organigrama</h4>
+    <p class="text-muted small mb-3">
+        Relación jerárquica basada en el jefe directo (<code>jefe_id</code>), agrupada por departamento.
+        Los roles se indican con las etiquetas <span
+            class="badge bg-primary-subtle text-primary border-0">GERENTE</span>,
+        <span class="badge bg-info-subtle text-info border-0">JEFE</span>,
+        <span class="badge bg-secondary-subtle text-secondary border-0">USUARIO</span> y
+        <span class="badge bg-danger-subtle text-danger border-0">ADMIN</span>.
+    </p>
+
+    {% if roots_flat and roots_flat|length > 0 %}
+    {% for group in roots_flat|groupby('departamento') %}
+    {% set dep_nombre = group.grouper or 'Sin departamento' %}
+    {% set personas = group.list %}
+
+    {% set resumen = namespace(jefes=0, gerentes=0, admins=0, usuarios=0) %}
+    {% for p in personas %}
+    {% set rol_l = (p.rol or '')|lower %}
+    {% if rol_l == 'jefe' %}
+    {% set resumen.jefes = resumen.jefes + 1 %}
+    {% elif rol_l == 'gerente' %}
+    {% set resumen.gerentes = resumen.gerentes + 1 %}
+    {% elif rol_l == 'admin' %}
+    {% set resumen.admins = resumen.admins + 1 %}
+    {% else %}
+    {% set resumen.usuarios = resumen.usuarios + 1 %}
+    {% endif %}
+    {% endfor %}
+
+    <div class="org-depto-card mb-3">
+        <div class="org-depto-header">
+            <div>
+                <div class="org-depto-title">
+                    {{ dep_nombre or 'Sin departamento' }}
+                </div>
+                <div class="text-muted small">
+                    {{ personas|length }} persona{{ 's' if personas|length != 1 }}
+                </div>
+            </div>
+            <div class="org-depto-meta">
+                <div>
+                    <span class="badge bg-primary-subtle text-primary border-0 me-1">
+                        Gerentes: {{ resumen.gerentes }}
+                    </span>
+                    <span class="badge bg-info-subtle text-info border-0 me-1">
+                        Jefes: {{ resumen.jefes }}
+                    </span>
+                </div>
+                <div class="mt-1">
+                    <span class="badge bg-danger-subtle text-danger border-0 me-1">
+                        Admin: {{ resumen.admins }}
+                    </span>
+                    <span class="badge bg-secondary-subtle text-secondary border-0">
+                        Usuarios: {{ resumen.usuarios }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-2">
+            <div class="row g-2">
+                {% for node in personas %}
+                {% set rol_l = (node.rol or '')|lower %}
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="org-person-card">
+                        <div class="d-flex align-items-center">
+                            <div class="org-avatar me-3">
+                                {{ ((node.nombre or '')[:2])|upper }}
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="pe-1">
+                                        <div class="org-name text-truncate">
+                                            {{ node.nombre or '—' }}
+                                        </div>
+                                        <div class="org-role-line text-truncate">
+                                            {% if node.rol %}
+                                            Rol: {{ node.rol|lower }}
+                                            {% endif %}
+                                            {% if node.jefe_nombre %}
+                                            {% if node.rol %} · {% endif %}
+                                            Jefe directo: <span class="fw-semibold">{{ node.jefe_nombre }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {% if rol_l == 'admin' %}
+                                        <span class="badge-role badge-role-admin">ADMIN</span>
+                                        {% elif rol_l == 'gerente' %}
+                                        <span class="badge-role badge-role-gerente">GERENTE</span>
+                                        {% elif rol_l == 'jefe' %}
+                                        <span class="badge-role badge-role-jefe">JEFE</span>
+                                        {% else %}
+                                        <span class="badge-role badge-role-usuario">USUARIO</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="org-id-line mt-1">
+                                    ID: {{ node.identificacion or '—' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="alert alert-light border rounded-3 shadow-sm mt-3">
+        No hay usuarios activos con jerarquía definida.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

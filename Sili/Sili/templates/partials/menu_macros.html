@@ -1,0 +1,52 @@
+{# templates/partials/menu_macros.html #}
+
+{# Render recursivo de nodos. Cada nivel tiene su propio "parent" #}
+{% macro render_nodes(nodes, parent_key) -%}
+<ul class="nav flex-column ms-0" id="grp-{{ parent_key }}">
+  {% for n in nodes %}
+    {% set is_group = n.is_group or n['is_group'] %}
+    {% set has_children = n.children and n.children|length > 0 %}
+    {% set collapse_id = 'mgrp-' ~ n.id %}
+
+    <li class="nav-item">
+      {% if is_group %}
+        {# Botón del grupo (no <a href="#"> para evitar saltos) #}
+        <button
+          class="nav-link-simple d-flex w-100 justify-content-between align-items-center btn btn-toggle rounded {% if not n.active %}collapsed{% endif %}"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#{{ collapse_id }}"
+          aria-expanded="{{ 'true' if n.active else 'false' }}"
+          aria-controls="{{ collapse_id }}">
+          <span>
+            {% if n.icon %}<i class="{{ n.icon }} me-2"></i>{% endif %}
+            {{ n.label }}
+          </span>
+          <i class="bi bi-chevron-down small"></i>
+        </button>
+
+        <div id="{{ collapse_id }}"
+             class="collapse {% if n.active %}show{% endif %}"
+             data-bs-parent="#grp-{{ parent_key }}">
+          {{ render_nodes(n.children, collapse_id) }}
+        </div>
+      {% else %}
+        <a class="nav-link-simple ps-4{% if n.active %} active{% endif %}"
+           href="{{ n.href or '#' }}">
+          {% if n.icon %}<i class="{{ n.icon }} me-2"></i>{% endif %}
+          {{ n.label }}
+        </a>
+      {% endif %}
+    </li>
+
+  {% endfor %}
+</ul>
+{%- endmacro %}
+
+{# Wrapper raíz que respeta tu script de "recordar estado" (id=sidebarAccordion) #}
+{% macro render_sidebar(menu_tree, active_page) -%}
+
+<div id="sidebarAccordion">
+  {{ render_nodes(menu_tree, 'root') }}
+</div>
+{%- endmacro %}

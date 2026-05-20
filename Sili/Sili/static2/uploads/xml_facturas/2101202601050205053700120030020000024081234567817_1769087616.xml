@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2101202601050205053700120030020000024081234567817</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-21T11:13:58-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;CATOTA DIAZ EVA MARINA&lt;/razonSocial&gt;
+    &lt;ruc&gt;0502050537001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;2101202601050205053700120030020000024081234567817&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;003&lt;/estab&gt;
+    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000002408&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;QUITO - AMBROSIO ACOSTA S34-328 Y AV EL TRANSITO - Teléfono:2961756&lt;/dirMatriz&gt;
+    &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;21/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;AMBROSIO ACOSTA S34-328 Y AV EL TRANSITO&lt;/dirEstablecimiento&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;AV. ROSAVIN LOTE 1 Y CALLE COBRE-KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;160.00&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+        &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+        &lt;valor&gt;0.00&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;160.00&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+        &lt;valor&gt;24.00&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;184.00&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;184.00&lt;/total&gt;
+        &lt;plazo&gt;30&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;Días&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;MOTOR   3KW&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;SERVICIO DE MANTENIMIENTO Y REBOBINAJE DE MOTOR 303B DE 3KW APROXIMADO,220/440VO&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;160.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;160.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;160.00&lt;/baseImponible&gt;
+          &lt;valor&gt;24.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;descripcion&gt;3500RPM,60HZ  OT9025 P8122&lt;/descripcion&gt;
+      &lt;cantidad&gt;0.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+          &lt;valor&gt;0.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;descripcion&gt;ORDEN DE COMPRA: 7500052580 N° HOJA DE INGRESO 1001560565&lt;/descripcion&gt;
+      &lt;cantidad&gt;0.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+          &lt;valor&gt;0.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Ciudad   :"&gt;GUAYAQUIL Teléfono:04 2162660          &lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Email    :"&gt;COMPRAS.ELECTRONICA@QUIMPAC.COM.EC Código Vendedor:1   &lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Contacto :"&gt;ING. DOMINGO ARGUINZONES&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Novedad  :"&gt;ORDEN DE COMPRA:7000052580 N° HOJA DE INGRESO 1001560565/GARANTÍA TÉCNICA:  6 MESES EN REBOBINAJE   &lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Elaborado Por:"&gt;.&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="CLAVE MAESTRA                 "&gt;.&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="."&gt;.&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="."&gt;.&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="."&gt;.&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="."&gt;.&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature60298"&gt;
+        &lt;ds:SignedInfo Id="Signature-SignedInfo50191"&gt;
+            &lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+            &lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+            &lt;ds:Reference Id="SignedPropertiesID68507" URI="#Signature60298-SignedProperties59434" Type="http://uri.etsi.org/01903#SignedProperties"&gt;
+                &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                &lt;ds:DigestValue&gt;r9gmh/ZBdqsr7IlTeGrB9Y6kBc0=&lt;/ds:DigestValue&gt;
+            &lt;/ds:Reference&gt;
+            &lt;ds:Reference URI="#Certificate51031"&gt;
+                &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                &lt;ds:DigestValue&gt;NAYeXjUSzTw5tTbQwWmYIUec9DQ=&lt;/ds:DigestValue&gt;
+            &lt;/ds:Reference&gt;
+            &lt;ds:Reference Id="Reference-ID-54100" URI="#comprobante"&gt;
+                &lt;ds:Transforms&gt;
+                    &lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+                &lt;/ds:Transforms&gt;
+                &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                &lt;ds:DigestValue&gt;mjnNL7oO0iVl87mhXRMUqhvF8EE=&lt;/ds:DigestValue&gt;
+            &lt;/ds:Reference&gt;
+        &lt;/ds:SignedInfo&gt;
+        &lt;ds:SignatureValue Id="SignatureValue83590"&gt;ePDEm3SLU/x5HFF8SjofNMhIjIh/Mnt4tOmvOzA8ruN0Tt55pczJqznp/v9stPqu9wa5Mn2A9TBc
+8q8N5dX+QMw/wRS8rYh1UAU9a38Q+RJjhsMlhQzODL2WfvFDBGl4CJoz72LNty/p9u9kGF13UJI4
+Y/vbsSYFYx5zE0+7Ghh5pwDAZgcv5urL5Ky1IY0rG18GftwDlvBMfoU6XMvQ8CoZClZLePT0pM/5
+VcvC7Tn2WJMipjFbY8Q6/o88cY1pZJSnkzlWwc9mNsKKpcZVqURXYjEnHMjViyaYHyX23J0YAHP6
+zN5q9yy2tN7tqQyzR/Rtd1wjKdxomnjMihzFig==&lt;/ds:SignatureValue&gt;
+        &lt;ds:KeyInfo Id="Certificate51031"&gt;
+            &lt;ds:X509Data&gt;
+                &lt;ds:X509Certificate&gt;MIILqjCCCZKgAwIBAgIEBYSZiTANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMjA1MjAxOTQ1MzRaFw0yNjA1MjAxOTQ1MzRaMIGWMR8w
+HQYDVQQDDBZFVkEgTUFSSU5BIENBVE9UQSBESUFaMRUwEwYDVQQFEwwyMDA1MjIxNDU1MTcxMDAu
+BgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwU
+U0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAxCardIbEJw+7+aq9odRPgfVqYRBQXx+5Lz8vt6m0tNMckI8eQ9FaMGM3cWyX/sPb
+a0j6GvOnSZtnwZIi9bRfUyuVbfhf/TQ7TyBGjKlGkzFEKkvc1iuxVYx3PuSE6Zq5fphMRXhh4gso
+o3HQanPw+cZQEPn9bdVdW5dP4MEbxfZCy+VRwujaWldYr0PVgN6En6fe9RhedgrLHxGTD9sfwdnA
+P0cnUD8jfSncIwArUyzIP/omMcrLNs4a81dOTgYlQhdE/d/dgqlW1hcnrb1W2xipVyjkh0e1WD+H
+dI8vl/mrjkOjbAsbG+dngAi+xFYlyzy8rnL8G4kmd5u4XaD8+QIDAQABo4IG+TCCBvUwDAYDVR0T
+AQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzCB2AYIKwYBBQUHAQEEgcsw
+gcgwgcUGCCsGAQUFBzABhoG4bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NO
+PUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4g
+MixDPUVDP2RlbHRhUmV2b2NhdGlvbkxpc3Q/YmFzZTCBzgYDVR0uBIHGMIHDMIHAoIG9oIG6hoG3
+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJU
+SUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2Nh
+dGlvbkxpc3Q/YmFzMCMGA1UdEQQcMBqBGGNwYW1hcmluYWNhdG90YUB5YWhvby5lczBlBgNVHSAE
+XjBcMFoGCisGAQQBgqZyAgcwTDBKBggrBgEFBQcCAjA+HjwAQwBlAHIAdABpAGYAaQBjAGEAZABv
+ACAAZABlACAAUABlAHIAcwBvAG4AYQAgAE4AYQB0AHUAcgBhAGwwggKiBgNVHR8EggKZMIIClTCB
+5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIv
+c3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9O
+IFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9O
+IERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMC
+RUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVU
+T1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQg
+REUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9
+RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0
+YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3Qv
+Y2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VC
+Q0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1B
+Q0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFCkAyhbZi8zgICVQehJW
+m3Duqz0PMCsGA1UdEAQkMCKADzIwMjIwNTIwMTk0NTM0WoEPMjAyNjA1MjAxOTQ1MzRaMAsGA1Ud
+DwQEAwIF4DAaBgorBgEEAYKmcgMBBAwMCjA1MDIwNTA1MzcwFQYKKwYBBAGCpnIDCQQHDAVRVUlU
+TzARBgorBgEEAYKmcgMiBAMMAS4wOgYKKwYBBAGCpnIDBwQsDCogQU1CUk9TSU8gQUNPU1RBIFMz
+NC0zMjggWSBBVi4gRUwgVFJBTlNJVE8wGgYKKwYBBAGCpnIDAgQMDApFVkEgTUFSSU5BMB8GCisG
+AQQBgqZyAyAEEQwPMDAyMDAxMDAwMzYwNTM2MBEGCisGAQQBgqZyAyMEAwwBLjATBgorBgEEAYKm
+cgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFgYKKwYBBAGCpnIDAwQIDAZDQVRP
+VEEwEQYKKwYBBAGCpnIDHgQDDAEuMB0GCisGAQQBgqZyAwsEDwwNMDUwMjA1MDUzNzAwMTARBgor
+BgEEAYKmcgMdBAMMAS4wFAYKKwYBBAGCpnIDBAQGDARESUFaMBoGCisGAQQBgqZyAwgEDAwKMDk4
+NDQ5MDgxODANBgkqhkiG9w0BAQsFAAOCAgEAwhhMODZ+5oqcjRoHxn5H9/Kb00cDParlg6VZYO1z
+nwHmJAHhv/hvdoAstuko9oNYIh7ASX2cq/TKIX2JkKgpaozdsMYMYcVkSolQmB8AVIz/cTK5ADDV
+XGTs6ZnYf7/IRA0W2rYdfT+iZ4PX2hZv1PMELwDvCkB4c7X4bevLuNbcB/YS1AaRl3PUsNoaDlcf
+DpAphu3ku0SZUUnQZRHEAdRpugjt3I9YfEIpyT4pSjnAvoMXAcXHESxUf9OrCDAD1AvX1OgHchKn
+OJbae/icS6VMJNNlYmreZz8iCORdwlqzNcno3UYG/MLwepr4vVivrq/zNO4v/KVFGCG1yGChCW+E
+zw6b86laJUcINzj0fVRE1HAowvlcKNds82Eq3la/sJ5Km8WvGUYv+HU4d6dSskDRKbO4p5uhH+Nj
+QPsU1aCdPkt7D5dpQHLlk+yfnaAW/bbCy742Vp6VF17AR2pvH6/jGBJJZxfv4xnfv4c7KYHtsvgU
+F3mSTe5tZ/AcTiAFsXPoLyA02Qd1ptQ9i+Mf30kWsH6/VWd+n7GYDDD2RTFeV6YpmVA1wN3EwEsQ
+F6jPTE/pNSjc1i6zjyPu1jcC1szzgr3LQcV6t7RHevyWWDGYEhm7yZIg+pBhOf+xEIdJybtNjVuO
+VcK5jg3ZvPairRXlWOYO7kDWNd+3UDkfBDc=&lt;/ds:X509Certificate&gt;
+            &lt;/ds:X509Data&gt;
+            &lt;ds:KeyValue&gt;
+                &lt;ds:RSAKeyValue&gt;
+                    &lt;ds:Modulus&gt;xCardIbEJw+7+aq9odRPgfVqYRBQXx+5Lz8vt6m0tNMckI8eQ9FaMGM3cWyX/sPba0j6GvOnSZtn
+wZIi9bRfUyuVbfhf/TQ7TyBGjKlGkzFEKkvc1iuxVYx3PuSE6Zq5fphMRXhh4gsoo3HQanPw+cZQ
+EPn9bdVdW5dP4MEbxfZCy+VRwujaWldYr0PVgN6En6fe9RhedgrLHxGTD9sfwdnAP0cnUD8jfSnc
+IwArUyzIP/omMcrLNs4a81dOTgYlQhdE/d/dgqlW1hcnrb1W2xipVyjkh0e1WD+HdI8vl/mrjkOj
+bAsbG+dngAi+xFYlyzy8rnL8G4kmd5u4XaD8+Q==&lt;/ds:Modulus&gt;
+                    &lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+                &lt;/ds:RSAKeyValue&gt;
+            &lt;/ds:KeyValue&gt;
+        &lt;/ds:KeyInfo&gt;
+        &lt;ds:Object Id="Signature60298-Object74046"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature60298"&gt;
+                &lt;etsi:SignedProperties Id="Signature60298-SignedProperties59434"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-21T11:13:57-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;v+qz43nNC2E9v+qGq2YAaGhRnBM=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;92576137&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-54100"&gt;
+                            &lt;etsi:Description&gt;Servicios IT, Luis Orellana Escalante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2001202601099329505100120050020000036381234567814</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-20T22:10:07-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;GONG S.A.&lt;/razonSocial&gt;
+        &lt;ruc&gt;0993295051001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2001202601099329505100120050020000036381234567814&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;005&lt;/estab&gt;
+        &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000003638&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;LA AURORA (SATÉLITE)&lt;/dirMatriz&gt;
+        &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;20/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;LA AURORA (SATÉLITE)&lt;/dirEstablecimiento&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;Dir: KM 16.5 VÍA A DAULE, CALLE COBRE Y AV. ROSAVIN”&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;13.03&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.27&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;13.03&lt;/baseImponible&gt;
+                &lt;valor&gt;1.96&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;14.99&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;16&lt;/formaPago&gt;
+                &lt;total&gt;14.99&lt;/total&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;507&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;PT0242&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PT 12  PORCION  DE WANTAN&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.177391&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.04&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.13&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.13&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.33&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;2&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;EM0033&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;EM FUNDA PAPEL #6&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;507&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;PT0242&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PT 12  PORCION  DE WANTAN&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.177391&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.04&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.13&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.13&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.33&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;2&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;EM0033&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;EM FUNDA PAPEL #6&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;741&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;PT2137&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PT 30 ROLLOS + PORC WANTAN + GASEOSA FAMILIAR&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;8.686900&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.18&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;8.51&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;8.51&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.30&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;594&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;PT1318&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;A COMBO 30 ROLLOS  TMP, CLF, WKM&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;759&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;PT2190&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PT CEVICHADO X 80 GR&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;761&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;PT2192&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PT SALSA DE ANGUILA X 80 GR&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;486&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;PT0192&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PT COLA  GALLITO FAMILIAR&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;2&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;EM0033&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;EM FUNDA PAPEL #6&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;52&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;EM1331&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;EM BANDEJA GRANDE SUSHI CTAPA&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.260870&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.01&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.26&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.26&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.04&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="Sistema Contable"&gt;Neola v.1.1&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Catastro"&gt;CONTRIBUYENTE RÉGIMEN GENERAL -  AGENTE DE RETENCIÓN&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Dirección"&gt;KM 16.5 VÍA A DAULE, CALLE COBRE Y AV. ROSAVIN”&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Email"&gt;contabilidad@gong.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Teléfono"&gt;S/N&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="uuid"&gt;f8cc025b-f1b9-40ab-b753-316b38f4d343Gong-Caja-1&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="delay"&gt;1623&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature940970"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo29268"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID415268" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature940970-SignedProperties579077"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Cll9bgesvvAO1Ocz6eLQpD7kYD4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1345187"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;8/mxYzBdfuLXfXEKkuRHbvaHSXM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-885947" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;MAcxHWgcqxpbCS2Tdo9w9LyN2Fk=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue605283"&gt;
+dN98d8O37BBdUWGnvsUHuUyFFLdjJG57VMeat5sP8emCF7qgdgykchrULsEh0ZYbqucbYXsoIIbw
+ejOEUBfyhaKoJvibJkuIeyaoZCB9pz6FICMxQTF973/zQD42zMEL98zX5te+RLRBweLGuLGM4PT1
+8kJ01xHWkAlnKXsE66PGw/2tfuhR6xY+iVxPZC3N205rr7oTvuozcfNhBT24mbGZkUCgvbhWlN9i
+kWRtiWEn5eRIh5QPWsI/uN/UJmR6k1N8DCu5/kPVz4uozDGVwZV0T7HUr0yOUd9LABWbrQrbCuSi
+Y3QofTcuOKQk26/Fo1XNzQ5yy3nDgLyzte0Uqw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1345187"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKtTCCCJ2gAwIBAgIIT6b1enkHP7owDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUxMjA0MjAzMzUzWhcNMjcxMjA0MjAzMzUzWjCB
+nTEbMBkGA1UEAwwSU0hJTkcgQ0hFVU5HIENIRVVLMSAwHgYDVQQFExcwOTExNzA4MDcxLTA0MTIy
+NTE1NDM0MzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9O
+MR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQCupBxQAVC/fCELJ8mlVlSap3wlCjEDcfbF2/Uaz6gedNl+B2UU
+1H+u9GUY3b5ijuB5CzWpkNGTC6tbLANLmUvqFuJXGRHWB6R+Elw6Enwd7BswWywsqS1ysIT1P4Ky
+IoOUeTnuyPV56+yL9QrpddH7WnGNC21C1kQGSu5Zw2Mrl/Tcv5QQw06Hw5Zl4n/6/RmPyzGBibZ4
+JyatvgdfsdWujTypOmmkqgb13MmGyWsdzSUaBdYcxqKVDQrXt0VqoAA03bfbxXc5hoH3rQSShWra
+rTlalIi0ykBrEKZsr3IlM35PaF3uc4N8iutZ0EXVidaEFEobn9EkRLloggaUFzSfAgMBAAGjggX5
+MIIF9TAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsG
+AQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVj
+L2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAmBgNVHREEHzAdgRtsYWNhc2FkZWx0b21haGF3
+a0BnbWFpbC5jb20wggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIw
+Rh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0
+AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93
+d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1Bf
+ZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExl
+Z2FsLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB
+3qA6oDiGNmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxl
+LmNybKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0Et
+MiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5G
+T1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqg
+OIY2aHR0cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3Js
+MIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMv
+ZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJ
+REFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMw
+HQYDVR0OBBYEFHMt1RlPLvTIgxif5ED57SdExxr4MCsGA1UdEAQkMCKADzIwMjUxMjA0MjAzMzUz
+WoEPMjAyNzEyMDQyMDMzNTNaMAsGA1UdDwQEAwIF4DAfBgorBgEEAYKmcgMFBBEMD0dFUkVOVEUg
+R0VORVJBTDAaBgorBgEEAYKmcgMBBAwMCjA5MTE3MDgwNzEwFgYKKwYBBAGCpnIDCQQIDAZUQVJR
+VUkwEQYKKwYBBAGCpnIDIgQDDAEuMDgGCisGAQQBgqZyAwcEKgwoQVYgQkVOSkFNSU4gQ0FSUklP
+TiBTTiBZIElORyBGRUxJUEUgUEVaTzAVBgorBgEEAYKmcgMCBAcMBVNISU5HMB8GCisGAQQBgqZy
+AyAEEQwPMDAxMDAyMDAxMDgwNDkzMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwE
+CQwHRUNVQURPUjAWBgorBgEEAYKmcgMDBAgMBkNIRVVORzAYBgorBgEEAYKmcgMKBAoMCEdPTkcg
+UyBBMB0GCisGAQQBgqZyAwsEDwwNMDk5MzI5NTA1MTAwMTARBgorBgEEAYKmcgMdBAMMAS4wFQYK
+KwYBBAGCpnIDBAQHDAVDSEVVSzAaBgorBgEEAYKmcgMIBAwMCjA5OTI2MTI5MTQwDQYJKoZIhvcN
+AQELBQADggIBALew/4b6Pn25om7+lWwS0SvPYTNP6dzAd8eADo/SosjrEkoMiixSjBGjbXIImbAE
+QAXKEO+WgJzUVT1G+vW/vLmBzwy21Zdm6vjjZGBRgdy85QXF3KNfNMGa1A9zzrubPNcMXN9pPpJ7
+EcSb6oYoOsPTBcUCw4nlN8L7HQ8icioufvwrNgoH8b7KY2GmqxCVp/IV35UgodkWG3fMZHtH0eVC
+HlagPrnnl9whd/5JBx+gkx5LfLofbJ52yMMylX/jFhE8eZTV+ORjoQvOzzD9jvjwWMD2H5GC2GCc
+YyaVMVnKx6nudOG88CCjoUg+oSde7FwhqjU/O0X+eqtk4+r6UPZ37bH1fXgcD+lHZAQV3RkyBFfZ
+KXogWhEgYZhO1f7fEQIKu8KUFgtjgukD4fa4HEyvwF9RlQGIdNZ5ERiC4xjRZwAj6dzInK0IosCi
+AgFQ+k9x6kw3Y099LiYvTQSDK+pHrdMxs/bQgIhF20klrjx1/YmtdKuZbbb+LdnjVz94N9n8e2vn
+XhcNiPplQHWWeG8563tyvKs08jJxk+wbO2aqZ7JZMImrtAd7UDa94Z7IMlOfVnpQTM8Mxa1oHAP2
+1O4a0ifRsE6EF6vesH7fyVLhWuILECvEdkAUVdSFm9SrsdlcYLEj39xK/BDYTM0eCxdmZNenwrw1
+S3yZr7qD28pX
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+rqQcUAFQv3whCyfJpVZUmqd8JQoxA3H2xdv1Gs+oHnTZfgdlFNR/rvRlGN2+Yo7geQs1qZDRkwur
+WywDS5lL6hbiVxkR1gekfhJcOhJ8HewbMFssLKktcrCE9T+CsiKDlHk57sj1eevsi/UK6XXR+1px
+jQttQtZEBkruWcNjK5f03L+UEMNOh8OWZeJ/+v0Zj8sxgYm2eCcmrb4HX7HVro08qTpppKoG9dzJ
+hslrHc0lGgXWHMailQ0K17dFaqAANN2328V3OYaB960EkoVq2q05WpSItMpAaxCmbK9yJTN+T2hd
+7nODfIrrWdBF1YnWhBRKG5/RJES5aIIGlBc0nw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature940970-Object411092"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature940970"&gt;
+                &lt;etsi:SignedProperties Id="Signature940970-SignedProperties579077"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-20T22:09:48-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;ocEm1u1UWgArtTWcV8XyyJmo6I8=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;5739544681495609274&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-885947"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

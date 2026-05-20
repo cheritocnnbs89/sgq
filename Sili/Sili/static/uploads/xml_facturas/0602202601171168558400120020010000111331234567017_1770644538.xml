@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0602202601171168558400120020010000111331234567017</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-06T16:21:49-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;FERRETERIA FERRISAT&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;FERRETERIA FERRISAT&lt;/nombreComercial&gt;
+    &lt;ruc&gt;1711685584001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0602202601171168558400120020010000111331234567017&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;002&lt;/estab&gt;
+    &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000011133&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;SAN JUAN DE TURUBAMBA CALLE PRINCIPAL LOTE 81 Y CALLE A&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;06/02/2026&lt;/fechaEmision&gt;
+    &lt;obligadoContabilidad&gt;NO&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;AV PANAMERICANA SUR QUITO PICHINCHA&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;4.26&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+        &lt;tarifa&gt;0&lt;/tarifa&gt;
+        &lt;valor&gt;0.00&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;4.26&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15&lt;/tarifa&gt;
+        &lt;valor&gt;0.64&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;4.90&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;01&lt;/formaPago&gt;
+        &lt;total&gt;4.90&lt;/total&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;30819&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;CLAVO DE ACERO 3 PHENIX CAJA 7005&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;4.2609&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;4.26&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;4.26&lt;/baseImponible&gt;
+          &lt;valor&gt;0.64&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Direccion"&gt;AV PANAMERICANA SUR QUITO PICHINCHA&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Email"&gt;HREASCO@QUIMPAC.COM.EC&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Fechavencimiento"&gt;06/02/2026&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature543268"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo215939"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID552482" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature543268-SignedProperties437933"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;t9d/v32ZJl+8siWG/MZDjnK/6iM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1943932"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;D2Sgwk48zevh9EHprGZ0rKUR+9M=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-709856" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;0KcfSH+va4vIsye90Vj0pv6NDhE=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue888155"&gt;
+BZ2I5eIGnIoCaciCExPgD0K20Y8S0H/a/laD8mPGi1KRj/NE2WkIsC3ffviRV48XAS/aHX0sR6Xh
+jRGU49nCWQRRLQI7HozVnRQ4nfCews+ry9M8ZJYQzVbsKDjaiBgyykp7TUcQB+msGaagUWNGPR2x
+kh5OhC2+nYxBB1hcdtIv+vMU4mUvXDMBXS0X+7F/BYSvV5T8voQatxJifZjeQKiLfVPxXVZOqd2s
+f8y1pw/Q92YUR9ZoiG58tN4fyrGyT2BaUqYWNQgE4Vh0dSg9AkBMoCRg1DbeenamM70s38qcCptl
+f7zWPRlIz78qIX2iM+4FtOhVF+uTpSmklIsgpg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1943932"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIHyzCCBbOgAwIBAgIQDOWoEFF1aGIltrNDnOt6nDANBgkqhkiG9w0BAQsFADCBwjELMAkGA1UE
+BhMCRUMxGzAZBgNVBAoMEkZJUk1BU0VHVVJBIFMuQS5TLjEwMC4GA1UECwwnRU5USURBRCBERSBD
+RVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMRMwEQYDVQQIDApUVU5HVVJBSFVBMT4wPAYDVQQD
+DDVBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0xIEZJUk1BU0VHVVJBIFMuQS5TLjEP
+MA0GA1UEBwwGQU1CQVRPMB4XDTI0MTExMzIwMjMwNloXDTI2MTExMzIxMjMwNlowgd4xLTArBgNV
+BAUTJGRmYmUwNTgyLWY5MjQtNDNkMi04MTFiLTQwYWM0OTQ4YzJmODEsMCoGCSqGSIb3DQEJARYd
+ZmFjdHVyYWNpb25hdmV0cnVrc0BnbWFpbC5jb20xIzAhBgNVBAMTGkpPUkdFIEdPTlpBTE8gU0FU
+SUFOIERVVEFOMTAwLgYDVQQLEydFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJ
+T04xGzAZBgNVBAoTEkZJUk1BU0VHVVJBIFMuQS5TLjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQCqqurvALdSiW2tbDxSW3FjgS/pZajCSoS18ZhhqCNe3nddBcGF
+Puxrqci/ObZ6yCu7TH9AlYXivuRqwFmVWNTcPy+58zvjhNRcyFFl88ukG6YxtHnhyXL6BSUMBaRG
+z54l2tyn3349S80zODGLUfd5WcTiLTJ9k6MQqF8M72zQcTPLa/7DV4blc7Vm1HbK6WBsHeaoOKCj
+y/qdk+JNvZkZM182vG6V2+IGLPj7vajPEb2iJWMUEWUMPPCI4CZNrr/exq3ApyvL63FbpPebStNP
+nMjlYGvI3VgTMdrNVLronsiV7S2RqnmHC+nOqRKT6wBOFUNIY1g8+56+jkYdrDZdAgMBAAGjggKd
+MIICmTAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFBNGk2gJrtckhzNFYyZ336xeXopRMB0GA1UdDgQW
+BBRSUHkR2gxEGxtGFpce01LJf69oWDBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3JsLmZpcm1h
+c2VndXJhZWMuY29tL2NybC9jY2NlNWE0Zi02YjY4LTQ2ZmMtYTYyMC00YWJjYzRjNGE2OTAuY3Js
+MDkGCCsGAQUFBwEBBC0wKzApBggrBgEFBQcwAYYdaHR0cDovL29jc3AuZmlybWFzZWd1cmFlYy5j
+b20wGgYKKwYBBAGD3nkDAQQMFgoxNzExNjg1NTg0MB0GCisGAQQBg955AwIEDxYNSk9SR0UgR09O
+WkFMTzAWBgorBgEEAYPeeQMDBAgWBlNBVElBTjAVBgorBgEEAYPeeQMEBAcWBURVVEFOMDMGCisG
+AQQBg955AwcEJRYjU0FOIEpVQU4gREUgVFVSVUJBTUJBIFMyNiBFNi0xMyBZIEEwHAYKKwYBBAGD
+3nkDCAQOFgw1OTM5Njc4NTIxOTAwFQYKKwYBBAGD3nkDCQQHFgVRVUlUTzATBgorBgEEAYPeeQMM
+BAUWA0VDVTAdBgorBgEEAYPeeQMLBA8WDTE3MTE2ODU1ODQwMDEwgZwGA1UdIASBlDCBkTBQBgsr
+BgEEAYPeeQIBATBBMD8GCCsGAQUFBwIBFjNodHRwczovL2Zpcm1hc2VndXJhZWMuY29tL3BvbGl0
+aWNhc19wZXJzb25hX25hdHVyYWwwPQYLKwYBBAGD3nkCAgEwLjAsBggrBgEFBQcCAjAgDB5DZXJ0
+aWZpY2FkbyBkZSBQZXJzb25hIE5hdHVyYWwwDgYDVR0PAQH/BAQDAgXgMA0GCSqGSIb3DQEBCwUA
+A4ICAQCbxCAPoZw2VoNEdtD3fx5Uh5j4UN4lkzyLyEHpEvZZQtrJ4CUSwzjn7Q9ZlFmpnjL5IiRq
+w6PByvY/NCPzcnsrxc1e/QcuVZUhzYkcCjr2CmxY4q3MZjk3ZqARyMJ1/R6AmLo40ysUSjRlg/B2
+cFezAA54+/z0u5uV9mE6lbebrMH2EGI9BNEk3WcfJwBmuR25X2x7zA0cE65bg82Adq70cyw8n72O
+e6u0tjXQ4b5IperBL8M9RwzS0beFoGMj5cM54+05EcJbLP3HPPhFg2j38nY/ia/mjHd3193WfEqb
+BnflOeD3YG0m85EbZEc+RUupTpsN6bA3CciRsnvW1+1IZ7uVJoLx+jTC0p7upuS0Q/Mdw8F5fSPo
+2sxZNln/vr/zhf7G3ZMrl9GplKq3gIGZ1p8JQJFXaAmwkR8L+vT2iWm0ZSfmxqHKYdJ3EEm/NJU3
+RFrOeiFbQxwxm3neOg1vBGoIcsiDSjEeBtMb/2mrZIvHfgCCJyL/93JXj03UGNn6c+exBFr0ubRU
+SbKicwqo8f4961ol5V8XhRevh6VWIH9p1VRFWGWtsw3GgaNhiXZzsjqr+raK4V8JsGGyewIyKuDz
+3h0NnJgh0l16p8EEUIaRmEveyfFqmz1WsfjL08rwLMN97Mvzqz0UzixBWLAfH9erTLD/D9JFMx6w
+wpp09A==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+qqrq7wC3UoltrWw8UltxY4Ev6WWowkqEtfGYYagjXt53XQXBhT7sa6nIvzm2esgru0x/QJWF4r7k
+asBZlVjU3D8vufM744TUXMhRZfPLpBumMbR54cly+gUlDAWkRs+eJdrcp99+PUvNMzgxi1H3eVnE
+4i0yfZOjEKhfDO9s0HEzy2v+w1eG5XO1ZtR2yulgbB3mqDigo8v6nZPiTb2ZGTNfNrxuldviBiz4
++72ozxG9oiVjFBFlDDzwiOAmTa6/3satwKcry+txW6T3m0rTT5zI5WBryN1YEzHazVS66J7Ile0t
+kap5hwvpzqkSk+sAThVDSGNYPPuevo5GHaw2XQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature543268-Object400337"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature543268"&gt;
+                &lt;etsi:SignedProperties Id="Signature543268-SignedProperties437933"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-06T16:21:47-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;gmgRbpbhXcYro9K0joyaUfEQrTk=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;L=AMBATO,CN=AUTORIDAD DE CERTIFICACION SUBCA-1 FIRMASEGURA S.A.S.,ST=TUNGURAHUA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=FIRMASEGURA S.A.S.,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;17143180667697702763676349392602495644&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-709856"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

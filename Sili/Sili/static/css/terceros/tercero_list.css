@@ -1,0 +1,204 @@
+:root {
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --ink: #111827;
+  --muted: #6B7280;
+  --line: #E5E7EB;
+  --surface-1: #FFFFFF;
+  --surface-2: #F3F4F6;
+  --input-bg: #FFFFFF;
+  --input-border: #CBD5E1;
+  --th-bg: #F3F4F6;
+  --row-hover: rgba(37, 99, 235, .06);
+  --primary: #2563EB;
+  --primary-600: #1D4ED8;
+  --grad-hero: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #22D3EE 100%);
+  --shadow-soft: 0 6px 20px rgba(2, 6, 23, .08);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, .28);
+}
+
+html.theme-dark {
+  --bg: #0B1220;
+  --card: #0F172A;
+  --ink: #E5E7EB;
+  --muted: #94A3B8;
+  --line: #1F2A44;
+  --surface-1: #0F172A;
+  --surface-2: #0B1629;
+  --input-bg: #0D1324;
+  --input-border: #334155;
+  --th-bg: #0B1629;
+  --row-hover: rgba(56, 189, 248, .08);
+  --shadow-soft: 0 10px 32px rgba(0, 0, 0, .45);
+  --shadow-focus: 0 0 0 3px rgba(59, 130, 246, .35);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.title-blue {
+  background: var(--grad-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+.btn-cta-blue {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: var(--grad-hero) !important;
+  background-color: transparent !important;
+  background-size: 120% 120%;
+  background-position: 50% 50%;
+  color: #fff !important;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: .45rem .9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  text-decoration: none;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, .25) !important;
+  transition: transform .12s ease, filter .12s ease, background-position .2s ease, box-shadow .2s ease;
+}
+
+.btn-cta-blue:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  background-position: 55% 45%;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, .30) !important;
+}
+
+.btn-cta-blue:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, .25) !important;
+}
+
+.btn-cta-blue:focus {
+  outline: 0 !important;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, .25) !important;
+}
+
+.panel-outline {
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.panel-header {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line);
+  padding: .65rem .85rem;
+}
+
+.panel-body {
+  padding: .85rem;
+}
+
+.form-control,
+.form-select {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--ink);
+}
+
+.form-control::placeholder {
+  color: var(--muted);
+}
+
+.input-group-text {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--muted);
+}
+
+.btn-outline-secondary {
+  border-color: var(--input-border);
+  color: var(--ink);
+}
+
+.btn-outline-secondary:hover {
+  background: var(--row-hover);
+}
+
+#tabla-terceros thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--th-bg);
+  color: var(--ink);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .06);
+}
+
+#tabla-terceros tbody tr:hover {
+  background: var(--row-hover);
+}
+
+.table-compact td,
+.table-compact th {
+  padding: .25rem .5rem !important;
+}
+
+.pagination .page-link {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--ink);
+}
+
+.pagination .page-item.active .page-link {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: 8px;
+}
+
+.tercero-search-group {
+  max-width: 460px;
+}
+
+.tercero-counter-text {
+  color: var(--muted);
+}
+
+.tercero-obs-cell {
+  max-width: 260px;
+}
+
+@media (max-width: 768px) {
+  #tabla-terceros thead {
+    display: none;
+  }
+
+  #tabla-terceros tbody tr {
+    display: block;
+    margin-bottom: .75rem;
+    border: 1px solid var(--line);
+    border-radius: .5rem;
+    background: var(--surface-1);
+  }
+
+  #tabla-terceros tbody td {
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem;
+    padding: .35rem .6rem !important;
+  }
+
+  #tabla-terceros tbody td::before {
+    content: attr(data-th);
+    font-weight: 600;
+    color: var(--muted);
+  }
+}

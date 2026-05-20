@@ -1,0 +1,51 @@
+.detail-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.detail-head {
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.detail-body {
+  padding: 1rem;
+}
+
+.kv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.kv-table td {
+  padding: 0.35rem 0;
+  vertical-align: top;
+}
+
+.kv-table .k {
+  width: 42%;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.kv-table .v {
+  font-weight: 600;
+}
+
+.kv-section-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.badge-ok {
+  background-color: #198754;
+}
+
+.badge-no {
+  background-color: #dc3545;
+}

@@ -1,0 +1,1 @@
+// JS personalizado para el fragmento de detalle de contrato.

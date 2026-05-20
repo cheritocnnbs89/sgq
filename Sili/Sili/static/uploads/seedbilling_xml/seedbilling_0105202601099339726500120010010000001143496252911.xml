@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>PALLET DEL NORTE PALNORT SJC S.A.S.</razonSocial>
+        <nombreComercial>PALLET DEL NORTE PALNORT SJC S.A.S.</nombreComercial>
+        <ruc>0993397265001</ruc>
+        <claveAcceso>0105202601099339726500120010010000001143496252911</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>001</ptoEmi>
+        <secuencial>000000114</secuencial>
+        <dirMatriz>Calle: BASTION POPULAR Interseccion: VILLA 3 </dirMatriz>
+        <contribuyenteRimpe>CONTRIBUYENTE RÉGIMEN RIMPE</contribuyenteRimpe>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>01/05/2026</fechaEmision>
+        <dirEstablecimiento>Calle: BASTION POPULAR Interseccion: VILLA 3 </dirEstablecimiento>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <direccionComprador>KM 16 1/2 VIA A DAULE</direccionComprador>
+        <totalSinImpuestos>722.10</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>722.10</baseImponible>
+                <valor>108.32</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0</propina>
+        <importeTotal>830.42</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>830.42</total>
+                <plazo>30</plazo>
+                <unidadTiempo>Dias</unidadTiempo>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>000005</codigoPrincipal>
+            <descripcion>PALLET DE 115 X 115</descripcion>
+            <cantidad>87.00</cantidad>
+            <precioUnitario>8.30</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>722.10</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>722.10</baseImponible>
+                    <valor>108.31</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Email">gecheverria@quimpac.com.ec</campoAdicional>
+        <campoAdicional nombre="ORDEN DE COMPRA"> # 100615018</campoAdicional>
+        <campoAdicional nombre="GUIA DE REMISION  #  182">INGRESO : 5000099242</campoAdicional>
+        <campoAdicional nombre="GUIA DE REMISION  # 191">INGRESO : 5000101384</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-17914ae9-a3a4-4c4f-a7cb-28bac4420a75"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-17914ae9-a3a4-4c4f-a7cb-28bac4420a75-ref0" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>CrcmUFRaXGCoCAsyh0KNb1M6LWfRrYzUD40Csgoatnk=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-17914ae9-a3a4-4c4f-a7cb-28bac4420a75-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>0q8JYISJ5gGYYU0yhy+TP8+K1aKMWCOn9mftrdDhcpE=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-17914ae9-a3a4-4c4f-a7cb-28bac4420a75-sigvalue">m+xix6OuL7yXKWKOVUTQWm56DD/7EqsyrqBwEPUEEKPQmVI/UQOM9GvpvGzUCTktxos4rPhBFYVOwpJ7gTs0fuWmWti132Ytizs6rE4dAquPauVZyqyuKhdZV5RI0B3hIBG+xjKxykSnJ0ZERrztmkjnMC6TbwCvBkO6FSwDphpPhWZvHPtrE0HOSpxRZqEoE8zWkTqnYPoQ0I0wrBgdXx+wkDuPIi9j3dRGFW+HBDyIdKtg8tJXR/sKh0WbT5ZN957T5O3/ZhW1cr0A6AyCfk1h07AuyybeSoanVyeIgzgk2hAlL0i93Nq93woywboK0ih8C8QHdYX7hVrUK00Ong==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIJ9jCCB96gAwIBAgIIBYoc90I6abIwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQwQgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNvbS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNBMRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4XDTI1MDMyMzAxMjQwMFoXDTI5MDMxMTEwMzczMVowgeoxCzAJBgNVBAYTAkVDMSwwKgYDVQQKDCNQQUxMRVQgREVMIE5PUlRFIFBBTE5PUlQgU0pDIFMuQS5TLjEYMBYGA1UEDAwPR0VSRU5URSBHRU5FUkFMMRYwFAYDVQQEDA1aQU1PUkEgTEVPTkVTMRkwFwYDVQQqDBBKRVNTSUNBIFBBVFJJQ0lBMRkwFwYDVQQFExBJRENFQy0wOTI0OTQzNzE1MScwJQYDVQQDDB5KRVNTSUNBIFBBVFJJQ0lBIFpBTU9SQSBMRU9ORVMxHDAaBgNVBGEME1ZBVEVDLTA5OTMzOTcyNjUwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQD16XJ+rzSAyOx8xACxNh9GHzzLTr7OP45Tb4jR5rARgLlhDhOtNOeKFDR5qgaFDFDZjgXO6paA8UtDYvtq+8wYCK71yjsXlYKEDGb/dnoxxywaIooy8V4k8ZTk+bxXYhsodoiQR6xYVXXCaeMNhjAibhSoq2pj3ebSnu990cScLTdwIWx4QYVSghBX3OCFHCxPBXBomsgv8dyMzPscnsCplECE4zoZY0gFRlvcZWDTHCdNVlBeJPuU5mK0Cf1gfHe9CR4rUnvLevN2OL3ADkqXbdFReSa01bPhPrmAXFOxd3xtsBH3iKmf3e9J8PYgI9LwMkOy9jS2wZNadz4cdcthAgMBAAGjggTOMIIEyjAbBgsrBgEEAYLxNmYDAQQMDAowOTI0OTQzNzE1MB4GCysGAQQBgvE2ZgMLBA8MDTA5OTMzOTcyNjUwMDEwgdcGCCsGAQUFBwEBBIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMvZG93bmxvYWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQU4TTlWRfJcx9BxfcSMFYVBuKlHWcwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGydJJz/TCBjgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJUSUZJQ0FETyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6aHR0cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDBAoD6gPIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0RBIICBjCCAgKBHGplc3NpY2EuemFtb3JhMjlAaG90bWFpbC5jb22gGwYLKwYBBAGC8TZmAwGgDAwKMDkyNDk0MzcxNaAhBgsrBgEEAYLxNmYDAqASDBBKRVNTSUNBIFBBVFJJQ0lBoBcGCysGAQQBgvE2ZgMDoAgMBlpBTU9SQaAXBgsrBgEEAYLxNmYDBKAIDAZMRU9ORVOgIAYLKwYBBAGC8TZmAwWgEQwPR0VSRU5URSBHRU5FUkFMoGYGCysGAQQBgvE2ZgMHoFcMVUNBTExFOiBCQVNUSU9OIFBPUFVMQVIgSU5URVJTRUNDSU46IFZJTExBIDMgTk1FUk8gREUgUElTTzogVklMTEEgUkVGRVJFTkNJQTogQkxPUVVFIDigHwYLKwYBBAGC8TZmAwigEAwOMDA1OTM5OTAyODI0NDmgGgYLKwYBBAGC8TZmAwmgCwwJR1VBWUFRVUlMoDQGCysGAQQBgvE2ZgMKoCUMI1BBTExFVCBERUwgTk9SVEUgUEFMTk9SVCBTSkMgUy5BLlMuoB4GCysGAQQBgvE2ZgMLoA8MDTA5OTMzOTcyNjUwMDGgEwYLKwYBBAGC8TZmAwygBAwCRUOgJAYLKwYBBAGC8TZmAzKgFQwTUkVQUkVTRU5UQU5URSBMRUdBTKAYBgsrBgEEAYLxNmYDM6AJDAdBUkNISVZPMA0GCSqGSIb3DQEBCwUAA4ICAQAQrycN3oAfOnCrJULVUcWCBObDQxw8jDEzNQXH2pdZKF9SP4omzu2S36MsY1DRoY387fsWrljWOThFaR/yak48eQUIT2KaY0+hV0VQ5nLs/cF68u113Plnz3ORL0ntRk5mgqaqM0Hq2w2X9rjJ4v3R/S385x4mOKnSVOKQUX0l6lzOGL7ESqInk1YmL3LZb2Ol3TzoPiEE7QW/zmXXEWxmBFw9zhmkosjAFVP4VDKlR3pHfzSp8nJ7o4vunkSWQJzo2mp7wyaw17eBKNeFALl9m5RVkV/dvX56v1966HnWA6/ntD+YEYEKQARjcXvMLwRVXcwsd+nfO+8sqipVboghBjwqcNHuOoSZawP77A2YKGoRPyLTjDmLC0sq7w6iMld3mp0pTljx9m+5xcbM7nnnx0ZaOpWhgGTX8uuJ+UMn90G7v92fYC5wysfn9rRI+2xYaqAD3aCAHUf5r3xsH/g2BkS/muGE4zmgI9LvkzadaIzJ6vOV2g8tdRK9pR4sQG9sYQYpXue47NrNJxUREyjXrdGLY8Fq5oFWPJW03xCGezq3CYD+59Sjoy9CatC02OKdHtFOfckVjpVpNI6m3ZkdJeSMPbdjb4L39XuPR5W2y6e9qnC9rcU6IXqDTXytE8C+j91RdogpswBxPSilFPV0o/lZD+XjNPwQOnNEFwr6OA==</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-17914ae9-a3a4-4c4f-a7cb-28bac4420a75"><xades:SignedProperties Id="xmldsig-17914ae9-a3a4-4c4f-a7cb-28bac4420a75-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-05-01T16:40:15.807-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>QhGKiTWZ9wrhbO5A/7fHXSWeL2sUlXsRpzDPMkP9cWM=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>399163365269334450</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-17914ae9-a3a4-4c4f-a7cb-28bac4420a75-ref0"><xades:Description>FIRMA DIGITAL SRI</xades:Description><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>

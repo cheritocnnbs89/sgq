@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2101202601099145684800120050010002762151234567816</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-21T12:01:36-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;CIATEITE S.A.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;CIATEITE S.A.&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0991456848001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2101202601099145684800120050010002762151234567816&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;005&lt;/estab&gt;
+        &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000276215&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;GUAYAQUIL - GALO PLAZA LASSO MZ 2002 SL 36 Y ADOLFO H. SIMMONDS&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;21/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;GUAYAQUIL - GALO PLAZA LASSO MZ 2002 SL 36 Y ADOLFO H. SIMMONDS&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;577&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;ROSAVIN LOTE 1 Y COBRE GUAYAQUILECUADOR&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;500.00&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;500.000000&lt;/baseImponible&gt;
+                &lt;valor&gt;0.00&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;500.00&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;500.00&lt;/total&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;HON-009&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;H492001&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TRANSPORTE 20 PIES&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;250.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;250.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="2026CI00541 ORD.TYT: 2025IM30386 Cnt.SEKU1394411 Ped. OC 2000029554 &amp;amp;   2000029720 | ACIDO FOSFORICO | FAC - Guía R.# 005-002-000009652" valor="--"/&gt;
+                &lt;detAdicional nombre="FECHAVENC%%PLAZO" valor="20/02/2026%%30 dias"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;250.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;HON-009&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;H492001&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TRANSPORTE 20 PIES&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;250.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;250.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="2026CI00541 ORD.TYT: 2025IM30386 Cnt.CSNU2132942 Ped. OC 2000029554 &amp;amp;   2000029720 | ACIDO FOSFORICO | FAC - Guía R.# 005-002-000009812" valor="--"/&gt;
+                &lt;detAdicional nombre="FECHAVENC%%PLAZO" valor="20/02/2026%%30 dias"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;250.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="DIRECCION CLIENTE"&gt;ROSAVIN LOTE 1 Y COBRE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Detalle:"&gt;2026CI00541-2025IM30386/&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Pedido:"&gt;OC 2000029554 &amp;amp;   2000029720 | ACIDO FOSFORICO | FAC&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="ORDCOMPRA:"&gt;OC 2000029554 &amp;amp;   2000029720 | ACIDO FOSFORICO | FAC&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature549678"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo174728"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID659799" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature549678-SignedProperties61235"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Z9p0UWcZB2D64r3d44+4iT272Fc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1410946"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;efBB0QFuw370ebWzj6O2K5MdmCw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-585264" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;cvrLccvb8XSO1I5/C7lRq0oKPG4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue481655"&gt;
+EHGwE3RjmbjN8H6461iieup0IgWVrBU4cN+oITgdwckb/XyyhDrHapjgJ8xn7EiDr5BjW88/ozl+
+0kYN15iXx5/vDNnKjtd1PCk1bob3LF5xLPsuYVP/XUc8y4MxNJqRP/wLaaQHiay5jBeQFsgNhTW3
+igvF5ADKDAfzkZXRpYFWr6AqkwPYHyyIg6efM3ghnhsSob6TF5miMiOvFjIgA1wl06tUC7oxJ/oL
+l/OftbAYQ926Za6UuYnCpuDKnUmJigLjO0eIziQO7dOl2cxa+qXHbx1vu1+4C91XGwjmPLlteyly
+dQTTxq2GgG+AR1+1/jDMF7MEhwR06rkbljR00w==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1410946"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMAzCCCeugAwIBAgIECq7QtDANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA1MjkxNzA3MzlaFw0yNjA1MjkxNzA3MzlaMIGkMSIw
+IAYDVQQDDBlQRURSTyBSQUZBRUwgVE9SUkVTIEFMQU5BMSAwHgYDVQQFExcwOTA5ODQ2NDA0LTI5
+MDUyNDEyMTcxNTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFD
+SU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDGE6BZuAC0lhuJFNKdHfFydOlTWh7xdD+4LbAqB9Qb8eGE
+F+SLbWESCi1sfSZYvFK8LvTyTKWCMRxK30WO3hhd8663LT5K0/Nsyhgo6jJcZGS3++EKn5MaR/KW
+9Ft1N42nw5g2DLnaCaSL8Gn8exGgoktaciWgkfvbYUTccn8nGsxz+enAix6HdxDw+ZhQ8XKGK5FS
+h7XDR/abip3cArAi4I9mi4QD/Q5Cb5J56qDbzJ92PmbAFEnAxjGIksjfi4Gkn+eq5xuXwdmR10f+
+mFf0LuPorYiH6hIcL81D+aI1+kRoLi2jzT0GYZFXwm6XRUYs37KPVlhFjx9N1ymvHZsFAgMBAAGj
+ggdEMIIHQDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkG
+CCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0
+LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4
+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJU
+SUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2Nh
+dGlvbkxpc3Q/YmFzZTAlBgNVHREEHjAcgRpwdG9ycmVzYUB0b3JyZXN5dG9ycmVzLmNvbTCCARUG
+A1UdIASCAQwwggEIMGIGCisGAQQBgqZyAgkwVDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYA
+aQBjAGEAZABvACAAZABlACAAUgBlAHAAcgBlAHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCB
+oQYKKwYBBAGCpnICAzCBkjCBjwYIKwYBBQUHAgEWgYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEu
+bmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3Mv
+UG9saXRpY2FzIGRlIENlcnRpZmljYWRvIFJlcHJlc2VudGFudGUgTGVnYWwucGRmMIICogYDVR0f
+BIICmTCCApUwgeWgQaA/hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2Ev
+cHVibGljd2ViL3N0YXR1cy9vY3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VS
+VElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VS
+VElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIx
+CzAJBgNVBAYTAkVDMIHHoIHEoIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0
+LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxP
+VT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRB
+IFMuQS4gMixDPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0
+dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dl
+Yi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04g
+REUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBS7Q2ms
+PDSFcuGVcsTTgegwZrZtqjArBgNVHRAEJDAigA8yMDI0MDUyOTE3MDczOVqBDzIwMjYwNTI5MTcw
+NzM5WjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9HRVJFTlRFIEdFTkVSQUwwGgYKKwYB
+BAGCpnIDAQQMDAowOTA5ODQ2NDA0MBYGCisGAQQBgqZyAwkECAwGWElNRU5BMBEGCisGAQQBgqZy
+AyIEAwwBLjA9BgorBgEEAYKmcgMHBC8MLUdBTE8gUExBWkEgTEFTU08gU09MQVIgMzYgWSBBRE9M
+Rk8gSCBTSU1NT05EUzAcBgorBgEEAYKmcgMCBA4MDFBFRFJPIFJBRkFFTDAfBgorBgEEAYKmcgMg
+BBEMDzY2NjY2NjY2NjY2NjY2NjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkM
+B0VDVUFET1IwFgYKKwYBBAGCpnIDAwQIDAZUT1JSRVMwHAYKKwYBBAGCpnIDCgQODAxDSUFURUlU
+RSBTIEEwHQYKKwYBBAGCpnIDCwQPDA0wOTkxNDU2ODQ4MDAxMBEGCisGAQQBgqZyAx0EAwwBLjAV
+BgorBgEEAYKmcgMEBAcMBUFMQU5BMBAGCisGAQQBgqZyAwgEAgwAMA0GCSqGSIb3DQEBCwUAA4IC
+AQA+OsOLM9Ijnp57wimGBFpWmmn42QmS9fKFPbm/9e1Ynm8pgnA4oGhptyb/rHibcv3ch7KUznzc
+1HV5/nIj3oyqm8YUDNYHIuyCswc36l4wHltu5k11tGLOkdZn9pCZfoylLoXc75O1T8MCfw+BrvRy
+rtM+OWZoSjEuXy/dlpEjGV8rZ1XOPqpwLNraXW+7pnAn/1PYzfRg6b7nKM6Y7fd6WcsicgHuLELp
+Jv0inrK/5C4u8HtRw7KgjPvqPZbX4vpkorCQlNfIcB7CkISl8GRNYgTstDVu9x3DmewgujeJniRh
+BIOl59/Ifpfb3cw1RrT1Rvhkcs+d374y7wUlu30XdWbNWB2rOfCRcp28ouVO4HrwLFdoVS+HdZoL
+C+csmcFPi1pwsbtgY60YhRgzW9m0b9CTY+BQLpMK2y/et1v1jRSq0ENEkgF+8vdcnZV/qDbG5III
+p13ynMM27UOixBtcKo5ULWXGPdaoLs8jo7TBrg/d5AHhQ06UYadhBQz3UMGKFmVLCtcOOTh0U0E2
+gLYgYBkz6p/Vo3wG8fPcvdH68G25/HA7H8U93I1ljp/J3yUVMQoH+2JsJNObiPraQTvqor5BaRfG
+aZEZpoYRttWMKid3GTikRtU39Uml5IXPi3u3tDVuvoXmyhaLU2SToiJfqSgp5Beu1ii6VUMo32xs
+/A==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+xhOgWbgAtJYbiRTSnR3xcnTpU1oe8XQ/uC2wKgfUG/HhhBfki21hEgotbH0mWLxSvC708kylgjEc
+St9Fjt4YXfOuty0+StPzbMoYKOoyXGRkt/vhCp+TGkfylvRbdTeNp8OYNgy52gmki/Bp/HsRoKJL
+WnIloJH722FE3HJ/JxrMc/npwIseh3cQ8PmYUPFyhiuRUoe1w0f2m4qd3AKwIuCPZouEA/0OQm+S
+eeqg28yfdj5mwBRJwMYxiJLI34uBpJ/nqucbl8HZkddH/phX9C7j6K2Ih+oSHC/NQ/miNfpEaC4t
+o809BmGRV8Jul0VGLN+yj1ZYRY8fTdcprx2bBQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature549678-Object535897"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature549678"&gt;
+                &lt;etsi:SignedProperties Id="Signature549678-SignedProperties61235"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-21T12:01:50-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;r9D7xsOI34HtZtUrwrH9bPgkHVo=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;179228852&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-585264"&gt;
+                            &lt;etsi:Description&gt;Descripcion del documento&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

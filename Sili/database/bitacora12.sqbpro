@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="bitacora.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="10328"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="areas" custom_title="0" dock_id="17" table="4,5:mainareas"/><table title="reclamo_respuesta_equipo_acciones" custom_title="0" dock_id="18" table="4,33:mainreclamo_respuesta_equipo_acciones"/><dock_state state="000000ff00000000fd0000000100000002000005bb0000038efc0100000008fc00000000000005bb0000000000fffffffa00000000010000000afb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500350000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003200320000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003200330000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100390000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003200300000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003200310000000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500340000000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500360000000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500370100000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100300100000000ffffffff0000000000000000fc00000000000005bb0000000000fffffffa000000000100000002fb000000160064006f0063006b00420072006f00770073006500380100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500390100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500390100000000ffffffff0000000000000000fc000000000000033b0000000000fffffffa000000000100000007fb000000180064006f0063006b00420072006f007700730065003100300000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100310000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100320000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100330000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100340000000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100350100000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100360100000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100320100000000ffffffff0000000000000000fb000000180064006f0063006b00420072006f007700730065003100350000000000ffffffff0000000000000000fc00000000000005bb0000011800fffffffa000000010100000002fb000000180064006f0063006b00420072006f007700730065003100370100000000ffffffff0000011800fffffffb000000180064006f0063006b00420072006f007700730065003100380100000000ffffffff0000011800ffffff0000033b0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="areas" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="51"/><column index="3" value="42"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="reclamo_respuesta_equipo_acciones" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="127"/><column index="3" value="72"/><column index="4" value="90"/><column index="5" value="77"/><column index="6" value="85"/><column index="7" value="187"/><column index="8" value="113"/><column index="9" value="41"/><column index="10" value="114"/><column index="11" value="59"/><column index="12" value="121"/><column index="13" value="111"/><column index="14" value="111"/><column index="15" value="111"/><column index="16" value="85"/><column index="17" value="42"/><column index="18" value="156"/><column index="19" value="70"/><column index="20" value="72"/><column index="21" value="74"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">select * from notify_queue;
+select * from notify_templates;
+delete from  notify_queue;
+delete from notify_templates;
+INSERT INTO notify_queue
+(user_id, tipo, canal, template_key, payload_json, scheduled_at, estado, gasto_id, area, event_key)
+VALUES
+(53, 'gasto_aprobado_user', 'email', 'gasto_user_approved',
+ '{&quot;gasto_id&quot;:2210,&quot;area&quot;:&quot;ga&quot;,&quot;approved_by_user_id&quot;:31}',
+ datetime('now'), 'pending',
+ 2210, 'ga', '2210:ga:user');
+
+
+
+ DROP INDEX IF EXISTS uq_notify_queue_once;
+
+ SELECT id, user_id, tipo, estado, gasto_id, area, event_key, scheduled_at
+FROM notify_queue
+WHERE gasto_id IN (2210,2209,2208)
+ORDER BY gasto_id, tipo, user_id;
+
+
+
+
+SELECT q.id, q.template_key, nt.key, nt.subject
+FROM notify_queue q
+LEFT JOIN notify_templates nt ON nt.key = q.template_key
+WHERE q.id IN (6898,6899);
+
+
+CREATE UNIQUE INDEX IF NOT EXISTS uq_notify_queue_event_key
+ON notify_queue(event_key)
+WHERE event_key IS NOT NULL;
+
+DROP INDEX IF EXISTS sqlite_autoindex_notify_queue_1;
+
+
+
+delete from notify_queue;
+
+
+SELECT id, user_id, tipo, canal, estado, scheduled_at, gasto_id, area, event_key
+FROM notify_queue
+WHERE tipo LIKE 'gasto_%'
+ORDER BY id DESC;
+
+
+SELECT g.id, g.usuario_id, u.id AS usuario_existe, u.username, u.email
+FROM gastos_tarjeta g
+LEFT JOIN usuarios u ON u.id = g.usuario_id
+WHERE g.id = 2210;
+
+
+SELECT g.id, g.usuario_id
+FROM gastos_tarjeta g
+LEFT JOIN usuarios u ON u.id = g.usuario_id
+WHERE u.id IS NULL
+LIMIT 50;
+
+
+
+
+PRAGMA index_info('sqlite_autoindex_notify_queue_1');
+
+
+PRAGMA index_list('notify_queue');
+
+SELECT name, sql
+FROM sqlite_master
+WHERE type='index'
+  AND tbl_name='notify_queue';
+
+
+  
+  
+  -- Gasto 2210
+INSERT INTO notify_queue (user_id,tipo,fecha_obj,canal,template_key,payload_json,scheduled_at,estado,gasto_id,area,event_key)
+SELECT g.usuario_id,
+       'gasto_aprobado_user',
+       date('now'),
+       'email',
+       'gasto_user_approved',
+       json_object('gasto_id', g.id, 'area','ga','approved_by_user_id',31),
+       datetime('now'),
+       'pending',
+       g.id,
+       'ga',
+       CAST(g.id AS TEXT) || ':ga:user'
+  FROM gastos_tarjeta g
+ WHERE g.id=2210;
+
+-- Gasto 2209
+INSERT INTO notify_queue (user_id,tipo,fecha_obj,canal,template_key,payload_json,scheduled_at,estado,gasto_id,area,event_key)
+SELECT g.usuario_id,'gasto_aprobado_user',date('now'),'email','gasto_user_approved',
+       json_object('gasto_id', g.id, 'area','ga','approved_by_user_id',31),
+       datetime('now'),'pending',g.id,'ga',CAST(g.id AS TEXT) || ':ga:user'
+  FROM gastos_tarjeta g
+ WHERE g.id=2209;
+
+-- Gasto 2208
+INSERT INTO notify_queue (user_id,tipo,fecha_obj,canal,template_key,payload_json,scheduled_at,estado,gasto_id,area,event_key)
+SELECT g.usuario_id,'gasto_aprobado_user',date('now'),'email','gasto_user_approved',
+       json_object('gasto_id', g.id, 'area','ga','approved_by_user_id',31),
+       datetime('now'),'pending',g.id,'ga',CAST(g.id AS TEXT) || ':ga:user'
+  FROM gastos_tarjeta g
+ WHERE g.id=2208;
+ 
+ 
+ PRAGMA foreign_key_list('notify_queue');
+
+ 
+ PRAGMA foreign_key_check;
+
+ 
+ SELECT g.id, g.usuario_id, u.id AS usuario_existe
+FROM gastos_tarjeta g
+LEFT JOIN usuarios u ON u.id = g.usuario_id
+WHERE g.id = 2210;
+
+
+INSERT INTO notify_queue
+(user_id,tipo,fecha_obj,canal,template_key,payload_json,scheduled_at,estado,gasto_id,area,event_key)
+VALUES
+(53,'gasto_aprobado_user',date('now'),'email','gasto_user_approved',
+ '{&quot;gasto_id&quot;:2210,&quot;area&quot;:&quot;ga&quot;,&quot;approved_by_user_id&quot;:31}',
+ datetime('now'),'pending',2210,'ga','2210:ga:user');
+
+
+
+ 
+ 
+ 
+ 
+          SELECT DISTINCT u.id AS user_id, u.username
+          FROM plan_tareas t
+          JOIN plan_responsables r ON r.id = t.responsable_id
+          JOIN usuarios u ON LOWER(u.username)=LOWER(r.nombre)
+          WHERE t.activo=1
+            AND (
+              t.frecuencia='Diario'
+              OR (t.frecuencia='Semanal' AND (t.dia_semana IS NULL OR t.dia_semana = ((CAST(strftime('%w','now','localtime') AS INTEGER)+6)%7)))
+              OR (t.frecuencia='Mensual' AND (t.dia_mes IS NULL OR t.dia_mes = CAST(strftime('%d','now','localtime') AS INTEGER)))
+            )
+			 SELECT scheduled_at, datetime('now')
+              FROM notify_queue
+             WHERE estado='pending'
+               AND (scheduled_at IS NULL OR scheduled_at &gt;= datetime('now'))       
+             ORDER BY id
+             LIMIT 100
+			 
+			 
+			 
+			 PRAGMA table_info(usuarios_cc);
+
+			 
+			 select * from usuarios_cc
+			drop table  usuarios_cc;
+			
+			select * from configuracion;
+			INSERT INTO configuracion (clave, valor) VALUES ('api_inbound_key', '8StqYmBeOxe5CtMnchg5vR2I9-OMMjxH__7ZZiwljgg');
+
+			
+			
+			SELECT t.*, 
+       p.nombre AS tipo_tarea_nombre,
+       us.nombre_completo AS solicitante_nombre -- 👈 Agregamos esto
+FROM tareas t
+LEFT JOIN param_values p ON t.tipo_tarea_id = p.id
+LEFT JOIN usuarios us ON t.solicitante_id = us.id -- 👈 Unión con el solicitante
+ORDER BY t.id DESC;
+
+select * from tarea_acciones;
+
+
+
+select * from tarea_acciones
+-- Agregar usuario asignado al paso
+ALTER TABLE tarea_acciones ADD COLUMN usuario_asignado_id INTEGER
+
+-- Agregar estado específico para este paso
+ALTER TABLE tarea_acciones ADD COLUMN estado_accion VARCHAR(50) DEFAULT 'En proceso';
+
+-- Agregar fecha inicio (cuando se crea el registro)
+ALTER TABLE tarea_acciones ADD COLUMN fecha_inicio DATETIME;
+
+-- Agregar fecha fin tentativa (planificada)
+ALTER TABLE tarea_acciones ADD COLUMN fecha_fin_tentativa DATETIME;
+
+
+
+
+
+
+
+-- 1. Lo quitamos para desbloquear el ALTER TABLE
+DROP INDEX IF EXISTS uq_notify_gasto_event;
+
+-- 2. Agregamos las columnas de tareas (esto ya no dará error)
+ALTER TABLE tarea_acciones ADD COLUMN usuario_asignado_id INTEGER;
+ALTER TABLE tarea_acciones ADD COLUMN estado_accion TEXT DEFAULT 'En proceso';
+ALTER TABLE tarea_acciones ADD COLUMN fecha_inicio DATETIME;
+ALTER TABLE tarea_acciones ADD COLUMN fecha_fin_tentativa DATETIME;
+
+-- 3. Lo volvemos a crear (aquí te pongo la forma estándar que suele tener)
+-- Si el paso A te dio un SQL diferente, usa ese.
+CREATE UNIQUE INDEX uq_notify_gasto_event 
+ON notify_eventos (referencia_id, tipo_evento) 
+WHERE procesado = 0;
+
+
+
+PRAGMA writable_schema = ON;
+
+
+DELETE FROM sqlite_master 
+WHERE type = 'index' AND name = 'uq_notify_gasto_event';
+
+
+PRAGMA writable_schema = OFF;
+VACUUM;
+
+
+SELECT * FROM sqlite_master 
+WHERE type = 'index' AND sql LIKE '%datetime%';
+
+
+PRAGMA writable_schema = ON;
+
+-- Borramos los dos índices que el sistema nos reportó como &quot;malformed&quot;
+DELETE FROM sqlite_master WHERE name = 'uq_notify_gasto_event';
+DELETE FROM sqlite_master WHERE name = 'uq_notify_queue_once';
+
+PRAGMA writable_schema = OFF;
+
+
+
+ALTER TABLE tarea_acciones ADD COLUMN usuario_asignado_id INTEGER;
+ALTER TABLE tarea_acciones ADD COLUMN estado_accion TEXT DEFAULT 'En proceso';
+ALTER TABLE tarea_acciones ADD COLUMN fecha_inicio DATETIME;
+ALTER TABLE tarea_acciones ADD COLUMN fecha_fin_tentativa DATETIME;
+512026
+
+
+
+ALTER TABLE gastos_tarjeta ADD COLUMN reembolso_vendedor INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE usuarios ADD COLUMN tiene_caja_chica INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE usuarios ADD COLUMN codigo_sap TEXT;
+ALTER TABLE gastos_tarjeta ADD COLUMN es_caja_chica INTEGER DEFAULT 0;
+ALTER TABLE tareas ADD COLUMN porcentaje_avance INTEGER DEFAULT 0;
+ALTER TABLE tareas ADD COLUMN empresa_id INTEGER REFERENCES empresas(id);
+
+
+
+CREATE TABLE IF NOT EXISTS secuencias_sap (
+    nombre TEXT PRIMARY KEY,
+    ultimo_valor INTEGER
+	
+	
+);
+
+-- Inicializamos con el valor anterior al que necesitas (20781)
+INSERT OR IGNORE INTO secuencias_sap (nombre, ultimo_valor) VALUES ('reembolsos', 20781);
+
+select * from tareas;
+
+
+     SELECT id, titulo, descripcion, estado, fecha_inicio, 
+                fecha_compromiso, fecha_cierre_real, usuario_id, 
+                fecha_fin, creador_id, solicitante_id,
+                tipo_tarea_id,porcentaje_avance
+            FROM tareas
+			
+			
+			
+			
+			
+			
+			SELECT
+            g.id, g.fecha, g.motivo, g.centro_costo, g.orden_compra,
+            g.con_soporte, g.sin_soporte, g.subtotal_factura,
+            g.servicios_10, g.subtotal_sin_iva, g.iva, g.total_con_iva, g.archivo,       
+            g.proveedor_id, g.usuario_id, g.ccb, t.identificacion,
+            COALESCE(t.nombre, g.proveedor) AS proveedor_nombre,
+            COALESCE(g.gg_aprobado, 0) AS gg_aprobado,
+            COALESCE(g.gf_aprobado, 0) AS gf_aprobado,
+            COALESCE(g.ga_aprobado, 0) AS ga_aprobado,
+            u.username AS usuario_username,
+            u.departamento_id AS usuario_departamento_id,
+            g.sap_contabilizacion,
+            uga.username AS ga_aprobado_por_username,
+            ugg.username AS gg_aprobado_por_username,
+            ugf.username AS gf_aprobado_por_username,
+            CASE
+                WHEN COALESCE(g.es_caja_chica,0)=1 THEN 'caja_chica'
+                WHEN COALESCE(g.reembolso_vendedor,0)=1 THEN 'reembolso'
+                ELSE 'tarjeta'
+            END AS tipo_gasto,
+            CASE
+                WHEN COALESCE(g.es_caja_chica,0)=1 OR COALESCE(g.reembolso_vendedor,0)=1 THEN 'gg'
+                ELSE 'ga'
+            END AS ga_actor
+
+            FROM gastos_tarjeta g
+            LEFT JOIN terceros t ON t.id = g.proveedor_id
+            LEFT JOIN usuarios u ON u.id = g.usuario_id
+            LEFT JOIN usuarios uga ON uga.id = g.ga_aprobado_por
+            LEFT JOIN usuarios ugg ON ugg.id = g.gg_aprobado_por
+            LEFT JOIN usuarios ugf ON ugf.id = g.gf_aprobado_por
+			where u.username='atorres';
+			
+			UPDATE secuencias_sap SET ultimo_valor = ultimo_valor + 1
+			 SELECT * FROM usuarios 
+			 update usuarios set email='jchavez1@quimpac.com.ec';
+			 
+			
+			
+			
+			
+			
+			
+			
+			
+			select * from usuarios
+	-- 1) Paso temporal (único)
+UPDATE usuarios
+SET email = 'tmp_' || id || '@quimpac.com.ec';
+
+-- 2) Paso final (definitivo)
+WITH ranked AS (
+  SELECT id, row_number() OVER (ORDER BY id) AS rn
+  FROM usuarios
+)
+UPDATE usuarios
+SET email = 'jchavez' || (SELECT rn FROM ranked WHERE ranked.id = usuarios.id) || '@quimpac.com.ec'
+WHERE id IN (SELECT id FROM ranked);
+
+
+ALTER TABLE gastos_tarjeta
+ADD COLUMN tarjeta_sin_soporte INTEGER NOT NULL DEFAULT 0;
+
+
+
+CREATE TABLE IF NOT EXISTS user_sequences (
+  usuario_id INTEGER NOT NULL,
+  key TEXT NOT NULL,
+  next_value INTEGER NOT NULL DEFAULT 1,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (usuario_id, key)
+);
+
+
+
+SELECT id, ga_aprobado, ga_aprobado_por, ga_aprobado_at,
+           gg_aprobado, gg_aprobado_por, gg_aprobado_at
+FROM gastos_tarjeta
+WHERE id = 2322  ;
+
+
+
+
+
+
+
+
+
+
+SELECT
+            g.id, g.fecha, g.motivo, g.centro_costo, g.orden_compra,
+            g.con_soporte, g.sin_soporte, g.subtotal_factura,
+            g.servicios_10, g.subtotal_sin_iva, g.iva, g.total_con_iva, g.archivo,
+            g.proveedor_id, g.usuario_id, g.ccb, t.identificacion,
+            COALESCE(t.nombre, g.proveedor) AS proveedor_nombre,
+            COALESCE(g.gg_aprobado, 0) AS gg_aprobado,
+            COALESCE(g.gf_aprobado, 0) AS gf_aprobado,
+            COALESCE(g.ga_aprobado, 0) AS ga_aprobado,
+            COALESCE(g.tarjeta_sin_soporte,0) AS tarjeta_sin_soporte,
+
+            COALESCE(md.motivos_detalle, '') AS motivos_detalle,
+
+            u.username AS usuario_username,
+            u.departamento_id AS usuario_departamento_id,
+            g.sap_contabilizacion,
+            uga.username AS ga_aprobado_por_username,
+            ugg.username AS gg_aprobado_por_username,
+            ugf.username AS gf_aprobado_por_username,
+            t.codigo_sap AS proveedor_codigo_sap,
+            CASE
+                WHEN COALESCE(g.es_caja_chica,0)=1 THEN 'caja_chica'
+                WHEN COALESCE(g.reembolso_vendedor,0)=1 THEN 'reembolso'
+                WHEN COALESCE(g.tarjeta_sin_soporte,0)=1 THEN 'tarjeta_online'
+                ELSE 'tarjeta'
+            END AS tipo_gasto
+
+            FROM gastos_tarjeta g
+            LEFT JOIN terceros t ON t.id = g.proveedor_id
+            LEFT JOIN usuarios u ON u.id = g.usuario_id
+            LEFT JOIN usuarios uga ON uga.id = g.ga_aprobado_por
+            LEFT JOIN usuarios ugg ON ugg.id = g.gg_aprobado_por
+            LEFT JOIN usuarios ugf ON ugf.id = g.gf_aprobado_por
+
+
+         WHERE date(g.fecha) &gt;= date(?) AND date(g.fecha) &lt;= date(?) ORDER BY date(g.fecha) DESC, g.id DESC
+		 
+		 
+		 
+		 ALTER TABLE gastos_tarjeta ADD COLUMN impuestos_json TEXT;
+
+		 ALTER TABLE gastos_tarjeta
+ADD COLUMN boletos_aereos INTEGER NOT NULL DEFAULT 0;
+
+select * from gastos_tarjeta;
+
+ALTER TABLE param_values ADD COLUMN parent_id INTEGER;
+
+
+
+
+
+select * from param_values s where s.parent_id=8310;
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'CS_RESPUESTA',        'Falta de respuesta oportuna',        8310, 1, 1),
+(4520, 'CS_SEGUIMIENTO',      'Seguimiento insuficiente',           8310, 1, 2),
+(4520, 'CS_COORDINACION',     'Falta de coordinación entre áreas',  8310, 1, 3),
+(4520, 'CS_PROCEDIMIENTO',    'Incumplimiento del procedimiento',   8310, 1, 4);
+
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'CP_FUERA_ESPEC', 'Producto fuera de especificación', 8309, 1, 1);
+
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'DE_SACO',     'Saco dañado',     8306, 1, 1),
+(4520, 'DE_IBC',      'IBC dañado',      8306, 1, 2),
+(4520, 'DE_TAMBOR',   'Tambor dañado',   8306, 1, 3),
+(4520, 'DE_CANEC',    'Caneca dañada',   8306, 1, 4);
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'ET_INCORRECTA', 'Etiqueta incorrecta o incompleta', 8307, 1, 1),
+(4520, 'ET_FALTA',      'Falta de etiqueta',               8307, 1, 2),
+(4520, 'ET_LOTE',       'Error en lote o fecha',            8307, 1, 3);
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'DE_PLAZO',        'Entrega fuera de plazo comprometido', 8308, 1, 1),
+(4520, 'DE_DESPACHO',     'Retraso en despacho',                8308, 1, 2),
+(4520, 'DE_TRANSPORTE',   'Retraso en transporte',              8308, 1, 3),
+(4520, 'DE_REPROG',       'Reprogramación no cumplida',         8308, 1, 4),
+(4520, 'DE_UNIDAD',       'Falta de disponibilidad de unidad',  8308, 1, 5),
+(4520, 'DE_LOGISTICA',    'Falta de coordinación logística',    8308, 1, 6),
+(4520, 'DE_PARCIAL',      'Entrega parcial fuera de tiempo',    8308, 1, 7);
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'DI_ENTREGA', 'Pedido incompleto', 8304, 1, 1);
+
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'DP_BASCULA',  'Fuera de tolerancia de báscula', 8304, 1, 2),
+(4520, 'DP_ACUERDO',  'Fuera de tolerancia por acuerdo comercial', 8304, 1, 3);
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'IP_STOCK',      'Falta de stock',      8304, 1, 4),
+(4520, 'IP_TRANSPORTE', 'Falta de transporte', 8304, 1, 5);
+
+INSERT INTO param_values (group_id, nombre, valor, parent_id, activo, orden) VALUES
+(4520, 'DOC_INCOMPLETOS', 'Documentos incompletos',        8304, 1, 6),
+(4520, 'DOC_FACTURA',    'Error en factura',              8304, 1, 7),
+(4520, 'DOC_GUIA',       'Error en guía de remisión',     8304, 1, 8),
+(4520, 'DOC_COA',        'COA incorrecto o no entregado', 8304, 1, 9),
+(4520, 'DOC_TRANSP',     'Datos de transporte incorrectos',8304,1,10);
+
+
+
+INSERT OR IGNORE INTO param_groups(nombre) VALUES ('RECL_SUBTIPO');
+
+
+-- Subtipos de Calidad de servicio (tipo_id=8310)
+UPDATE param_values
+SET group_id = 5918, parent_id = 8310
+WHERE nombre IN ('CS_RESPUESTA','CS_SEGUIMIENTO','CS_COORDINACION','CS_PROCEDIMIENTO');
+
+-- Subtipos de Calidad de producto (tipo_id=8309)
+UPDATE param_values
+SET group_id = 5918, parent_id = 8309
+WHERE nombre IN ('CP_FUERA_ESPEC');
+
+-- Subtipos de Daño de envases (tipo_id=8306)
+UPDATE param_values
+SET group_id = 5918, parent_id = 8306
+WHERE nombre IN ('DE_SACO','DE_IBC','DE_TAMBOR','DE_CANEC');
+
+
+UPDATE param_values
+SET group_id = 5918,
+    parent_id = 8308
+WHERE nombre IN (
+    'DE_DESPACHO',
+    'DE_LOGISTICA',
+    'DE_PARCIAL',
+    'DE_PLAZO',
+    'DE_REPROG',
+    'DE_TRANSPORTE',
+    'DE_UNIDAD'
+);
+
+UPDATE param_values
+SET group_id = 5918,
+    parent_id = 8307
+WHERE nombre IN (
+    'ET_FALTA',
+    'ET_INCORRECTA',
+    'ET_LOTE'
+);
+
+UPDATE param_values
+SET group_id = 5918,
+    parent_id = 8306
+WHERE nombre IN (
+    'DE_SACO',
+    'DE_IBC',
+    'DE_TAMBOR',
+    'DE_CANEC'
+);
+
+
+
+UPDATE param_values
+SET group_id = 5918,
+    parent_id = 8310
+WHERE nombre IN (
+    'CS_RESPUESTA',
+    'CS_SEGUIMIENTO',
+    'CS_COORDINACION',
+    'CS_PROCEDIMIENTO'
+);
+
+
+SELECT id FROM param_groups WHERE nombre='RECL_SUBTIPO';
+
+
+
+
+
+
+
+
+
+SELECT
+            g.id, g.fecha, g.motivo, g.centro_costo, g.orden_compra,
+            g.con_soporte, g.sin_soporte, g.subtotal_factura,
+            g.servicios_10, g.subtotal_sin_iva, g.iva, g.total_con_iva, g.archivo,
+            g.proveedor_id, g.usuario_id, g.ccb, t.identificacion,
+            COALESCE(t.nombre, g.proveedor) AS proveedor_nombre,
+            COALESCE(g.gg_aprobado, 0) AS gg_aprobado,
+            COALESCE(g.gf_aprobado, 0) AS gf_aprobado,
+            COALESCE(g.ga_aprobado, 0) AS ga_aprobado,
+            COALESCE(g.tarjeta_sin_soporte,0) AS tarjeta_sin_soporte,
+            COALESCE(g.boletos_aereos,0) AS boletos_aereos,
+
+
+  (
+  SELECT group_concat(x, ', ')
+  FROM (
+    SELECT DISTINCT COALESCE(pv.nombre, CAST(d.motivo AS TEXT)) AS x
+    FROM gastos_tarjeta_detalle d
+    LEFT JOIN param_values pv
+      ON pv.group_id = 1
+     AND CAST(pv.valor AS TEXT) = CAST(d.motivo AS TEXT)
+    WHERE d.gasto_id = g.id
+  )
+) AS motivos_detalle,
+
+            u.username AS usuario_username,
+            u.departamento_id AS usuario_departamento_id,
+            g.sap_contabilizacion,
+            uga.username AS ga_aprobado_por_username,
+            ugg.username AS gg_aprobado_por_username,
+            ugf.username AS gf_aprobado_por_username,
+            t.codigo_sap AS proveedor_codigo_sap,
+            CASE
+                WHEN COALESCE(g.es_caja_chica,0)=1 THEN 'caja_chica'
+                WHEN COALESCE(g.reembolso_vendedor,0)=1 THEN 'reembolso'
+                  WHEN COALESCE(g.boletos_aereos,0)=1 THEN 'tarjeta_boletos'
+
+                WHEN COALESCE(g.tarjeta_sin_soporte,0)=1 THEN 'tarjeta_online'
+                ELSE 'tarjeta'
+            END AS tipo_gasto
+
+            FROM gastos_tarjeta g
+            LEFT JOIN terceros t ON t.id = g.proveedor_id
+            LEFT JOIN usuarios u ON u.id = g.usuario_id
+            LEFT JOIN usuarios uga ON uga.id = g.ga_aprobado_por
+            LEFT JOIN usuarios ugg ON ugg.id = g.gg_aprobado_por
+            LEFT JOIN usuarios ugf ON ugf.id = g.gf_aprobado_por
+
+
+
+
+         WHERE  (g.sap_contabilizacion IS NULL OR TRIM(g.sap_contabilizacion)='')
+		 AND g.usuario_id = 382 
+		 AND (
+			 COALESCE(g.ga_aprobado,0)=0
+			AND COALESCE(g.es_caja_chica,0)=0
+			AND COALESCE(g.reembolso_vendedor,0)=0
+    ) AND g.usuario_id = 382 ORDER BY date(g.fecha) DESC, g.id DESC
+
+
+SELECT reclamo_id, imputacion_id, miembro_id, COUNT(*) AS n
+FROM reclamo_respuestas_equipo
+WHERE activo = 1
+GROUP BY reclamo_id, imputacion_id, miembro_id
+HAVING COUNT(*) &gt; 1;
+
+
+
+-- 1) desactiva duplicados: deja activo solo el de mayor id por reclamo+imputacion+miembro
+UPDATE reclamo_respuestas_equipo
+SET activo = 0
+WHERE activo = 1
+  AND id NOT IN (
+    SELECT MAX(id)
+    FROM reclamo_respuestas_equipo
+    WHERE activo = 1
+    GROUP BY reclamo_id, imputacion_id, miembro_id
+  );
+
+-- 2) verifica que ya no existan duplicados activos
+SELECT reclamo_id, imputacion_id, miembro_id, COUNT(*) AS n
+FROM reclamo_respuestas_equipo
+WHERE activo = 1
+GROUP BY reclamo_id, imputacion_id, miembro_id
+HAVING COUNT(*) &gt; 1;
+
+
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0402202601099131531400120010020000308324443852211</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-04T13:12:30-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;GRUPO QUIMICO MARCOS C. LTDA GRUQUIMAR&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;GRUPO QUIMICO MARCOS C. LTDA GRUQUIMAR&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0991315314001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;0402202601099131531400120010020000308324443852211&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000030832&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;KM. 11,5 VÍA A DAULE, PARQUE CALIFORNIA 2 BLOQUE D LOCAL 41&lt;/dirMatriz&gt;
+		
+		
+			&lt;agenteRetencion&gt;8&lt;/agenteRetencion&gt;
+		
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;04/02/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;KM. 11,5 VÍA A DAULE, PARQUE CALIFORNIA 2 BLOQUE D LOCAL 41&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+			&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;Km 16½ Via a Daule - Rosavin Lote 1 y Cobre&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;168.40000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;18.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;168.40&lt;/baseImponible&gt;
+				&lt;valor&gt;25.26000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;193.66000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;20&lt;/formaPago&gt;
+	    		&lt;total&gt;193.66&lt;/total&gt;
+	    		&lt;plazo&gt;0&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;A&amp;amp;G-E&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;A&amp;amp;G-E&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Aceites y Grasas&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;30.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;4.50&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;25.50&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;25.50000&lt;/baseImponible&gt;
+          &lt;valor&gt;3.82&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;CF/MB&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;CF/MB&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Coliformes Fecales&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;23.400000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;23.40&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;23.40000&lt;/baseImponible&gt;
+          &lt;valor&gt;3.51&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;DBOW&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;DBOW&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Demanda Bioquimica de Oxigeno&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;35.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;5.25&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;29.75&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;29.75000&lt;/baseImponible&gt;
+          &lt;valor&gt;4.46&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;DQOrc&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;DQOrc&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Demanda Quimica de Oxigeno&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;35.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;5.25&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;29.75&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;29.75000&lt;/baseImponible&gt;
+          &lt;valor&gt;4.46&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;PH-insitu&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;PH-insitu&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Potencial de Hidrogeno, in situ&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;8.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;8.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;8.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;1.20&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;MuPGYE-NAL&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;MuPGYE-NAL&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Servicio de muestreo puntual dentro GYE&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;35.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;35.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;35.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;5.25&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;SST&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;SST&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Solidos Suspendidos Totales&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;20.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;3.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;17.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;17.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;2.55&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+	
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;120686&lt;/campoAdicional&gt;
+    		
+    			&lt;campoAdicional nombre="Código Único"&gt;PEDIDO # 7500052963 HE # 1001567556&lt;/campoAdicional&gt;
+    		
+    			&lt;campoAdicional nombre="Tipo"&gt;REGULAR&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature652251"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo585231"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID850986" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature652251-SignedProperties522625"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;wK4w3bpydW0v7pmoIoc3jEiN6tI=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate603608"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;rleExyYi7gOERg3UMGNUvT16mfs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-385497" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;YoCgOFezLMtuyOQE/tpY44RBkEc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue273919"&gt;
+YFiIJYKmHVDGNs3Pf8cfU3h/DCy53mqZMFKp1S5DO12Tt+j/Fpsma36HLZOnoyXr6NsJt0mRIawW
+c3I46eaAH8Dz5t6sfez1Hyy0VnmVBQFjAjtf0XbA34HDMffzQn6/1ENAJhlbAvoYbvb5LWnR4ZTj
+YFdFZyQdqJIetMtw7K714PIuqVy4tQK55fDO4ETMtX42MC5gnRYUzfY4X2mwr6tq8zS7eNr/hpVn
+/DuXfWfNHRQxZ0pMFxnEP7mwpio7/w+V3seOlK/IyjkvXQzpUXYoUfrq/WMD3uJX2sWH9qjVYDab
+2G40pgJRdHIXk70HbfXUqIJMOvrRz4m0cn+4yg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate603608"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKxzCCCK+gAwIBAgIIV1W7MgniaEcwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwNzAzMTYxNzEwWhcNMzAwNzAzMTYxNzEwWjCB
+qDEmMCQGA1UEAwwdRkVSTkFORE8gWEFWSUVSIE1BUkNPUyBZQU5RVUkxIDAeBgNVBAUTFzA5MjQx
+NjEwNTItMDMwNzI1MTEyNzAxMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCC
+ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMc/SdFGQQOdMWVYQZPc0WfGJBBwhor6c8TR
+6rHl6Ts1JBBzQra9T603FjcxGPSfdjhJ4C0Yqa5HOnWw5d1ArGtFdas5eLk1wzSEWWL36uDvN9hf
++CSJMLddk4fOzb8jiojjnHuvcMjtcdCPUZdFuIoRKEUqDOXhHbAGJgXZc3BzhT4TZGIO2Xh96zLW
+THS2eJ2oCTEaBoz6ixEUnW96GQvI1IGdxg/BHp8DGLxVgFHDFX+yF5SE0KlxjgnwbTFHqpKOTYYO
+vX9zTAiSRrKuDbDFbCbwP+9MDY4QndSKW+YWXtd84ZMuXU/lQpjXVTHjZOGr2E/13NmMBJImJ0hg
+Qn0CAwEAAaOCBgAwggX8MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+N
+rmLdvY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5
+ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMCoGA1UdEQQjMCGBH2Z4bWFy
+Y29zQGdydXBvcXVpbWljb21hcmNvcy5jb20wggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJ
+MFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIA
+ZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUF
+BwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fk
+cy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBS
+ZXByZXNlbnRhbnRlIExlZ2FsLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIP
+BgNVHR8EggIGMIICAjCB3qA6oDiGNmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3Vi
+Y2EyY3JsMS9jcmxmaWxlLmNybKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJ
+RklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJ
+RklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQsw
+CQYDVQQGEwJFQzA8oDqgOIY2aHR0cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJj
+cmwyL2NybGZpbGUuY3JsMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3Vy
+aXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZp
+c3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRB
+LE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERB
+VEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFJRoiY6ZlIHfbJT9oBq8of/t6c+8MCsGA1UdEAQkMCKA
+DzIwMjUwNzAzMTYxNzEwWoEPMjAzMDA3MDMxNjE3MTBaMAsGA1UdDwQEAwIF4DAfBgorBgEEAYKm
+cgMFBBEMD0dFUkVOVEUgR0VORVJBTDAaBgorBgEEAYKmcgMBBAwMCjA5MjQxNjEwNTIwFgYKKwYB
+BAGCpnIDCQQIDAZUQVJRVUkwEQYKKwYBBAGCpnIDIgQDDAEuMBMGCisGAQQBgqZyAwcEBQwDUyBO
+MB8GCisGAQQBgqZyAwIEEQwPRkVSTkFORE8gWEFWSUVSMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAy
+MDAxMDEzNjg3MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAW
+BgorBgEEAYKmcgMDBAgMBk1BUkNPUzA1BgorBgEEAYKmcgMKBCcMJUdSVVBPIFFVSU1JQ08gTUFS
+Q09TIEMgTFREQSBHUlVRVUlNQVIwHQYKKwYBBAGCpnIDCwQPDA0wOTkxMzE1MzE0MDAxMBEGCisG
+AQQBgqZyAx0EAwwBLjAWBgorBgEEAYKmcgMEBAgMBllBTlFVSTAaBgorBgEEAYKmcgMIBAwMCjA5
+OTQ5NzQ2NjgwDQYJKoZIhvcNAQELBQADggIBAMRct/20VgHwlg847CYSOpgwcIxInKDvnu00Heom
+qfKIZHuV18zntQcIRaZgJU/ePmg3UqDcW4ecJzptfSPuS4B1uEZRczB2H2OGrA17GsR+TI5R1I5j
+d/JwfudWl8WN3lGGZrEfBxQQ8sQ/g8W/NdzNmc4sbT9jcyd8OlYYselN6a6q5TNitZxHdUIWGmqm
+o+btY8MLoclx/OVMk6KTti/Ej+BON/m6oW4gGqDem7KS9hfIi22ua6X/86VIl0i0mEXBOyQl1l0D
+KwAhClQ1E5Tc5DIOSMzcRSxTW9IihHmALKtHL1r46pWTOhE9fpL94oYsfrQPct8eNGhbP2qqQ1Iz
+XndU7QbF1nYUoFmIuTsnizQXc3+5I+ytUwM9mu83rWtOp7QRyzfeX0iIOByMNfGRcNjdfgfiCadh
+kwFFrZ2rkN137SFKcmEza96dEAJmirwHmUgaO6GEqBm6ugyt8RKRZdrTDyKnjxGhREnK+jc3ETjP
+WdpkOzBzVt5QeWHPEVxqtQL8bH6i+b4juNbzwx2j6hiuZtKtyhABQVML3bjfkmpBuD3b7bt15WXk
+YUWU0J4L5+SESwjdWRmZjliz9empuCZbBUDNO0LKIuQU2pj+t4YOvrUJw9WIamvDFdtWhkX9eyFb
+xLMt+8D9q9wFG2nQan3ksBLaSit3Q5UtikUs
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+xz9J0UZBA50xZVhBk9zRZ8YkEHCGivpzxNHqseXpOzUkEHNCtr1PrTcWNzEY9J92OEngLRiprkc6
+dbDl3UCsa0V1qzl4uTXDNIRZYvfq4O832F/4JIkwt12Th87NvyOKiOOce69wyO1x0I9Rl0W4ihEo
+RSoM5eEdsAYmBdlzcHOFPhNkYg7ZeH3rMtZMdLZ4nagJMRoGjPqLERSdb3oZC8jUgZ3GD8EenwMY
+vFWAUcMVf7IXlITQqXGOCfBtMUeqko5Nhg69f3NMCJJGsq4NsMVsJvA/70wNjhCd1Ipb5hZe13zh
+ky5dT+VCmNdVMeNk4avYT/Xc2YwEkiYnSGBCfQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature652251-Object68301"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature652251"&gt;
+                &lt;etsi:SignedProperties Id="Signature652251-SignedProperties522625"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-04T13:12:28-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;mC9B/Rqd47TQgctYJKuE3QJ398M=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;6293141877908727879&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

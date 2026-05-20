@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Sistema Gestión Quimpac{% endblock %}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+
+
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  Al final del <body> -->
+
+  <!-- ===================== Estilos del layout (los tuyos) ===================== -->
+  <style>
+    :root {
+      --brand-600: #2563eb;
+      --brand-500: #3b82f6;
+      --brand-100: #dbeafe;
+      --border: #e5e7eb;
+      --muted: #6b7280;
+      --bg: #f6f7fb;
+
+      /* Layout */
+      --sidebar-w: 280px;
+      /* ancho del menú */
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: #0f172a;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      margin: 0;
+    }
+
+    /* Contenedores fluidos dentro del contenido */
+    .content .container,
+    .content .container-sm,
+    .content .container-md,
+    .content .container-lg,
+    .content .container-xl,
+    .content .container-xxl {
+      max-width: 100% !important;
+      width: 100% !important;
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+    }
+
+    /* ===== Tarjetas de sección ===== */
+    .section {
+      position: relative;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, .08);
+      border-radius: 12px;
+      padding: 1rem 1.25rem 1.25rem;
+      box-shadow: 0 6px 18px rgba(16, 24, 40, .06);
+      margin-bottom: 1rem;
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 6px;
+      border-radius: 12px 0 0 12px;
+      background: var(--section-accent, var(--bs-primary));
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-weight: 600;
+      color: var(--section-accent, var(--bs-primary));
+      margin-bottom: .75rem;
+    }
+
+    .section-danger {
+      --section-accent: var(--bs-danger);
+    }
+
+    .section-success {
+      --section-accent: var(--bs-success);
+    }
+
+    .section-warning {
+      --section-accent: var(--bs-warning);
+    }
+
+    /* ===== Inputs ===== */
+    .form-control:focus,
+    .form-select:focus {
+      box-shadow: 0 0 0 .25rem rgba(220, 53, 69, .15);
+      border-color: var(--bs-danger);
+    }
+
+    .form-control,
+    .form-select,
+    textarea.form-control {
+      border: 1px solid var(--border);
+      box-shadow: none !important;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+      background: #fff;
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    textarea.form-control:focus {
+      border-color: var(--brand-600);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .15) !important;
+    }
+
+    .form-control.filled,
+    .form-select.filled,
+    textarea.form-control.filled {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, .12) !important;
+    }
+
+    .btn-primary {
+      background: var(--brand-600);
+      border-color: var(--brand-600);
+    }
+
+    .btn-primary:hover {
+      background: #1e4ed8;
+      border-color: #1e4ed8;
+    }
+
+    .btn-outline-secondary {
+      border-color: var(--border);
+      color: #111827;
+    }
+
+    .btn-outline-secondary:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    /* ===== LAYOUT ===== */
+    .app-shell {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      border-radius: 0;
+      border-top: 1px solid var(--border);
+      background: #fff;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+      /* dos columnas */
+      min-height: 100vh;
+      transition: grid-template-columns .25s ease;
+    }
+
+    /* cerrado: mantiene 2 columnas pero la primera vale 0 (el contenido no cae) */
+    .app-shell:not(.open) {
+      grid-template-columns: 0 minmax(0, 1fr);
+    }
+
+    /* ===== Sidebar ===== */
+    .sidebar {
+      position: relative;
+      /* para posicionar btn interno */
+      background: #fbfdff;
+      border-right: 1px solid var(--border);
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow: hidden;
+      transition: padding .25s ease, border-color .25s ease;
+      z-index: 1041;
+    }
+
+    .app-shell:not(.open) .sidebar {
+      padding: 0;
+      border-right-color: transparent;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand i {
+      color: var(--brand-600);
+    }
+
+    .nav-section-title {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin: 12px 10px 4px;
+    }
+
+    .nav-link-simple {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: #111827;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background .15s ease;
+    }
+
+    .nav-link-simple:hover,
+    .nav-link-simple.active {
+      background: #eef2ff;
+    }
+
+    .nav-link-simple .bullet {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .nav-link-simple.active .bullet {
+      background: var(--brand-600);
+      border-color: var(--brand-600);
+    }
+
+    /* Acordeón del menú */
+    .accordion-button {
+      background: transparent !important;
+      color: #111827;
+      padding: 10px 12px;
+      border-radius: 10px !important;
+    }
+
+    .accordion-button:not(.collapsed) {
+      background: #eef2ff !important;
+      color: #0f172a !important;
+      box-shadow: none;
+    }
+
+    .accordion-item {
+      border: none;
+      background: transparent;
+    }
+
+    .accordion-body {
+      padding: 6px 2px 8px 8px;
+    }
+
+    .list-group-item {
+      background: transparent;
+      border: none;
+      padding: 4px 0;
+    }
+
+    .list-group-item .nav-link {
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #111827;
+      text-decoration: none;
+      display: block;
+      font-size: 14px;
+    }
+
+    .list-group-item .nav-link:hover {
+      background: #eef2ff;
+    }
+
+    .list-group-item .nav-link.active {
+      background: #e0e7ff;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .sidebar .spacer {
+      flex: 1 1 auto;
+    }
+
+    .logout {
+      margin-top: auto;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #111827;
+      display: flex;
+      gap: 10px;
+    }
+
+    .logout:hover {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* ===== Contenido ===== */
+    .content {
+      padding: 28px 34px;
+      background: #fff;
+      min-width: 0;
+    }
+
+    .form-page {
+      max-width: 100%;
+    }
+
+    .content .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .content table {
+      white-space: nowrap;
+    }
+
+    /* ===== Botones toggle ===== */
+    .btn-toggle {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: #111827;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .10);
+    }
+
+    .btn-toggle:hover {
+      background: #f2f4f8;
+    }
+
+    /* Botón ABRIR (fuera, para cerrado y móvil) */
+    #btnOpen {
+      position: fixed;
+      left: 14px;
+      top: 14px;
+      z-index: 1200;
+      display: none;
+      /* por defecto oculto */
+    }
+
+    /* Mostrar el botón abrir cuando está cerrado (desktop) */
+    .app-shell:not(.open)~#btnOpen {
+      display: grid;
+    }
+
+    /* En móvil usar siempre el botón abrir; se controla abajo en media */
+
+    /* Botón CERRAR (dentro del sidebar, pegado al divisor) */
+    #btnClose {
+      position: absolute;
+      top: 10px;
+      right: -21px;
+      /* -21px para “morder” la línea */
+      z-index: 1202;
+      display: none;
+      /* solo en abierto desktop */
+    }
+
+    .app-shell.open .sidebar #btnClose {
+      display: grid;
+    }
+
+    /* ===== Scrim móvil ===== */
+    .sidebar-scrim {
+      display: none;
+    }
+
+    /* ===== Responsivo ===== */
+    @media (max-width: 992px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      /* Drawer móvil */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        padding: 20px 18px;
+        border-right-color: var(--border);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+        transform: translateX(-100%);
+        /* oculto del todo */
+        transition: transform .25s ease;
+      }
+
+      .app-shell.open .sidebar {
+        transform: translateX(0);
+      }
+
+      .sidebar-scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .35);
+        display: none;
+        z-index: 1040;
+      }
+
+      .app-shell.open+.sidebar-scrim {
+        display: block;
+      }
+
+      /* En móvil SIEMPRE usamos el btnOpen en 14px y ocultamos el interno */
+      #btnOpen {
+        display: grid;
+      }
+
+      .app-shell.open~#btnOpen {
+        left: 14px;
+        top: 14px;
+      }
+
+      .app-shell.open .sidebar #btnClose {
+        display: none;
+      }
+
+      .content {
+        padding: 18px;
+      }
+    }
+  </style>
+
+
+
+  <!-- ===================== Estilos globales reutilizables (UI kit) ===================== -->
+  <style>
+    :root {
+      --app-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans",
+          "Apple Color Emoji", "Segoe UI Emoji");
+
+      --ink: #111827;
+      --muted: #6B7280;
+      --line: #E5E7EB;
+      --surface-1: #FFFFFF;
+      --surface-2: #F3F4F6;
+      --input-bg: #FFFFFF;
+      --input-border: #CBD5E1;
+
+      --primary: #2563EB;
+      --primary-600: #1D4ED8;
+      --grad-hero: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #22D3EE 100%);
+
+      --accent: #dc2626;
+      --accent-600: #b91c1c;
+      --accent-200: #fecaca;
+      --accent-100: #fee2e2;
+      --accent-50: #fff1f2;
+      --shadow-soft: 0 6px 20px rgba(2, 6, 23, .08);
+    }
+
+    /* Título degradado reutilizable */
+    .title-blue {
+      background: var(--grad-hero);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 700;
+    }
+
+    /* Contador rojo */
+    .count-badge--red {
+      background: var(--accent-100);
+      color: var(--accent-600);
+      border: 1px solid var(--accent-200);
+      font-weight: 600;
+      padding: .2rem .55rem;
+      border-radius: 999px;
+    }
+
+    /* Panel genérico */
+    .panel-outline {
+      background: var(--surface-1);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--line);
+      padding: .65rem .85rem;
+    }
+
+    .panel-body {
+      padding: .85rem;
+    }
+
+    /* CTA degradado sin bordes */
+    .btn-cta-blue {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: var(--grad-hero) !important;
+      background-color: transparent !important;
+      background-size: 120% 120%;
+      background-position: 50% 50%;
+      color: #fff !important;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: .50rem 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      text-decoration: none;
+      border: 0 !important;
+      outline: 0 !important;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, .25) !important;
+      transition: transform .12s ease, filter .12s ease, background-position .2s ease, box-shadow .2s ease;
+    }
+
+    .btn-cta-blue:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+      background-position: 55% 45%;
+    }
+
+    .btn-cta-blue:active {
+      transform: none;
+    }
+
+    .btn-cta-blue:focus-visible {
+      outline: 0 !important;
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, .45), 0 8px 18px rgba(37, 99, 235, .25) !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn-cta-blue {
+        transition: none !important;
+        transform: none !important;
+      }
+
+      .btn-cta-blue:hover {
+        transform: none !important;
+      }
+    }
+
+    /* Chips acción */
+    .btn-chip {
+      border: 1px solid transparent;
+      border-radius: 999px !important;
+      font-weight: 600;
+      padding: .25rem .65rem;
+      line-height: 1.1
+    }
+
+    .btn-chip-amber {
+      background: #fef3c7;
+      color: #b45309;
+      border-color: #fde68a
+    }
+
+    .btn-chip-amber:hover {
+      background: #fff7ed;
+      border-color: #f59e0b
+    }
+
+    .btn-chip-red {
+      background: var(--accent-100);
+      color: var(--accent-600);
+      border-color: var(--accent-200)
+    }
+
+    .btn-chip-red:hover {
+      background: var(--accent-50);
+      border-color: var(--accent)
+    }
+
+    /* Tabla base reutilizable */
+    .tablekit thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: var(--surface-2);
+      color: var(--ink);
+    }
+
+    .tablekit tbody tr:hover {
+      background: rgba(37, 99, 235, .06);
+    }
+
+    .tablekit.table-compact td,
+    .tablekit.table-compact th {
+      padding: .25rem .5rem !important;
+    }
+
+    /* Paginación base */
+    .tablekit-pager .page-link {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--ink);
+    }
+
+    .tablekit-pager .page-item.active .page-link {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+  </style>
+
+  <style>
+    /* Parche defensivo: obligar texto horizontal en la zona de la app */
+    html,
+    body,
+    .app-shell,
+    main.content,
+    .content,
+    .content * {
+      writing-mode: horizontal-tb !important;
+      text-orientation: mixed !important;
+      white-space: normal !important;
+      word-break: normal !important;
+    }
+
+    .system-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    .system-sub {
+      font-size: 11px;
+      color: #6b7280;
+      letter-spacing: .04em;
+    }
+  </style>
+
+
+
+</head>
+
+<body>
+  <!-- APP (inicia abierta en desktop) -->
+  <div class="app-shell open">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <!-- Botón cerrar integrado en el menú (desktop) -->
+      <button id="btnClose" class="btn-toggle" aria-label="Cerrar menú">
+        <i class="bi bi-list"></i>
+      </button>
+
+      <div class="app-header-title">
+        <div class="system-sub">SGQ</div>
+        <div class="system-name">Sistema Gestión Quimpac</div>
+
+      </div>
+      <a href="{{ url_for('dashboard') }}" class="nav-link-simple {% if active_page == 'dashboard' %}active{% endif %}">
+        <span class="bullet">{% if active_page == 'dashboard' %}<i class="bi bi-check-lg"></i>{% else %}&nbsp;{% endif
+          %}</span>
+        Panel
+      </a>
+
+      <div class="nav-section-title">Menú</div>
+      {% from 'partials/menu_macros.html' import render_sidebar %}
+      {{ render_sidebar(menu_tree, active_page) }}
+
+
+      <button type="submit" form="logoutForm" class="logout w-100" style="background:none;border:none;">
+        <i class="bi bi-box-arrow-right"></i> Salir
+      </button>
+
+
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <div class="form-page">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="mb-3">
+          {% for category, message in messages %}
+          <div
+            class="alert alert-{{ 'success' if category=='success' else 'info' if category=='info' else 'warning' if category=='warning' else 'danger' }} alert-dismissible fade show"
+            role="alert" data-alert-key="{{ category }}::{{ message|striptags|trim }}">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Scrim móvil -->
+  <div class="sidebar-scrim" id="sidebarScrim"></div>
+
+  <!-- Botón abrir (fuera) -->
+  <button id="btnOpen" class="btn-toggle" aria-label="Abrir menú">
+    <i class="bi bi-list"></i>
+  </button>
+
+
+  <!-- ===================== Scripts de comportamiento del layout ===================== -->
+  <script>
+    // Estado de colapsables del menú (si existen)
+    document.addEventListener('DOMContentLoaded', function () {
+      const accordion = document.getElementById('sidebarAccordion');
+      if (accordion && window.bootstrap) {
+        const saved = localStorage.getItem('sidebarState');
+        if (saved) {
+          try {
+            const state = JSON.parse(saved);
+            Object.keys(state).forEach(id => {
+              const el = document.getElementById(id);
+              if (!el) return;
+              const c = new bootstrap.Collapse(el, { toggle: false });
+              state[id] ? c.show() : c.hide();
+            });
+          } catch (e) { }
+        }
+        const save = (id, on) => {
+          let s = {}; try { s = JSON.parse(localStorage.getItem('sidebarState')) || {} } catch (e) { }
+          s[id] = on; localStorage.setItem('sidebarState', JSON.stringify(s));
+        };
+        accordion.addEventListener('shown.bs.collapse', ev => ev.target?.id && save(ev.target.id, true));
+        accordion.addEventListener('hidden.bs.collapse', ev => ev.target?.id && save(ev.target.id, false));
+      }
+    });
+
+    // Marca "filled" cuando hay valor
+    (function () {
+      function markFilled(el) {
+        const hasValue = !!(el.value && el.value.toString().trim().length);
+        el.classList.toggle('filled', hasValue);
+      }
+      function bind(container = document) {
+        const fields = container.querySelectorAll('input.form-control, textarea.form-control, select.form-select');
+        fields.forEach(el => {
+          markFilled(el);
+          el.addEventListener('input', () => markFilled(el));
+          el.addEventListener('change', () => markFilled(el));
+          el.addEventListener('blur', () => markFilled(el));
+        });
+      }
+      document.addEventListener('DOMContentLoaded', () => bind());
+    })();
+
+    // Mostrar/Ocultar Sidebar + persistencia desktop
+    (function () {
+      const shell = document.querySelector('.app-shell');
+      const btnOpen = document.getElementById('btnOpen');
+      const btnClose = document.getElementById('btnClose');
+      const scrim = document.getElementById('sidebarScrim');
+
+      const KEY = 'ui.sidebar.open';
+      const isMobile = () => window.matchMedia('(max-width: 992px)').matches;
+
+      function setOpen(open) {
+        shell.classList.toggle('open', open);
+        if (!isMobile()) localStorage.setItem(KEY, open ? '1' : '0');
+      }
+
+      // Estado inicial
+      const saved = localStorage.getItem(KEY);
+      if (saved !== null && !isMobile()) setOpen(saved === '1');
+      else setOpen(!isMobile()); // desktop abierto, móvil cerrado
+
+      btnOpen.addEventListener('click', () => setOpen(true));
+      btnClose.addEventListener('click', () => setOpen(false));
+      scrim.addEventListener('click', () => setOpen(false));
+
+      window.addEventListener('resize', () => {
+        if (isMobile()) setOpen(false);
+        else setOpen((localStorage.getItem(KEY) ?? '1') === '1');
+      });
+    })();
+  </script>
+
+  <!-- Alturas para charts -->
+  <style>
+    .chart-box {
+      position: relative;
+      width: 100%;
+      height: 300px;
+    }
+
+    .chart-box.tall {
+      height: 340px;
+    }
+
+    .chart-box>canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    @media (min-width: 992px) {
+      .chart-box {
+        height: 320px;
+      }
+
+      .chart-box.tall {
+        height: 380px;
+      }
+    }
+  </style>
+
+  <!-- ===================== TableKit helper reutilizable ===================== -->
+  <script>
+    window.TableKit = (function () {
+      const norm = s => (s || '')
+        .toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '');
+
+      function init(opts) {
+        const {
+          table,
+          filterInput,
+          btnSearch, btnClear,
+          pagerContainer,
+          infoContainer,
+          pageLenKey = 'tablekit_page_len',
+          densityKey = 'tablekit_density',
+          defaultPageLen = 10
+        } = opts;
+
+        const elTable = typeof table === 'string' ? document.querySelector(table) : table;
+        if (!elTable) return;
+        elTable.classList.add('tablekit');
+
+        const tbody = elTable.querySelector('tbody');
+        const rows = [...tbody.querySelectorAll('tr[data-row="1"]')];
+        const infoEl = infoContainer ? document.querySelector(infoContainer) : null;
+        const pagerEl = pagerContainer ? document.querySelector(pagerContainer) : null;
+
+        // Densidad persistente
+        const applyDensity = (mode) => {
+          if (mode === 'compact') { elTable.classList.add('table-compact'); }
+          else { elTable.classList.remove('table-compact'); }
+          localStorage.setItem(densityKey, mode);
+        };
+        applyDensity(localStorage.getItem(densityKey) || 'normal');
+
+        // Paginación
+        let pageLength = parseInt(localStorage.getItem(pageLenKey) || defaultPageLen, 10);
+        let currentPage = 1;
+
+        const visibles = () => rows.filter(r => r.style.display !== 'none');
+
+        function updateInfo(start, end, total) {
+          if (infoEl) infoEl.textContent = `Mostrando ${total ? start + 1 : 0} a ${end} de ${total}`;
+        }
+        function mk(label, page, disabled = false, active = false) {
+          const li = document.createElement('li');
+          li.className = 'page-item' + (disabled ? ' disabled' : '') + (active ? ' active' : '');
+          const a = document.createElement('a');
+          a.className = 'page-link'; a.href = '#'; a.textContent = label;
+          a.addEventListener('click', e => { e.preventDefault(); if (!disabled) go(page); });
+          li.appendChild(a); return li;
+        }
+        function render(totalPages) {
+          if (!pagerEl) return;
+          pagerEl.innerHTML = ''; pagerEl.classList.add('tablekit-pager');
+          const tp = Math.max(1, totalPages);
+          pagerEl.appendChild(mk('Anterior', currentPage - 1, currentPage === 1));
+          const max = 7, start = Math.max(1, currentPage - 3), end = Math.min(tp, start + max - 1);
+          for (let p = start; p <= end; p++) pagerEl.appendChild(mk(String(p), p, false, p === currentPage));
+          pagerEl.appendChild(mk('Siguiente', currentPage + 1, currentPage === tp));
+        }
+        function go(page) {
+          const v = visibles();
+          const total = v.length;
+          const tp = Math.max(1, Math.ceil(total / pageLength));
+          currentPage = Math.min(Math.max(1, page), tp);
+
+          v.forEach((r, i) => {
+            const start = (currentPage - 1) * pageLength, end = start + pageLength;
+            r.style.display = (i >= start && i < end) ? '' : 'none';
+          });
+          const start = (currentPage - 1) * pageLength;
+          const endCount = Math.min(start + pageLength, total);
+          updateInfo(start, endCount, total); render(tp);
+        }
+
+        // Filtro
+        const qEl = filterInput ? document.querySelector(filterInput) : null;
+        let tId = null;
+        const applyFilterNow = () => {
+          const term = norm(qEl?.value || '').trim();
+          rows.forEach(r => {
+            const txt = norm(r.innerText);
+            r.style.display = term ? (txt.includes(term) ? '' : 'none') : '';
+          });
+          go(1);
+        };
+        const applyFilterDebounced = () => { clearTimeout(tId); tId = setTimeout(applyFilterNow, 120); };
+
+        qEl?.addEventListener('input', applyFilterDebounced);
+        btnSearch && document.querySelector(btnSearch)?.addEventListener('click', applyFilterNow);
+        btnClear && document.querySelector(btnClear)?.addEventListener('click', () => { if (qEl) { qEl.value = ''; applyFilterNow(); qEl.focus(); } });
+
+        // API sencillo
+        return {
+          go,
+          applyFilterNow,
+          setDensity: mode => applyDensity(mode),
+          setPageLength: n => { pageLength = +n; localStorage.setItem(pageLenKey, String(pageLength)); go(1); }
+        };
+      }
+
+      return { init };
+    })();
+  </script>
+
+  <!-- ===================== Persistencia de cierre de alertas ===================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const STORAGE_KEY = 'sili.dismissedAlerts';
+      let dismissed = [];
+
+      // Cargar lista de alertas ya cerradas
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        dismissed = raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        dismissed = [];
+      }
+
+      const alerts = document.querySelectorAll('.alert[data-alert-key]');
+
+      alerts.forEach(alert => {
+        const key = alert.getAttribute('data-alert-key');
+        if (!key) return;
+
+        // Si esta alerta ya fue cerrada antes, no la mostramos
+        if (dismissed.includes(key)) {
+          alert.remove();
+          return;
+        }
+
+        // Cuando el usuario hace click en la X, la marcamos como cerrada
+        const btn = alert.querySelector('[data-bs-dismiss="alert"]');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            if (!dismissed.includes(key)) {
+              dismissed.push(key);
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(dismissed));
+              } catch (e) {
+                // si falla localStorage no pasa nada: solo no persiste
+              }
+            }
+          });
+        }
+      });
+    });
+  </script>
+
+  {% block scripts_extra %}{% endblock %}
+ 
+ <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+ 
+   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>-->
+
+  <!-- En cualquier lugar del layout (al final del <body> es buena idea) añade el form oculto: -->
+  <form id="logoutForm" action="{{ url_for('logout') }}" method="post" style="display:none;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  </form>
+</body>
+
+
+</html>

@@ -1,0 +1,26 @@
+2026-05-08 13:42:20,175 | INFO | app | PERF GET /test-encuestas-directo -> 302 | 2.15 ms | sql=0 (0.00 ms)
+2026-05-08 13:42:20,185 | WARNING | app | GATEWAY data={'p': '/test-encuestas-directo'}
+2026-05-08 13:42:20,186 | WARNING | app | GATEWAY raw_path=/test-encuestas-directo
+2026-05-08 13:42:20,188 | WARNING | app | GATEWAY request.path=/g/eyJwIjoiL3Rlc3QtZW5jdWVzdGFzLWRpcmVjdG8ifQ.5DmVTqMijRR3NH1fnPWsOS9CQdI
+2026-05-08 13:42:20,189 | WARNING | app | GATEWAY request.method=GET
+2026-05-08 13:42:20,190 | WARNING | app | GATEWAY parts.path=/test-encuestas-directo
+2026-05-08 13:42:20,190 | WARNING | app | GATEWAY parts.query=
+2026-05-08 13:42:20,191 | WARNING | app | GATEWAY forward_qs=
+2026-05-08 13:42:20,192 | WARNING | app | GATEWAY match=('test_encuestas_directo', {})
+2026-05-08 13:42:20,204 | WARNING | app | GATEWAY despachando interno path=/test-encuestas-directo method=GET qs=
+2026-05-08 13:42:20,205 | WARNING | app | GATEWAY response type=<class 'flask.wrappers.Response'> status=200 OK
+2026-05-08 13:42:20,206 | INFO | app | PERF GET /test-encuestas-directo -> 200 | 1.57 ms | sql=0 (0.00 ms)
+2026-05-08 13:42:20,207 | INFO | app | PERF GET /g/eyJwIjoiL3Rlc3QtZW5jdWVzdGFzLWRpcmVjdG8ifQ.5DmVTqMijRR3NH1fnPWsOS9CQdI -> 200 | 2.44 ms | sql=0 (0.00 ms)
+2026-05-08 13:42:28,570 | INFO | app | PERF GET /__debug/encuestas -> 302 | 1.62 ms | sql=0 (0.00 ms)
+2026-05-08 13:42:28,579 | WARNING | app | GATEWAY data={'p': '/__debug/encuestas'}
+2026-05-08 13:42:28,580 | WARNING | app | GATEWAY raw_path=/__debug/encuestas
+2026-05-08 13:42:28,582 | WARNING | app | GATEWAY request.path=/g/eyJwIjoiL19fZGVidWcvZW5jdWVzdGFzIn0.DW9dBSlNsP8i_iLOE1wGVG2MBYc
+2026-05-08 13:42:28,583 | WARNING | app | GATEWAY request.method=GET
+2026-05-08 13:42:28,583 | WARNING | app | GATEWAY parts.path=/__debug/encuestas
+2026-05-08 13:42:28,584 | WARNING | app | GATEWAY parts.query=
+2026-05-08 13:42:28,585 | WARNING | app | GATEWAY forward_qs=
+2026-05-08 13:42:28,585 | WARNING | app | GATEWAY match=('debug_encuestas', {})
+2026-05-08 13:42:28,587 | WARNING | app | GATEWAY despachando interno path=/__debug/encuestas method=GET qs=
+2026-05-08 13:42:28,591 | WARNING | app | GATEWAY response type=<class 'flask.wrappers.Response'> status=200 OK
+2026-05-08 13:42:28,592 | INFO | app | PERF GET /__debug/encuestas -> 200 | 3.87 ms | sql=0 (0.00 ms)
+2026-05-08 13:42:28,593 | INFO | app | PERF GET /g/eyJwIjoiL19fZGVidWcvZW5jdWVzdGFzIn0.DW9dBSlNsP8i_iLOE1wGVG2MBYc -> 200 | 5.27 ms | sql=0 (0.00 ms)

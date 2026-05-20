@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Planilla Mensual{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-end gap-2 mb-3">
+    <div>
+        <label class="form-label mb-1">Mes</label>
+        <input type="month" id="month" class="form-control" value="{{'%04d-%02d'|format(y, m)}}">
+    </div>
+    <div> 
+        <label class="form-label mb-1">Responsable</label>
+        <select id="f_res" class="form-select">
+            <option value="" {{ ''==rid and 'selected' or '' }}>Todos</option>
+            {% for r in responsables %}
+            <option value="{{r.id}}" {{ (rid|string)==(r.id|string) and 'selected' or '' }}>{{r.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label class="form-label mb-1">Frecuencia</label>
+        <select id="f_freq" class="form-select">
+            <option value="" {{ ''==freq and 'selected' or '' }}>Todas</option>
+            {% for f in ['Diario','Semanal','Mensual'] %}            
+			<option value="{{f}}" {{ (freq|string)==f and 'selected' or '' }}>{{f}}</option>{% endfor %}
+			</select>
+			</div>
+  <div>
+    <label class="form-label mb-1">Departamento</label>
+    <select id="f_dep" class="form-select">
+      <option value="" {{ ''==depid and 'selected' or '' }}>Todos</option>
+      {% for d in departamentos %}<option value="{{ d.id }}" {{ (depid|string)==(d.id|string) and 'selected' or '' }}>{{ d.nombre }}</option>{% endfor %}
+    </select>
+  </div>
+    <button id="btnFiltrar" class="btn btn-primary">Filtrar</button>
+
+    <div class="ms-auto small">
+        <a class="btn btn-outline-secondary btn-sm"
+            href="{{ url_for('planilla_mensual.planilla', year=prev_y, month=prev_m, responsable_id=rid, frecuencia=freq) }}">&laquo;
+            Mes anterior</a>
+        <a class="btn btn-outline-secondary btn-sm"
+            href="{{ url_for('planilla_mensual.planilla', year=next_y, month=next_m, responsable_id=rid, frecuencia=freq) }}">Mes
+            siguiente &raquo;</a>
+    </div>
+</div>
+
+<div class="planilla-wrap table-responsive">
+  <table class="table table-sm table-bordered table-hover align-middle planilla"
+         style="--w1:420px; --w2:120px; --w3:180px; --wday:34px;">
+    <colgroup>
+      <col style="width: var(--w1)">
+      <col style="width: var(--w2)">
+      <col style="width: var(--w3)">
+      {% for _ in dias %}<col style="width: var(--wday)">{% endfor %}
+    </colgroup>
+    <thead class="table-light sticky-top">
+        <tr>
+            <th class="col-act sticky-1">Actividades Clave</th>
+            <th class="col-fre sticky-2">Frecuencia</th>
+            <th class="col-res sticky-3">Responsable</th>
+            {% for d in dias %}
+            <th class="text-center">{{ "%02d"|format(d.day) }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in tareas %}
+        <tr data-id="{{t.id}}">
+            <td class="sticky-1 text-wrap">{{ t['nombre'] }}</td>
+            <td class="sticky-2 text-center">{{ t['frecuencia'] }}</td>
+            <td class="sticky-3 text-nowrap">{{ t['responsable_nombre'] }}</td>
+            {% for d in dias %}
+            {% set key = t['id']|string + '-' + d.isoformat() %}
+            <td class="text-center">
+                <input type="checkbox" class="tick" data-date="{{ d.isoformat() }}" {% if checks.get(key) %}checked{%
+                    endif %}>
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<div class="modal fade" id="evidenceModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" id="evidenceForm" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar observación y evidencia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="tarea_id" id="ev_tarea">
+        <input type="hidden" name="fecha" id="ev_fecha">
+        <div class="mb-3">
+          <label class="form-label">Observación</label>
+          <textarea class="form-control" name="obs" rows="3" placeholder="Comentario breve…"></textarea>
+        </div>
+        <div class="mb-1">
+          <label class="form-label">Evidencia (PDF o imagen)</label>
+          <input class="form-control" type="file" name="file" accept="application/pdf,image/*">
+          <div class="form-text">Opcional. Máx. recomendado 10 MB.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planilla_mensual.css') }}">
+<script src="{{ url_for('static', filename='js/planilla_mensual.js') }}"></script>
+{% endblock %}

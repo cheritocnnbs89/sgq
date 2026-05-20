@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1901202601099028186600120050010002736890037417611</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-19T10:09:26-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;TUVAL S. A.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;TUVAL S. A.&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0990281866001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;1901202601099028186600120050010002736890037417611&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;005&lt;/estab&gt;
+        &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000273689&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;CEDROS SOLAR 5 Y CALLE C&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;19/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;GUAYAS / GUAYAQUIL / TARQUI / CEDROS SOLAR 5 Y CALLE C&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;176&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;VIA A DAULE KM 16.5 ROSAVIN LOTE 1 Y COBRE&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;73.65&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;24.55&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;73.65&lt;/baseImponible&gt;
+                &lt;valor&gt;11.05&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;84.70&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;84.70&lt;/total&gt;
+                &lt;plazo&gt;30&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;027-000028-I&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;BRIDA ROSC (THR) NPT AC INOX 304 FORJ CL 150 RF - 2 - 4H USA PERNO 5/8X3&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;13.240000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;13.24&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;39.72&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;39.72&lt;/baseImponible&gt;
+                    &lt;valor&gt;5.96&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;026-000075-I&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;BRIDA DESLIZ (SO) AC FORJ A105 CL 150 RF - 2 - 4H USA PERNO 5/8X3&lt;/descripcion&gt;
+            &lt;cantidad&gt;12.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;3.770000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;11.31&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;33.93&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;33.93&lt;/baseImponible&gt;
+                    &lt;valor&gt;5.09&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="Email"&gt;compras.electronica@quimpac.com.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Vendedor"&gt;NARCISA MARISOL VILLALTA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Forma de Pago"&gt;CREDITO 30 DIAS&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Telefono Cliente"&gt;42162660&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Telefono Empresa"&gt;043704060&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Direccion Cliente"&gt;VIA A DAULE KM 16.5 ROSAVIN LOTE 1 Y COBRE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Orden Compra"&gt;1000602156&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Forma Retiro"&gt;Despacho en ruta&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Peso KG"&gt;34.24000&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="NOTA CLIENTE"&gt;DENIA V.&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature822568"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo647582"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID903589" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature822568-SignedProperties553596"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;oK5xKzPNVk1bGvc0/PrksYUKqtg=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1890693"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;40w8vgDf4KBD/cv/9CBRMJrf2qs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-245089" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;knlvyHhZiDkceHDTVwxj42JHHSE=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue191779"&gt;
+R3lg9PDzaPt1FqHdU/1ILtmFNdXh2kNGvDwFmCFZ9YNZX/fbqCIbIPntnrZSjyDVbzOcZz48svrV
+Bff2Ts5uGDwgNSxv/jgIPEhtuwzjSSR+fKBsASi4G8SCBJMwRTEfiLVAKLJYGkgTp8BjpUCGY/C6
+/p0NNtI5fgfTbWHamMWp6Osou/KvMXpCY0utFwCVm7mWywIQuSu7lCkBeSDIqsuU8CwR9EFmUhow
+j78X1oPN/t4qsxXFN6zImWdZ6j+17fvEH2wUQNNcuwmUBBUv80oDdO4DCisZsTkzlL/uy+rJtdsC
+VtVIrerJn8rsDB4lyC3XdKQ2ZlQKEv9Fv/lpYQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1890693"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMBzCCCe+gAwIBAgIEQ/ruVzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDEyMDYxNDM5MTBaFw0yNjEyMDYxNDM5MTBaMIGnMSUw
+IwYDVQQDDBxGUkVERFkgUkVORSBWQUxMRUpPIE1FRFJBTkRBMSAwHgYDVQQFExcwOTA4ODczMDUy
+LTA2MTIyNDA5NDkwMTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9S
+TUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDm6f44lXIQ9vtVSlLbNI1YTUTEeL2xuEaQKWYz56h2
+I2cstn9STXf1lhqkMueSFJvweNWeGivOqKO/BFZfB86xiX9XlEUif2tFxztzun1njocgpZ3Gntmr
+vPktQOzRW8AQLjmLxgSD0TtloqzOpOYs4DdAA7+qztXKn0kcnxS1kd4/3fyEqMSe+JBjej/uYRQ7
+2CdFrmO/l8CB6putb60+80j8fQQmAQSIdXC/fittiuaFbENUbaPgPL6+EJubrgEId3LSLG47Xju1
+mU0G88YJ0Jgbns1R5czDIhE5B6eX8HEmUdIKZTpKo+SDQhpyAa4Ee9U9Oac7K74R3C/UBHRrAgMB
+AAGjggdFMIIHQTAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2P
+MFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7
+hoG4bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2
+b2NhdGlvbkxpc3Q/YmFzZTAdBgNVHREEFjAUgRJpbXBvcnRAdHV2YWxzYS5jb20wggEVBgNVHSAE
+ggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBh
+AGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisG
+AQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5l
+Yy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0
+aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjAdBgNVHSUEFjAUBggr
+BgEFBQcDAgYIKwYBBQUHAwQwggKiBgNVHR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cu
+c2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkx
+OTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFU
+QTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYD
+VQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8v
+bGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJ
+T04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0
+aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5
+ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1
+ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9V
+PUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEg
+Uy5BLiAyLEM9RUMwHQYDVR0OBBYEFBGqcfGgJYk8yNiiB7l3nQmcpuH/MCsGA1UdEAQkMCKADzIw
+MjQxMjA2MTQzOTEwWoEPMjAyNjEyMDYxNDM5MTBaMAsGA1UdDwQEAwIF4DAeBgorBgEEAYKmcgMF
+BBAMDlZJQ0VQUkVTSURFTlRFMBoGCisGAQQBgqZyAwEEDAwKMDkwODg3MzA1MjAWBgorBgEEAYKm
+cgMJBAgMBlRBUlFVSTARBgorBgEEAYKmcgMiBAMMAS4wKAYKKwYBBAGCpnIDBwQaDBhDRURST1Mg
+U09MQVIgNSBZIENBTExFIEMwGwYKKwYBBAGCpnIDAgQNDAtGUkVERFkgUkVORTAfBgorBgEEAYKm
+cgMgBBEMDzAwMTAwMjAwMDY4MTE1NjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMM
+BAkMB0VDVUFET1IwFwYKKwYBBAGCpnIDAwQJDAdWQUxMRUpPMBkGCisGAQQBgqZyAwoECwwJVFVW
+QUwgUyBBMB0GCisGAQQBgqZyAwsEDwwNMDk5MDI4MTg2NjAwMTARBgorBgEEAYKmcgMdBAMMAS4w
+GAYKKwYBBAGCpnIDBAQKDAhNRURSQU5EQTAQBgorBgEEAYKmcgMIBAIMADANBgkqhkiG9w0BAQsF
+AAOCAgEAGnaS8eLDOpeGxzASgh0rcOn2ttDeXehLKpOLqzLAFvSwDueQdygrlfe4ev6ICHHXRofx
+RKuzW/k/M7p9DDcr0aYWi3/L74yY+sZbxxSM756L9vzHL0UiEkLF3OAVkCtHAiNBARJVWRgqqTeu
+Ss1GlKti14oabtrYyUknu/ut9RmU1JYvL/ADf9SYcPBbgtqoeF/CpE4LzFx25eMq2jd6VDQR5KCG
+1G5UW3K8Ik3Ig/w1vdmR//MLIsGVSWLKguawiXAlsoUSPP9hA6m4SiOe0hRQySoDICp8qB/kYG7E
+TZ9RC5mIELH95y+lmO09NikVxVrATmBoFFYT7bVgVAGV48ym7uADdSV8kz+/CK/pott6Ru/5R1QT
+5qBTkdF50KtBpudUPhu+AGvyAFbojp7+hiaisqltCIiN4AI7Sc3S8tl9lIr4jITuYnt7avuZvB+K
+H5tKDOxWZmSFTBoQc2nlZdu+TuxmGT9sI016Uyc+HOXj4I2va6ZBi5RQAUNXjxFnE3s8dO54BzjN
+mUBvnYY2/nCSTtUu9qrTdouwCRwOjMkfeKwZBcgtpRzl1COq/5CYI304sEVZ7qZmOJh+RxrH60Zd
+45YThHz3EN/un0X9uEk8/p2lilWnwfgnyQNyWjaAZAsFT2iS1k3ya1iKDaKc91igQXjy/Yfm/hyo
+2hoboMM=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+5un+OJVyEPb7VUpS2zSNWE1ExHi9sbhGkClmM+eodiNnLLZ/Uk139ZYapDLnkhSb8HjVnhorzqij
+vwRWXwfOsYl/V5RFIn9rRcc7c7p9Z46HIKWdxp7Zq7z5LUDs0VvAEC45i8YEg9E7ZaKszqTmLOA3
+QAO/qs7Vyp9JHJ8UtZHeP938hKjEnviQY3o/7mEUO9gnRa5jv5fAgeqbrW+tPvNI/H0EJgEEiHVw
+v34rbYrmhWxDVG2j4Dy+vhCbm64BCHdy0ixuO147tZlNBvPGCdCYG57NUeXMwyIROQenl/BxJlHS
+CmU6SqPkg0IacgGuBHvVPTmnOyu+Edwv1AR0aw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature822568-Object601360"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature822568"&gt;
+                &lt;etsi:SignedProperties Id="Signature822568-SignedProperties553596"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-19T10:09:13-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;E22qH/q+6mblQ0/jC8iqbvABJE4=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1140518487&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-245089"&gt;
+                            &lt;etsi:Description&gt;comprobateFirma&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

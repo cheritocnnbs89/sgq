@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0202202601179003329500120010030000461780054369210</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-02T14:02:57-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;Citibank, N.A. Sucursal Ecuador&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;Citibank, N.A. Sucursal Ecuador&lt;/nombreComercial&gt;
+        &lt;ruc&gt;1790033295001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0202202601179003329500120010030000461780054369210&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;003&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000046178&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;AV. REPUBLICA DE EL SALVADOR N36-230 Y AV. NACIONES UNIDAS ESQ.&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;02/02/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;Av Naciones Unidas y Republica de El Salvador&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;5368&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;totalSinImpuestos&gt;979.69&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;7&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;979.69&lt;/baseImponible&gt;
+                &lt;valor&gt;0.00&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;979.69&lt;/importeTotal&gt;
+        &lt;moneda&gt;USD&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;979.69&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;DIAS&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;SF0&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;SERVICIOS FINANCIEROS NO GRABADOS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;979.69&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;979.69&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;7&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;979.69&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="CORREO"&gt;irugel@quimpac.com.ec;adominguez@quimpac.com.ec;kramirez@quimpac.com.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="DESCRIPCION"&gt;BEBIDAS ARCACONTINENTAL ECUADOR ARCADOR SA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="DETALLE"&gt;DESCUENTO FINANCIERO SUPPLIER FINANCE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="DIRECCION"&gt;"KM.16.5 VIA DUALE,Guayaquil"&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="MES"&gt;ENERO 2026&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="MONEDA"&gt;USD&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="GRAN CONTRIBUYENTE"&gt;RESOLUCION NAC-AGCOGEC23-00000065-M&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature825419"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo757377"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID268782" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature825419-SignedProperties531797"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;FNFgbX75ggAxHbaGIIoAcUGaF+4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1652841"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;lwBN4ADAP/+5c+igzLJvptGyS3s=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-531835" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ur8Atu0HcyBkNVtjhBZip9B6iO4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue561962"&gt;
+Qlx/0qSOv+z1LW808I9NcYlcbq5wnpwfdGRrk68Qmd1UXPcWSb8hfAIP/wG08Qsq9O8dRegl/Z9k
+/8tcO53dQrQNYgqJKq/YVozXbh1jvLgu4jRZewqmkra0T4UgVoOhW7brIhOWceqZt0MzqHfmSeB9
++efhb8wxBgiWXdK6dkDnjdsCNvky1FsJmd+8jLRq50lVPV9m8XFTl2kwkRKiMYXNTUBxVdp3q6dL
+6hkcEttys6mY/Lywd51dY38qsLLDlrPQXBtlWnLHQB7d4i28icQ+gms1W+AVtYMkddYVM+cIgwmw
+1SPvLXIJAYvNRINVgzKe3mhN+JcTuHcq1skf3w==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1652841"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIIWTCCBkGgAwIBAgIIGG5rd0n94SAwDQYJKoZIhvcNAQELBQAwgbUxCzAJBgNVBAYTAkVDMREw
+DwYDVQQHDAhETSBRVUlUTzEhMB8GA1UECgwYQ09OU0VKTyBERSBMQSBKVURJQ0FUVVJBMUQwQgYD
+VQQLDDtTVUJESVJFQ0NJT04gTkFDSU9OQUwgREUgU0VHVVJJREFEIERFIExBIElORk9STUFDSU9O
+IEROVElDUzEqMCgGA1UEAwwhRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIElDRVJULUVDMB4XDTI0
+MDgwNzE2MzkyN1oXDTI2MDgwODE2MzkyN1owgYcxCzAJBgNVBAYTAkVDMScwJQYDVQQKEx5DSVRJ
+QkFOSyBOLkEuIFNVQ1VSU0FMIEVDVUFET1IxDjAMBgNVBAcTBVFVSVRPMRMwEQYDVQQFEwowOTIz
+NTc1NzQwMSowKAYDVQQDEyFDQVJPTElOQSBERU5JU1NFIEJFTklURVMgT1JFTExBTkEwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC2LxyX7LL8ZkJl7wgiIjdBYoDcgtxLd0nU94mdw2FX
+s5bD413yjrpdclX4+zuJXgT5bCFVzxbEtxfpGo1AxbhKegthvlhb7f/8+fJ19HttByIxe3JmtfXq
+lIPt1DLKzKEgAGYAdmSc17knndxZ5NxmObUBJ6ZcUG72lkTChGLMbIyh7ksGrH06eVNoQ0f+6uUE
+m5qwOAgQ/O2TGTNYWgTdrFg9rFtiwkB/D9ijRON+gmQRPg9PE1y7flLPFSMdjDmSliSLOiAkJ6Da
+9gTPttaTbDgVlmvIXb3xHLW3c4j+jFGfQ0rD8/NbFhluSmm0MmZwvLg54qXAQFZZ9k/In/93AgMB
+AAGjggOXMIIDkzCCAisGA1UdEQSCAiIwggIegRljYXJvbGluYS5iZW5pdGVzQGNpdGkuY29toBsG
+CysGAQQBgtVhAQMBoAwMCjA5MjM1NzU3NDCgIQYLKwYBBAGC1WEBAwKgEgwQQ0FST0xJTkEgREVO
+SVNTRaAYBgsrBgEEAYLVYQEDA6AJDAdCRU5JVEVToBkGCysGAQQBgtVhAQMEoAoMCE9SRUxMQU5B
+oCoGCysGAQQBgtVhAQMFoBsMGUNBU0ggWSBUUkFERSBQUk9DIFNSUyBVUFagQQYLKwYBBAGC1WEB
+AwegMgwwUkVQVUJMSUNBIERFTCBTQUxWQURPUiBZIE5OVVUgRURJRklDSU8gQ0lUWVBMQVpBoB0G
+CysGAQQBgtVhAQMIoA4MDCs1OTMyMzkzODk2NaAWBgsrBgEEAYLVYQEDCaAHDAVRVUlUT6AvBgsr
+BgEEAYLVYQEDCqAgDB5DSVRJQkFOSyBOLkEuIFNVQ1VSU0FMIEVDVUFET1KgHgYLKwYBBAGC1WEB
+AwugDwwNMTc5MDAzMzI5NTAwMaAYBgsrBgEEAYLVYQEDDKAJDAdFQ1VBRE9SoCMGCysGAQQBgtVh
+AQMyoBQMEk1JRU1CUk8gREUgRU1QUkVTQaAgBgsrBgEEAYLVYQEDM6ARDA9BUkNISVZPIFBLQ1Mj
+MTKgEQYLKwYBBAGC1WEBAzSgAgwAoCEGCysGAQQBgtVhAQM2oBIMEFNJTiBERVBBUlRBTUVOVE8w
+CQYDVR0TBAIwADAfBgNVHSMEGDAWgBQvInr4Xm2UjmpAFDfHbmty6TrCPzA4BggrBgEFBQcBAQQs
+MCowKAYIKwYBBQUHMAGGHGh0dHA6Ly9vY3NwLmljZXJ0LmZqZS5nb2IuZWMwcgYDVR0gBGswaTBn
+Bg4rBgEEAYLVYQECAQQCATBVMFMGCCsGAQUFBwIBFkdodHRwOi8vd3d3LmljZXJ0LmZqZS5nb2Iu
+ZWMvZHBjL2RlY2xhcmFjaW9uX3ByYWN0aWNhc19jZXJ0aWZpY2FjaW9uLnBkZjAdBgNVHSUEFjAU
+BggrBgEFBQcDAgYIKwYBBQUHAwQwOgYDVR0fBDMwMTAvoC2gK4YpaHR0cDovL3d3dy5pY2VydC5m
+amUuZ29iLmVjL2NybC9pY2VydC5jcmwwHQYDVR0OBBYEFIh2UCgUbUW7bYb/KiTyhtW6myOlMA4G
+A1UdDwEB/wQEAwIGwDANBgkqhkiG9w0BAQsFAAOCAgEATcmaCcLCyRv2xu8oyrOI0OwufnHPBSVo
+0KcT8L+HflLYi1ZqZUkD9lydTY2MBtNHd7NKKUp422lj/IAzC6fwQ7dyCjQmavMObF+kMEbjqly4
+dHAItHDUzL71hxqxNlmQ6cqSxTyuGraM31GDZ01zBPW8Y+gird5cgJKgeHMxp00nJB5JE9OTMRcj
+QyU3AXxk+IuLAtEb0sdrrvRkyQoclyNAPaZniriXPJpqgBgtsu4VGxRQ+4UsehAkw1cYx0osUZwF
+X4ICGEGpzOBcziUJB0RBAbNM1ZagudwSLFA2mr7E72bjY2MDCVX+wFMsRUxnsWBnBcetVnlK7lSK
+5C0bJhdIt4qr5VO3okyzSAJMfKfNZqOkw+VRCRVqRS3bmDCZxrMNudL9wl0zbCM0v/u3cZbeh+pd
+vSHUOZ0UGtb8am3pkkhV6LYzOat06Ghft3eREIiTwP3Jb5ignB4QRxP52/IGexrVvlovU84HM0a1
+do7ptexGzQQa61ziEqCJgxLImFuK1LjqTntF/dEzAYaDkrmLxoMbbcUUBP9ftr9xLl0QDB9dT9s6
+Lvvxv+hpI5UN7xpFhA0Sz4aFN4pAyLi7Fkv7Hc6kf/jnUMrackAQz5edD/VDVjIm7EEJSIFd8M2s
+y+3SHwJmRQMu6NQRqaNBzy1hIqJfJBF95r0Mxjh/lu8=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+ti8cl+yy/GZCZe8IIiI3QWKA3ILcS3dJ1PeJncNhV7OWw+Nd8o66XXJV+Ps7iV4E+WwhVc8WxLcX
+6RqNQMW4SnoLYb5YW+3//PnydfR7bQciMXtyZrX16pSD7dQyysyhIABmAHZknNe5J53cWeTcZjm1
+ASemXFBu9pZEwoRizGyMoe5LBqx9OnlTaENH/urlBJuasDgIEPztkxkzWFoE3axYPaxbYsJAfw/Y
+o0TjfoJkET4PTxNcu35SzxUjHYw5kpYkizogJCeg2vYEz7bWk2w4FZZryF298Ry1t3OI/oxRn0NK
+w/PzWxYZbkpptDJmcLy4OeKlwEBWWfZPyJ//dw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature825419-Object168514"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature825419"&gt;
+                &lt;etsi:SignedProperties Id="Signature825419-SignedProperties531797"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-02T14:02:52-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;hbKtmQKdAIN0Ck1NoihWlybtWcM=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=ENTIDAD DE CERTIFICACION ICERT-EC,OU=SUBDIRECCION NACIONAL DE SEGURIDAD DE LA INFORMACION DNTICS,O=CONSEJO DE LA JUDICATURA,L=DM QUITO,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1760462664435097888&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-531835"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

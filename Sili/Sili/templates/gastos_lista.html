@@ -1,0 +1,786 @@
+{% extends 'base.html' %}
+{% block title %}Reembolso de Gasto — Consulta{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reembolsos/gasto_lista.css') }}">
+<script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="gasto-lista-config"
+  data-csrf-token="{{ csrf_token() }}"
+  data-lista-gastos-url="{{ url_for('lista_gastos') }}"
+  data-aprobar-gasto-masivo-url="{{ url_for('aprobar_gasto_masivo') }}"
+  data-enviar-gasto-sap-masivo-url="{{ url_for('enviar_gasto_sap_masivo') }}"
+  data-is-coord="{{ '1' if ((rol or '')|lower) == 'coordinador' else '0' }}"
+  data-status-deleted="{{ '1' if request.args.get('status') == 'deleted' else '0' }}">
+</div>
+
+{% if request.args.get('status') == 'deleted' %}
+<div class="alert alert-success alert-dismissible fade show" role="alert" data-once="1">
+  Gasto eliminado.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="container mt-4 gastos-page">
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <h3 class="mb-0">
+      <i class="bi bi-credit-card me-2"></i>Reembolso de Gasto — Consulta
+    </h3>
+
+    <div class="d-none d-md-flex align-items-center gap-2 text-muted small">
+      <span class="badge bg-light text-dark border">
+        <i class="bi bi-person-circle me-1"></i>{{ (usuario or session.get('usuario') or session.get('username') or '—') }}
+      </span>
+      <span class="badge bg-light text-dark border">
+        <i class="bi bi-shield-lock me-1"></i>{{ (rol or session.get('rol') or '—') }}
+      </span>
+    </div>
+
+    <div class="d-flex d-md-none align-items-center gap-2 mb-2 text-muted small">
+      <span class="badge bg-light text-dark border">
+        <i class="bi bi-person-circle me-1"></i>{{ (usuario or session.get('usuario') or session.get('username') or '—') }}
+      </span>
+      <span class="badge bg-light text-dark border">
+        <i class="bi bi-shield-lock me-1"></i>{{ (rol or session.get('rol') or '—') }}
+      </span>
+    </div>
+  </div>
+
+  <form method="get" action="{{ url_for('lista_gastos') }}"
+    class="d-flex flex-wrap align-items-end gap-2 mb-2 filtros-gastos no-print"
+    id="form-filtros-gastos">
+
+    <div class="d-flex flex-column">
+      <label class="form-label mb-1">Desde</label>
+      <input type="date" name="desde" class="form-control form-control-sm w-160" value="{{ filtros.desde or '' }}">
+    </div>
+
+    <div class="d-flex flex-column">
+      <label class="form-label mb-1">Hasta</label>
+      <input type="date" name="hasta" class="form-control form-control-sm w-160" value="{{ filtros.hasta or '' }}">
+    </div>
+
+    <datalist id="dl-proveedores"></datalist>
+
+    <div class="flex-grow-1 d-flex flex-column">
+      <label class="form-label mb-1">Usuario</label>
+      <select name="usuario_id" id="usuario_id" class="form-select form-select-sm w-220">
+        <option value="">— Todos —</option>
+        {% for u in usuarios_reg %}
+        <option value="{{ u.id }}" {{ 'selected' if (filtros.usuario_id|string)==(u.id|string) else '' }}>
+          {{ u.username }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="d-flex flex-column">
+      <label class="form-label mb-1">Tipo</label>
+      <select name="tipo" id="tipo_gasto" class="form-select form-select-sm w-220">
+        <option value="" {{ 'selected' if not filtros.tipo else '' }}>— Todos —</option>
+        <option value="caja_chica" {{ 'selected' if filtros.tipo=='caja_chica' else '' }}>Caja chica</option>
+        <option value="reembolso" {{ 'selected' if filtros.tipo=='reembolso' else '' }}>Reembolso vendedor</option>
+        <option value="tarjeta" {{ 'selected' if filtros.tipo=='tarjeta' else '' }}>Tarjeta</option>
+        <option value="tarjeta_online" {{ 'selected' if filtros.tipo=='tarjeta_online' else '' }}>
+          Tarjeta (Online)
+        </option>
+        <option value="tarjeta_boletos" {{ 'selected' if filtros.tipo=='tarjeta_boletos' else '' }}>
+          Tarjeta (Boletos)
+        </option>
+      </select>
+    </div>
+
+    {% set role_lower = (rol or '')|lower %}
+    {% if role_lower in ['gerente general','gerente financiero','coordinador','admin'] %}
+    <div class="flex-grow-1 d-flex flex-column">
+      <label class="form-label mb-1">Gerente</label>
+      <select name="gerente_id" id="gerente_id" class="form-select form-select-sm w-220">
+        <option value="">— Todos —</option>
+        {% for g in gerentes_reg %}
+        <option value="{{ g.id }}" {{ 'selected' if (filtros.gerente_id|string)==(g.id|string) else '' }}>
+          {{ g.nombre }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <input type="hidden" id="proveedor_id" name="proveedor_id" value="{{ filtros.proveedor_id or '' }}">
+    <input type="hidden" id="proveedor" name="proveedor" value="{{ filtros.proveedor or '' }}">
+    <input type="hidden" id="pendientes" name="pendientes" value="{{ filtros.pendientes or '' }}">
+
+    <div class="d-flex align-items-end gap-2">
+      <button type="submit" class="btn btn-primary" name="accion" value="buscar">
+        Buscar
+      </button>
+
+      <div class="d-flex flex-column">
+        <label class="form-label mb-1">CCB</label>
+        <div class="input-group input-group-sm input-group-ccb">
+          <span class="input-group-text" title="CCB"><i class="bi bi-star"></i></span>
+          <select name="ccb" id="ccb" class="form-select">
+            <option value="" {{ 'selected' if (filtros.ccb|string)=='' else '' }}>Todos</option>
+            <option value="1" {{ 'selected' if (filtros.ccb|string)=='1' else '' }}>Con CCB</option>
+            <option value="0" {{ 'selected' if (filtros.ccb|string)=='0' else '' }}>Sin CCB</option>
+          </select>
+        </div>
+      </div>
+
+      {% set rol = (session.get('rol') or '')|lower %}
+
+      {% if rol in ['gerente', 'gerente de área', 'gerente de area', 'gerente general', 'gerente financiero'] %}
+      {% set q = request.args.to_dict(flat=True) %}
+      {% set _ = q.update({'pend_view':'1'}) %}
+      {% endif %}
+
+      <a href="{{ url_for('nuevo_gasto') }}" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-lg me-1"></i>Nuevo
+      </a>
+    </div>
+
+    <div class="btn-group btn-group-sm ms-auto">
+      <button type="button" class="btn btn-outline-secondary" data-range="today">Hoy</button>
+      <button type="button" class="btn btn-outline-secondary" data-range="week">Semana</button>
+      <button type="button" class="btn btn-outline-secondary" data-range="month">Mes</button>
+      <button type="button" class="btn btn-outline-secondary" data-range="30">Últ. 30 días</button>
+    </div>
+  </form>
+
+  {% if totales %}
+  <div class="row g-2 mb-2 no-print">
+    <div class="col-12 col-sm-4">
+      <div class="kpi-card">
+        <div class="small">Sub Total</div>
+        <div class="fs-5 fw-semibold tabular-nums">
+          {{ '{:,.2f}'.format((totales.con_soporte|default(0,true)) + (totales.sin_soporte|default(0,true)))
+          |replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4">
+      <div class="kpi-card">
+        <div class="small">IVA</div>
+        <div class="fs-5 fw-semibold tabular-nums">
+          {{ '{:,.2f}'.format(totales.iva)|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4">
+      <div class="kpi-card">
+        <div class="small">Total</div>
+        <div class="fs-5 fw-semibold tabular-nums">
+          {{ '{:,.2f}'.format(totales.total_con_iva)|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="d-flex align-items-center justify-content-between mb-2 no-print">
+    <div class="btn-toolbar gap-2">
+      <a id="btnExcelVisible" class="btn btn-success btn-sm" href="#" data-export-url="/reembolsos/gastos/export/excel">
+        <i class="bi bi-file-earmark-excel me-1"></i>Excel
+      </a>
+
+      {% if role_lower in ['admin','coordinador','asistente _gerencia'] %}
+      <a id="btnReporteExcel" class="btn btn-outline-success btn-sm" href="#"
+        data-export-url="{{ url_for('export_gastos_reporte_excel') }}">
+        <i class="bi bi-file-earmark-spreadsheet me-1"></i>Reporte Excel
+      </a>
+      {% endif %}
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <div class="dropdown">
+        <button id="pageLengthBtn" class="btn btn-primary btn-sm dropdown-toggle" type="button"
+          data-bs-toggle="dropdown">
+          Mostrar 5 filas
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#" data-page-length="5">5</a></li>
+          <li><a class="dropdown-item" href="#" data-page-length="10">10</a></li>
+          <li><a class="dropdown-item" href="#" data-page-length="15">15</a></li>
+          <li><a class="dropdown-item" href="#" data-page-length="25">25</a></li>
+          <li><a class="dropdown-item" href="#" data-page-length="50">50</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {% set role_lower = (rol or '')|lower %}
+  {% set can_select = (role_lower in ['admin','coordinador','gerente general','gerente financiero','gerente'] or
+  can_approve_ga or can_approve_gf or can_approve_gg) %}
+
+  {% if can_select %}
+  <div class="d-flex align-items-center gap-2 mb-2 no-print">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="chkSelectAllVisible">
+      <label class="form-check-label small" for="chkSelectAllVisible">
+        Seleccionar visibles
+      </label>
+    </div>
+
+    {% set role_lower = (rol or '')|lower %}
+    {% set tipo_sel = (filtros.tipo or '')|lower %}
+    {% set is_gf = (role_lower == 'gerente financiero') %}
+    {% set is_caja_chica_filter = (tipo_sel == 'caja_chica') %}
+
+    {% set is_gf = (role_lower == 'gerente financiero') %}
+    {% set tipo_sel = (filtros.tipo or '')|lower %}
+    {% set es_tarjeta_filter = (tipo_sel in ['tarjeta','tarjeta_online','tarjeta_boletos']) %}
+    {% set es_restringido_filter = (tipo_sel in ['caja_chica','reembolso']) %}
+
+    {% set role_lower = (rol or '')|lower %}
+    {% set tipo_sel = (filtros.tipo or '')|lower %}
+    {% set is_gf = (role_lower == 'gerente financiero') %}
+    {% set es_caja_chica_filter = (tipo_sel == 'caja_chica') %}
+
+    {% set show_bulk_ga_btn = (
+    role_lower in ['admin','gerente','gerente de área','gerente de area']
+    ) %}
+
+    {% if role_lower == 'coordinador' %}
+    <button type="button" class="btn btn-outline-info btn-sm" id="btnSapMasivo">
+      <i class="bi bi-send me-1"></i>Enviar SAP seleccionados
+    </button>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="table-responsive">
+    <table id="tabla-gastos" class="table table-striped align-middle">
+      {% set role_lower = (rol or '')|lower %}
+
+      {% set show_col_ga = role_lower in ['admin','coordinador','gerente','gerente de área','gerente de area'] %}
+      {% set show_col_gg = role_lower in ['admin','coordinador','gerente general'] %}
+      {% set show_col_gf = role_lower in ['admin','coordinador','gerente financiero'] %}
+
+      {% set is_sender = role_lower in ['admin','coordinador'] %}
+      {% set is_coord = role_lower == 'coordinador' %}
+      {% set tipo_sel = (filtros.tipo or '') %}
+      {% set tipo_restringido = (tipo_sel in ['caja_chica','reembolso']) %}
+
+      {% if tipo_restringido %}
+      {% set show_aprob_gg = (is_coord or can_approve_gg or role_lower == 'admin') %}
+      {% else %}
+      {% set show_aprob_gg = (is_coord or can_approve_gg or can_approve_gf or role_lower == 'admin') %}
+      {% endif %}
+
+      {% set show_aprob_gf = (is_coord or can_approve_gf or role_lower == 'admin') %}
+
+      {% set role_lower = (rol or '')|lower %}
+      {% set is_admin = role_lower == 'admin' %}
+      {% set is_coord = role_lower == 'coordinador' %}
+      {% set is_gg_gf = role_lower in ['gerente general','gerente financiero'] %}
+      {% set is_sender = is_admin or is_coord %}
+
+      <thead>
+        <tr>
+          <th class="text-center no-print">Sel.</th>
+
+          <th data-sort="date"><span class="th-sortable">Fecha <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">Proveedor <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">Detalle <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">Tipo <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">CCB <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+
+          <th data-sort="num" class="text-end">
+            <span class="th-sortable">Sub total factura <i class="bi bi-arrow-down-up ms-1"></i></span>
+          </th>
+          <th class="text-end">IVA</th>
+          <th data-sort="num" class="text-end">
+            <span class="th-sortable">Total con IVA <i class="bi bi-arrow-down-up ms-1"></i></span>
+          </th>
+
+          {% if is_admin or is_coord %}
+          <th>Usuario</th>
+          <th>Gerente</th>
+          {% elif is_gg_gf %}
+          <th>Gerente</th>
+          {% else %}
+          <th>Usuario</th>
+          {% endif %}
+
+          {% if is_sender %}
+          <th data-sort="text"><span class="th-sortable">Doc. SAP <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          {% endif %}
+
+          <th class="text-end sticky-end">Acciones</th>
+
+          {% if is_coord %}
+          <th class="text-center">Aprob. GA</th>
+          <th class="text-center">Aprob. GG</th>
+          <th class="text-center">Aprob. GF</th>
+          {% else %}
+          {% if show_col_ga %}<th class="text-center">Aprob. GA</th>{% endif %}
+          {% if show_col_gg %}<th class="text-center">Aprob. GG</th>{% endif %}
+          {% if show_col_gf %}<th class="text-center">Aprob. GF</th>{% endif %}
+          {% endif %}
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for g in gastos %}
+        {% set role_lower = (rol or '')|string|lower %}
+
+        {% set trow = (g['tipo_gasto'] or '')|lower %}
+        {% set es_restringido_row = (trow in ['caja_chica','reembolso']) %}
+        {% set es_tarjeta_row = (trow in ['tarjeta','tarjeta_online','tarjeta_boletos']) %}
+
+        {% set can_gf_row = can_approve_gf %}
+
+        {% set ga_ok = (g['ga_aprobado']|default(0))|int == 1 %}
+        {% set gg_ok = (g['gg_aprobado']|default(0))|int == 1 %}
+        {% set gf_ok = (g['gf_aprobado']|default(0))|int == 1 %}
+
+        {% set sap_doc = (g['sap_contabilizacion']|default('', true) | string) %}
+        {% set sap_doc_clean = sap_doc | replace('\u00a0',' ') | trim %}
+        {% set has_sap = sap_doc_clean not in ['', '0', 'none', 'null', 'None', 'NULL'] %}
+
+        {% set ga_actor = (g.get('ga_actor') or g.get('ga_aprobador') or g.get('ga_aprobador_rol') or '')|string|lower %}
+        {% set ga_actor_is_gg = es_tarjeta_row and (ga_actor in ['gg','gerente general','gerente_general']) %}
+        {% set ga_actor_is_gf = es_tarjeta_row and (ga_actor in ['gf','gerente financiero','gerente_financiero']) %}
+
+        {% set gf_o_gg_puede_actuar_como_ga_restringido = (
+        es_restringido_row
+        and (g.get('can_act_as_ga_restringido',0)|int == 1)
+        and (role_lower in ['gerente financiero','gerente general'])
+        ) %}
+
+        {% set ga_no_aplica_por_actor = false %}
+        {% set gg_no_aplica_por_actor = es_tarjeta_row and ga_actor_is_gf %}
+        {% set hay_ga_real_tarjeta = es_tarjeta_row and (not ga_no_aplica_por_actor) %}
+
+        {% if ga_actor_is_gg %}
+        {% set ga_effective_ok = gg_ok %}
+        {% elif ga_actor_is_gf %}
+        {% set ga_effective_ok = gf_ok %}
+        {% else %}
+        {% if es_restringido_row and (not ga_ok) and gg_ok %}
+        {% set ga_effective_ok = true %}
+        {% else %}
+        {% set ga_effective_ok = ga_ok %}
+        {% endif %}
+        {% endif %}
+
+        {% if es_restringido_row %}
+        {% set sap_ready_row = (ga_ok or gg_ok or gf_ok) %}
+        {% else %}
+        {% if ga_actor_is_gf %}
+        {% set sap_ready_row = gf_ok %}
+        {% elif ga_actor_is_gg %}
+        {% set sap_ready_row = gg_ok and gf_ok %}
+        {% else %}
+        {% set sap_ready_row = ga_ok and gg_ok and gf_ok %}
+        {% endif %}
+        {% endif %}
+
+        {% set can_sap_row = (role_lower in ['admin','coordinador']) and sap_ready_row and (not has_sap) and (not proveedor_sin_sap) %}
+        {% set can_bulk_sap = (role_lower == 'coordinador') and can_sap_row %}
+
+        {% set actions_locked = (ga_ok or gg_ok or gf_ok) %}
+        {% set can_ga_special = (g.get('can_act_as_ga_restringido', 0)|int == 1) %}
+
+        {% set can_manual_ga = (
+        can_approve_ga
+        or (
+        es_tarjeta_row
+        and (g.get('can_act_as_ga_tarjeta',0)|int == 1)
+        and role_lower in ['gerente financiero','gerente general']
+        )
+        or gf_o_gg_puede_actuar_como_ga_restringido
+        ) %}
+
+        {% set can_bulk_ga = (
+        can_manual_ga
+        and (not has_sap)
+        and (not ga_effective_ok)
+        and (not gf_ok)
+        ) %}
+
+        {% set can_bulk_gg = (
+        can_approve_gg
+        and (not has_sap)
+        and (not gg_ok)
+        and (not gg_no_aplica_por_actor)
+        and (
+        es_restringido_row
+        or (es_tarjeta_row and (ga_effective_ok or ga_actor_is_gg))
+        )
+        ) %}
+
+        {% set can_bulk_gf = (
+        can_approve_gf
+        and can_gf_row
+        and (not has_sap)
+        and (not gf_ok)
+        and (not gf_final_no_aplica)
+        and (
+        es_restringido_row
+        or (es_tarjeta_row and gg_ok and ga_effective_ok)
+        )
+        ) %}
+
+        {% set allow_free_select = (
+        (role_lower in ['gerente financiero','gerente general'])
+        and es_tarjeta_row
+        and (not has_sap)
+        ) %}
+
+        {% set can_bulk_any = can_bulk_ga or can_bulk_gg or can_bulk_gf %}
+        {% set can_select_row = allow_free_select or can_bulk_any or can_bulk_sap %}
+
+        <tr data-row="1" data-id="{{ g['id'] }}" data-sap="{{ 1 if has_sap else 0 }}">
+          <td data-th="Sel." class="text-center no-print">
+            <input type="checkbox" class="form-check-input row-select" data-id="{{ g['id'] }}"
+              data-can-ga="{{ 1 if can_bulk_ga else 0 }}"
+              data-can-gg="{{ 1 if (can_bulk_gg or allow_free_select) else 0 }}"
+              data-can-gf="{{ 1 if (can_bulk_gf or allow_free_select) else 0 }}"
+              data-free-select="{{ 1 if allow_free_select else 0 }}"
+              data-can-sap="{{ 1 if ((role_lower == 'coordinador') and can_sap_row) else 0 }}"
+              {% if not can_select_row %}disabled{% endif %}
+              title="{% if has_sap %}No editable: ya tiene Doc. SAP
+{% elif role_lower=='coordinador' and not sap_ready_row %}No listo para SAP
+{% elif can_approve_gg and (not ga_ok) %}Pendiente aprobación GA
+{% elif can_approve_gf and (hay_ga_real_tarjeta and (not ga_ok)) %}Pendiente aprobación GA
+{% elif can_approve_gf and (es_tarjeta_row and ga_actor_is_gg and (not gg_ok)) %}Pendiente aprobación GG (GA=GG)
+{% else %}No elegible{% endif %}">
+          </td>
+
+          <td data-th="Fecha">{{ g['fecha'] }}</td>
+
+          <td data-th="Proveedor">
+            {{ g['proveedor_nombre'] or '' }}
+
+            {% if es_tarjeta_row %}
+            {% set prov_sap = (g.get('proveedor_codigo_sap') or '')|string|trim %}
+            {% if prov_sap == '' and (is_admin or is_coord) %}
+            <span class="badge bg-danger ms-2">Sin SAP</span>
+            {% endif %}
+            {% endif %}
+          </td>
+
+          <td data-th="Detalle">
+            <div>{{ g.get('motivo') or '' }}</div>
+            {% set md = (g.get('motivos_detalle') or '')|trim %}
+            {% if md %}
+            <div class="small text-muted">Motivos: {{ md|replace(',', ' | ') }}</div>
+            {% endif %}
+          </td>
+
+          <td data-th="Tipo">
+            {% set t = (g['tipo_gasto'] or '')|lower %}
+            {% set tss = (g.get('tarjeta_sin_soporte', 0)|int == 1) %}
+
+            {% if t == 'caja_chica' %}
+            <span class="badge bg-warning text-dark">Caja chica</span>
+            {% elif t == 'reembolso' %}
+            <span class="badge bg-info text-dark">Reembolso</span>
+            {% elif t == 'tarjeta_boletos' %}
+            <span class="badge bg-primary">Tarjeta (Boletos)</span>
+            {% else %}
+            {% if tss %}
+            <span class="badge bg-danger-subtle text-danger border border-danger">Tarjeta (Online)</span>
+            {% else %}
+            <span class="badge bg-secondary">Tarjeta</span>
+            {% endif %}
+            {% endif %}
+          </td>
+
+          <td>
+            <div class="col-md-2">
+              <div class="text-muted small">CCB</div>
+              <div class="fw-semibold">
+                {% if (g['ccb']|default(0))|int == 1 %}SI{% else %}NO{% endif %}
+              </div>
+            </div>
+          </td>
+
+          <td data-th="Sub Total" class="text-end tabular-nums">
+            {{ '{:,.2f}'.format(((g.con_soporte|default(0,true))|float + (g.sin_soporte|default(0,true))|float))
+            |replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </td>
+
+          <td data-th="IVA" class="text-end tabular-nums">
+            {{ '{:,.2f}'.format(g['iva'])|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </td>
+
+          <td data-th="Total con IVA" class="text-end tabular-nums">
+            {{ '{:,.2f}'.format(g['total_con_iva'])|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </td>
+
+          {% if is_admin or is_coord %}
+          <td data-th="Usuario">{{ g['usuario_username'] or '' }}</td>
+          <td data-th="Gerente">{{ g.get('gerente_nombre') or '' }}</td>
+          {% elif is_gg_gf %}
+          <td data-th="Gerente">{{ g.get('gerente_nombre') or '' }}</td>
+          {% else %}
+          <td data-th="Usuario">{{ g['usuario_username'] or '' }}</td>
+          {% endif %}
+
+          {% if is_sender %}
+          <td data-th="Doc. SAP">{{ sap_doc_clean }}</td>
+          {% endif %}
+
+          <td data-th="Acciones" class="text-end sticky-end">
+            <div class="actions-wrap">
+              {% set is_sender_row = role_lower in ['admin','coordinador'] %}
+              {% set can_sap = is_sender_row and sap_ready_row and (not has_sap) %}
+              {% set prov_sap = (g.get('proveedor_codigo_sap') or '')|string|trim %}
+              {% set proveedor_sin_sap = es_tarjeta_row and (prov_sap == '') %}
+
+              {% if is_sender_row %}
+              <button type="button" class="btn btn-sm btn-sap
+              {% if proveedor_sin_sap %}btn-outline-danger{% else %}btn-outline-info{% endif %}
+              {% if can_sap and (not proveedor_sin_sap) %}sap-ready{% endif %}"
+                data-url="{{ url_for('enviar_gasto_sap', gasto_id=g['id']) }}"
+                data-proveedor="{{ g['proveedor_nombre'] or '' }}"
+                {% if (not can_sap) or proveedor_sin_sap %}disabled{% endif %}
+                title="{% if proveedor_sin_sap %}Proveedor sin código SAP (actualizar en ficha de terceros)
+{% elif has_sap %}Ya contabilizado en SAP
+{% elif es_restringido_row and not (ga_ok or gg_ok or gf_ok) %}Falta al menos 1 aprobación (GA/GG/GF)
+{% elif (not es_restringido_row) and not (ga_ok and gg_ok and gf_ok) %}Faltan aprobaciones GA/GG/GF
+{% else %}Listo para envío{% endif %}">
+                <i class="bi bi-send"></i> <span class="d-none d-md-inline">Envío a SAP</span>
+              </button>
+              {% endif %}
+
+              <div class="actions-icons">
+                <button type="button" class="btn btn-outline-secondary btn-sm btn-icon btn-ver-gasto"
+                  data-url="{{ url_for('ver_gasto', gid=g['id']) }}?popup=1" title="Ver">
+                  <i class="bi bi-eye"></i>
+                </button>
+
+                {% if (g['has_adjuntos']|default(0))|int == 1 %}
+                <button type="button" class="btn btn-outline-secondary btn-sm btn-icon js-ver-adjuntos"
+                  data-gasto-id="{{ g['id'] }}" title="Ver adjuntos">
+                  <i class="bi bi-paperclip"></i>
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-outline-secondary btn-sm btn-icon" disabled title="Sin adjuntos">
+                  <i class="bi bi-paperclip"></i>
+                </button>
+                {% endif %}
+
+                {% set is_owner = (session.get('user_id')|int == (g.get('usuario_id')|int)) %}
+                {% set can_edit_delete = (role_lower in ['admin','coordinador','usuario','gerente'] or is_owner) and
+                (role_lower != 'gerente financiero') %}
+
+                {% if can_edit_delete %}
+                <a href="{{ url_for('editar_gasto', gasto_id=g['id']) }}"
+                  class="btn btn-outline-secondary btn-sm btn-icon {% if actions_locked %}disabled-link{% endif %}"
+                  aria-label="Editar"
+                  {% if actions_locked %}tabindex="-1" aria-disabled="true"
+                  title="Bloqueado: el registro ya tiene una aprobación"{% endif %}>
+                  <i class="bi bi-pencil"></i>
+                </a>
+
+                <form method="post"
+                  class="d-inline m-0 p-0 js-delete-gasto-form"
+                  action="{{ url_for('eliminar_gasto', gasto_id=g['id']) }}"
+                  data-confirm-message="¿Eliminar el registro? Esta acción es irreversible.">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                  <button type="submit" class="btn btn-outline-danger btn-sm btn-icon" aria-label="Eliminar"
+                    {% if actions_locked %}disabled title="Bloqueado: el registro ya tiene una aprobación"{% endif %}>
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+
+          {% if is_coord %}
+          <td data-th="Aprob. GA" class="text-center">
+            {% if ga_ok %}
+            <span class="badge rounded-pill badge-ok" title="{{ g.get('ga_aprobado_por_username','') }}">Aprobado</span>
+            {% endif %}
+          </td>
+
+          <td data-th="Aprob. GG" class="text-center">
+            <div class="form-check form-switch d-inline-block">
+              <input type="checkbox" class="form-check-input" {% if gg_ok %}checked{% endif %} disabled
+                title="Solo lectura">
+            </div>
+          </td>
+
+          <td data-th="Aprob. GF" class="text-center">
+            <div class="form-check form-switch d-inline-block">
+              <input type="checkbox" class="form-check-input" {% if gf_ok %}checked{% endif %} disabled
+                title="Solo lectura">
+            </div>
+          </td>
+
+          {% else %}
+
+          {% if show_col_ga %}
+          <td data-th="Aprob. GA" class="text-center">
+            {% if ga_no_aplica_por_actor %}
+            <span class="badge rounded-pill badge-pend" title="GA no aplica: el aprobador de área es GG">
+              N/A
+            </span>
+            {% elif es_restringido_row and can_ga_special and role_lower in ['gerente financiero','gerente general'] %}
+            <span class="badge rounded-pill badge-pend"
+              title="Autoaprobado por rol combinado (no implica aprobación manual de GA).">
+              N/A
+            </span>
+            {% else %}
+            <span class="badge rounded-pill {{ 'badge-ok' if ga_ok else 'badge-pend' }}"
+              title="{{ g.get('ga_aprobado_por_username','') }}">
+              {{ 'Aprobado' if ga_ok else 'Pendiente' }}
+            </span>
+            {% endif %}
+          </td>
+          {% endif %}
+
+          {% if show_col_gg %}
+          <td data-th="Aprob. GG" class="text-center">
+            {% if es_restringido_row and role_lower == 'gerente financiero' %}
+            <span class="badge rounded-pill badge-pend">N/A</span>
+            {% else %}
+            <span class="badge rounded-pill {{ 'badge-ok' if gg_ok else 'badge-pend' }}"
+              title="{{ g.get('gg_aprobado_por_username','') }}">
+              {{ 'Aprobado' if gg_ok else 'Pendiente' }}
+            </span>
+            {% endif %}
+          </td>
+          {% endif %}
+
+          {% if show_col_gf %}
+          <td data-th="Aprob. GF" class="text-center">
+            {% if gf_final_no_aplica %}
+            <span class="badge rounded-pill badge-pend"
+              title="Este gasto ya fue aprobado por GF actuando como GA (no aplica GF final)">
+              N/A
+            </span>
+            {% elif es_restringido_row and not can_approve_gf %}
+            <span class="badge rounded-pill badge-pend">N/A</span>
+            {% elif es_tarjeta_row and not can_gf_row %}
+            <span class="badge rounded-pill badge-pend" title="No aplica: este gasto no corresponde a tu aprobación GF">
+              N/A
+            </span>
+            {% else %}
+            <span class="badge rounded-pill {{ 'badge-ok' if gf_ok else 'badge-pend' }}"
+              title="{{ g.get('gf_aprobado_por_username','') }}">
+              {{ 'Aprobado' if gf_ok else 'Pendiente' }}
+            </span>
+            {% endif %}
+          </td>
+          {% endif %}
+
+          {% endif %}
+        </tr>
+
+        {% else %}
+        <tr>
+          {% set cols_aprob = 3 if is_coord else ((1 if show_col_ga else 0) + (1 if show_col_gg else 0) + (1 if show_col_gf else 0)) %}
+          {% set cols_total = 9 + (1 if is_sender else 0) + cols_aprob %}
+          <td colspan="{{ cols_total }}" class="text-center py-5 text-muted-var">
+            No hay resultados para los filtros actuales.
+            <div class="mt-2 no-print">
+              <a class="btn btn-primary btn-sm" href="{{ url_for('nuevo_gasto') }}">
+                <i class="bi bi-plus-lg me-1"></i>Crear gasto
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+
+        {% if gastos|length > 0 %}
+        {% set cols_aprob = 3 if is_coord else ((1 if show_col_ga else 0) + (1 if show_col_gg else 0) + (1 if show_col_gf else 0)) %}
+        {% set cols_after_totals = 1 + (1 if is_sender else 0) + 1 + cols_aprob %}
+
+        <tr class="fw-bold row-totales-bg" data-totales="1">
+          <td colspan="5" data-th="Totales">Totales</td>
+          <td></td>
+
+          <td class="text-end" data-th="Sub total factura">
+            {{ '{:,.2f}'.format((totales.con_soporte|default(0,true)) + (totales.sin_soporte|default(0,true)))
+            |replace(',','X')|replace('.',',')|replace('X','.') }}
+          </td>
+
+          <td class="text-end" data-th="IVA">
+            {{ '{:,.2f}'.format(totales.iva)|replace(',','X')|replace('.',',')|replace('X','.') }}
+          </td>
+
+          <td class="text-end" data-th="Total con IVA">
+            {{ '{:,.2f}'.format(totales.total_con_iva)|replace(',','X')|replace('.',',')|replace('X','.') }}
+          </td>
+
+          <td colspan="{{ cols_after_totals }}"></td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-between">
+    <div id="tableInfo" class="small text-muted-var">Mostrando 0 a 0 de 0 registros</div>
+    <nav class="no-print">
+      <ul id="pagination" class="pagination pagination-sm mb-0"></ul>
+    </nav>
+  </div>
+</div>
+
+<div id="bulkOverlay" class="no-print bulk-overlay" aria-hidden="true">
+  <div class="bulk-overlay-card">
+    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+    <strong>Procesando aprobaciones…</strong>
+  </div>
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3 no-print toast-wrap">
+  <div id="toast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body"></div>
+      <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalVerGasto" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-eye me-1"></i> Detalle de gasto 1</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body p-0">
+        <iframe id="iframeVerGasto" src="" class="iframe-ver-gasto"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mdlFacturaXml" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content" id="mdlFacturaXmlContent">
+      <div class="modal-body p-4 text-center">Cargando...</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAdjuntosGasto" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-paperclip me-2"></i>Adjuntos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="adjuntos-body">
+        <div class="text-muted">Cargando…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/reembolsos/gasto_lista.js') }}"></script>
+{% endblock %}

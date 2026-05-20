@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2801202601019033700600120010020000013740103321415</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-28T15:31:42-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;EQUISPLAST S A&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;EQUISPLAST S A&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0190337006001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2801202601019033700600120010020000013740103321415&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000001374&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;ALBERTO MARIA ANDRADE 1-17 DANIEL MUNOZ&lt;/dirMatriz&gt;
+        &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;28/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;ALBERTO MARIA ANDRADE 1-17 DANIEL MUNOZ&lt;/dirEstablecimiento&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;totalSinImpuestos&gt;1768.6&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;1768.60&lt;/baseImponible&gt;
+                &lt;valor&gt;265.29&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                &lt;valor&gt;0&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;2033.89&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;2033.89&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;Dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;AN50X50X6-6GPL&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;ANGULO DE 50X50X6 DE 6 METROS DE LARGO DE COLOR GRIS&lt;/descripcion&gt;
+            &lt;cantidad&gt;10.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;51.2000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;512.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;512.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;76.80&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;TC50.8X50.8X4-6GPL&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;TUBO CUADRADO DE 50.8X50.8X6.4 DE 6 METRO DE LARGO DE COLOR GRIS&lt;/descripcion&gt;
+            &lt;cantidad&gt;10.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;93.3000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;933.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;933.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;139.95&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;BAS72.8X30X5-6GPL&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;BASTIDOR OMEGA DE 72,8X30X5 DE 6 METROS COLOR GRIS&lt;/descripcion&gt;
+            &lt;cantidad&gt;8.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;40.4500&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;323.60&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;323.60&lt;/baseImponible&gt;
+                    &lt;valor&gt;48.54&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="DIRECCION DEL ADQUIRENTE"&gt;VIA A DAULE KM 16.5 S/N&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="TELEFONO"&gt;04 2162660&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="E-MAIL"&gt;cchalen@quimpac.com.ec,equisplast.facturacion@gmail.com&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="OBSERVACION"&gt;El transporte corre por cuenta del cliente, Forma de pago: 70% de anticipo y 30% antes de la entrega de los postes,Tiempo de entrega: 15 dias, Validez de la oferta: 8 dias, Adjunto anexo 2 Garantia.http://www.equisplast.com/ANEXOS/ANEXO3.pdf&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature68663"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo527520"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID391710" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature68663-SignedProperties892157"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;V7gz6Xyq3lY+o1LFvgvWgAC12cM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1582787"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;MB8SGnjvFL3QUj1Wa86U9R3sf5U=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-288168" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;gBzZQxsgBDVNJ8izCXrLO5A2z4k=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue349782"&gt;
+B/3sWPnbpcSjNt7J0RwSSMBPdo1EpJf0WYjvw32UUsgtvZes+RHN9deCnc7Hbn/gZYQcd0e9tc3a
+ayizwwxg/KbRqLkoQjUt5U0txkEijr+4JBBB4o2R0Ys37vLo51TLb7s2PXhaa/K6sze0FExwnAf8
+tPlQjfuVYssRck1NCN0GyGxOtlv5KCyDGU9sk/z/2H6pqhZsa+SD04AlGLiwIsFoghvakOI95S/N
+JF/GQNYtwsXJhcA4WtmjJuIz0IfGYzb7S/9oNz2pLjyUUe6QqTiOEX5vLPtDKvwJmPkbJtBHSRLg
+BnKTI/qmrOtdXiS3I8ltv1oTAPkVBIUNE4uyOw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1582787"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKrzCCCJegAwIBAgIIcTJFh/VQTIkwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUxMjAyMTgwNTEwWhcNMjcxMjAyMTgwNTEwWjCB
+njEcMBoGA1UEAwwTWEFWSUVSIE1PU0NPU08gVkVHQTEgMB4GA1UEBRMXMDEwMjg0MDU4NC0wMjEy
+MjUxMzE1MDExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lP
+TjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG
+9w0BAQEFAAOCAQ8AMIIBCgKCAQEA28UurKN8U8jg4y02rTidNHcsrKAwuEBJq3SYAroQ74kW2g2y
+dc9A+qi0abltQxSMHpVy6etBpuY7gIEgvqgtWqCo6YuAqeuM83PaguC5KD5Y3Mo6k5BW9XeIL9v/
+Sy7UJSW72BJamhvIxGP+sSxrNWGi9fXL3kkNkuK+fuIR3pjM/xMacu5YOLSWbGyEmRBX83CUqivj
+HwvewdxN/FBwGbBnT8BAyQFCYDzdo2/Mbeq/jhIn+KLX2U2OvDIxULjb4WznaAHJzW9XwoKxk4PW
+fH44LAXrZcYzQd8FkSZ1H8crmfL5D7yPlVLrwNS17RaQECox9Myqk3WeFbMgiFgP6QIDAQABo4IF
+8jCCBe4wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzBZBggr
+BgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5l
+Yy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwFgYDVR0RBA8wDYELeG12QG1zbi5jb20wggEV
+BgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBm
+AGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGww
+gaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRh
+Lm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9z
+L1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjAdBgNVHSUE
+FjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB3qA6oDiGNmh0dHA6Ly9j
+cmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxlLmNybKKBn6SBnDCBmTE5
+MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRB
+MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqgOIY2aHR0cDovL2NybDIu
+c2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3JsMIHgoIHdoIHahoHXaHR0
+cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2Vi
+L3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklD
+QUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBE
+RSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFL2JJoJw
+vFvNLJSKLo2Os0RnYoogMCsGA1UdEAQkMCKADzIwMjUxMjAyMTgwNTEwWoEPMjAyNzEyMDIxODA1
+MTBaMAsGA1UdDwQEAwIF4DAfBgorBgEEAYKmcgMFBBEMD0dFUkVOVEUgR0VORVJBTDAaBgorBgEE
+AYKmcgMBBAwMCjAxMDI4NDA1ODQwPQYKKwYBBAGCpnIDCQQvDC1DVUVOQ0EgQ0FCRUNFUkEgQ0FO
+VE9OQUwgWSBDQVBJVEFMIFBST1ZJTkNJQUwwEQYKKwYBBAGCpnIDIgQDDAEuMBMGCisGAQQBgqZy
+AwcEBQwDUyBOMBYGCisGAQQBgqZyAwIECAwGWEFWSUVSMB8GCisGAQQBgqZyAyAEEQwPMDA1MDAx
+MDAwMTgzNjk2MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAX
+BgorBgEEAYKmcgMDBAkMB01PU0NPU08wHgYKKwYBBAGCpnIDCgQQDA5FUVVJU1BMQVNUIFMgQTAd
+BgorBgEEAYKmcgMLBA8MDTAxOTAzMzcwMDYwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBQGCisGAQQB
+gqZyAwQEBgwEVkVHQTAaBgorBgEEAYKmcgMIBAwMCjA5OTk5NTIyNTAwDQYJKoZIhvcNAQELBQAD
+ggIBAISYOtZrJBFI/Lj8M2ZrpVY53iiL8v9aBttUIGEnqt690NmKjNhVUH8Ou8Xbae4CCvbTS+86
+5Ak+9r4Gikrzc9gBXOayUDNY+qvktpbvwS/gOaVrUdZl6eCFQpUF9c7Bsx4FiUgcasUTbxSbMKsB
+3LcsUMv89ULIzyZssnVxmrWBXOEpuk1hTNfHIaWBeqFYtvgSTNkTDgjIuBkgENQNk7LnjgVJRmXH
+OCLUKYJQ3YLLtm+Igl+1CIXmvixVhji7R/q7Of7SWNH04txagVTu7ZF5XtgMRBXzc6DfhjeaHCBu
+I8fUWg+5+cGWRKE1UuWriXVVF3DUybsMUXExodWMl+5S680nYTnBhj45YpDIIWQaka5VXZKggp6j
+eeve5fH+hS96BIRn1NQP4jd8Ej0ckuxlPey1KKeqxk47VL0S6SQ+FWwzxR7xms+VeDwI3hGWJSuy
+jEnjK3BLRP1paZJnXLbaBZICCJoi9d7dr7oaqOoGIGliLtDPxZLECyw904DQ6yfx2Z+m5qU+wsVG
+0Jczss7AEsVH4FPQ/BmHFLeeztElCBXWhEmYc/C9psHueCuB4zuHxrjU9D8TotN8GemLgWLtwSYL
+97GXPcmAofX6FDsrnPRC8DpHf6+euSnzBy3BKVMdfsgBWFVLVytEqjPxtGu85yy7CZcBnceFARY1
+JXIa
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+28UurKN8U8jg4y02rTidNHcsrKAwuEBJq3SYAroQ74kW2g2ydc9A+qi0abltQxSMHpVy6etBpuY7
+gIEgvqgtWqCo6YuAqeuM83PaguC5KD5Y3Mo6k5BW9XeIL9v/Sy7UJSW72BJamhvIxGP+sSxrNWGi
+9fXL3kkNkuK+fuIR3pjM/xMacu5YOLSWbGyEmRBX83CUqivjHwvewdxN/FBwGbBnT8BAyQFCYDzd
+o2/Mbeq/jhIn+KLX2U2OvDIxULjb4WznaAHJzW9XwoKxk4PWfH44LAXrZcYzQd8FkSZ1H8crmfL5
+D7yPlVLrwNS17RaQECox9Myqk3WeFbMgiFgP6Q==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature68663-Object10782"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature68663"&gt;
+                &lt;etsi:SignedProperties Id="Signature68663-SignedProperties892157"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-28T15:36:06-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;7lUANo6iFpJBz6MCbty9EUOQzYs=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;8156658325359971465&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-288168"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

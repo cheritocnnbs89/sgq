@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Sistema Gestión Quimpac{% endblock %}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+  {% block head %}{% endblock %}
+  {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+  <div class="app-shell open">
+    <aside class="sidebar">
+      <button id="btnClose" class="btn-toggle" aria-label="Cerrar menú">
+        <i class="bi bi-list"></i>
+      </button>
+
+      <div class="app-header-title">
+        <div class="system-sub">SGQ</div>
+        <div class="system-name">Sistema Gestión Quimpac</div>
+      </div>
+
+      <a href="{{ url_for('dashboard') }}" class="nav-link-simple {% if active_page == 'dashboard' %}active{% endif %}">
+        <span class="bullet">
+          {% if active_page == 'dashboard' %}
+            <i class="bi bi-check-lg"></i>
+          {% else %}
+            &nbsp;
+          {% endif %}
+        </span>
+        Panel
+      </a>
+
+      <div class="nav-section-title">Menú</div>
+      {% from 'partials/menu_macros.html' import render_sidebar %}
+      {{ render_sidebar(menu_tree, active_page) }}
+
+      <button type="submit" form="logoutForm" class="logout w-100 logout-btn-reset">
+        <i class="bi bi-box-arrow-right"></i> Salir
+      </button>
+    </aside>
+
+    <main class="content">
+      <div class="form-page">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="mb-3">
+              {% for category, message in messages %}
+                <div
+                  class="alert alert-{{ 'success' if category=='success' else 'info' if category=='info' else 'warning' if category=='warning' else 'danger' }} alert-dismissible fade show"
+                  role="alert"
+                  data-alert-key="{{ category }}::{{ message|striptags|trim }}"
+                >
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+
+  <div class="sidebar-scrim" id="sidebarScrim"></div>
+
+  <button id="btnOpen" class="btn-toggle" aria-label="Abrir menú">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+  {% block scripts %}{% endblock %}
+  {% block scripts_extra %}{% endblock %}
+
+  <form id="logoutForm" action="{{ url_for('logout') }}" method="post" class="d-none">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  </form>
+</body>
+
+</html>

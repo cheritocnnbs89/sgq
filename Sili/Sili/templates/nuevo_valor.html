@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo valor{% endblock %}
+{% block content %}
+<h4 class="mb-3">Nuevo valor para {{ grupo['nombre'] }}</h4>
+<div class="card card-custom shadow-sm">
+  <div class="card-body">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="mb-3">
+    <label class="form-label">Nombre</label>
+    <input type="text" name="nombre" class="form-control" required>
+    <div class="form-text">
+      Para RECL_PROCESO_SPONSOR, aquí va el ID del usuario.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Valor</label>
+    <input type="text" name="valor" class="form-control">
+    <div class="form-text">
+      Ejemplo: PRINCIPAL, BACKUP o el nombre del proceso.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Parent ID</label>
+    <input type="number" name="parent_id" class="form-control" placeholder="Ej: 11475">
+    <div class="form-text">
+      Vacío si es proceso padre. Para sponsor/backup, coloca el ID del proceso.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Orden</label>
+    <input type="number" name="orden" class="form-control" value="1">
+  </div>
+
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="activo" value="1" id="activo" checked>
+    <label class="form-check-label" for="activo">
+      Activo
+    </label>
+  </div>
+
+  <button class="btn btn-primary">Guardar</button>
+  <a href="{{ url_for('parametro_items', group_id=grupo['id']) }}" class="btn btn-secondary">Cancelar</a>
+</form>
+
+   
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1201202601099311299200120230020001665470016654715</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-12T16:11:55-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;RESTAURANTES UNIDOS RESTAUNSA S.A.&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;RESTAUNSA S.A.&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0993112992001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;1201202601099311299200120230020001665470016654715&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;023&lt;/estab&gt;
+    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000166547&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;GUAYAQUIL AV. NUEVE DE OCTUBRE 729 ENTRE BOYACA Y GARCIA AVILES.&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;12/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;GUAYAS / GUAYAQUIL / TARQUI / S/N&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;189&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. &lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;totalSinImpuestos&gt;55.20&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;55.20&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+        &lt;valor&gt;8.28&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;5.52&lt;/propina&gt;
+    &lt;importeTotal&gt;69.00&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;19&lt;/formaPago&gt;
+        &lt;total&gt;69.00&lt;/total&gt;
+        &lt;plazo&gt;0&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;Dias&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;70022&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Filet Mignon&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;16.72&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;16.72&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;16.72&lt;/baseImponible&gt;
+          &lt;valor&gt;2.51&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;180002&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Coca Cola&lt;/descripcion&gt;
+      &lt;cantidad&gt;2.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;3.28&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;6.56&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;6.56&lt;/baseImponible&gt;
+          &lt;valor&gt;.98&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;90010&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;BaconRanchQuesad&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;13.52&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;13.52&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;13.52&lt;/baseImponible&gt;
+          &lt;valor&gt;2.03&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;180302&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;L Natural&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;3.28&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.28&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.28&lt;/baseImponible&gt;
+          &lt;valor&gt;.49&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;505545&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;5 Crispers&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;15.12&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;15.12&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;15.12&lt;/baseImponible&gt;
+          &lt;valor&gt;2.27&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="logo"&gt;Chilis&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-1453387040"&gt;
+	&lt;ds:SignedInfo&gt;
+		&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+		&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+		&lt;ds:Reference URI="#comprobante"&gt;
+			&lt;ds:Transforms&gt;
+				&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+			&lt;/ds:Transforms&gt;
+			&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+			&lt;ds:DigestValue&gt;2FWGGS+OpfLEzYyWsSakXcG/4/c=&lt;/ds:DigestValue&gt;
+		&lt;/ds:Reference&gt;
+		&lt;ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignedProperties-407867364"&gt;
+			&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+			&lt;ds:DigestValue&gt;Y230t5Ahk90C+ZC2o0vtkjxF28w=&lt;/ds:DigestValue&gt;
+		&lt;/ds:Reference&gt;
+	&lt;/ds:SignedInfo&gt;
+	&lt;ds:SignatureValue&gt;
+TygFiRZqqobTIE9WWZy7XfIO8lx6N0RPa/4Fj2+AgY4XAwRUfWlA/lHs3JJUz4Ak
+uTihq/YgE6n7X15Ae3VmAT/IiCV8butQoL8nf5ddrfhYxucMyFpsrPCgO4LcHjNl
+enSx4ceG0UeO5SavlLUBuFnQjg5bEOBHZ/csQ+t22f1jMW4csRD9shceJT1QhLwx
+J7TFQ8NeFcmGHEFTLbDHQ+Ket26dyZzNS6SEU0FDlHSypJMeU4RXZ5nqax16VDCi
+mglIorZY+85++cgcmNM50swHSSx6xSvEU3moSOEVgdMR9zyAPkiwxIPQAKWCy0Y0
+l2cPhkZIIgKxabFTK9PIyQ==
+	&lt;/ds:SignatureValue&gt;
+	&lt;ds:KeyInfo&gt;
+		&lt;ds:KeyValue&gt;
+			&lt;ds:RSAKeyValue&gt;
+				&lt;ds:Modulus&gt;
+lm53XHYFDOwUNErxczNhP8qY+59Co+lA20UpOiseFfVUYV0OVujy1r2CtT9fmvXv
+mCs8mSg/WjrQH+NQBU0p4AXB/9h8jvH1qgGL/57zikOTQ+asEmju1PXn9YqNLb+D
+jN1BcUq22pNsbwMNW5EpTcUl9CJHrkbGf32cG2Y6rXi96g89AK5qnt7BEAVIc136
+ja1IYBLCDQ7TzjBZ2psPK3RBrjoUZ8342+cKhT8X+mIl77qSTimJQfUUDrVFilS8
+hKT1Qr18HQg05M1rQNz1dakjx+uYEo8lmpHPtOJb/aznoOevGQsRm4e7p91FTVSZ
+Y7LvigoSPFRaK8YW69sN3Q==
+				&lt;/ds:Modulus&gt;
+				&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+			&lt;/ds:RSAKeyValue&gt;
+		&lt;/ds:KeyValue&gt;
+		&lt;ds:X509Data&gt;
+			&lt;ds:X509IssuerSerial&gt;
+				&lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC&lt;/ds:X509IssuerName&gt;
+				&lt;ds:X509SerialNumber&gt;7169951946785930830&lt;/ds:X509SerialNumber&gt;
+			&lt;/ds:X509IssuerSerial&gt;
+			&lt;ds:X509SubjectName&gt;C=EC, O=SECURITY DATA S.A. 2, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, 2.5.4.5=0918805805-240625121246, CN=LUZ MARIA MANCERO ALMEIDA&lt;/ds:X509SubjectName&gt;
+			&lt;ds:X509Certificate&gt;
+MIIK1zCCCL+gAwIBAgIIY4DJTrzLvk4wDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNV
+BAYTAkVDMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwn
+RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQD
+DDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERB
+VEEwHhcNMjUwNjI0MTcwMjU0WhcNMzAwNjI0MTcwMjU0WjCBpDEiMCAGA1UEAwwZ
+TFVaIE1BUklBIE1BTkNFUk8gQUxNRUlEQTEgMB4GA1UEBRMXMDkxODgwNTgwNS0y
+NDA2MjUxMjEyNDYxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBE
+RSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJ
+BgNVBAYTAkVDMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlm53XHYF
+DOwUNErxczNhP8qY+59Co+lA20UpOiseFfVUYV0OVujy1r2CtT9fmvXvmCs8mSg/
+WjrQH+NQBU0p4AXB/9h8jvH1qgGL/57zikOTQ+asEmju1PXn9YqNLb+DjN1BcUq2
+2pNsbwMNW5EpTcUl9CJHrkbGf32cG2Y6rXi96g89AK5qnt7BEAVIc136ja1IYBLC
+DQ7TzjBZ2psPK3RBrjoUZ8342+cKhT8X+mIl77qSTimJQfUUDrVFilS8hKT1Qr18
+HQg05M1rQNz1dakjx+uYEo8lmpHPtOJb/aznoOevGQsRm4e7p91FTVSZY7LvigoS
+PFRaK8YW69sN3QIDAQABo4IGFDCCBhAwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAW
+gBSMusoRV3glgB1rCktVv42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUH
+MAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJs
+aWN3ZWIvc3RhdHVzL29jc3AwIAYDVR0RBBkwF4EVbG1hbmNlcm9AZWxyb3NhZG8u
+Y29tMIIBEgYDVR0gBIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwIC
+MEQeQgBDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBv
+ACAAZABlACAARQBtAHAAcgBlAHMAYTCBoAYKKwYBBAGCpnICBDCBkTCBjgYIKwYB
+BQUHAgEWgYFodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRl
+bnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRp
+Y2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIwgd6gOqA4
+hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3Js
+ZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklU
+WSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNl
+Y3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNybDCB4KCB3aCB
+2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVj
+L2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVy
+PUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkg
+REFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04s
+Tz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBSmlFedXPpnPicv
+dvgyeUGVEX7Q2jArBgNVHRAEJDAigA8yMDI1MDYyNDE3MDI1NFqBDzIwMzAwNjI0
+MTcwMjU0WjALBgNVHQ8EBAMCBeAwHQYKKwYBBAGCpnIDBQQPDA1BRE1JTklTVFJB
+RE9SMBoGCisGAQQBgqZyAwEEDAwKMDkxODgwNTgwNTAaBgorBgEEAYKmcgMJBAwM
+ClJPQ0FGVUVSVEUwEQYKKwYBBAGCpnIDIgQDDAEuMDoGCisGAQQBgqZyAwcELAwq
+QVYgOSBERSBPQ1RVQlJFIDcyOSBZIEJPWUFDQSBHQVJDSUEgQVZJTEVTMBkGCisG
+AQQBgqZyAwIECwwJTFVaIE1BUklBMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAx
+MDEwMzQzMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNV
+QURPUjAXBgorBgEEAYKmcgMDBAkMB01BTkNFUk8wMQYKKwYBBAGCpnIDCgQjDCFS
+RVNUQVVSQU5URVMgVU5JRE9TIFJFU1RBVU5TQSBTIEEwHQYKKwYBBAGCpnIDCwQP
+DA0wOTkzMTEyOTkyMDAxMBEGCisGAQQBgqZyAx0EAwwBLjAXBgorBgEEAYKmcgME
+BAkMB0FMTUVJREEwGgYKKwYBBAGCpnIDCAQMDAowOTkxNzYwNDM5MA0GCSqGSIb3
+DQEBCwUAA4ICAQBhyV3QDEjQAGJsjc66STvZxxJzLebDdEKyTLUyq4JXHVYaPNej
+HY05YrdvmA/jTKdRzPgWjQXWmoVFCsDwSV9YJZ1dTjouWXvf9Z1GRHrixYTSq7uu
+E9zjQhA+wX0L1yFXNiSe6+i/5XlFuNdaHyZXAtf2ohnmFtf+4Pj7knRgZ54L/boA
+PjRnCBjIuqK9ScgDdynIMrBGYJGEC+0tB+oX/GzWozDYXdu+VmRl0oX3x2Ej0sqs
+OWx85Iv/3gs5V5CK6CmxRnkRqwOczt6aH7dnnmYUkZ9BbSyezmAbfcln3xgSChhl
+B5HKVXGe9zHcTmwWARD1cfW+Np0GAeNrhTFZ872c/KPZ17liyfdn7LIVRk5c0Nip
+DIg0rPn8vyOFWfNwl4H+G9GU9RRjlm02/FjxH82ilNuG4qMHfI75YbDtWoR7GHFT
+B3ap5eCL3ahMQzCpQvGqZ8ESUeCAvuGBQNY3OGsZ3NS2PAOEysP+oGsbMGgzRYkN
+tSBeb06RoQ5/xmSpTS4NQDUIqZecSO972lHu2p1BpexElijH7ZLR2S4yMzOS8lfu
+msl06O4l3rNAW6qY80mp+tc7pTG69iuwv1pltEnE89rqfSAOZN8H7oBTll5J2sBX
+nYbzwbgt+QvY/7TU3W78yM1acD9Dnp5uvk5o1jG8WqUAip5TuBk8BfpJNA==
+			&lt;/ds:X509Certificate&gt;
+		&lt;/ds:X509Data&gt;
+	&lt;/ds:KeyInfo&gt;
+	&lt;ds:Object&gt;
+		&lt;etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature-1453387040"&gt;
+			&lt;etsi:SignedProperties Id="SignedProperties-407867364"&gt;
+				&lt;etsi:SignedSignatureProperties&gt;
+					&lt;etsi:SigningTime&gt;2026-01-12T16:10:03.612Z&lt;/etsi:SigningTime&gt;
+					&lt;etsi:SigningCertificate&gt;
+						&lt;etsi:Cert&gt;
+							&lt;etsi:CertDigest&gt;
+								&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+								&lt;ds:DigestValue&gt;rVlFCUG6K9bUtDEeoBhTp4AI6ok=&lt;/ds:DigestValue&gt;
+							&lt;/etsi:CertDigest&gt;
+							&lt;etsi:IssuerSerial&gt;
+								&lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC&lt;/ds:X509IssuerName&gt;
+								&lt;ds:X509SerialNumber&gt;7169951946785930830&lt;/ds:X509SerialNumber&gt;
+							&lt;/etsi:IssuerSerial&gt;
+						&lt;/etsi:Cert&gt;
+					&lt;/etsi:SigningCertificate&gt;
+				&lt;/etsi:SignedSignatureProperties&gt;
+			&lt;/etsi:SignedProperties&gt;
+		&lt;/etsi:QualifyingProperties&gt;
+	&lt;/ds:Object&gt;
+&lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

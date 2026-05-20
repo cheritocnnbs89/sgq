@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0312202501099255538600120010100000079310000000019</numeroAutorizacion>
+    <fechaAutorizacion>2025-12-03T14:10:21-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+    &lt;infoTributaria&gt;		&lt;ambiente&gt;2&lt;/ambiente&gt;		&lt;tipoEmision&gt;1&lt;/tipoEmision&gt;		&lt;razonSocial&gt;METALKING S.A.&lt;/razonSocial&gt;		&lt;nombreComercial&gt;METALKING S.A.&lt;/nombreComercial&gt;		&lt;ruc&gt;0992555386001&lt;/ruc&gt;		&lt;claveAcceso&gt;0312202501099255538600120010100000079310000000019&lt;/claveAcceso&gt;		&lt;codDoc&gt;01&lt;/codDoc&gt;		&lt;estab&gt;001&lt;/estab&gt;		&lt;ptoEmi&gt;010&lt;/ptoEmi&gt;		&lt;secuencial&gt;000007931&lt;/secuencial&gt;		&lt;dirMatriz&gt;VIA A DAULE KM 9.5 LAURELES SOLAR 51 Y HIGUERILLA&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;		&lt;fechaEmision&gt;03/12/2025&lt;/fechaEmision&gt;		&lt;dirEstablecimiento&gt;VIA A DAULE KM 9.5 LAURELES SOLAR 51 Y HIGUERILLA&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;00163&lt;/contribuyenteEspecial&gt;		&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;		&lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;		&lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;		&lt;totalSinImpuestos&gt;15000.00&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;		&lt;totalConImpuestos&gt;	&lt;totalImpuesto&gt;		&lt;codigo&gt;2&lt;/codigo&gt;		&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;		&lt;baseImponible&gt;15000.00&lt;/baseImponible&gt;		&lt;valor&gt;2250.00&lt;/valor&gt;	&lt;/totalImpuesto&gt;	&lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;		&lt;importeTotal&gt;17250.00&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;		&lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;17250.00&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+        &lt;valorRetIva&gt;0.00&lt;/valorRetIva&gt;
+        &lt;valorRetRenta&gt;0.00&lt;/valorRetRenta&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;		&lt;detalle&gt;			&lt;codigoPrincipal&gt;7&lt;/codigoPrincipal&gt;			&lt;descripcion&gt;ALUMINIO CANECA&lt;/descripcion&gt;			&lt;cantidad&gt;6000.00&lt;/cantidad&gt;			&lt;precioUnitario&gt;2.500000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;			&lt;precioTotalSinImpuesto&gt;15000.00&lt;/precioTotalSinImpuesto&gt;			&lt;impuestos&gt;
+                &lt;impuesto&gt;					&lt;codigo&gt;2&lt;/codigo&gt;					&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;				&lt;tarifa&gt;15&lt;/tarifa&gt;					&lt;baseImponible&gt;15000.00&lt;/baseImponible&gt;					&lt;valor&gt;2250.00&lt;/valor&gt;				&lt;/impuesto&gt;
+            &lt;/impuestos&gt;		&lt;/detalle&gt;		&lt;/detalles&gt;
+    &lt;infoAdicional&gt;	&lt;campoAdicional nombre="Codigo Cliente"&gt;229&lt;/campoAdicional&gt;		&lt;campoAdicional nombre="Telefono Cliente"&gt;099500081&lt;/campoAdicional&gt;		&lt;campoAdicional nombre="Direccion Cliente"&gt;VIA A DAULE KM 16.5  S/N&lt;/campoAdicional&gt;		&lt;campoAdicional nombre="num_factura"&gt;14292&lt;/campoAdicional&gt;		&lt;campoAdicional nombre="E-MAIL"&gt;Compras.electronica@quimpac.com.ec;kquijije@recime&lt;/campoAdicional&gt;		&lt;campoAdicional nombre="oficina"&gt;1&lt;/campoAdicional&gt;		&lt;campoAdicional nombre="Nota"&gt;EXPORTADOR HABITUAL DE BIENES&lt;/campoAdicional&gt;		&lt;campoAdicional nombre="Leyenda"&gt;Gran Contribuyente Resolucion Nro. NAC-DGERCGC21-00000022&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Autorizado"&gt;gcaiza&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Mensaje"&gt;Gracias por Confiar en Metalking S.A.&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17"&gt;
+&lt;ds:SignedInfo&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/&gt;
+&lt;ds:Reference Id="xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-ref0" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/&gt;
+&lt;ds:DigestValue&gt;/LZlHnmjfbxg/tixxdlkl43rmhxjBombdhFD5gK5gmw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-ref1" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-object0"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/&gt;
+&lt;ds:DigestValue&gt;WudtEuEXlwJVUHp6NkitaxhO2lw0m/xJG0yyMtKlzec=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-signedprops"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/&gt;
+&lt;ds:DigestValue&gt;FQcKlfeTKc0DpdRMMtIQ02uvLvT2UMMKVhgw6HyjTyw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-sigvalue"&gt;
+Jk845AYbq3dGzvgJIV9I+1CtUoHWj1DaqB8jAnIBLeNweo7gRH7T3oOAPrmbw6kXOFxt3i5EFoIg
+CmY2b3eyUuMm//GS/lfvv7Q6Eqs36SGupmVw1zLN+dpF9EvceOMIAvMMZKmsenX4dehchoi71gOG
+JtekujYDbXb7t1g6+9361QItPxENMbF2NSPB+uUq2AFRpOCEw1OTDcFUV04+Lu77RigApEE/ua3s
+6m34uPGeqE/QWNJ/KOMbfVdWtgC182OMevTeBm8S1NrrWlSqpi9MyoXDNY72DU9i5CttP6agqslz
+R5oY+h4A5ft3Bj8wiD6fe8dtCy40M4A7DfBOsw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMAzCCCeugAwIBAgIEC4zuKzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA4MTUyMjU4MzNaFw0yNjA4MTUyMjU4MzNaMIGsMSow
+KAYDVQQDDCFNQVlSQSBFTElaQUJFVEggQ0hJTkFDSEkgQ0hJTkFDSEkxIDAeBgNVBAUTFzA5MTk3
+MjcyMzAtMTUwODI0MTgwODIyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCC
+ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOLirQXYO9QxBnIvcChhpbkfLSyV+apA3YP6
+r8rTbIsTSJk5gysmbWICfXyHWn/3moJW6Hr6Xjx6iEhGoCFnZ82TaZCKbyy2POnyxyZK0SjpW1Vf
+oKRl2tCuGGNvCOZeoGo9mc0cexG4Vb4x/ybGTCh5bL2j96uEoltXX1H+i2ksbsZrFW6yCz4Pml8z
+fgxEfANRwzC38nUhWFJ0ECKfLBZgBP8FoQGLFlKO+XK4HgKXsRgFk9dFZ34qXspPR0I8C1U2CdHo
+oWDFEVjk8phhjLtwdxANLsRBxtmi9/NiGArws70kXWj7XYLxDWmh2p3lVDllcooE6+Z4RuRW+Kut
+kkkCAwEAAaOCBzwwggc4MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+N
+rmLdvY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5
+ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGg
+gb6ggbuGgbhsZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFE
+IERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VS
+VElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVs
+dGFSZXZvY2F0aW9uTGlzdD9iYXNlMCIGA1UdEQQbMBmBF21jaGluYWNoaUByZWNpbWV0YWwuY29t
+MIIBEgYDVR0gBIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwICMEQeQgBDAGUAcgB0
+AGkAZgBpAGMAYQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBvACAAZABlACAARQBtAHAAcgBlAHMA
+YTCBoAYKKwYBBAGCpnICBDCBkTCBjgYIKwYBBQUHAgEWgYFodHRwczovL3d3dy5zZWN1cml0eWRh
+dGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fk
+b3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYwggKiBgNV
+HR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJj
+YS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBD
+RVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4g
+MjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5u
+ZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRB
+LE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERB
+VEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHX
+aHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGlj
+d2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJ
+RklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFIDQ
+krTlE/c2WrpMqaCWxHKWWatDMCsGA1UdEAQkMCKADzIwMjQwODE1MjI1ODMzWoEPMjAyNjA4MTUy
+MjU4MzNaMAsGA1UdDwQEAwIF4DAZBgorBgEEAYKmcgMFBAsMCUNPTlRBRE9SQTAaBgorBgEEAYKm
+cgMBBAwMCjA5MTk3MjcyMzAwFgYKKwYBBAGCpnIDCQQIDAZUQVJRVUkwEQYKKwYBBAGCpnIDIgQD
+DAEuMC4GCisGAQQBgqZyAwcEIAweTEFVUkVMRVMgU09MQVIgNTEgWSBISUdVRVJJTExBMB8GCisG
+AQQBgqZyAwIEEQwPTUFZUkEgRUxJWkFCRVRIMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAwNjI4
+ODQ1MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAYBgorBgEE
+AYKmcgMDBAoMCENISU5BQ0hJMB0GCisGAQQBgqZyAwoEDwwNTUVUQUxLSU5HIFMgQTAdBgorBgEE
+AYKmcgMLBA8MDTA5OTI1NTUzODYwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBgGCisGAQQBgqZyAwQE
+CgwIQ0hJTkFDSEkwGgYKKwYBBAGCpnIDCAQMDAowOTgzMDg3MDY2MA0GCSqGSIb3DQEBCwUAA4IC
+AQBJBMA2FCmsWrghiQA83jC2oC2Hcodn7T64yP4iQ/SVWBMsvMEUlUumdnINuAvIdcktCbMfNdLE
+01qPFDmrNaHTWd3iJioIIiM3xtTLujvlT7YRFGOIBWDHjZfNZzoy9wYcHNG2Ti+DjcCBxpB5T/0U
+dl1OuUsLMSjg8nWkXKiOy0A/8m3cn4RX+6a+G2A8Hi2PaKyJxtkmFBVKM5cIGS2fjMjJ9abyUm+l
+S7iGqO1uaPSabW3ZfjKbYxF2X+K+HiwAQQ4XwIHF3oGLltouYXFo8fb2SmX7nDP9vQN8lNZCO33v
+FBkLMSE02K2E6ZC+0eOSJLPc3L1gSGpThwK87Unvza52aZRiSGSN8wvoEmAFKuE5JsSZ5fpP4Shm
+Eelx52FF3+z5ZS8XbTBUJelXcGQPIqqA+B87aLz0uSE38a0jTRAs1yqpr/n9kaGNzL3UYSXaqBgY
+j0dAyz5/DDVyrX0lxlDD0gQTMltaXdqAU17EEsaM5KJNwLD4Rm1YjjSXqpJC+7XP9MCiqtCaAEKs
+NNlh7ST5u0wVs8+/W8cnAAEt0/ooNmsdWLTGbX1p38TE4JYF/C4onVpEJOfcfhHQgaEHryLN6JDG
+uxT5Ckun3trlEMHyM9vYqh6FlGYQcPek0BCeo4HzpVFVb2NY19dJKy1pNLdqUhz9yrDaYo/MJqkQ
+6A==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-object0" MimeType="text/xml"&gt;
+            &lt;data&gt;Elaborado en linea desde efactura.merlyna.com Whatsapp 0986906090 info@alomaximo.com - SISTEMASINTELIGENTES S.A.&lt;/data&gt;
+        &lt;/ds:Object&gt;
+&lt;ds:Object&gt;
+            &lt;xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17"&gt;
+                &lt;xades:SignedProperties Id="xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-signedprops"&gt;
+                    &lt;xades:SignedSignatureProperties&gt;
+                        &lt;xades:SigningTime&gt;2025-12-03T14:10:08.453-05:00&lt;/xades:SigningTime&gt;
+                        &lt;xades:SigningCertificate&gt;
+                            &lt;xades:Cert&gt;
+                                &lt;xades:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/&gt;
+                                    &lt;ds:DigestValue&gt;IZOpsMgESmaFmcWnECgw6lWsEAVZuvNcWh2WQ21TmBA=&lt;/ds:DigestValue&gt;
+                                &lt;/xades:CertDigest&gt;
+                                &lt;xades:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;193785387&lt;/ds:X509SerialNumber&gt;
+                                &lt;/xades:IssuerSerial&gt;
+                            &lt;/xades:Cert&gt;
+                        &lt;/xades:SigningCertificate&gt;
+                    &lt;/xades:SignedSignatureProperties&gt;
+                    &lt;xades:SignedDataObjectProperties&gt;
+                        &lt;xades:DataObjectFormat ObjectReference="#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-ref0"&gt;
+                            &lt;xades:Description&gt;www.merlyna.com&lt;/xades:Description&gt;
+                            &lt;xades:ObjectIdentifier&gt;
+                                &lt;xades:Identifier&gt;http://elem.root&lt;/xades:Identifier&gt;
+                                &lt;xades:DocumentationReferences&gt;
+                                    &lt;xades:DocumentationReference&gt;http://doc1.txt&lt;/xades:DocumentationReference&gt;
+                                    &lt;xades:DocumentationReference&gt;http://doc2.txt&lt;/xades:DocumentationReference&gt;
+                                &lt;/xades:DocumentationReferences&gt;
+                            &lt;/xades:ObjectIdentifier&gt;
+                            &lt;xades:MimeType&gt;text/xml&lt;/xades:MimeType&gt;
+                            &lt;xades:Encoding&gt;MyEncoding&lt;/xades:Encoding&gt;
+                        &lt;/xades:DataObjectFormat&gt;
+                        &lt;xades:DataObjectFormat ObjectReference="#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-ref1"&gt;
+                            &lt;xades:Description&gt;Firmado por Merlyna ERP - SISTEMASINTELIGENTES S.A.&lt;/xades:Description&gt;
+                            &lt;xades:ObjectIdentifier&gt;
+                                &lt;xades:Identifier&gt;http://elem.in.object&lt;/xades:Identifier&gt;
+                                &lt;xades:DocumentationReferences&gt;
+                                    &lt;xades:DocumentationReference&gt;http://doc3.txt&lt;/xades:DocumentationReference&gt;
+                                    &lt;xades:DocumentationReference&gt;http://doc4.txt&lt;/xades:DocumentationReference&gt;
+                                &lt;/xades:DocumentationReferences&gt;
+                            &lt;/xades:ObjectIdentifier&gt;
+                            &lt;xades:MimeType&gt;text/xml&lt;/xades:MimeType&gt;
+                            &lt;xades:Encoding&gt;MyEncoding&lt;/xades:Encoding&gt;
+                        &lt;/xades:DataObjectFormat&gt;
+                        &lt;xades:CommitmentTypeIndication&gt;
+                            &lt;xades:CommitmentTypeId&gt;
+                                &lt;xades:Identifier&gt;http://uri.etsi.org/01903/v1.2.2#ProofOfCreation&lt;/xades:Identifier&gt;
+                                &lt;xades:Description&gt;Indicates that the signer has created the signed data object (but not necessarily approved, nor sent it)&lt;/xades:Description&gt;
+                            &lt;/xades:CommitmentTypeId&gt;
+                            &lt;xades:ObjectReference&gt;#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-ref1&lt;/xades:ObjectReference&gt;
+                            &lt;xades:ObjectReference&gt;#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-ref0&lt;/xades:ObjectReference&gt;
+                        &lt;/xades:CommitmentTypeIndication&gt;
+                        &lt;xades:CommitmentTypeIndication&gt;
+                            &lt;xades:CommitmentTypeId&gt;
+                                &lt;xades:Identifier&gt;http://uri.etsi.org/01903/v1.2.2#ProofOfApproval&lt;/xades:Identifier&gt;
+                                &lt;xades:Description&gt;Indicates that the signer has approved the content of the signed data object&lt;/xades:Description&gt;
+                            &lt;/xades:CommitmentTypeId&gt;
+                            &lt;xades:AllSignedDataObjects/&gt;
+                        &lt;/xades:CommitmentTypeIndication&gt;
+                        &lt;xades:AllDataObjectsTimeStamp&gt;
+                            &lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+                            &lt;xades:EncapsulatedTimeStamp&gt;MIAGCSqGSIb3DQEHAqCAMIIVEAIBAzELMAkGBSsOAwIaBQAwggFFBgsqhkiG9w0BCRABBKCCATQEggEwMIIBLAIBAQYLKwYBBAG/VQNkAgAwITAJBgUrDgMCGgUABBTGqlN0fyEzXMaIof9hyrMSHugL9QIFAX5R3+EYDzIwMjUxMjAzMTkxMDEwWjAKAgEAgAIB9IEBAQEB/wIGAZrlnzrVoIGqpIGnMIGkMRcwFQYDVQQDDA5UU0ExIEFDQ1YgMjAxNjEQMA4GA1UECwwHUEtJQUNDVjFEMEIGA1UECgw7QWdlbmNpYSBkZSBUZWNub2xvZ8OtYSB5IENlcnRpZmljYWNpw7NuIEVsZWN0csOzbmljYSAtIEFDQ1YxETAPBgNVBAcMCFZhbGVuY2lhMREwDwYDVQQIDAhWYWxlbmNpYTELMAkGA1UEBhMCRVOhGzAZBggrBgEFBQcBAwQNMAswCQYHBACBl14BAaCCEDswgghgMIIGSKADAgECAggNdK9mS7VpDTANBgkqhkiG9w0BAQsFADBCMRIwEAYDVQQDDAlBQ0NWUkFJWjExEDAOBgNVBAsMB1BLSUFDQ1YxDTALBgNVBAoMBEFDQ1YxCzAJBgNVBAYTAkVTMB4XDTE2MDIyOTE2Mzc1MFoXDTI5MDIyNTE2Mzc1MFowgaQxFzAVBgNVBAMMDlRTQTEgQUNDViAyMDE2MRAwDgYDVQQLDAdQS0lBQ0NWMUQwQgYDVQQKDDtBZ2VuY2lhIGRlIFRlY25vbG9nw61hIHkgQ2VydGlmaWNhY2nDs24gRWxlY3Ryw7NuaWNhIC0gQUNDVjERMA8GA1UEBwwIVmFsZW5jaWExETAPBgNVBAgMCFZhbGVuY2lhMQswCQYDVQQGEwJFUzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALkTxLO4yeNsrcPAwwIRCadbzf0ybTJAQymF/SoLD3VhdE7jrrx78Bfg+csxkShMYCAygBRl917FeBGdA7Ecm33hSPPzwnUD/pCY6NYs0MddLocsUMipbEMQ9Zve9vZB567cKPEtbSmDDlW0N6e5duDymThBViZL3ofVldX95iaBce4rRATSj8SPJU45jppXqzF9faEaHOQalThvmdrhwPh728db2ylBhsoGlHKAZSsyIfWh2PrRc5sPV+FnH8IBxZ9WnWOSqKt6CJbO7lfZO9QfDTEgxOkIYxDUqArO/EszDqwPYwD7iudNBNbMRoVpNPmXhobAWpPhDg7gCnnFtzrXYPADzAjUVl98kQ01OWrktgapDbsM/f4B+t1lZeIItEx6Y5hnqpIKE5wzdoUBGIYlp1OnUX9LjzfEiP4ekKrRSygdpBcJ1RUr9hZjlq/7i6ILvHdYUh0AkKh8C7QSDsW2b+bKykEauqkODMQlnmncz/7OOonE/9+VLQs5VBAuyNnThC0HA9IexH5Q1MPnlV5zi+pMaxPqa62977zNx9GSB7IrSkLdd9YIfE6oYjZpiuAbK5cwkfRrFrVSDUmYpuaLLRKYJzE6EyvXoY6EvZv3qNGRco+g9vUZj8SgH2yKTcfzkvS8KcYpJOzA93qm7U2D9q4pANbSrXZKrURCgr0JAgMBAAGjggL1MIIC8TBmBggrBgEFBQcBAQRaMFgwNQYIKwYBBQUHMAKGKWh0dHA6Ly93d3cuYWNjdi5lcy9nZXN0Y2VydC9BQ0NWUkFJWjEuY3J0MB8GCCsGAQUFBzABhhNodHRwOi8vb2NzcC5hY2N2LmVzMB0GA1UdDgQWBBTGxNhAyEiUnZ1LUcP6TtUOVGKVlDAfBgNVHSMEGDAWgBTSh7Tj3zcnk1X2VuqB5TbMjB4/vTCCAcYGA1UdIASCAb0wggG5MIIBtQYLKwYBBAG/VQNkAgAwggGkMIIBbgYIKwYBBQUHAgIwggFgHoIBXABTAGUAcgB2AGkAZABvAHIAIABkAGUAIABTAGUAbABsAGEAZABvACAAZABlACAAVABpAGUAbQBwAG8AIABkAGUAIABsAGEAIABBAGcAZQBuAGMAaQBhACAAZABlACAAVABlAGMAbgBvAGwAbwBnAO0AYQAgAHkAIABDAGUAcgB0AGkAZgBpAGMAYQBjAGkA8wBuACAARQBsAGUAYwB0AHIA8wBuAGkAYwBhACAASQBWAEYAIAAoAFAAbAAuACAAZABlACAATgBhAHAAbwBsAGUAcwAgAHkAIABTAGkAYwBpAGwAaQBhACAANgAsACAAQwBQACAANAA2ADAAMAAzACAAQwBJAEYAIABRADkANgA1ADAAMAAxADAAQwApAC4AIABDAFAAUwAgAHkAIABDAFAAIABlAG4AIABoAHQAdABwADoALwAvAHcAdwB3AC4AYQBjAGMAdgAuAGUAczAwBggrBgEFBQcCARYkaHR0cDovL3d3dy5hY2N2LmVzL2xlZ2lzbGFjaW9uX2MuaHRtMFUGA1UdHwROMEwwSqBIoEaGRGh0dHA6Ly93d3cuYWNjdi5lcy9maWxlYWRtaW4vQXJjaGl2b3MvY2VydGlmaWNhZG9zL3JhaXphY2N2MV9kZXIuY3JsMA4GA1UdDwEB/wQEAwIGwDAWBgNVHSUBAf8EDDAKBggrBgEFBQcDCDANBgkqhkiG9w0BAQsFAAOCAgEACNYMMDp12YM8nW3T11T/T/tVu4LCpCEw42STw+Gf420ihQDFawOTw5hrUK45IYe/IrKzS+Avcw0mUXGev5QTQ+diFnvDPzOJOwj2nkbdsH/sS6/DWznn/7iTHKkagl4lhjz4lrH2lP7HVW5kXlS+/aJzuBAJjBrlfSBIZcB1WDMotgu6/Oi+K2mS4iBsOZWaEbDfoa8tDoUC3FAlvYyaB+5ujtEGWKvGAyWTIHDFlF5vtVY3p1MAKb3fdKMJj+lKCOjXWIak1FxGVMpEhTnzKix1lrbf2BlT7dPGx82J/C6UxJODnyViIcS58coqC2WEAJ0qbwnBpfUXRp+iCfTpnDMErFSBdv2zFQV0eUjO7SV5jNQuDXUMPr8KSqK7KCdU1CEBrx00GwzBtDnSs5JsyrVrMhk26gXo6j1yUfkLPuMQq37XExiT8uarhlR0TQi5Da17Np05ef8HquoNzjEWEopxNS3ZWmtNQoZYJdNfj0XCEN2bI/f8GUvrY2S+UAuiuMPYaJbhapo6Jx58TbJWaq/gf2CHgXvR4RrwI+rFhjvkwiYihAa3OTj294N7rdiOLVmxNjsm7iTzP1gp4OOOjsNnVzU2hA55p1+gRsAIF5vY1JyiyCEsALP4+PQ7Z46jUsi7Z7j06cR5JVLNVnPzarYGbsGZSNOmBnK9WGWGCUAwggfTMIIFu6ADAgECAghew7emQ3+k4DANBgkqhkiG9w0BAQUFADBCMRIwEAYDVQQDDAlBQ0NWUkFJWjExEDAOBgNVBAsMB1BLSUFDQ1YxDTALBgNVBAoMBEFDQ1YxCzAJBgNVBAYTAkVTMB4XDTExMDUwNTA5MzczN1oXDTMwMTIzMTA5MzczN1owQjESMBAGA1UEAwwJQUNDVlJBSVoxMRAwDgYDVQQLDAdQS0lBQ0NWMQ0wCwYDVQQKDARBQ0NWMQswCQYDVQQGEwJFUzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAJupq79hSpevL5dmmnRf0NmW/c/i5GbvHx9HM8JEo9+a3h+1VN0VfGk1EW+7yAyOahge2I/ZFrwQSDZc8GOzkFpcJDfXo9bLCXG58QFyhLB9202AzfzTb8n42rYOgtJFhagbaKg96PREbL2hwssDvow+EwCE30pIwOMiCujpN6cYTLEJDSNWfwRN2ReEGKXI2kCUc+vODlc8A4E6nQqhV0NprFdteZB45bW0O9i8TI0ooaejp7oCTiXRKq7trgMiuGsgDzAoVJV/4O7OCmad0UAtbiKvnRrBBRnSb8Dyn/h7swJC+1CpHS2TDyOrxsEPkv/QohX1UwlxHP9FE4TmJl744IgcCvwWtqhzBrjwY4QCoMZa7Od033Cuo4Ml6tbHl4eTp8aKijOXYDcQPpc+bikV1qEP0YgsEp9vqqTGQutBouOVQ9MBhW2OuzvzIzbH/jvgoSUHSKvJiXT/CI+Av8CWZfPu7EtovZ2IwzGzQPHoz/Y4u5zk0X/U5VibfPrU8w6bdZHkulIuGX7R9c1aGfy6Bvb7UqhLmQTd+Pm0i1CjTmKJ8Ick+oNCwYf61S0pKlpxemRq1ydgYw3bzkn1jR+QiTIX+HNDuNJak4Zh1uF1Cup5ZnaIT3HrBCXWClp6k+W5SxdAD7G2ufXeT9zgs6w7EXBghEpDbpkgwClxCsBlAgMBAAGjggLLMIICxzB9BggrBgEFBQcBAQRxMG8wTAYIKwYBBQUHMAKGQGh0dHA6Ly93d3cuYWNjdi5lcy9maWxlYWRtaW4vQXJjaGl2b3MvY2VydGlmaWNhZG9zL3JhaXphY2N2MS5jcnQwHwYIKwYBBQUHMAGGE2h0dHA6Ly9vY3NwLmFjY3YuZXMwHQYDVR0OBBYEFNKHtOPfNyeTVfZW6oHlNsyMHj+9MA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0jBBgwFoAU0oe04983J5NV9lbqgeU2zIweP70wggFzBgNVHSAEggFqMIIBZjCCAWIGBFUdIAAwggFYMIIBIgYIKwYBBQUHAgIwggEUHoIBEABBAHUAdABvAHIAaQBkAGEAZAAgAGQAZQAgAEMAZQByAHQAaQBmAGkAYwBhAGMAaQDzAG4AIABSAGEA7QB6ACAAZABlACAAbABhACAAQQBDAEMAVgAgACgAQQBnAGUAbgBjAGkAYQAgAGQAZQAgAFQAZQBjAG4AbwBsAG8AZwDtAGEAIAB5ACAAQwBlAHIAdABpAGYAaQBjAGEAYwBpAPMAbgAgAEUAbABlAGMAdAByAPMAbgBpAGMAYQAsACAAQwBJAEYAIABRADQANgAwADEAMQA1ADYARQApAC4AIABDAFAAUwAgAGUAbgAgAGgAdAB0AHAAOgAvAC8AdwB3AHcALgBhAGMAYwB2AC4AZQBzMDAGCCsGAQUFBwIBFiRodHRwOi8vd3d3LmFjY3YuZXMvbGVnaXNsYWNpb25fYy5odG0wVQYDVR0fBE4wTDBKoEigRoZEaHR0cDovL3d3dy5hY2N2LmVzL2ZpbGVhZG1pbi9BcmNoaXZvcy9jZXJ0aWZpY2Fkb3MvcmFpemFjY3YxX2Rlci5jcmwwDgYDVR0PAQH/BAQDAgEGMBcGA1UdEQQQMA6BDGFjY3ZAYWNjdi5lczANBgkqhkiG9w0BAQUFAAOCAgEAlzECn+f9Q2dIRBTkKYftTChm0I812k1ht0qXTbXbkOAFLg7GedDyl2kPvQRH2b7btSnam9muqZnV0zwwk/WNoaj8Bo1E9MoWlXwz3GKLqDf4J9gJLRvvyBQnIKlkRP8u1nWqbE1gQBlJQ1Rj2uLMumblT0R6W9lqgStA1X/5ASdYLMjtSJF8P6YAz8QpcxE23oYZPp3uGYob1bDtjj2cKsAN2D1m4zwNvdWUXOLipzUbBAD2P1qN6kO9X4kdqcGwzJniTQAK2sknW+cTkFzk9TOiVW3c4AlNL7EmWyd1AAnEYncpCF+eWay2fq2fVDAiA8EecWT++TgKlhjdAhSsI8sGHB6kfY0N3idB6K3aFbewI90rqNPaJYft6FVETYj0Nn6Emnis9w5WSQ7WMyXWhFBCbCASHSrVvrzycIGkcGC+BbWbngREvmEjrOmlJIwRgJRaoqK5SdLB3NGn7TERLJ4Zpu7hVeHA6s8NhOQXt6J8pd5VJQbuzMCHXEDazJU/VeA1x7iEvrRdzXqDAXLuh+ZfHa61hcYm3+bBmukeAkefKqhtqVvP7EV3f5gnmjJdKuOE7sWYZi+WIB3d2MMn17D5/tl9zdCfjwsUWFGfL4vDOC3e6I/WjYek9VZDFpks9KRWtDS4YTfJwliAG6CXofxZjekR9tEPS1U0RiqLhjsxggN0MIIDcAIBATBOMEIxEjAQBgNVBAMMCUFDQ1ZSQUlaMTEQMA4GA1UECwwHUEtJQUNDVjENMAsGA1UECgwEQUNDVjELMAkGA1UEBhMCRVMCCA10r2ZLtWkNMAkGBSsOAwIaBQCggfwwGgYJKoZIhvcNAQkDMQ0GCyqGSIb3DQEJEAEEMBwGCSqGSIb3DQEJBTEPFw0yNTEyMDMxOTEwMTBaMCMGCSqGSIb3DQEJBDEWBBSUWZfKq2F464YDFKPPspSFsI/PcDCBmgYLKoZIhvcNAQkQAgwxgYowgYcwgYQwFgQUR35se9FUzWR1M4PhjB2THPGpDfgwagQUkwV6iBXGT86IL/qRFlIoeLxTZBcwUjBGpEQwQjESMBAGA1UEAwwJQUNDVlJBSVoxMRAwDgYDVQQLDAdQS0lBQ0NWMQ0wCwYDVQQKDARBQ0NWMQswCQYDVQQGEwJFUwIIXsO3pkN/pOAwDQYJKoZIhvcNAQEBBQAEggIAt2IO/HbvLg9g70649aedKWQYr33WXVrf/JgUDBwSelvz2IC1WwKpAgljmFYZ9BVeCLwqsNGJgnSCZY5Mq8YGTHG2olCQe+jsGdMuqfBcRevorpKSI1kqDn4s6aVLZFL6jH9W25FRYle+zsSh+QpGQicLhq2SHOG1U+Xy6GVJh8bIq4Rn/R0xc/YoZo5YEwnO60oQvrkJiDLWX9VdRcxagk1A19AzKPDsJEuttb+3aJ9px/HlvzIGNGZvy93BNUagaFKXmCYRwk5NbhP6GgPGKNgJJP0PewzxRqzj6TVXomzHNbxoebl7Yy9kneHStALnInjqoNdxiRunRnMA+e0Qk5uG5IU66O5SJIrj/Zsgq3O+t26Uc/qPRH02iHrJ2NMW79Uxqwaq1SlvphOD06X0LbHdV+U/bP4ijkJOR0Uprc1e7Slc7X9rQ5lMTvVBRvxuCQdrydrkeBxCS7atBJe6h6+Wtg6wLnzJhxP2A9CnXQwrJrJGv7l6pbof1kJMqGs3rOVWnxsjm+2y13BtZKqDmOGgS1vEQZnBcl25h/x4cRE60L56fobFDR9zG7aKHNbZZ3/cUjAGBdynKY/tIdmdwsrRF0sWs3cgH5M9FYPIytOjVWWnsPWmNn4qg+UNSv+LDEk0eO/lF8/wRaBRHC3Vn/WwNwvexJh5V+iLL3v33f0AAAAA&lt;/xades:EncapsulatedTimeStamp&gt;
+                        &lt;/xades:AllDataObjectsTimeStamp&gt;
+                        &lt;xades:IndividualDataObjectsTimeStamp&gt;
+                            &lt;xades:Include URI="#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-ref1" referencedData="true"/&gt;
+                            &lt;xades:Include URI="#xmldsig-cfe06153-c356-45b1-b575-43a7a7511b17-ref0" referencedData="true"/&gt;
+                            &lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+                            &lt;xades:EncapsulatedTimeStamp&gt;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&lt;/xades:EncapsulatedTimeStamp&gt;
+                        &lt;/xades:IndividualDataObjectsTimeStamp&gt;
+                    &lt;/xades:SignedDataObjectProperties&gt;
+                &lt;/xades:SignedProperties&gt;
+            &lt;/xades:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+&lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

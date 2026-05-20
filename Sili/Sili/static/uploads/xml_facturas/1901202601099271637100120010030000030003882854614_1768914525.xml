@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1901202601099271637100120010030000030003882854614</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-19T19:34:20-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura version="2.1.0" id="comprobante"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;SECADO Y TRATADO DE MADERA SETRAMAD CIA. LTDA.&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;SECADO Y TRATADO DE MADERA SETRAMAD CIA. LTDA.&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0992716371001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;1901202601099271637100120010030000030003882854614&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;001&lt;/estab&gt;
+    &lt;ptoEmi&gt;003&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000003000&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;KM. 43 VÍA MANABÍ, AV TELÉGRAFO&lt;/dirMatriz&gt;
+    &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;19/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;KM. 43 VÍA MANABÍ, AV TELÉGRAFO&lt;/dirEstablecimiento&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;Km 16 vía a daule por cervecería nacional&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;1340.00&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;1340.00&lt;/baseImponible&gt;
+        &lt;valor&gt;201.00&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;1541.00&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;1541.00&lt;/total&gt;
+        &lt;plazo&gt;15&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;PALL-REC-QUIM-01&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;3 LISTONES&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;[PALL-REC-QUIM-01] PALL-REC-QUIM-AME-115X115X13.  110x115 REFORZADO&lt;/descripcion&gt;
+      &lt;cantidad&gt;200.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;6.700000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;1340.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;1340.00&lt;/baseImponible&gt;
+          &lt;valor&gt;201.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="OC"&gt;1000602436&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="GUIA DE REMISION"&gt;4957&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signatured6c8290f-9e24-437d-b049-50ed6f6c6648"&gt;
+&lt;ds:SignedInfo&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" Id="SignedPropertiesIDce8415d5-2b16-4845-8739-d6d7bafd1d9e" URI="#Signatured6c8290f-9e24-437d-b049-50ed6f6c6648-SignedPropertiesID7a380a15-3c4b-4055-a398-7578f980d8df"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;/reY5TeGOD6OM9+QTx3cx0O1EkY=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate385b5aac-877f-4682-9676-a8eb6b4776db"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;kHu4o4ce8nmw6dahWcWEYwf4Lko=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#comprobante" Id="Reference-ID-87c6e355-b035-4457-80cb-afe5ab1976f8"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;glWKsIYVWImwe/6iL3i4dqS2Ryg=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue&gt;IQotD35Ch7HvPh4DQJFrgUvgpq9NhlpUQ8f7T8Puntiv41j40JIYa62P5xFkvPh+DK0wQ1GFudNv
+tTdLMrC2aZRmLLx11WiC7dmwpH3H8MMREqjuQCj60cgaPrsFCJqJLvPWQltZNqW8Z+9mD+TPa6Y5
+Q7Y8dhuiYDCCxQc/jiM8yIQFWw7ro3OiOSfJHkuGYuF1RCpQQSBxyog1GzjMXtm+Rom0/kk+fmEV
+tSNH3cjNDu7kxEmrJ8bun4PT5k+uBNgCtpPToaoGGwqF8n2PNGc4RJLxsjOwweW+yYnyIiV219HL
+MBZSR8rmzE93xh0wCTERFlPVpIoobosUkyd23g==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate385b5aac-877f-4682-9676-a8eb6b4776db"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;MIIJ6TCCB9GgAwIBAgIIFe8gaCQHdOYwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI0MDgyNzIwMzMwMFoXDTI2MDgyNzIwMzMwMFowgeExCzAJBgNVBAYTAkVDMTcwNQYDVQQKDC5T
+RUNBRE8gWSBUUkFUQURPIERFIE1BREVSQSBTRVRSQU1BRCBDSUEuIExUREEuMRAwDgYDVQQMDAdH
+RVJFTlRFMRYwFAYDVQQEDA1NQU5aQU5PIFBBTE1BMRMwEQYDVQQqDApKVUFOIFBBQkxPMRkwFwYD
+VQQFExBJRENFQy0wMTAzMTA0NzgyMSEwHwYDVQQDDBhKVUFOIFBBQkxPIE1BTlpBTk8gUEFMTUEx
+HDAaBgNVBGEME1ZBVEVDLTA5OTI3MTYzNzEwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+AoIBAQCJ9YbX4nJ6Xgnh2GYNHVlF5JdpfGMJ8p16MWE/5lHWF6NF7XJY7PNKRJiGvtOXcKoJFJk8
+ueb/NXd6aVEHki5Ur1gP+N77La0G96LFJ4IKo2HdG4d8ts+ZFoe5WlXGUQ0xCUj6lVwXqRckbMhA
+1rFthILQ474kfRgqGqKTdxRbFmBfdTayjnpdux38WJHThaw2lWPftQWu/5sioNKcaMJn2VzSKZnt
+uPUG6YseN28IqPb2BOiwSE2J07cYTt+NiL0mrMLtv7ftLYvfi32MidctnV8f1jFWEKiRFtXszNts
+GCdVec+jmnpSHGg8jpaI+bWZkWZROG9jU/5OvxHnb+RjAgMBAAGjggTKMIIExjAbBgsrBgEEAYLx
+NmYDAQQMDAowMTAzMTA0NzgyMB4GCysGAQQBgvE2ZgMLBA8MDTA5OTI3MTYzNzEwMDEwgdcGCCsG
+AQUFBwEBBIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMv
+ZG93bmxvYWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipo
+dHRwOi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0
+dHA6Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQUcCYvXW73
+YdLUA6IpwoBgqHr9cQswDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGy
+dJJz/TCBjgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6
+Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJU
+SUZJQ0FETyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6
+aHR0cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNy
+bDBAoD6gPIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9y
+ZGluYWRhLmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwME
+MIICCwYDVR0RBIICAjCCAf6BHm5vdGlmaWNhY2lvbmVzZmlybWFzQHNpaWdvLmNvbaAbBgsrBgEE
+AYLxNmYDAaAMDAowMTAzMTA0NzgyoBsGCysGAQQBgvE2ZgMCoAwMCkpVQU4gUEFCTE+gGAYLKwYB
+BAGC8TZmAwOgCQwHTUFOWkFOT6AWBgsrBgEEAYLxNmYDBKAHDAVQQUxNQaAYBgsrBgEEAYLxNmYD
+BaAJDAdHRVJFTlRFoGMGCysGAQQBgvE2ZgMHoFQMUkxPVC4gRklOQ0FTIERFTElBIENBTExFOiBT
+T0xBUkVTIDI1IDI2IFkgMjcgTk1FUk86IFNOIElOVEVSU0VDQ0lOOiBWSUEgRFVSQU4gVEFNQk+g
+HwYLKwYBBAGC8TZmAwigEAwOMDA1OTM5Njc4NTIwMDagGgYLKwYBBAGC8TZmAwmgCwwJR1VBWUFR
+VUlMoD8GCysGAQQBgvE2ZgMKoDAMLlNFQ0FETyBZIFRSQVRBRE8gREUgTUFERVJBIFNFVFJBTUFE
+IENJQS4gTFREQS6gHgYLKwYBBAGC8TZmAwugDwwNMDk5MjcxNjM3MTAwMaATBgsrBgEEAYLxNmYD
+DKAEDAJFQ6AkBgsrBgEEAYLxNmYDMqAVDBNSRVBSRVNFTlRBTlRFIExFR0FMoBgGCysGAQQBgvE2
+ZgMzoAkMB0FSQ0hJVk8wDQYJKoZIhvcNAQELBQADggIBAKKYU0ZHtsA7N4FDEdE9m8Gvc72XH7j0
+5Vd8vUOM0SK0wIPbOgDoLb5Xu4OAERDGvYJ10jOVWKHOPxjAwgS0aLcOUpPHRDMSOKI/XNxuUFB/
+e1IP2uOhhdL25Rdbp9Gd+NG/ZjLpIzTFhHOM7KAMCygMcD+3HicsbC1JkrKA6RnRRyf/NAwTjqKB
+DZZ8pQL8wHyL3vqsvsFNTJmZUXN2EmsU4tSO0IMQh9801Bkj8tiaQCOpeGGd9ecNUr29NFz50FF4
+71tN5Mu17rbu8EnZmhg2IQIZNSsyAt6zFhELWDjMo1195Puet4KeWZ2QxMDH5bFg/O7SsRZAPqUb
+kMusMDEGxvCC1HwW5X61NEDLc76z99jb0+RD+1NLqOgkdwTM80UziJqTRVO9wxyxvA7Uvfaepy1/
+zeV+aJ+jJG+jeIyNoaASxNhyZ6hT3DTug6MuIqU7GIIP/fLkJu7fxwsD3kwIdVUmYNQbN8tTg4cC
+SQWdtJJuvkSUpu4u5rdt15rV9YxILkiFRHiIl2PUsA1tWM2QA+GEhvjCmhvQe0GrA0VeuqYZJLVN
+nKKsKNU9O4l+5sTyN0KS29rvzTdTquLfAy8ZHiLMG2FptwuzI+l7RYJHvmDNNAxEKI25ONwzSZwu
+DlL8cvEfK5jFWa08FqH2hqauVpeDjkOFo1on1IEcXYHw
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;ifWG1+Jyel4J4dhmDR1ZReSXaXxjCfKdejFhP+ZR1hejRe1yWOzzSkSYhr7Tl3CqCRSZPLnm/zV3
+emlRB5IuVK9YD/je+y2tBveixSeCCqNh3RuHfLbPmRaHuVpVxlENMQlI+pVcF6kXJGzIQNaxbYSC
+0OO+JH0YKhqik3cUWxZgX3U2so56Xbsd/FiR04WsNpVj37UFrv+bIqDSnGjCZ9lc0imZ7bj1BumL
+HjdvCKj29gTosEhNidO3GE7fjYi9JqzC7b+37S2L34t9jInXLZ1fH9YxVhCokRbV7MzbbBgnVXnP
+o5p6UhxoPI6WiPm1mZFmUThvY1P+Tr8R52/kYw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB
+&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object&gt;
+            &lt;etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Target="#Signatured6c8290f-9e24-437d-b049-50ed6f6c6648" Id="Signatured6c8290f-9e24-437d-b049-50ed6f6c6648"&gt;
+                &lt;etsi:SignedProperties Id="Signatured6c8290f-9e24-437d-b049-50ed6f6c6648-SignedPropertiesID7a380a15-3c4b-4055-a398-7578f980d8df"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;Y//CPIkINjwE/80HMiOcZbG0ct8=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;2.5.4.97=VATES-A66721499,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1580517625883489510&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                        &lt;etsi:SignaturePolicyIdentifier&gt;
+                            &lt;etsi:SignaturePolicyImplied/&gt;
+                        &lt;/etsi:SignaturePolicyIdentifier&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-87c6e355-b035-4457-80cb-afe5ab1976f8"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

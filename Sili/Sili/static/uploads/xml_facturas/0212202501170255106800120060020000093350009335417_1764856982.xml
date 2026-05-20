@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0212202501170255106800120060020000093350009335417</numeroAutorizacion>
+    <fechaAutorizacion>2025-12-03T16:04:50-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="comprobante" version="1.0.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;GUERRERO PARREÑO JAIME EDUARDO&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;J.G. GLOBALCOLOR&lt;/nombreComercial&gt;
+    &lt;ruc&gt;1702551068001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0212202501170255106800120060020000093350009335417&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;006&lt;/estab&gt;
+    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000009335&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;IÑAQUITO / AV DE LOS GRANADOS E14-88 Y JOSE QUERI&lt;/dirMatriz&gt;
+    &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;02/12/2025&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;AV.PLAZA DAÑIN S/N Y OCTAVA ALBATROS&lt;/dirEstablecimiento&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;90.25&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;87.30&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+        &lt;valor&gt;13.10&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;2.95&lt;/baseImponible&gt;
+        &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+        &lt;valor&gt;0.00&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;importeTotal&gt;103.35&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;16&lt;/formaPago&gt;
+        &lt;total&gt;103.35&lt;/total&gt;
+        &lt;unidadTiempo&gt;dia&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;G201316&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;ULTIMATE LEATHER DTLR&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;27.720000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;27.72&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;27.72&lt;/baseImponible&gt;
+          &lt;valor&gt;4.17&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;G14512&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;ULTIMATE PROTECTANT&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;25.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;25.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;25.00&lt;/baseImponible&gt;
+          &lt;valor&gt;3.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;G4216&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;NEW CAR PROTECTANT&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;20.750000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;20.75&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;20.75&lt;/baseImponible&gt;
+          &lt;valor&gt;3.11&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;X2000-5&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Water Magnet Microfiber 1/2&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;13.830000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;13.83&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;13.83&lt;/baseImponible&gt;
+          &lt;valor&gt;2.07&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;ENVCIUDAD&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;ENVIO EN LA CIUDAD&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;2.950000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;2.95&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;2.95&lt;/baseImponible&gt;
+          &lt;valor&gt;0.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Direccion"&gt;KM 16.5 VIA DAULE&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Email"&gt;atorres@quimpac.com.ec&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature833141"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo209373"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID246264" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature833141-SignedProperties60920"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;6XLZwtb72Xsmq3qJuuCXEwLsg1E=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate153996"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;heTfx56WP2xISXWyAXFeFn9GXek=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-854384" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;tVm+YeN7flMjQFmWDm4X++RjUTc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue721242"&gt;
+Thrl6ePssbfyh+G0CXNd/HrTKV2TaCivIDgwOubGeJs9GvFPwHfkWsov8/B3EHwPVKBKE8AfR4Lf
+b771/vKtMZwDC8w8BouG1SUFgTmMjMngFMO8w1/LuxDjyYqe53D26TsaKfe+RPa6zFG8qkadymn8
+VcPpvrIzhctT7sQep1G7Cs/pGQGtrwUjbIfa2R29wPLhAvSi41ZHlOdZ2wYhoco1nkH9Sm8CtI7/
+3PwetXTlVX+53nG3M6fmnXYgySD3RGkXp1J/spTyfPHpOS04fs7iIQX0BstU/TYB+C4Rxy/UK+xJ
+JcqIMJmKuFRd+UCp/d6ELaRhLtqTNx4FfE7PKQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate153996"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIL2zCCCcOgAwIBAgIEJxfoJDANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMTA0MDcxMjU1MzdaFw0yNjA0MDcxMjU1MzdaMIGeMScw
+JQYDVQQDDB5KQUlNRSBFRFVBUkRPIEdVRVJSRVJPIFBBUlJFTk8xFTATBgNVBAUTDDA3MDQyMTA4
+MDUzMzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQCtqDr8gIw6uPA8MDergtlHWQHZdgYKf0JqZoPMSZ4AyUmQtVKA6j8d
+d8lGzUsXZlkTcw0w1+sEutEQ2lI9fzkdIpJvJeYV6uscO2mTsp011W7x4OC5x32hK6WPtwMNgAcR
+J7FM0FfcfQZqjPee/6JdwFa2/ltpkxxmRpRzaeaESfLZi+MVU6JPnwaGRkgbBjvs1DULKihlyEq1
+IHvFlHVsHlLT1PQOmmc3cCwesVyIbIwVSWLUIuW6jpudyJdGdIkjJljSu8YOE6BL22aIXlsc83dN
+PeqE36kHfLP211IUe8dRCZWoN7RkvhWQ3GC++w1BdAFtTAlEDxNhDrA1mN7VAgMBAAGjggciMIIH
+HjAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUF
+BwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2Vq
+YmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4bGRhcDov
+L2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FD
+SU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2NhdGlvbkxp
+c3Q/YmFzZTAiBgNVHREEGzAZgRdqZ2dsb2JhbGNvbG9yQGdtYWlsLmNvbTCCAQYGA1UdIASB/jCB
++zBaBgorBgEEAYKmcgIHMEwwSgYIKwYBBQUHAgIwPh48AEMAZQByAHQAaQBmAGkAYwBhAGQAbwAg
+AGQAZQAgAFAAZQByAHMAbwBuAGEAIABOAGEAdAB1AHIAYQBsMIGcBgorBgEEAYKmcgIBMIGNMIGK
+BggrBgEFBQcCARZ+aHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rv
+d25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZp
+Y2FkbyBQZXJzb25hIE5hdHVyYWwucGRmMIICogYDVR0fBIICmTCCApUwgeWgQaA/hj1odHRwOi8v
+b2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwooGf
+pIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VS
+SVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lP
+TjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIHHoIHEoIHBhoG+
+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJU
+SUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2NlcnRpZmljYXRl
+UmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5z
+ZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1j
+cmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkg
+REFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklU
+WSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBR1qBwNwXAIKzCK4s9Pz051Ud4S9DArBgNVHRAE
+JDAigA8yMDIxMDQwNzEyNTUzN1qBDzIwMjYwNDA3MTI1NTM3WjALBgNVHQ8EBAMCBeAwGgYKKwYB
+BAGCpnIDAQQMDAoxNzAyNTUxMDY4MBUGCisGAQQBgqZyAwkEBwwFUVVJVE8wEQYKKwYBBAGCpnID
+IgQDDAEuMDYGCisGAQQBgqZyAwcEKAwmQVYgREUgTE9TIEdSQU5BRE9TIEUxNC04OCBZIEpPU0Ug
+UVVFUkkwHQYKKwYBBAGCpnIDAgQPDA1KQUlNRSBFRFVBUkRPMB8GCisGAQQBgqZyAyAEEQwPMDAy
+MDAxMDAwMTc1Njg3MBEGCisGAQQBgqZyAyMEAwwBLjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgor
+BgEEAYKmcgMMBAkMB0VDVUFET1IwGAYKKwYBBAGCpnIDAwQKDAhHVUVSUkVSTzARBgorBgEEAYKm
+cgMeBAMMAS4wHQYKKwYBBAGCpnIDCwQPDA0xNzAyNTUxMDY4MDAxMBEGCisGAQQBgqZyAx0EAwwB
+LjAXBgorBgEEAYKmcgMEBAkMB1BBUlJFTk8wHAYKKwYBBAGCpnIDCAQODAw1OTM5ODM0NjExMTcw
+DQYJKoZIhvcNAQELBQADggIBAHTvCDrll66jMN9HspqHWPJ51IH+/e/s7sJGbuYKPzs4Epv+ZUQE
+ItmDCjRWnmeDp+I14iZWHQx7ZmIIMVUqzJ5titIoDqB88qMURjvxkKtmlyPOhQvh7l9iclMWRc0/
+me38Qixf9obbgzPmtxTvNCLB05IRxOjpJHBi0rnM7rqdJ0SUazjy54RiWAchjX5lntdtDXgRpvG3
+G27FfDp5Zmeegf+QaaRoRxQLeeY1OvN6xkVzNY4ZlB/QhsoL7k297dRzmBEwZju6nVSbIoZ6Jm16
+F7K54sUrUZzoSZC4zvNhSMO/7qI9H0wHnT68Fj54D2fYmCcq4+rnUA5rWe34JE6u5nvGxU3MiqSe
+s2BCXpUlap8jf0EXQIlRhBcfjnRqbwRGWR1Lvi3WwzFWtpppvZ6eqIypvJUEWMLJNyl6D+ykDwzh
+ozZB/8GgKstjvZHPa1x0Ke/14dDPdxmY/hkv1KdA2vG33olG5fMLbiPrida7uG9ICgtWxqS0anzb
+Vzv9kCTSrDw082l+HbfMHaVLph3dvfALGdVVlX147/CbFk8oU8vmt9tV2ltl4IMn16pvsQf1C1ld
+yw6tgWV/oY7LKWwcxksSeXAkz+u+PywV7cONRHFkExg46ODa25AEFVfNZM7+DUShsxo2lonzr+hF
+wVRol1HYtaD1MhK1lE204MK8
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+rag6/ICMOrjwPDA3q4LZR1kB2XYGCn9CamaDzEmeAMlJkLVSgOo/HXfJRs1LF2ZZE3MNMNfrBLrR
+ENpSPX85HSKSbyXmFerrHDtpk7KdNdVu8eDgucd9oSulj7cDDYAHESexTNBX3H0Gaoz3nv+iXcBW
+tv5baZMcZkaUc2nmhEny2YvjFVOiT58GhkZIGwY77NQ1CyooZchKtSB7xZR1bB5S09T0DppnN3As
+HrFciGyMFUli1CLluo6bnciXRnSJIyZY0rvGDhOgS9tmiF5bHPN3TT3qhN+pB3yz9tdSFHvHUQmV
+qDe0ZL4VkNxgvvsNQXQBbUwJRA8TYQ6wNZje1Q==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature833141-Object2161"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature833141"&gt;
+                &lt;etsi:SignedProperties Id="Signature833141-SignedProperties60920"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2025-12-02T13:28:53-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;H91igeumfgZTYP3briqn3HD5LNE=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;655878180&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                        &lt;etsi:SignaturePolicyIdentifier&gt;
+                            &lt;etsi:SignaturePolicyId&gt;
+                                &lt;etsi:SigPolicyId&gt;
+                                    &lt;etsi:Identifier&gt;http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf&lt;/etsi:Identifier&gt;
+                                    &lt;etsi:Description&gt;Política de Firma FacturaE v3.1&lt;/etsi:Description&gt;
+                                &lt;/etsi:SigPolicyId&gt;
+                                &lt;etsi:SigPolicyHash&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;Ohixl6upD6av8N7pEvDABhEL6hM=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:SigPolicyHash&gt;
+                            &lt;/etsi:SignaturePolicyId&gt;
+                        &lt;/etsi:SignaturePolicyIdentifier&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-854384"&gt;
+                            &lt;etsi:Description&gt;comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

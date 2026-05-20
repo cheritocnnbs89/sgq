@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block title %}Departamentos{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/departamentos/departamentos.css') }}">
+<script src="{{ url_for('static', filename='js/departamentos/departamentos.js') }}" defer></script>
+
+{% set can_create = permissions.get('departamentos', {}).get('crear') %}
+{% set can_edit = permissions.get('departamentos', {}).get('editar') %}
+{% set can_delete = permissions.get('departamentos', {}).get('eliminar') %}
+
+<div class="container mt-3 departamentos-page">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div class="d-flex align-items-center gap-2">
+      <h4 class="mb-0 title-blue">Listado de departamentos</h4>
+      <span class="count-badge--red">{{ (departamentos or [])|length }}</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-moon-stars me-1"></i>Tema
+      </button>
+      {% if can_create %}
+      <a href="{{ url_for('nuevo_departamento') }}" class="btn btn-cta-blue btn-sm">
+        <i class="bi bi-plus-lg"></i> <span>Nuevo</span>
+      </a>
+      <!-- Botón Carga masiva -->
+      <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalBulkDeptos">
+        <i class="bi bi-upload me-1"></i>Carga masiva
+      </button>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Flash messages #}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} mb-2">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="panel-outline">
+    <div class="panel-header">
+      <form id="toolbarForm" class="d-flex flex-wrap align-items-center gap-2">
+        <div class="input-group input-group-sm toolbar-search-wrap">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input id="liveFilter" class="form-control" placeholder="Buscar en la tabla (nombre / id)">
+        </div>
+        <div class="btn-group btn-group-sm">
+          <button id="btnSearch" class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search me-1"></i>Buscar
+          </button>
+          <button id="btnClear" class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-x-circle me-1"></i>Limpiar
+          </button>
+        </div>
+        <div class="ms-auto small text-muted-var">
+          <span id="countTotal">0</span> departamentos •
+          <span id="countVisibles">0</span> visibles
+        </div>
+      </form>
+    </div>
+
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table id="tabla-deptos" class="table table-striped align-middle mb-0">
+          <thead class="border-bottom">
+            <tr>
+              <th class="w-110px">ID</th>
+              <th>Nombre</th>
+              <th class="text-end w-220px">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in (departamentos or []) %}
+            <tr data-row="1">
+              <td data-th="ID" class="text-muted">{{ d['id'] }}</td>
+              <td data-th="Nombre">{{ d['nombre'] }}</td>
+              <td data-th="Acciones" class="text-end">
+                {% if can_edit %}
+                <a href="{{ url_for('editar_departamento', dep_id=d['id']) }}"
+                  class="btn btn-sm btn-outline-secondary me-1">
+                  <i class="bi bi-pencil-square me-1"></i> Editar
+                </a>
+                {% endif %}
+                {% if can_delete %}
+
+                <form method="post" action="{{ url_for('eliminar_departamento', dep_id=d['id']) }}"
+                  class="d-inline js-confirm-delete">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash me-1"></i> Eliminar
+                  </button>
+                </form>
+
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            {% if (departamentos or [])|length == 0 %}
+            <tr>
+              <td colspan="3" class="text-center text-muted py-4">No hay departamentos para mostrar.</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if can_create %}
+<!-- MODAL CARGA MASIVA -->
+<div class="modal fade" id="modalBulkDeptos" tabindex="-1" aria-labelledby="bulkDeptosLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" method="POST" action="{{ url_for('departamentos_bulk') }}"
+      enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      {% if csrf_token is defined %}{{ csrf_token() }}{% endif %}
+      <div class="modal-header">
+        <h5 class="modal-title" id="bulkDeptosLabel">Carga masiva de departamentos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p class="small mb-2">
+          Sube un archivo <strong>CSV (UTF-8)</strong> con columnas:
+          <code>codigo,nombre</code> (o solo <code>nombre</code>).
+          <br>Los nombres ya existentes se omitirán automáticamente.
+        </p>
+        <div class="mb-2">
+          <a class="link-primary" href="{{ url_for('departamentos_bulk_template') }}">
+            <i class="bi bi-file-earmark-arrow-down"></i> Descargar plantilla CSV
+          </a>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Archivo CSV</label>
+          <input class="form-control" type="file" name="archivo" accept=".csv" required>
+        </div>
+        <div class="alert alert-info py-2 mb-0 small">
+          <i class="bi bi-info-circle me-1"></i>
+          Validaciones: duplicados en archivo, nombres existentes y filas inválidas.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary"><i class="bi bi-upload me-1"></i>Importar</button>
+        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

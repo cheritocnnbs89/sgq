@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0701202601099266461400120012400000124002035701410</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-07T17:17:40-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;INDUWAGEN S.A.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;INDUWAGEN&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0992664614001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0701202601099266461400120012400000124002035701410&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;240&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000012400&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;Av. Carlos Julio Arosemena km 2 ½&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;07/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;AV.32 N.O. SOLAR 37  MZ 1 AV. CARLOS JULIO AROSEMENA KM 2.5&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;286&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;KM 16.5 VIA DAULE AV ROSAVIN Y CALLE&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;1178.86&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;1178.86&lt;/baseImponible&gt;
+                &lt;valor&gt;176.83&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0&lt;/propina&gt;
+        &lt;importeTotal&gt;1355.69&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;1355.69&lt;/total&gt;
+                &lt;plazo&gt;1&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;5&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;INSUMO M&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;27.5&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;27.5&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;27.5&lt;/baseImponible&gt;
+                    &lt;valor&gt;4.13&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;5Q0615301G&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;DISCO FRENO TIG&lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;330&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;660&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;660&lt;/baseImponible&gt;
+                    &lt;valor&gt;99&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;5Q0698151AJA&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;PASTILLAS DELT&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;398&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;398&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;398&lt;/baseImponible&gt;
+                    &lt;valor&gt;59.7&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;G  000650X&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;GR.PASTA LUBRIC. (GARAN)&lt;/descripcion&gt;
+            &lt;cantidad&gt;3&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.7&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;8.1&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;8.1&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.22&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;G  052150A2X&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;GR.GRASA LITIO    (GARAN)&lt;/descripcion&gt;
+            &lt;cantidad&gt;3&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.02&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;3.06&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;3.06&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.46&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;N  01713123&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;FUSIBLE 20A/AMAR&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.6&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.6&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.6&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.09&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;X004&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;LOCALIZACION GUIADA DE AVERIAS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;24&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;24&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;24&lt;/baseImponible&gt;
+                    &lt;valor&gt;3.6&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;X004&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;SUSTITUCION DE DISCOS DE FRENOS DELANTEROS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;24&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;24&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;24&lt;/baseImponible&gt;
+                    &lt;valor&gt;3.6&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;X004&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;SUSTITUCION DE PASTILLAS DE FRENOS DELANTEROS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;33.6&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;33.6&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;33.6&lt;/baseImponible&gt;
+                    &lt;valor&gt;5.04&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="Condicion Pago"&gt;CONTADO |BaseImponibleBienes 1097.26  |BaseImponibleServicios 81.60&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Observaciones"&gt;Vehiculo WAUZZZF35M1083490|Modelo Q3 TFSI F3BA6Y AC 2.0 5P 4X4 TA|Orden# 14143|Propietario QUIMPAC ECUADOR S.A QUIMPACSA|Kilometraje 113953|Placa GCT3747|Asesor AGUILERA HUACON MARIA JOSE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Correo"&gt;atorres@quimpac.com.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Teléfonos"&gt;0979620825&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Referencia Interna"&gt;FACT12400&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Nota1"&gt;La mercadería viaja por cuenta y riesgo del cliente. No se aceptan reclamos ni devoluciones de mercadería una vez salida del almacén.&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature1979"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo61274"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID578341" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature1979-SignedProperties440093"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;pGlOuPneFpeOcVgHGWsgukjSr+k=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1351967"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;qElj+YMRMmHLr7Rr2lowtH6teEc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-933922" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;NYs6BAhyiLyFGds7f5IASmppZps=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue1035052"&gt;
+Z68Xdx7bwBosEWI1HqLh9JWBHFkWsbZeU/5dqUCD9dWOV89jL5HLWcMuE8iaqB4VF6lWC/TaCA2c
+VJXNBsenKqQRSoRE04vrmzqIgAmUGHnF4LniEnDqzCKzwkSvZVabuCrOmMG1vBgH62u82nCDFTUc
+nwgnYk2sPVOb0QMv1YMQgrwsCYMT4sRCIoc8ixeuNb6pi3aQu4xqSB7bOwDCHlWMl+cmHQO/B6th
+wbhLSa05FwomR6Mg4vbXbCKOEZYgtlsu0WNoS7aiB8wsELSHcJsV9gEfrqw2OM4WMzlkS9K8S0/V
+37kQAZ+cYAUZAt9nmiS3/k76pL20lf6fawxEFw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1351967"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIL8zCCCdugAwIBAgIEJ9TULDANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA0MjkyMzE4NTBaFw0yNzA0MjkyMzE4NTBaMIGcMSUw
+IwYDVQQDDBxYQVZJRVIgSk9TRSBNT0xFU1RJTkEgQVZFR05PMRUwEwYDVQQFEwwyOTA0MjQxODI4
+MzYxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsG
+A1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEAzPFxX9hC3OzpvYtOeAE05lmjZDG1WlK0TtY7VaMQ9HjFCxR8N5ZPyqkO
+06CTB8k7+iNlpkG8KNUhgFeoQgyMFrAVFgYbPxEYPs2rgEdiu5OtXPM13BqpLsLHOVxrD8ZE/dZj
+99hwhtlpmCkZU7yHLIkx2XnANc7GIeBV11PQECD4VuVUMwvdho+xYSQN7gizC90LMIL4+Ua6cwkI
+w9x0a3JmNeIuPuj3i2fbpyVg+OVr22U0zYDe4v6Te/vOciKnKNyAsiYckgAN+ykuMIuMDntDinfN
+rHTd99CraNF+ZGT6udQ6DJXxSmcpwx6mlNgwVVU65lhFqZ71QRNcIHXdkQIDAQABo4IHPDCCBzgw
+DAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzBZBggrBgEFBQcB
+AQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJj
+YS9wdWJsaWN3ZWIvc3RhdHVzL29jc3Awgc8GA1UdLgSBxzCBxDCBwaCBvqCBu4aBuGxkYXA6Ly9s
+ZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9kZWx0YVJldm9jYXRpb25MaXN0
+P2Jhc2UwHwYDVR0RBBgwFoEUYWNhc3Ryb0BpbmR1YXV0by5jb20wggEVBgNVHSAEggEMMIIBCDBi
+BgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQA
+ZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMw
+gZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250
+ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBD
+ZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjCCAqIGA1UdHwSCApkwggKVMIHloEGg
+P4Y9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0
+dXMvb2NzcKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VC
+Q0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCB
+x6CBxKCBwYaBvmxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklE
+QUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBD
+RVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9j
+ZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2UwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1v
+cGVyYWRvcjIuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0
+ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0y
+IFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9O
+LE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUdLKZBKWjXb0txcztaHqPN1p4
+ORcwKwYDVR0QBCQwIoAPMjAyNDA0MjkyMzE4NTBagQ8yMDI3MDQyOTIzMTg1MFowCwYDVR0PBAQD
+AgXgMCQGCisGAQQBgqZyAwUEFgwUUFJFU0lERU5URSBFSkVDVVRJVk8wGgYKKwYBBAGCpnIDAQQM
+DAoxNzE0MzQxNjcyMBkGCisGAQQBgqZyAwkECwwJR1VBWUFRVUlMMBEGCisGAQQBgqZyAyIEAwwB
+LjAkBgorBgEEAYKmcgMHBBYMFCBBViAzMiBOIE8gIFNPTEFSIDM3MBsGCisGAQQBgqZyAwIEDQwL
+WEFWSUVSIEpPU0UwHwYKKwYBBAGCpnIDIAQRDA8wMDEwMDIwMDA1Nzg3MzkwEwYKKwYBBAGCpnID
+IQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBkGCisGAQQBgqZyAwMECwwJTU9MRVNU
+SU5BMB0GCisGAQQBgqZyAwoEDwwNSU5EVVdBR0VOIFMgQTAdBgorBgEEAYKmcgMLBA8MDTA5OTI2
+NjQ2MTQwMDEwEgYKKwYBBAGCpnIDHQQEDAJObzAWBgorBgEEAYKmcgMEBAgMBkFWRUdOTzAaBgor
+BgEEAYKmcgMIBAwMCjA5OTI3MTI2MDMwDQYJKoZIhvcNAQELBQADggIBAG09cWSlfzkJ1wOFrEep
+dhRgFsYfEXEatAFvK+00DnkZdTSk73V5VXyXXR9eZS12jyDH+PNNiEIlNUFLvCghk/c9P9/P61Aj
+3uO0STak+2AIRb9TMc4s5d/aTwfq6iCF49/VWgy9JSl+dW3yvxFWgxUMa+//MGx6BbABXqr1JNxS
+PpaGPEiU369+En/dYnTbjez1Zz1cZ/XdBtTxGYKVTNh+8p7DjRdJrIsw2lnLFRJn6kq5qfndPei/
+3Q5hoQnx+DvWS6YeNEqqwf9y1yqBMco1aQyVIHAMW1HoD4Izzj9csv4z956llDCHuST3jYGY5av1
+VXAJjbAxd+fKU7CRyp9hr7hWjoygXfy5Q6luygKhLTNXH7l+aj6ra+oXEQUfbaemInDBefZjbL+N
+2Y+HkMuhvNM0Yef/+SNdRmizyAy9SLDcYCiIo+6/VlRDc1FFLi0YHzHKcClduGAN4XrEF0Ym2CsR
+eKzgTdFoTF2rbN/NTGP/6qJcqI01dPjbpKnnYQBsKUrkAgnWzDCDQc//9dla/V2OMEQVjJX0/dXi
+sKa+FTOmLFQvvF7l4r66Houlz7at7OAkOSOzmgfXhZFrp7+y62F6JxsVvHmdAnu0A4ymEumE6KyO
+cPdEnFUSvFDhfAaU7tHgv5upOn88NXXji7Y8e4neE1Dg5BLrHg5RBNwe
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+zPFxX9hC3OzpvYtOeAE05lmjZDG1WlK0TtY7VaMQ9HjFCxR8N5ZPyqkO06CTB8k7+iNlpkG8KNUh
+gFeoQgyMFrAVFgYbPxEYPs2rgEdiu5OtXPM13BqpLsLHOVxrD8ZE/dZj99hwhtlpmCkZU7yHLIkx
+2XnANc7GIeBV11PQECD4VuVUMwvdho+xYSQN7gizC90LMIL4+Ua6cwkIw9x0a3JmNeIuPuj3i2fb
+pyVg+OVr22U0zYDe4v6Te/vOciKnKNyAsiYckgAN+ykuMIuMDntDinfNrHTd99CraNF+ZGT6udQ6
+DJXxSmcpwx6mlNgwVVU65lhFqZ71QRNcIHXdkQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature1979-Object263184"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature1979"&gt;
+                &lt;etsi:SignedProperties Id="Signature1979-SignedProperties440093"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-07T22:16:10+00:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;A67+scmkLmZlO7IQNEief5vwe4c=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;668259372&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-933922"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

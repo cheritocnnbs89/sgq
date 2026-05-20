@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% block title %}Usuarios{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios/usuarios.css') }}">
+<script src="{{ url_for('static', filename='js/usuarios/usuarios.js') }}" defer></script>
+
+{# Macro para links de ordenamiento con iconos #}
+{% macro sort_link(col, label, q, estado, sort, dir) -%}
+{%- set new_dir = 'asc' -%}
+{%- if sort == col and dir == 'asc' -%}
+{%- set new_dir = 'desc' -%}
+{%- endif -%}
+<a href="{{ url_for('usuarios',
+                      q=q,
+                      estado=estado,
+                      sort=col,
+                      dir=new_dir) }}" class="text-decoration-none text-reset">
+  {{ label }}
+  {% if sort == col %}
+  {% if dir == 'asc' %}
+  <i class="bi bi-caret-up-fill small"></i>
+  {% else %}
+  <i class="bi bi-caret-down-fill small"></i>
+  {% endif %}
+  {% else %}
+  <i class="bi bi-arrow-down-up small text-muted"></i>
+  {% endif %}
+</a>
+{%- endmacro %}
+
+<div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+  <div>
+    <h4 class="mb-1">Listado de usuarios</h4>
+
+    <form class="d-flex flex-wrap align-items-center gap-2" method="get" action="{{ url_for('usuarios') }}">
+      <input type="text" class="form-control form-control-sm users-maxw-200" name="q"
+        placeholder="Buscar usuario/email/departamento" value="{{ q or '' }}">
+
+      <select class="form-select form-select-sm users-maxw-160" name="estado">
+        <option value="activos" {% if estado=='activos' %}selected{% endif %}>Solo activos</option>
+        <option value="deshabilitados" {% if estado=='deshabilitados' %}selected{% endif %}>Solo deshabilitados</option>
+        <option value="todos" {% if estado=='todos' %}selected{% endif %}>Todos</option>
+      </select>
+
+      <input type="hidden" name="sort" value="{{ sort or 'id' }}">
+      <input type="hidden" name="dir" value="{{ dir  or 'desc' }}">
+
+      <button class="btn btn-outline-secondary btn-sm" type="submit">
+        <i class="bi bi-search"></i> Filtrar
+      </button>
+    </form>
+
+   <input type="hidden" id="csrfToken" value="{{ csrf_token() }}">
+  </div>
+
+  <div class="btn-group">
+    {% if has_permission('areas','ver') %}
+    <a href="{{ url_for('areas') }}" class="btn btn-outline-secondary btn-sm">Áreas</a>
+    {% endif %}
+    {% if has_permission('puestos','ver') %}
+    <a href="{{ url_for('puestos') }}" class="btn btn-outline-secondary btn-sm">Puestos</a>
+    {% endif %}
+    <a href="{{ url_for('organigrama') }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-diagram-3"></i> Organigrama
+    </a>
+    <a href="{{ url_for('usuarios_reporte_csv') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-download"></i> Descargar reporte
+    </a>
+    {% if has_permission('usuarios','crear') %}
+    <a href="{{ url_for('nuevo_usuario') }}" class="btn btn-primary btn-sm">Nuevo usuario</a>
+    {% endif %}
+  </div>
+
+  {% if has_permission('usuarios','crear') %}
+  <div class="dropdown mt-2">
+    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+      <i class="bi bi-upload"></i> Carga masiva
+    </button>
+    <div class="dropdown-menu dropdown-menu-end p-2 users-minw-260">
+      <a class="dropdown-item px-0" href="{{ url_for('usuarios_bulk_template') }}">
+        <i class="bi bi-download me-1"></i> Descargar plantilla CSV
+      </a>
+      <hr class="dropdown-divider">
+      <form method="POST" action="{{ url_for('usuarios_bulk_upload') }}" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-2 small text-muted">
+          Subir usuarios desde CSV (mismo formato de la plantilla).
+        </div>
+        <input class="form-control form-control-sm mb-2" type="file" name="archivo" accept=".csv">
+        <button type="submit" class="btn btn-sm btn-success w-100">
+          <i class="bi bi-cloud-upload"></i> Procesar archivo
+        </button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<div class="card card-custom">
+  <div class="card-body p-0">
+
+    {% if permissions.get('usuarios', {}).get('editar') %}
+    <form method="post" action="{{ url_for('usuarios_asignar_jefe') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="p-2 d-flex flex-wrap align-items-center gap-2 border-bottom">
+        <div class="d-flex align-items-center gap-2">
+          <label class="small mb-0">Jefe:</label>
+          <select name="jefe_id" class="form-select form-select-sm" required>
+            <option value="">-- Seleccione jefe --</option>
+            {% for j in jefes %}
+            <option value="{{ j['id'] }}">
+              {{ j['username'] }}{% if j['nombre_completo'] %} — {{ j['nombre_completo'] }}{% endif %}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-people-fill"></i> Asignar jefe a seleccionados
+        </button>
+
+        <div class="form-check ms-auto">
+          <input class="form-check-input" type="checkbox" id="chk-select-all">
+          <label class="form-check-label small" for="chk-select-all">
+            Seleccionar todos los de la vista
+          </label>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              {% if permissions.get('usuarios', {}).get('editar') %}
+              <th class="users-col-check"></th>
+              {% endif %}
+              <th>{{ sort_link('id','ID', q, estado, sort, dir) }}</th>
+              <th>{{ sort_link('username','Nombre', q, estado, sort, dir) }}</th>
+              <th>{{ sort_link('email','Identificación', q, estado, sort, dir) }}</th>
+              <th>{{ sort_link('rol','Rol', q, estado, sort, dir) }}</th>
+              <th>{{ sort_link('departamento','Departamento', q, estado, sort, dir) }}</th>
+              <th>{{ sort_link('jefe','Jefe directo', q, estado, sort, dir) }}</th>
+              <th>{{ sort_link('fecha_registro','Fecha registro', q, estado, sort, dir) }}</th>
+              <th>{{ sort_link('estado','Estado', q, estado, sort, dir) }}</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in usuarios %}
+            <tr class="{% if u['disabled'] %}table-danger{% endif %}">
+              {% if permissions.get('usuarios', {}).get('editar') %}
+              <td>
+                <input type="checkbox" name="user_ids" value="{{ u['id'] }}" class="chk-user">
+              </td>
+              {% endif %}
+
+              <td>{{ u['id'] }}</td>
+              <td>{{ u['nombre_completo'] or u['username'] }}</td>
+              <td>{{ u['identificacion'] }}</td>
+              <td>{{ u['rol'] }}</td>
+              <td>{{ u['departamento'] }}</td>
+              <td>{{ u['jefe_nombre'] or '—' }}</td>
+              <td>{{ u['fecha_registro'] or '' }}</td>
+              <td>{% if u['disabled'] %}Deshabilitado{% else %}Activo{% endif %}</td>
+
+              <td class="text-nowrap">
+                {% if permissions.get('usuarios', {}).get('editar') %}
+                <a href="{{ url_for('editar_usuario', user_id=u['id']) }}" class="btn btn-sm btn-warning">
+                  Editar
+                </a>
+                {% endif %}
+
+                {% if permissions.get('usuarios', {}).get('eliminar') %}
+                <button type="button" class="btn btn-sm btn-danger ms-1 js-user-eliminar" data-user-id="{{ u['id'] }}"
+                  data-nombre="{{ (u['nombre_completo'] or u['username'])|e }}">
+                  Eliminar
+                </button>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+
+            {% if usuarios|length == 0 %}
+            <tr>
+              <td colspan="{{ 10 if permissions.get('usuarios', {}).get('editar') else 9 }}"
+                class="text-center text-muted py-4">
+                No hay usuarios para mostrar.
+              </td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if permissions.get('usuarios', {}).get('editar') %}
+    </form>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

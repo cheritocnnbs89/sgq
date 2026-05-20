@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>DISQUISA SA </razonSocial>
+    <nombreComercial>DISQUISA SA</nombreComercial>
+    <ruc>0990990018001</ruc>
+    <claveAcceso>0105202601099099001800120010030000207440002074417</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>003</ptoEmi>
+    <secuencial>000020744</secuencial>
+    <dirMatriz>DURAN KM 8 VIA YAGUACHI</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>01/05/2026</fechaEmision>
+    <dirEstablecimiento>KM 8 VIA DURAN YAGUACHI</dirEstablecimiento>
+    <contribuyenteEspecial>0069</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA </razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>VIA DAULE KM 16.5 S N</direccionComprador>
+    <totalSinImpuestos>574.25</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>574.25</baseImponible>
+        <valor>86.14</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>660.39</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>660.39</total>
+        <plazo>31</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>246032</codigoPrincipal>
+      <codigoAuxiliar>246032</codigoAuxiliar>
+      <descripcion>CUCHILLO SOPORTE PIN</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>5.8</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>5.80</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>5.80</baseImponible>
+          <valor>0.87</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>11 64W15103</codigoPrincipal>
+      <codigoAuxiliar>11 64W15103</codigoAuxiliar>
+      <descripcion>ARANDELA</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>1.52</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1.52</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1.52</baseImponible>
+          <valor>0.23</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>11 64S40049</codigoPrincipal>
+      <codigoAuxiliar>11 64S40049</codigoAuxiliar>
+      <descripcion>11 64S40049</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>5.16</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>5.16</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>5.16</baseImponible>
+          <valor>0.77</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>245222</codigoPrincipal>
+      <codigoAuxiliar>245222</codigoAuxiliar>
+      <descripcion>LOOPER COVER</descripcion>
+      <cantidad>2.00000</cantidad>
+      <precioUnitario>9.15</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>18.30</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>18.30</baseImponible>
+          <valor>2.74</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>9 64S40065</codigoPrincipal>
+      <codigoAuxiliar>9 64S40065</codigoAuxiliar>
+      <descripcion>TORNILLO</descripcion>
+      <cantidad>12.00000</cantidad>
+      <precioUnitario>2.7</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>32.40</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>32.40</baseImponible>
+          <valor>4.86</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>245033</codigoPrincipal>
+      <codigoAuxiliar>245033</codigoAuxiliar>
+      <descripcion>AGUJA BAR GUARDIA</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>28.8</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>28.80</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>28.80</baseImponible>
+          <valor>4.32</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>11 64S40005</codigoPrincipal>
+      <codigoAuxiliar>11 64S40005</codigoAuxiliar>
+      <descripcion>TORNILLO</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>2.9</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.90</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2.90</baseImponible>
+          <valor>0.44</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>9 64S40054</codigoPrincipal>
+      <codigoAuxiliar>9 64S40054</codigoAuxiliar>
+      <descripcion>PERNO </descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>2.7</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.70</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2.70</baseImponible>
+          <valor>0.40</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>B01002</codigoPrincipal>
+      <codigoAuxiliar>B01002</codigoAuxiliar>
+      <descripcion>AGUJA DNX1 25  EQUIVALENTE A B11001</descripcion>
+      <cantidad>3.00000</cantidad>
+      <precioUnitario>2.3</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>6.90</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>6.90</baseImponible>
+          <valor>1.04</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>246071</codigoPrincipal>
+      <codigoAuxiliar>246071</codigoAuxiliar>
+      <descripcion>CUCHILLA FIJA</descripcion>
+      <cantidad>3.00000</cantidad>
+      <precioUnitario>12.96</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>38.88</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>38.88</baseImponible>
+          <valor>5.83</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>246061</codigoPrincipal>
+      <codigoAuxiliar>246061</codigoAuxiliar>
+      <descripcion>CUCHILLA MOVIL</descripcion>
+      <cantidad>3.00000</cantidad>
+      <precioUnitario>13.35</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>40.05</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>40.05</baseImponible>
+          <valor>6.01</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>242121A</codigoPrincipal>
+      <codigoAuxiliar>242121A</codigoAuxiliar>
+      <descripcion>BARRA PARA AGUJA</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>51.52</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>51.52</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>51.52</baseImponible>
+          <valor>7.73</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>243102</codigoPrincipal>
+      <codigoAuxiliar>243102</codigoAuxiliar>
+      <descripcion>LOOPER</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>40.22</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>40.22</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>40.22</baseImponible>
+          <valor>6.03</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>1 8S40003</codigoPrincipal>
+      <codigoAuxiliar>1 8S40003</codigoAuxiliar>
+      <descripcion>SCREW</descripcion>
+      <cantidad>4.00000</cantidad>
+      <precioUnitario>13.04</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>52.16</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>52.16</baseImponible>
+          <valor>7.82</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>242231A</codigoPrincipal>
+      <codigoAuxiliar>242231A</codigoAuxiliar>
+      <descripcion>PRESSER FOOT ASSEMBLY PATA</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>72.83</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>72.83</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>72.83</baseImponible>
+          <valor>10.92</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>244011A</codigoPrincipal>
+      <codigoAuxiliar>244011A</codigoAuxiliar>
+      <descripcion>RSS DOG CARRIER BLOQUEAR GASSY</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>174.11</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>174.11</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>174.11</baseImponible>
+          <valor>26.12</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Direccion">VIA DAULE KM 16.5 S N</campoAdicional>
+    <campoAdicional nombre="email">recepcion@quimpac.com.ec</campoAdicional>
+    <campoAdicional nombre="Nota">MANTENIMIENTO Y REPARACION COD N183872 XXX 388265  REC 1001599750  GUIA 001-003-000020028 20029 20030 20031 </campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature828267">
+<ds:SignedInfo Id="Signature-SignedInfo192198">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID1024245" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature828267-SignedProperties378404">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>MA7ir+BQR4K/t+ZKvfB8kMjIXJo=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate155734">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>WLo/GzyOTsoBVaFXf6EcimsYVpk=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-436912" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>2F/5EqJTyhec3VmdFBlwHdcKtTI=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue1045857">
+MkBRT+jtHxeSX5ogKT7BvzKRvWakXquP24yKkx+Y3gKwP5eFYtWvj6eP2FbsQw2mFNrKqmDIJK4D
+EB+kTBlturWX/+8V+/KbKuncCmgbfzBM28Tk+sqIwFn0DVKsyi9zCteJt7ChRUrC9I+4Hg9CwjK+
+e4aWoyT4vLb1Mo1WGjimoQwnJ4c5qTpwTdrSQ3yKCKyqFHdd4yKBXWPrWKj5+KeJdAPLWXjhE1IL
+xUmaaL4SmAPFkdwQ/blEEKWVRXOQ9DBT18TZjiLUjYOcGO0h+IHKZGTEN+nH15IU44APzJmXd8hD
+k8vtigammMQ8Y5yKuMcdueiB7TfejID6CwURyw==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate155734">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJ3zCCB8egAwIBAgIEZecr+zANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV
+BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB
+QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTI1MTAwMjE3MDgwMFoXDTI3MTAwMjE3Mzgw
+MFowgbUxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw
+NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w
+DAYDVQQHEwVRVUlUTzE5MBEGA1UEBRMKMDAwMDEzNzgwMDAkBgNVBAMTHUFMRlJFRE8gTUFTQUhJ
+Uk8gT1pFS0kgQ0FNUE9TMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1VfrHMdtRi4+
+YNehARANn3wlxBPvrVHRN/JRPlXF2pAr7TfE0u3aCydYVlsfxkinPNAi5JdctnVYhagnfd9e2WIr
+Tjd/4gpq1f4GzFhbPXwMtT51WySSGnfYedbe2euvOLOXvGqWs+Xfl3h4FQgfaNKCi4Y1UAyIGdlL
+4VvnCDyU/geFHOBn8B4xjtnxfqG4ZvVWeuzCBFDABaaQmhIFlhsR8TYeXVgY5VAooKvAoObjtNQk
+J0eJTclu982RRPOdwo4Wt1JGpeMYYt/HMhxMm0KjHwR7MKNeOCT9DMXJFakYdGpQwwnXmXOV0pK9
+Q+zouHdTfLww2k29hKbS49Ho+wIDAQABo4IFBzCCBQMwCwYDVR0PBAQDAgbAMGcGA1UdIARgMF4w
+XAYLKwYBBAGCqDsCAgEwTTBLBggrBgEFBQcCARY/aHR0cDovL3d3dy5lY2kuYmNlLmVjL3BvbGl0
+aWNhLWNlcnRpZmljYWRvL3BlcnNvbmEtanVyaWRpY2EucGRmMIGRBggrBgEFBQcBAQSBhDCBgTA+
+BggrBgEFBQcwAYYyaHR0cDovL29jc3AuZWNpLmJjZS5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVz
+L29jc3AwPwYIKwYBBQUHMAGGM2h0dHA6Ly9vY3NwMS5lY2kuYmNlLmVjL2VqYmNhL3B1YmxpY3dl
+Yi9zdGF0dXMvb2NzcDAdBgorBgEEAYKoOwMKBA8TDURJU1FVSVNBIFMuQS4wHQYKKwYBBAGCqDsD
+CwQPEw0wOTkwOTkwMDE4MDAxMBoGCisGAQQBgqg7AwEEDBMKMDkwODgyOTQ2ODAgBgorBgEEAYKo
+OwMCBBITEEFMRlJFRE8gTUFTQUhJUk8wFQYKKwYBBAGCqDsDAwQHEwVPWkVLSTAWBgorBgEEAYKo
+OwMEBAgTBkNBTVBPUzAfBgorBgEEAYKoOwMFBBETD0dFUkVOVEUgR0VORVJBTDAYBgorBgEEAYKo
+OwMHBAoTCEVMIEJBVEFOMBkGCisGAQQBgqg7AwgECxMJMDQzNzEzNTAwMBsGCisGAQQBgqg7AwkE
+DRMLU0FNQk9ST05ET04wFwYKKwYBBAGCqDsDDAQJEwdFQ1VBRE9SMCAGCisGAQQBgqg7AzMEEhMQ
+U09GVFdBUkUtQVJDSElWTzAlBgNVHREEHjAcgRptY29udGFiaWlkYWRAc2Fjb3BsYXN0Lm5ldDCC
+AeEGA1UdHwSCAdgwggHUMIIB0KCCAcygggHIhoHWbGRhcDovL2JjZXFsZGFwc3VicDEuYmNlLmVj
+L2NuPUNSTDIyODIsY249QUMlMjBCQU5DTyUyMENFTlRSQUwlMjBERUwlMjBFQ1VBRE9SLGw9UVVJ
+VE8sb3U9RU5USURBRCUyMERFJTIwQ0VSVElGSUNBQ0lPTiUyMERFJTIwSU5GT1JNQUNJT04tRUNJ
+QkNFLG89QkFOQ08lMjBDRU5UUkFMJTIwREVMJTIwRUNVQURPUixjPUVDP2NlcnRpZmljYXRlUmV2
+b2NhdGlvbkxpc3Q/YmFzZYY0aHR0cDovL3d3dy5lY2kuYmNlLmVjL0NSTC9lY2lfYmNlX2VjX2Ny
+bGZpbGVjb21iLmNybKSBtjCBszELMAkGA1UEBhMCRUMxIjAgBgNVBAoTGUJBTkNPIENFTlRSQUwg
+REVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1B
+Q0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxBQyBCQU5DTyBDRU5UUkFMIERF
+TCBFQ1VBRE9SMRAwDgYDVQQDEwdDUkwyMjgyMCsGA1UdEAQkMCKADzIwMjUxMDAyMTcwODAwWoEP
+MjAyNzEwMDIxNzM4MDBaMB8GA1UdIwQYMBaAFEii3yMfHfgsUXqMA81JMqUJwZSrMB0GA1UdDgQW
+BBQ4yGEOM61EbwEkoZlpd66QTjSJcjAJBgNVHRMEAjAAMBoGCSqGSIb2fQdBAAQNMAsbBVYxMC4w
+AwIEMDANBgkqhkiG9w0BAQsFAAOCAgEAG+XkKoLW6vuz1vteBWwcvev5qBu0j/vXwKC8BiV+697a
+oFhmDsI0wW04VdtdAKllc56oH09+ztIrqeq8ETjxCoZ3D4LW5R8j1PKXkrfmQG55ogsPTSR3U2Pc
+2m7nIh0euJ9oae6Dk4vgj/NmTCxSXhvx2ytipzHFcRJfJgjD0bshlL1p4POy/fl4oZOs+m7/hR27
+M6oK2PCxLu8EZQghEjCOBSmj7WUChxgPgO+MkdrzXt2cVTVNcR1RF+6RTEEUecL+t4hA4fYbO0c5
+Dk08LPUUi7yGKRZAb0hDs5pIwgWW8IIT1ePbSUjCNarwVM8piPvS+3yLWPbMiuRuh8H18MH866vw
+NFsPg3K00Br9MehcMb8S0Lu3G76oiGXUh9e1Eq+T8HQpGoZZnIcYV5ZF6zUBycpvi5tE4i7zPFIH
+P6+nDoxgpkpwc3BYC4G8VTYnGEyckR9L1Z88vRgIC91A4Xh6wLRTjDNDpCpHDdnjQkoK9MVSGveG
+ipwoDbJ2FoMQm/AYaEEe4J4ocd44y7+dg+pOH9GRwztbB50g9nPmgtgAL3BNoHcTSLx+uFatPKYw
++qmfdRJAFodBxw86WtDTAAd7Yli+SAvo5cuBdxK4wH6ez/9qPvVeegps74eresAdhaFeiPK56AuP
+mc1zlOtOqC9geY2Jty3IR6DasHq8Tno=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+1VfrHMdtRi4+YNehARANn3wlxBPvrVHRN/JRPlXF2pAr7TfE0u3aCydYVlsfxkinPNAi5JdctnVY
+hagnfd9e2WIrTjd/4gpq1f4GzFhbPXwMtT51WySSGnfYedbe2euvOLOXvGqWs+Xfl3h4FQgfaNKC
+i4Y1UAyIGdlL4VvnCDyU/geFHOBn8B4xjtnxfqG4ZvVWeuzCBFDABaaQmhIFlhsR8TYeXVgY5VAo
+oKvAoObjtNQkJ0eJTclu982RRPOdwo4Wt1JGpeMYYt/HMhxMm0KjHwR7MKNeOCT9DMXJFakYdGpQ
+wwnXmXOV0pK9Q+zouHdTfLww2k29hKbS49Ho+w==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature828267-Object472331"><etsi:QualifyingProperties Target="#Signature828267"><etsi:SignedProperties Id="Signature828267-SignedProperties378404"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-01T13:23:38-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>GhDsrnsNPuI1ujeIm7Btbx5aXUA=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1709648891</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-436912"><etsi:Description>contedido del comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

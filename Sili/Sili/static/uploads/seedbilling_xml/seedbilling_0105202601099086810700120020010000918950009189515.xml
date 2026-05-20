@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>SACOPLAST SA </razonSocial>
+    <nombreComercial>SACOPLAST SA</nombreComercial>
+    <ruc>0990868107001</ruc>
+    <claveAcceso>0105202601099086810700120020010000918950009189515</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>002</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000091895</secuencial>
+    <dirMatriz>DURAN KM 8.5 VIA YAGUACHI</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>01/05/2026</fechaEmision>
+    <dirEstablecimiento>DURAN KM 8.5 VIA YAGUACHI</dirEstablecimiento>
+    <contribuyenteEspecial>0577</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA </razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>VIA DAULE KM 16.5 S N</direccionComprador>
+    <totalSinImpuestos>1861.30</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>1861.30</baseImponible>
+        <valor>279.20</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>2140.50</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>2140.50</total>
+        <plazo>61</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>106032059</codigoPrincipal>
+      <codigoAuxiliar>106032059</codigoAuxiliar>
+      <descripcion>40X60 BLANCO LAM MATE + LINER 25 MICRAS  SULFATO DE SODIO  QUIMPAC</descripcion>
+      <cantidad>7000.00000</cantidad>
+      <precioUnitario>0.2659</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1861.30</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Nota" valor="14 BULTOS"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1861.30</baseImponible>
+          <valor>279.20</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Direccion">VIA DAULE KM 16.5 S N</campoAdicional>
+    <campoAdicional nombre="Telefono">2162660</campoAdicional>
+    <campoAdicional nombre="email">recepcion@quimpac.com.ec</campoAdicional>
+    <campoAdicional nombre="Nota">OC 1000610918  REC 5000101297  GUIA: 002-001-000116445 </campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature922755">
+<ds:SignedInfo Id="Signature-SignedInfo536547">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID428247" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature922755-SignedProperties463558">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>pHdeG3Pre4RUv6n5J5woRmnlXC0=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1804645">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>RMtV/vT8f8013np793Da4ilA+30=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-912848" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>DIzlaVT9YRn6awjO///XUi26+X0=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue836928">
+ImtM2etIIHyiSeypsFhwAGvkOHmsj5vE7OUmM7vf5fRKKvGTX82AgPFdQCzl1gJkPLry5sRUQDlM
+rhufmE3UIW/kExiWuk5JEzain7aLFUx3BIMekDrO463F1rT8j87mVQxnX/HsBUZGSGKR8jXwYhfa
+SJv4Bm5Bn3H+Rqz8x2MLH59pdUIa/+hdlq/UGtl3rpyq1UbfAY+KHr7DCN0CeFJ6eWzO/eiYudQ9
+fyONmN2gg01181PoldoJ69KkYbGXKU57H4n2kc/PBT5ApuXGrOQAVaK6+EhQZI/F8RjtvLTWDvvo
+p5vj5BYgwYwdBONSH5io6zQR89BUbQWNSZgOjg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1804645">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJ4DCCB8igAwIBAgIEZecsBTANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV
+BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB
+QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTI1MTAwMjE3MjE0M1oXDTI3MTAwMjE3NTE0
+MlowgbUxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw
+NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w
+DAYDVQQHEwVRVUlUTzE5MBEGA1UEBRMKMDIwMDAxODMwNjAkBgNVBAMTHUFMRlJFRE8gTUFTQUhJ
+Uk8gT1pFS0kgQ0FNUE9TMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApkKe7yWjqOFs
+FAG/ucrFzjxsOBnVSdVZtcTfFZuDdDbMYwlugwPu+1W9Yu6j4rc6T6sQ8hliNYP56cZMTiTKfRsz
+9SElq35D03aQeePragYv3Cz6px+nZZVtEdrSq6Rioy6XWyN1UxojDIjzGYXQO0q1k9KNGAQeFXGY
+lpjL7XD6aGDpHrDkknpKV03/0Ws4dnU+0bWw0S2RF7C20Mnggy4zba6JDwl8D6OurAKQxk4jqAiu
+30Bo9rO3PpenawIDEgiGCrx3PC7JKqEH+hrCkXSek2E3EigDEHwr3iL0as81H/JN1Vy/bXFtfP0S
+dRRT7tCKiPbB9BgxB5+X024HQwIDAQABo4IFCDCCBQQwCwYDVR0PBAQDAgbAMGcGA1UdIARgMF4w
+XAYLKwYBBAGCqDsCAgEwTTBLBggrBgEFBQcCARY/aHR0cDovL3d3dy5lY2kuYmNlLmVjL3BvbGl0
+aWNhLWNlcnRpZmljYWRvL3BlcnNvbmEtanVyaWRpY2EucGRmMIGRBggrBgEFBQcBAQSBhDCBgTA+
+BggrBgEFBQcwAYYyaHR0cDovL29jc3AuZWNpLmJjZS5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVz
+L29jc3AwPwYIKwYBBQUHMAGGM2h0dHA6Ly9vY3NwMS5lY2kuYmNlLmVjL2VqYmNhL3B1YmxpY3dl
+Yi9zdGF0dXMvb2NzcDAeBgorBgEEAYKoOwMKBBATDlNBQ09QTEFTVCBTLkEuMB0GCisGAQQBgqg7
+AwsEDxMNMDk5MDg2ODEwNzAwMTAaBgorBgEEAYKoOwMBBAwTCjA5MDg4Mjk0NjgwIAYKKwYBBAGC
+qDsDAgQSExBBTEZSRURPIE1BU0FISVJPMBUGCisGAQQBgqg7AwMEBxMFT1pFS0kwFgYKKwYBBAGC
+qDsDBAQIEwZDQU1QT1MwHwYKKwYBBAGCqDsDBQQREw9HRVJFTlRFIEdFTkVSQUwwGAYKKwYBBAGC
+qDsDBwQKEwhFTCBCQVRBTjAZBgorBgEEAYKoOwMIBAsTCTA0MzcxMzUwMDAbBgorBgEEAYKoOwMJ
+BA0TC1NBTUJPUk9ORE9OMBcGCisGAQQBgqg7AwwECRMHRUNVQURPUjAgBgorBgEEAYKoOwMzBBIT
+EFNPRlRXQVJFLUFSQ0hJVk8wJQYDVR0RBB4wHIEaYXNpc3RlbnRlQHNhY29wbGFzdC5jb20uZWMw
+ggHhBgNVHR8EggHYMIIB1DCCAdCgggHMoIIByIaB1mxkYXA6Ly9iY2VxbGRhcHN1YnAxLmJjZS5l
+Yy9jbj1DUkwyMjgyLGNuPUFDJTIwQkFOQ08lMjBDRU5UUkFMJTIwREVMJTIwRUNVQURPUixsPVFV
+SVRPLG91PUVOVElEQUQlMjBERSUyMENFUlRJRklDQUNJT04lMjBERSUyMElORk9STUFDSU9OLUVD
+SUJDRSxvPUJBTkNPJTIwQ0VOVFJBTCUyMERFTCUyMEVDVUFET1IsYz1FQz9jZXJ0aWZpY2F0ZVJl
+dm9jYXRpb25MaXN0P2Jhc2WGNGh0dHA6Ly93d3cuZWNpLmJjZS5lYy9DUkwvZWNpX2JjZV9lY19j
+cmxmaWxlY29tYi5jcmykgbYwgbMxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFM
+IERFTCBFQ1VBRE9SMTcwNQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JN
+QUNJT04tRUNJQkNFMQ4wDAYDVQQHEwVRVUlUTzElMCMGA1UEAxMcQUMgQkFOQ08gQ0VOVFJBTCBE
+RUwgRUNVQURPUjEQMA4GA1UEAxMHQ1JMMjI4MjArBgNVHRAEJDAigA8yMDI1MTAwMjE3MjE0M1qB
+DzIwMjcxMDAyMTc1MTQyWjAfBgNVHSMEGDAWgBRIot8jHx34LFF6jAPNSTKlCcGUqzAdBgNVHQ4E
+FgQUdVth8GxngvJ1JfnfA0DLK38nsRowCQYDVR0TBAIwADAaBgkqhkiG9n0HQQAEDTALGwVWMTAu
+MAMCBDAwDQYJKoZIhvcNAQELBQADggIBAGriZLR5S3Gvv/aJN8yeWb29XUsGsaf/k4CgkFIiKkfL
+7ibvfdgxfEyiVB9iJgBa+cXmtqS/p5p8BadXgLL4fixhA3rNsOnwZkQgPpePFjTpGFyIT2qLem5m
+GSvnCfrPqLWA5XfdfMFUB/FRtirT++vVxlqwtMeOwaXWud7LU47WuCUYO7vX9kxf60CsJVSZO/UR
+q7f2rtSLTq9eJehxp7wtkonYa39CSHuDdJeI/QDe3TBuvkWpV/UT+kf8WZbadILwbiL36crcnRxr
+zF/Mg62je6CbqtI/y35QgUzmIR+o+rFG6JklN1RD0b2CSFgcdkw7wrJJMUzF2zFfC8Ixn9DgpKDd
+cxT7nFpDuUlVj9w9cIASMt1iVtm694IvJSpMjchsspCLueAJeiX7SzIXca2fGESGS3iySui45yCq
+k+ZGlrzCF9jfLWPzroHFy7zGttwzdkJcSFDjC/vPOxw+9WwF3sH95AEXCZkMxmQH78fYVnHdxUpt
+YeFUkW85bWQ/ISkADWFkHTHHwUxsqexQnB4MKmK3tSNBkczUf/GRqzMRAjEzlTNFpTgvIavtFfxE
+3ORVVtq59LfLpUKnCUJtXI8tSv2UGsHHZHXGlYUyLYyodMkJv/khdkuK76aa4EBclFSV4PWMOjtv
+2MXHbpYrx9aHXVEHFwmqfqtf/scXTF3Y
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+pkKe7yWjqOFsFAG/ucrFzjxsOBnVSdVZtcTfFZuDdDbMYwlugwPu+1W9Yu6j4rc6T6sQ8hliNYP5
+6cZMTiTKfRsz9SElq35D03aQeePragYv3Cz6px+nZZVtEdrSq6Rioy6XWyN1UxojDIjzGYXQO0q1
+k9KNGAQeFXGYlpjL7XD6aGDpHrDkknpKV03/0Ws4dnU+0bWw0S2RF7C20Mnggy4zba6JDwl8D6Ou
+rAKQxk4jqAiu30Bo9rO3PpenawIDEgiGCrx3PC7JKqEH+hrCkXSek2E3EigDEHwr3iL0as81H/JN
+1Vy/bXFtfP0SdRRT7tCKiPbB9BgxB5+X024HQw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature922755-Object677601"><etsi:QualifyingProperties Target="#Signature922755"><etsi:SignedProperties Id="Signature922755-SignedProperties463558"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-01T10:18:27-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>hAfMjjwhV5SHp11MxQmfRQOdblg=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1709648901</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-912848"><etsi:Description>contedido del comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

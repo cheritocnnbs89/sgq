@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0801202601099102854400120100030000680120006801219</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-08T15:54:16-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;INTEROC S.A.&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;INTEROC S.A.&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0991028544001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0801202601099102854400120100030000680120006801219&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;010&lt;/estab&gt;
+    &lt;ptoEmi&gt;003&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000068012&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;GUAYAS / GUAYAQUIL / KM 16.5 VÍA A DAULE&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;08/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;GUAYAS / GUAYAQUIL / KM 16.5 VÍA A DAULE&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;2239&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;KM 16 1/2 VIA DAULE AV.ROSAVIN Y CO&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;18666.88&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.0&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;18666.88&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15&lt;/tarifa&gt;
+        &lt;valor&gt;2800.03&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.0&lt;/propina&gt;
+    &lt;importeTotal&gt;21466.91&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;     21466.91&lt;/total&gt;
+        &lt;plazo&gt;045&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;DÍAS&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;85027&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;SERVICIO Y ASESORIA TECNICA&lt;/descripcion&gt;
+      &lt;cantidad&gt;               1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;18666.88&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;18666.88&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="UniVta" valor="SERVICIO"/&gt;
+        &lt;detAdicional nombre="Pagaiva" valor="SI"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;18666.88&lt;/baseImponible&gt;
+          &lt;valor&gt;2800.03&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Código del cliente"&gt;0100006260&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="No. Pedido"&gt;1300000033&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Vendedor"&gt;MANUEL EDUARDO ESTRADA MAYORGA&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Dirección"&gt;KM 16 1/2 VIA DAULE AV.ROSAVIN Y CO    GUAYAQUIL&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="CodInternoSAP"&gt;9000009465/1300000033/300100481 &lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Moneda"&gt;USD&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="CodSociedad"&gt;1100&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Orden de compra"&gt;.&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Gran Contribuyente"&gt;Nro. OFICIO NAC-GCFOIOC21-00000907-E&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature35098"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo1009516"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID163058" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature35098-SignedProperties218839"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;GD8nVwl2JrMAULuun7qQDIiv7Sk=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1771565"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;703MsugaCICZYvD66TtOzr4r2Z0=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-317546" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;6ydvfKG7GqB7wRDOs3Fg7J8xUnk=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue42140"&gt;
+DSYOn1xlg4NqA59+SoFvQHMfEwFgu0S2/H6fDht8NvqqkmhBMiQAUCsbA88QQSBFTq1YRhdMxIrv
+CNgMrORPIVsGZSiYWRIvc27eGEMtmz3StoGm1kfXUAfWIuPzPLRRUTkvItTD3ea/nT/dSFxmQrir
+8W8VlLywJ3jBFyAoPVmWjFNG/vlYL135h3lQZtcYjKUDiQ3ZT09uT6l+j83IdY5HWOvIAVwKiX6K
+NZGkJfwimUQec9vIc7DE/y4bV6em8lJRpy6IAXTgN2ZRHwclT5QigOv6vTHXHDj2Ni5uySkM+k/u
+O79QRpZHrpv3PXff5L7BNI4MnCo6BWhpILU5rQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1771565"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIILcjCCCVqgAwIBAgIMAzcUe1FQI7JkoTlFMA0GCSqGSIb3DQEBCwUAMIG5MRYwFAYDVQQFEw0x
+NzkyNjAxMjE1MDAxMQswCQYDVQQGEwJFQzE2MDQGA1UEChMtQU5GQUMgQVVUT1JJREFEIERFIENF
+UlRJRklDQUNJT04gRUNVQURPUiBDLkEuMSUwIwYDVQQLExxBTkYgQXV0b3JpZGFkIGludGVybWVk
+aWEgIEVDMTMwMQYDVQQDEypBTkYgSGlnaCBBc3N1cmFuY2UgRWN1YWRvciBJbnRlcm1lZGlhdGUg
+Q0EwHhcNMjMwOTE1MTczMTEzWhcNMjcwOTE0MTczMTEzWjCCAZ0xFTATBgNVBAoMDElOVEVST0Mg
+Uy5BLjEaMBgGCisGAQQBgqRCCgQMCjA5MjEzNDM2OTUxMDAuBgNVBAsMJ0NlcnRpZmljYWRvIFBl
+cnNvbmEgSnVyaWRpY2EgRUMgKEZJUk1BKTEVMBMGA1UEKgwMQUxFWFkgSkFORVRIMRYwFAYDVQRh
+Ew0wOTkxMDI4NTQ0MDAxMQswCQYDVQQGEwJFQzETMBEGA1UEBRMKMDkyMTM0MzY5NTEYMBYGA1UE
+BAwPU0FOIExVQ0FTIFBFUkVaMTAwLgYDVQQDDCcwOTIxMzQzNjk1IEFMRVhZIEpBTkVUSCBTQU4g
+TFVDQVMgUEVSRVoxGzAZBgNVBAwMElNVQkdFUkVOVEUgR0VORVJBTDEqMCgGCSqGSIb3DQEJARYb
+YWxleGlzLnNhbmx1Y2FzQGludGVyb2MuYml6MSswKQYDVQQNDCJDZXJ0aWZpY2FkbyBwYXJhIFBl
+cnNvbmEgSnVyw61kaWNhMQ8wDQYDVQQIDAZHVUFZQVMxEjAQBgNVBAcMCUdVQVlBUVVJTDCCASIw
+DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMKpUkyo8EGYChwYaP1uOHS4wkAI2f8k+eN1+PHO
+9UcZcKk17K08ohJs0F8+Ya8TrMKwXp0wU0u1wD9gln37CLSMOVJJqk3/NTleyzzj+tIBDF8Dzofn
+0Cwxbr1tnUULehmTzpswbJrRHzyjB2vol0UnRMG9Du+W0bHFqMFn5o589FX1/2VgnZ7DRJ5RMX4n
+cXNhMmAFyIHrGB4Nb6AXRFW96I5lPX2/oe2SbQdvpYA6jGPf5XfvjyFRiBVjUVXlLq6ifAGv1l0X
+/yl0XIDQMp9oRMmBk69rXVw1gnSZvoP5Uvl7LpxIlLewZRnLZpvntjlTRV8ll5+Rv9zPvUyfYjEC
+AwEAAaOCBZEwggWNMB8GA1UdIwQYMBaAFJKu1MuCtJnG0XsRbGXqxU1oIfmsMB0GA1UdDgQWBBQX
+qRkGGTDS5omTrywv6umQOFpPXzCB9wYDVR0RBIHvMIHsgRthbGV4aXMuc2FubHVjYXNAaW50ZXJv
+Yy5iaXqkgcwwgckxHTAbBgorBgEEAYKkQgoBDA1BTEVYSVMgSkFORVRIMRMwEQYKKwYBBAGCpEIK
+AgwDU0FOMRUwEwYKKwYBBAGCpEIKAwwFTFVDQVMxGjAYBgorBgEEAYKkQgoEDAowOTIxMzQzNjk1
+MRkwFwYJKwYBBAGDvW4BDApBLTEzMDkyMDIzMTAwLgYDVQQDDCcwOTIxMzQzNjk1IEFMRVhZIEpB
+TkVUSCBTQU4gTFVDQVMgUEVSRVoxEzARBgNVBAUMCjA5MjEzNDM2OTUwDgYDVR0PAQH/BAQDAgbA
+MB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDBQBgNVHR8ESTBHMEWgQ6BBhj9odHRwOi8v
+Y3JsLmFuZi5lcy9jcmwvQU5GSGlnaEFzc3VyYW5jZUVjdWFkb3JJbnRlcm1lZGlhdGVDQS5jcmww
+ggEDBgNVHSAEgfswgfgwgd8GDCsGAQQBgqRCAgUBAzCBzjAoBggrBgEFBQcCARYcaHR0cDovL3d3
+dy5hbmYuZXMvZG9jdW1lbnRvczCBoQYIKwYBBQUHAgIwgZQMgZFDZXJ0aWZpY2FkbyBjb25mb3Jt
+ZSBhIGxhIGxlZ2lzbGFjacOzbiBkZSBmaXJtYSBlbGVjdHLDs25pY2EuIEFudGVzIGRlIGFjZXB0
+YXJsbyBjb21wcnVlYmUgaW50ZWdyaWRhZCwgbGltaXRhY2lvbmVzLCB2aWdlbmNpYSB5IHVzb3Mg
+YXV0b3JpemFkb3MuMAkGBwQAi+xAAQEwCQYHYIVUAQMFCDCBmwYIKwYBBQUHAQEEgY4wgYswJwYI
+KwYBBQUHMAGGG2h0dHA6Ly9vY3NwLmFuZi5lcy9zcGFpbi9BVjBgBggrBgEFBQcwAoZUaHR0cDov
+L3d3dy5hbmYuZXMvZXMvY2VydGlmaWNhdGVzLWRvd25sb2FkL0FORkhpZ2hBc3N1cmFuY2VFY3Vh
+ZG9ySW50ZXJtZWRpYXRlQ0EuY2VyMAwGA1UdEwEB/wQCMAAwKAYJKwYBBAGBjxwTBBsMGTU4NzM5
+Nzk3MDI0My00ODQ2NTY0NzM0NDAwFQYKKwYBBAGBjxwTAgQHDAUzNzQ0MjApBgorBgEEAYKkQhMB
+BBsMGTQ4NDY1NjQ3MzQ0MC00NzY4MTk3NDcwOTUwGgYKKwYBBAGCpEIDAQQMDAowOTIxMzQzNjk1
+MBwGCisGAQQBgqRCAwoEDgwMSU5URVJPQyBTLkEuMB0GCisGAQQBgqRCAwsEDwwNMDk5MTAyODU0
+NDAwMTASBgorBgEEAYKkQgMMBAQMAkVDMB0GCisGAQQBgqRCAwIEDwwNQUxFWElTIEpBTkVUSDAf
+BgorBgEEAYKkQgMDBBEMD1NBTiBMVUNBUyBQRVJFWjAiBgorBgEEAYKkQgMFBBQMElNVQkdFUkVO
+VEUgR0VORVJBTDAZBgorBgEEAYKkQgMJBAsMCUdVQVlBUVVJTDAXBgorBgEEAYKkQioBBAkMB1VJ
+Ty0wMDMwFAYKKwYBBAGCpEIuAQQGDAQxNDYwMFAGCisGAQQBgqRCLwEEQgxAZTc2MmY0NmEyNDQ0
+ZmRjY2Y4ZTY5ZDczZDRhNzI0YTAzYWVkNjQ2NTAyMjQzMWMxZTZmY2M5Zjc5M2Q4YmUzOTBEBggr
+BgEFBQcBAwQ4MDYwCAYGBACORgEBMBMGBgQAjkYBBjAJBgcEAI5GAQYBMAkGBwQAi+xJAQEwCgYI
+KwYBBQUHCwIwDQYJKoZIhvcNAQELBQADggIBAAHXAoooePvXQyxF1jaa71eOI08Wp+3SZiO8lOL8
+vPOuAsjDX72GFsx9qbfxhoaKtxVwtklShC4hMFzuOFgVh9huYD21bOhILN8Kvs/iUyBzzHIfSCen
+XT3E13WYUJBidlzoEiU9cvonbujImoGHjlU9yq8u0IikFVk1216nJN6AmF0GMxFMDRX/deq/yhyA
+Fxtn2T2eJVSQaBmvpPalLd9go+lSZCoroaoPHTFb78juHtB8/o1Tewwb1KjdlWaGb4K+g5Mf/s24
+WYPXXTF2ufp1YW8K51EcsYLf6R6SXBeieVSnmabaQg6DcN1IneImm6ZNd9PsNuBYpf/smQDs0ux8
+lmVYGGINMwKPIlhqbHBEw69wHTLR0IZ2eZfmfjHpp2/QJKYgcTxmiD2YxuFcZPXV1rqJtxMDKea3
+0J0urT9gfm4ie9ljOSqofWOGSJ4ZmyQ7TrvWBgJE28MalloKymM7R8SsMS48dsBmT2LtSfGymXgR
+I8qYwu5bqLwfzYPA+ajjUplolnQN243/Ga7FwNf5ylJeFlo8gKoBR11UBt3C1Rt+XDnzZmzChhJz
+a9C5OO5kAIaaZpRVo/YiVXe3OZNplSdOqR90oJ3HabM20+cixo6c05gPUrJkTZp/NCQNaEveARVg
+WK8BVLWcZYbTdnhWRPZ42hZAHibE79PdwRS0
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+wqlSTKjwQZgKHBho/W44dLjCQAjZ/yT543X48c71RxlwqTXsrTyiEmzQXz5hrxOswrBenTBTS7XA
+P2CWffsItIw5UkmqTf81OV7LPOP60gEMXwPOh+fQLDFuvW2dRQt6GZPOmzBsmtEfPKMHa+iXRSdE
+wb0O75bRscWowWfmjnz0VfX/ZWCdnsNEnlExfidxc2EyYAXIgesYHg1voBdEVb3ojmU9fb+h7ZJt
+B2+lgDqMY9/ld++PIVGIFWNRVeUurqJ8Aa/WXRf/KXRcgNAyn2hEyYGTr2tdXDWCdJm+g/lS+Xsu
+nEiUt7BlGctmm+e2OVNFXyWXn5G/3M+9TJ9iMQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature35098-Object137519"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature35098"&gt;
+                &lt;etsi:SignedProperties Id="Signature35098-SignedProperties218839"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-08T15:54:06-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;xyX0SSLABHgl821EebayoK9hKp0=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=ANF High Assurance Ecuador Intermediate CA,OU=ANF Autoridad intermedia  EC,O=ANFAC AUTORIDAD DE CERTIFICACION ECUADOR C.A.,C=EC,2.5.4.5=#130d31373932363031323135303031&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;995042671681240634270759237&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-317546"&gt;
+                            &lt;etsi:Description&gt;comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

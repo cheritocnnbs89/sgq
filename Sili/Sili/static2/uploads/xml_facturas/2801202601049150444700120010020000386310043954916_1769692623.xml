@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2801202601049150444700120010020000386310043954916</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-28T08:45:14-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="comprobante" version="1.1.0" xsi:noNamespaceSchemaLocation="Factura_2801202601049150444700120010020000386310043954916.xsd"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;ALMAROS&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;ALMAROS CIA  LTDA &lt;/nombreComercial&gt;
+        &lt;ruc&gt;0491504447001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2801202601049150444700120010020000386310043954916&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000038631&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;PANAMERICANA NORTE S N&lt;/dirMatriz&gt;
+        &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;28/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;URB  PARQUES DEL RIO KM 15 VIA A SAMBORONDON  &lt;/dirEstablecimiento&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S A  QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;totalSinImpuestos&gt;79.20&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;79.20&lt;/baseImponible&gt;
+                &lt;valor&gt;11.88&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0&lt;/propina&gt;
+        &lt;importeTotal&gt;91.08&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;91.08&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;8&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;295927&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ALMACENAJE&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;64.20&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;64.20&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="DAU" valor="50715122"/&gt;
+                &lt;detAdicional nombre="Solicitante" valor="QUIMPAC ECUADOR S A  QUIMPACSA"/&gt;
+                &lt;detAdicional nombre="Consignatario" valor="QUIMPAC"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;64.20&lt;/baseImponible&gt;
+                    &lt;valor&gt;9.63&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;7&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;295928&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PESAJE &lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;12.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;12.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;12.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.80&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;11&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;295929&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TARJA&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;3.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;3.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;3.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.45&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="Direccion"&gt;URB  PARQUES DEL RIO KM 15 VIA A SAMBORONDON  &lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Importador"&gt;QUIMPAC ECUADOR S A  QUIMPACSA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Ruc Importador"&gt;0990344760001&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Direccion Importador"&gt;URB  PARQUES DEL RIO KM 15 VIA A SAMBORONDON  &lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Fechas"&gt;27/01/2026 28/01/2026 28/01/2026 2&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Solicitud"&gt;76898&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="CPI"&gt;  CO000153:22815.0000&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Cantidad"&gt;1200 SACOS&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Refrendo"&gt;10 07320261000149716:6600001002000038631&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Peso Bruto"&gt;30100 KILOS:CLORURO FERRICO ANHIDRIDO&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Registro"&gt;CEC202679480325&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Total Letras"&gt; NOVENTA Y UNO CON 08/100 DOLARES AMERICANOS&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature316479"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo302645"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID402201" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature316479-SignedProperties196279"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;UpUYMDY76jVn1Ruk3uFJoddFDW8=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1442213"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;hPUCV/bGmLZJ2+oVjrDX78NVUL0=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-648065" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;G/9Lok34Y43LFO5/3Z8LkmMxMbs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue208206"&gt;
+KLxn91QcmkSsHgN7ppM639U8bLYoWJN02W1RA++O7m9HA0IERZolRvIyNbnB1OtQFNrPY8CkLM6j
+LFqbSnnHSDbhLyluTXKK99ZI0tEadehhqWhf8VFdPqjL4Rq9Vf+WZtKCiFWpbV1mCayYnMESyrQr
+NmjJrfBpkHR0VoxqEAEFm/kmECi7PxuyRzaz5MYVONHNnmQgDvwL9gZnRJvWwMP2pMCcvZk4M3it
+pqlon1uWuwzTS0rDfVKHH892tYg2pyhm9k9qT6tQbqL+0lzMfhLtBMMhIpcFzc/VbBmhHHoqyOtD
+hwll+WAximaSAmehuTD+IhAEqP9+VV8eFZMxwA==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1442213"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIISzCCBzOgAwIBAgIFAMIDv70wDQYJKoZIhvcNAQELBQAwRzELMAkGA1UEBhMCRUMxGzAZBgNV
+BAoMEkxhenphdGUgQ2lhLiBMdGRhLjEbMBkGA1UEAwwSTGF6emF0ZSBFbWlzb3IgQ0EyMB4XDTI2
+MDEwNTIwMDkwNFoXDTI4MDEwNTIwMDkwNFowgZUxCzAJBgNVBAYTAkVDMRswGQYDVQQKDBJMYXp6
+YXRlIENpYS4gTHRkYS4xHjAcBgNVBAsMFUVudGUgZGUgQ2VydGlmaWNhY2lvbjEjMCEGA1UEAwwa
+Sk9TRSBBTlRPTklPIExVQ0VSTyBST1NFUk8xJDAiBgkqhkiG9w0BCQEWFWJvb3N0aXFmZUBob3Rt
+YWlsLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJXGQ//ApVsqXbO7Piu5P2a8
+dUb2iKgcONbeY1VES3VZkqmBZO9Xi1TsJDpfxhRldbEqrk9CQzwiiM4eSgFqe5vB0W1iZk9EAMvi
+o5PleZw85T9WvwNxqj4KIHXFFA1g3wvLvHYg5LjWbwRGE/9g8gMb/u6QE6DrhI2nBflPcX8bD0nl
+PV9puvieBN2cn6Fg1AiiW1Le5nmDUBXUgBYdJHCoLuhosHSIt6peysQwbT7udJBB3fmMnbSEKqLX
+giEXekN/0TVVoiPRVhiT1pm6mUewOJyw9lmzh7VeifjtPgdY/ZZH06K+ZCsU5vAMS0BDahGvSVZF
+gOzUUmRCg+UGnzkCAwEAAaOCBO0wggTpMBoGCisGAQQBg892AwEEDAwKMDQwMDA2NDI0MjAcBgor
+BgEEAYPPdgMCBA4MDEpPU0UgQU5UT05JTzAWBgorBgEEAYPPdgMDBAgMBkxVQ0VSTzAWBgorBgEE
+AYPPdgMEBAgMBlJPU0VSTzAfBgorBgEEAYPPdgMFBBEMD0dFUkVOVEUgR0VORVJBTDAfBgorBgEE
+AYPPdgMHBBEMD0dPTlpBTEVaIFNVQVJFWjAaBgorBgEEAYPPdgMIBAwMCjA5ODE2NzI4MTAwFgYK
+KwYBBAGDz3YDCQQIDAZUdWxjYW4wFwYKKwYBBAGDz3YDDAQJDAdFQ1VBRE9SMB0GCisGAQQBg892
+AwsEDwwNMDQ5MTUwNDQ0NzAwMTAiBgorBgEEAYPPdgMKBBQMEkFMTUFST1MgQ0lBLiBMVERBLjAM
+BgNVHRMBAf8EAjAAMB0GA1UdDgQWBBT0pTQCGnakdmRKrzUKP0Fv1zT9NDAfBgNVHSMEGDAWgBTt
+dkiwCvHJhoYMTEZk0gb4zNW9PjAOBgNVHQ8BAf8EBAMCBeAwOgYDVR0fBDMwMTAvoC2gK4YpaHR0
+cDovZW5leHQyLnh5ei9MYXp6YXRlQ0EyL2VtaXNvckNBMi5jcmwwggGEBgNVHSAEggF7MIIBdzB8
+BgorBgEEAYPPdgICMG4wbAYIKwYBBQUHAgIwYBpeRWwgcHJlc2VudGUgY2VydGlmaWNhZG8gZXMg
+ZW1pdGlkbyBlbiBiYXNlIGEgbGFzIHBvbMOtdGljYXMgZGUgc2VndXJpZGFkIGRlIExhenphdGUg
+Q2lhLiBMdGRhLjCB9gYJKwYBBAGDz3YCMIHoMGwGCCsGAQUFBwICMGAaXkVsIHByZXNlbnRlIGNl
+cnRpZmljYWRvIGVzIGVtaXRpZG8gZW4gYmFzZSBhIGxhcyBwb2zDrXRpY2FzIGRlIHNlZ3VyaWRh
+ZCBkZSBMYXp6YXRlIENpYS4gTHRkYS4weAYIKwYBBQUHAgIwbBpqRWwgcHJlc2VudGUgY2VydGlm
+aWNhZG8gc3Vib3JkaW5hZG8gZXMgZW1pdGlkbyBlbiBiYXNlIGEgbGFzIHBvbMOtdGljYXMgZGUg
+c2VndXJpZGFkIGRlIExhenphdGUgQ2lhLiBMdGRhLjCCAUkGA1UdEQSCAUAwggE8oBoGCisGAQQB
+g892AwGgDAwKMDQwMDA2NDI0MqAcBgorBgEEAYPPdgMCoA4MDEpPU0UgQU5UT05JT6AWBgorBgEE
+AYPPdgMDoAgMBkxVQ0VST6AWBgorBgEEAYPPdgMEoAgMBlJPU0VST6AfBgorBgEEAYPPdgMFoBEM
+D0dFUkVOVEUgR0VORVJBTKAfBgorBgEEAYPPdgMHoBEMD0dPTlpBTEVaIFNVQVJFWqAaBgorBgEE
+AYPPdgMIoAwMCjA5ODE2NzI4MTCgFgYKKwYBBAGDz3YDCaAIDAZUdWxjYW6gFwYKKwYBBAGDz3YD
+DKAJDAdFQ1VBRE9SoB0GCisGAQQBg892AwugDwwNMDQ5MTUwNDQ0NzAwMaAiBgorBgEEAYPPdgMK
+oBQMEkFMTUFST1MgQ0lBLiBMVERBLjA8BggrBgEFBQcBAQQwMC4wLAYIKwYBBQUHMAGGIGh0dHA6
+Ly9lbmV4dDIueHl6Ojg3NzcvYWRzcy9vY3NwMA0GCSqGSIb3DQEBCwUAA4IBAQBZbvKFRJkpGmgM
+WgNpYLKoMquEKaRd+95NRW0ULdAdFBlPsqdDZqALSEDR8N/qVWKSewZ7TMtwT/JozRaXPfNtIlHr
+Tkcvz3byWuf7PpdMLixmoDaVvmJW0ALBSPnehalymqqRxo92NbBdzlj/iajzL/+rSU32+shRHQIA
+RxcEbQVhl3fxhhtjeQ98kLwgdfP0TiGQDJMqUo/tRVK5PgoCWGvLTgWIfjfMce8hcHcd+K5aHXoc
+RfOaQS/9JplPQsydsivpaTedm0UqKsZiyxD6pEthvTu4HE96ylrV4EMk6JGr2uBiHT1gntxP8jRG
+NQhe8txSTSYdtlrYpaLA5z/S
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+lcZD/8ClWypds7s+K7k/Zrx1RvaIqBw41t5jVURLdVmSqYFk71eLVOwkOl/GFGV1sSquT0JDPCKI
+zh5KAWp7m8HRbWJmT0QAy+Kjk+V5nDzlP1a/A3GqPgogdcUUDWDfC8u8diDkuNZvBEYT/2DyAxv+
+7pAToOuEjacF+U9xfxsPSeU9X2m6+J4E3ZyfoWDUCKJbUt7meYNQFdSAFh0kcKgu6GiwdIi3ql7K
+xDBtPu50kEHd+YydtIQqoteCIRd6Q3/RNVWiI9FWGJPWmbqZR7A4nLD2WbOHtV6J+O0+B1j9lkfT
+or5kKxTm8AxLQENqEa9JVkWA7NRSZEKD5QafOQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature316479-Object881460"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature316479"&gt;
+                &lt;etsi:SignedProperties Id="Signature316479-SignedProperties196279"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-28T08:45:16-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;NQ+AcahqPSS6XfzF388JQnzCHNs=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=Lazzate Emisor CA2,O=Lazzate Cia. Ltda.,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;3255025597&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-648065"&gt;
+                            &lt;etsi:Description&gt;Documento de ejemplo&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

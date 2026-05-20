@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1601202601099229427200120030010001741609846951116</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-16T11:03:41-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;VEOLIA SERVICIOS AMBIENTALES ECUADOR "VEOLIASERVICES" S.A.&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;VEOLIA SERVICIOS AMBIENTALES ECUADOR "VEOLIASERVICES" S.A.&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0992294272001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;1601202601099229427200120030010001741609846951116&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;003&lt;/estab&gt;
+    &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000174160&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;GUAYAS / GUAYAQUIL / CIUDAD COLON EDIFICIO COLON CORPORATIVO NUMERO DE OFICINA 101-102 PISO 1 MANZANA 274 JUNTO A NETLIFE&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;16/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;Av. Naciones Unidas 1014 y Av. Amazonas Edif. La Previsora, Torre B 4to piso, Oficina 408&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;256&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;totalSinImpuestos&gt;26.39&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+        &lt;baseImponible&gt;26.39&lt;/baseImponible&gt;
+        &lt;valor&gt;3.96&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;30.35&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;30.35&lt;/total&gt;
+        &lt;plazo&gt;30&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;DIAS&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;0201460048&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;PQHI-3&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;Funda 63 x 76 y/o PC-1N (PQHI3)&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;26.390000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;26.39&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Tipo" valor="Servicio de Gestión de Residuos"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;26.39&lt;/baseImponible&gt;
+          &lt;valor&gt;3.96&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;0202000010&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;NE-10&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;Desechos biopeligrosos activos resultantes de la atención médica prestados en centros médicos&lt;/descripcion&gt;
+      &lt;cantidad&gt;2.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;0.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="Tipo" valor="Servicio de Gestión de Residuos"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+          &lt;valor&gt;0.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="DESTINO"&gt;Km 16.5 vía a Daule. Av. Rosavin y CobreGuayaquil-Guayas-Ecuador&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Fecha de vencimiento"&gt;15-02-2026&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Condición de Pago"&gt;30 días&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Asesor Servicios"&gt;-&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Teléfono"&gt;0991958392&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Comentario"&gt;1 de diciembre del 2025&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Email Envío Pagos"&gt;cobranzas.gadere.ec@veolia.com&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Fase de Gestión"&gt;Integral&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Cod Cliente"&gt;C0990344760001&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Email Dest"&gt;compras.electronica@quimpac.com.ec;enfermeria@quimpac.com.ec;ulynch@quimpac.com.ec;ssuarez@gadere.com;hdiaz@quimpac.com.ec;pgallegos@quimpac.com.ec&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature146103"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo955218"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID322950" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature146103-SignedProperties234809"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;hio2pltEPeYU7reCi7Mb9Tn8u/k=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1916864"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;vGUPqIYxlzwhpUO+yaMZnIWeOmo=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-137919" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;KybAxS2UADgqNqs6qunpcSbzTzM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue298798"&gt;
+gXq1ecTUyAV06Vxvxxa6wWIIHpY5JkfNMwC/Yu3uu0XKV+s9LP2CS8PDvEY4hnxpinQ8JA0fj4dS
+xnd/VVaMn7mwwDsZRkJxndjEiwZvMYqSRPfobAJtMTF+OHftxQZzJfIvSi5cUCwbV0/I4bFlOIRj
+xy/LoXC7nFdanTgkyFY2aHY/RGwidbSHRUNy6R8Cn3RhYm7tWckBPoc4k9kDNM+FpzkqaMw6Khge
+rvmZMiB6WISsHTAVyV7IYvpnyJbkCoM++R+5ejjIQqDfQziXKFgw2HtKYHni2icKUGIucvKWYTE6
+Nnol0tTELKinSz4cn/PafSENv7Irfh9f/v1tOw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1916864"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJ2TCCB8GgAwIBAgIIVStoRBwq2a4wDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI0MTIxMzIwNTEwMFoXDTI2MTIxMzIwNTEwMFowgeMxCzAJBgNVBAYTAkVDMUEwPwYDVQQKDDhW
+RU9MSUEgU0VSVklDSU9TIEFNQklFTlRBTEVTIEVDVUFET1IgVkVPTElBU0VSVklDRVMgUy5BLjEY
+MBYGA1UEDAwPR0VSRU5URSBHRU5FUkFMMRIwEAYDVQQEDAlDQVJESU5FQVUxDzANBgNVBCoMBkpF
+Uk9NRTEZMBcGA1UEBRMQSURDRUMtMDkzMzAzNTQ3OTEZMBcGA1UEAwwQSkVST01FIENBUkRJTkVB
+VTEcMBoGA1UEYQwTVkFURUMtMDk5MjI5NDI3MjAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBALggEQH6GKHBBKYzF+ayNt3rvyqNVME9uq7y+6UeokMoLSeUwk379lllAhkj6rroLohs
+H9vY83BdkxdJICCyvlT/rz90Sh9/06rVIVRuh7ZpdAiKz+iQfVA4w+TSvca0QaRQ4aw0vgldg98u
+PQVbpcgGWXZa0nT8l9zkIWZjhhCoJt7DcM8rpkLe7wOHJYmpTiu1SQEMc9c0d/UVaMQ3yDMVEbDv
+AOuPJ2Gu0xkk015kcQRcRSc/O3qVMxqDIL641+SXzmT57SLFn3Y6QQ8A1Uf+rwsiS7vgp8YfmHbs
+7iVRfmvS8A+egQfJUmx1vPbZOyfE+Cx2lo8fTkWZl0bSo9MCAwEAAaOCBLgwggS0MBsGCysGAQQB
+gvE2ZgMBBAwMCjA5MzMwMzU0NzkwHgYLKwYBBAGC8TZmAwsEDwwNMDk5MjI5NDI3MjAwMTCB1wYI
+KwYBBQUHAQEEgcowgccwVQYIKwYBBQUHMAKGSWh0dHA6Ly93d3cudWFuYXRhY2EuY29tL3B1Ymxp
+Yy9kb3dubG9hZC90c3BfY2VydGlmaWNhdGVzL3N1Ym9yZGluYXRlMS5jcnQwNgYIKwYBBQUHMAGG
+Kmh0dHA6Ly9vY3NwMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzA2BggrBgEFBQcwAYYq
+aHR0cDovL29jc3AyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1UdDgQWBBTMwaN3
+EetfEPzx4Ab3AheLyhnZ9zAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH1X52BzzgdGqeKjaPDh
+EbJ0knP9MIGOBgNVHSAEgYYwgYMwgYAGDCsGAQQBgvE2ZgIDATBwMDcGCCsGAQUFBwIBFitodHRw
+czovL3d3dy51YW5hdGFjYS5jb20vcHVibGljL3BraS9kcGMtZWMvMDUGCCsGAQUFBwICMCkMJ0NF
+UlRJRklDQURPIERFIFJFUFJFU0VOVEFOVEUgRU4gQVJDSElWTzCBjwYDVR0fBIGHMIGEMECgPqA8
+hjpodHRwOi8vY3JsMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3JkaW5hZGEu
+Y3JsMECgPqA8hjpodHRwOi8vY3JsMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vi
+b3JkaW5hZGEuY3JsMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUH
+AwQwggH5BgNVHREEggHwMIIB7IEbamVyb21lLmNhcmRpbmVhdUB2ZW9saWEuY29toBsGCysGAQQB
+gvE2ZgMBoAwMCjA5MzMwMzU0NzmgFwYLKwYBBAGC8TZmAwKgCAwGSkVST01FoBoGCysGAQQBgvE2
+ZgMDoAsMCUNBUkRJTkVBVaAgBgsrBgEEAYLxNmYDBaARDA9HRVJFTlRFIEdFTkVSQUygXAYLKwYB
+BAGC8TZmAwegTQxLR1VBWUFTICAgR1VBWUFRVUlMICAgVEFSUVVJICAgQ0lVREFEIENPTE9OIEVE
+SUYgQ09SUCA0IE9GIDQwMSBQSVNPIDQgTVogMjc1oB8GCysGAQQBgvE2ZgMIoBAMDjAwNTkzOTM5
+MTgwMzQyoBoGCysGAQQBgvE2ZgMJoAsMCUdVQVlBUVVJTKBJBgsrBgEEAYLxNmYDCqA6DDhWRU9M
+SUEgU0VSVklDSU9TIEFNQklFTlRBTEVTIEVDVUFET1IgVkVPTElBU0VSVklDRVMgUy5BLqAeBgsr
+BgEEAYLxNmYDC6APDA0wOTkyMjk0MjcyMDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCQGCysGAQQB
+gvE2ZgMyoBUME1JFUFJFU0VOVEFOVEUgTEVHQUygGAYLKwYBBAGC8TZmAzOgCQwHQVJDSElWTzAN
+BgkqhkiG9w0BAQsFAAOCAgEAQ+u3rJikViRvBimz6XOVOVn58hwzMAhxce39twxDIXh2rhD7DqtL
+DUDXqd8tre6CsoVvvra2+V+cH6IuXmtxmDKkB7c9yFVR36I6/aUAp1JNLhfTIGStlTEhDV78i/A7
+fmmGI8pJ704q+EDYlUmfDX6dBeiQcJ5yBM8sLu/7sTg+5WqdCrO6+DWMn7lh8xHc3eX5a1Y1qVKL
+nHTuTMnEvUa6Cfc/KGYf9A8+9hyaYdVvOMdgux9bCknVoABlTTM4M3DkvHeqr1uquQ/vg5AIAx7u
+M1NDj7JFQ6FZ3NCFZI1vXiB/GjysglhnJf7g9ZxDzsrBMKPlxe+57olGxOa0hn4f1ad0CKARKnwA
+vfU9BeZ3fSiUmFqqxJMrcogxMtPu33muVZ0QLI3S5ZFaeNjY49Z5GSAQNrtW/qbh2aEihEcScxG8
+gBdLDsvBujvElaQI/iNIzZT5zcF9/xskpgHzlGV4AJtsh1+fBafKmbd2pLghfGWfFppFWw/qSyLF
+caFhKJAZZE0DZCchJCX25T7YQLZV//ALEBhmq+ZwfYUSSGpGduzFU14M3IxoqwrnlxR5z/30pnDG
+D0KnxTXEz8+BY7VE50TXOTCDE6ZtTb73CsRKvKHhRi/SetxDVRUr+hSI8ziLQ/eMdtV8P3eatCTs
+Fy9ZFd3QEaFHxko4DcCBR5s=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+uCARAfoYocEEpjMX5rI23eu/Ko1UwT26rvL7pR6iQygtJ5TCTfv2WWUCGSPquuguiGwf29jzcF2T
+F0kgILK+VP+vP3RKH3/TqtUhVG6Html0CIrP6JB9UDjD5NK9xrRBpFDhrDS+CV2D3y49BVulyAZZ
+dlrSdPyX3OQhZmOGEKgm3sNwzyumQt7vA4clialOK7VJAQxz1zR39RVoxDfIMxURsO8A648nYa7T
+GSTTXmRxBFxFJz87epUzGoMgvrjX5JfOZPntIsWfdjpBDwDVR/6vCyJLu+Cnxh+YduzuJVF+a9Lw
+D56BB8lSbHW89tk7J8T4LHaWjx9ORZmXRtKj0w==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature146103-Object900746"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature146103"&gt;
+                &lt;etsi:SignedProperties Id="Signature146103-SignedProperties234809"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-16T11:03:40-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;8p4UgNpnpMYAo0lagAs0ajOyBBE=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;6137113558962067886&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-137919"&gt;
+                            &lt;etsi:Description&gt;DOCUMENTO EMITIDO CON ECUAFACT. LA FACTURACION ELECTRONICA DEL ECUADOR. Visitenos en http://www.ecuanexus.com &lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

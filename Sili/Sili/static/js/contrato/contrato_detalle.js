@@ -1,0 +1,1 @@
+// JS personalizado para detalle de contrato.

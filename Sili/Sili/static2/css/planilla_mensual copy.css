@@ -1,0 +1,122 @@
+/* Tabla fija por columnas del <colgroup> */
+.planilla{ table-layout: fixed; border-collapse: collapse; }
+.planilla th, .planilla td{ box-sizing: border-box; white-space: nowrap; }
+
+/* Columnas pegajosas usando las mismas vars del <colgroup> */
+.planilla .sticky-1, .planilla .sticky-2, .planilla .sticky-3{
+  position: sticky; background:#fff; z-index:5;
+}
+
+/* Actividades */
+.planilla .sticky-1{
+  left:0;
+  width:var(--w1); min-width:var(--w1); max-width:var(--w1);
+}
+/* Permite envolver texto dentro del ancho fijo de la 1ª columna */
+.planilla .sticky-1, .planilla .sticky-1 *{ white-space: normal; word-break: break-word; }
+
+/* Frecuencia */
+.planilla .sticky-2{
+  left:var(--w1);
+  width:var(--w2);
+  text-align:center;
+}
+
+/* Responsable */
+.planilla .sticky-3{
+  left:calc(var(--w1) + var(--w2));
+  width:var(--w3);
+}
+
+/* Días: el <colgroup> ya fija el ancho; no hace falta extra */
+.cell-flex{ display:flex; gap:6px; align-items:center; justify-content:center; }
+.planilla input[type="checkbox"]{ width:18px; height:18px; }
+.planilla a.evi{ text-decoration:none; font-size:16px; line-height:1; }
+/* ===== Barra de filtros (solo estética) ===== */
+.filter-bar .form-control,
+.filter-bar .form-select { min-width: 180px; }
+.filter-bar { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: .75rem; }
+
+/* ===== Leyenda ===== */
+.legend { display:flex; align-items:center; gap:14px; color:#6b7280; font-size: .875rem; }
+.legend .legend-item { display:inline-flex; align-items:center; gap:8px; }
+.legend .dot{ width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid #d1d5db; }
+.legend .dot-empty{ background:#fff; }
+.legend .dot-done{ background:#dcfce7; border-color:#86efac; }
+
+/* ===== Tabla ===== */
+.planilla-wrap{
+  background:#fff;
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:12px;
+  box-shadow: 0 6px 18px rgba(16,24,40,.06);
+  padding: .5rem .5rem 0 .5rem;
+}
+
+/* Cabecera fija con sombra sutil al hacer scroll */
+.soft-shadow { box-shadow: 0 6px 10px -8px rgba(0,0,0,.25); }
+.planilla thead th{ position: sticky; top: 0; z-index: 5; }
+
+/* Columnas pegajosas (ya definidas en HTML) */
+.sticky-1{ position: sticky; left: 0; z-index: 6; background: #fff; }
+.sticky-2{ position: sticky; left: var(--w1); z-index: 6; background: #fff; }
+.sticky-3{ position: sticky; left: calc(var(--w1) + var(--w2)); z-index: 6; background: #fff; }
+
+/* Zebra + compactación */
+.table-compact> :not(caption)>*>*{ padding: .45rem .5rem; }
+.planilla tbody tr:nth-child(even){ background: #fafafa; }
+
+/* Títulos de actividad con jerarquía visual */
+.act-title{ font-weight: 600; color:#0f172a; }
+
+/* Chip de responsable */
+.chip{
+  display:inline-flex; align-items:center; gap:.4rem;
+  background:#f3f4f6; color:#111827; border:1px solid #e5e7eb;
+  padding:.15rem .5rem; border-radius: 999px; font-size:.875rem;
+}
+.chip .bi{ opacity:.8; }
+
+/* Badges de frecuencia */
+.badge{ font-weight:600; border-radius: 999px; padding:.35rem .6rem; }
+.freq-diario  { background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe; }
+.freq-semanal { background:#dcfce7; color:#065f46; border:1px solid #bbf7d0; }
+.freq-mensual { background:#fee2e2; color:#7f1d1d; border:1px solid #fecaca; }
+
+/* Columnas de días */
+.day-col{ font-weight:600; color:#334155; }
+
+/* Estados visuales con :has() – sin JS ni lógica extra */
+.day-cell{ transition: background .12s ease, box-shadow .12s ease; }
+.day-cell:has(.tick:checked){
+  background:#e8fff3;           /* verde muy suave */
+  box-shadow: inset 0 0 0 1px #86efac;
+}
+.day-cell:hover{ background:#f5faff; }
+
+/* Checkboxes más visibles */
+.tick{
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Borde de tabla sutil */
+.planilla{ border-color:#eef2f7 !important; }
+.planilla th, .planilla td{ border-color:#eef2f7 !important; }
+
+/* Indicador de scroll horizontal (decorativo) */
+.planilla-wrap::after{
+  content:"";
+  position:absolute; right: 8px; bottom: 6px;
+  width: 40px; height: 6px; border-radius: 6px;
+  background: linear-gradient(90deg, #e5e7eb, #cbd5e1);
+  opacity:.55;
+}
+
+/* Responsive: oculta número de día si la pantalla es muy estrecha (solo óptica) */
+@media (max-width: 768px){
+  .day-col{ font-size: 0; }
+  .day-col::after{ content: "D"; font-size: .8rem; }
+}
+

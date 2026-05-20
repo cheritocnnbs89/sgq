@@ -1,0 +1,1 @@
+// JS propio para la pantalla de verificación de código.

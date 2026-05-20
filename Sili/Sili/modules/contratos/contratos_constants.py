@@ -1,0 +1,62 @@
+from __future__ import annotations
+
+TABLA_CONTRATOS = "contratos"
+TABLA_GARANTIAS = "garantias"
+TABLA_CONTRATO_ARCHIVOS = "contrato_archivos"
+TABLA_USUARIOS = "usuarios"
+TABLA_TERCEROS = "terceros"
+TABLA_DEPARTAMENTOS = "departamentos"
+
+TIPO_PAGARE = "PAGARE"
+TIPO_POLIZA = "POLIZA"
+TIPO_AMBOS = "AMBOS"
+
+ESTADO_VIGENTE = "Vigente"
+ESTADO_VENCIDA = "Vencida"
+ESTADO_LIBERADA = "Liberada"
+ESTADO_ANULADA = "Anulada"
+
+STATUS_APROBADO = "Aprobado"
+STATUS_NO_APROBADO = "No aprobado"
+
+PUBLIC_FIXED_URL = "http://bitacoraquimpac.com.ec:5000/".rstrip("/") + "/"
+
+PGALLEGOS_FALLBACK_EMAIL_DEFAULT = "pgallegos1@quimpac.com.ec"
+SAVERA_EMAIL = "svera@quimpac1.com.ec"
+GERENTE_FINANCIERO_EMAIL = "dcunninghan2@quimpac.com.ec"
+
+CAMPO_ARCHIVOS_PDF = "archivos_pdf"
+
+REQ_CONTRATO_LABEL_ANIO = "AÑO"
+REQ_CONTRATO_LABEL_PEDIDO = "PEDIDO"
+REQ_CONTRATO_LABEL_PROVEEDOR = "PROVEEDOR"
+REQ_CONTRATO_LABEL_USUARIO_SOLICITANTE = "Usuario solicitante"
+REQ_CONTRATO_LABEL_OBJETO = "Objeto del contrato"
+REQ_CONTRATO_LABEL_VALOR_CONTRATO = "Valor contrato"
+REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION = "Fecha de suscripción"
+
+REQ_GARANTIA_LABEL_CONTRATO = "Contrato"
+REQ_GARANTIA_LABEL_TIPO = "Pagaré / Póliza"
+REQ_GARANTIA_LABEL_FECHA_SUSCRIPCION = "Fecha de suscripción"
+REQ_GARANTIA_LABEL_FECHA_VENCIMIENTO = "Fecha de vencimiento"
+REQ_GARANTIA_LABEL_ESTADO = "Estado"
+REQ_GARANTIA_LABEL_REQUIERE_RENOVACION = "Requiere renovación"
+
+ESTADOS_GARANTIA_VALIDOS = (
+    ESTADO_VIGENTE,
+    ESTADO_VENCIDA,
+    ESTADO_LIBERADA,
+    ESTADO_ANULADA,
+)
+
+TIPOS_GARANTIA_VALIDOS = (
+    TIPO_PAGARE,
+    TIPO_POLIZA,
+)
+
+MAPA_TIPO_PP_AMIGABLE = {
+    "AMBOS": "Ambos",
+    "PAGARE": "Pagaré",
+    "PAGARÉ": "Pagaré",
+    "POLIZA": "Póliza",
+}

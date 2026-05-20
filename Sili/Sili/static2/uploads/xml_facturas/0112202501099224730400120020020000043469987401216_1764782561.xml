@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0112202501099224730400120020020000043469987401216</numeroAutorizacion>
+    <fechaAutorizacion>2025-12-01T15:01:21-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;EDITY S.A.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;EDITY&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0992247304001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0112202501099224730400120020020000043469987401216&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;002&lt;/estab&gt;
+        &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000004346&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;CDLA. URDESA CALLE SEXTA 405 Y AV LAS LOMAS&lt;/dirMatriz&gt;
+        &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;01/12/2025&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt; &lt;/dirEstablecimiento&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;VIA A DAULE KM. 16.5 ROSAVIN LOTE 1 COBRE&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;262.50&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;262.50&lt;/baseImponible&gt;
+                &lt;valor&gt;39.38&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;301.88&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;301.88&lt;/total&gt;
+                &lt;plazo&gt;1&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;1015&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;XXXXX&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;Ribbons de Resina 110x74                                                                                                                                                                                         Orden de pedido NÂ°1000599887 Documento material NÂ° 5000315406&lt;/descripcion&gt;
+            &lt;cantidad&gt;30.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;8.750000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;262.50&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;262.50&lt;/baseImponible&gt;
+                    &lt;valor&gt;39.38&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="EMAIL:"&gt;compras.electronica@quimpac.com.ec; jgarcia@editysa.com; pgallegos@quimpac.com.ec; recepcion@quimpac.com.ec &lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="DIRECCION:"&gt;VIA A DAULE KM. 16.5 ROSAVIN LOTE 1 COBRE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="TELEFONO:"&gt;2152220&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="MOTIVO"&gt;SUMINISTROS ZEBRA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="ID.SISTEMA"&gt;5164&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="AGENTE DE RETENCION:"&gt;No. Resolucion: 1&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature341368"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo575433"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID84729" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature341368-SignedProperties559939"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;8/IP4cg5JmNqzBUfTs005buJ7p4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1646753"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Ui0ZHjTqW/a4tLrOFzsLIoKBmdU=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-591409" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;FH1zA6CpJV0nDxLviXUjMBhhkyg=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue257700"&gt;
+fSbJF0ymHUjLrCLlHnqjUbg7wbFWQaeVEe8JrJOywTTeOcyJbG/RHnlEaJf75eQ6bYnooaPWiwVF
+DiUbQUHSpumrL0ctS1JOyHMJ9lqycsBTc3pQ3S7sR1pMy3/r449gAlefRd2glhGYt5T14gPi/myp
+V3Oxc59yXaF3sY9nlIJc+G8AK1JOyq+JBYstssMd4T1Qj3KAzFyvLsbLYNWpvh2nM+/hN3EVaXcz
+H5/vxcA3NGp0ezXTP3lGvTt/monR/vs3hb5R9yqXvLYjbbJ3RXDbDyCKS6aWvYZc4RpX2ecqTIQS
+KdHWxjbEdyaUzgHeub+Gkz/0Q0S97EuzFjCHSg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1646753"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIILwzCCCaugAwIBAgIMAzcclcUpWGo2pxLNMA0GCSqGSIb3DQEBCwUAMIG5MRYwFAYDVQQFEw0x
+NzkyNjAxMjE1MDAxMQswCQYDVQQGEwJFQzE2MDQGA1UEChMtQU5GQUMgQVVUT1JJREFEIERFIENF
+UlRJRklDQUNJT04gRUNVQURPUiBDLkEuMSUwIwYDVQQLExxBTkYgQXV0b3JpZGFkIGludGVybWVk
+aWEgIEVDMTMwMQYDVQQDEypBTkYgSGlnaCBBc3N1cmFuY2UgRWN1YWRvciBJbnRlcm1lZGlhdGUg
+Q0EwHhcNMjQwMTA4MTkzMTM4WhcNMjYwMTA3MTkzMTM4WjCCAfAxEzARBgNVBAoMCkVESVRZIFMu
+QS4xGjAYBgorBgEEAYKkQgoEDAowOTEwMzE4OTE0MSgwJgYDVQQLDB9DZXJ0aWZpY2FkbyBQZXJz
+b25hIEp1cmlkaWNhIEVDMRQwEgYDVQQqDAtKVUxJTyBDRVNBUjEWMBQGA1UEYRMNMDk5MjI0NzMw
+NDAwMTELMAkGA1UEBhMCRUMxEzARBgNVBAUTCjA5MTAzMTg5MTQxFjAUBgNVBAQMDUJFUk1FTyBG
+RUlKT08xLTArBgNVBAMMJDA5MTAzMTg5MTQgSlVMSU8gQ0VTQVIgQkVSTUVPIEZFSUpPTzEdMBsG
+A1UEDAwUQWRtaW5pc3RyYWRvciDDum5pY28xKTAnBgkqhkiG9w0BCQEWGmFkbWluaXN0cmFjaW9u
+QGVkaXR5c2EuY29tMYGPMIGMBgNVBA0MgYRSZWcuIFB1Yi46QUFBIEluc2NyaXBjacOzbjogMDAs
+IFRvbW8gQUFBLCBMaWJybyAwLCBGb2xpbyAwLCBIb2phIDAgQ2FyZ286QWRtaW5pc3RyYWRvciDD
+um5pY28gTm90YXJpbzpBQUEgRmVjaGEgZGUgT3RvcmdhbWllbnRvOm51bGwxDzANBgNVBAgMBkJ1
+cmdvczEPMA0GA1UEBwwGVEFSUVVJMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt2kr
+knIRvKF3XWxtHeuul+crrPjzXEMQED1nBaUxYRtC6nT3FvDpz/FpvSoP56q+uBBCyHDAdaqPbaoH
+efb+9WDqpDc8i6ZA1AoEFrEQBvYMVkcjwl/xtoxHxomWV+k1dGSoymwep25pXXpPQBl2VJGERrOe
+J3lTZvAiCD3PR7xdzN54HXeoCL9cUyfoNtNyWqygtzUkEXsqfOeDLd7CS0+HwU5swhXSQ/lZppC+
+L4+5kAl/z12Eish82jMUEIbfxvhe2/6zTjM0rH07Xa4KqjOf0X9m9kUXXwmKHTf0HyTNyrJ5268l
+s+Ue3zUR8o4jXi4nsVaZpjJ61pEvzKaWhwIDAQABo4IFjzCCBYswHwYDVR0jBBgwFoAUkq7Uy4K0
+mcbRexFsZerFTWgh+awwHQYDVR0OBBYEFNrMuiC838Rjt4G9DnRVC5xsM8bKMIH1BgNVHREEge0w
+geqBGmFkbWluaXN0cmFjaW9uQGVkaXR5c2EuY29tpIHLMIHIMRswGQYKKwYBBAGCpEIKAQwLSlVM
+SU8gQ0VTQVIxFjAUBgorBgEEAYKkQgoCDAZCRVJNRU8xFjAUBgorBgEEAYKkQgoDDAZGRUlKT08x
+GjAYBgorBgEEAYKkQgoEDAowOTEwMzE4OTE0MRkwFwYJKwYBBAGDvW4BDApBLTA1MDEyMDI0MS0w
+KwYDVQQDDCQwOTEwMzE4OTE0IEpVTElPIENFU0FSIEJFUk1FTyBGRUlKT08xEzARBgNVBAUMCjA5
+MTAzMTg5MTQwDgYDVR0PAQH/BAQDAgbAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDBQ
+BgNVHR8ESTBHMEWgQ6BBhj9odHRwOi8vY3JsLmFuZi5lcy9jcmwvQU5GSGlnaEFzc3VyYW5jZUVj
+dWFkb3JJbnRlcm1lZGlhdGVDQS5jcmwwggEDBgNVHSAEgfswgfgwgd8GDCsGAQQBgqRCAgUBAzCB
+zjAoBggrBgEFBQcCARYcaHR0cDovL3d3dy5hbmYuZXMvZG9jdW1lbnRvczCBoQYIKwYBBQUHAgIw
+gZQMgZFDZXJ0aWZpY2FkbyBjb25mb3JtZSBhIGxhIGxlZ2lzbGFjacOzbiBkZSBmaXJtYSBlbGVj
+dHLDs25pY2EuIEFudGVzIGRlIGFjZXB0YXJsbyBjb21wcnVlYmUgaW50ZWdyaWRhZCwgbGltaXRh
+Y2lvbmVzLCB2aWdlbmNpYSB5IHVzb3MgYXV0b3JpemFkb3MuMAkGBwQAi+xAAQEwCQYHYIVUAQMF
+CDCBmwYIKwYBBQUHAQEEgY4wgYswJwYIKwYBBQUHMAGGG2h0dHA6Ly9vY3NwLmFuZi5lcy9zcGFp
+bi9BVjBgBggrBgEFBQcwAoZUaHR0cDovL3d3dy5hbmYuZXMvZXMvY2VydGlmaWNhdGVzLWRvd25s
+b2FkL0FORkhpZ2hBc3N1cmFuY2VFY3VhZG9ySW50ZXJtZWRpYXRlQ0EuY2VyMAwGA1UdEwEB/wQC
+MAAwKAYJKwYBBAGBjxwTBBsMGTU5NzI4MjIxMTI5NC00ODQ2NjU1NDU3MDIwHQYKKwYBBAGBjxwT
+AgQPDA0wOTkyMjQ3MzA0MDAxMCkGCisGAQQBgqRCEwEEGwwZNDg0NjY1NTQ1NzAyLTQ3NjgxOTc0
+NzA5NTAaBgorBgEEAYKkQgMBBAwMCjA5MTAzMTg5MTQwGgYKKwYBBAGCpEIDCgQMDApFRElUWSBT
+LkEuMB0GCisGAQQBgqRCAwsEDwwNMDk5MjI0NzMwNDAwMTASBgorBgEEAYKkQgMMBAQMAkVDMBsG
+CisGAQQBgqRCAwIEDQwLSlVMSU8gQ0VTQVIwHQYKKwYBBAGCpEIDAwQPDA1CRVJNRU8gRkVJSk9P
+MCQGCisGAQQBgqRCAwUEFgwUQWRtaW5pc3RyYWRvciDDum5pY28wFgYKKwYBBAGCpEIDCQQIDAZU
+QVJRVUkwFwYKKwYBBAGCpEIqAQQJDAdVSU8tMDE1MBMGCisGAQQBgqRCLgEEBQwDNzMwMFAGCisG
+AQQBgqRCLwEEQgxAYjQzZmI4ZjQ5OTMxYzZjOGJkZTgwZGY3MjkxMDJiMDU2ZTMwMTk3OTBjNmJl
+YWU0MTU4NTQwZDk2M2YzZTIzNzBEBggrBgEFBQcBAwQ4MDYwCAYGBACORgEBMBMGBgQAjkYBBjAJ
+BgcEAI5GAQYBMAkGBwQAi+xJAQEwCgYIKwYBBQUHCwIwDQYJKoZIhvcNAQELBQADggIBAJezYQOW
+BETGL5VsZQulRAYj9Xr1Zp2Xw6+1XEr3aEZqwwLm7kJWx+QgaSLm/xJdlAP8ZLKtolkNXJY7uM3P
+XOh0i+Q6dRpOZ+inKW4Isy7Wvuyx7O+k+PGgRIpCcNGMto3AL/dYh06QkqhvcXNVfnlwOcDE9oJs
+tteXB4v8NKbnKyF/BAKkuueVyrYZqbDoHQUAv+7/losymiNiCtleA2yY75dq+I6NtSyRVQPe1OT5
+vmop1XqG+JlDFmMgB/ZIPkSPmgVElKDhGxARrnq1DfjlHMTZIREGHw0JRdVkARm8Dm4zsh7YpJCw
+GW5GuN2TRgjvpWEPUQVaec9/0GLm/NbFSfXDw8VfkzBhznAtiSNiOZw2KiVdISQIEEn5DCiQ3ma5
+YaDBaItOHZWI/rgck5l4AocIew6tNoXSIQGBS8qcMq0rw9dQlh3XiXe2riJ/2YNcuhb6YCP7VoCu
+9AB8/qQ64ZRPMFvNLC9qACsbqGBFX1pRRnK46Om16HxQCHcIfaGO15hy/VnyEH0/+YiRviXvvBen
++e+ieOU9JiP19+usZx9anaibJTuTNj4mInnAmQPErQS60/8mAB4eKc5svMZfUga9wkhtzOYxqV2J
+N55hU7/SGChhxi7OwOLPjl0VYsqQTuSvFkZKJ1Y7t8RI9ZDF2uh+re7E3rd4Y4uzhjLD
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+t2krknIRvKF3XWxtHeuul+crrPjzXEMQED1nBaUxYRtC6nT3FvDpz/FpvSoP56q+uBBCyHDAdaqP
+baoHefb+9WDqpDc8i6ZA1AoEFrEQBvYMVkcjwl/xtoxHxomWV+k1dGSoymwep25pXXpPQBl2VJGE
+RrOeJ3lTZvAiCD3PR7xdzN54HXeoCL9cUyfoNtNyWqygtzUkEXsqfOeDLd7CS0+HwU5swhXSQ/lZ
+ppC+L4+5kAl/z12Eish82jMUEIbfxvhe2/6zTjM0rH07Xa4KqjOf0X9m9kUXXwmKHTf0HyTNyrJ5
+268ls+Ue3zUR8o4jXi4nsVaZpjJ61pEvzKaWhw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature341368-Object11619"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature341368"&gt;
+                &lt;etsi:SignedProperties Id="Signature341368-SignedProperties559939"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2025-12-01T15:00:16-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;Ee3D5rYzdr+6CUQsDJ0T12EnFPw=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=ANF High Assurance Ecuador Intermediate CA,OU=ANF Autoridad intermedia  EC,O=ANFAC AUTORIDAD DE CERTIFICACION ECUADOR C.A.,C=EC,2.5.4.5=#130d31373932363031323135303031&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;995080938576210856295994061&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-591409"&gt;
+                            &lt;etsi:Description&gt;realizado por JSS TECHNOLOGIES (NIDASA S.A.)&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

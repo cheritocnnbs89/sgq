@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1201202601099254099000120010010000032864242897611</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-12T11:50:29-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+&lt;infoTributaria&gt;
+   &lt;ambiente&gt;2&lt;/ambiente&gt;
+   &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+   &lt;razonSocial&gt;FIBRATOTAL S.A FIBRATO                                                          &lt;/razonSocial&gt;
+   &lt;nombreComercial&gt;FIBRATOTAL S.A FIBRATO&lt;/nombreComercial&gt;
+   &lt;ruc&gt;0992540990001&lt;/ruc&gt;
+   &lt;claveAcceso&gt;1201202601099254099000120010010000032864242897611&lt;/claveAcceso&gt;
+   &lt;codDoc&gt;01&lt;/codDoc&gt;
+   &lt;estab&gt;001&lt;/estab&gt;
+   &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+   &lt;secuencial&gt;000003286&lt;/secuencial&gt;
+   &lt;dirMatriz&gt;RECINTO NUEVA ESPERANZA AV. AB JAIME NEBOT V SOLAR 3 VIA A LA COSTA KM 19.5&lt;/dirMatriz&gt;
+   &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+&lt;/infoTributaria&gt;
+&lt;infoFactura&gt;
+   &lt;fechaEmision&gt;12/01/2026&lt;/fechaEmision&gt;
+   &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+   &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+   &lt;razonSocialComprador&gt;Quimpac Ecuador SA QUIMPACSA&lt;/razonSocialComprador&gt;
+   &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+   &lt;totalSinImpuestos&gt;4837.00&lt;/totalSinImpuestos&gt;
+   &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+   &lt;totalConImpuestos&gt;
+   &lt;totalImpuesto&gt;
+     &lt;codigo&gt;2&lt;/codigo&gt;
+     &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+     &lt;baseImponible&gt;4837.00&lt;/baseImponible&gt;
+     &lt;tarifa&gt;15&lt;/tarifa&gt;
+     &lt;valor&gt;725.55&lt;/valor&gt;
+   &lt;/totalImpuesto&gt;
+   &lt;/totalConImpuestos&gt;
+   &lt;propina&gt;0.00&lt;/propina&gt;
+   &lt;importeTotal&gt;5562.55&lt;/importeTotal&gt;
+   &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+&lt;pagos&gt;
+   &lt;pago&gt;
+     &lt;formaPago&gt;20&lt;/formaPago&gt;
+     &lt;total&gt;5562.55&lt;/total&gt;
+     &lt;plazo&gt;90&lt;/plazo&gt;
+     &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+   &lt;/pago&gt;
+&lt;/pagos&gt;
+&lt;/infoFactura&gt;
+&lt;detalles&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000417&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;ANILLOS DE BRIDAS DE FIBRA DE 3"&lt;/descripcion&gt;
+    &lt;cantidad&gt;6.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;35.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;210.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR 0101000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;210.00&lt;/baseImponible&gt;
+       &lt;valor&gt;31.50&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000398&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;PERFIL TIPO C&lt;/descripcion&gt;
+    &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;65.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;195.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR 001001000003607 "/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;195.00&lt;/baseImponible&gt;
+       &lt;valor&gt;29.25&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000378&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;ANGULO L 76X76X95MMX58M&lt;/descripcion&gt;
+    &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;109.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;327.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR 001001000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;327.00&lt;/baseImponible&gt;
+       &lt;valor&gt;49.05&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000378&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;ANGULO L 76X76X95MMX58M&lt;/descripcion&gt;
+    &lt;cantidad&gt;7.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;109.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;763.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR001001000003607  "/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;763.00&lt;/baseImponible&gt;
+       &lt;valor&gt;114.45&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000398&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;PERFIL TIPO C&lt;/descripcion&gt;
+    &lt;cantidad&gt;4.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;236.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;944.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR001001000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;944.00&lt;/baseImponible&gt;
+       &lt;valor&gt;141.60&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000379&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;ANGULO L 508X508X64X5800MM EN FIBRA&lt;/descripcion&gt;
+    &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;50.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;150.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR 001001000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;150.00&lt;/baseImponible&gt;
+       &lt;valor&gt;22.50&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000141&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;TUBO CUADRADO PRFV 50X5800MM&lt;/descripcion&gt;
+    &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;91.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;273.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR 001001000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;273.00&lt;/baseImponible&gt;
+       &lt;valor&gt;40.95&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000398&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;PERFIL TIPO C&lt;/descripcion&gt;
+    &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;65.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;195.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR 001001000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;195.00&lt;/baseImponible&gt;
+       &lt;valor&gt;29.25&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000139&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;ANGULO 100X100X14X6M EN FIBRA&lt;/descripcion&gt;
+    &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;194.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;582.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR001001000003607-36"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;582.00&lt;/baseImponible&gt;
+       &lt;valor&gt;87.30&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000398&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;PERFIL TIPO C&lt;/descripcion&gt;
+    &lt;cantidad&gt;4.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;65.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;260.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR 001001000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;260.00&lt;/baseImponible&gt;
+       &lt;valor&gt;39.00&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000398&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;PERFIL TIPO C&lt;/descripcion&gt;
+    &lt;cantidad&gt;2.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;115.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;230.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC1000601920 DM 5000003445 GR001001000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;230.00&lt;/baseImponible&gt;
+       &lt;valor&gt;34.50&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+  &lt;detalle&gt;
+    &lt;codigoPrincipal&gt;01-00000398&lt;/codigoPrincipal&gt;
+    &lt;descripcion&gt;PERFIL TIPO C&lt;/descripcion&gt;
+    &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+    &lt;precioUnitario&gt;236.000000&lt;/precioUnitario&gt;
+    &lt;descuento&gt;0.00&lt;/descuento&gt;
+    &lt;precioTotalSinImpuesto&gt;708.00&lt;/precioTotalSinImpuesto&gt;
+    &lt;detallesAdicionales&gt;
+    &lt;detAdicional nombre="Datos Adicionales" valor="OC 1000601920 DM 5000003445 GR 001001000003607"/&gt;
+    &lt;/detallesAdicionales&gt;
+    &lt;impuestos&gt;
+     &lt;impuesto&gt;
+       &lt;codigo&gt;2&lt;/codigo&gt;
+       &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+       &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+       &lt;baseImponible&gt;708.00&lt;/baseImponible&gt;
+       &lt;valor&gt;106.20&lt;/valor&gt;
+     &lt;/impuesto&gt;
+    &lt;/impuestos&gt;
+  &lt;/detalle&gt;
+&lt;/detalles&gt;
+&lt;infoAdicional&gt;
+   &lt;campoAdicional nombre="Direccion"&gt;AV ROSAVIN LOTE 1 Y CALLE COBRE - KM 165 VIA A DAULE&lt;/campoAdicional&gt;
+   &lt;campoAdicional nombre="Email"&gt;compras.electronica@quimpac.com.ec;recepcion@quimpac.com.ec&lt;/campoAdicional&gt;
+&lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature283786"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo749529"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID279478" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature283786-SignedProperties498197"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;l27jllz4tuSpkfQIuiSEJAZ7jz8=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1207710"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;tOGXZqFyj65+DR2kX5BlbM/7WxU=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-149317" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;4CqDL0oGFF+wQjj6kUFH4XbpDgA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue766826"&gt;
+mWXG0R9P+fcWppNSGsInoURInTL2MqnReoSuQamoOtla/w68sejznKcWLlJnR/eEd4IehCYjolsR
+3RpQ5/3X3j/rielqIIj67BymEbGPPgDRyzP8LJzQb0ZzvyTb89fy2aFZ0RnH/CcnsO26DBFRj7Qc
+bA0VdknnQPbQYaYfhsV7PDLw+Ny1Kc905OlxquPTPnxHy/Vnk1eWOO13umgMkyc3rs2zdW1EfQ7k
++TEmJVusrvjueKuF5gqRV4Kuiq+vkuHPRCsE0J+BJj22SsZgU025OyHQNcJL7WnRVHyvmNBapANz
+/f5U/OciJeBPFwt+BqCe+9rLR4fpF8FdAli/+Q==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1207710"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMFTCCCf2gAwIBAgIEKC+M9zANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA5MDIyMDQ3MzhaFw0yNjA5MDIyMDQ3MzhaMIGnMSUw
+IwYDVQQDDBxDSU5USElBIEtBUkxBIFBFUkVaIFBFTkFGSUVMMSAwHgYDVQQFExcwOTE5NDgzNDc5
+LTAyMDkyNDE1NTcyNzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9S
+TUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCjQW27Ev+mYB9YwMOnuDORqoewjq9mlcu6l/uJMAlO
+F9TiztpkeVy2I4kFAPFWwSpK9W4NYdwh5ynOVMHdVB8VXK3fYxXfPJRc3XAi31aockjU7xwQhRTv
+F8xVk8DRy2/7NYamG5Sbxn6fVBfxvlbegn4AMwC9IUchEnu546QQMALXKz1LoAatvUzR7p9BXyNy
+bugQUI/p47WAhN0QCI+QPHmDoGVd2ry3vdWoekvfISaZScBGjEzxu2eLpJpXV3An8FEoianjqrYi
+2IXAxiToHQ0TP87sL02vvXgHMStk1QqOHKEgeut8a0Egcz1Je/dRwVPRAC6fNWzkxpXWthF3AgMB
+AAGjggdTMIIHTzAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2P
+MFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7
+hoG4bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2
+b2NhdGlvbkxpc3Q/YmFzZTAkBgNVHREEHTAbgRljb250YWJpbGlkYWRAZmlicmFkb3IuY29tMIIB
+EgYDVR0gBIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwICMEQeQgBDAGUAcgB0AGkA
+ZgBpAGMAYQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBvACAAZABlACAARQBtAHAAcgBlAHMAYTCB
+oAYKKwYBBAGCpnICBDCBkTCBjgYIKwYBBQUHAgEWgYFodHRwczovL3d3dy5zZWN1cml0eWRhdGEu
+bmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3Mv
+UG9saXRpY2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYwggKiBgNVHR8E
+ggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9w
+dWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJU
+SUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJU
+SUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEL
+MAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQu
+ZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9V
+PUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEg
+Uy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0
+cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2Vi
+L3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklD
+QUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBE
+RSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFCaxfBut
+YOvlCHnP98uMI7pZMFT8MCsGA1UdEAQkMCKADzIwMjQwOTAyMjA0NzM4WoEPMjAyNjA5MDIyMDQ3
+MzhaMAsGA1UdDwQEAwIF4DAYBgorBgEEAYKmcgMFBAoMCENPTlRBRE9SMBoGCisGAQQBgqZyAwEE
+DAwKMDkxOTQ4MzQ3OTAWBgorBgEEAYKmcgMJBAgMBlRBUlFVSTARBgorBgEEAYKmcgMiBAMMAS4w
+QAYKKwYBBAGCpnIDBwQyDDBBQiBKQUlNRSBORUJPVCBWRUxBU0NPIFNPTEFSIDMgWSBDQUxMRSBW
+RUhJQ1VMQVIwHQYKKwYBBAGCpnIDAgQPDA1DSU5USElBIEtBUkxBMB8GCisGAQQBgqZyAyAEEQwP
+MDAxMDAyMDAwNjM1NjEyMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNV
+QURPUjAVBgorBgEEAYKmcgMDBAcMBVBFUkVaMCYGCisGAQQBgqZyAwoEGAwWRklCUkFUT1RBTCBT
+IEEgRklCUkFUTzAdBgorBgEEAYKmcgMLBA8MDTA5OTI1NDA5OTAwMDEwEQYKKwYBBAGCpnIDHQQD
+DAEuMBgGCisGAQQBgqZyAwQECgwIUEVOQUZJRUwwGgYKKwYBBAGCpnIDCAQMDAowOTk4MDg0Njk3
+MA0GCSqGSIb3DQEBCwUAA4ICAQA5ypgzDDwhhkrrh3bsLgi94iUBhDhZ1JNX273bkMd5qlBN8fdN
+7WZHes0lJ/21CbXtJvs0WTdkmjwjw9Ovgkh4xrZdy9bdhK59qLVJNmk6qskNnHTDjzeMMcPLBgn9
+VTFCNGzuS6nTT4U+32y6bDR1+Hwp2hBZ5aROcMSsjz5g/StFYTFCZUryRAuczmAwnt1/iA55cyhZ
+XJcHRer39Y6fyBeHWUlLak5fEKThbfjc02+M04HUG20J22l92I3lqtF5lBlMliVXNstfCUVgYWde
+n02gxhavfF3hTztIre3q5rpWh7LuXKFl+7fbLs22p7hahYvASEn/7wpJiWlU/GTd3gJIwRJ0jYmO
+iwtErOmKOCSEqv4oKk61s00BSIfclUD45mgRaB2CZ82aPky7tDrmKjBi7cxZvFQT1j1LKpB63DC1
+9TrYGpuOMmQ7UFZ1pxF+bmF57sE6y55wqI0E+n+vqkDMr/Kg+G+tgQbfyxdfzi6N3yPxfiK4YcXz
+9zwR4zIBEUmJqxTceY1v7Y6uOZfAMXOzjEwPY2ZkTsIrGDwD/khpCDrzgY6RoVq0rECuMv0gafpV
+YLexiaOiofpF6Y73z6zv1Q3CmhJCanIMyBywU/uCzFzskcLPiLYt/6KTrCYewa/mgBrduZaou3Hq
+OkGcMomWkOoH8DuRgyeQsnrZ7Q==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+o0FtuxL/pmAfWMDDp7gzkaqHsI6vZpXLupf7iTAJThfU4s7aZHlctiOJBQDxVsEqSvVuDWHcIecp
+zlTB3VQfFVyt32MV3zyUXN1wIt9WqHJI1O8cEIUU7xfMVZPA0ctv+zWGphuUm8Z+n1QX8b5W3oJ+
+ADMAvSFHIRJ7ueOkEDAC1ys9S6AGrb1M0e6fQV8jcm7oEFCP6eO1gITdEAiPkDx5g6BlXdq8t73V
+qHpL3yEmmUnARoxM8btni6SaV1dwJ/BRKImp46q2ItiFwMYk6B0NEz/O7C9Nr714BzErZNUKjhyh
+IHrrfGtBIHM9SXv3UcFT0QAunzVs5MaV1rYRdw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature283786-Object162929"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature283786"&gt;
+                &lt;etsi:SignedProperties Id="Signature283786-SignedProperties498197"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-12T11:50:16-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;IgnsBVnY3cR0bYty63Ev5r37b7Y=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;674204919&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-149317"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

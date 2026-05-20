@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% block title %}Detalle tarea{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/detalle_tarea.css') }}">
+<script src="{{ url_for('static', filename='js/tareas/detalle_tarea.js') }}" defer></script>
+
+{% macro fmt_dt(v) -%}
+    {%- if not v -%}
+        -
+    {%- elif v is string -%}
+        {%- set s = v.replace('T', ' ') -%}
+        {{ s[8:10] }}/{{ s[5:7] }}/{{ s[0:4] }} {{ s[11:16] }}
+    {%- else -%}
+        {{ v.strftime('%d/%m/%Y %H:%M') }}
+    {%- endif -%}
+{%- endmacro %}
+
+<h4 class="mb-3">Detalle de tarea</h4>
+
+<div class="card card-custom shadow-sm mb-3">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Título</label>
+                <div>{{ tarea['titulo'] }}</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Estado Global</label>
+                <div>
+                    <span class="badge {% if tarea['estado'] == 'Terminado' %}bg-success{% else %}bg-primary{% endif %}">
+                        {{ tarea['estado'] }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label fw-semibold">Descripción</label>
+                <div class="detalle-prewrap">{{ tarea['descripcion'] }}</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Responsable(s)</label>
+                <div>{{ tarea['propietario'] }}</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Creada por</label>
+                <div>{{ tarea['creador_nombre'] or tarea['creador_username'] }}</div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-semibold small">Creación</label>
+                <div>{{ fmt_dt(tarea['fecha_creacion']) }}</div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-semibold small">Inicio</label>
+                <div>{{ fmt_dt(tarea['fecha_inicio']) }}</div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-semibold small">Compromiso</label>
+                <div>{{ fmt_dt(tarea['fecha_compromiso']) }}</div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-semibold small">Fin Real</label>
+                <div>{{ fmt_dt(tarea['fecha_fin']) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-custom shadow-sm mb-3">
+    <div class="card-body">
+        <h5 class="mb-3">Historial de acciones / pasos</h5>
+
+        {% if acciones %}
+        <div class="table-responsive">
+            <table class="table table-sm align-middle table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th class="historial-col-fecha">Fecha / Inicio</th>
+                        <th class="historial-col-user">Registrado por</th>
+                        <th class="historial-col-asignado">Asignado a / Estado</th>
+                        <th>Actividad (Observación y Detalles)</th>
+                        <th class="historial-col-fecha">Fin Tentativo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in acciones %}
+                    <tr>
+                        <td class="small">
+                            {{ fmt_dt(a['fecha_accion']) }}
+
+                            {% if a['fecha_inicio'] and a['fecha_inicio'] != a['fecha_accion'] %}
+                            <br><span class="text-muted small">Ini: {{ fmt_dt(a['fecha_inicio']) }}</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <small>{{ a['nombre_completo'] or a['username'] }}</small>
+                        </td>
+
+                        <td class="accion-col-asignado">
+                            <div class="fw-bold accion-nombre">
+                                {{ a['nombre_asignado'] or 'Sin asignar' }}
+                            </div>
+
+                            <div class="d-flex align-items-center gap-1 flex-wrap">
+                                <span
+                                    class="badge badge-estado-accion {% if a['estado_accion'] == 'Finalizado' %}bg-success{% elif a['estado_accion'] == 'Bloqueado' %}bg-danger{% else %}bg-info text-dark{% endif %}">
+                                    {{ a['estado_accion'] or 'En proceso' }}
+                                </span>
+
+                                {% if a['estado_accion'] != 'Finalizado' %}
+                                <form action="{{ url_for('finalizar_accion', accion_id=a['id']) }}" method="POST" class="form-inline-action">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-outline-success btn-sm p-0 px-1 accion-btn"
+                                        title="Marcar como terminado">
+                                        <i class="bi bi-check2-all"></i> Terminar
+                                    </button>
+                                </form>
+
+                                <form action="{{ url_for('reenviar_observacion', accion_id=a['id']) }}" method="POST" class="form-inline-action">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm p-0 px-1 accion-btn"
+                                        title="Reenviar recordatorio">
+                                        <i class="bi bi-send"></i> Reenviar
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold">{{ a['observacion'] }}</div>
+                            <div class="text-muted small detalle-prewrap">{{ a['detalles'] }}</div>
+                        </td>
+
+                        <td class="small text-primary">
+                            {{ fmt_dt(a['fecha_fin_tentativa']) }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-muted small">Aún no se han registrado acciones para esta tarea.</div>
+        {% endif %}
+    </div>
+</div>
+
+{% if puede_anotar %}
+<div class="card card-custom shadow-sm mb-3 border-primary">
+    <div class="card-body">
+        <h5 class="mb-3 text-primary">Agregar avance / acción</h5>
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="row g-3">
+                <div class="col-md-7">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-semibold small">Observación corta</label>
+                            <input type="text" name="observacion" class="form-control form-control-sm" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold small">Detalles de la actividad</label>
+                            <textarea name="detalles" rows="4" class="form-control form-control-sm"></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Estado de este paso</label>
+                            <select name="estado_accion" class="form-select form-select-sm">
+                                <option value="En proceso">En proceso</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Finalizado">Finalizado / Realizado</option>
+                                <option value="Bloqueado">Bloqueado</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Fecha fin tentativa</label>
+                            <input type="datetime-local" name="fecha_fin_tentativa" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label fw-semibold small">Asignar responsable de este paso</label>
+                    <input id="responsableSearch" type="text" class="form-control form-control-sm mb-1"
+                        placeholder="Filtrar usuarios...">
+
+                    <div class="d-flex gap-2">
+                        <select id="responsableSelect" name="usuario_accion_id" class="form-select form-select-sm" size="7">
+                            <option value="">-- No asignar (queda libre) --</option>
+                            {% for r in responsables %}
+                            {% set nombre = r['nombre_completo'] %}
+                            <option value="{{ r['id'] }}" data-search="{{ (nombre ~ ' ' ~ r['username'])|lower }}">
+                                {{ nombre or r['username'] }}
+                            </option>
+                            {% endfor %}
+                        </select>
+
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded-circle btn-add-responsable">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary btn-sm">Guardar acción</button>
+                <a href="{{ url_for('listar_tareas', vista='realizar') }}" class="btn btn-link btn-sm text-muted">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

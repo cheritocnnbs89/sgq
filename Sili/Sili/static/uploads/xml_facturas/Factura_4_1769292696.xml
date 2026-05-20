@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<autorizacion>
+<estado>AUTORIZADO</estado>
+<numeroAutorizacion>1101202601099301716700120080010006382260000000115</numeroAutorizacion>
+<fechaAutorizacion>2026-01-11T14:02:05-05:00</fechaAutorizacion>
+<ambiente>PRODUCCIÓN</ambiente>
+<comprobante><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<factura id="comprobante" version="1.1.0">
+<infoTributaria>
+   <ambiente>2</ambiente>
+   <tipoEmision>1</tipoEmision>
+   <razonSocial>INVERSIONES CANASTO  S A</razonSocial>
+   <nombreComercial>INV&#x002D;CANASTO S.A.</nombreComercial>
+   <ruc>0993017167001</ruc>
+   <claveAcceso>1101202601099301716700120080010006382260000000115</claveAcceso>
+   <codDoc>01</codDoc>
+   <estab>008</estab>
+   <ptoEmi>001</ptoEmi>
+   <secuencial>000638226</secuencial>
+   <dirMatriz>COOP VALLE GERANEOS MZ 302 SL 26</dirMatriz>
+</infoTributaria>
+<infoFactura>
+   <fechaEmision>11/01/2026</fechaEmision>
+   <dirEstablecimiento>AV. FEBRES A LADO URB. BALI</dirEstablecimiento>
+<obligadoContabilidad>SI</obligadoContabilidad>
+   <tipoIdentificacionComprador>05</tipoIdentificacionComprador>
+   <razonSocialComprador>KAROL LEAL</razonSocialComprador>
+   <identificacionComprador>0950525048</identificacionComprador>
+   <totalSinImpuestos>15.00</totalSinImpuestos>
+   <totalDescuento>0.00</totalDescuento>
+   <totalConImpuestos>
+   <totalImpuesto>
+      <codigo>2</codigo>
+      <codigoPorcentaje>4</codigoPorcentaje>
+      <baseImponible>15.00</baseImponible>
+      <valor>2.25</valor>
+   </totalImpuesto>
+   </totalConImpuestos>
+   <propina>0.00</propina>
+   <importeTotal>17.25</importeTotal>
+   <moneda>DOLAR US</moneda>
+<pagos>
+<pago>
+<formaPago>19</formaPago>
+<total>17.25</total>
+<plazo>0</plazo>
+<unidadTiempo>DIAS</unidadTiempo>
+</pago>
+</pagos>
+</infoFactura>
+<detalles>
+   <detalle>
+     <codigoPrincipal>PER6180</codigoPrincipal>
+     <descripcion>TARJETA LAVADA DE CARRO $ 15 </descripcion>
+     <cantidad>1.000000</cantidad>
+     <precioUnitario>15.000000</precioUnitario>
+     <descuento>0.00</descuento>
+     <precioTotalSinImpuesto>15.00</precioTotalSinImpuesto>
+     <impuestos>
+         <impuesto>
+            <codigo>2</codigo>
+            <codigoPorcentaje>4</codigoPorcentaje>
+            <tarifa>15.00</tarifa>
+            <baseImponible>15.00</baseImponible>
+            <valor>2.25</valor>
+         </impuesto>
+     </impuestos>
+   </detalle>
+</detalles>
+<infoAdicional>
+<campoAdicional nombre="DIRECCION">VILLA CLUB</campoAdicional>
+<campoAdicional nombre="EMAIL">kvleal@outlook.com</campoAdicional>
+<campoAdicional nombre="CONTRIBUYENTEGENERAL">CONTRIBUYENTE R&#x00C9;GIMEN GENERAL</campoAdicional>
+</infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-1131310678"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><ds:Reference Id="ReferenciaComprobante" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>hRJgxh49uJfJqOwoxfAjzhLEFYw=</ds:DigestValue></ds:Reference><ds:Reference Id="ReferenciaCertificado" URI="#Certificado"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>/9SVeazW/YCDNbx2g/X+wSUY23M=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignedProperties-1266486628"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>wMfY4sCnr1Q+WhriErrayA5NmI8=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>UeXYGrAfyZu/dgw2LbB5q78A8pin9am6Nl/d856jK4oU7evZwd4x8FS3TmMGCUs1gFH0E5V+etlObHVnGawCw8dEK07xwWIxSHrtTB24Sd9xmF5FHDRiiD1xgqnvrtC9sIackCOR4GjeFYYbdz3/UNf1H245S0ADkm0QTeNEoGEouz+C17rO5Writs52P+q74YmSnjxsiUKOiZy+CggcbCqCb9m/Z7YpXFQithNlY6tk/FSK5fPjMnXxpe3+NtnOP3TATzohnlOkqQ//4q33KcZKQL3szbD/09Wd9RP2BAtJbZ/OvQu06uZYQR750JoP009EKAOuoffQOKP/v7knpA==</ds:SignatureValue><ds:KeyInfo Id="Certificado"><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>s0+Q9ttO0z0ARiIXmdMEqe8LVo75qKQ8n0jeSZ3ltO23tFHVjjgFdfoQM/lgkFKu8PwBUvJZTVtnLQElmGMftypwPS9i1pRTgBlCEQx7/Z8SkE+5Jr2R0AiX4bNXemyJ+BZenfsxeZXdYCYOlnuYXPnZMUqrClIs8sq8R0ECFM06VmkxkWZxoJkMEvCGw2roVXgvIry5QTJBS815IWa0Ki6ozAYBdszAXp1fx61lFsgkT2tIZcsG+H7olSALHyrdGlaGioMb6nL/EjvRBM/5Wg/d6YSNM76/2YpfcI++a2Y8uJCTnK0sop7wpParl/Z2XGp1za+YVtmrIKy2+tsBSw==</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue><ds:X509Data><ds:X509IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC</ds:X509IssuerName><ds:X509SerialNumber>1159867266</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509SubjectName>C=EC, O=SECURITY DATA S.A. 2, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, 2.5.4.5=121023091346, CN=MARCO ANTONIO BASTIDAS TERAN</ds:X509SubjectName><ds:X509Certificate>MIIL/DCCCeSgAwIBAgIERSIrgjANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMzEwMTIxNDA0MDNaFw0yNjEwMTExNDA0MDNaMIGcMSUwIwYDVQQDDBxNQVJDTyBBTlRPTklPIEJBU1RJREFTIFRFUkFOMRUwEwYDVQQFEwwxMjEwMjMwOTEzNDYxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs0+Q9ttO0z0ARiIXmdMEqe8LVo75qKQ8n0jeSZ3ltO23tFHVjjgFdfoQM/lgkFKu8PwBUvJZTVtnLQElmGMftypwPS9i1pRTgBlCEQx7/Z8SkE+5Jr2R0AiX4bNXemyJ+BZenfsxeZXdYCYOlnuYXPnZMUqrClIs8sq8R0ECFM06VmkxkWZxoJkMEvCGw2roVXgvIry5QTJBS815IWa0Ki6ozAYBdszAXp1fx61lFsgkT2tIZcsG+H7olSALHyrdGlaGioMb6nL/EjvRBM/5Wg/d6YSNM76/2YpfcI++a2Y8uJCTnK0sop7wpParl/Z2XGp1za+YVtmrIKy2+tsBSwIDAQABo4IHRTCCB0EwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3Awgc8GA1UdLgSBxzCBxDCBwaCBvqCBu4aBuGxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9kZWx0YVJldm9jYXRpb25MaXN0P2Jhc2UwIwYDVR0RBBwwGoEYbWFyY29iYXN0aWRhc3RAZ21haWwuY29tMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsGAQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4AdABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50YW50ZSBMZWdhbC5wZGYwggKiBgNVHR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFAfVx99wqXXrhGDyaeB1CEiU1aAtMCsGA1UdEAQkMCKADzIwMjMxMDEyMTQwNDAzWoEPMjAyNjEwMTExNDA0MDNaMAsGA1UdDwQEAwIF4DAfBgorBgEEAYKmcgMFBBEMD0dFUkVOVEUgR0VORVJBTDAaBgorBgEEAYKmcgMBBAwMCjA5MTQ3ODg4NDkwGQYKKwYBBAGCpnIDCQQLDAlHVUFZQVFVSUwwEQYKKwYBBAGCpnIDIgQDDAEuMBgGCisGAQQBgqZyAwcECgwIU09MQVIgMjYwHQYKKwYBBAGCpnIDAgQPDA1NQVJDTyBBTlRPTklPMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAwNDY1OTQ5MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAYBgorBgEEAYKmcgMDBAoMCEJBU1RJREFTMDMGCisGAQQBgqZyAwoEJQwjSU5WRVJTSU9ORVMgQ0FOQVNUTyBJTlYgQ0FOQVNUTyBTIEEwHQYKKwYBBAGCpnIDCwQPDA0wOTkzMDE3MTY3MDAxMBIGCisGAQQBgqZyAx0EBAwCTm8wFQYKKwYBBAGCpnIDBAQHDAVURVJBTjAaBgorBgEEAYKmcgMIBAwMCjA5OTk0ODAwMjAwDQYJKoZIhvcNAQELBQADggIBAMQS+IKRxv2PzH5TUNSv+o38Oc8aHzrKXQcI4AxxkT44eVkaoXeo5xPnFCi666zRlC0BFfbiRqdTPguwMUvOldGlnblH/zcZgrHIlmPeCS9ctMVyrvFhERDwl5konw4lmR3fEZ2ma387E7XM/SwbQXJmQPo0JLvfEysIwq0cP9Rc6UDoOU2NLKfYt+LvVjOn/YbGqiBsMTkpTzw9QCRvgObEIvUPqLNUbnAbpfUFrprmX+J5gma3mlwcr+cpnPMYaKc6PVVITpWzsSaaw9hA8UfMG2BnUDbo6K4fWMMaRZZPBFNnppzLYPWEAG4Mzg1MHhkhrW3IgTTtBA778sC/ruqEm1wkDM9kfjwOJEKJoZ2YgSyjaqzBcjmt3q92uMM/KIXloSiddGj3XMMwZSLYVxYQGIt+HSmSRBnJfXlJYwaqk3TBV0flqxE3dBur+SZGT+9cFcWXo7CRuiqTtzB4QS7m9CM9Fxw4mPt3rhqtM8DgI+Vt0D7DoXmkIwbPJ7qJYhtNQfC5wcdqmg58+GoHNOLLXwJYm36weQF73k3+ql6KIMxmysEikOkaat/vfQHswcDU5sj005xj8rRhv8C9E1XHHEY42cWKZk6rMvKOv2YVP8ubotJCJx9fRCN1wwugdGYGElA/VCAN6Q5/PTVv/ZpaF8nwnuqPeUckkuOT5wDx</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><QualifyingProperties xmlns="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature-1131310678"><SignedProperties Id="SignedProperties-1266486628"><SignedSignatureProperties><SigningTime>2026-01-11T18:03:11.955Z</SigningTime><SigningCertificate><Cert><CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>b1ifWAKvmaVgj+OfJVe8vq9L2yU=</ds:DigestValue></CertDigest><IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC</ds:X509IssuerName><ds:X509SerialNumber>1159867266</ds:X509SerialNumber></IssuerSerial></Cert></SigningCertificate></SignedSignatureProperties></SignedProperties></QualifyingProperties></ds:Object></ds:Signature>
+</factura>]]></comprobante>
+<mensajes/>
+</autorizacion>
+

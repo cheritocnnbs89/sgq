@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2301202601176000562000120010030000910791722023710</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-23T09:30:00-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;ESCUELA POLITECNICA NACIONAL&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;ESCUELA POLITECNICA NACIONAL&lt;/nombreComercial&gt;
+        &lt;ruc&gt;1760005620001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2301202601176000562000120010030000910791722023710&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;003&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000091079&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;LADRON DE GUEVARA E11-253 Y ANDALUCIA&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;23/01/2026&lt;/fechaEmision&gt;
+        &lt;contribuyenteEspecial&gt;M803001&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A.&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;PANAMERICANA SUR KM14 PARQUE INDUSTRIAL DEL SUR LOTE 180 CALLE H Y 3RA TRANSVERSAL&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;1524.00&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;1524.00&lt;/baseImponible&gt;
+                &lt;valor&gt;228.60&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0&lt;/propina&gt;
+        &lt;importeTotal&gt;1752.60&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;1752.60&lt;/total&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CI-S0177&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;ALÚMINA SOLUBLE TOTAL&lt;/descripcion&gt;
+            &lt;cantidad&gt;12.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;38.50&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;462.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;462.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;69.30&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CI-S0207&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;BASICIDAD EXPRESADA COMO AL2O32 LIBRE&lt;/descripcion&gt;
+            &lt;cantidad&gt;12.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;44.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;528.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;528.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;79.20&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CI-S0499&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;DENSIDAD&lt;/descripcion&gt;
+            &lt;cantidad&gt;12.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;6.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;72.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;72.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;10.80&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CI-S0178&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;HIERRO SOLUBLE TOTAL&lt;/descripcion&gt;
+            &lt;cantidad&gt;12.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;27.50&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;330.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;330.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;49.50&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CI-S0206&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;MATERIA INSOLUBLE EN AGUA&lt;/descripcion&gt;
+            &lt;cantidad&gt;12.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;11.00&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;132.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;132.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;19.80&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature414183"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo1033448"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID902351" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature414183-SignedProperties217469"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;pNeJKzvTTSXdvhNYPaEjofCnSNs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1437208"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;RT9STihpg5n2zxmmZn6fzZws+qw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-779473" Type="http://uri.etsi.org/01903#CountersignedSignature" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;01UuIkmUOky3v7V/8WV0sWKzt2Y=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue990032"&gt;
+PHyVS1o5M2NQv5CxqbJl3D8WoInEfcd3J4IaJomGT383nQmN4Pmmcn1NqWbYgIglnazsvHBfq25j
+THKqjl2Z/1kV1e/QS9kk2Dnaib/kEgSoaqFo5DQOhUGhB3IzsaVeyle4tYXmxvNdaybyIJCzkFn/
+h83KrjzLR0YKFDYoz97jahUcA+aKIwhCaraUR1Wt0kBAirhd5NwfHr8CpXLm8NOG5zlGa/CA8gza
+OXiHZrFMFq8YhCoBJ63DP3u2e2BC9xi208LljYE8G/oZYFxo/Sl8puAwdCANaJhQjYrGqbSIiq9U
+QtGm2EcDuVZFXEbiRp376CWqI5KNA+IC4FYW6Q==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1437208"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJ9zCCB9+gAwIBAgIEZeTs2DANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV
+BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB
+QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTI0MTAzMDEzNDA0NFoXDTI2MTAzMDE0MTA0
+M1owgbIxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw
+NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w
+DAYDVQQHEwVRVUlUTzE2MBEGA1UEBRMKMDIwMDAzODg5NzAhBgNVBAMTGlJVQkVOIERBUklPIEFO
+RFJBREUgUEFTVE9SMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoEV1QSD2KZIcrKsQ
+tD8BHUzJJSIkDCSiTocemO1KeaIZdk1pK68B9I/9OJcSPP4lg2BEk4Lt6dJUySPtmmU1+dnHqIOF
++ENTbDnJIJo75nTr4lgfJYc9Ws5MuyDWK4LKNIPPHdoC2BXg7dDNaKdF65dFBNJyOJ7fDxQHejWn
+2GEieg5Lubp7NbCddWzXk36XGvx6XQChCeVj+JXunzQ5uxqFfsaO0HDTl+kAAqrPvOdoB/J6B2uD
+Bt9PwwVNBkKVg3beqJknTIVZ9+mcv50KXmKT2IxhOrUHnauCo372aRMmlB+b+WCRnKBl4DPf0AVS
+psg+PLW1BbS6EuZj25DcXwIDAQABo4IFIjCCBR4wCwYDVR0PBAQDAgeAMGcGA1UdIARgMF4wXAYL
+KwYBBAGCqDsCAgEwTTBLBggrBgEFBQcCARY/aHR0cDovL3d3dy5lY2kuYmNlLmVjL3BvbGl0aWNh
+LWNlcnRpZmljYWRvL3BlcnNvbmEtanVyaWRpY2EucGRmMIGRBggrBgEFBQcBAQSBhDCBgTA+Bggr
+BgEFBQcwAYYyaHR0cDovL29jc3AuZWNpLmJjZS5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29j
+c3AwPwYIKwYBBQUHMAGGM2h0dHA6Ly9vY3NwMS5lY2kuYmNlLmVjL2VqYmNhL3B1YmxpY3dlYi9z
+dGF0dXMvb2NzcDAsBgorBgEEAYKoOwMKBB4THEVTQ1VFTEEgUE9MSVRFQ05JQ0EgTkFDSU9OQUww
+HQYKKwYBBAGCqDsDCwQPEw0xNzYwMDA1NjIwMDAxMBoGCisGAQQBgqg7AwEEDBMKMTcxNDgxMDI1
+NDAbBgorBgEEAYKoOwMCBA0TC1JVQkVOIERBUklPMBcGCisGAQQBgqg7AwMECRMHQU5EUkFERTAW
+BgorBgEEAYKoOwMEBAgTBlBBU1RPUjAYBgorBgEEAYKoOwMFBAoTCFRFU09SRVJPMDoGCisGAQQB
+gqg7AwcELBMqR1JBTkRBIENFTlRFTk8gNjg0IEVERi4gTUFOU0lPTiBJViBEUCBBNjAzMBkGCisG
+AQQBgqg7AwgECxMJMDIyOTIxMjg1MBUGCisGAQQBgqg7AwkEBxMFUVVJVE8wFwYKKwYBBAGCqDsD
+DAQJEwdFQ1VBRE9SMCAGCisGAQQBgqg7AzMEEhMQU09GVFdBUkUtQVJDSElWTzAfBgNVHREEGDAW
+gRRyYXBkYW44NEBob3RtYWlsLmNvbTCCAeEGA1UdHwSCAdgwggHUMIIB0KCCAcygggHIhoHWbGRh
+cDovL2JjZXFsZGFwc3VicDEuYmNlLmVjL2NuPUNSTDIxMDUsY249QUMlMjBCQU5DTyUyMENFTlRS
+QUwlMjBERUwlMjBFQ1VBRE9SLGw9UVVJVE8sb3U9RU5USURBRCUyMERFJTIwQ0VSVElGSUNBQ0lP
+TiUyMERFJTIwSU5GT1JNQUNJT04tRUNJQkNFLG89QkFOQ08lMjBDRU5UUkFMJTIwREVMJTIwRUNV
+QURPUixjPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZYY0aHR0cDovL3d3dy5lY2ku
+YmNlLmVjL0NSTC9lY2lfYmNlX2VjX2NybGZpbGVjb21iLmNybKSBtjCBszELMAkGA1UEBhMCRUMx
+IjAgBgNVBAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYD
+VQQDExxBQyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMRAwDgYDVQQDEwdDUkwyMTA1MCsGA1Ud
+EAQkMCKADzIwMjQxMDMwMTM0MDQ0WoEPMjAyNjEwMzAxNDEwNDNaMB8GA1UdIwQYMBaAFEii3yMf
+HfgsUXqMA81JMqUJwZSrMB0GA1UdDgQWBBRbhDh/oCE5pUoP433p1OtpAfHDczAJBgNVHRMEAjAA
+MBoGCSqGSIb2fQdBAAQNMAsbBVYxMC4wAwIEMDANBgkqhkiG9w0BAQsFAAOCAgEAf0U2iZF/RUH9
+8YGBlNaOl7Ojp6t/7dmIhJ/5KRGlJnngbKs0XPNLSnjrzWtDsBgiiWIy6Q/9XgiFyo5I+uQzRXew
+sYDEuol8shK2Ongkgujf4pEMtRMsNvJvQHjbgUylFaSXpLtdr4kblynUPX23+PJaL5PuIsgat1Ie
+OSnBD9xV2HsH7jmB3IufRyEPPTWUircbDHhlRTt9bHnsy1DC5NsB6I5vsOyX87tNSpVhNvgcFrmR
+clTy0ne0+ju5j7IaZd3Ef4dvZENyC7G+GlgtCdB3hzL/OykMECjb2q2zy/U+1saH65heBaJtEQ+y
+agn7bPsdJEfzCxOG3FrNjQlysDuWrWk3q/+6J8uU9jpBrnf8rAs7faRSRDZDbVnB29Um/LlAVBHf
+dXJN8oXq2YOEnq/d5T69Q+dZGL8IowWLn8D+0oKISxurULswsTenqRaaTCnMmeuBv8IuRYoaNysU
+W6mdgC05se5QbrWUIkCQY4WqDGYBF8Rf7g1VeYctijghgdCfnCbfR9WiYoxhbm0HqkhUnrJ3hpD+
+jCOlnZZ8F6UYe39ci+H6sIF09TiPbPPI4DyGPXzWzP6FKUOcTTyRFSS6Znvpt9SbEcMuACrdvlxt
+cshzRS7koHTevzTolxK0x1TZpbHzmWqnwbvX0o5YQAKUoG0/4vi/Tv8qACza6lY=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+oEV1QSD2KZIcrKsQtD8BHUzJJSIkDCSiTocemO1KeaIZdk1pK68B9I/9OJcSPP4lg2BEk4Lt6dJU
+ySPtmmU1+dnHqIOF+ENTbDnJIJo75nTr4lgfJYc9Ws5MuyDWK4LKNIPPHdoC2BXg7dDNaKdF65dF
+BNJyOJ7fDxQHejWn2GEieg5Lubp7NbCddWzXk36XGvx6XQChCeVj+JXunzQ5uxqFfsaO0HDTl+kA
+AqrPvOdoB/J6B2uDBt9PwwVNBkKVg3beqJknTIVZ9+mcv50KXmKT2IxhOrUHnauCo372aRMmlB+b
++WCRnKBl4DPf0AVSpsg+PLW1BbS6EuZj25DcXw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature414183-Object656101"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature414183"&gt;
+                &lt;etsi:SignedProperties Id="Signature414183-SignedProperties217469"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-23T09:24:00-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;ywuCa4ReVn9/P7QEb+rsZvEoDNQ=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1709501656&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                        &lt;etsi:SignerRole&gt;
+                            &lt;etsi:ClaimedRoles&gt;
+                                &lt;etsi:ClaimedRole&gt;Rol de firma&lt;/etsi:ClaimedRole&gt;
+                            &lt;/etsi:ClaimedRoles&gt;
+                        &lt;/etsi:SignerRole&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

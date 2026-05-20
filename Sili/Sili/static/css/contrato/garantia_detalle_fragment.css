@@ -1,0 +1,65 @@
+.detail-card {
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.detail-head {
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #edf0f2;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 700;
+  color: #495057;
+}
+
+.detail-body {
+  padding: 1rem;
+}
+
+.kv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.kv-table td {
+  padding: .6rem .25rem;
+  vertical-align: top;
+  border-bottom: 1px solid #eef1f3;
+}
+
+.kv-table td.k {
+  width: 180px;
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.kv-table td.v {
+  color: #212529;
+  font-weight: 600;
+}
+
+.kv-section-title {
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: .5rem;
+}
+
+.badge-ok {
+  background: #e9f7ef;
+  color: #198754;
+  border: 1px solid #bde5c8;
+  padding: .25rem .5rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.badge-no {
+  background: #fdecec;
+  color: #dc3545;
+  border: 1px solid #f5c2c7;
+  padding: .25rem .5rem;
+  border-radius: 8px;
+  font-weight: 700;
+}

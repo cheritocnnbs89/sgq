@@ -1,0 +1,131 @@
+{# templates/planilla/tarea_form.html #}
+{% extends 'base.html' %}
+{% block title %}Planilla — {{ 'Editar tarea' if modo=='editar' else 'Nueva tarea' }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planilla/tarea_form.css') }}">
+<script src="{{ url_for('static', filename='js/planilla/tarea_form.js') }}" defer></script>
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <a class="btn btn-outline-secondary" href="{{ url_for('planilla_mensual.tareas_list') }}">← Volver</a>
+  <h1 class="h5 mb-0">{{ 'Editar tarea' if modo=='editar' else 'Nueva tarea' }}</h1>
+</div>
+
+<form method="post"
+      class="row g-3"
+      id="tareaForm"
+      novalidate
+      data-is-edit="{{ '1' if modo == 'editar' else '0' }}"
+      data-users-url-prefix="/planilla-mensual/api/usuarios/by-dep/">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <!-- Nombre -->
+  <div class="col-12">
+    <label class="form-label">Nombre de la tarea</label>
+    <input name="nombre" class="form-control" required value="{{ tarea.nombre if tarea else '' }}">
+  </div>
+
+  <!-- Frecuencia -->
+  <div class="col-md-4">
+    <label class="form-label">Frecuencia</label>
+    <select name="frecuencia" id="frecuencia" class="form-select" required>
+      {% for f in frecuencias %}
+      <option value="{{ f }}" {% if tarea and tarea.frecuencia==f %}selected{% endif %}>{{ f }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Departamento -->
+  <div class="col-md-4">
+    <label class="form-label">Departamento</label>
+    <select name="departamento_id" id="departamento_id" class="form-select" required>
+      <option value="">-- Seleccione --</option>
+      {% for d in departamentos %}
+      <option value="{{ d.id }}" {% if tarea and tarea.departamento_id==d.id %}selected{% endif %}>
+        {{ d.nombre }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Responsable (usuario) -->
+  <div class="col-md-4">
+    <label class="form-label">Responsable (usuario)</label>
+    <select id="responsable_user_id" class="form-select">
+      {% if dept_users %}
+      <option value="">-- Seleccione --</option>
+      {% for u in dept_users %}
+      <option value="{{ u.id }}" {% if selected_user_id and selected_user_id==u.id %}selected{% endif %}>
+        {{ u.username }}{% if u.email %} — {{ u.email }}{% endif %}
+      </option>
+      {% endfor %}
+      {% else %}
+      <option value="">-- Seleccione --</option>
+      {% endif %}
+    </select>
+    <div class="form-text">Se cargan usuarios del departamento elegido.</div>
+  </div>
+
+  <!-- Hidden: responsable_id actual -->
+  {% if tarea %}
+  <input type="hidden" name="responsable_id" id="responsable_id_hidden" value="{{ tarea.responsable_id }}">
+  {% else %}
+  <input type="hidden" name="responsable_id" id="responsable_id_hidden" value="">
+  {% endif %}
+
+  <!-- Día de la semana -->
+  <div class="col-md-6" id="box_dia_semana">
+    <label class="form-label">Día de la semana</label>
+    {# 0=Lunes .. 6=Domingo #}
+    <select name="dia_semana" class="form-select">
+      {% set ds = tarea.dia_semana if tarea else None %}
+      <option value="">-- Seleccione --</option>
+      <option value="0" {{ 'selected' if ds is not none and ds==0 }}>Lunes</option>
+      <option value="1" {{ 'selected' if ds is not none and ds==1 }}>Martes</option>
+      <option value="2" {{ 'selected' if ds is not none and ds==2 }}>Miércoles</option>
+      <option value="3" {{ 'selected' if ds is not none and ds==3 }}>Jueves</option>
+      <option value="4" {{ 'selected' if ds is not none and ds==4 }}>Viernes</option>
+      <option value="5" {{ 'selected' if ds is not none and ds==5 }}>Sábado</option>
+      <option value="6" {{ 'selected' if ds is not none and ds==6 }}>Domingo</option>
+    </select>
+    <div class="form-text">Obligatorio si la frecuencia es Semanal.</div>
+  </div>
+
+  <!-- Día del mes -->
+  <div class="col-md-6" id="box_dia_mes">
+    <label class="form-label">Día del mes</label>
+    <select name="dia_mes" class="form-select">
+      {% set dm = tarea.dia_mes if tarea else None %}
+      <option value="">-- Seleccione --</option>
+      {% for d in range(1,32) %}
+      <option value="{{ d }}" {{ 'selected' if dm is not none and dm==d }}>{{ d }}</option>
+      {% endfor %}
+    </select>
+    <div class="form-text">Obligatorio si la frecuencia es Mensual.</div>
+  </div>
+
+  <!-- Nuevo responsable -->
+  <div class="col-md-8">
+    <label class="form-label">Nuevo responsable (opcional)</label>
+    <input name="nuevo_responsable" id="nuevo_responsable" class="form-control"
+           placeholder="Nombre del responsable" value="">
+    <div class="form-text">
+      Si eliges un usuario arriba, este campo se rellena con su <em>username</em> para crear/usar ese responsable.
+    </div>
+  </div>
+
+  <!-- Activo -->
+  <div class="col-md-4 d-flex align-items-end">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="activo" name="activo"
+             {% if not tarea or tarea.activo %}checked{% endif %}>
+      <label class="form-check-label" for="activo">Activo</label>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Guardar cambios</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('planilla_mensual.tareas_list') }}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

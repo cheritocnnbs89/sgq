@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0112202501176818190000120010020005782400578240317</numeroAutorizacion>
+    <fechaAutorizacion>2025-12-01T12:06:25-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="comprobante" version="1.0.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;AGENCIA DE REGULACION Y CONTROL DE LAS TELECOMUNICACIONES ARCOTEL&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;AGENCIA DE REGULACION Y CONTROL DE LAS TELECOMUNICACIONES ARCOTEL&lt;/nombreComercial&gt;
+    &lt;ruc&gt;1768181900001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0112202501176818190000120010020005782400578240317&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;001&lt;/estab&gt;
+    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000578240&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;LA PRADERA Calle: AV. 9 DE OCTUBRE Numero: N27-75 Intersección: BERLIN Edificio: OLIMPO Numero de oficina: PB Numero de piso: 2 Referencia: DIAGONAL A&lt;/dirMatriz&gt;
+    &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;01/12/2025&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;LA PRADERA Calle: AV. 9 DE OCTUBRE Numero: N27-75 Intersección: BERLIN Edificio: OLIMPO Numero de oficina: PB Numero de piso: 2 Referencia: DIAGONAL A&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;NAC-14-790&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;PARQUE INDUSTRIAL PASCUALES KM. 16.5 VIA A DAULE, CALLE ROSAVIN LOTE 1 ED. QUIMPAC ECUADOR S.A. DIAGONAL A LA CERVECERIA NACIONAL&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;17.80&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;17.80&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+        &lt;valor&gt;2.67&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;importeTotal&gt;20.47&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;20.47&lt;/total&gt;
+        &lt;unidadTiempo&gt;dia&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;UH&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;VHF, UHF (Radios de dos vías)&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;17.800000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;17.80&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;17.80&lt;/baseImponible&gt;
+          &lt;valor&gt;2.67&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Direccion"&gt;PARQUE INDUSTRIAL PASCUALES KM. 16.5 VIA A DAULE, CALLE ROSAVIN LOTE 1 ED. QUIMPAC ECUADOR S.A. DIAGONAL A LA CERVECERIA NACIONAL&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Email"&gt;compras.electronica@quimpac.com.ec&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature309832"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo739637"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID207801" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature309832-SignedProperties209990"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;jfgYirKaNhw3liCmlvPvmPm4fYo=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1262911"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ncSjdaJnm5D+C9NeDmN4XseeRPw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-547254" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Xfk3omQ4kSgPXVm70q5gNIS9W+U=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue1024450"&gt;
+HuA8TWQg2w8+q1FcieI4//oG9YRAo3AdVgzzBaub+ZjK1lGlPX3EYgOC4MbTwBPTR77IFLCr3cSo
+4iv1UA6bLK0QekS7IOWQflQrYUkVWz6fqgA4oRnTyG9DPPGX3WKmvDLLOqO57AfgxeuVK2K0kuqA
+9QvxreyOAUIOgQJPmc3fFxc2GD4kT2XT1PnAEbwwrYemux7b3MD1z6Qer+KtCESDe3kKNbrTZqwQ
+AjX6WhnpUxUQ6yHo06g+MzBneWlbWs9u3DpOWoncmUJ6+Ds3jzSnhjKNs4daCFDrVYYziKotogas
+pTQcnzBISumD8bk66liNROuPOWKTy7gtIgQycw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1262911"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKNjCCCB6gAwIBAgIEZeRHTDANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV
+BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB
+QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTI0MDgwODE0MTc0M1oXDTI2MDgwODE0NDgw
+OFowgbUxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw
+NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w
+DAYDVQQHEwVRVUlUTzE5MBEGA1UEBRMKMDAwMDUxMzk1MDAkBgNVBAMTHU1ZUklBTiBJQkVUSCBE
+T0lDRUxBIEFSR1VFTExPMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoICPQ1+DuFNi
+p7/UtnPS19rqqAdhpFYsxKWIENfny/qDWE89Yc5vAWvrr51QWQhhqdT1A75F0FoH7WfhlKdTo4CX
+nk/HUR/2bjen0LTlleQxQHMZbn9+CjHPXkYcrvel+t4yKL1WZ/1+E6y39COFlRo7Yz+AojeI7or3
+FXmmYyO3wtVP2K+0BpVRGnIrUoUgEUYtDjDGRofW8qEyRbfTaSUrVW5iv4H7YJwPt7QEvrSeL4rr
+WJYYlrh0bQwmMXxTcFhRhG0DOeeyVtgZPuT9dk127sVBgZPjG+NQXTXHNcUsKu7cBK9qXteu3cNV
+m8go0Cl4KA0JBT102mPIxOk0DQIDAQABo4IFXjCCBVowCwYDVR0PBAQDAgeAMGcGA1UdIARgMF4w
+XAYLKwYBBAGCqDsCAgEwTTBLBggrBgEFBQcCARY/aHR0cDovL3d3dy5lY2kuYmNlLmVjL3BvbGl0
+aWNhLWNlcnRpZmljYWRvL3BlcnNvbmEtanVyaWRpY2EucGRmMIGRBggrBgEFBQcBAQSBhDCBgTA+
+BggrBgEFBQcwAYYyaHR0cDovL29jc3AuZWNpLmJjZS5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVz
+L29jc3AwPwYIKwYBBQUHMAGGM2h0dHA6Ly9vY3NwMS5lY2kuYmNlLmVjL2VqYmNhL3B1YmxpY3dl
+Yi9zdGF0dXMvb2NzcDBRBgorBgEEAYKoOwMKBEMTQUFHRU5DSUEgREUgUkVHVUxBQ0lPTiBZIENP
+TlRST0wgREUgTEFTIFRFTEVDT01VTklDQUNJT05FUyBBUkNPVEVMMB0GCisGAQQBgqg7AwsEDxMN
+MTc2ODE4MTkwMDAwMTAaBgorBgEEAYKoOwMBBAwTCjE3MTk4MTcyODgwHAYKKwYBBAGCqDsDAgQO
+EwxNWVJJQU4gSUJFVEgwFwYKKwYBBAGCqDsDAwQJEwdET0lDRUxBMBgGCisGAQQBgqg7AwQEChMI
+QVJHVUVMTE8wMQYKKwYBBAGCqDsDBQQjEyFFWFBFUlRPIEVOIEFETUlOSVNUUkFDSU9OIEVOIENB
+SkEwLQYKKwYBBAGCqDsDBwQfEx1DQUxMRSBVTklPTiBZIEdFT1ZBTk5ZIENBTExFUzAZBgorBgEE
+AYKoOwMIBAsTCTAyMjAyMjQzMTAVBgorBgEEAYKoOwMJBAcTBVFVSVRPMBcGCisGAQQBgqg7AwwE
+CRMHRUNVQURPUjAgBgorBgEEAYKoOwMzBBITEFNPRlRXQVJFLUFSQ0hJVk8wKAYDVR0RBCEwH4Ed
+bXlyaWFuLmRvaWNlbGFAYXJjb3RlbC5nb2IuZWMwggHhBgNVHR8EggHYMIIB1DCCAdCgggHMoIIB
+yIaB1mxkYXA6Ly9iY2VxbGRhcHN1YnAxLmJjZS5lYy9jbj1DUkwyMDU3LGNuPUFDJTIwQkFOQ08l
+MjBDRU5UUkFMJTIwREVMJTIwRUNVQURPUixsPVFVSVRPLG91PUVOVElEQUQlMjBERSUyMENFUlRJ
+RklDQUNJT04lMjBERSUyMElORk9STUFDSU9OLUVDSUJDRSxvPUJBTkNPJTIwQ0VOVFJBTCUyMERF
+TCUyMEVDVUFET1IsYz1FQz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2WGNGh0dHA6Ly93
+d3cuZWNpLmJjZS5lYy9DUkwvZWNpX2JjZV9lY19jcmxmaWxlY29tYi5jcmykgbYwgbMxCzAJBgNV
+BAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcwNQYDVQQLEy5FTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4wDAYDVQQHEwVRVUlU
+TzElMCMGA1UEAxMcQUMgQkFOQ08gQ0VOVFJBTCBERUwgRUNVQURPUjEQMA4GA1UEAxMHQ1JMMjA1
+NzArBgNVHRAEJDAigA8yMDI0MDgwODE0MTc0M1qBDzIwMjYwODA4MTQ0ODA4WjAfBgNVHSMEGDAW
+gBRIot8jHx34LFF6jAPNSTKlCcGUqzAdBgNVHQ4EFgQUj+JSXEGuAgQwo/O/dsf1vzS9l9swCQYD
+VR0TBAIwADAZBgkqhkiG9n0HQQAEDDAKGwRWOC4zAwIEMDANBgkqhkiG9w0BAQsFAAOCAgEATLKL
+hP60iJ7NJcxWHVs7tz6sm3Sek6rcIWS1av6FqYntmHdKBZPJs2en5lbe9mZ/9jY8dAbaIAxTEGLk
+tbx7t3FdeZ3nmkPCwxLYbqxedsZSPkb8nxMrGLBdo2xWzD7KCSjwCnow7gVeJ3KcbL8BwxiGcsHb
+5jj0pUtCEkPckHW/dtbVlRPEaOTYfkKtIhSpqHfcXznV0y+hD7skLTRlvu3Cyb2Ji/GeQ33q/MP1
+xhGaeT6V/0wJ+NhPo3borZf8uPaeqV2OIXcn7vHde4PhO68i8Za6E4CY1m/joB4vlco/YuqiV1vV
+HBjx/v7EjcfK3W5r09j5oRfLTlGCRzV8atKJdd8Og5T7kX6HtiTq0y4XdlcpBAk5mN62TS0n9rO3
+jItipvYArNY9REMMtohuzmJHeqYK6YqXzMK4AOG6Ag0ffj56TJyZL7j/r4kjlQ++dBM9UfrQNW3O
+snqL1Kl6ZbV+NzoZ1JA5ilsiE5uJq2NUzF4D8DwwAJRgeoIv6jcv5xrjx+M8SooxaoUjhqgJO7dq
+mGBmNI6MP6mpgJ/hbj/B9MFAtwy2JB8mfJD587d/tlm0wrwR6jS/8rBPT5lABEFKGgRssbmvu67t
+V8SiIj4xPhw/KuTFN4sUtUJOJq0l3rH45/A95uqGdzhT7PSurfK9A0VHhOJnntlMsmULoMQ=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+oICPQ1+DuFNip7/UtnPS19rqqAdhpFYsxKWIENfny/qDWE89Yc5vAWvrr51QWQhhqdT1A75F0FoH
+7WfhlKdTo4CXnk/HUR/2bjen0LTlleQxQHMZbn9+CjHPXkYcrvel+t4yKL1WZ/1+E6y39COFlRo7
+Yz+AojeI7or3FXmmYyO3wtVP2K+0BpVRGnIrUoUgEUYtDjDGRofW8qEyRbfTaSUrVW5iv4H7YJwP
+t7QEvrSeL4rrWJYYlrh0bQwmMXxTcFhRhG0DOeeyVtgZPuT9dk127sVBgZPjG+NQXTXHNcUsKu7c
+BK9qXteu3cNVm8go0Cl4KA0JBT102mPIxOk0DQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature309832-Object806908"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature309832"&gt;
+                &lt;etsi:SignedProperties Id="Signature309832-SignedProperties209990"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2025-12-01T12:03:49-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;p5M5xasCkJL3MTJUPs9TbO3c/Dw=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1709459276&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                        &lt;etsi:SignaturePolicyIdentifier&gt;
+                            &lt;etsi:SignaturePolicyId&gt;
+                                &lt;etsi:SigPolicyId&gt;
+                                    &lt;etsi:Identifier&gt;http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf&lt;/etsi:Identifier&gt;
+                                    &lt;etsi:Description&gt;Política de Firma FacturaE v3.1&lt;/etsi:Description&gt;
+                                &lt;/etsi:SigPolicyId&gt;
+                                &lt;etsi:SigPolicyHash&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;Ohixl6upD6av8N7pEvDABhEL6hM=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:SigPolicyHash&gt;
+                            &lt;/etsi:SignaturePolicyId&gt;
+                        &lt;/etsi:SignaturePolicyIdentifier&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-547254"&gt;
+                            &lt;etsi:Description&gt;comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

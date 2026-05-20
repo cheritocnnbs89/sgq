@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Carga masiva de proveedores{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/terceros/terceros_carga_masiva.css') }}">
+
+<div id="terceros-carga-config"></div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Carga masiva de proveedores</h4>
+  <a href="{{ url_for('proveedores_carga_plantilla') }}" class="btn btn-outline-secondary btn-sm">
+    Descargar plantilla
+  </a>
+</div>
+
+<div class="card card-custom">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data" class="row g-3" id="tercerosCargaMasivaForm">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="col-md-6">
+        <label class="form-label">Archivo CSV</label>
+        <input type="file" name="archivo" class="form-control" accept=".csv" required>
+        <div class="form-text">
+          Columnas: <code>nombre,identificacion,email,telefono,direccion,codigo_sap,observaciones</code> (UTF-8).
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Separador</label>
+        <input type="text" name="sep" class="form-control" value="," maxlength="1">
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="has_header" id="chkHeader" value="1" checked>
+          <label class="form-check-label" for="chkHeader">El archivo tiene encabezado</label>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Importar</button>
+        <a href="{{ url_for('proveedores') }}" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+
+    <hr>
+
+    <p class="small text-muted mb-0">
+      Reglas: si alguna fila existe (misma <em>identificación</em> o, si no hay, mismo <em>nombre</em>), se reporta la(s) línea(s) y
+      no se importará nada. Los campos vacíos se guardan como NULL.
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/terceros/terceros_carga_masiva.js') }}"></script>
+{% endblock %}

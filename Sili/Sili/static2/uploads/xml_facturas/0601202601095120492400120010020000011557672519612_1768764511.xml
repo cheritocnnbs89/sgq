@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0601202601095120492400120010020000011557672519612</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-06T15:45:36-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;VERA VELASQUEZ JOHN LENON&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;TRITUPLAST&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0951204924001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;0601202601095120492400120010020000011557672519612&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000001155&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;GUAYAS / GUAYAQUIL / PASCUALES / SOLAR 12&lt;/dirMatriz&gt;
+		
+		
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;06/01/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;GUAYAS / GUAYAQUIL / PASCUALES / SOLAR 12&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;208.00000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;208.00&lt;/baseImponible&gt;
+				&lt;valor&gt;31.20000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;239.20000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;20&lt;/formaPago&gt;
+	    		&lt;total&gt;239.20&lt;/total&gt;
+	    		&lt;plazo&gt;0&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;IL&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;IL&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;IBC DE 1.000 LITROS LAVADOS&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;16.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;13.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;208.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;208.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;31.20&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;IBC DE 1.000 LITROS LAVADOS   GUIA # 2026&lt;/campoAdicional&gt;
+    		
+    			&lt;campoAdicional nombre="Adicional 1"&gt;ORDEN DE COMPRA # 7500052588&lt;/campoAdicional&gt;
+    		
+    			&lt;campoAdicional nombre="Adicional 2"&gt;INGRESO # 1001563071&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature484204"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo568331"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID559890" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature484204-SignedProperties424930"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;glCUJpBMz/dr6NH+ldY8z9TId5s=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate95042"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;LHNpRQX1sJk00kAs/1jJ+zXAoho=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-63233" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;glDUEdioNeeFcBy1IUNl4Qpvhak=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue433523"&gt;
+Un4X1NVrx77oMBkmPjpNkgqygoeFiMvnxv8UAblUWCg3+rKQ7A1bTg35yI51fe09Zja+PsmEzHIV
+BmWbvYzi5bYQeNIvmMSh5e8dh+I79uqML+7drKUESiesa/PKTGoff6v7vDsjaXvdzpXy8xUGR0e9
+ZVv4OBc/wneZzfwv9mnEPj7LVvle+NKZ1QUoWSevTVZgbra2xgthfknQnFsYX5192tdH/8QPTA91
+GaEnlMT43wp8ZAIhtf7MhFlU8V+qWXLkibP0z9sAgJLXs5UL87zpTrTKO6LboFpD7OClJSXbRLHG
+gV1Btq8vvE9mxugnhyrn9B/6ubSAGvKfAPmm4A==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate95042"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJLjCCBxagAwIBAgIIa4jjY2XMUkUwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI0MDcyNTIwMTUwMFoXDTI3MDcyNTIwMTUwMFowgZgxCzAJBgNVBAYTAkVDMRcwFQYDVQQEDA5W
+RVJBIFZFTEFTUVVFWjETMBEGA1UEKgwKSk9ITiBMRU5PTjEZMBcGA1UEBRMQSURDRUMtMDk1MTIw
+NDkyNDEiMCAGA1UEAwwZSk9ITiBMRU5PTiBWRVJBIFZFTEFTUVVFWjEcMBoGA1UEYQwTVElORUMt
+MDk1MTIwNDkyNDAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALF6U+p5p/TMKbaH
+oWPfHeVrDZkD8wEb/cgxKX9ezP3OYp9cI5NBTfSYd4Nuv7/pr7sieE7BQ0KbXZC9FvYTJu66T+Hp
++54aotwl14uwNhNeOEtu36LAxqSMpTYngOE+1FMpdzPezBAdLZNqH9u7cTovgMu0ZidGb+8xP5RD
+lawSLk1HpIgqb0keTaI89OvSDZXTm0I6ycgysLdHj+aqmLeo05M2rOtpF9bbCaI1Qjg2mojkQt4s
+VetNalm3g7ekWwmOY/M+pfzZfAnbQi4QD1nxbrRcYpY0Zh2VGf247cS2Q81HLflht2/ez2ArCgaA
+kxDGdTFct2VTHB6kVArZ/KMCAwEAAaOCBFgwggRUMBsGCysGAQQBgvE2ZgMBBAwMCjA5NTEyMDQ5
+MjQwHgYLKwYBBAGC8TZmAwsEDwwNMDk1MTIwNDkyNDAwMTCB1wYIKwYBBQUHAQEEgcowgccwVQYI
+KwYBBQUHMAKGSWh0dHA6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9kb3dubG9hZC90c3BfY2Vy
+dGlmaWNhdGVzL3N1Ym9yZGluYXRlMS5jcnQwNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMS51YW5h
+dGFjYS5jb20vcHVibGljL3BraS9vY3NwLzA2BggrBgEFBQcwAYYqaHR0cDovL29jc3AyLnVhbmF0
+YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1UdDgQWBBSYeVuMM5pqVkPrInLfLh252d7rtDAM
+BgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH1X52BzzgdGqeKjaPDhEbJ0knP9MIGZBgNVHSAEgZEw
+gY4wgYsGDCsGAQQBgvE2ZgIBATB7MDcGCCsGAQUFBwIBFitodHRwczovL3d3dy51YW5hdGFjYS5j
+b20vcHVibGljL3BraS9kcGMtZWMvMEAGCCsGAQUFBwICMDQMMkNFUlRJRklDQURPIERFIFBFUlNP
+TkEgTkFUVVJBTCBPIEZJU0lDQSBFTiBBUkNISVZPMIGPBgNVHR8EgYcwgYQwQKA+oDyGOmh0dHA6
+Ly9jcmwxLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5jcmwwQKA+
+oDyGOmh0dHA6Ly9jcmwyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFk
+YS5jcmwwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAY4G
+A1UdEQSCAYUwggGBgR5ub3RpZmljYWNpb25lc2Zpcm1hc0BzaWlnby5jb22gGwYLKwYBBAGC8TZm
+AwGgDAwKMDk1MTIwNDkyNKAbBgsrBgEEAYLxNmYDAqAMDApKT0hOIExFTk9OoBUGCysGAQQBgvE2
+ZgMDoAYMBFZFUkGgGgYLKwYBBAGC8TZmAwSgCwwJVkVMQVNRVUVaoDsGCysGAQQBgvE2ZgMHoCwM
+KkJBU1RJT04gUE9QVUxBUiBCTE9RVUUgMSBCIE1aIDUxMCBTT0xBUiAxMqAfBgsrBgEEAYLxNmYD
+CKAQDA4wMDU5Mzk2Nzg1MjAwNqAaBgsrBgEEAYLxNmYDCaALDAlHVUFZQVFVSUygHgYLKwYBBAGC
+8TZmAwugDwwNMDk1MTIwNDkyNDAwMaATBgsrBgEEAYLxNmYDDKAEDAJFQ6ApBgsrBgEEAYLxNmYD
+MqAaDBhQRVJTT05BIE5BVFVSQUwgTyBGSVNJQ0GgGAYLKwYBBAGC8TZmAzOgCQwHQVJDSElWTzAN
+BgkqhkiG9w0BAQsFAAOCAgEAIYcwVhJeZ0K8ceYzvUbSozUxbhZefg4gcC14Q7GXSSw1vNMJhAD1
+QXvffHXPXUaxRv/ENGTVcZLl0N3fJpPvZDiICAzNQ4TVar6KXGvNhtTkOBhUv3WcZVdAwWOlA3AG
+glfgb1JPAzmvlCpGSNpKGqdI5yjdWWGTtjDhOK6K/4NXoq2yrNjPFRWuDwq+4GnyfCPr+hWmnSFH
+eoCVhPi8Z/abCcWI0o/xmZDrjtqLPVlKhX8vSc3d/XPprtFGxeqXQSlwaO4GC4F6oie1su0kiYnp
+wi301by94aKafRuzOOxfSBmvpDdFgonhzzWmgS3N8sinv13QRV6QxfFTceRFaGR9hy9Ff++B0Y9E
+vhBxzEudqKkB37qit3NdlejNfDyu7rJLkuJWeGn6RXZXae3cBLc3N4UBUmxfnRSpHblBI2QkOSdA
+bPUyVJlqJYPpStPfo+uhs0eG0jmoNipcqW/isxnr1Xc9s8x88FKN7Ud5kusj7mvKV1NHEjGAZqNp
+qrk//pWKrrgl2JIMUN7CuJSg9hCL1x73BXcnqh1sI/3lpHiCmQRUp6u6MzEagMp+gwmAeCikRpPE
+ZwhOZsqrP1hWbUZVEgrrzNEQVsQd5qoF2WbGSSl8zKmyqgTFefCftj4ExqiK5tHlRpwrGzuco7Xp
+Vss+6cXOkPskhlzBpsO1TjQ=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+sXpT6nmn9MwptoehY98d5WsNmQPzARv9yDEpf17M/c5in1wjk0FN9Jh3g26/v+mvuyJ4TsFDQptd
+kL0W9hMm7rpP4en7nhqi3CXXi7A2E144S27fosDGpIylNieA4T7UUyl3M97MEB0tk2of27txOi+A
+y7RmJ0Zv7zE/lEOVrBIuTUekiCpvSR5Nojz069INldObQjrJyDKwt0eP5qqYt6jTkzas62kX1tsJ
+ojVCODaaiORC3ixV601qWbeDt6RbCY5j8z6l/Nl8CdtCLhAPWfFutFxiljRmHZUZ/bjtxLZDzUct
++WG3b97PYCsKBoCTEMZ1MVy3ZVMcHqRUCtn8ow==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature484204-Object779521"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature484204"&gt;
+                &lt;etsi:SignedProperties Id="Signature484204-SignedProperties424930"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-06T15:45:34-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;WL4K/N9/P9rjjSMC2H9wPGvla8Q=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;7748693174940095045&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

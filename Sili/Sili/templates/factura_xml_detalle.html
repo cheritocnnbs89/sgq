@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% block title %}Factura XML{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reembolsos/factura_detalle.css') }}">
+
+<div
+  id="factura-detalle-data"
+  data-clave-acceso="{{ (f['clave_acceso'] or '') }}">
+</div>
+
+<div class="container-fluid px-3 px-md-4 py-3">
+
+  {% set nro_factura = (f['estab'] or '') ~ '-' ~ (f['pto_emi'] or '') ~ '-' ~ ('%09d'|format((f['secuencial'] or '0')|int)) %}
+
+  <div class="d-flex align-items-center mb-3">
+    <a href="{{ url_for('facturas_xml_list') }}" class="btn btn-outline-secondary btn-sm me-2">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <div>
+      <div class="small text-muted mb-1">Facturas XML / Detalle</div>
+      <h2 class="mb-0 d-flex align-items-center">
+        <i class="bi bi-filetype-xml text-primary me-2 fs-3"></i>
+        Factura {{ nro_factura }}
+        <span class="badge bg-light text-muted border ms-2">
+          {{ f['tipo_comprobante'] }} ({{ f['cod_doc'] }})
+        </span>
+      </h2>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <div class="small text-muted mb-1">Estado</div>
+            {% if f['estado'] == 'PROCESADO' %}
+            <span class="badge bg-success-subtle text-success border px-3 py-2">Procesado</span>
+            {% else %}
+            <span class="badge bg-warning-subtle text-warning border px-3 py-2">Pendiente</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3 align-items-start">
+    <div class="col-12 col-lg-7">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <div class="small text-muted text-uppercase">Emisor</div>
+          <div class="fw-semibold">{{ f['razon_social_emisor'] or '—' }}</div>
+          <div class="text-muted small">RUC: {{ f['ruc_emisor'] or '—' }}</div>
+
+          <hr class="my-3">
+
+          <div class="small text-muted text-uppercase">Cliente</div>
+          <div class="fw-semibold">{{ f['razon_social_cliente'] or '—' }}</div>
+          <div class="text-muted small">RUC/CI: {{ f['ruc_cliente'] or '—' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-5">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="text-uppercase small text-muted">Factura</div>
+              <div class="fw-semibold">
+                No. <span class="text-danger">{{ nro_factura }}</span>
+              </div>
+            </div>
+            <span class="badge bg-light text-muted border">
+              {{ f['tipo_comprobante'] }} ({{ f['cod_doc'] }})
+            </span>
+          </div>
+
+          <div class="mt-2 small">
+            <div class="text-muted">Número de autorización</div>
+            <div class="text-monospace auth-break">
+              {{ f['numero_autorizacion'] or '—' }}
+            </div>
+
+            <div class="text-muted mt-2">Fecha y hora de autorización</div>
+            <div class="fw-semibold fs-5">{{ f['fecha_emision'] or '—' }}</div>
+
+            <div class="text-muted mt-2">Clave de acceso</div>
+          </div>
+
+          <div class="mt-3 p-2 border rounded bg-white text-center">
+            <svg id="barcodeClave" class="barcode-clave"></svg>
+            <div class="text-monospace small mt-1">
+              {{ f['clave_acceso'] or '' }}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-white border-0 pb-0">
+      <h6 class="mb-2">Detalle de la factura</h6>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover table-sm align-middle mb-0" id="tabla-detalle-xml">
+          <thead class="table-light">
+            <tr>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th class="text-end">Cant.</th>
+              <th class="text-end">P. unitario</th>
+              <th class="text-end">Desc.</th>
+              <th class="text-end">Base</th>
+              <th class="text-end">IVA</th>
+              <th class="text-end">Total línea</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in detalles %}
+            <tr>
+              <td class="text-nowrap">{{ d['codigo_principal'] }}</td>
+              <td>{{ d['descripcion'] }}</td>
+              <td class="text-end">{{ '%.3f'|format(d['cantidad'] or 0) }}</td>
+              <td class="text-end">{{ '%.4f'|format(d['precio_unitario'] or 0) }}</td>
+              <td class="text-end">{{ '%.2f'|format(d['descuento'] or 0) }}</td>
+              <td class="text-end">{{ '%.2f'|format(d['base_imponible'] or 0) }}</td>
+              <td class="text-end">{{ '%.2f'|format(d['iva'] or 0) }}</td>
+              <td class="text-end fw-semibold">{{ '%.2f'|format(d['total_linea'] or 0) }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="8" class="text-center text-muted py-3">
+                No hay líneas de detalle.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3 justify-content-end">
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-3">
+          {% set tarifa = (f['iva_tarifa'] or 0) | float %}
+
+          {% if tarifa > 0 %}
+          <div class="d-flex justify-content-between">
+            <span>Subtotal {{ tarifa|round(0)|int }}%</span>
+            <span>{{ '%.2f'|format(f['base_iva'] or 0) }}</span>
+          </div>
+          {% endif %}
+
+          <div class="d-flex justify-content-between">
+            <span>Subtotal 0%</span>
+            <span>{{ '%.2f'|format(f['subtotal_0'] or 0) }}</span>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <span>IVA {{ f['iva_tarifa'] or 0 }}%</span>
+            <span>{{ '%.2f'|format(f['iva'] or 0) }}</span>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <span>Propina</span>
+            <span>{{ '%.2f'|format(f['propina'] or 0) }}</span>
+          </div>
+
+          <hr>
+          <div class="d-flex justify-content-between fw-bold fs-5">
+            <span>Total</span>
+            <span>{{ '%.2f'|format(f['total'] or 0) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <a href="{{ url_for('facturas_xml_list') }}" class="btn btn-light border">
+      <i class="bi bi-arrow-left"></i> Volver a Facturas XML
+    </a>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/reembolsos/factura_detalle.js') }}"></script>
+{% endblock %}

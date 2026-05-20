@@ -1,0 +1,146 @@
+SQLite origen: C:\Temp\bitacora.db
+SQL Server destino: 172.16.40.52:1433/SGQ_BITACORA
+Esquema: dbo
+Fecha: 2026-04-29T09:14:26.793875
+========================================================================================================================
+[areas] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'areas' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[config] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'config' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[configuracion] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'configuracion' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_contratos_aprobacion] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_contratos_aprobacion' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_contratos_contab_lista] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_contratos_contab_lista' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_facturas_xml_list] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_facturas_xml_list' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_gastos_pendientes_aprobacion] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_gastos_pendientes_aprobacion' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_lista_empresas] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_lista_empresas' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_planilla_mensual_dept_cfg] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_planilla_mensual_dept_cfg' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_planilla_mensual_mail_template] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_planilla_mensual_mail_template' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_planilla_mensual_planilla_dashboard] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_planilla_mensual_planilla_dashboard' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_planilla_mensual_tareas_list] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_planilla_mensual_tareas_list' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_reclamos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_reclamos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_reclamos_dashboard] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_reclamos_dashboard' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[crud_reporte_gastos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'crud_reporte_gastos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[departamentos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'departamentos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[empresas] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'empresas' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[facturas_xml] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'facturas_xml' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[menu_items] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'menu_items' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[notify_templates] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'notify_templates' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[opciones] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'opciones' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[param_groups] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'param_groups' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[permisos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'permisos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[plan_feriados] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'plan_feriados' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[plan_mail_templates] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'plan_mail_templates' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[plan_responsables] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'plan_responsables' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[productos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'productos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[puestos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'puestos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_equipo] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_equipo' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_equipo_acciones] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_equipo_acciones' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_imputados] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_imputados' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_tipo_campos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_tipo_campos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[regiones] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'regiones' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[roles] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'roles' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[secuencias_sap] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'secuencias_sap' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[terceros] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'terceros' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[terceros_bad] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'terceros_bad' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[user_sequences] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'user_sequences' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[usuarios_cc] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'usuarios_cc' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[usuarios] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'usuarios' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[facturas_xml_det] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'facturas_xml_det' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[param_values] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'param_values' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[plan_tareas] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'plan_tareas' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_adjuntos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_adjuntos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_imputado_acciones] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_imputado_acciones' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[provincias] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'provincias' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[roles_permisos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'roles_permisos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[contratos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'contratos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[gastos_tarjeta] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'gastos_tarjeta' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[notify_inapp] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'notify_inapp' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[notify_user_prefs] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'notify_user_prefs' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[plan_dept_config] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'plan_dept_config' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_equipo_respuestas] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_equipo_respuestas' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_respuestas_equipo] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_respuestas_equipo' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reset_tokens] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reset_tokens' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[tareas] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'tareas' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[notify_queue] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'notify_queue' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[plan_checks] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'plan_checks' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[plan_evidencias] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'plan_evidencias' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_accion_evidencias] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_accion_evidencias' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[cantones] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'cantones' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[contrato_archivos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'contrato_archivos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[garantias] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'garantias' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[gastos_tarjeta_archivos] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'gastos_tarjeta_archivos' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[gastos_tarjeta_detalle] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'gastos_tarjeta_detalle' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_respuesta_equipo_acciones] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_respuesta_equipo_acciones' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[tarea_acciones] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'tarea_acciones' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[tarea_responsables] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'tarea_responsables' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+[reclamo_respuesta_equipo_accion_evidencias] ERROR DESHABILITANDO CONSTRAINTS | motivo=('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]No se encuentra el objeto 'reclamo_respuesta_equipo_accion_evidencias' porque no existe o no tiene permisos. (1088) (SQLExecDirectW)")
+DELETE: dbo.reclamo_respuesta_equipo_accion_evidencias
+DELETE: dbo.tarea_responsables
+DELETE: dbo.tarea_acciones
+DELETE: dbo.reclamo_respuesta_equipo_acciones
+DELETE: dbo.gastos_tarjeta_detalle
+DELETE: dbo.gastos_tarjeta_archivos
+DELETE: dbo.garantias
+DELETE: dbo.contrato_archivos
+DELETE: dbo.cantones
+DELETE: dbo.reclamo_accion_evidencias
+DELETE: dbo.plan_evidencias
+DELETE: dbo.plan_checks
+DELETE: dbo.notify_queue
+DELETE: dbo.tareas
+DELETE: dbo.reset_tokens
+DELETE: dbo.reclamo_respuestas_equipo
+DELETE: dbo.reclamo_equipo_respuestas
+DELETE: dbo.plan_dept_config
+DELETE: dbo.notify_user_prefs
+DELETE: dbo.notify_inapp
+DELETE: dbo.gastos_tarjeta
+DELETE: dbo.contratos
+DELETE: dbo.roles_permisos
+DELETE: dbo.provincias
+DELETE: dbo.reclamo_imputado_acciones
+DELETE: dbo.reclamo_adjuntos
+DELETE: dbo.plan_tareas
+DELETE: dbo.param_values
+DELETE: dbo.facturas_xml_det
+DELETE: dbo.usuarios
+[usuarios] ERROR EN DELETE | motivo=('23000', "[23000] [Microsoft][SQL Server Native Client 11.0][SQL Server]Instrucción DELETE en conflicto con la restricción REFERENCE 'FK_auditoria_seguridad_usuarios_usuario_id'. El conflicto ha aparecido en la base de datos 'SGQ_BITACORA', tabla 'dbo.auditoria_seguridad', column 'usuario_id'. (547) (SQLExecDirectW); [23000] [Microsoft][SQL Server Native Client 11.0][SQL Server]Se terminó la instrucción. (3621)")
+DELETE: dbo.usuarios_cc
+DELETE: dbo.user_sequences
+DELETE: dbo.terceros_bad
+DELETE: dbo.terceros
+DELETE: dbo.secuencias_sap
+DELETE: dbo.roles
+DELETE: dbo.regiones
+DELETE: dbo.reclamos
+DELETE: dbo.reclamo_tipo_campos
+DELETE: dbo.reclamo_imputados
+DELETE: dbo.reclamo_equipo_acciones
+DELETE: dbo.reclamo_equipo
+DELETE: dbo.puestos
+DELETE: dbo.productos
+DELETE: dbo.plan_responsables
+DELETE: dbo.plan_mail_templates
+DELETE: dbo.plan_feriados
+DELETE: dbo.permisos
+DELETE: dbo.param_groups
+DELETE: dbo.opciones
+DELETE: dbo.notify_templates
+DELETE: dbo.menu_items
+DELETE: dbo.facturas_xml
+DELETE: dbo.empresas
+DELETE: dbo.departamentos
+DELETE: dbo.crud_reporte_gastos
+DELETE: dbo.crud_reclamos_dashboard
+DELETE: dbo.crud_reclamos
+DELETE: dbo.crud_planilla_mensual_tareas_list
+DELETE: dbo.crud_planilla_mensual_planilla_dashboard
+DELETE: dbo.crud_planilla_mensual_mail_template
+DELETE: dbo.crud_planilla_mensual_dept_cfg
+DELETE: dbo.crud_lista_empresas
+DELETE: dbo.crud_gastos_pendientes_aprobacion
+DELETE: dbo.crud_facturas_xml_list
+DELETE: dbo.crud_contratos_contab_lista
+DELETE: dbo.crud_contratos_aprobacion
+DELETE: dbo.configuracion
+DELETE: dbo.config
+DELETE: dbo.areas

@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Nueva tarea{% endblock %}
+
+{% block content %}
+<h4 class="mb-3">
+  {% if modo == 'asignar' %}
+    Nueva tarea / asignación
+  {% else %}
+    Nueva tarea
+  {% endif %}
+</h4>
+
+{% if modo_asignar %}
+  {% set back_url = url_for('listar_tareas', vista='mis') %}
+{% else %}
+  {% set back_url = url_for('listar_tareas', vista='realizar') %}
+{% endif %}
+
+<div class="card card-custom shadow-sm">
+  <div class="card-body">
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="modo" value="{{ modo }}">
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Título</label>
+          <input type="text" name="titulo" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">
+            {% if modo_asignar %}Responsables{% else %}Responsable{% endif %}
+          </label>
+
+          {% if modo_asignar and responsables %}
+            <div class="mb-1 small text-muted">
+              Puedes asignar la tarea a una o varias personas.
+              Escribe para filtrar la lista, selecciona un nombre y pulsa <b>+</b>.
+            </div>
+
+            <div class="mb-1">
+              <input
+                id="responsableSearch"
+                type="text"
+                class="form-control form-control-sm mb-1"
+                placeholder="Buscar por nombre, apellido o usuario..."
+              >
+
+              <div class="d-flex gap-2">
+                <select id="responsableSelect" class="form-select" size="8">
+                  {% for r in responsables %}
+                    {% set nombre = r['nombre_completo'] %}
+                    {% if nombre %}
+                      {% set etiqueta = nombre ~ ' (' ~ r['username'] ~ ')' %}
+                    {% else %}
+                      {% set etiqueta = r['username'] %}
+                    {% endif %}
+
+                    <option
+                      value="{{ r['id'] }}"
+                      data-search="{{ (nombre ~ ' ' ~ r['username'])|lower }}"
+                    >
+                      {{ etiqueta }}
+                    </option>
+                  {% endfor %}
+                </select>
+
+                <button
+                  type="button"
+                  id="btnAgregarResp"
+                  class="btn btn-primary btn-sm rounded-circle ms-2 btn-add-responsable"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <label class="form-label">Responsables seleccionados</label>
+              <div id="responsablesSeleccionados" class="d-flex flex-wrap gap-1 small"></div>
+            </div>
+
+            <div id="responsablesHidden"></div>
+          {% else %}
+            <input type="text" class="form-control" value="{{ usuario }} (tú)" disabled>
+            <input type="hidden" name="responsable_id" value="{{ user_id }}">
+          {% endif %}
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Descripción</label>
+          <textarea name="descripcion" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Fecha inicio (opcional)</label>
+          <input type="datetime-local" name="fecha_inicio" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Fecha compromiso (opcional)</label>
+          <input type="datetime-local" name="fecha_compromiso" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Fecha fin (opcional)</label>
+          <input type="datetime-local" name="fecha_fin" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Tipo de Tarea</label>
+          <select name="tipo_tarea_id" class="form-select" required>
+            <option value="" selected disabled>Seleccione un tipo...</option>
+            {% for tipo in tipos_tarea %}
+              <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Empresa / Cliente</label>
+          <select name="empresa_id" class="form-select">
+            <option value="" selected>-- Sin asignar (Interno) --</option>
+            {% for empresa in empresas %}
+              <option value="{{ empresa.id }}">{{ empresa.razon_social }}</option>
+            {% endfor %}
+          </select>
+          <div class="form-text">Identifica a qué cliente pertenece esta tarea.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Solicitante</label>
+
+          <input
+            id="solicitanteSearch"
+            type="text"
+            class="form-control form-control-sm mb-1"
+            placeholder="Buscar solicitante por nombre o usuario..."
+          >
+
+          <select name="solicitante_id" id="solicitanteSelect" class="form-select" required>
+            <option value="{{ user_id }}" selected>
+              {{ usuario }} (tú)
+            </option>
+
+            {% for u in solicitantes %}
+              {% if u['id'] != user_id %}
+                {% set nom = (u['nombre_completo'] or '').strip() %}
+                {% set etiqueta = nom ~ ' (' ~ u['username'] ~ ')' if nom else u['username'] %}
+
+                <option
+                  value="{{ u['id'] }}"
+                  data-search="{{ (nom ~ ' ' ~ u['username'])|lower }}"
+                >
+                  {{ etiqueta }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+
+          <div class="form-text">
+            Este usuario define el departamento que se mostrará en la lista vía su perfil.
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn btn-primary">Guardar</button>
+        <a href="{{ back_url }}" class="btn btn-outline-secondary ms-2">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}"></script>
+{% endblock %}

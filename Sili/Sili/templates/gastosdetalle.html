@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% block title %}Detalle de gasto{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reembolsos/gastosdetalle.css') }}">
+
+<div id="gastos-detalle-config" data-popup="{{ 1 if popup else 0 }}"></div>
+
+<div class="container mt-3 gasto-detalle-page {% if popup %}popup-mode{% endif %}">
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <h3 class="mb-0"><i class="bi bi-eye me-2"></i>Detalle de gasto #{{ g['id'] }}</h3>
+    {% if not popup %}
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('lista_gastos') }}">
+      <i class="bi bi-arrow-left me-1"></i>Volver
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">Cabecera</div>
+    <div class="card-body">
+      <div class="row g-2">
+        <div class="col-md-2">
+          <div class="small text-muted">Año</div>
+          <div class="fw-semibold">{{ g['anio'] or '' }}</div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="small text-muted">Proveedor</div>
+          <div class="fw-semibold">{{ g['proveedor'] or '' }}</div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="small text-muted">Detalle (cabecera)</div>
+          <div class="fw-semibold">{{ g['motivo'] or '' }}</div>
+        </div>
+
+        <div class="col-md-2 d-flex flex-column justify-content-end">
+          {% if tiene_caja_chica %}
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="checkbox" id="reembolso_vendedor" name="reembolso_vendedor" checked
+              onclick="return false;">
+            <label class="form-check-label fw-bold" for="reembolso_vendedor">
+              Modo: Caja Chica
+              <br>
+              <span class="badge bg-warning text-dark mt-1">
+                <i class="bi bi-safe-fill"></i> Fondo Fijo Asignado
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="reembolso_vendedor" value="1">
+          <input type="hidden" name="tipo_registro" value="caja_chica">
+
+          {% elif es_comercial_qp %}
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="checkbox" id="reembolso_vendedor" name="reembolso_vendedor" checked
+              onclick="return false;">
+            <label class="form-check-label fw-bold" for="reembolso_vendedor">
+              Reembolso de Vendedor
+              <br>
+              <span class="badge bg-info text-dark mt-1">
+                <i class="bi bi-patch-check-fill"></i> Autodetectado
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="reembolso_vendedor" value="1">
+
+          {% else %}
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="ccb" name="ccb" {% if form and (form.get('ccb') in
+              ['1','on',1,true]) %}checked{% elif g and g.get('ccb') %}checked{% endif %}>
+            <label class="form-check-label" for="ccb">Con cargo a bono (CCB)</label>
+          </div>
+          {% endif %}
+
+          {% if not (tiene_caja_chica or es_comercial_qp) %}
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="tarjeta_sin_soporte" name="tarjeta_sin_soporte" {% if
+              form and (form.get('tarjeta_sin_soporte') in ['1','on',1,true]) %}checked{% elif g and
+              g.get('tarjeta_sin_soporte') %}checked{% endif %}>
+            <label class="form-check-label" for="tarjeta_sin_soporte">
+              Tarjeta sin soporte
+            </label>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="col-md-3">
+          <div class="small text-muted">CCB</div>
+          <div class="fw-semibold">
+            {% if g['ccb'] %}Sí{% else %}No{% endif %}
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="small text-muted">Subtotal factura</div>
+          <div class="fw-semibold">
+            {{ '{:,.2f}'.format(g['subtotal_factura']|default(0,true))|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="small text-muted">Servicios/Propina</div>
+          <div class="fw-semibold">
+            {{ '{:,.2f}'.format(g['servicios_10']|default(0,true))|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="small text-muted">IVA</div>
+          <div class="fw-semibold">
+            {{ '{:,.2f}'.format(g['iva']|default(0,true))|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="small text-muted">Total con IVA</div>
+          <div class="fw-semibold">
+            {{ '{:,.2f}'.format(g['total_con_iva']|default(0,true))|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">Detalle</div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-sm table-striped align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Obs.</th>
+              <th>Motivo</th>
+              <th>Centro</th>
+              <th>Ind.</th>
+              <th class="text-end">Con soporte</th>
+              <th class="text-end">Sin soporte</th>
+              <th class="text-end">Subt. fac</th>
+              <th class="text-end">Serv.</th>
+              <th class="text-end">Subt. sin IVA</th>
+              <th class="text-end">IVA</th>
+              <th class="text-end">Total</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in detalles %}
+            <tr>
+              <td class="gd-obs-cell">
+                {{ d['observacion'] or '' }}
+              </td>
+              <td>{{ d['motivo'] or '' }}</td>
+              <td>{{ d['centro_costo'] or '' }}</td>
+              <td>{{ d['indicador'] or '' }}</td>
+              <td class="text-end">{{ '{:,.2f}'.format(d['con_soporte']|default(0,true))|replace(',', 'X')|replace('.', ',',)|replace('X','.') }}</td>
+              <td class="text-end">{{ '{:,.2f}'.format(d['sin_soporte']|default(0,true))|replace(',', 'X')|replace('.', ',',)|replace('X','.') }}</td>
+              <td class="text-end">{{ '{:,.2f}'.format(d['subtotal_factura']|default(0,true))|replace(',', 'X')|replace('.', ',',)|replace('X','.') }}</td>
+              <td class="text-end">{{ '{:,.2f}'.format(d['servicios_10']|default(0,true))|replace(',', 'X')|replace('.', ',',)|replace('X','.') }}</td>
+              <td class="text-end">{{ '{:,.2f}'.format(d['subtotal_sin_iva']|default(0,true))|replace(',', 'X')|replace('.', ',',)|replace('X','.') }}</td>
+              <td class="text-end">{{ '{:,.2f}'.format(d['iva']|default(0,true))|replace(',', 'X')|replace('.', ',',)|replace('X','.') }}</td>
+              <td class="text-end">{{ '{:,.2f}'.format(d['total_con_iva']|default(0,true))|replace(',', 'X')|replace('.', ',',)|replace('X','.') }}</td>
+              <td>{{ d['descripcion'] or '' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="12" class="text-center py-4 text-muted">Sin detalle.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">Adjuntos</div>
+    <div class="card-body">
+      {% set archivos = [] %}
+      {% if g['archivo'] %}
+      {% set _ = archivos.append(g['archivo']) %}
+      {% endif %}
+      {% if adjuntos %}
+      {% for a in adjuntos %}
+      {% if a and a not in archivos %}
+      {% set _ = archivos.append(a) %}
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+
+      {% if archivos %}
+      <ul class="mb-0 gd-adjuntos-lista">
+        {% for a in archivos %}
+        <li>
+          <a href="{{ url_for('static', filename='uploads/' + a) }}" target="_blank" rel="noopener noreferrer">{{ a }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="text-muted">No hay adjuntos.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/reembolsos/gastosdetalle.js') }}"></script>
+{% endblock %}

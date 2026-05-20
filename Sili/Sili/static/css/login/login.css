@@ -1,0 +1,61 @@
+/* Full-page gradient background */
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f4c75, #1b262c);
+}
+
+/* Translucent login card */
+.login-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  padding: 2rem;
+  width: 100%;
+  max-width: 360px;
+  color: #f5f5f5;
+}
+
+.login-card .icon {
+  font-size: 4rem;
+  color: #ffffff;
+}
+
+.login-card label {
+  color: #e0e0e0;
+}
+
+.login-card .form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #cccccc;
+  border-radius: 0;
+  color: #ffffff;
+}
+
+.login-card .form-control:focus {
+  box-shadow: none;
+  border-color: #66afe9;
+}
+
+.login-card .form-control::placeholder {
+  color: #b0c4de;
+}
+
+.login-card .btn-primary {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.login-card a {
+  color: #a7d7f2;
+  font-size: 0.9rem;
+}
+
+.remember-label {
+  color: #e0e0e0;
+}

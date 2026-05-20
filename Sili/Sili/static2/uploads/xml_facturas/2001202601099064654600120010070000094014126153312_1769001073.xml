@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2001202601099064654600120010070000094014126153312</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-20T20:23:11-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;CASA DEL RULIMAN DEL ECUADOR SA CARRULESA&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;CASA DEL RULIMAN DEL ECUADOR SA CARRULESA&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0990646546001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2001202601099064654600120010070000094014126153312&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;007&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000009401&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;MACHALA 1101 Y VELEZECU&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;20/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;MACHALA 1101 Y VELEZ&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;0215&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;KM 16 &amp;amp;#189; VIA DAULE, AVE, ROSAVIN Y CALLE COBRE&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;1052.67&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;566.66&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;1052.67&lt;/baseImponible&gt;
+                &lt;valor&gt;157.90&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;1210.57&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;1210.57&lt;/total&gt;
+                &lt;plazo&gt;30&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+        &lt;valorRetIva&gt;0.00&lt;/valorRetIva&gt;
+        &lt;valorRetRenta&gt;0.00&lt;/valorRetRenta&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CDR-0000001239&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CDR-0000001239&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LAMINA SINTETICA SIN MALLA S9100 1/8 &lt;/descripcion&gt;
+            &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;344.020000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;120.41&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;223.61&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;223.61&lt;/baseImponible&gt;
+                    &lt;valor&gt;33.54&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CDR-0000021532&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CDR-0000021532&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;L/AL090/095 INSERTO&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;19.350000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;27.08&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;50.32&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;50.32&lt;/baseImponible&gt;
+                    &lt;valor&gt;7.55&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CDR-0000021398&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CDR-0000021398&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;7JE-SLEEVE (ELASTOMERO NEGRO EPDM) (S-FLEX)&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;71.100000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;99.54&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;184.86&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;184.86&lt;/baseImponible&gt;
+                    &lt;valor&gt;27.73&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CDR-0000021531&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CDR-0000021531&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;L/AL075 INSERTO&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;13.270000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;18.56&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;34.52&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;34.52&lt;/baseImponible&gt;
+                    &lt;valor&gt;5.18&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CDR-0000021533&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CDR-0000021533&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;L/AL099/100 INSERTO&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;36.530000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;51.11&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;95.01&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;95.01&lt;/baseImponible&gt;
+                    &lt;valor&gt;14.25&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CDR-0000021534&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CDR-0000021534&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;L/AL110 INSERTO&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;45.490000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;63.67&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;118.29&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;118.29&lt;/baseImponible&gt;
+                    &lt;valor&gt;17.74&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;LJC150I&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;LJC150I&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LJC150I INSERTO&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;55.540000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;77.76&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;144.40&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;144.40&lt;/baseImponible&gt;
+                    &lt;valor&gt;21.66&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CDR-0000009044&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;CDR-0000009044&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;28-56-10 TC&lt;/descripcion&gt;
+            &lt;cantidad&gt;8.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.440000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;4.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;7.52&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;7.52&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.13&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;UC215-48&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;UC215-48&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;UC215-48&lt;/descripcion&gt;
+            &lt;cantidad&gt;2.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;149.340000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;104.54&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;194.14&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="*" valor="und"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;194.14&lt;/baseImponible&gt;
+                    &lt;valor&gt;29.12&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="Email"&gt;compras.electronica@quimpac.com.ec/csegarra@quimpac.com.ec/abelesaca@quimpac.com.ec/quimpac@quimpac.com.pe/quimpac@quimpac.com.pe/dvera@quimpac.com.ec/tesoreria@quimpac.com.ec/shirley.bajana@casadelruliman.com&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Direccion del cliente"&gt;KM 16 &amp;amp;#189; VIA DAULE, AVE, ROSAVIN Y CALLE COBRE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Direccion de envio"&gt;KM 16 &amp;amp;#189; VIA DAULE, AVE, ROSAVIN Y CALLE COBRE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Telefono del cliente"&gt;04 2162708&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Asesor del cliente"&gt;CEDENO FIGUEROA NICACIO SEBASTIAN&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Usuario"&gt;shirley.&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Transporte del pedido"&gt;DOCUMENTAL&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Numero de pedido"&gt;SO000878153&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Ciudad cliente"&gt;GUAYAS / GUAYAQUIL&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Orden compra"&gt;1000604516&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Recepcion de servicio"&gt;5000010505&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Fecha y hora de creacion"&gt;20/01/2026 02:49:54 pm&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature414111"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo673347"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID847379" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature414111-SignedProperties834336"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ZJvJVrscsI1yrUoJqQlpUV8Wd0A=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1745187"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;aL1rrTeE5uj/esM45Hgpru4/QOM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-434011" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;/k4m5saNEEUszvwOyFT5tc2VKW0=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue701955"&gt;
+PPOMTh7KgA+z45prnyovcJcNBlE7AgwsdfJGZELr2e3YtGvEdjPULcD4ogMbhKcDAZM2Q2ARCCt/
+bVWt/lFx0qrbB7TUoi8H+Biw35KTng2Iohl4tue6nruy1rj4tYoNVisSSsYiX3FnQtQ8+7BP+W9O
+wza6BqYYRz7IVXne3qVYP6JpHci9Wpca/FqV+WHmg485NIY9n9wrwqIdT33N/UvagCNCkoigO4ZL
+mj5KkKYQVGLcbMcQnyZi18Y4nvFTc7cc45zcRYn9Ytz4aSr9UeEtrhMGCvMP+tTsFp44/BXlKlmd
+sTowm8bDGUV05n9EGmb6zZD5KTQ7JJug340OdA==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1745187"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMETCCCfmgAwIBAgIEal697TANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMzA1MTgxNTA5MjZaFw0yNjA1MTcxNTA5MjZaMIGaMSMw
+IQYDVQQDDBpKVUFOIEFMRlJFRE8gU09SSUFOTyBTQU1BTjEVMBMGA1UEBRMMMTgwNTIzMTAxODU2
+MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAJPA05M6rf73wRk5P4eDkHoW5nbJ8WVEd/p9Sp7uk/da1TEDO649yQhu1FhV
+g+f2g1usTgGocQl8VR4YjPkKeAfBCooS3vUEre2OCpe5R+bFHh4MeOZK9SR1lOwE14wlJaxoCKcA
+6mfeee6+6gASWlsPUWN1MOow9jIxS5TMUH6WEvsD0ahAKWin8ClYflrtZGJojqpNyGFAaTwaLqQl
+0ITSZ5ZHl5GKxM5KLxWjZ5qRz2BUCUxP9EOAbv+KdDYyCzOukm/OnOMm0qI8W6JVzq0X/iPG1iHp
+nxxVGsk/pI8kpasvex3HwXuE5gK90Ge7584YB0Nnkq5aXFX+Y/E7ftcCAwEAAaOCB1wwggdYMAwG
+A1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUHAQEE
+TTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2Ev
+cHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhsZGFwOi8vbGRh
+cHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04g
+U1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZP
+Uk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0aW9uTGlzdD9i
+YXNlMCYGA1UdEQQfMB2BG2pzb3JpYW5vQGNhc2FkZWxydWxpbWFuLmNvbTCCARUGA1UdIASCAQww
+ggEIMGIGCisGAQQBgqZyAgkwVDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBjAGEAZABv
+ACAAZABlACAAUgBlAHAAcgBlAHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYKKwYBBAGC
+pnICAzCBkjCBjwYIKwYBBQUHAgEWgYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dw
+LWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2Fz
+IGRlIENlcnRpZmljYWRvIFJlcHJlc2VudGFudGUgTGVnYWwucGRmMIICogYDVR0fBIICmTCCApUw
+geWgQaA/hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2Vi
+L3N0YXR1cy9vY3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYT
+AkVDMIHHoIHEoIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFV
+VE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFE
+IERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixD
+PUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBzOi8vcG9y
+dGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0
+L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JN
+QUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBRdDIUlRY01+lhEx7mn
+6cID3iKKczArBgNVHRAEJDAigA8yMDIzMDUxODE1MDkyNlqBDzIwMjYwNTE3MTUwOTI2WjALBgNV
+HQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9HRVJFTlRFIEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQM
+DAowOTE0Mzg1Mjk5MBkGCisGAQQBgqZyAwkECwwJR1VBWUFRVUlMMBEGCisGAQQBgqZyAyIEAwwB
+LjAnBgorBgEEAYKmcgMHBBkMF0FWIE1BQ0hBTEEgMTEwMSBZIFZFTEVaMBwGCisGAQQBgqZyAwIE
+DgwMSlVBTiBBTEZSRURPMB8GCisGAQQBgqZyAyAEEQwPMDAyMDAxMDAwNjIzNDc1MBMGCisGAQQB
+gqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAXBgorBgEEAYKmcgMDBAkMB1NP
+UklBTk8wOgYKKwYBBAGCpnIDCgQsDCpDQVNBIERFTCBSVUxJTUFOIERFTCBFQ1VBRE9SIFMgQSBD
+QVJSVUxFU0EwHQYKKwYBBAGCpnIDCwQPDA0wOTkwNjQ2NTQ2MDAxMBIGCisGAQQBgqZyAx0EBAwC
+Tm8wFQYKKwYBBAGCpnIDBAQHDAVTQU1BTjAaBgorBgEEAYKmcgMIBAwMCjA5OTc4MzgwNTgwDQYJ
+KoZIhvcNAQELBQADggIBACjns4bZE0KPqcnT+s6VaYgQGD8vgFIo5GX83OhDNBu+Aid6Bi6fp38L
+59jvWPLd4D/Xdt0GAKun65qUfrhUcEZKoKP9AjDxyXffj8HmaAbp8oQwMi76zVfjFtINWmej+BKq
+1HrrdiisRSREXX8pCu7LXMCYChKIfwL5rikJjusyGpYbFjxnjYJ/qhpohVGm98rX8x5e8l4RDxAu
+0jag7mlmKzVA7N+LkJL0CNM0GMaYB5SrmKxjbHF4RdFbxm4eX7I8Ytqa+VLxrLOaROIZjFS7eVW4
+oMZqG4aZl9cOuGhU98RrdIDyhCFHop/UgMrvpCQLPkXjRZL6vaE/4ca3u3C4oT3SXqEakEYobCQ0
+sM+1kM1fxK8/M3FHFbenYnFLigndfCNA1Kr7YwUcgVJ1sQl2AOgfA4E9pfZ1WzDhM52nlTLvaySy
+uwJ5oTQkkJFG4F6lysPmKksnn1GKfEVCBNfiTEP6NuyTq4Zcbyixkrb/vbc9QAwArfmGHZvbz6gN
+2D4YyOQvvqADTo7sOhfw3WplQdQYXiJ9s/yJPH+6uOoMJUdBrYMbTaegk0N0pAdRumZ3PjRyujnt
+LUpplXk2a2KLryK00c5z9wjNgaKqNxlFQFfvcaoAKhonaykkaxbdVDt/dVa/b0Ke8hdErXWGH1tD
+ec68vVQ2U3oi3ztOmL8Y
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+k8DTkzqt/vfBGTk/h4OQehbmdsnxZUR3+n1Knu6T91rVMQM7rj3JCG7UWFWD5/aDW6xOAahxCXxV
+HhiM+Qp4B8EKihLe9QSt7Y4Kl7lH5sUeHgx45kr1JHWU7ATXjCUlrGgIpwDqZ9557r7qABJaWw9R
+Y3Uw6jD2MjFLlMxQfpYS+wPRqEApaKfwKVh+Wu1kYmiOqk3IYUBpPBoupCXQhNJnlkeXkYrEzkov
+FaNnmpHPYFQJTE/0Q4Bu/4p0NjILM66Sb86c4ybSojxbolXOrRf+I8bWIemfHFUayT+kjySlqy97
+HcfBe4TmAr3QZ7vnzhgHQ2eSrlpcVf5j8Tt+1w==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature414111-Object969926"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature414111"&gt;
+                &lt;etsi:SignedProperties Id="Signature414111-SignedProperties834336"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-20T20:21:41-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;9QDjcLQPPKhaHGaw+0W+qbdI40g=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1784593901&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-434011"&gt;
+                            &lt;etsi:Description&gt;Sismeticsa S.A. Un mundo de Ideas&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

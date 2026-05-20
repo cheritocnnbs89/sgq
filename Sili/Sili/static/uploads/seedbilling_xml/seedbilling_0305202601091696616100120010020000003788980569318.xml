@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><factura id="comprobante" version="2.1.0">
+<infoTributaria>
+<ambiente>2</ambiente>
+<tipoEmision>1</tipoEmision>
+<razonSocial>QUINTERO QUIMI EDINSON RAFAEL</razonSocial>
+<nombreComercial>CELLSISTEMS</nombreComercial>
+<ruc>0916966161001</ruc>
+<claveAcceso>0305202601091696616100120010020000003788980569318</claveAcceso>
+<codDoc>01</codDoc>
+<estab>001</estab>
+<ptoEmi>002</ptoEmi>
+<secuencial>000000378</secuencial>
+<dirMatriz>GUAYAS / GUAYAQUIL / FEBRES CORDERO / CALLEJON PARRA S/N Y CALLE 46 AVA. - CALLE 47 AVA.</dirMatriz>
+</infoTributaria>
+<infoFactura>
+<fechaEmision>03/05/2026</fechaEmision>
+<dirEstablecimiento>GUAYAS / GUAYAQUIL / FEBRES CORDERO / CALLEJON PARRA S/N Y CALLE 46 AVA. - CALLE 47 AVA.</dirEstablecimiento>
+<obligadoContabilidad>NO</obligadoContabilidad>
+<tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+<razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+<identificacionComprador>0990344760001</identificacionComprador>
+<direccionComprador>Rosavin y Cobre Km 16½ vía Daule</direccionComprador>
+<totalSinImpuestos>450.0</totalSinImpuestos>
+<totalDescuento>0.0</totalDescuento>
+<totalConImpuestos>
+<totalImpuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<baseImponible>450.0</baseImponible>
+<valor>67.5</valor>
+</totalImpuesto>
+</totalConImpuestos>
+<propina>0.0</propina>
+<importeTotal>517.5</importeTotal>
+<moneda>DOLAR</moneda>
+<pagos>
+<pago>
+<formaPago>15</formaPago>
+<total>517.5</total>
+</pago>
+</pagos>
+</infoFactura>
+<detalles>
+<detalle>
+<codigoPrincipal>045</codigoPrincipal>
+<codigoAuxiliar> </codigoAuxiliar>
+<descripcion>Ajustes de excentricidad calibracion de ISOTANQUE capacidad 30 toneladas ubicado en planta clorosoda </descripcion>
+<cantidad>1.0</cantidad>
+<precioUnitario>450.000000</precioUnitario>
+<descuento>0.0</descuento>
+<precioTotalSinImpuesto>450.0</precioTotalSinImpuesto>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15.0</tarifa>
+<baseImponible>450.0</baseImponible>
+<valor>67.5</valor>
+</impuesto>
+</impuestos>
+</detalle>
+</detalles>
+<infoAdicional>
+<campoAdicional nombre="Sucursal">QUIMPAC ECUADOR S.A QUIMPACSA</campoAdicional>
+<campoAdicional nombre="Dirección">Rosavin y Cobre Km 16½ vía Daule</campoAdicional>
+<campoAdicional nombre="E-MAIL">compras.electronica@quimpac.com.ec;pgallegos@quimpac.com.ec;recepcion@quimpac.com.ec</campoAdicional>
+<campoAdicional nombre="Teléfono">042162660</campoAdicional>
+<campoAdicional nombre="Orden de compra N°">7500054765</campoAdicional>
+<campoAdicional nombre="aceptacion N°">1001612990</campoAdicional>
+</infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature171814">
+<ds:SignedInfo Id="Signature-SignedInfo423938">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID827798" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature171814-SignedProperties811299">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>AjQZ2ZRBxtKLgkBIzXMPL4xUfNE=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1867681">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>1uQKRYPsZmRa7nNCFHnJy4Ztamo=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-655598" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>2ldIPrZYy69vTXYIET49fwdG4H4=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue26840">
+dRGyQjO48Nh2+uD4UxEOtyCQzBI7FvpSsQXeJ2tfrtkctoZ74SyozFZCOHJ6o/rdpkVTEZg/ij5S
+FMyGuS33fSl1hKQKqPBW5ZwU8Br1ozSQYCdKB6edCqMM3DCpiIpgmXT0sHLkW4DSMmF7FdDI82xA
+QDIisFXYJGdWKjz8nLGUsIQclxRGH3yReNS35//fJ2JxmAFI1RIGCV6HQH7cRQx+ztx2o+ZtqOiY
+ZZmjBKpLbeO6ZdH8Cuoj69cHdCDCgzRC2IThLfy5sAdiWQ8hFrBOB2OUw5cvG7RjQWZTt/X/HVG9
+1PjgZQmZbGL9QuJCXxU/XJ0wx4z922TcCPWTrA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1867681">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIHvzCCBaegAwIBAgIRAPQ86cTN6tE9fmz0czgPrkEwDQYJKoZIhvcNAQELBQAwgcIxCzAJBgNV
+BAYTAkVDMRswGQYDVQQKDBJGSVJNQVNFR1VSQSBTLkEuUy4xMDAuBgNVBAsMJ0VOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjETMBEGA1UECAwKVFVOR1VSQUhVQTE+MDwGA1UE
+Aww1QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMSBGSVJNQVNFR1VSQSBTLkEuUy4x
+DzANBgNVBAcMBkFNQkFUTzAeFw0yNTEwMjIxMjM2MTBaFw0yNjEwMjIxMzM2MTBaMIHbMS0wKwYD
+VQQFEyRjZDA2ZTBjYy1iMDJkLTQ5YzYtYjI1Ni1lYjY5OWI3MGMyZTMxJjAkBgkqhkiG9w0BCQEW
+F2FsZG9zYWxpbmFzY2hAZ21haWwuY29tMSYwJAYDVQQDEx1FRElOU09OIFJBRkFFTCBRVUlOVEVS
+TyBRVUlNSTEwMC4GA1UECxMnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9O
+MRswGQYDVQQKExJGSVJNQVNFR1VSQSBTLkEuUy4xCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAprdOrcLYsxTTltfD0O9sMX7NAhPTir3zxlkv5wutUI91c6R6Cr3d
+oTBOvW+xsZLjcF396UQ+LVbc/LwQu82skfYjMPgNNV4mpTWSdGefoLuCuM1dBMjl8LJM/+e+TuSQ
+ZHmIaYhZwDk3qtDBTX9EWRYFKvMI5HXt2aqEcAVHOjCu6ZUJLwmLrzYznmJoEgtnAP1Gfz9EFSxq
+cSYtMy+jmhPoMa5rc8kgqmWv78Qq1VlE6x+OyfDIAc8F8euckdzcTt824SeWRzoo9HpGs4CmHz2l
+xzN/lunWG0c5PomObznxF2H8MFBbYmHlEwK4H2wLUf5/PijawIVJoGHvssiSSwIDAQABo4ICkzCC
+Ao8wCQYDVR0TBAIwADAfBgNVHSMEGDAWgBQTRpNoCa7XJIczRWMmd9+sXl6KUTAdBgNVHQ4EFgQU
+6xvCYV3fKcQUYAEhCGtmjJgzt10wWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2NybC5maXJtYXNl
+Z3VyYWVjLmNvbS9jcmwvY2NjZTVhNGYtNmI2OC00NmZjLWE2MjAtNGFiY2M0YzRhNjkwLmNybDA5
+BggrBgEFBQcBAQQtMCswKQYIKwYBBQUHMAGGHWh0dHA6Ly9vY3NwLmZpcm1hc2VndXJhZWMuY29t
+MBoGCisGAQQBg955AwEEDBYKMDkxNjk2NjE2MTAeBgorBgEEAYPeeQMCBBAWDkVESU5TT04gUkFG
+QUVMMBgGCisGAQQBg955AwMEChYIUVVJTlRFUk8wFQYKKwYBBAGD3nkDBAQHFgVRVUlNSTBBBgor
+BgEEAYPeeQMHBDMWMUNBTExFSk9OIFBBUlJBIFMvTiBZIENBTExFIDQ2IEFWQS4gLSBDQUxMRSA0
+NyBBVkEwHAYKKwYBBAGD3nkDCAQOFgw1OTM5OTY3OTc1MzUwGQYKKwYBBAGD3nkDCQQLFglHVUFZ
+QVFVSUwwEwYKKwYBBAGD3nkDDAQFFgNFQ1UwgZwGA1UdIASBlDCBkTBQBgsrBgEEAYPeeQIBATBB
+MD8GCCsGAQUFBwIBFjNodHRwczovL2Zpcm1hc2VndXJhZWMuY29tL3BvbGl0aWNhc19wZXJzb25h
+X25hdHVyYWwwPQYLKwYBBAGD3nkCAgEwLjAsBggrBgEFBQcCAjAgDB5DZXJ0aWZpY2FkbyBkZSBQ
+ZXJzb25hIE5hdHVyYWwwDgYDVR0PAQH/BAQDAgXgMA0GCSqGSIb3DQEBCwUAA4ICAQCUfmxfGrDE
+d+dpTasxBDZox3S8EaQFD4sTCptp8jkg9aErZhe6to3P5LlLMaAcs9ixa/IUHLrVD5CgdjpvQIa+
+IN54/tzNZH6KJ3L3nksJNr34LpiTeeZ9nEr35IRYLxyV/A9ninFNrgnXg6RMHizhVa++nLtXunFf
+dOmRt7DOQm3Me2imjd004a9LknT7OnbxMbSwRkvltsddBhUc+Bb+qSLUcHjHUTleYKCuV5TmeOmi
+MotgZxFTWxeqcoVrMboauTupJ7NnmfRFmTb0sQ09OoBHIqfeZ1bYPsSCgUVNl5rVi3Q1Iwv1bQJU
+msX9Lh22kiN2QIPpGvYqiJ6Hiyf+HhmFkjKOctONiZaQ0PMp4DVltDyKbXglpRfDWFm4WZy3Vksc
+l0kMz/eRdgF/BtZjREaMywG3muqCOEAvn42b/CKkVmwi8UZIbik9VhVvW31qmu04r9wKZBdUKg1q
+mSvNdMplpnNKde+per05/sV32O57A0pJNJ1auVd5YwVSAd923yl/F6C4hxKEiC2SjzM6W98oPpjy
+Ky8+x7bBvpWXnjv4nxyxjt62X1iD37VS94h6SRH60biXHiDi0PXT6/sTucTCAUVqL+PP9B/CZ7jZ
+CM1yZyfJXUNRLq12MAgWQ2sCtnlqrJtZ7ycAzm5lvr55fK7ISo/1r8DW4zv22eiTAA==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+prdOrcLYsxTTltfD0O9sMX7NAhPTir3zxlkv5wutUI91c6R6Cr3doTBOvW+xsZLjcF396UQ+LVbc
+/LwQu82skfYjMPgNNV4mpTWSdGefoLuCuM1dBMjl8LJM/+e+TuSQZHmIaYhZwDk3qtDBTX9EWRYF
+KvMI5HXt2aqEcAVHOjCu6ZUJLwmLrzYznmJoEgtnAP1Gfz9EFSxqcSYtMy+jmhPoMa5rc8kgqmWv
+78Qq1VlE6x+OyfDIAc8F8euckdzcTt824SeWRzoo9HpGs4CmHz2lxzN/lunWG0c5PomObznxF2H8
+MFBbYmHlEwK4H2wLUf5/PijawIVJoGHvssiSSw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature171814-Object386352"><etsi:QualifyingProperties Target="#Signature171814"><etsi:SignedProperties Id="Signature171814-SignedProperties811299"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-03T20:39:06-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>nS0MVtxsmik6FBsSmePzomLnwsA=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>L=AMBATO,CN=AUTORIDAD DE CERTIFICACION SUBCA-1 FIRMASEGURA S.A.S.,ST=TUNGURAHUA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=FIRMASEGURA S.A.S.,C=EC</ds:X509IssuerName><ds:X509SerialNumber>324647910176917370045381496021877501505</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-655598"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

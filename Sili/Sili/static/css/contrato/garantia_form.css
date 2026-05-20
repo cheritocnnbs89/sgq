@@ -1,0 +1,126 @@
+.card-elev {
+  border: 1px solid #eaecef;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.req::after {
+  content: " *";
+  color: #dc3545;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.sticky-actions {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  padding: 0.75rem;
+  border-top: 1px solid #e9ecef;
+  z-index: 10;
+}
+
+.accent-left {
+  border-left: 6px solid var(--brand-primary);
+}
+
+/* Formulario garantía compacto */
+.theme-contab {
+  background: #f5f7fb;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+.theme-contab h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.theme-contab .card-elev {
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.theme-contab .card-body {
+  padding: 12px 14px;
+}
+
+.theme-contab .form-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.theme-contab .form-control,
+.theme-contab .form-select,
+.theme-contab .input-group-text {
+  height: 32px;
+  min-height: 32px;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 9px;
+}
+
+.theme-contab textarea.form-control {
+  height: auto;
+  min-height: 70px;
+}
+
+.theme-contab .row.g-3 {
+  --bs-gutter-y: 0.65rem;
+}
+
+.theme-contab h6 {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.theme-contab .hint,
+.theme-contab .form-text {
+  font-size: 0.74rem;
+}
+
+.theme-contab .section-chip {
+  font-size: 0.8rem;
+}
+
+.theme-contab .btn {
+  font-size: 0.78rem;
+  padding: 5px 10px;
+}
+
+.theme-contab .sticky-actions {
+  padding: 8px 0;
+}
+
+/* Modal contrato compacto dentro del formulario */
+#modalContrato .modal-content,
+#modalSalir .modal-content {
+  border-radius: 14px;
+  font-size: 0.82rem;
+}
+
+#modalContrato .modal-header,
+#modalSalir .modal-header {
+  padding: 10px 16px;
+}
+
+#modalContrato .modal-title,
+#modalSalir .modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+#modalContrato .modal-body,
+#modalSalir .modal-body {
+  padding: 12px 16px;
+}
+
+#modalContrato .modal-footer,
+#modalSalir .modal-footer {
+  padding: 10px 16px;
+}

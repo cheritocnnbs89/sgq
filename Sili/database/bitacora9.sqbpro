@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="bitacora.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="10243"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="tareas" custom_title="0" dock_id="13" table="4,6:maintareas"/><table title="tarea_acciones" custom_title="0" dock_id="12" table="4,14:maintarea_acciones"/><table title="areas" custom_title="0" dock_id="1" table="4,5:mainareas"/><table title="cantones" custom_title="0" dock_id="10" table="4,8:maincantones"/><table title="provincias" custom_title="0" dock_id="2" table="4,10:mainprovincias"/><table title="provincias" custom_title="0" dock_id="3" table="4,10:mainprovincias"/><table title="provincias" custom_title="0" dock_id="4" table="4,10:mainprovincias"/><table title="regiones" custom_title="0" dock_id="5" table="4,8:mainregiones"/><table title="provincias" custom_title="0" dock_id="8" table="4,10:mainprovincias"/><table title="cantones" custom_title="0" dock_id="9" table="4,8:maincantones"/><table title="usuarios" custom_title="0" dock_id="11" table="4,8:mainusuarios"/><table title="tarea_acciones" custom_title="0" dock_id="14" table="4,14:maintarea_acciones"/><dock_state state="000000ff00000000fd0000000100000002000004e700000202fc0100000001fc00000000000004e70000012f00fffffffa0000000b010000000cfb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000011e00fffffffb000000160064006f0063006b00420072006f00770073006500320100000000ffffffff0000011e00fffffffb000000160064006f0063006b00420072006f00770073006500330100000000ffffffff0000011e00fffffffb000000160064006f0063006b00420072006f00770073006500340100000000ffffffff0000011e00fffffffb000000160064006f0063006b00420072006f00770073006500350100000000ffffffff0000011e00fffffffb000000160064006f0063006b00420072006f00770073006500380100000000ffffffff0000011e00fffffffb000000160064006f0063006b00420072006f00770073006500390100000000ffffffff0000012300fffffffb000000180064006f0063006b00420072006f007700730065003100300100000000ffffffff0000012300fffffffb000000180064006f0063006b00420072006f007700730065003100310100000000ffffffff0000012f00fffffffb000000180064006f0063006b00420072006f007700730065003100320100000000ffffffff0000011e00fffffffb000000180064006f0063006b00420072006f007700730065003100330100000000ffffffff0000012900fffffffb000000180064006f0063006b00420072006f007700730065003100340100000000ffffffff0000012300ffffff000004e70000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="areas" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="52"/><column index="3" value="43"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="cantones" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="79"/><column index="3" value="52"/><column index="4" value="43"/><column index="5" value="41"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="provincias" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="3" mode="0"/></sort><column_widths><column index="1" value="35"/><column index="2" value="63"/><column index="3" value="95"/><column index="4" value="43"/><column index="5" value="41"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="regiones" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="55"/><column index="3" value="43"/><column index="4" value="41"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="tarea_acciones" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="0" mode="0"/></sort><column_widths><column index="1" value="35"/><column index="2" value="58"/><column index="3" value="69"/><column index="4" value="159"/><column index="5" value="349"/><column index="6" value="532"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="tareas" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="0" mode="0"/></sort><column_widths><column index="1" value="35"/><column index="2" value="300"/><column index="3" value="458"/><column index="4" value="111"/><column index="5" value="159"/><column index="6" value="159"/><column index="7" value="159"/><column index="8" value="69"/><column index="9" value="64"/><column index="10" value="159"/><column index="11" value="159"/><column index="12" value="69"/><column index="13" value="84"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="usuarios" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="111"/><column index="3" value="300"/><column index="4" value="300"/><column index="5" value="151"/><column index="6" value="109"/><column index="7" value="55"/><column index="8" value="99"/><column index="9" value="159"/><column index="10" value="120"/><column index="11" value="300"/><column index="12" value="95"/><column index="13" value="39"/><column index="14" value="109"/><column index="15" value="88"/><column index="16" value="60"/><column index="17" value="79"/><column index="18" value="300"/><column index="19" value="75"/><column index="20" value="51"/><column index="21" value="64"/><column index="22" value="81"/><column index="23" value="83"/><column index="24" value="159"/><column index="25" value="47"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">INSERT INTO provincias (region_id, nombre, activo, orden) VALUES
+(1, 'Esmeraldas', 1, 1),
+(1, 'Manabí',     1, 2),
+(1, 'Los Ríos',   1, 3),
+(1, 'Guayas',     1, 4),
+(1, 'Santa Elena',1, 5),
+(1, 'El Oro',     1, 6);
+
+
+
+-- Insertar provincias de la Sierra (region_id = 2)
+INSERT INTO provincias (region_id, nombre, activo, orden) VALUES
+(2, 'Carchi',      1, 1),
+(2, 'Imbabura',    1, 2),
+(2, 'Pichincha',   1, 3),
+(2, 'Cotopaxi',    1, 4),
+(2, 'Tungurahua',  1, 5),
+(2, 'Bolívar',     1, 6),
+(2, 'Chimborazo',  1, 7),
+(2, 'Cañar',       1, 8),
+(2, 'Azuay',       1, 9),
+(2, 'Loja',        1,10);
+
+
+
+
+
+
+INSERT INTO cantones (provincia_id, nombre, activo, orden) VALUES
+(1, 'San Cristóbal', 1, 1),
+(1, 'Santa Cruz',    1, 2),
+(1, 'Isabela',       1, 3),
+
+-- =========================================
+--  PROVINCIA 2: ESMERALDAS
+-- =========================================
+(2, 'Esmeraldas', 1, 1),
+(2, 'Eloy Alfaro', 1, 2),
+(2, 'Muisne', 1, 3),
+(2, 'Quinindé', 1, 4),
+(2, 'Rioverde', 1, 5),
+(2, 'San Lorenzo', 1, 6),
+(2, 'Atacames', 1, 7),
+
+-- =========================================
+--  PROVINCIA 3: MANABÍ
+-- =========================================
+(3, 'Portoviejo', 1, 1),
+(3, 'Manta', 1, 2),
+(3, 'Chone', 1, 3),
+(3, 'El Carmen', 1, 4),
+(3, 'Jipijapa', 1, 5),
+(3, 'Montecristi', 1, 6),
+(3, 'Rocafuerte', 1, 7),
+(3, 'Santa Ana', 1, 8),
+(3, 'Sucre', 1, 9),
+(3, 'Paján', 1, 10),
+(3, 'Junín', 1, 11),
+(3, 'Flavio Alfaro', 1, 12),
+(3, 'Olmedo', 1, 13),
+(3, 'Pichincha', 1, 14),
+(3, 'Tosagua', 1, 15),
+(3, 'Bolívar', 1, 16),
+(3, 'Jama', 1, 17),
+(3, 'Pedernales', 1, 18),
+(3, 'Puerto López', 1, 19),
+(3, 'San Vicente', 1, 20),
+
+-- =========================================
+--  PROVINCIA 4: LOS RÍOS
+-- =========================================
+(4, 'Babahoyo', 1, 1),
+(4, 'Quevedo', 1, 2),
+(4, 'Ventanas', 1, 3),
+(4, 'Vinces', 1, 4),
+(4, 'Palenque', 1, 5),
+(4, 'Buena Fe', 1, 6),
+(4, 'Valencia', 1, 7),
+(4, 'Mocache', 1, 8),
+(4, 'Montalvo', 1, 9),
+(4, 'Quinsaloma', 1, 10),
+(4, 'Urdaneta', 1, 11),
+
+-- =========================================
+--  PROVINCIA 5: GUAYAS
+-- =========================================
+(5, 'Guayaquil', 1, 1),
+(5, 'Durán', 1, 2),
+(5, 'Samborondón', 1, 3),
+(5, 'Daule', 1, 4),
+(5, 'Milagro', 1, 5),
+(5, 'Yaguachi', 1, 6),
+(5, 'Naranjal', 1, 7),
+(5, 'Playas', 1, 8),
+(5, 'Balzar', 1, 9),
+(5, 'El Empalme', 1, 10),
+(5, 'El Triunfo', 1, 11),
+(5, 'General Antonio Elizalde (Bucay)', 1, 12),
+(5, 'Isidro Ayora', 1, 13),
+(5, 'Alfredo Baquerizo Moreno (Juján)', 1, 14),
+(5, 'Simón Bolívar', 1, 15),
+(5, 'Lomas de Sargentillo', 1, 16),
+(5, 'Naranjito', 1, 17),
+(5, 'Pedro Carbo', 1, 18),
+(5, 'Colimes', 1, 19),
+(5, 'General Villamil (Playas)', 1, 20),
+
+-- =========================================
+--  PROVINCIA 6: SANTA ELENA
+-- =========================================
+(6, 'Santa Elena', 1, 1),
+(6, 'La Libertad', 1, 2),
+(6, 'Salinas', 1, 3),
+
+-- =========================================
+--  PROVINCIA 7: EL ORO
+-- =========================================
+(7, 'Machala', 1, 1),
+(7, 'Santa Rosa', 1, 2),
+(7, 'Pasaje', 1, 3),
+(7, 'El Guabo', 1, 4),
+(7, 'Huaquillas', 1, 5),
+(7, 'Arenillas', 1, 6),
+(7, 'Zaruma', 1, 7),
+(7, 'Piñas', 1, 8),
+(7, 'Portovelo', 1, 9),
+(7, 'Atahualpa', 1, 10),
+(7, 'Las Lajas', 1, 11),
+(7, 'Marcabelí', 1, 12),
+(7, 'Chilla', 1, 13),
+
+-- =========================================
+--  PROVINCIA 8: CARCHI
+-- =========================================
+(8, 'Tulcán', 1, 1),
+(8, 'Montúfar', 1, 2),
+(8, 'Espejo', 1, 3),
+(8, 'Mira', 1, 4),
+(8, 'Bolívar', 1, 5),
+(8, 'Huaca', 1, 6),
+
+-- =========================================
+--  PROVINCIA 9: IMBABURA
+-- =========================================
+(9, 'Ibarra', 1, 1),
+(9, 'Otavalo', 1, 2),
+(9, 'Cotacachi', 1, 3),
+(9, 'Antonio Ante', 1, 4),
+(9, 'Pimampiro', 1, 5),
+(9, 'Urcuquí', 1, 6),
+
+-- =========================================
+--  PROVINCIA 10: PICHINCHA
+-- =========================================
+(10, 'Quito', 1, 1),
+(10, 'Mejía', 1, 2),
+(10, 'Rumiñahui', 1, 3),
+(10, 'Cayambe', 1, 4),
+(10, 'Pedro Moncayo', 1, 5),
+(10, 'San Miguel de los Bancos', 1, 6),
+(10, 'Pedro Vicente Maldonado', 1, 7),
+(10, 'Puerto Quito', 1, 8),
+
+-- =========================================
+--  PROVINCIA 11: COTOPAXI
+-- =========================================
+(11, 'Latacunga', 1, 1),
+(11, 'La Maná', 1, 2),
+(11, 'Pujilí', 1, 3),
+(11, 'Salcedo', 1, 4),
+(11, 'Saquisilí', 1, 5),
+(11, 'Sigchos', 1, 6),
+(11, 'Pangua', 1, 7),
+
+-- =========================================
+--  PROVINCIA 12: TUNGURAHUA
+-- =========================================
+(12, 'Ambato', 1, 1),
+(12, 'Baños de Agua Santa', 1, 2),
+(12, 'Cevallos', 1, 3),
+(12, 'Mocha', 1, 4),
+(12, 'Patate', 1, 5),
+(12, 'Quero', 1, 6),
+(12, 'Tisaleo', 1, 7),
+(12, 'Pelileo', 1, 8),
+(12, 'Píllaro', 1, 9),
+
+-- =========================================
+--  PROVINCIA 13: BOLÍVAR
+-- =========================================
+(13, 'Guaranda', 1, 1),
+(13, 'Chimbo', 1, 2),
+(13, 'San Miguel', 1, 3),
+(13, 'Chillanes', 1, 4),
+(13, 'Echeandía', 1, 5),
+(13, 'Caluma', 1, 6),
+(13, 'Las Naves', 1, 7),
+
+-- =========================================
+--  PROVINCIA 14: CHIMBORAZO
+-- =========================================
+(14, 'Riobamba', 1, 1),
+(14, 'Guano', 1, 2),
+(14, 'Colta', 1, 3),
+(14, 'Chunchi', 1, 4),
+(14, 'Alausí', 1, 5),
+(14, 'Pallatanga', 1, 6),
+(14, 'Penipe', 1, 7),
+(14, 'Cumandá', 1, 8),
+(14, 'Guamote', 1, 9),
+(14, 'Chambo', 1, 10),
+
+-- =========================================
+--  PROVINCIA 15: CAÑAR
+-- =========================================
+(15, 'Azogues', 1, 1),
+(15, 'Biblián', 1, 2),
+(15, 'Cañar', 1, 3),
+(15, 'La Troncal', 1, 4),
+(15, 'El Tambo', 1, 5),
+(15, 'Suscal', 1, 6),
+(15, 'Déleg', 1, 7),
+
+-- =========================================
+--  PROVINCIA 16: AZUAY
+-- =========================================
+(16, 'Cuenca', 1, 1),
+(16, 'Gualaceo', 1, 2),
+(16, 'Paute', 1, 3),
+(16, 'Sígsig', 1, 4),
+(16, 'Santa Isabel', 1, 5),
+(16, 'Nabón', 1, 6),
+(16, 'Girón', 1, 7),
+(16, 'San Fernando', 1, 8),
+(16, 'Oña', 1, 9),
+(16, 'Pucará', 1, 10),
+(16, 'Camilo Ponce Enríquez', 1, 11),
+(16, 'Chordeleg', 1, 12),
+(16, 'Guachapala', 1, 13),
+(16, 'Sevilla de Oro', 1, 14),
+(16, 'El Pan', 1, 15),
+
+-- =========================================
+--  PROVINCIA 17: LOJA
+-- =========================================
+(17, 'Loja', 1, 1),
+(17, 'Catamayo', 1, 2),
+(17, 'Calvas', 1, 3),
+(17, 'Celica', 1, 4),
+(17, 'Chaguarpamba', 1, 5),
+(17, 'Gonzanamá', 1, 6),
+(17, 'Macará', 1, 7),
+(17, 'Olmedo', 1, 8),
+(17, 'Paltas', 1, 9),
+(17, 'Pindal', 1, 10),
+(17, 'Puyango', 1, 11),
+(17, 'Quilanga', 1, 12),
+(17, 'Saraguro', 1, 13),
+(17, 'Sozoranga', 1, 14),
+(17, 'Zapotillo', 1, 15),
+(17, 'Espíndola', 1, 16);
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

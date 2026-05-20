@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Empresas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0">Empresas</h4>
+    {% if has_permission('empresas','crear') %}
+    <a href="{{ url_for('empresas.nueva_empresa') }}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Nueva empresa
+    </a>
+    {% endif %}
+  </div>
+
+  <form class="row g-2 mb-3" method="get" action="{{ url_for('empresas.lista_empresas') }}">
+    <div class="col-md-6">
+      <input type="text" class="form-control" name="q" placeholder="Buscar por razón social, RUC, email o teléfono" value="{{ f.q }}">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" name="activo">
+        <option value="" {{ ''==f.activo and 'selected' or '' }}>Todos (activo/inactivo)</option>
+        <option value="1" {{ '1'==f.activo and 'selected' or '' }}>Activos</option>
+        <option value="0" {{ '0'==f.activo and 'selected' or '' }}>Inactivos</option>
+      </select>
+    </div>
+    <div class="col-md-3 d-grid d-md-flex">
+      <button class="btn btn-outline-secondary me-2"><i class="bi bi-search"></i> Filtrar</button>
+      <a class="btn btn-outline-dark" href="{{ url_for('empresas.lista_empresas') }}"><i class="bi bi-x-circle"></i> Limpiar</a>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Razón social</th>
+          <th>RUC</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th class="text-center">Estado</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r.razon_social }}</td>
+          <td><code>{{ r.ruc }}</code></td>
+          <td>{{ r.email }}</td>
+          <td>{{ r.telefono }}</td>
+          <td class="text-center">
+            {% if r.activo %}<span class="badge bg-success">Activo</span>
+            {% else %}<span class="badge bg-secondary">Inactivo</span>{% endif %}
+          </td>
+          <td class="text-end">
+            {% if has_permission('empresas','editar') %}
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('empresas.editar_empresa', empresa_id=r.id) }}">
+              <i class="bi bi-pencil-square"></i> Editar
+            </a>
+            {% endif %}
+            {% if has_permission('empresas','eliminar') %}
+            <form method="post" action="{{ url_for('empresas.eliminar_empresa', empresa_id=r.id) }}" class="d-inline"
+                  onsubmit="return confirm('¿Eliminar empresa?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">Sin resultados</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

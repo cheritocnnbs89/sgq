@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitácora - Verificar código</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login/verificar_codigo.css') }}">
+</head>
+
+<body>
+  <div class="verify-card">
+    <div class="text-center mb-3">
+      <i class="bi bi-shield-lock-fill icon"></i>
+    </div>
+
+    <h4 class="text-center mb-3">Verificar código</h4>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <p class="text-center mb-3">
+      Ingrese el código de verificación que recibió por correo.
+    </p>
+
+    <form method="POST" action="{{ url_for('verificar_codigo') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="mb-3">
+        <label class="form-label">Código de verificación</label>
+        <input type="text" name="code" class="form-control" placeholder="Ingrese su código" required>
+      </div>
+
+      <button class="btn btn-primary w-100" type="submit">Verificar</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <p class="mb-0">Intentos restantes: {{ attempts_left }}</p>
+      <a href="{{ url_for('login') }}">Cancelar</a>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/login/verificar_codigo.js') }}"></script>
+</body>
+
+</html>

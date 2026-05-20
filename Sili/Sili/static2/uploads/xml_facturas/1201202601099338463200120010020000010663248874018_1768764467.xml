@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1201202601099338463200120010020000010663248874018</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-12T15:45:59-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;OVASIESTIBAS S.A.S&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;OVASIESTIBAS S.A.S&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0993384632001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;1201202601099338463200120010020000010663248874018&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;001&lt;/estab&gt;
+    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000001066&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;CALLE 12AVA Y CRISTOBAL COLON&lt;/dirMatriz&gt;
+    &lt;contribuyenteRimpe&gt;CONTRIBUYENTE RÉGIMEN RIMPE&lt;/contribuyenteRimpe&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;12/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;CALLE 12AVA Y CRISTOBAL COLON&lt;/dirEstablecimiento&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;AV ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;922.50&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;922.50&lt;/baseImponible&gt;
+        &lt;valor&gt;138.38&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0&lt;/propina&gt;
+    &lt;importeTotal&gt;1060.88&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;1060.88&lt;/total&gt;
+        &lt;plazo&gt;30&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;Días&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;45&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;45.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE PROCESADORA NACIONAL DE ALIMENTOS C Hipoclorito de Sodio al 10%" valor="TRANSPORTE 410246816 ENTREGA 260390326"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;45.00&lt;/baseImponible&gt;
+          &lt;valor&gt;6.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE BEBIDAS ARCACONTINENTAL ECUADOR Soda 50% Líquida" valor="TRANSPORTE 410246817 ENTREGA 260390325"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;3&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;67.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE SERCHEM S.A.    DISTRIBUIDORA MICHELLE S.A. Hipoclorito de Sodio al 10%  Tambor  Tambor plastico usado reutilizable" valor="TRANSPORTE 410246818 ENTREGA 260390452    260390479"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;67.50&lt;/baseImponible&gt;
+          &lt;valor&gt;10.13&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE INTERNATIONAL WATER SERVICES Hipoclorito de Sodio al 10%" valor="TRANSPORTE 410246822 ENTREGA 260390454"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;45&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;45.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE DETERGENTES DEL ECUADOR Hipoclorito de Sodio al 10%" valor="TRANSPORTE 410246823 ENTREGA 260390465"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;45.00&lt;/baseImponible&gt;
+          &lt;valor&gt;6.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;2&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;45.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE INCODIPROSA S.A. Hipoclorito de Sodio al 10%  Tambor  Tambor plastico usado reutilizable" valor="TRANSPORTE 410246827 ENTREGA 410246827"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;45.00&lt;/baseImponible&gt;
+          &lt;valor&gt;6.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;2&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;45.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE INCODIPROSA S.A. Hipoclorito de Sodio al 10%  Tambor  Tambor plastico usado reutilizable" valor="TRANSPORTE 410246829 ENTREGA 260390370"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;45.00&lt;/baseImponible&gt;
+          &lt;valor&gt;6.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;3&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;45&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;135.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE FIBESA FB-INC S.A.S. Regulador de pH Quimpac 20 - Can 25kg" valor="TRANSPORTE 410246830 ENTREGA 260390457"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;135.00&lt;/baseImponible&gt;
+          &lt;valor&gt;20.25&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;2&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;45&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;90.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE CASTIMERSA QUIMICOS S.A. Acido Clorhidrico TB 250kg  Tambor Plastico Reacondicionado" valor="TRANSPORTE 410246831 ENTREGA 410246831"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;90.00&lt;/baseImponible&gt;
+          &lt;valor&gt;13.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE ROMERO QUIMI JORDY RICARDO Hipoclorito de Sodio al 10%  Tambor  Tambor plastico usado reutilizable" valor="TRANSPORTE 410246833 ENTREGA 260390485"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;2&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;45&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;90.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE OPERADORA Y PROCESADORA DE PRODUCTO    LA CHAMECITA S.A.S. Hipoclorito de Sodio al 10%  Tambor  Tambor plastico usado reutilizable" valor="TRANSPORTE 410246834 260390480    ENTREGA 260390483"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;90.00&lt;/baseImponible&gt;
+          &lt;valor&gt;13.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE PROCESADORA NACIONAL DE ALIMENTOS C Hipoclorito de Sodio al 10%  Tambor  Tambor Plastico Reacondicionado" valor="TRANSPORTE 410246835 ENTREGA 260390478"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE MORAN ORTIZ MIRELLA ANTONIA Hipoclorito de Sodio al 10%  Tambor  Tambor plastico usado reutilizable INDUSTRIAL PESQUERA SANTA Hipoclorito de Sodio al 10%  Caneca" valor="TRANSPORTE 410246836 ENTREGA 260390487    260390488"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE GARCIA RAMIREZ PIEDAD HORTENCIA Acido Sulfurico - canecas" valor="TRANSPORTE 410246837 ENTREGA 260390472"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;45&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;45.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE ESPINOZA GUERRERO ENIVER ROLANDO Sulfato de Alum -Quimpac 1000 SG SC 25Kg EMPRESA PUBLICA DE AGUA POTABLE Policloruro de Aluminio Sólido 25kg  Cal Hidratada  sc 25 kg" valor="TRANSPORTE 410246858 ENTREGA 260390504"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;45.00&lt;/baseImponible&gt;
+          &lt;valor&gt;6.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE ELECTROQUIMICA S.A. Soda Caustica Escamas Peru SC25  Sulfato de Sodio Anhidro SC 25kg  Carbonato de Sodio Liviano China SC25" valor="TRANSPORTE 410246859 ENTREGA 260390507  260390508  260390509"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;45&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;45.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE EMPRESA PUBLICA DE AGUA POTABLE Hipoclorito de Calcio 70% CN 45kg EMPRESA PUBLICA DE AGUA POTABLE Hipoclorito de Sodio al 10%  Tb " valor="TRANSPORTE 410246862 ENTREGA 260390515  260390513"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;45.00&lt;/baseImponible&gt;
+          &lt;valor&gt;6.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE ESPINOZA ALVARADO JOEL JOSUE    CALVA GUARNIZO MARCOS ERNESTO Hipoclorito de Sodio al 10%  Tambor  Tambor plastico usado reutilizable" valor="TRANSPORTE 410246863 ENTREGA 260390510    260390511"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE REFRESCOS SIN GAS S.A. RESGASA    PROQUILIM S.A. Hipoclorito de Sodio al 10%  Tambor  Tambor plastico usado reutilizable" valor="TRANSPORTE 410246864 ENTREGA 260390493    260390512"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE ESPINOZA GUERRERO ENIVER ROLANDO Muriático Solución tambor 220kg  Tambor Plastico Reacondicionado" valor="TRANSPORTE 410246865 ENTREGA 260390505"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE MAQUILADORES Y ENVASADORES Hipoclorito de Sodio al 10%" valor="TRANSPORTE 410246819 ENTREGA 260390455"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Servicios de estiba&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;22.5&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;22.50&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="CLIENTE QUIMPAC S.A." valor="OE 5564"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;22.50&lt;/baseImponible&gt;
+          &lt;valor&gt;3.38&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="CORREO"&gt;asistentelogistica1@quimpac.com.ec&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="ESTIBA QUIMPAC S.A."&gt;30 DE DICIEMBRE&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="MAILEMISOR"&gt;ovasiestibas@gmail.com&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature249369"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo32411"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID978386" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature249369-SignedProperties430534"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;rmwwNFQJGA/HUxm0F2dOWbQVe+o=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1804765"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;EJN5XO6+GQ+QXGai9cHSsEEmckM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-1044014" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;tWnb3yJc4Uus0EtiAcP0SSUixr0=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue386234"&gt;
+qPGBqVtFpQssZrDdWSEmjAJdGnH9DrS52S2Wo/1K2okAOrr8vMaMOPmicBNJi7ZfbE5zBvgetHn5
+aXyZQ0lqAat6Z4Ce8CnsKUDMbu3SvjdMXAWk2olGDxkbrGPhx9afQdQN6bIeMtJQpg3ypdMHx+V0
+AG1pokDQhWsoEsRdKO0WVrGK363dCn+BCvm+5UEygJvHVXoUa47yNX3AluvIpJe4hhwNDTS++AxQ
+CPu8Q26KWoiNf7nQvvdAKX0NWWGajPM/OaZc7Mq3+lqyFEK3NXXW7e4l81xEXyoim5tsSviZicaC
+BQNLHGQpDDslin8mQjv54ohjBmzjq7Be+YRiRw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1804765"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIK9zCCCN+gAwIBAgIIFa7jvYvgLrgwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwOTMwMTUyMTQ1WhcNMjgwOTI5MTUyMTQ1WjCB
+qzEpMCcGA1UEAwwgS0FST0xJTkEgVkFORVNTQSBDQU1BQ0hPIFBBUlJBR0ExIDAeBgNVBAUTFzA5
+NTE4ODE2NDgtMzAwOTI1MTAzMTM2MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04g
+REUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJF
+QzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANYiXIsqZWuGEf6wKZLTiVRTxciKnZbw
+SWavwGDvcL9nwLjnTIvV569vQ0f9P9ctULmJOTuGtnqWt7wRfRuuv6ZajzxxkROojcQBU1nPT3d1
+zfW7JhlKXAC1e5lo6Si++3rNpQ09AQeHfgZ6/YT6p8fjxB8F8iT8MMq5qVVMQTXEUXsp+36BXt/B
+NhpkXo4Rw1R+bcIZCJVJjraHvxK8ZaMPnISzSuz2X4qNrACLATFotd8LJt6xwluE9LGgfvlVJiXx
+2K6G50T7/dKnFlfrDANiaFfaYCHqMGCSwpOk42pHjWhWQe61Qno2U2F/Sj0uZyy3kyOGsEvLQ+s8
+BR5pyg0CAwEAAaOCBi0wggYpMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpL
+Vb+NrmLdvY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3Vy
+aXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMCgGA1UdEQQhMB+BHWlu
+Z3NpeHRvemFtYnJhbm9wOTBAZ21haWwuY29tMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnIC
+CTBUMFIGCCsGAQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcABy
+AGUAcwBlAG4AdABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEF
+BQcCARaBgmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9h
+ZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8g
+UmVwcmVzZW50YW50ZSBMZWdhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIIC
+DwYDVR0fBIICBjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1
+YmNhMmNybDEvY3JsZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJU
+SUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJU
+SUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEL
+MAkGA1UEBhMCRUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2Ey
+Y3JsMi9jcmxmaWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1
+cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwm
+aXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFU
+QSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBE
+QVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBTPomnYOe+2fvQlBiF3DcSmXZ72zTArBgNVHRAEJDAi
+gA8yMDI1MDkzMDE1MjE0NVqBDzIwMjgwOTI5MTUyMTQ1WjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGC
+pnIDBQQRDA9HRVJFTlRFIEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQMDAowOTUxODgxNjQ4MEAGCisG
+AQQBgqZyAwkEMgwwR1VBWUFRVUlMIENBQkVDRVJBIENBTlRPTkFMIFkgQ0FQSVRBTCBQUk9WSU5D
+SUFMMBEGCisGAQQBgqZyAyIEAwwBLjAoBgorBgEEAYKmcgMHBBoMGEZSQU5DSVNDTyBTRUdVUkEg
+WSBMQSAxMjAgBgorBgEEAYKmcgMCBBIMEEtBUk9MSU5BIFZBTkVTU0EwHwYKKwYBBAGCpnIDIAQR
+DA8wMDEwMDIwMDEwNTI5MTEwEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdF
+Q1VBRE9SMBcGCisGAQQBgqZyAwMECQwHQ0FNQUNITzAiBgorBgEEAYKmcgMKBBQMEk9WQVNJRVNU
+SUJBUyBTIEEgUzAdBgorBgEEAYKmcgMLBA8MDTA5OTMzODQ2MzIwMDEwEQYKKwYBBAGCpnIDHQQD
+DAEuMBcGCisGAQQBgqZyAwQECQwHUEFSUkFHQTAaBgorBgEEAYKmcgMIBAwMCjA5OTU5NzE5Mjcw
+DQYJKoZIhvcNAQELBQADggIBALrmPhjB0zPOE/BYDizo/kWpBTAq0QcgKFQbRaRbVIbKJHxnlf1N
+dPX3fOJlJG4xL7KuKflJ02vJ1hqS78cCY5NR9IgRqSpkfgD0yHGpYANMT7OSTwbNfoTvQ9PNtaZ/
+2KvZlQ3r3V9nMNy49VtPV3yC68yc6Zwe/nCJmxNPb4nicXhPt0X3D+JxjqizSUZt0Ha5OV6aNqt4
+Uw20NxdJfLh1iP0MB2pBBqUZlv+humM1OW9vZsKT2JmR0FXj+E738R5jaVPbBslCFH8yBHrdsrzc
+bUxxXHnyJXSuQreOghS9UMO5vse3AAEbWf5Msrr7ZNEwvOePqD3b1lDgKtMWd8UsI4sGSUtQfTo9
+c8l8ZuRORwxzVw4grY52AAqupBQ+x45N52tpcNZxHR1pI0kuwFfbYrD5t7W9q9h59N+ZTeDKTwcN
+YvUJ3z15C+MLv8jHJodp0ikcV+y+I0EEAn1PQHsGdqahXqMUCblr05g7kX8ShxJv4z2OK1eYP0zh
+24cHNMSbwYL6uyrCux5U7GnBghaEs5R6zPsVGQa//4DzclpZIp9K7gsyku+F2KEt2DUbJ+NzCsX5
+wYco59BLjSzSOY9K03781zAYhwN0aQ8Ea7onxO+OU0DNrUFU76oOZzq7hCYPWaWn5A5CEZrheiUY
++eHnNkatGqLsShOIFpnJPe4q
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+1iJciypla4YR/rApktOJVFPFyIqdlvBJZq/AYO9wv2fAuOdMi9Xnr29DR/0/1y1QuYk5O4a2epa3
+vBF9G66/plqPPHGRE6iNxAFTWc9Pd3XN9bsmGUpcALV7mWjpKL77es2lDT0BB4d+Bnr9hPqnx+PE
+HwXyJPwwyrmpVUxBNcRReyn7foFe38E2GmRejhHDVH5twhkIlUmOtoe/Erxlow+chLNK7PZfio2s
+AIsBMWi13wsm3rHCW4T0saB++VUmJfHYrobnRPv90qcWV+sMA2JoV9pgIeowYJLCk6TjakeNaFZB
+7rVCejZTYX9KPS5nLLeTI4awS8tD6zwFHmnKDQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature249369-Object48940"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature249369"&gt;
+                &lt;etsi:SignedProperties Id="Signature249369-SignedProperties430534"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-12T15:45:50-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;qApwiHnDt+Ixc6zcFizKaDNDCqs=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1562436523979189944&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-1044014"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

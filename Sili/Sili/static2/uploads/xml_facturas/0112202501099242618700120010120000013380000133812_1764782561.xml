@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0112202501099242618700120010120000013380000133812</numeroAutorizacion>
+    <fechaAutorizacion>2025-12-01T17:32:49-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;FIDEICOMISO TITULARIZACION OMNIHOSPITAL&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;FIDEICOMISO TITULARIZACION OMNIHOSPITAL&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0992426187001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0112202501099242618700120010120000013380000133812&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;012&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000001338&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;AV. ABEL CASTILLO S/N Y AV. JUAN TANCA MARENGO&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;01/12/2025&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;AV. ABEL CASTILLO S/N Y AV. JUAN TANCA MARENGO&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;1305&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;totalSinImpuestos&gt;1298&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;1298&lt;/baseImponible&gt;
+                &lt;tarifa&gt;0&lt;/tarifa&gt;
+                &lt;valor&gt;0&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0&lt;/propina&gt;
+        &lt;importeTotal&gt;1298&lt;/importeTotal&gt;
+        &lt;moneda&gt;0&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;1298&lt;/total&gt;
+                &lt;plazo&gt;15&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;DIAS&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;CHEQUEO EJECUTIVO EMPRESA&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;CHEQUEO EJECUTIVO EMPRESA&lt;/descripcion&gt;
+            &lt;cantidad&gt;39&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;33.281923&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1298&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1297.99&lt;/baseImponible&gt;
+                    &lt;valor&gt;0&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="HC"&gt;55286&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="PACIENTE"&gt;LUZARDO MALDONADO HERINARCO SEGUNDO&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="CAJA"&gt;CJK-1544&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="PLAN"&gt;AMB - OMNI 20&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="EMAIL"&gt;atorres@quimpac.com.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="USUARIO"&gt;RTANDAZO&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="FECHA_INGRESO"&gt;31/10/2025 07:15:14 a.m.&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="DIRECCION_CLIENTE"&gt;KM 16.5 VIA DAULE/AV ROSAVIN Y CALLE COBRE&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="TELEF_CLIENTE"&gt;5000460&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="FECHA_EGRESO"&gt;01/11/2025 07:15:00 a.m.&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="OBSERVACION"&gt;CHEQUEO&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature915033"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo734020"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID248612" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature915033-SignedProperties170549"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;6tWipJ46I/PogwjkaOzT/+y+B18=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1209467"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ydqqXu6NYNj27FeTujyQw6ZBktQ=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-616170" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;s1uuZt5OVv6l6t1ZFpbuCe5DNTw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue870364"&gt;
+ImWh6MOY+pKQMTCqQK3hn33Pgth80DEGei+7foU4bKnVDU+5uoyBTgzWM6Dy9D7NcHrxmgNIiwFd
+ASoGhMbcPxpMJJRGQZDcMRh1egs5/8ufYnwQ2wLGcT+Tv6a9AcDWM7B45NKrNU/Oq/NMGu4aTkUZ
+xftIil+BWQj0FvnG+/FM8T8Ls81tNGXLN5BDghJ9yqw8rKpmD4McZS6PIPTg6mamy7gLVr0ZyVK6
+pw1SGah2AK7w7DS0ZM1tHS1HxM8ZXa/fAB6nc9hu6SEi8Vs12SgJqZqvWeMsXQqmTnF/y72AdKAx
+jA5GsNgnYEHCzfWsUOH5n3K+1Gu/De//vJBZcQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1209467"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIK+jCCCOKgAwIBAgIESgGoLzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTA0MzAxOTQxMzFaFw0yODA0MjkxOTQxMzFaMIGsMSow
+KAYDVQQDDCFDQVRIRVJJTkUgVkFORVNTQSBET01FTkVDSCBaQVBBVEExIDAeBgNVBAUTFzA5MjE4
+OTY3OTEtMzAwNDI1MTQ1MTI3MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCC
+ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANq6h0YaG9toc3tyQmA/Woi8VMmkVGenBsUi
+IDtd1pwRakUj6/mz4ce7KI+0gjrDGW8Z4W7R9kqYBZrJyEMgQScoTGqQzRiJWqY4RQw1TX7p2pQN
+Ppk4zKl3BZhjcPvB+0ecbq7HSKr3Izg7VNIxQjWNU8uBsD9jbdagmJkz8ayRkoZa4HhUWKrS747z
+F0wuGTeG2IDk4TOgMJ2iDjwe4p1PesouoMs99eMCpmdxQKCHH2xGmJ8yjOCzFqJzWDRQDpx58bqv
+pv8m0FKabh01NZrHRV7qFvAEI+zrMlr0KtHuOvaE4oVHNJNvmJ5WN1eUXLKW40rux094UHIr081w
+/CkCAwEAAaOCBjMwggYvMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+N
+rmLdvY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5
+ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMCUGA1UdEQQeMByBGmZhbGJh
+bkBvbW5paG9zcGl0YWwuY29tLmVjMIIBEgYDVR0gBIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAG
+CCsGAQUFBwICMEQeQgBDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBv
+ACAAZABlACAARQBtAHAAcgBlAHMAYTCBoAYKKwYBBAGCpnICBDCBkTCBjgYIKwYBBQUHAgEWgYFo
+dHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1h
+dGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8g
+ZGUgRW1wcmVzYS5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIIC
+BjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEv
+Y3JsZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9O
+IFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9O
+IERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMC
+RUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxm
+aWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNO
+PUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4g
+MixDPUVDMB0GA1UdDgQWBBRU5fDEsLUt14crUmxYlHXVa8m8ljArBgNVHRAEJDAigA8yMDI1MDQz
+MDE5NDEzMVqBDzIwMjgwNDI5MTk0MTMxWjALBgNVHQ8EBAMCBeAwGQYKKwYBBAGCpnIDBQQLDAlD
+T05UQURPUkEwGgYKKwYBBAGCpnIDAQQMDAowOTIxODk2NzkxMBYGCisGAQQBgqZyAwkECAwGVEFS
+UVVJMBEGCisGAQQBgqZyAyIEAwwBLjA6BgorBgEEAYKmcgMHBCwMKkRSIEFCRUwgUk9NRVJPIDAw
+MSBZIEFWIEpVQU4gVEFOQ0EgTUFSRU5HTzAhBgorBgEEAYKmcgMCBBMMEUNBVEhFUklORSBWQU5F
+U1NBMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAwOTg4NTgwMBMGCisGAQQBgqZyAyEEBQwDUEZY
+MBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAYBgorBgEEAYKmcgMDBAoMCERPTUVORUNIMBEGCisG
+AQQBgqZyAx4EAwwBLjA4BgorBgEEAYKmcgMKBCoMKEZJREVJQ09NSVNPIFRJVFVMQVJJWkFDSU9O
+IE9NTkkgSE9TUElUQUwwHQYKKwYBBAGCpnIDCwQPDA0wOTkyNDI2MTg3MDAxMBEGCisGAQQBgqZy
+Ax0EAwwBLjAWBgorBgEEAYKmcgMEBAgMBlpBUEFUQTAaBgorBgEEAYKmcgMIBAwMCjA5NTg4OTE0
+MTQwDQYJKoZIhvcNAQELBQADggIBAMNnAhivRxI1hZHkXFUEg7Fi+6slZd4UCKrqQyPjzlihZecx
+JsDVk95M8YABTMFsSgJPoMGjmSSAa9M6DxcV8QYjn2f9g1sz7IdgGHFAzFe1VjqAadcvudrIxuv8
+SmseTMI4iz/MIhPi2HbzARBSwaIR6LWc/VOM+bX37C+7mk0N89XyMGMjBbzrTGP6OYUNcto0Z8I3
+XrxuxfUcGJ2srbZ4FuLj7SdUCi7iOkVWSUgYX1E2TgIXu/RfeBfWdCIWqOZldRV5UdaXRNt1WsZv
+WsSZ1517w+2nKTCdY0rR4PXrZIcoy2lHF4INgXhxybolY4emEjS1KVb31ez8qIzBM5LfwoyWCFv1
+Gkq/R7Ra5k5JjgeSubE2scXRtFGBYPs9CiOoi+8T+LXHGqSpD9w2YBEHYuE2JEkVMJ+zRbzmj32j
+t2wZsmJD3lv/Cz1S5/ZIJegXVL1vOX4SiRzckJrwq2zXhd6l4NMhSrmabp7DX9OHeQE2Qe5FbiY0
+TQV+Wc05fmCiIjRH7tc2TqbottOCs2l8uOrI/m78bnl1bzmJ6kj4nu6aFRLPxg8sTv9hdI1DF3IH
+zUP0y/237Su4xsBoEttux8dTnULpuP3RClkonwEZ7kB9I20sEBSmhoixEaJf2a3MObP4x9x5fMZe
+Br618p7kuLfQYoIPAVDjPf+wc18D
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+2rqHRhob22hze3JCYD9aiLxUyaRUZ6cGxSIgO13WnBFqRSPr+bPhx7soj7SCOsMZbxnhbtH2SpgF
+msnIQyBBJyhMapDNGIlapjhFDDVNfunalA0+mTjMqXcFmGNw+8H7R5xursdIqvcjODtU0jFCNY1T
+y4GwP2Nt1qCYmTPxrJGShlrgeFRYqtLvjvMXTC4ZN4bYgOThM6AwnaIOPB7inU96yi6gyz314wKm
+Z3FAoIcfbEaYnzKM4LMWonNYNFAOnHnxuq+m/ybQUppuHTU1msdFXuoW8AQj7OsyWvQq0e469oTi
+hUc0k2+YnlY3V5RcspbjSu7HT3hQcivTzXD8KQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature915033-Object272658"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature915033"&gt;
+                &lt;etsi:SignedProperties Id="Signature915033-SignedProperties170549"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2025-12-01T17:32:48-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;eyIPEjCegemKImooJ43+zKxbuzI=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1241622575&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-616170"&gt;
+                            &lt;etsi:Description&gt;CIMA IT, Johanna Orozco Tel. +593 (4) 2280217&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

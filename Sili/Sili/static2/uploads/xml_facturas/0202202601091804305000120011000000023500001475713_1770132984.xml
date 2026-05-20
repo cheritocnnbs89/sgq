@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0202202601091804305000120011000000023500001475713</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-02T18:02:16-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;NEXO EGIDIO LAFFERTE ALANIZ&lt;/razonSocial&gt;
+        &lt;ruc&gt;0918043050001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0202202601091804305000120011000000023500001475713&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;100&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000002350&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;Alborada etapa XIII MZ 13 V 30&lt;/dirMatriz&gt;
+        &lt;agenteRetencion&gt;00000001&lt;/agenteRetencion&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;02/02/2026&lt;/fechaEmision&gt;
+            &lt;dirEstablecimiento&gt;CDLA ALBORADA ETAPA 13 MZ 22 SL6&lt;/dirEstablecimiento&gt;
+            &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPAC S.A.&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+            &lt;direccionComprador&gt;AV. ROSAVIN LOTE 1 Y CALLE COBRE- KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;971.25&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+                &lt;totalImpuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;baseImponible&gt;971.25&lt;/baseImponible&gt;
+                    &lt;valor&gt;145.69&lt;/valor&gt;
+                &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;1116.94&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+                &lt;pago&gt;
+                    &lt;formaPago&gt;20&lt;/formaPago&gt;
+                    &lt;total&gt;1116.94&lt;/total&gt;
+                        &lt;plazo&gt;30&lt;/plazo&gt;
+                        &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+                &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;RE07&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;RECARGA DE EXTINTOR PQS 10 LB&lt;/descripcion&gt;
+                &lt;cantidad&gt;2.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;11.400000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;22.80&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;22.80&lt;/baseImponible&gt;
+                            &lt;valor&gt;3.42&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;RE10&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;RECARGA DE EXTINTOR PQS 20 LB&lt;/descripcion&gt;
+                &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;22.800000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;91.20&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;91.20&lt;/baseImponible&gt;
+                            &lt;valor&gt;13.68&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;RE26&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;RECARGA DE EXTINTOR CO2 20 LB&lt;/descripcion&gt;
+                &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;17.000000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;17.00&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;17.00&lt;/baseImponible&gt;
+                            &lt;valor&gt;2.55&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;RE05&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;RECARGA DE EXTINTOR PQS 150 LB&lt;/descripcion&gt;
+                &lt;cantidad&gt;3.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;171.000000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;513.00&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;513.00&lt;/baseImponible&gt;
+                            &lt;valor&gt;76.95&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;REP43&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;MANOMETRO PARA EXTINTOR PQS 10 - 20 LBS.&lt;/descripcion&gt;
+                &lt;cantidad&gt;3.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;3.500000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;10.50&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;10.50&lt;/baseImponible&gt;
+                            &lt;valor&gt;1.57&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;REP99&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;VALVULA PARA EXTINTOR PQS 10 - 20 LBS&lt;/descripcion&gt;
+                &lt;cantidad&gt;2.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;12.000000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;24.00&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;24.00&lt;/baseImponible&gt;
+                            &lt;valor&gt;3.60&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;REP08&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;BANDA PLASTICA PARA EXTINTOR PQS&lt;/descripcion&gt;
+                &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;3.500000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;3.50&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;3.50&lt;/baseImponible&gt;
+                            &lt;valor&gt;0.53&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;RE16&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;RECARGA DE EXTINTOR PQS 100 LB&lt;/descripcion&gt;
+                &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;114.000000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;114.00&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;114.00&lt;/baseImponible&gt;
+                            &lt;valor&gt;17.10&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;RE25&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;RECARGA DE EXTINTOR CO2 15 LB&lt;/descripcion&gt;
+                &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;12.750000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;12.75&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;12.75&lt;/baseImponible&gt;
+                            &lt;valor&gt;1.91&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+            &lt;detalle&gt;
+                &lt;codigoPrincipal&gt;RE38&lt;/codigoPrincipal&gt;
+                &lt;descripcion&gt;RECARGA DE EXTINTOR FOAM 25 GALONES&lt;/descripcion&gt;
+                &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+                &lt;precioUnitario&gt;162.500000&lt;/precioUnitario&gt;
+                &lt;descuento&gt;0.00&lt;/descuento&gt;
+                &lt;precioTotalSinImpuesto&gt;162.50&lt;/precioTotalSinImpuesto&gt;
+                &lt;impuestos&gt;
+                        &lt;impuesto&gt;
+                            &lt;codigo&gt;2&lt;/codigo&gt;
+                            &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                            &lt;tarifa&gt;15&lt;/tarifa&gt;
+                            &lt;baseImponible&gt;162.50&lt;/baseImponible&gt;
+                            &lt;valor&gt;24.38&lt;/valor&gt;
+                        &lt;/impuesto&gt;
+                &lt;/impuestos&gt;
+            &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="PLANTA"&gt;GUAYAQUIL&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="N° DE PEDIDO"&gt;7500053117&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="ACEPTACION DEL SERVICIO"&gt;1001569402&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature8833"&gt;
+&lt;ds:SignedInfo&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID96839" URI="#Signature8833-SignedProperties84539" Type="http://uri.etsi.org/01903#SignedProperties"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;zWIxx3l6Itx9VV6ird+73IKUCEI=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate98150"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;oh8GojLObA7LE5vyapl/LyAErwo=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-73231" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;IYIbWU5wTLRAbF8tTfAbLUgmg70=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue&gt;Pq0njajToZWkwbiuzCYv5RQT2hVvzUQxCtRY8odJeyD8vJHQ8JOFXFsv9osA1Te9
+EOILwdLUoLTiededE3Q6Vkt+lVvMPWXQtZ6a9yIfR5eUVV0PL5p93WeCrlj3MN81
++2X2mIuySAJCejZ6oQJYgpgXglaEovicdjP1CSrgfnrtvx5l/KQ356eeH6yBXXpw
+/ypiDCW2vjzJ7xfnq1Zoq8DWVb09yy5B+kCoE8Zz+nP9DzLgYQcW1RB0dyGnvpW0
+mDE85917zgB7S4387km6lmRiaCRhYmjsTaqF0yQk8JaovIG/jc2Px7xSbeeNWYuX
+vH73F2imYIq6NRnA/dxHyQ==&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate98150"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;MIIKiTCCCHGgAwIBAgIETtBRVTANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMC
+RUMxHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFV
+VE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTAe
+Fw0yNTA2MTIxNjU5NTNaFw0yNzA2MTIxNjU5NTNaMIGmMSQwIgYDVQQDDBtORVhP
+IEVHSURJTyBMQUZGRVJURSBBTEFOSVoxIDAeBgNVBAUTFzA5MTgwNDMwNTAtMTIw
+NjI1MTIwOTQ0MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYD
+VQQGEwJFQzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALEJ5M/dnLAz
+yY33FRmR3NGC9ixFS5LvwD+VmfWlJCmjsnfRsD2QEBZ7zWVpwhmWkJm9e5XDgzOc
+Leey25hRd9nNKemRDTROOcr535gE6WrDi+JjJ7ftQ4X1rkcrP/W3gRx+NxdLExzv
+lsuEcnsoQP8V8nlCquW3DigLx8D+nKYLJqbFSNcmrA92TS4729YfgNB3wyaB/qgo
+HcuAr48k5xp6lNYeHIupOMUzwOxy37iFXPmA4kpNYsoy+rmEAsV4FiPIyIrGH60D
+p76MLsnytXvVaa00E3g8psJIM16kP+4VZxc0KiIu0esfLwhE8mm0gpszMpFobnnW
+X9qVrboPV/ECAwEAAaOCBcgwggXEMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAU
+jLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzAB
+hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGlj
+d2ViL3N0YXR1cy9vY3NwMB8GA1UdEQQYMBaBFHNlcHJvQGd5ZS5zYXRuZXQubmV0
+MIIBBgYDVR0gBIH+MIH7MFoGCisGAQQBgqZyAgcwTDBKBggrBgEFBQcCAjA+HjwA
+QwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUABlAHIAcwBvAG4AYQAgAE4A
+YQB0AHUAcgBhAGwwgZwGCisGAQQBgqZyAgEwgY0wgYoGCCsGAQUFBwIBFn5odHRw
+czovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRz
+L05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRp
+ZmljYWRvIFBlcnNvbmEgTmF0dXJhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIG
+CCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5z
+ZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmlsZS5jcmyigZ+kgZww
+gZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIg
+U0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9O
+IERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEL
+MAkGA1UEBhMCRUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQu
+ZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9y
+dGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dl
+Yi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFE
+IERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRB
+IFMuQS4gMixDPUVDMB0GA1UdDgQWBBQ2nddCS2a41DypB2nzzDhcO5aRaDArBgNV
+HRAEJDAigA8yMDI1MDYxMjE2NTk1M1qBDzIwMjcwNjEyMTY1OTUzWjALBgNVHQ8E
+BAMCBeAwGgYKKwYBBAGCpnIDAQQMDAowOTE4MDQzMDUwMBYGCisGAQQBgqZyAwkE
+CAwGVEFSUVVJMBEGCisGAQQBgqZyAyIEAwwBLjAYBgorBgEEAYKmcgMHBAoMCFNP
+TEFSIDMwMBsGCisGAQQBgqZyAwIEDQwLTkVYTyBFR0lESU8wHwYKKwYBBAGCpnID
+IAQRDA8wMDEwMDIwMDEwMDE3ODAwEQYKKwYBBAGCpnIDIwQDDAEuMBMGCisGAQQB
+gqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAYBgorBgEEAYKm
+cgMDBAoMCExBRkZFUlRFMCIGCisGAQQBgqZyAx4EFAwSTElDIENPTVVOSUMgU09D
+SUFMMB0GCisGAQQBgqZyAwsEDwwNMDkxODA0MzA1MDAwMTARBgorBgEEAYKmcgMd
+BAMMAS4wFgYKKwYBBAGCpnIDBAQIDAZBTEFOSVowGgYKKwYBBAGCpnIDCAQMDAow
+OTk3NTU1Mjk4MA0GCSqGSIb3DQEBCwUAA4ICAQAICbUZmmbw4qV+oxZzSEhNuoXu
+YpajYGAyW2mEzA+sTVQd91yR8dop296ScvKrc47IcTQmihPCOMMMltnnMW7P37r8
+/B5h8zEvWehfPnzj3bd9VS2p11BDza8iWKpZ+pcZgjWRQCjyYubA8+21eaDs1q/A
+QfVLq0BLZzz/ltccz3mhFZ/S5AooDa7rldXsAaFd3/+0oD9UJE2kzrlPqRH0wlUn
+zt49kIIfZ9wW50ogSzCR/7z8/8qsj7e21cGM0/5o39yxTQ85JyrZJ4+VCjnTsACu
+w2Fxk+Y3m57UP9pZ8Uba/zdgOgoeHmMgUrjnu/AQut6VMwJDmeZmRG9gvP1R1fwF
+uJzv9kZMSWPblPXU75RLHq55okdmZZ3kllmstjSsQqw8kBU9q8SXAkoWjYzECEzC
+hpO0sN9+5/X7CVmt2dDZh8gHYlV44HFFpyy5yCu0HrZ9RrPOmE/jdOplKT0NszUy
+N5SSkJ+uApLSctA/cpy1y2jJQbN9KK61rJ65PK3zl3zoCeierA/05M98JBzz5CKJ
+Olx1yDs85ISFcFdOdPpNZf+4S7IwosiefxoRWl2j40SEDYbmzQpIwlfGPUj9NBsK
+FntLoPKm71Z4y8Y4PDpAa2lYHy7L1u2mGkDLblfM33tH1hlB1cUq7f5m6sSIlkJl
+7VhLxLcGxTPe2KjA4g==&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;sQnkz92csDPJjfcVGZHc0YL2LEVLku/AP5WZ9aUkKaOyd9GwPZAQFnvNZWnCGZaQ
+mb17lcODM5wt57LbmFF32c0p6ZENNE45yvnfmATpasOL4mMnt+1DhfWuRys/9beB
+HH43F0sTHO+Wy4RyeyhA/xXyeUKq5bcOKAvHwP6cpgsmpsVI1yasD3ZNLjvb1h+A
+0HfDJoH+qCgdy4CvjyTnGnqU1h4ci6k4xTPA7HLfuIVc+YDiSk1iyjL6uYQCxXgW
+I8jIisYfrQOnvowuyfK1e9VprTQTeDymwkgzXqQ/7hVnFzQqIi7R6x8vCETyabSC
+mzMykWhuedZf2pWtug9X8Q==&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature8833-Object21105"&gt;
+            &lt;etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature8833"&gt;
+                &lt;etsi:SignedProperties Id="Signature8833-SignedProperties84539"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-02T23:02:15+00:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;76dVCHMb/81rExq8xrji03vjNw0=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1322275157&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-73231"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

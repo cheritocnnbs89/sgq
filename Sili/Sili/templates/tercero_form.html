@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% set titulo = ('Nuevo ' if not item else 'Editar ') + ('cliente' if tipo=='C' else 'proveedor') %}
+{% block title %}{{ titulo|capitalize }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/terceros/tercero_form.css') }}">
+
+<h4 class="mb-3">{{ titulo|capitalize }}</h4>
+
+<form method="post" class="row g-3 form-terceros" id="terceroForm">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="col-md-6">
+    <label class="form-label">Nombre*</label>
+    <input name="nombre" class="form-control" required value="{{ item['nombre'] if item else '' }}">
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Identificación</label>
+    <input name="identificacion" class="form-control" value="{{ item['identificacion'] if item else '' }}">
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Teléfono</label>
+    <input name="telefono" class="form-control" value="{{ item['telefono'] if item else '' }}">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" value="{{ item['email'] if item else '' }}">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Dirección</label>
+    <input name="direccion" class="form-control" value="{{ item['direccion'] if item else '' }}">
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Código SAP</label>
+    <input name="codigo_sap" class="form-control" value="{{ item['codigo_sap'] if item else '' }}">
+  </div>
+
+  <div class="col-md-8">
+    <label class="form-label">Observaciones</label>
+    <textarea name="observaciones" class="form-control" rows="2">{{ item['observaciones'] if item else '' }}</textarea>
+  </div>
+
+  <div class="col-md-3 form-check mt-2 tercero-form-check">
+    <input id="activo" type="checkbox" class="form-check-input" name="activo"
+           {% if not item or item['activo'] %}checked{% endif %}>
+    <label class="form-check-label" for="activo">Activo</label>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <a href="{{ url_for('clientes' if tipo=='C' else 'proveedores') }}" class="btn btn-outline-secondary">Cancelar</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/terceros/tercero_form.js') }}"></script>
+{% endblock %}

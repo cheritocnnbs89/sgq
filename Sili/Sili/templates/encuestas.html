@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/encuestas.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="encuestas-page">
+    <div class="page-header">
+        <div>
+            <h1>Gestión de encuesta</h1>
+            <p class="text-muted mb-0">Bandeja de encuestas pendientes y realizadas.</p>
+        </div>
+    </div>
+
+    <div class="survey-cards">
+        <div class="survey-card">
+            <span>Total</span>
+            <strong>{{ total }}</strong>
+        </div>
+        <div class="survey-card warning">
+            <span>Pendientes</span>
+            <strong>{{ pendientes }}</strong>
+        </div>
+        <div class="survey-card success">
+            <span>Realizadas</span>
+            <strong>{{ realizadas }}</strong>
+        </div>
+    </div>
+
+    <form method="get" class="survey-toolbar">
+        <input type="search" name="q" id="liveFilterEncuestas" class="form-control" value="{{ q }}"
+            placeholder="Buscar por tarea, solicitante, responsable...">
+
+        <select name="estado" id="fEstadoEncuesta" class="form-select">
+            <option value="">Todos los estados</option>
+            <option value="Pendiente" {% if estado_sel=='Pendiente' %}selected{% endif %}>Pendiente</option>
+            <option value="Realizada" {% if estado_sel=='Realizada' %}selected{% endif %}>Realizada</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a href="{{ url_for('listar_encuestas') }}" class="btn btn-outline-secondary">Limpiar</a>
+    </form>
+
+    <div class="table-responsive survey-table-wrap">
+        <table class="table table-hover align-middle" id="tabla-encuestas">
+            <thead>
+                <tr>
+                    <th>Código tarea</th>
+                    <th>Título</th>
+                    <th>Solicitante</th>
+                    <th>Responsable</th>
+                    <th>Fecha cierre</th>
+                    <th>Estado encuesta</th>
+                    <th>Promedio</th>
+                    <th>Enviada</th>
+                    <th>Respondida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for e in encuestas %}
+                <tr data-row="1">
+                    <td data-th="Código">{{ e.codigo_tarea or "—" }}</td>
+
+                    <td data-th="Título">{{ e.titulo or "—" }}</td>
+
+                    <td data-th="Solicitante">
+                        {{ e.solicitante_nombre or "—" }}
+                    </td>
+
+                    <td data-th="Responsable">
+                        {{ e.responsable_nombre or "—" }}
+                    </td>
+
+                    <td data-th="Fecha cierre">
+                        {{ e.fecha_cierre_real or "—" }}
+                    </td>
+
+                    <td data-th="Estado">
+                        <span
+                            class="badge {% if e.estado == 'Realizada' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                            {{ e.estado or "Pendiente" }}
+                        </span>
+                    </td>
+
+                    <td data-th="Promedio">
+                        {{ e.promedio_fmt or "—" }}
+                    </td>
+
+                    <td data-th="Enviada">
+                        {{ e.fecha_envio or "—" }}
+                    </td>
+
+                    <td data-th="Respondida">
+                        {{ e.fecha_respuesta or "—" }}
+                    </td>
+
+                    <td data-th="Acciones">
+                        {% if e.puede_responder %}
+                        <a href="{{ url_for('responder_encuesta', token=e.token) }}" class="btn btn-sm btn-primary">
+                            Responder
+                        </a>
+
+                        {% elif e.puede_crear_encuesta %}
+                        <form method="post"
+                            action="{{ url_for('responder_encuesta_desde_bandeja', task_id=e.tarea_id) }}"
+                            class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                Responder
+                            </button>
+                        </form>
+
+                        {% elif e.estado == 'Realizada' %}
+                        <span class="text-muted small">Respondida</span>
+
+                        {% else %}
+                        <span class="text-muted small">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="10" class="text-center text-muted py-4">
+                        No hay encuestas registradas.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="survey-footer">
+        <span id="tableInfoEncuestas"></span>
+        <ul class="pagination mb-0" id="paginationEncuestas"></ul>
+    </div>
+
+    <div id="noResultsEncuestas" class="alert alert-warning d-none mt-3">
+        No hay resultados con los filtros aplicados.
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/tareas/encuestas.js') }}"></script>
+{% endblock %}

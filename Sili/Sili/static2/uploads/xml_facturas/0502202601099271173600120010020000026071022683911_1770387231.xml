@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0502202601099271173600120010020000026071022683911</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-05T12:06:07-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;PROYECTOS E INTEGRACION PROEINSA S.A.&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;PROYECTOS E INTEGRACION PROEINSA S.A.&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0992711736001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;0502202601099271173600120010020000026071022683911&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000002607&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;GUAYAS / GUAYAQUIL / TARQUI / AVENIDA 4NE SOLAR 1 Y AVENIDA DE LAS AMERICAS&lt;/dirMatriz&gt;
+		
+		
+			&lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+		
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;05/02/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;GUAYAS / GUAYAQUIL / TARQUI / AVENIDA 4NE SOLAR 1 Y AVENIDA DE LAS AMERICAS&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+			&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;Vía a Daule Km 16.5 Rosavin Lote 1 y Cobre.&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;1417.41000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;1417.41&lt;/baseImponible&gt;
+				&lt;valor&gt;212.61000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;1630.02000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;20&lt;/formaPago&gt;
+	    		&lt;total&gt;1630.02&lt;/total&gt;
+	    		&lt;plazo&gt;90&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;000350&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;000350&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;CONTROL OPERATIVO SUBESTACIÓN 69KV&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1417.410000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;1417.41&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;1417.41000&lt;/baseImponible&gt;
+          &lt;valor&gt;212.61&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+	
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;CONTROL OPERATIVO SUBESTACIÓN 69KV, SEGUN HOJA DE ENTRADA NRO. 1001573112 Y PEDIDO NRO. 7500050594&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature778088"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo18751"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID710203" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature778088-SignedProperties463128"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;SwauRTyxSTWjkaqZC1X1twOPsuo=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate549768"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;j3eKjxERhIW0x6zi2Jkh7fbj1Vs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-126668" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;NYJjWsczCWySGav5QlIHJWP1mG4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue193085"&gt;
+EyJj+d8xgNX65QhP4JZgQ9ImlPZOgfcR612gjF0mMq/3/S7x/+TDTqqtRDboFLb1COuMpqd/wC5p
+qAag1peKZJU6+cfUqN+nlEUcyu7UD7/YZJVyNYeUI6oijtODrETlSEBvLKlJ9ttHA5QXaqvVhZqx
+O7fJfefNVciZYt4ug19prMV3jgGaElt3vXA+XukyeI3h8PAbpQ2EtT2AZGlKqBk+9MWo748E0vr8
+PAc+irccfUqbw88wI7XtA4FQyS7VSRy40ugjteND8qJH/NXFt75cMaFcMPcy88U5UvOZRVKAUrgD
+0VIyJhCi+22GP6qWMAR4YlMUmuSFORCPEcQ30Q==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate549768"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMJjCCCg6gAwIBAgIEease7zANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDExMjIxMzIwMTdaFw0yNzExMjIxMzIwMTdaMIGnMSUw
+IwYDVQQDDBxPTUFSIE1FREFSRE8gQ0FSVEFHRU5BIFVMTE9BMSAwHgYDVQQFExcwNjAzMDQyNDY2
+LTIyMTEyNDA4MzAxMTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9S
+TUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCXtA6utc6Nq5xEwjH2Q2lLlvqaLRq+0TiOnu66fTY/
+zLDhJ3SdfGPHlx/bwkIFLEhMT7FbVfA86iiTC2CuwkYmxjzGN96cEK/1VmyjssoAPiZS+hjFRZf4
+4B66DTDC60HrbtAk7cSETh+CBAgRzSio1BYiggo+e0kMGbeB2IM1EXKNn8EayOOihV/u+0PGhS64
+nibaUulq+iXUc2nEDmDMGAE6/0BhtPPmvibmt8+C/floalFvD+ASigQBaQBBnNxoZWAxTjuermm9
+hno4m+5P5eE+riKsfU5OMxCyjsSGP1qYwug5ql4tjF5ASuHncblDm7vAmLzSogb0v627U7sbAgMB
+AAGjggdkMIIHYDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2P
+MFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7
+hoG4bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2
+b2NhdGlvbkxpc3Q/YmFzZTAgBgNVHREEGTAXgRVuZWdvY2lvc0Bwcm9laW5zYS5jb20wggEVBgNV
+HSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkA
+YwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEG
+CisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5l
+dC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1Bv
+bGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjCCAqIGA1UdHwSC
+ApkwggKVMIHloEGgP4Y9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1
+YmxpY3dlYi9zdGF0dXMvb2NzcKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJ
+RklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJ
+RklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQsw
+CQYDVQQGEwJFQzCBx6CBxKCBwYaBvmxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5l
+Yy9DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9
+RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBT
+LkEuIDIsQz1FQz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2UwgeCggd2ggdqGgddodHRw
+czovL3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIv
+d2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNB
+Q0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERF
+IElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUg/JHSO3f
+L4D+AXFuQTDQhlZnm1QwKwYDVR0QBCQwIoAPMjAyNDExMjIxMzIwMTdagQ8yMDI3MTEyMjEzMjAx
+N1owCwYDVR0PBAQDAgXgMB8GCisGAQQBgqZyAwUEEQwPR0VSRU5URSBHRU5FUkFMMBoGCisGAQQB
+gqZyAwEEDAwKMDYwMzA0MjQ2NjAWBgorBgEEAYKmcgMJBAgMBlRBUlFVSTARBgorBgEEAYKmcgMi
+BAMMAS4wPQYKKwYBBAGCpnIDBwQvDC1BVkVOSURBIDRORSBTT0xBUiAxIFkgQVZFTklEQSBERSBM
+QVMgQU1FUklDQVMwHAYKKwYBBAGCpnIDAgQODAxPTUFSIE1FREFSRE8wHwYKKwYBBAGCpnIDIAQR
+DA8wMDEwMDIwMDA2NzQwODgwEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdF
+Q1VBRE9SMBkGCisGAQQBgqZyAwMECwwJQ0FSVEFHRU5BMDQGCisGAQQBgqZyAwoEJgwkUFJPWUVD
+VE9TIEUgSU5URUdSQUNJT04gUFJPRUlOU0EgUyBBMB0GCisGAQQBgqZyAwsEDwwNMDk5MjcxMTcz
+NjAwMTARBgorBgEEAYKmcgMdBAMMAS4wFQYKKwYBBAGCpnIDBAQHDAVVTExPQTAaBgorBgEEAYKm
+cgMIBAwMCjA5NjkyNTAzMTEwDQYJKoZIhvcNAQELBQADggIBAETvjjx2p93bgKyIpx0/vNQ7avuy
+MJwMO4YHmM+QAhPNoPtNMkOcVXYo4c+3lEIP6GFQPN1GigquRraVtvvTKvMOM1BOF8+JmjeI9Kp9
+cdvKzwEV+GJrFVlf5/PMwOmMjB6FoHkcQsnfOz6lk3NWOlgyFe0AKviK2PeQcqENZiDgtc8/l7WU
+25ro5Pxx2FDdzLYnTEhhaMN5aRYW+UkAobACavA9RBHfgnSZCrfO0xKcTIllRSRY+6hb5Uri14+1
+m9tjd7h+KpflE00ULvYdeoF+yfYg6NyfukAEtD/D2oulKsE8uK/bN8+NBl9J0dNcYncOVYqkmvd+
+aYonKAXXe+RT5o1tJcm3Wmur/9JQfjBbH2CXlBBTo6DwM/RNITkr6yDOVIWOGDagX34aP9HXzjfH
+tBlleA3XMVvP5zl8aHYlO3mX327qSAv1OCgtQDJ+tUkdPZB+W4TUkz6L2aFSVzAIh/niYNcwHxPB
+SMgcrvX8M7JcIk+m/ex5MLvANM3VyqDNtvcrRoQcuzIITrr4ItjN4x1eVWKsWF3fPAQEE2isdX2F
+hcVz7BChdB31HanYlgqhw1ibLknl+Ju0LoEkMWxbnP/R7W99UC/O4wdWJvJ+mhceSVJZBqV/d3Ov
+qDoywvbQHfrecXikdb3XRF+HVnLZA/lQ1N/VxJxhyjEcVgTI
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+l7QOrrXOjaucRMIx9kNpS5b6mi0avtE4jp7uun02P8yw4Sd0nXxjx5cf28JCBSxITE+xW1XwPOoo
+kwtgrsJGJsY8xjfenBCv9VZso7LKAD4mUvoYxUWX+OAeug0wwutB627QJO3EhE4fggQIEc0oqNQW
+IoIKPntJDBm3gdiDNRFyjZ/BGsjjooVf7vtDxoUuuJ4m2lLpavol1HNpxA5gzBgBOv9AYbTz5r4m
+5rfPgv35aGpRbw/gEooEAWkAQZzcaGVgMU47nq5pvYZ6OJvuT+XhPq4irH1OTjMQso7Ehj9amMLo
+OapeLYxeQErh53G5Q5u7wJi80qIG9L+tu1O7Gw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature778088-Object765631"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature778088"&gt;
+                &lt;etsi:SignedProperties Id="Signature778088-SignedProperties463128"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-05T12:06:04-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;KJEAOqSKAA3y/sgKxW04u8SuQQA=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;2041257711&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

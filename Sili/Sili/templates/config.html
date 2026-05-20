@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">Configuración del sistema</h4>
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Servidor SMTP</label>
+      <input type="text" name="smtp_host" class="form-control" value="{{ config.smtp_host or '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Puerto SMTP</label>
+      <input type="text" name="smtp_port" class="form-control" value="{{ config.smtp_port or '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Usuario SMTP</label>
+      <input type="text" name="smtp_user" class="form-control" value="{{ config.smtp_user or '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Contraseña SMTP</label>
+      <input type="password" name="smtp_pass" class="form-control" value="{{ config.smtp_pass or '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Remitente (From)</label>
+      <input type="text" name="smtp_from" class="form-control" value="{{ config.smtp_from or '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Minutos para cierre de sesión por inactividad</label>
+      <input type="number" name="inactivity_minutes" step="1" min="1" class="form-control" value="{{ config.inactivity_minutes or '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Minutos para permitir edición de tareas</label>
+      <input type="number" name="edit_minutes" step="1" min="1" class="form-control" value="{{ config.edit_minutes or '' }}" required>
+    </div>
+  </div>
+  <div class="mt-4">
+    {# Mostrar el botón solo si se tiene permiso para editar parámetros #}
+    {% if permissions.get('parametros', {}).get('editar') %}
+    <button type="submit" class="btn btn-success">Guardar cambios</button>
+    {% endif %}
+  </div>
+</form>
+{% endblock %}

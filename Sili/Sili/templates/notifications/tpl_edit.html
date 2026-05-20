@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Editar plantilla{% endblock %}
+
+{% block content %}
+<h1 class="h5 mb-3">Editar plantilla — {{ tpl.key if tpl else 'nueva' }}</h1>
+
+<form method="post" class="row g-3">
+  <div class="col-12">
+    <label class="form-label">Asunto</label>
+    <input name="subject" class="form-control" required
+           value="{{ tpl.subject if tpl else '' }}">
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">HTML</label>
+    <textarea name="html" class="form-control" rows="10" required>{{ tpl.html if tpl else '' }}</textarea>
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Texto plano (opcional)</label>
+    <textarea name="text" class="form-control" rows="4">{{ tpl.text if tpl else '' }}</textarea>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Guardar</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('notifications.tpl_list') }}">Volver</a>
+  </div>
+</form>
+{% endblock %}

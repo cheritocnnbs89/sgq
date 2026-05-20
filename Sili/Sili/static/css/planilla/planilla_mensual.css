@@ -1,0 +1,28 @@
+.planilla-col-act {
+  width: 520px;
+}
+
+.planilla-col-fre {
+  width: 130px;
+}
+
+.planilla-col-res {
+  width: 200px;
+}
+
+.planilla-col-day {
+  width: 34px;
+}
+
+.day-cell.is-locked {
+  opacity: .65;
+  background: #f8fafc;
+}
+
+html.theme-dark .day-cell.is-locked {
+  background: #0f172a;
+}
+
+.day-cell.is-locked .tick {
+  cursor: not-allowed;
+}

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2301202601099286570900120010020000621964316539117</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-23T15:03:20-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;PACIFIC OCEAN S.A PACIFOCSA&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;PACIFIC OCEAN S.A&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0992865709001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;2301202601099286570900120010020000621964316539117&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000062196&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;Edificio 100 Business Plaza Piso 04 Oficina 404&lt;/dirMatriz&gt;
+		
+		
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;23/01/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;Edificio 100 Business Plaza Piso 04 Oficina 404&lt;/dirEstablecimiento&gt;
+		
+	    &lt;contribuyenteEspecial&gt;0011&lt;/contribuyenteEspecial&gt;
+	    
+			&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;ROSAVIN LOTE 1 Y COBRE&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;253.85000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;253.85&lt;/baseImponible&gt;
+				&lt;valor&gt;38.08000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;291.93000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;20&lt;/formaPago&gt;
+	    		&lt;total&gt;291.93&lt;/total&gt;
+	    		&lt;plazo&gt;0&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;IMP-GLOCAL-029&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;IMP-GLOCAL-029&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;COLLECT FEE&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;23.850000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;23.85&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;23.85000&lt;/baseImponible&gt;
+          &lt;valor&gt;3.58&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;IMP-GLOCAL-003&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;IMP-GLOCAL-003&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;SERVICIOS LOGISTICOS&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;230.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;230.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;230.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;34.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;OC 2000030017 W#2 BL#NA/SGO260132-2 CTNDR#TIIU2098056 ORIGEN#SAN ANTONIO REFERENCIA#  BUQUE#DUSSELDORF EXPRESS 601W CLIENTE#QUIMPAC CONDITION#COLLECT (ROU062055POC)&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature378239"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo562851"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID23697" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature378239-SignedProperties596714"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;RrDIXMUSVHQHV+bTlxcddlKul8o=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate783444"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ucGElS6Dta9ED91HpERNaBBX99I=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-23115" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;jSslJr4FmgrBppxp7wKkW5XBg64=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue6142"&gt;
+jZppkna8CjKUZ23MoPA+cadFY6wOrT88PBLKmnKid7fDWUHk17UAkl+XpHXPySE+w3MgYyEMmM9h
+ONo1IR8dPQXqLoihP2dZgDXAjFNYvJo8HguORLVFosjMWY4RLk/yfn91YTVy3joKLxSE8aa+FDLc
+AdE2JupWuXc/MM44vuG47DDgsAd3IIY4zp3hGu3Yv8TIVXDYRkujUBi/52IuqM0CNFIQlFXBWb7D
+ExVvl/Sf1qdhdBCCoaEkAQ5+s919QbKew1/MCqA39XNup5B59hDof4H4XxAdS0MB6Zk9ykGwKvCd
+c84mvO384s28IKxM0G8Tm9m1vHDsRtVek3FnGQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate783444"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJ3DCCB8SgAwIBAgIISOkwGPZrpnkwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI0MTIwNTE5MzUwMFoXDTI2MTIwNTE5MzUwMFowgeAxCzAJBgNVBAYTAkVDMSQwIgYDVQQKDBtQ
+QUNJRklDIE9DRUFOIFMuQSBQQUNJRk9DU0ExGDAWBgNVBAwMD0dFUkVOVEUgR0VORVJBTDEXMBUG
+A1UEBAwOQ0FSUkFTQ08gQVlBTEExFzAVBgNVBCoMDk1FTElEQSBWSVZJQU5BMRkwFwYDVQQFExBJ
+RENFQy0wOTE1NjA4NTY2MSYwJAYDVQQDDB1NRUxJREEgVklWSUFOQSBDQVJSQVNDTyBBWUFMQTEc
+MBoGA1UEYQwTVkFURUMtMDk5Mjg2NTcwOTAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAKUrEXvrv5fEh2cC48TuQRn38oW89W4lqhj/oKDc9Flehk3IQVEvb58Io2FAkMJtAxE+imOD
++mKAZ2lA2SwefR0Glu08fNR081yub9nrSCwM0s7KQTVlXQtFtefdbD8/HaCCm3erLDJUn4R3wwvj
+1l3i4il5R8r+iky0nGfDrZzW1IK27AHglKKa/kiWW6LD8KJ2Awp4bDXClC5xokHo82HWdlkb3Ra+
+5umRNhGkUa2lODN7svT0SRhd3sooTJaad8J0OY/QFj0MLdDPKXOiFfcfdMr3UHMEHVeHAJNrxZvQ
+vk5Sl8ag+++AhGg72G1448XDjvyndgnIf52kfZf7yo0CAwEAAaOCBL4wggS6MBsGCysGAQQBgvE2
+ZgMBBAwMCjA5MTU2MDg1NjYwHgYLKwYBBAGC8TZmAwsEDwwNMDk5Mjg2NTcwOTAwMTCB1wYIKwYB
+BQUHAQEEgcowgccwVQYIKwYBBQUHMAKGSWh0dHA6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9k
+b3dubG9hZC90c3BfY2VydGlmaWNhdGVzL3N1Ym9yZGluYXRlMS5jcnQwNgYIKwYBBQUHMAGGKmh0
+dHA6Ly9vY3NwMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzA2BggrBgEFBQcwAYYqaHR0
+cDovL29jc3AyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1UdDgQWBBSyFK9UEiYJ
+zVT4ufKPoHOyLtnpXDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH1X52BzzgdGqeKjaPDhEbJ0
+knP9MIGOBgNVHSAEgYYwgYMwgYAGDCsGAQQBgvE2ZgIDATBwMDcGCCsGAQUFBwIBFitodHRwczov
+L3d3dy51YW5hdGFjYS5jb20vcHVibGljL3BraS9kcGMtZWMvMDUGCCsGAQUFBwICMCkMJ0NFUlRJ
+RklDQURPIERFIFJFUFJFU0VOVEFOVEUgRU4gQVJDSElWTzCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
+dHRwOi8vY3JsMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3JkaW5hZGEuY3Js
+MECgPqA8hjpodHRwOi8vY3JsMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3Jk
+aW5hZGEuY3JsMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQw
+ggH/BgNVHREEggH2MIIB8oEebm90aWZpY2FjaW9uZXNmaXJtYXNAc2lpZ28uY29toBsGCysGAQQB
+gvE2ZgMBoAwMCjA5MTU2MDg1NjagHwYLKwYBBAGC8TZmAwKgEAwOTUVMSURBIFZJVklBTkGgGQYL
+KwYBBAGC8TZmAwOgCgwIQ0FSUkFTQ0+gFgYLKwYBBAGC8TZmAwSgBwwFQVlBTEGgIAYLKwYBBAGC
+8TZmAwWgEQwPR0VSRU5URSBHRU5FUkFMoF0GCysGAQQBgvE2ZgMHoE4MTEFWIEpVQU4gVEFOQ0Eg
+TUFSRU5HTyBZIEFWIEpPQVFVSU4gT1JSQU5USUEgRURGIDEwMCBCVVNJTkVTUyBQTEFaQSBQMDQg
+T0Y0MDSgHwYLKwYBBAGC8TZmAwigEAwOMDA1OTM5Njc4NTIwMDagGgYLKwYBBAGC8TZmAwmgCwwJ
+R1VBWUFRVUlMoCwGCysGAQQBgvE2ZgMKoB0MG1BBQ0lGSUMgT0NFQU4gUy5BIFBBQ0lGT0NTQaAe
+BgsrBgEEAYLxNmYDC6APDA0wOTkyODY1NzA5MDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCQGCysG
+AQQBgvE2ZgMyoBUME1JFUFJFU0VOVEFOVEUgTEVHQUygGAYLKwYBBAGC8TZmAzOgCQwHQVJDSElW
+TzANBgkqhkiG9w0BAQsFAAOCAgEAHDyy3vJwZXwmBkwnT7kNx4iJa19IaSZHICqOcVv9ytoub0rH
+JjvpN68tNH4naZGB6HNU+G9o3emzX4akOiVMdgw8/AtXw5hmDoom48+VnfzAFsJUMzkhXvG81HiS
+OdKHDMghmj4ETt/W0qur32TvQ3MQoVe/+uVgCR16PYzJodUMf/oBQ82+o6nMj1/wmPv6gynhHs31
+PhhQ6gBdEvelwhJ/xXaIe/lrPnD3LviTU8YTdpu+8+5tVLr7Zs8Eknj/TJ3dBr6qRdFm7A0movEi
+hPICiF6uxowPKpW3aUV7R9Mk+/+pd5H6WB6cx0SYC3OFHS6zwZ0iBtn2fMQMFrmfRePAJYWghakL
+eLwlVB87y2fAed6TEuwYOqMwElRTF7ioEux4YfaYIFfwmL+0n7su9sy34M6ldGZPWnLaZuo/i6OR
+pRLcj+JgfzZCWxWj5fy7OTjne+dbTcxlwA+SRMmzeYnbhraFJvHTu9gi5BtZLtPu+4sRHQ61Kf9f
+v0HDEuGfkcZcMizQz23F+HJ9zXRn4dkXD4ch//Z47c7kZsVB7/Y6KYmh2fDGvCGNyO5yqdWPwB52
+eex9695qWTXda10aTI7wvVQFtNnSUTUZ95bjGsik2LDhe6eV9JfptDmf1OyFzmg1+YsHuEO+dJWV
+b0IGXLOgYlLAa6dyk2xgs2yHUBQ=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+pSsRe+u/l8SHZwLjxO5BGffyhbz1biWqGP+goNz0WV6GTchBUS9vnwijYUCQwm0DET6KY4P6YoBn
+aUDZLB59HQaW7Tx81HTzXK5v2etILAzSzspBNWVdC0W1591sPz8doIKbd6ssMlSfhHfDC+PWXeLi
+KXlHyv6KTLScZ8OtnNbUgrbsAeCUopr+SJZbosPwonYDCnhsNcKULnGiQejzYdZ2WRvdFr7m6ZE2
+EaRRraU4M3uy9PRJGF3eyihMlpp3wnQ5j9AWPQwt0M8pc6IV9x90yvdQcwQdV4cAk2vFm9C+TlKX
+xqD774CEaDvYbXjjxcOO/Kd2Cch/naR9l/vKjQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature378239-Object370910"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature378239"&gt;
+                &lt;etsi:SignedProperties Id="Signature378239-SignedProperties596714"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-23T15:03:17-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;n/urcv7N9Kpsq1efsqOP7e2UiSA=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;5253783324075992697&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

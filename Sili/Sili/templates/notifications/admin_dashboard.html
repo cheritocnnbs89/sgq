@@ -1,0 +1,181 @@
+{# templates/notifications/admin_dashboard.html #}
+{% extends 'base.html' %}
+{% block title %}Notificaciones - Admin{% endblock %}
+
+{% block content %}
+<h1 class="h5 mb-3">Cola de notificaciones</h1>
+
+{# Flash messages #}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for cat, msg in messages %}
+<div class="alert alert-{{ 'info' if cat=='message' else cat }} alert-dismissible fade show" role="alert">
+  {{ msg }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+{# ---- Botonera superior: fuera de cualquier otro <form> ---- #}
+  <form action="{{ url_for('notifications.weekly_report_send_pdf') }}" method="post" class="mb-3 d-flex gap-2">
+    <button type="submit" class="btn btn-success btn-sm">
+      📄 Enviar informe gerencial (PDF)
+    </button>
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('notifications.weekly_report_ping') }}">
+      Probar ruta (GET)
+    </a>
+  </form>
+
+  {# ---- Filtros (GET) ---- #}
+  <form method="get" action="{{ url_for('notifications.dashboard') }}" class="mb-3">
+    <div class="row g-2 align-items-end">
+      <form method="get" action="{{ url_for('notifications.dashboard') }}" class="mb-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-12 col-md-2">
+            <label class="form-label form-label-sm">Fecha</label>
+            <input type="date" class="form-control form-control-sm" name="fecha" value="{{ q_fecha or '' }}">
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label form-label-sm">Usuario</label>
+            <select class="form-select form-select-sm" name="user_id">
+              <option value="">-- Todos --</option>
+              {% for u in users %}
+              <option value="{{ u.id }}" {{ 'selected' if q_userid==u.id else '' }}>{{ u.username }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label form-label-sm">Tipo</label>
+            <select class="form-select form-select-sm" name="tipo">
+              <option value="">-- Todos --</option>
+              {% for key, label in TPL_TYPES %}
+              <option value="{{ key }}" {{ 'selected' if q_tipo==key else '' }}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label form-label-sm">Canal</label>
+            <select class="form-select form-select-sm" name="canal">
+              <option value="">-- Todos --</option>
+              {% for c in ['email','inapp','slack'] %}
+              <option value="{{ c }}" {{ 'selected' if q_canal==c else '' }}>{{ c }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label form-label-sm">Estado</label>
+            <select class="form-select form-select-sm" name="estado">
+              <option value="">-- Todos --</option>
+              {% for e in ['pending','error','sent','skipped'] %}
+              <option value="{{ e }}" {{ 'selected' if q_estado==e else '' }}>{{ e }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12 col-md-2 d-flex gap-2">
+            <button class="btn btn-primary btn-sm" type="submit">Filtrar</button>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('notifications.dashboard') }}">Limpiar</a>
+          </div>
+        </div>
+        <div class="d-flex gap-2 align-items-center mb-3">
+          <form action="{{ url_for('notifications.weekly_report_send_pdf') }}" method="post" class="d-inline">
+            <button class="btn btn-sm btn-success">
+              📄 Enviar informe gerencial (PDF)
+            </button>
+          </form>
+          {% if session.weekly_pdf_result %}
+          <div class="alert alert-info py-1 px-2 mb-0">{{ session.pop('weekly_pdf_result') }}</div>
+          {% endif %}
+        </div>
+
+      </form>
+
+    </div>
+    <div class="mt-2">
+      <button class="btn btn-primary btn-sm" type="submit">Filtrar</button>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('notifications.dashboard') }}">Limpiar</a>
+    </div>
+
+    {# ---- Tabla + acciones masivas (POST) ---- #}
+    <form method="post" action="{{ url_for('notifications.queue_bulk_action', **request.args) }}">
+
+      <div class="mb-2 d-flex gap-2">
+        <button class="btn btn-success btn-sm" name="action" value="send" type="submit">Enviar seleccionados</button>
+        <button class="btn btn-outline-secondary btn-sm" name="action" value="retry" type="submit">Reintentar
+          seleccionados</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead>
+            <tr>
+              <th style="width:28px;">
+                <input type="checkbox" id="chk-all" />
+              </th>
+              <th>ID</th>
+              <th>User</th>
+              <th>Tarea</th>
+              <th>Tipo</th>
+              <th>Fecha</th>
+              <th>Canal</th>
+              <th>Estado</th>
+              <th>Programada</th>
+              <th>Enviada</th>
+              <th>Error</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in queue %}
+            <tr>
+              <td>
+                <input type="checkbox" class="chk-row" name="ids" value="{{ r.id }}">
+              </td>
+              <td>{{ r.id }}</td>
+              <td>{{ r.user_desc }}</td>
+              <td>{{ r.tarea_id or '—' }}</td>
+              <td>{{ r.tipo_desc }}</td>
+              <td>{{ r.fecha_obj }}</td>
+              <td>{{ r.canal }}</td>
+              <td>{{ r.estado }}</td>
+              <td>{{ r.scheduled_at or '—' }}</td>
+              <td>{{ r.sent_at or '—' }}</td>
+              <td class="text-danger small">{{ r.error_msg or '' }}</td>
+              <td class="text-nowrap">
+                <form action="{{ url_for('notifications.queue_send_now', nid=r.id) }}" method="post" class="d-inline">
+                  <button class="btn btn-sm btn-primary" title="Enviar ahora">Enviar</button>
+                </form>
+                <form action="{{ url_for('notifications.queue_retry', nid=r.id) }}" method="post" class="d-inline">
+                  <button class="btn btn-sm btn-outline-secondary" title="Reintentar">Reintentar</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="12" class="text-muted">Sin items</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </form>
+
+    <script>
+      // Master checkbox
+      document.addEventListener('DOMContentLoaded', () => {
+        const all = document.getElementById('chk-all');
+        const rows = Array.from(document.querySelectorAll('.chk-row'));
+        if (all) {
+          all.addEventListener('change', () => {
+            rows.forEach(ch => ch.checked = all.checked);
+          });
+        }
+      });
+    </script>
+
+    <div class="mt-3">
+      <a class="btn btn-outline-primary btn-sm" href="{{ url_for('notifications.tpl_list') }}">Plantillas</a>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('notifications.prefs_list') }}">Preferencias de
+        usuario</a>
+    </div>
+    {% endblock %}

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0901202601171521255900120040030000004569846951116</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-09T15:28:28-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;CRUZ PAGUAY TEODORO ROQUENDO&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;CRUZ PAGUAY TEODORO ROQUENDO&lt;/nombreComercial&gt;
+    &lt;ruc&gt;1715212559001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0901202601171521255900120040030000004569846951116&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;004&lt;/estab&gt;
+    &lt;ptoEmi&gt;003&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000000456&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;6 #LOTE 56  / CHILLOGALLO / QUITO / PICHINCHA&lt;/dirMatriz&gt;
+    &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;09/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;CLAUDIO BARAHONA&lt;/dirEstablecimiento&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;ROSAVIN #LOTE 1 Y COBRE, PASCUALES&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;600.00&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+        &lt;baseImponible&gt;600.00&lt;/baseImponible&gt;
+        &lt;valor&gt;90.00&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;690.00&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;01&lt;/formaPago&gt;
+        &lt;total&gt;690.00&lt;/total&gt;
+        &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;E03&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;SERVICIO DE ESTIBA RECORRIDO EXTERNO&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;120.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;120.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ENTREGA" valor="260389583"/&gt;
+        &lt;detAdicional nombre="TRANSP" valor="410246204"/&gt;
+        &lt;detAdicional nombre="PROD" valor="FOSFATO MONODICALCICO"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;120.00&lt;/baseImponible&gt;
+          &lt;valor&gt;18.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;E03&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;SERVICIO DE ESTIBA RECORRIDO EXTERNO&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;120.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;120.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ENTREGA" valor="260389585"/&gt;
+        &lt;detAdicional nombre="TRANSP" valor="410246218"/&gt;
+        &lt;detAdicional nombre="PROD" valor="FOSFATO BICALCICO"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;120.00&lt;/baseImponible&gt;
+          &lt;valor&gt;18.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;E03&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;SERVICIO DE ESTIBA RECORRIDO EXTERNO&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;120.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;120.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ENTREGA" valor="260389707/260389623"/&gt;
+        &lt;detAdicional nombre="TRANSP" valor="410246253/410246254"/&gt;
+        &lt;detAdicional nombre="PROD" valor="SULFATO DE ALUM/SULFATO DE ALUMINIO"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;120.00&lt;/baseImponible&gt;
+          &lt;valor&gt;18.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;E03&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;SERVICIO DE ESTIBA RECORRIDO EXTERNO&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;120.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;120.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ENTREGA" valor="260389674"/&gt;
+        &lt;detAdicional nombre="TRANSP" valor="410246255"/&gt;
+        &lt;detAdicional nombre="PROD" valor="SULFATO DE ALUMINIO"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;120.00&lt;/baseImponible&gt;
+          &lt;valor&gt;18.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;E03&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;SERVICIO DE ESTIBA RECORRIDO EXTERNO&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;120.000000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;120.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;detallesAdicionales&gt;
+        &lt;detAdicional nombre="ENTREGA" valor="260388849/260389625"/&gt;
+        &lt;detAdicional nombre="TRANSP" valor="410246256/410246257"/&gt;
+        &lt;detAdicional nombre="PROD" valor="SULFATO DE ALUMINIO"/&gt;
+      &lt;/detallesAdicionales&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;120.00&lt;/baseImponible&gt;
+          &lt;valor&gt;18.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="DIRECCION"&gt;ROSAVIN #LOTE 1 Y COBRE, PASCUALES&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="TELEFONO"&gt;022691477&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="EMAIL"&gt;recepcion@quimpac.com.ec&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="CLIENTES"&gt;MONTANA ECUADOR, BORIS BARROS, ETAPA EP, PASAMANERIA&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="ESTIBAS N°"&gt;4489 4490 4498 4499 4500&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="ACTIVIDAD"&gt;DESCARGA DE SACOS&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="REFERENCIA"&gt;SEMANA DEL 15 AL 19 DE DICIEMBRE 2025&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature456831"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo144613"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID136259" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature456831-SignedProperties29480"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ZJWifZoGl6M6UYMsMJbTiAslTog=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1959355"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;IcImN5uM/GoclVhgrrkksyKu9Ro=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-924520" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;57nTjJfN1/eeyaZUt/ky/4q+aCs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue1009034"&gt;
+sr87XF3rvr5zh7/k4b4m3qqxqNxYvX3hwtn0V3BwCZSIqbwsp6zXgSWJ//cdc7HWVc7O+wmKRhHl
+Uth/90HSdZHS/GTKfD6Bv1l+nFYtKRDqlQ27KEkQfTdFmnjiMS/bQBBmeuLQdwBR3ELBT+qKRqEF
+KYHEbad2JQ1kRKqWxFlp9FqxM/c8Q1GAKT9NzjZrV5UnnCO2KObww8SvBwmz6CWWQO8dbCP77Gx6
+R4LzDI6NJYhl+vhvvKwIifE+kqkrr+qW+pfqsmL0mnLC6ljz3qgYYAY+U0Yg3dkbQGTa/bdvKR2y
+7Tviyw8goPbmH2YVLYh7BJ8KpihosKJztMtNjQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1959355"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJMDCCBxigAwIBAgIIRf1BpNXS3T0wDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI1MDUwMTIyNTQwMFoXDTI2MDUwMTIyNTQwMFowgZ4xCzAJBgNVBAYTAkVDMRQwEgYDVQQEDAtD
+UlVaIFBBR1VBWTEZMBcGA1UEKgwQVEVPRE9STyBST1FVRU5ETzEZMBcGA1UEBRMQSURDRUMtMTcx
+NTIxMjU1OTElMCMGA1UEAwwcVEVPRE9STyBST1FVRU5ETyBDUlVaIFBBR1VBWTEcMBoGA1UEYQwT
+VElORUMtMTcxNTIxMjU1OTAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALXeRl3B
+p//2xYhdU4mpjcGjv99kvL4MrhY8ILZBAH2Z/aeRCvE73FN0G1anetC1TI323rVpkcqNXnRAEdr8
+E34gJw2sh/9LDJyLd3Lv0U1VNW3/Tplv5i4c+rfbzLPmwXYDeXKNcjVb2SXEj5eiHKK6SHNBTq85
+4ttwZ72j8Ij0QEK0tJMWJJ3bL+8MkZj2dbKPaQoBLa9JYUo2e1bug5LgyWltAdtrSHOiOMjn7VMC
+pKAZz7MMtusvx89mHrTX6NXVzUGrzRa4WnaTQdDU/aJWyVAbdfg95Zz63sZQQrQToiO2a15vhLvW
+02FH7JSP5iB6Rmmhj1WKbxlpLDizTXsCAwEAAaOCBFQwggRQMBsGCysGAQQBgvE2ZgMBBAwMCjE3
+MTUyMTI1NTkwHgYLKwYBBAGC8TZmAwsEDwwNMTcxNTIxMjU1OTAwMTCB1wYIKwYBBQUHAQEEgcow
+gccwVQYIKwYBBQUHMAKGSWh0dHA6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9kb3dubG9hZC90
+c3BfY2VydGlmaWNhdGVzL3N1Ym9yZGluYXRlMS5jcnQwNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3Nw
+MS51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzA2BggrBgEFBQcwAYYqaHR0cDovL29jc3Ay
+LnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1UdDgQWBBS+Nx4kyq/vMdj9WN6sykwT
+99Q9rTAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH1X52BzzgdGqeKjaPDhEbJ0knP9MIGZBgNV
+HSAEgZEwgY4wgYsGDCsGAQQBgvE2ZgIBATB7MDcGCCsGAQUFBwIBFitodHRwczovL3d3dy51YW5h
+dGFjYS5jb20vcHVibGljL3BraS9kcGMtZWMvMEAGCCsGAQUFBwICMDQMMkNFUlRJRklDQURPIERF
+IFBFUlNPTkEgTkFUVVJBTCBPIEZJU0lDQSBFTiBBUkNISVZPMIGPBgNVHR8EgYcwgYQwQKA+oDyG
+Omh0dHA6Ly9jcmwxLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5j
+cmwwQKA+oDyGOmh0dHA6Ly9jcmwyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJv
+cmRpbmFkYS5jcmwwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcD
+BDCCAYoGA1UdEQSCAYEwggF9gRhlZHdpbnBpbGxham8xMUBnbWFpbC5jb22gGwYLKwYBBAGC8TZm
+AwGgDAwKMTcxNTIxMjU1OaAhBgsrBgEEAYLxNmYDAqASDBBURU9ET1JPIFJPUVVFTkRPoBUGCysG
+AQQBgvE2ZgMDoAYMBENSVVqgFwYLKwYBBAGC8TZmAwSgCAwGUEFHVUFZoD4GCysGAQQBgvE2ZgMH
+oC8MLTYgI0xPVEUgNTYgIC8gQ0hJTExPR0FMTE8gLyBRVUlUTyAvIFBJQ0hJTkNIQaAfBgsrBgEE
+AYLxNmYDCKAQDA4wMDU5Mzk5MzY1NzA3NqAWBgsrBgEEAYLxNmYDCaAHDAVRVUlUT6AeBgsrBgEE
+AYLxNmYDC6APDA0xNzE1MjEyNTU5MDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCkGCysGAQQBgvE2
+ZgMyoBoMGFBFUlNPTkEgTkFUVVJBTCBPIEZJU0lDQaAYBgsrBgEEAYLxNmYDM6AJDAdBUkNISVZP
+MA0GCSqGSIb3DQEBCwUAA4ICAQAg4SBNyBW6HrixJdLlU37WI4BjHnnqyRaVnLFA8YZSvtvhk204
++L6OHtVkcba5LsR554d/u2kGv0Ss2wGvQSmsIABPiSGSqgNuYAx45yjK8k+8s8ATdQWHiLSc9MrP
+DKmxRxjqTCVmcySUAqBNyOCxoGq9xWpWnv+k7h+Q/oZYnMmlq3ElZWSTKUl0hfmBCZk5r5KrhkSr
+pdoOZsUW+mHlSvGdtGdf3vhi5saPKntEZAi26lGcpwr6kE9DAmcHAWihq5tOla0vbBr9LC0EoRzD
+/P9uT7/q+KWxCQMEQVkZxUrttvmyp7ErJ+cirOP86sItdVyxAp1Hjq2PqU7rJUc3hMCq/1cs8ipn
+e/z2tf4JX5YJTK+Vwu5kEgzOak9GLS5AaKaPb7/iB1I1y4M4YxFbOEPnsAVpJm2B6oPX6AmgHbZD
+uKYCNZc8dOkOkqU3e4BrSb7NApUnUwBOC6bEFD4Okro6UCejUH2Uw/D1EM8l8VAzEyVhjaYmoZjj
+wlRsJJw14bGYhug0HR8Xt/xCMweh7EeO5MiBN093QORN8ZFQa7jkI3+EDWMhu8gP4qhpQ/iQvcZE
+emNVTz64xNrPMPVcqE9vhsJ8QDVZJjMlXH7uwpG2YiRMF/kMkKbUioSzL/XMBPNvzmqCaOADJVOG
+gsLh7I9VQ83J1LvEiZ7xQ1IeJg==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+td5GXcGn//bFiF1TiamNwaO/32S8vgyuFjwgtkEAfZn9p5EK8TvcU3QbVqd60LVMjfbetWmRyo1e
+dEAR2vwTfiAnDayH/0sMnIt3cu/RTVU1bf9OmW/mLhz6t9vMs+bBdgN5co1yNVvZJcSPl6IcorpI
+c0FOrzni23BnvaPwiPRAQrS0kxYkndsv7wyRmPZ1so9pCgEtr0lhSjZ7Vu6DkuDJaW0B22tIc6I4
+yOftUwKkoBnPswy26y/Hz2YetNfo1dXNQavNFrhadpNB0NT9olbJUBt1+D3lnPrexlBCtBOiI7Zr
+Xm+Eu9bTYUfslI/mIHpGaaGPVYpvGWksOLNNew==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature456831-Object293649"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature456831"&gt;
+                &lt;etsi:SignedProperties Id="Signature456831-SignedProperties29480"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-09T15:28:20-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;nUzNVqI1XZbtZEhJFp/r1L0G4ZU=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;5043259333942631741&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-924520"&gt;
+                            &lt;etsi:Description&gt;DOCUMENTO EMITIDO CON ECUAFACT. LA FACTURACION ELECTRONICA DEL ECUADOR. Visitenos en http://www.ecuanexus.com &lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2001202601099338270600120010010000003431004772517</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-21T02:20:14-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;SILAS S.A.S.&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;SILAS S.A.S.&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0993382706001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;2001202601099338270600120010010000003431004772517&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000000343&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;GUAYAS / DAULE / DAULE / CDLA NUEVA AURORA Y CDLA NUEVA AURORA&lt;/dirMatriz&gt;
+		
+		
+		
+			&lt;contribuyenteRimpe&gt;CONTRIBUYENTE RÉGIMEN RIMPE&lt;/contribuyenteRimpe&gt;
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;20/01/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;GUAYAS / DAULE / DAULE / CDLA NUEVA AURORA Y CDLA NUEVA AURORA&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+			&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR SA&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA A DAULE&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;270.00000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;270.00&lt;/baseImponible&gt;
+				&lt;valor&gt;40.50000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;310.50000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;20&lt;/formaPago&gt;
+	    		&lt;total&gt;310.50&lt;/total&gt;
+	    		&lt;plazo&gt;0&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;DAHIAN-BK&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;DAHIAN-BK&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;SILLAS MODELO DAHIAN TELA NEGRA SILLA CON ESPALDAR ERGONOMICO RECLINABLE&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;3.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;90.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;270.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+	  	&lt;detallesAdicionales&gt;
+			
+    			&lt;detAdicional nombre="Detalle" valor="903B-N(X3)"/&gt;
+    		
+      	&lt;/detallesAdicionales&gt;
+      
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;270.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;40.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+	
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;VENTA DE SILLAS DE OFICINA BLACK 
+PROFORMA APROBADA: 20260108 
+ORDEN DE PEDIDO/COMPRA: 1000605191 
+NUMERO/CODIGO DE INGRESO: 5000013954 
+FORMA DE PAGO: TOTAL 
+METODO DE PAGO: TRANSFERENCIA 
+GARANTIA: 6 MESES&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature820300"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo190816"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID340054" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature820300-SignedProperties927477"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;D1Dw8PuQQYENK7LuZPA/pt6ZNWA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate78120"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;VwMgFeWzjpuBgCRnCUAqnBPoHkQ=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-39826" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;uwJ1oVmJ3tYrVVQW7T/qCN1EOQA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue653780"&gt;
+U/aCYSaT2jkB7M+lBmcj9B4KeXfsoHtYShBfQsNOZWE8TiXozwsHRHN3k+ell70bYfkUBRqR/6vN
+qZyPLCcOdsEurG9XArDfiyIadPT86AC+yHi7qoivrXixb1t2/+VB+BMe2lrVvuwBNSGo6tyojfQ0
+AGxMGXcJPIKDfW7E7oN2746aZdGSDpziDi1soHj3/OnxQzGi/bv9DTdyCb3EuiU1PcQZu2ofq5/x
+F/3t9KYS4lHeOmU9KD+7RCBTI2AwIFWYyVoTxLweEv0YqyVtSWwKlOLjV5lLbJkIrfQ2coT+qVch
+AwqWrqbN6Vw6BkmvTTAmvUJC41TATPnzLy2pMw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate78120"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKvjCCCKagAwIBAgIIbo2UtTvYKCwwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwODIwMTMxNDM2WhcNMjcwODIwMTMxNDM2WjCB
+pjEkMCIGA1UEAwwbSlVBTiBTRUJBU1RJQU4gUElaQSBNT1JBTEVTMSAwHgYDVQQFExcwOTUxNjgy
+MDA0LTIwMDgyNTA4MjQyNjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCknJVNgcAgmjeZDBw1Jf7iuBv4Hgk7OIGhKbVO
+zdsouuaD7ZbqN3b4PeTqB4W+Nwyue7gFICRL90nveQLM0csUNwhEAjyw8+YvUw6rH3CsybWF2U42
+UGIuyRRz0EFhqLwa7UkoAXY3k7JZ8kwKJihXr0hlWjD2dC5d6CB1E4bJ9pig3lJW+zKJokM2hp4m
+J+tIYrOg5XdIhhaAdXqdxz0z7ofFMLIGaGca2Ww+M+zI0HnptoPkOBI2fgaMzOUfbDAtdFg9z93R
+IOqRM1R5EXWTLsKk2ss9jCnLSIT+DG8XWoX1ghEOn9JeAvlACCRD0aiHjgo24EWkb5LHOyfK8cBp
+AgMBAAGjggX5MIIF9TAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i
+3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRh
+dGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAeBgNVHREEFzAVgRN2ZW50YXNA
+c2lsYXMuY29tLmVjMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsGAQUFBwIC
+MEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4AdABhAG4A
+dABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0dHBzOi8v
+d3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9Q
+X2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50YW50ZSBM
+ZWdhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIw
+gd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmls
+ZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNB
+LTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6
+oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNy
+bDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVj
+L2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9S
+SURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERF
+IENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVD
+MB0GA1UdDgQWBBTLuKLf2p4XxgtPN/gOsIJ/ZtykzDArBgNVHRAEJDAigA8yMDI1MDgyMDEzMTQz
+NlqBDzIwMjcwODIwMTMxNDM2WjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9HRVJFTlRF
+IEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQMDAowOTUxNjgyMDA0MBUGCisGAQQBgqZyAwkEBwwFREFV
+TEUwEQYKKwYBBAGCpnIDIgQDDAEuMDUGCisGAQQBgqZyAwcEJwwlQ0RMQSBOVUVWQSBBVVJPUkEg
+WSBDRExBIE5VRVZBIEFVUk9SQTAeBgorBgEEAYKmcgMCBBAMDkpVQU4gU0VCQVNUSUFOMB8GCisG
+AQQBgqZyAyAEEQwPMDAxMDAyMDAxMDM1NDU3MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQB
+gqZyAwwECQwHRUNVQURPUjAUBgorBgEEAYKmcgMDBAYMBFBJWkEwGwYKKwYBBAGCpnIDCgQNDAtT
+SUxBUyBTIEEgUzAdBgorBgEEAYKmcgMLBA8MDTA5OTMzODI3MDYwMDEwEQYKKwYBBAGCpnIDHQQD
+DAEuMBcGCisGAQQBgqZyAwQECQwHTU9SQUxFUzAaBgorBgEEAYKmcgMIBAwMCjA5NjczNzg2NDEw
+DQYJKoZIhvcNAQELBQADggIBAKsNvxesikg7hJAD6gYXy6H3V/mP5vNrYZXSeyl0Vb6tou/EIVB2
+0IPPPEU4cTOfyJrnUZiRn7bHafFjlVWLJMvXaIEWxbbbsGnVQjxuL0+VkRLkmrWOECMX8ifI0AuM
+FIcsmFTqpgCL1YXOXQIq+h2viCHrxVToa5CftfxbieyzkXVeoalF9j8maZwZCY9SCTVoadZJlUQ6
+Y/pzPYwmc8h6v2L+93vDhTkPOB018A/+tOKglogClUYvD6/ZDDcK+AHCv+ZLaZ7mrQy6mC802dYc
+UfdQHUhW/IT+GcoPtlMa1OWtG/QJhkc7SlhklQFkiitmlOSD2z01+jZtpK4YTaHj3Coy6AFDDgPd
+Qt0vDiQRPdjbRGfVWZqrQHpQxGZf//8o/dC4eSTcPXnsXonfJsd/1Jz5ZznCPt3vFHLPxwL8UACO
+WkeAj4yM0pReVPwKtz2SHMcCziwNJSnZEgi5rhPG5PajK/KcDi9l/VKphM7LqVLozRrweyvCVliB
+AKtCLY8vJ2iQgZKq2VFujQIsGiN6WPS71iQXOzgbxkQBxL+tJpKwZUJg/B2K4aehbfz9vEErYR1J
+sXzC/78tm6tMvLoMDfUSzRECoAC4H8xSygmFoQpe4wcZI6alz5B7atCSQ85C6irn6nQoT4YQfind
+d9e6pSjzE0Rse0VktKc6Epv/
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+pJyVTYHAIJo3mQwcNSX+4rgb+B4JOziBoSm1Ts3bKLrmg+2W6jd2+D3k6geFvjcMrnu4BSAkS/dJ
+73kCzNHLFDcIRAI8sPPmL1MOqx9wrMm1hdlONlBiLskUc9BBYai8Gu1JKAF2N5OyWfJMCiYoV69I
+ZVow9nQuXeggdROGyfaYoN5SVvsyiaJDNoaeJifrSGKzoOV3SIYWgHV6ncc9M+6HxTCyBmhnGtls
+PjPsyNB56baD5DgSNn4GjMzlH2wwLXRYPc/d0SDqkTNUeRF1ky7CpNrLPYwpy0iE/gxvF1qF9YIR
+Dp/SXgL5QAgkQ9Goh44KNuBFpG+SxzsnyvHAaQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature820300-Object677032"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature820300"&gt;
+                &lt;etsi:SignedProperties Id="Signature820300-SignedProperties927477"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-20T16:42:27-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;HrRN1pqUQRnC8h10DbQPyW+TCg4=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;7966186822002288684&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

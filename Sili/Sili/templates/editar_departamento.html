@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Editar departamento{% endblock %}
+{% block content %}
+<h4 class="mb-3">Editar departamento</h4>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+
+
+
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Nombre del departamento</label>
+      <input type="text" name="nombre" class="form-control" value="{{ departamento['nombre'] }}" required>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <button class="btn btn-primary">Guardar cambios</button>
+  </div>
+</form>
+
+
+{% endblock %}

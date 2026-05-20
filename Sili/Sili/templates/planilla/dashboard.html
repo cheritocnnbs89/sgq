@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - Planilla{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planilla/dashboard.css') }}">
+
+<div id="dashboardConfig"
+     data-chart="{{ chart|tojson|forceescape }}"
+     data-ym="{{ '%04d-%02d'|format(y,m) }}"
+     data-api-list-feriados="{{ url_for('planilla_mensual.api_list_feriados') }}"
+     data-api-add-feriado="{{ url_for('planilla_mensual.api_add_feriado') }}"
+     data-api-del-feriado="{{ url_for('planilla_mensual.api_delete_feriado', fid=0) }}">
+</div>
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h5 mb-0">Dashboard - {{ '%02d/%04d'|format(m, y) }}</h1>
+
+  <div class="page-toolbar d-flex flex-wrap align-items-end gap-2">
+    <div>
+      <label class="form-label mb-1">Mes</label>
+      <input type="month" id="month" class="form-control form-control-sm" value="{{'%04d-%02d'|format(y, m)}}">
+    </div>
+
+    <div>
+      <label class="form-label mb-1">Frecuencia</label>
+      <select id="freqFilter" class="form-select form-select-sm dashboard-w-auto">
+        <option value="todos" {{ 'selected' if freq=='todos' }}>Todos</option>
+        <option value="diario" {{ 'selected' if freq=='diario' }}>Diario</option>
+        <option value="semanal" {{ 'selected' if freq=='semanal' }}>Semanal</option>
+        <option value="mensual" {{ 'selected' if freq=='mensual' }}>Mensual</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="form-label mb-1">Departamento</label>
+      <select id="deptoFilter" class="form-select form-select-sm dashboard-minw-220">
+        <option value="" {{ 'selected' if not depto_sel }}>Todos</option>
+        {% for d in departamentos_list %}
+        <option value="{{ d }}" {{ 'selected' if d==depto_sel }}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="form-label mb-1">Responsable</label>
+      <select id="respFilter" class="form-select form-select-sm dashboard-minw-220">
+        <option value="" {{ 'selected' if not resp_sel }}>Todos</option>
+        {% for r in responsables_list %}
+        <option value="{{ r }}" {{ 'selected' if r==resp_sel }}>{{ r }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="d-flex align-items-end gap-2">
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('dashboard', year=prev_y, month=prev_m, freq=freq) }}">&laquo; Mes anterior</a>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('dashboard', year=next_y, month=next_m, freq=freq) }}">Mes siguiente &raquo;</a>
+    </div>
+
+    <div class="d-flex align-items-end gap-2">
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('planilla_mensual.planilla', year=y, month=m) }}">
+        <i class="bi bi-table"></i> Ver planilla
+      </a>
+      <button class="btn btn-outline-secondary btn-sm" id="btnExportAll" title="Alt+E" type="button">
+        <i class="bi bi-download"></i> Exportar PNG
+      </button>
+      <button id="themeToggle" class="btn btn-outline-secondary btn-sm" type="button">
+        <i class="bi bi-moon-stars"></i> Tema
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" id="btnFeriados" title="Gestionar feriados" type="button">
+        <i class="bi bi-calendar-x"></i> Feriados
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-6 col-md-3">
+    <div class="section kpi-card" data-target="#chartDep">
+      <div class="section-header"><i class="bi bi-check2-circle"></i> Cumplimiento</div>
+      <div class="d-flex align-items-end justify-content-between">
+        <div>
+          <div class="fs-2 fw-bold" id="kpiCumplTxt">{{ kpis.cumplimiento|round(1) }}%</div>
+          <div class="text-muted">Realizadas: {{ kpis.realizadas }}/{{ kpis.planeadas }}</div>
+        </div>
+        <div class="kpi-delta" id="kpiCumplDelta">—</div>
+      </div>
+      <div class="sparkline-wrap mt-2"><canvas id="sparkCumpl"></canvas></div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="section kpi-card" data-target="#chartTrend">
+      <div class="section-header"><i class="bi bi-clock-history"></i> Puntualidad</div>
+      <div class="fs-2 fw-bold" id="kpiPuntTxt">{{ kpis.puntualidad|round(1) }}%</div>
+      <div class="text-muted">Evidencias del mes</div>
+      <div class="sparkline-wrap mt-2"><canvas id="sparkPunt"></canvas></div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="section kpi-card" data-target="#chartRep">
+      <div class="section-header"><i class="bi bi-file-earmark-check"></i> Con archivo</div>
+      <div class="fs-2 fw-bold" id="kpiArchTxt">{{ kpis.con_archivo|round(1) }}%</div>
+      <div class="text-muted">Evidencias con adjunto</div>
+      <div class="sparkline-wrap mt-2"><canvas id="sparkArch"></canvas></div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="section section-warning kpi-card" data-target="#chartTrend">
+      <div class="section-header"><i class="bi bi-exclamation-circle"></i> Pendientes hoy</div>
+      <div class="fs-2 fw-bold">{{ kpis.pendientes_hoy }}</div>
+      <div class="text-muted">Solo si es el mes actual</div>
+      <div class="sparkline-wrap mt-2"><canvas id="sparkPend"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-6 col-md-3"><div class="section kpi-card"><div class="section-header"><i class="bi bi-flag"></i> Cumplimiento esperado a hoy</div><div class="fs-2 fw-bold">{{ (kpis.esperado_hoy_pct or 0)|round(1) }}%</div><div class="text-muted">Baseline acumulada</div></div></div>
+  <div class="col-6 col-md-3"><div class="section kpi-card"><div class="section-header"><i class="bi bi-graph-up-arrow"></i> Cumplimiento real a hoy</div><div class="fs-2 fw-bold">{{ (kpis.real_a_hoy_pct or 0)|round(1) }}%</div><div class="text-muted">Sobre lo planeado a la fecha</div></div></div>
+  <div class="col-6 col-md-3">{% set gap = (kpis.real_a_hoy_pct or 0) - (kpis.esperado_hoy_pct or 0) %}<div class="section kpi-card"><div class="section-header"><i class="bi bi-target"></i> Gap vs esperado</div><div class="fs-2 fw-bold">{{ gap|round(1) }}%</div><div class="text-muted">{{ 'Por encima' if gap>=0 else 'Por debajo' }} de la baseline</div></div></div>
+  <div class="col-6 col-md-3"><div class="section kpi-card"><div class="section-header"><i class="bi bi-calendar2-check"></i> Proyección fin de mes</div><div class="fs-2 fw-bold">{{ (kpis.proyeccion_pct or 0)|round(1) }}%</div><div class="text-muted">Backlog: {{ kpis.backlog or 0 }}</div></div></div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex align-items-center justify-content-between">
+        <span><i class="bi bi-lightning-charge"></i> Burn-up: Planeado (baseline) vs Real acumulado</span>
+        <div class="chart-toolbar" data-for="chartBurn">
+          <button class="btn btn-light btn-sm ct-full" type="button"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom" type="button"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png" type="button"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv" type="button"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box tall"><canvas id="chartBurn"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12 col-lg-6">
+    <div class="section">
+      <div class="section-header d-flex align-items-center justify-content-between">
+        <span><i class="bi bi-building"></i> Cumplimiento por departamento</span>
+        <div class="chart-toolbar" data-for="chartDep">
+          <button class="btn btn-light btn-sm ct-full" type="button"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom" type="button"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png" type="button"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv" type="button"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartDep"></canvas></div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="section">
+      <div class="section-header d-flex align-items-center justify-content-between">
+        <span><i class="bi bi-person-check"></i> Cumplimiento por responsable</span>
+        <div class="chart-toolbar" data-for="chartRep">
+          <button class="btn btn-light btn-sm ct-full" type="button"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom" type="button"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png" type="button"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv" type="button"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartRep"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex align-items-center justify-content-between">
+        <span><i class="bi bi-graph-up"></i> Tendencia diaria</span>
+        <div class="chart-toolbar" data-for="chartTrend">
+          <button class="btn btn-light btn-sm ct-full" type="button"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom" type="button"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-ma7" type="button"><i class="bi bi-activity"></i> MA7</button>
+          <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button class="btn btn-light btn-sm ct-png" type="button"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv" type="button"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box tall"><canvas id="chartTrend"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12 col-lg-4">
+    <div class="section"><div class="section-header"><i class="bi bi-trophy"></i> Top 3 usuarios con mayor cumplimiento</div><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>Usuario</th><th class="text-end">Real/Plan</th><th class="text-end">Cumpl.</th></tr></thead><tbody>{% for r in top_high[:3] %}<tr><td>{{ r.usuario }}</td><td class="text-end">{{ r.realizadas }}/{{ r.planeadas }}</td><td class="text-end">{{ (r.porc or 0)|round(1) }}%</td></tr>{% else %}<tr><td colspan="3" class="text-muted">Sin datos</td></tr>{% endfor %}</tbody></table></div></div>
+  </div>
+  <div class="col-12 col-lg-4">
+    <div class="section"><div class="section-header"><i class="bi bi-emoji-frown"></i> Top 3 usuarios con menor cumplimiento</div><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>Usuario</th><th class="text-end">Real/Plan</th><th class="text-end">Cumpl.</th></tr></thead><tbody>{% for r in top_low[:3] %}<tr><td>{{ r.usuario }}</td><td class="text-end">{{ r.realizadas }}/{{ r.planeadas }}</td><td class="text-end">{{ (r.porc or 0)|round(1) }}%</td></tr>{% else %}<tr><td colspan="3" class="text-muted">Sin datos</td></tr>{% endfor %}</tbody></table></div></div>
+  </div>
+  <div class="col-12 col-lg-4">
+    <div class="section"><div class="section-header"><i class="bi bi-building-gear"></i> Cumplimiento por departamento</div><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>Departamento</th><th class="text-end">Real/Plan</th><th class="text-end">Cumpl.</th></tr></thead><tbody>{% for r in dept_rows %}<tr><td>{{ r.depto or '—' }}</td><td class="text-end">{{ r.realizadas }}/{{ r.planeadas }}</td><td class="text-end">{{ (r.porc or 0)|round(1) }}%</td></tr>{% else %}<tr><td colspan="3" class="text-muted">Sin datos</td></tr>{% endfor %}</tbody></table></div></div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex align-items-center justify-content-between">
+        <span><i class="bi bi-people"></i> Resumen por usuario y departamento</span>
+        <button class="btn btn-light btn-sm" id="btnExpSummaryCsv" type="button"><i class="bi bi-filetype-csv"></i> CSV</button>
+      </div>
+      <div class="table-responsive">
+        <table id="summary-table" class="table table-sm table-bordered table-hover">
+          <thead><tr><th>Departamento</th><th>Responsable</th><th class="text-end" data-type="int">Planeadas (mes)</th><th class="text-end" data-type="int">Tareas a hoy</th><th class="text-end" data-type="int">Realizadas (mes)</th><th class="text-end" data-type="pct">Cumpl. mes %</th><th class="text-end" data-type="pct">Esperado a hoy %</th><th class="text-end" data-type="pct">Gap %</th><th class="text-end" data-type="pct">Proyección fin mes %</th></tr></thead>
+          <tbody>{% for r in summary_rows %}<tr><td>{{ r.depto or '—' }}</td><td>{{ r.resp or '—' }}</td><td class="text-end">{{ r.plan_mes }}</td><td class="text-end">{{ r.plan_hoy }}</td><td class="text-end">{{ r.real_mes }}</td><td class="text-end">{{ (r.cumpl_mes_pct or 0)|round(1) }}%</td><td class="text-end">{{ (r.esperado_hoy_pct or 0)|round(1) }}%</td>{% set gap = (r.cumpl_mes_pct|float) - (r.esperado_hoy_pct|float) %}<td class="text-end"><span class="{{ 'text-success' if gap >= 0 else 'text-danger' }}">{{ '%0.1f' % gap }}%</span></td><td class="text-end">{{ (r.proy_pct or 0)|round(1) }}%</td></tr>{% else %}<tr><td colspan="9" class="text-muted">Sin datos para este período/filtros</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex align-items-center justify-content-between">
+        <span><i class="bi bi-calendar3"></i> Proyección resto del año</span>
+        <button class="btn btn-light btn-sm" id="btnExpQ4Csv" type="button"><i class="bi bi-filetype-csv"></i> CSV</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0" id="tblQ4">
+          <thead><tr><th data-type="text">Departamento</th><th data-type="text">Responsable</th>{% for c in proj_cols %}<th class="text-end" data-type="pct">Proy. {{ c.label }}</th>{% endfor %}<th class="text-end" data-type="pct">Prom. resto año %</th><th data-type="text">Estado</th></tr></thead>
+          <tbody>{% for r in proj_rows %}<tr><td>{{ r.depto or '—' }}</td><td>{{ r.resp or '—' }}</td>{% for c in proj_cols %}<td class="text-end">{{ (r[c.key] or 0)|round(1) }}%</td>{% endfor %}<td class="text-end fw-semibold">{{ (r.q_total_pct or 0)|round(1) }}%</td><td><span class="badge text-bg-{{ r.estado_level }}">{{ r.estado }}</span></td></tr>{% else %}<tr><td colspan="{{ 4 + (proj_cols|length) }}" class="text-muted">Sin datos</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="feriadosModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="modal-title">Feriados del mes</h6><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
+      <div class="modal-body">
+        <div class="mb-2"><label class="form-label mb-1">Fecha</label><input type="date" id="feriadoFecha" class="form-control form-control-sm"></div>
+        <div class="mb-2"><label class="form-label mb-1">Nombre</label><input type="text" id="feriadoNombre" class="form-control form-control-sm" placeholder="Ej. Carnaval"></div>
+        <div class="mb-2"><label class="form-label mb-1">País</label><input type="text" id="feriadoPais" class="form-control form-control-sm" value="EC"></div>
+        <div class="d-grid"><button class="btn btn-primary btn-sm" id="btnAddFeriado" type="button"><i class="bi bi-plus-lg"></i> Agregar</button></div>
+        <hr class="my-2"><ul class="list-group" id="feriadosList"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="modal-title">Detalle</h6><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
+      <div class="modal-body"><div class="small text-muted" id="detailLabel">—</div><ul class="list-group list-group-flush mt-2" id="detailList"></ul></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planilla/planilla_mensual.css') }}">
+<script src="{{ url_for('static', filename='js/chart.umd.min.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/planilla/dashboard.js') }}" defer></script>
+{% endblock %}

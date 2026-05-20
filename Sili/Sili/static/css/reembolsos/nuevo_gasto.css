@@ -1,0 +1,67 @@
+/* Por defecto: TODO visible */
+.hide-soporte .col-hide-soporte {
+  display: none !important;
+}
+
+.hide-soporte .only-soporte {
+  display: none !important;
+}
+
+.hide-subtotal-fac .col-subtotal-fac {
+  display: none !important;
+}
+
+/* ===== Detalle: alineación limpia ===== */
+#det-body td {
+  vertical-align: top;
+  min-height: 38px;
+}
+
+#det-body input,
+#det-body textarea,
+#det-body select {
+  min-height: 36px;
+  height: 34px;
+  font-size: 0.9rem;
+}
+
+#det-body textarea {
+  height: 34px;
+  resize: none;
+}
+
+/* Estado inválido sin texto debajo */
+#det-body input.is-invalid,
+#det-body textarea.is-invalid,
+#det-body select.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 .12rem rgba(220, 53, 69, .15) !important;
+  background-image: none !important;
+}
+
+#busyModal {
+  z-index: 2055;
+}
+.th-observacion {
+  min-width: 200px;
+}
+
+.th-motivo {
+  min-width: 180px;
+}
+
+.th-centro {
+  min-width: 180px;
+}
+
+.th-indicador {
+  min-width: 90px;
+}
+
+.th-descripcion {
+  min-width: 160px;
+}
+
+.th-actions {
+  width: 1%;
+}

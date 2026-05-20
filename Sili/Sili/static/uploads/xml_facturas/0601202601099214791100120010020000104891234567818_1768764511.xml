@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0601202601099214791100120010020000104891234567818</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-06T16:41:15-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;SUFERSA SA&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;SUFERSA SA&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0992147911001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0601202601099214791100120010020000104891234567818&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;001&lt;/estab&gt;
+    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000010489&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;CAÑAR 1208 Y VILLAVICENCIO&lt;/dirMatriz&gt;
+    &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;06/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;CAÑAR 1208 Y VILLAVICENCIO&lt;/dirEstablecimiento&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;1896.00&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;1896.00&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+        &lt;valor&gt;284.40&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;2180.40&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;2180.4&lt;/total&gt;
+        &lt;plazo&gt;30&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;4461&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PERNO HEXAG INOX 1/2"  X 2-1/2" COMPLETO&lt;/descripcion&gt;
+      &lt;cantidad&gt;100.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.4&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;140.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;140.00&lt;/baseImponible&gt;
+          &lt;valor&gt;21.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;3613&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PERNO HEXAG INOX 1/2"  X 2" COMPLETO&lt;/descripcion&gt;
+      &lt;cantidad&gt;200.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.2&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;240.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;240.00&lt;/baseImponible&gt;
+          &lt;valor&gt;36.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;4404&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PERNO HEXAG INOX 5/8"  X 2.1/2" COMPLETO&lt;/descripcion&gt;
+      &lt;cantidad&gt;200.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.9&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;380.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;380.00&lt;/baseImponible&gt;
+          &lt;valor&gt;57.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;4241&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PERNO HEXAG INOX 5/8"  X 3" COMPLETO&lt;/descripcion&gt;
+      &lt;cantidad&gt;200.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;2.2&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;440.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;440.00&lt;/baseImponible&gt;
+          &lt;valor&gt;66.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;5349&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PERNO HEXAG INOX 5/8"  X 3-1/2" COMPLETO&lt;/descripcion&gt;
+      &lt;cantidad&gt;200.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;2.4&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;480.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;480.00&lt;/baseImponible&gt;
+          &lt;valor&gt;72.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;514&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;DISCO DESBASTE 4-1/2" X 1/4 X 7/8" ACODADO BDA 640 NORTON&lt;/descripcion&gt;
+      &lt;cantidad&gt;36.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.7&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;61.20&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;61.20&lt;/baseImponible&gt;
+          &lt;valor&gt;9.18&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;5017&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PERNO HEXAG INOX 5/16"  X 1-1/2" COMPLETO&lt;/descripcion&gt;
+      &lt;cantidad&gt;180.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.36&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;64.80&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;64.80&lt;/baseImponible&gt;
+          &lt;valor&gt;9.72&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;3793&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PERNO HEXAG INOX 5/16"  X 1" COMPLETO&lt;/descripcion&gt;
+      &lt;cantidad&gt;150.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.3&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;45.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;45.00&lt;/baseImponible&gt;
+          &lt;valor&gt;6.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;4308&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PERNO HEXAG H/NEGRO 3/8" X 1" G8 COMPLETO&lt;/descripcion&gt;
+      &lt;cantidad&gt;100.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.45&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;45.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;45.00&lt;/baseImponible&gt;
+          &lt;valor&gt;6.75&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Observacion: "&gt;OC# 1000603388 DESPACHO# 9293 INGR.# 5000346314&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature613851"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo122464"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID1027933" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature613851-SignedProperties1023639"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;mZs2hxhikHvXp2D7978CDUdnuMA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1645005"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;RnNoIjm0HKx0NYrCkzlBBVzt7yI=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-811613" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Lj6Ix9xzDqtMq1zmSHscSK3kFaM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue748055"&gt;
+b0yWOo1FXjTyvUsvYcO6lSOPRbOHbATUHQQekaFlEtiMcI1Rw8hEysaz7t2hKaqJoLRJzjNnu5t1
+aFQlszx9TnI28FOgtOA6ZmA+R9awznG3IElmrWTJyCkbmuP1gO9Ki6dcX/6pcuKCIw+q8CUwYWSR
+/Mnboi6Ecit8C/8tcoDY7XTsjjWS/vyOdb0IfiQ7llg7xYIXgyILXfM3rvBBKYaT4Vs1WPDCYtfd
+el+diOLNfIcn/1OC+TzcXpUvyC1C/0F3foRXVPNdgqmCABTHdWcR0dOBIHb8ppIICM8JKDpS5MTC
+n9xNPlbeC+Yq93z7HqhP5YDAJVO0Uke3SXmMbg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1645005"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKBTCCB+2gAwIBAgIIM46Te3Vi+58wDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTIzMTExNTIwMjIwMFoXDTI2MTExNDIwMjIwMFowge0xCzAJBgNVBAYTAkVDMTMwMQYDVQQKDCpT
+VUZFUlNBIFMuQS4gU1VNSU5JU1RSTyBGRVJSRVRFUk8gU09DSUVEQUQxGDAWBgNVBAwMD0dFUkVO
+VEUgR0VORVJBTDEWMBQGA1UEBAwNUk9NRVJPIENVTENBWTEXMBUGA1UEKgwOSk9SR0UgV0lMRlJJ
+RE8xGTAXBgNVBAUTEElEQ0VDLTA5MTIxMjcxMDcxJTAjBgNVBAMMHEpPUkdFIFdJTEZSSURPIFJP
+TUVSTyBDVUxDQVkxHDAaBgNVBGEME1ZBVEVDLTA5OTIxNDc5MTEwMDEwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQCVus6dM1J1z3FEcrMo4bGEWCzmSy+XHZgqy6oPjRbsV7oPPEfmctKF
+HRTHHHuhWFfUlQxUSnYEegb5YE7eNTnavl0xf6NakoQ+LmEuq5chBeqwUecxwO6vuxb1c5TOGb1d
+CBqnd1OM/JGsr3JOThulFQV6IsauZGtZrxg5oUxSgp6pW4iodGh1UcApTVxWaovwE8053riddHBN
+GPe+1xZTVMlFlmWxCcj2rtL/Mx0vwyyWfX6UHviD1Wg9QTYU5YoBACsEkwhBxyDrFsIputW7BnUu
+xYmFat9EJ0EASuFKq481et7E5a9BdrfFq71CUkYHBPoOa2JF0lX2BUJTQjM/AgMBAAGjggTaMIIE
+1jAbBgsrBgEEAYLxNmYDAQQMDAowOTEyMTI3MTA3MB4GCysGAQQBgvE2ZgMLBA8MDTA5OTIxNDc5
+MTEwMDEwgdcGCCsGAQUFBwEBBIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNh
+LmNvbS9wdWJsaWMvZG93bmxvYWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYG
+CCsGAQUFBzABhipodHRwOi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYI
+KwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNV
+HQ4EFgQUWT34Vt5fWRU1N9+sPCHtjRsVB6MwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dg
+c84HRqnio2jw4RGydJJz/TCBjgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEF
+BQcCARYraHR0cHM6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEF
+BQcCAjApDCdDRVJUSUZJQ0FETyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSB
+hzCBhDBAoD6gPIY6aHR0cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1
+Ym9yZGluYWRhLmNybDBAoD6gPIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kv
+Y3JsL0NBMnN1Ym9yZGluYWRhLmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUH
+AwIGCCsGAQUFBwMEMIICGwYDVR0RBIICEjCCAg6BF2Vyd19mcmFuY2lzQGhvdG1haWwuY29toBsG
+CysGAQQBgvE2ZgMBoAwMCjA5MTIxMjcxMDegHwYLKwYBBAGC8TZmAwKgEAwOSk9SR0UgV0lMRlJJ
+RE+gFwYLKwYBBAGC8TZmAwOgCAwGUk9NRVJPoBcGCysGAQQBgvE2ZgMEoAgMBkNVTENBWaAgBgsr
+BgEEAYLxNmYDBaARDA9HRVJFTlRFIEdFTkVSQUygcgYLKwYBBAGC8TZmAwegYwxhQ0FBUiBOTUVS
+TzogMTIwOCBJTlRFUlNFQ0NJTjogVklMTEFWSUNFTkNJTyBSRUZFUkVOQ0lBOiBGUkVOVEUgQSBK
+QVJESU4gREUgSU5GQU5URVMgTE9TIFBJTExVRUxPU6AfBgsrBgEEAYLxNmYDCKAQDA4wMDU5Mzkz
+OTMzMjgwOKAaBgsrBgEEAYLxNmYDCaALDAlHVUFZQVFVSUygOwYLKwYBBAGC8TZmAwqgLAwqU1VG
+RVJTQSBTLkEuIFNVTUlOSVNUUk8gRkVSUkVURVJPIFNPQ0lFREFEoB4GCysGAQQBgvE2ZgMLoA8M
+DTA5OTIxNDc5MTEwMDGgEwYLKwYBBAGC8TZmAwygBAwCRUOgJAYLKwYBBAGC8TZmAzKgFQwTUkVQ
+UkVTRU5UQU5URSBMRUdBTKAYBgsrBgEEAYLxNmYDM6AJDAdBUkNISVZPMA0GCSqGSIb3DQEBCwUA
+A4ICAQAbrfL3ay7JWqeUaC2jlaaauc1dwbTM6AjXl6FGAfWBoY80pg8JokTKI8Ff/MSO/6JU03su
+K4ikQO9ZV6U2cxbyCGZCue37oSS9MpKOxTR9thsmWStkbdFHRFgB4Cg08NEyqUKHyscSpZIwK2sh
+eeVSWArJDPljvMIQfywYbWTMp8EZtKn68KyDG08mwk813/KaM2r/wyUbDckvbmtGcMj2VPnG0S2e
+ARiH0xGqJEpboFDDTvuebTGEDJgMAyUsBW/A0hogXwRQMZG2t702DEBPjks/4B/dzAhwdnbcw002
+GGk/1c15z7fzni/EHNGvdcM5O7e4Xm4XnwaDu1QxHoahoUGik2RFajsg6fcsl+3ZLeSts2dbaOQ5
+m8BmBYhzrU/nE0NqdCGoT8i3y43ysjqgYwAwfG7nkJ0vfW/Jb7bRl2p36XgdNPK36hb0UBs6Oc/T
+lrH6GrFRa+oUhJf0hWuZFYYHL6+ZoLLqOG1/S2QNd5hlWIIJ8CJsVlqFkKkYAS0bvL34WHfXdJfL
+JlUHSRruVUf2yZM+yINih9gBlLdP3Uq+sqwpmUg7+/H7jXeeK7b5vD9umYZqhR/UrVi6gOabSRyg
+TtfV1psqQDQT2XH5wEECbHlaEgx3ChEOz3kJafg36s77VVDovyzNkCoXlSY9wNfUCljf3aWxKSHC
+ur8tRQ==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+lbrOnTNSdc9xRHKzKOGxhFgs5ksvlx2YKsuqD40W7Fe6DzxH5nLShR0Uxxx7oVhX1JUMVEp2BHoG
++WBO3jU52r5dMX+jWpKEPi5hLquXIQXqsFHnMcDur7sW9XOUzhm9XQgap3dTjPyRrK9yTk4bpRUF
+eiLGrmRrWa8YOaFMUoKeqVuIqHRodVHAKU1cVmqL8BPNOd64nXRwTRj3vtcWU1TJRZZlsQnI9q7S
+/zMdL8Msln1+lB74g9VoPUE2FOWKAQArBJMIQccg6xbCKbrVuwZ1LsWJhWrfRCdBAErhSquPNXre
+xOWvQXa3xau9QlJGBwT6DmtiRdJV9gVCU0IzPw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature613851-Object53945"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature613851"&gt;
+                &lt;etsi:SignedProperties Id="Signature613851-SignedProperties1023639"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-06T16:40:45-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;PjaarBPTfWn2vOpfIlONupWE6Gk=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;3715068901086919583&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-811613"&gt;
+                            &lt;etsi:Description&gt;SUFERSA 2020 &lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>MENDOZA ALVARADO JOSE LUIS</razonSocial>
+	    <nombreComercial>JM Restaurante Chi Cha Rron</nombreComercial>
+	    <ruc>0923441968001</ruc>
+	    <claveAcceso>0105202601092344196800120010020000488830000000013</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>002</ptoEmi>
+	    <secuencial>000048883</secuencial>
+	    <dirMatriz>GUAYAS / GUAYAQUIL / JUAN GÓMEZ RENDÓN PROGRESO / KM 57 VIA A LA COSTA NN</dirMatriz>
+		
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>01/05/2026</fechaEmision>
+		
+			<dirEstablecimiento>GUAYAS / GUAYAQUIL / JUAN GÓMEZ RENDÓN PROGRESO / KM 57 VIA A LA COSTA NN</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>NO</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>GYE</direccionComprador>
+	    
+	    <totalSinImpuestos>31.35000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>8</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>31.35</baseImponible>
+				<valor>2.51000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>33.86000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>01</formaPago>
+	    		<total>33.86</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>201</codigoPrincipal>
+		<codigoAuxiliar>201</codigoAuxiliar>
+      	<descripcion>LB COMIDA ESPECIAL</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>9.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>9.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>8</codigoPorcentaje>
+          <tarifa>8</tarifa>
+          <baseImponible>9.00000</baseImponible>
+          <valor>0.72</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>003</codigoPrincipal>
+		<codigoAuxiliar>003</codigoAuxiliar>
+      	<descripcion>BOLON MIXTO</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.400000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.40</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>8</codigoPorcentaje>
+          <tarifa>8</tarifa>
+          <baseImponible>2.40000</baseImponible>
+          <valor>0.19</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>001</codigoPrincipal>
+		<codigoAuxiliar>001</codigoAuxiliar>
+      	<descripcion>BOLON CHICHARRON</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.400000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.40</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>8</codigoPorcentaje>
+          <tarifa>8</tarifa>
+          <baseImponible>2.40000</baseImponible>
+          <valor>0.19</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>101</codigoPrincipal>
+		<codigoAuxiliar>101</codigoAuxiliar>
+      	<descripcion>LB COMIDA MIXTA</descripcion>
+      
+      <cantidad>2.100000</cantidad>
+      <precioUnitario>7.070000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>14.85</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>8</codigoPorcentaje>
+          <tarifa>8</tarifa>
+          <baseImponible>14.85000</baseImponible>
+          <valor>1.19</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>014</codigoPrincipal>
+		<codigoAuxiliar>014</codigoAuxiliar>
+      	<descripcion>JUGOS</descripcion>
+      
+      <cantidad>2.000000</cantidad>
+      <precioUnitario>1.350000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.70</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>8</codigoPorcentaje>
+          <tarifa>8</tarifa>
+          <baseImponible>2.70000</baseImponible>
+          <valor>0.22</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+	
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+    	
+    		
+    			<campoAdicional nombre="Descripción">VENTA PUNTO DE VENTA</campoAdicional>
+    		
+    	
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature422359">
+<ds:SignedInfo Id="Signature-SignedInfo85535">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID286278" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature422359-SignedProperties352065">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>MKkNmmWqdH5KjF/doTQCVPwZtV4=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate951309">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>prNWj7FnGo4iuyyyb3wSP+l7UdM=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-413507" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>HD2MGn52APczldshk/LsQc91okY=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue381550">
+joUO2XB8igohMO7Y9A2gXPOWvZforDpQSaEb0+BD7K+ByEc6Ja9dTKlFzleMSP02WZbVOpb6NHxK
+B7cKSRgMQa/76SmUCyQ5BaqQMd7pg5MfQ68u6Bm/asWYqOPAmjRE/dMRECHYWt2dG3ECRnrAyJkh
++mhmlqQ3aq/Kx9nz9Gy8zPYkl+FO+pWVHI4BHGr+oLaytKd1iq8MEK5B7ambdpoBBf18FCV7Wp+D
+31v3vXc2FiNYP6O3YRY+OxZThjVk8ROLAee6AaFWaQ7ouAv1ersGScTuRZohlGXyVph654KiF8Qo
+uZcmJ66P5QHdUIkJ6pL9/Ktyo2dGZGOY3vDV0A==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate951309">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJQTCCBymgAwIBAgIIOg9MfQvjIGswDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI0MTAzMTIyNTUwMFoXDTI2MTAzMTIyNTUwMFowgZoxCzAJBgNVBAYTAkVDMRkwFwYDVQQEDBBN
+RU5ET1pBIEFMVkFSQURPMRIwEAYDVQQqDAlKT1NFIExVSVMxGTAXBgNVBAUTEElEQ0VDLTA5MjM0
+NDE5NjgxIzAhBgNVBAMMGkpPU0UgTFVJUyBNRU5ET1pBIEFMVkFSQURPMRwwGgYDVQRhDBNUSU5F
+Qy0wOTIzNDQxOTY4MDAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlhq3nSI8js5h
+vbUXbeLU0zfvSkiCWmshAg6nXGHKen6TJs5sJper/DECqZyhCZSmQ+LP8At8CqOvN43ppDxo+6F6
+n3DMQUElPxxy86717iXCBcONKOQCtRIkGKM12FKi8VnPcFEF7TyQJlG8tQwiF2Zo6HIELUWUjzur
+sPvTI6aZgtBjWEf4zseE2g+QY2bdHOeSgPVcgAMQ4C2gO+DrvFodke0QjAu7WaayFS+EcytO3LqP
+5CI/nkF4Xfg9FGM6SC7ciyQhZhiXrvEXZtUezrjkgeih4jonoxULnq7/UEM/+GbDZDBQ+BFFj1bo
+k2dFoccY/Ip+lC+iIaKBYL9o2QIDAQABo4IEaTCCBGUwGwYLKwYBBAGC8TZmAwEEDAwKMDkyMzQ0
+MTk2ODAeBgsrBgEEAYLxNmYDCwQPDA0wOTIzNDQxOTY4MDAxMIHXBggrBgEFBQcBAQSByjCBxzBV
+BggrBgEFBQcwAoZJaHR0cDovL3d3dy51YW5hdGFjYS5jb20vcHVibGljL2Rvd25sb2FkL3RzcF9j
+ZXJ0aWZpY2F0ZXMvc3Vib3JkaW5hdGUxLmNydDA2BggrBgEFBQcwAYYqaHR0cDovL29jc3AxLnVh
+bmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDIudWFu
+YXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wHQYDVR0OBBYEFCBojMV8VJQjIkCWh8JKLfiwDbam
+MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUfVfnYHPOB0ap4qNo8OERsnSSc/0wgZkGA1UdIASB
+kTCBjjCBiwYMKwYBBAGC8TZmAgEBMHswNwYIKwYBBQUHAgEWK2h0dHBzOi8vd3d3LnVhbmF0YWNh
+LmNvbS9wdWJsaWMvcGtpL2RwYy1lYy8wQAYIKwYBBQUHAgIwNAwyQ0VSVElGSUNBRE8gREUgUEVS
+U09OQSBOQVRVUkFMIE8gRklTSUNBIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6aHR0
+cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDBA
+oD6gPIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGlu
+YWRhLmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIIB
+nwYDVR0RBIIBljCCAZKBJHJlc3RhdXJhbnRlX2VsY2hpY2hhcnJvbkBvdXRsb29rLmNvbaAbBgsr
+BgEEAYLxNmYDAaAMDAowOTIzNDQxOTY4oBoGCysGAQQBgvE2ZgMCoAsMCUpPU0UgTFVJU6AYBgsr
+BgEEAYLxNmYDA6AJDAdNRU5ET1pBoBkGCysGAQQBgvE2ZgMEoAoMCEFMVkFSQURPoEUGCysGAQQB
+gvE2ZgMHoDYMNEdVQVlBUyAvIEdVQVlBUVVJTCAvIEpVQU4gR01FWiBSRU5ETiBQUk9HUkVTTyAg
+LyBTL06gHwYLKwYBBAGC8TZmAwigEAwOMDA1OTM5OTk1MTcyMjWgGgYLKwYBBAGC8TZmAwmgCwwJ
+R1VBWUFRVUlMoB4GCysGAQQBgvE2ZgMLoA8MDTA5MjM0NDE5NjgwMDGgEwYLKwYBBAGC8TZmAwyg
+BAwCRUOgKQYLKwYBBAGC8TZmAzKgGgwYUEVSU09OQSBOQVRVUkFMIE8gRklTSUNBoBgGCysGAQQB
+gvE2ZgMzoAkMB0FSQ0hJVk8wDQYJKoZIhvcNAQELBQADggIBAI3lkXRzVpoZK4e1mDT2+Q8le7DK
+67gt8glw7bJKIOpw9fL2/N/vNtI/4LgbEVY1VIq7GsBGjaMR2Lhotw6JyTkLkHRMhJk9vkuve2Qx
+BUza4vFqpe97O6pqprINf5SU41Uy8g+qiXq59aCXxeFTPS/+PdrmtB3U5zjoO9tif0rKRn/VnrD8
+f5zHX2wotSYZfvVMV7YQaOjtUIhL9AcnG2HngtztmeIMdi26c6uolHvjiTyANtoiprAulUAyQB5o
+HaArrh/QEEphOtDq4lQm568v1OLEDzMwYG3vixG8HDScVzqFe6XUnMQCE4UmXfDIGuoQmDrrEoOc
+REDQN0mXtvzndCKqiP/KWZXpcbFLysR6hM1LUjERi9yoiVntczg8bw9jK1sN/XPUloaRnkyN5TfQ
+cnae29xYb+atcQ/2ZdoCz83zfO8oPTn9PZcTPK5iBOw+YZI1JDYnx4rsBJMWGiWI7Zy4L+XBNzlt
+AbTfs9KKoro8O/PIwUqStTfjD8cUvxvZ/pKWzlxs8jpD22iDQmMT7q73woA5KZrAz/+siSqyoCj2
+tnSXhHMaJLB0uV3uBVlyiKUFaD/lbezhIKz/NOdQhExOw48Vmg3W4SwziUfl5WZ9UlpXJWYe5MWs
+7NX9ZqpwZsuy2Sg41i9K4Lrk/lyqbLjwN7qDtBI/jC7jFUL6
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+lhq3nSI8js5hvbUXbeLU0zfvSkiCWmshAg6nXGHKen6TJs5sJper/DECqZyhCZSmQ+LP8At8CqOv
+N43ppDxo+6F6n3DMQUElPxxy86717iXCBcONKOQCtRIkGKM12FKi8VnPcFEF7TyQJlG8tQwiF2Zo
+6HIELUWUjzursPvTI6aZgtBjWEf4zseE2g+QY2bdHOeSgPVcgAMQ4C2gO+DrvFodke0QjAu7Waay
+FS+EcytO3LqP5CI/nkF4Xfg9FGM6SC7ciyQhZhiXrvEXZtUezrjkgeih4jonoxULnq7/UEM/+GbD
+ZDBQ+BFFj1bok2dFoccY/Ip+lC+iIaKBYL9o2Q==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature422359-Object911358"><etsi:QualifyingProperties Target="#Signature422359"><etsi:SignedProperties Id="Signature422359-SignedProperties352065"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-01T11:58:46-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>lhQ5+J8RS0oJL1uUWcr43vl9aw8=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA</ds:X509IssuerName><ds:X509SerialNumber>4183646678804537451</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

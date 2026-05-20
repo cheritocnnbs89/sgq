@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo parámetro{% endblock %}
+{% block content %}
+<h4 class="mb-3">Nuevo parámetro</h4>
+<div class="card card-custom shadow-sm">
+  <div class="card-body">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('nuevo_parametro') }}">
+      <!-- 🔐 CSRF TOKEN -->
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label class="form-label">Nombre del parámetro</label>
+        <input type="text" name="nombre" class="form-control" required>
+      </div>
+      <button class="btn btn-primary">Guardar</button>
+      <a href="{{ url_for('parametros_generales') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

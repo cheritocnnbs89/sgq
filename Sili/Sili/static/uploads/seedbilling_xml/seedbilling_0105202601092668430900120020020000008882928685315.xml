@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>Alvarado Perez Erick Wilson</razonSocial><nombreComercial>SEA</nombreComercial><ruc>0926684309001</ruc><claveAcceso>0105202601092668430900120020020000008882928685315</claveAcceso><codDoc>01</codDoc><estab>002</estab><ptoEmi>002</ptoEmi><secuencial>000000888</secuencial><dirMatriz>Rosendo Aviles 5927 y 45ava - 46 Ava</dirMatriz></infoTributaria><infoFactura><fechaEmision>01/05/2026</fechaEmision><dirEstablecimiento>Pradera I Bloque 1A Dpto 2</dirEstablecimiento><obligadoContabilidad>NO</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A.QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>AV.ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE</direccionComprador><totalSinImpuestos>1900.00</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>1900.00</baseImponible><valor>285.00</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>2185.00</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>2185.00</total><plazo>30</plazo><unidadTiempo>días</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><descripcion>ABR. SERV.TECNICO ELECTRICO CLSO</descripcion><cantidad>1.000000</cantidad><precioUnitario>950.000000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>950.00</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>950.00</baseImponible><valor>142.50</valor></impuesto></impuestos></detalle><detalle><descripcion>ABR. SERV.TECNICO ELECTRICO TTMTO</descripcion><cantidad>1.000000</cantidad><precioUnitario>950.000000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>950.00</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>950.00</baseImponible><valor>142.50</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Contribuyente">Regimen General</campoAdicional><campoAdicional nombre="Proyecto">SERVICIO DE TECNICOS  ELECTRICO CLSO Y MTTO</campoAdicional><campoAdicional nombre="Dependencia">QUIMPAC ECUADOR - GUAYAQUIL</campoAdicional><campoAdicional nombre="Pedido de Compra">7500054860</campoAdicional><campoAdicional nombre="Hoja de Entrada">1001612997</campoAdicional><campoAdicional nombre="Hoja de Entrada 2">1001612998</campoAdicional><campoAdicional nombre="Anticipo">No</campoAdicional></infoAdicional><ds:Signature Id="Signature90575" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo181820">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID664962" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature90575-SignedProperties654286">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>64Mti0WIy1GORGIlOf+Wk/stKl0=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1312798">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>1cYDSBxCMO4heGzJmAdnCMzJLKM=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-516491" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>yC2p5JU9aBvV3oZcUYMcvRzwj2Y=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue555471">
+AA8bGiufwhgVg5l6IQrbbASgBhVRSu0RzDAF1lh+zGWt49NrkaevFbJUOc58p43mFeEqR2B2YjnU
+NuIPcVE6/TV7zMoqidvb0RM5gAqO7FHtUOix6+CHuAoGZ0x8b0bfDpEt/rgKHjL9jjIR//Md/1KR
+gtXDvWIMevtPCM6ijxGgSE/nMOPVgUmYCAL0PNXPM4K5vHyS5IHmnaX6E+3AxsY9wZxKtEE8iGR7
+krzrfLyeYtJ3ZZg8xEe+sfVEiIUyUrpsiCi8XQE3hjc7TQHLRjmU7b4StIZlT1ksGSIpKg2rE1Af
+UzjXUWmThSnGCVGVOvSM0/moaVu/lS4xdnYnvg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1312798">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIHrzCCBZegAwIBAgIQWhja2XTNZfIVaPK79xOVgjANBgkqhkiG9w0BAQsFADCBtTELMAkGA1UE
+BhMCRUMxGDAWBgNVBAoMD0RhdGlsbWVkaWEgUy5BLjEwMC4GA1UECwwnRW50aWRhZCBkZSBjZXJ0
+aWZpY2FjaW9uIGRlIGluZm9ybWFjaW9uMQ8wDQYDVQQIDAZHdWF5YXMxNTAzBgNVBAMMLERhdGls
+IEF1dG9yaWRhZCBkZSBDZXJ0aWZpY2FjaW9uIFN1Ym9yZGluYWRhMRIwEAYDVQQHDAlHdWF5YXF1
+aWwwHhcNMjUxMDE2MTIxNjI3WhcNMjcxMDE2MTMxNjI3WjCBjTEkMCIGA1UEAwwbRXJpY2sgV2ls
+c29uIEFsdmFyYWRvIFBlcmV6MScwJQYJKoZIhvcNAQkBFhhzZWEuZ2VyZW5jaWFAb3V0bG9vay5j
+b20xDjAMBgNVBAoMBURhdGlsMR8wHQYDVQQLDBZDZXJ0aWZpY2Fkb3MgRGlnaXRhbGVzMQswCQYD
+VQQGEwJFQzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANRfjid46WsMKaRmtC3EbfoD
+8+G88/QuAcngzOVm9r6Tl/jNaDtEdK96Cz16VTRx30uXEfWtbb80LpbNAX/UptX0qyf59IHNYCKV
+vv+Vzechyp3YPg7WQ1PGRKVUq+FzSTLgtdciaYti7nRpsbZG9caFAuP14Y8xeUWvjAS5LzquLccH
+98qvsH6p20SvoXYE3baJNu54FOxufP1gjam1SJhS1YdU/mIvRFscpbMqxZXC65keZEwGn9JjSKk+
++DOO5Vt7UvU2ja2z7wdY/uksIzMt1EbvGqg9flHnt5nbfkf6e7sARr1tef4HIj8jbMX4J56Ue5iy
+2S0miy8bdoGlLyECAwEAAaOCAt8wggLbMCMGA1UdEQQcMBqBGHNlYS5nZXJlbmNpYUBvdXRsb29r
+LmNvbTAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFOVm+bJ4dhtq9M/LeFDFBR86neB3MB0GA1UdDgQW
+BBSxbQSnDl4iVC9+gtyEuSIyaqfccDCBogYDVR0gBIGaMIGXMIGUBgsrBgEEAYObIwIFATCBhDCB
+gQYIKwYBBQUHAgEWdWh0dHBzOi8vZGF0aWwtb3MtcHVibGljLnMzLnVzLXdlc3QtMi5hbWF6b25h
+d3MuY29tLzk4ZTIxZGJkLWI2ZWMtNGU4My1iOWU5LWQ0YWUxMmI0ZDk2Ny9EYXRpbF9DUFNfUGVy
+c29uYV9OYXR1cmFsLnBkZjBvBgNVHR8EaDBmMGSgYqBghl5odHRwOi8vZGF0aWwtc3ViY2EtY3Js
+LnMzLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tL2NybC9hMDc4OGVlMC03OGJiLTQwNmItYjM4YS0z
+MmUzNmFhNGRiZGIuY3JsMDEGCCsGAQUFBwEBBCUwIzAhBggrBgEFBQcwAYYVaHR0cDovL29jc3Au
+ZGF0aWwuY29tMA4GA1UdDwEB/wQEAwIGwDAdBgorBgEEAYObIwMLBA8MDTA5MjY2ODQzMDkwMDEw
+GgYKKwYBBAGDmyMDAQQMDAowOTI2Njg0MzA5MBwGCisGAQQBg5sjAwIEDgwMRXJpY2sgV2lsc29u
+MBgGCisGAQQBg5sjAwMECgwIQWx2YXJhZG8wFQYKKwYBBAGDmyMDBAQHDAVQZXJlejAZBgorBgEE
+AYObIwMHBAsMCUd1YXlhcXVpbDAZBgorBgEEAYObIwMIBAsMCTA5OTk5OTk5OTAZBgorBgEEAYOb
+IwMJBAsMCUd1YXlhcXVpbDASBgorBgEEAYObIwMMBAQMAkVDMCEGCisGAQQBg5sjAyAEEwwRMDAx
+LTAwMi0wMDAwMzU0NjYwDQYJKoZIhvcNAQELBQADggIBAIE+TvTFwW0np0ZAcOmQbx/p4RUUX16C
+yLJw1nmSann7gGAmSZKz7a+cGRUSShqJsGyZAjqDdEHBJDB/pB/MYP6ohBZ50cTn9YltSvlGBaWd
+rCAtSin1du7wHDYwMF2ieit1FA3YnXh4gMYgjZU9O5rPAZtHxFtCjDRlkHZbGqWN68r69ZrVcNfp
+pZN4LBpcWEDjYLDRM2rSU8MEtNICxdbgBbaV5EnMSEPi2DuXcaFQoQCLvJNSF8RGIyrVX/sVYMkk
+BEIdM/5CpnxVXlWxKl/XZ/TjLJlMHeJbs2qgMKmfjhtBEb09aSb5Pa808QBENeSRUUZRi3Ifv2lJ
+z2dnlyKv1gGQ4aRLQL0maGX5Nu7vwOh3ztMJIHVlRId219k8dobw7wkqlfGBgsS6IEZ+6ZV8ILN4
+NK+7YMrWEga6/RGJ2GWuShuOXRMXiNiwGoK9VUewQUiYKM9miKG815r4zdhhZqE8rQKs1eNoi/dP
+iHztBIfK49mYuVIgNm+iNDth8u6fXyl4dRXPMJ+o/bhMSRvhu/ql55eIFYv0ahsrvMYIkTLqv+hj
+hiUg8rISC0MxDzAzWqDoBWz5x6ITh4KBeeee3dIb2Hjchc5vjTnzkxBiAiDkqOI8Vit5QmVxGVlJ
+Yb0K4qU0zyYRMAyLDeyJn5HKRBl3jzeyQNMYfaxVnqNC
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+1F+OJ3jpawwppGa0LcRt+gPz4bzz9C4ByeDM5Wb2vpOX+M1oO0R0r3oLPXpVNHHfS5cR9a1tvzQu
+ls0Bf9Sm1fSrJ/n0gc1gIpW+/5XN5yHKndg+DtZDU8ZEpVSr4XNJMuC11yJpi2LudGmxtkb1xoUC
+4/XhjzF5Ra+MBLkvOq4txwf3yq+wfqnbRK+hdgTdtok27ngU7G58/WCNqbVImFLVh1T+Yi9EWxyl
+syrFlcLrmR5kTAaf0mNIqT74M47lW3tS9TaNrbPvB1j+6SwjMy3URu8aqD1+Uee3mdt+R/p7uwBG
+vW15/gciPyNsxfgnnpR7mLLZLSaLLxt2gaUvIQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature90575-Object203075"><etsi:QualifyingProperties Target="#Signature90575"><etsi:SignedProperties Id="Signature90575-SignedProperties654286"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-01T21:12:35+00:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>5Lo4EVGtcHct8e5G7SxNVa4w/u8=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>L=Guayaquil,CN=Datil Autoridad de Certificacion Subordinada,ST=Guayas,OU=Entidad de certificacion de informacion,O=Datilmedia S.A.,C=EC</ds:X509IssuerName><ds:X509SerialNumber>119759573539200698440907658023209768322</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-516491"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

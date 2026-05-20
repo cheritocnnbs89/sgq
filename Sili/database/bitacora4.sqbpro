@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="bitacora.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="10243"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="areas" custom_title="0" dock_id="1" table="4,5:mainareas"/><table title="menu_items" custom_title="0" dock_id="2" table="4,10:mainmenu_items"/><dock_state state="000000ff00000000fd0000000100000002000004e700000202fc0100000001fc00000000000004e70000012900fffffffa000000010100000002fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000011e00fffffffb000000160064006f0063006b00420072006f00770073006500320100000000ffffffff0000012900ffffff000002c30000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="menu_items" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="65"/><column index="3" value="295"/><column index="4" value="287"/><column index="5" value="78"/><column index="6" value="167"/><column index="7" value="60"/><column index="8" value="167"/><column index="9" value="167"/><column index="10" value="57"/><column index="11" value="63"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">CREATE TABLE contratos (
+
+  id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  anio                 INTEGER,                     -- AÑO (cabecera)
+
+  pedido               TEXT NOT NULL,               -- Nº de pedido (único por año opcional)
+
+  proveedor            TEXT NOT NULL,
+
+  objeto               TEXT NOT NULL,               -- &quot;Objeto Contrato&quot;
+
+  valor_contrato       REAL NOT NULL DEFAULT 0,
+
+  valor_anticipo       REAL NOT NULL DEFAULT 0,
+
+  tipo_pp              TEXT NOT NULL CHECK (tipo_pp IN ('PAGARE','POLIZA','AMBOS')),
+
+  fecha_suscripcion    TEXT,                        -- 'YYYY-MM-DD'
+
+  fecha_terminacion    TEXT,                        -- 'YYYY-MM-DD'
+
+  plazo_dias           INTEGER,                     -- Plazo en días
+
+  cronograma_pagos     TEXT,                        -- Texto libre
+
+  fecha_entrega_compras            TEXT,            -- 'YYYY-MM-DD'
+
+  fecha_firma_gerencia            TEXT,            -- 'YYYY-MM-DD'
+
+  fecha_entrega_finanzas_sumilla  TEXT,            -- 'YYYY-MM-DD'
+
+  fecha_entrega_originales_fin    TEXT,            -- 'YYYY-MM-DD'
+
+  fechas_pago_anticipo TEXT,                        -- Texto libre
+
+  fecha_entrega_pedido TEXT,                        -- 'YYYY-MM-DD'
+
+  observaciones         TEXT,
+
+  status_interno        TEXT,                       -- columna de la grilla
+
+  -- Auditoría / pertenencia
+
+  departamento_id       INTEGER,                    -- FK -&gt; departamentos.id
+
+  creado_por            INTEGER,                    -- FK -&gt; usuarios.id
+
+  creado_at             TEXT NOT NULL DEFAULT (datetime('now')),
+
+  actualizado_at        TEXT,
+
+  -- Aprobación (Gerencias)
+
+  aprobado              INTEGER NOT NULL DEFAULT 0, -- 0/1
+
+  aprobado_por          INTEGER,                    -- FK -&gt; usuarios.id (quien aprueba)
+
+  aprobado_en           TEXT, usuario_solicitante_id INTEGER, usuario_compras_id INTEGER, aprobado_jefe INTEGER DEFAULT 0, aprobado_jefe_por INTEGER, aprobado_jefe_en TEXT, usuario_compras_nombre TEXT, aprob_gf INTEGER DEFAULT 0, disabled INTEGER DEFAULT 0,
+
+  FOREIGN KEY(departamento_id) REFERENCES departamentos(id) ON UPDATE CASCADE,
+
+  FOREIGN KEY(creado_por)      REFERENCES usuarios(id)       ON UPDATE CASCADE,
+
+  FOREIGN KEY(aprobado_por)    REFERENCES usuarios(id)       ON UPDATE CASCADE
+
+)
+ 
+CREATE TABLE garantias (
+
+  id                        INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  contrato_id               INTEGER NOT NULL,             -- FK -&gt; contratos.id
+
+  tipo                      TEXT NOT NULL CHECK (tipo IN ('PAGARE','POLIZA')),
+
+  compania_emisora          TEXT,
+
+  monto_poliza              REAL NOT NULL DEFAULT 0,
+
+  fecha_suscripcion         TEXT,                         -- 'YYYY-MM-DD'
+
+  fecha_vencimiento         TEXT,                         -- 'YYYY-MM-DD'
+
+  fecha_vencimiento_actual  TEXT,                         -- 'YYYY-MM-DD'
+
+  vigencia_dias             INTEGER,
+
+  estado                    TEXT NOT NULL DEFAULT 'Vigente',  -- 'Vigente','Vencida','Liberada','Anulada', etc.
+
+  fecha_renovacion          TEXT,                         -- 'YYYY-MM-DD'
+
+  requiere_renovacion       INTEGER NOT NULL DEFAULT 0,   -- 0/1
+
+  status_interno            TEXT,
+
+  observaciones             TEXT,                         -- Verificación/Observaciones
+
+  creado_at                 TEXT NOT NULL DEFAULT (datetime('now')),
+
+  actualizado_at            TEXT,
+
+  -- Aprobación (Gerencias) – si decides aprobar cada póliza/pagaré individual
+
+  aprobado                  INTEGER NOT NULL DEFAULT 0,   -- 0/1
+
+  aprobado_por              INTEGER,
+
+  aprobado_en               TEXT, aprobado_jefe INTEGER DEFAULT 0, aprobado_jefe_por INTEGER, aprobado_jefe_en TEXT, aprob_gf INTEGER DEFAULT 0, disabled INTEGER DEFAULT 0,
+
+  FOREIGN KEY(contrato_id)  REFERENCES contratos(id) ON DELETE CASCADE ON UPDATE CASCADE,
+
+  FOREIGN KEY(aprobado_por) REFERENCES usuarios(id)  ON UPDATE CASCADE
+
+)
+ </sql><current_tab id="0"/></tab_sql></sqlb_project>

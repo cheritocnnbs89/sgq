@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0312202501179242893900120040010000040171234567813</numeroAutorizacion>
+    <fechaAutorizacion>2025-12-03T15:59:29-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;FRANGOURMET S.A&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;KO&lt;/nombreComercial&gt;
+        &lt;ruc&gt;1792428939001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0312202501179242893900120040010000040171234567813&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;004&lt;/estab&gt;
+        &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000004017&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;AV.FRANCISCO DE ORELLANA PLAZA DANIN CC SAN MARINO SHOPPING LOCAL P1-03 PISO 1&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;03/12/2025&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;AV.FRANCISCO DE ORELLANA PLAZA DANIN CC SAN MARINO SHOPPING LOCAL P1-03 PISO 1&lt;/dirEstablecimiento&gt;
+        &lt;obligadoContabilidad&gt;NO&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;73.6&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;73.6&lt;/baseImponible&gt;
+                &lt;valor&gt;11.04&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;7.36&lt;/propina&gt;
+        &lt;importeTotal&gt;92&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;19&lt;/formaPago&gt;
+                &lt;total&gt;92&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000087&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000087&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;AGUA SIN GAS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.4&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.4&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.4&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.36&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000087&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000087&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;AGUA SIN GAS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.4&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.4&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.4&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.36&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000087&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000087&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;AGUA SIN GAS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.4&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.4&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.4&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.36&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000013&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000013&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;KO SHRIMP TEMPURA&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;12&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;12&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;12&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.8&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000044&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000044&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;NORI SALMON&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;12&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;12&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;12&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.8&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000003&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000003&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;SIU MAI *4&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;7.2&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;7.2&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;7.2&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.08&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000193&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000193&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;CVB PACO Y LOLA N12 ALBA&lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;6.8&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;13.6&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;13.6&lt;/baseImponible&gt;
+                    &lt;valor&gt;2.04&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000012&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000012&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;HOISIN PORK&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;8&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;8&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;8&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.2&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;0000193&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;0000193&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;CVB PACO Y LOLA N12 ALBA&lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;6.8&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;13.6&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;13.6&lt;/baseImponible&gt;
+                    &lt;valor&gt;2.04&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="Propina"&gt;10.00&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Email"&gt;mjmino78@gmail.com&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature792117"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo193611"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID824796" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature792117-SignedProperties679706"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;jIj6D5DmciKLn8B4eWFYI8fGaUA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1709086"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;0IlcLikEEV6eYCl1bx9J6YT88sw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-1044988" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ywW97QB+C6rFDJgbzINEDfP+928=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue829753"&gt;
+OcKNSSCgfXXOwfQe0vm+nMmUh5SogQtj6ALbvbGTu/jii9dGd8+U1eZy9XUWvrT9dYMmN0RjzdFG
+b2mX7nUISOVhrVPRMYhxTkkuf7Sxte0rHteoE7vr72bxP4ptNlltI+heMDQO44nqJzAm7vRZLCRS
+JRmaqeq9LVXATnRNUnYyu5wxkeeawOxKVUsPDYFCnCUmSBZ+1DC8Js/OB0vHHyQ2aJxkCuW+3D5y
+0iixTQXJzTeWRIsJeTm97orrY1ZcMIeWLm7sCTcHv/0G0tTu9W6+bOgEgp95ym56Dnj/rW7/JTBG
+TdUWAjDbw7sxfMEhowE1khXQ95AVk3ykRcNl+g==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1709086"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKvzCCCKegAwIBAgIINufiXe+VxdMwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwNzE3MTUxNzUxWhcNMjcwNzE3MTUxNzUxWjCB
+pjEkMCIGA1UEAwwbTFVJUyBNSUdVRUwgU0FOQ0hFWiBBTE1FSURBMSAwHgYDVQQFExcxNzEwODY2
+MzQyLTE3MDcyNTEwMjc0MjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCum7UbEmmIrHa6xdkFpzia0klAWyxbGsZq4gBw
+MWv1LiW4hojzWIr8MbExZDxoJIRUBWcJvB+/I8FPwc6cuXSQu3nq7nush/lFYX0SC43xjA+/aTri
+LfCMAo0dqAUAftaXNKhmZy5O2wjXxnJzFqvDB/xjE91Y+Ukq82apGxdRhu/A40QZt0+zVChMMi+v
+HR8HEgVRINkZkGXoVhEFUELWwePXNoB+uFRw0TgI3vQQxsvuvRUCmLYAwOBIVu3n56NflM4fk3A8
+Zl+xS44UNtyaDh+RJe1MLoMQDl6ZOmqZmi1ukwvwiMMCSCfqaVkn0oJbqpvjdWc2lO0bfhfvkkgX
+AgMBAAGjggX6MIIF9jAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i
+3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRh
+dGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAoBgNVHREEITAfgR1sdWlzbWln
+dWVsc2FuY2hlejgzQGdtYWlsLmNvbTCCARUGA1UdIASCAQwwggEIMGIGCisGAQQBgqZyAgkwVDBS
+BggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUgBlAHAAcgBlAHMA
+ZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYKKwYBBAGCpnICAzCBkjCBjwYIKwYBBQUHAgEW
+gYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05v
+cm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIFJlcHJl
+c2VudGFudGUgTGVnYWwucGRmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAg8GA1Ud
+HwSCAgYwggICMIHeoDqgOIY2aHR0cDovL2NybDEuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJj
+cmwxL2NybGZpbGUuY3JsooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNB
+Q0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNB
+Q0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNV
+BAYTAkVDMDygOqA4hjZodHRwOi8vY3JsMi5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDIv
+Y3JsZmlsZS5jcmwwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJpdHlk
+YXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vl
+cj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9
+RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBT
+LkEuIDIsQz1FQzAdBgNVHQ4EFgQUe6SRY+MVdcCC0BeFAg0fUSEAVFMwKwYDVR0QBCQwIoAPMjAy
+NTA3MTcxNTE3NTFagQ8yMDI3MDcxNzE1MTc1MVowCwYDVR0PBAQDAgXgMB8GCisGAQQBgqZyAwUE
+EQwPR0VSRU5URSBHRU5FUkFMMBoGCisGAQQBgqZyAwEEDAwKMTcxMDg2NjM0MjAZBgorBgEEAYKm
+cgMJBAsMCUlUQ0hJTUJJQTARBgorBgEEAYKmcgMiBAMMAS4wMwYKKwYBBAGCpnIDBwQlDCNTQUxB
+WkFSIEUxMiAxNyBZIElTQUJFTCBMQSBDQVRPTElDQTAbBgorBgEEAYKmcgMCBA0MC0xVSVMgTUlH
+VUVMMBAGCisGAQQBgqZyAyAEAgwAMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwE
+CQwHRUNVQURPUjAXBgorBgEEAYKmcgMDBAkMB1NBTkNIRVowHwYKKwYBBAGCpnIDCgQRDA9GUkFO
+R09VUk1FVCBTIEEwHQYKKwYBBAGCpnIDCwQPDA0xNzkyNDI4OTM5MDAxMBEGCisGAQQBgqZyAx0E
+AwwBLjAXBgorBgEEAYKmcgMEBAkMB0FMTUVJREEwGgYKKwYBBAGCpnIDCAQMDAowOTkxNDcxMzA2
+MA0GCSqGSIb3DQEBCwUAA4ICAQBoRjZydZxpMiMLCwU4DlG1mlRlmPi3IRQ0+RfLXBL26ngO4ByW
+aVdzSJ691ZWxmL4AfRY4OC+AJvL3V3hu1kzrYrEzC2qmglj5823Zx4FYc4ydLOP0yL9ttWsQqIGc
+MV0ZcbfkdJZkCDJ6LdEl9yLnWjGpNkaoDcSCpVM5ya10AxoD0jGcNhjYCaNZoTEo+mey73b6v/Dh
+qg9jZcfHNP0YAE/z/azKMdyWyPzZ7cx+Ki7G6G5AYnglMR85UzponreLMjArFxpNB1MeaZbHVMoL
+pNeNgn3obPFsZKLQaN8GxVp/tfVq3mPP03jxHkyfJ8NbK9A2hrKaR5NaOg3c6TZ6RhsNXNdmxl3F
+hNdPy5Uw/Kpflwuslm5SEGCzTEoRzPs3jr/ltkrxKRCb2zlQYJibHcpZJb0KQvXbOon0ba+m9buV
+oxQeomqAoqyvOiCMOSi56eWzTCT3dBNMvaPfaVuNX3xvFA6F+N59Txze6xq8k+yGgtzjy7WHs3dQ
+qWrzZr6ZvVcUhZMeTmXbEbWjNyQI5rv4vh2aNhxoPCk9iaRbj6BKL6jo4VoNuX7YyLmX7Tc4tE1P
+5ZbLfSg5MxUTmnpOO/BnyFLKHDHO0Yzkzp6P867Q81DGQ2bVwtLLjuniOPIHlkbjqa14shzHDJHf
+pgWdDzU/EF2SZtp8yf++BFXWrA==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+rpu1GxJpiKx2usXZBac4mtJJQFssWxrGauIAcDFr9S4luIaI81iK/DGxMWQ8aCSEVAVnCbwfvyPB
+T8HOnLl0kLt56u57rIf5RWF9EguN8YwPv2k64i3wjAKNHagFAH7WlzSoZmcuTtsI18Zycxarwwf8
+YxPdWPlJKvNmqRsXUYbvwONEGbdPs1QoTDIvrx0fBxIFUSDZGZBl6FYRBVBC1sHj1zaAfrhUcNE4
+CN70EMbL7r0VApi2AMDgSFbt5+ejX5TOH5NwPGZfsUuOFDbcmg4fkSXtTC6DEA5emTpqmZotbpML
+8IjDAkgn6mlZJ9KCW6qb43VnNpTtG34X75JIFw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature792117-Object888447"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature792117"&gt;
+                &lt;etsi:SignedProperties Id="Signature792117-SignedProperties679706"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2025-12-03T15:59:20-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;K7rykRbhJBL2C0m/L/olCyXV67o=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;3956379690747676115&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-1044988"&gt;
+                            &lt;etsi:Description&gt;comprobateFirma&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

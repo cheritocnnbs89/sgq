@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block title %}Editar tarea{% endblock %}
+
+{% block content %}
+
+{% macro dt_local(v) -%}
+  {%- if not v -%}
+    {{ '' }}
+  {%- elif v is string -%}
+    {{ v[:16].replace(' ', 'T') }}
+  {%- else -%}
+    {{ v.strftime('%Y-%m-%dT%H:%M') }}
+  {%- endif -%}
+{%- endmacro %}
+
+<h4 class="mb-3">Editar tarea</h4>
+
+<div class="card card-custom shadow-sm">
+  <div class="card-body">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Título</label>
+          <input
+            type="text"
+            name="titulo"
+            class="form-control"
+            value="{{ tarea['titulo'] or '' }}"
+            required
+          >
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-primary">Solicitante</label>
+          <select name="solicitante_id" class="form-select" required>
+            <option value="">-- Seleccione solicitante --</option>
+            {% for s in solicitantes %}
+              {% set nombre = s['nombre_completo'] %}
+              {% set etiqueta = (nombre ~ ' (' ~ s['username'] ~ ')') if nombre else s['username'] %}
+              <option value="{{ s['id'] }}" {% if tarea['solicitante_id'] == s['id'] %}selected{% endif %}>
+                {{ etiqueta }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Estado</label>
+          <select name="estado" class="form-select" required>
+            {% for s in estados %}
+              <option value="{{ s }}" {% if s == tarea['estado'] %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Tipo de Tarea</label>
+          <select name="tipo_tarea_id" class="form-select">
+            <option value="">-- Seleccione tipo --</option>
+            {% for tipo in tipos_tarea %}
+              <option value="{{ tipo['id'] }}" {% if tipo['id'] == tarea['tipo_tarea_id'] %}selected{% endif %}>
+                {{ tipo['nombre'] }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Descripción</label>
+          <textarea name="descripcion" class="form-control" rows="3">{{ tarea['descripcion'] or '' }}</textarea>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Fecha inicio</label>
+          <input
+            type="datetime-local"
+            name="fecha_inicio"
+            class="form-control"
+            value="{{ dt_local(tarea['fecha_inicio']) }}"
+          >
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Fecha compromiso</label>
+          <input
+            type="datetime-local"
+            name="fecha_compromiso"
+            class="form-control"
+            value="{{ dt_local(tarea['fecha_compromiso']) }}"
+          >
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Fecha fin</label>
+          <input
+            type="datetime-local"
+            name="fecha_fin"
+            class="form-control"
+            value="{{ dt_local(tarea['fecha_fin']) }}"
+          >
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Fecha fin real</label>
+          <input
+            type="datetime-local"
+            name="fecha_cierre_real"
+            class="form-control"
+            value="{{ dt_local(tarea['fecha_cierre_real']) }}"
+          >
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold text-success">Porcentaje de Avance (%)</label>
+          <div class="input-group">
+            <input
+              type="number"
+              name="porcentaje_avance"
+              class="form-control"
+              value="{{ tarea['porcentaje_avance'] or 0 }}"
+              min="0"
+              max="100"
+              step="1"
+              required
+            >
+            <span class="input-group-text">%</span>
+          </div>
+          <div class="form-text">Ingrese un valor de 0 a 100.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Empresa / Cliente</label>
+          <select name="empresa_id" class="form-select">
+            <option value="">-- Sin asignar (Interno) --</option>
+            {% for empresa in empresas %}
+              <option value="{{ empresa.id }}" {% if tarea['empresa_id'] == empresa.id %}selected{% endif %}>
+                {{ empresa.razon_social }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check-circle"></i> Actualizar Tarea
+        </button>
+        <a href="{{ url_for('listar_tareas') }}" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

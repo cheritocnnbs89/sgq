@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0412202501179005388100120019991230193520104370311</numeroAutorizacion>
+    <fechaAutorizacion>2025-12-04T20:35:46-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.0.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;Empresa Eléctrica Quito S.A.E.E.Q.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;Empresa Eléctrica Quito S.A.E.E.Q.&lt;/nombreComercial&gt;
+        &lt;ruc&gt;1790053881001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0412202501179005388100120019991230193520104370311&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;999&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;123019352&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;Bartolome de las Casas E1-24 y Av. 10 de Agosto&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;04/12/2025&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;Bartolome de las Casas E1-24 y Av. 10 de Agosto&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;5368&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;S60H LT 180 E3E CALLE H / TURUBAMBA ALTO PB / ESQ / TURUBAMBA - QUITO&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;24.86&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;7&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;0.02&lt;/baseImponible&gt;
+                &lt;valor&gt;0.00&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;24.84&lt;/baseImponible&gt;
+                &lt;valor&gt;0.00&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;24.86&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;01&lt;/formaPago&gt;
+                &lt;total&gt;24.86&lt;/total&gt;
+                &lt;plazo&gt;15&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;STATIT&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;Intereses por Mora&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.02&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.02&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;7&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.02&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;ZAPUGE&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;Serv. Alum. Públic. General&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.36&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.36&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.36&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;ZCOMER&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;Comercialización&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.42&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.42&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.42&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;ZDEMAN&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;Demanda&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;15.05&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;15.05&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;15.05&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;ZENERG&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;Energía total&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;5.46&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;5.46&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;5.46&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;ZPEBFP&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;Penalización Bajo Fact. Pot&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.55&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.55&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.55&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="CUENTA CONTRATO"&gt;200013692500&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="CODIGO UNICO ELECTRICO NACIONAL"&gt;1401795169&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="CONTRIBUCION BOMBEROS"&gt;7.05&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="TASA RECOLECCION BASURA"&gt;0.00&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="FORMA DE PAGO TERCEROS BASURA Y BOMBEROS"&gt;SIN UTILIZACION DEL SISTEMA FINANCIERO&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="TOTAL FORMA DE PAGO TERCEROS BASURA Y BOMBEROS"&gt;7.05&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature643517"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo784685"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID252314" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature643517-SignedProperties656720"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;aO/gWINFwov9SHvvwLpUHypobHo=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1524362"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;slHklEdLvRVjQAxOWsQFIy/ONr0=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-250103" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;bksIynDqT2WPZQdAMM1AmuR89vs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue248634"&gt;
+HFvTwEnj9+xJ0wgj7AYFwN5NpfmG4pdPdwIwvxsIEqevMAHvz6TfwYMOsoLIDfWdiohBLbe+I2Xr
+hgkW2l/f7d6VNMpFjDMO6F4M3VmZ4oALf1IRni1451EAGgMHdGBCtEfpkwLlmRiHEYHi1fvm6d62
+uWtajarsIpBZxdIHLHGKgDRk6QySdTtRxdpDk0M5v7IDlqKyQuPxpra/o6IilviOVmIW6vbPTap+
+oTruRHj3JeQOq2wRnwIhhf1jKPbYs+0ryr9gubrM3NBXjVknCekiPE6JJtQ+ML5N3T1/ZUaLOvjd
+LhsMH6M7uJA+VDRyiqRVG98BjkrTcRPBYaFXXQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1524362"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKDDCCB/SgAwIBAgIEZedW/TANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV
+BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB
+QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTI1MTEwNjIwMTcwNloXDTI3MTEwNjIwNDcw
+NVowgbwxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw
+NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w
+DAYDVQQHEwVRVUlUTzFAMBEGA1UEBRMKMDIwMDAyMDU5OTArBgNVBAMTJE1ZUklBTSBHQUJSSUVM
+QSBWSUxMQVJSRUFMIEhFUk5BTkRFWjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL0s
+sjM/l2izqi3yt53hAYRasAaLEgWEA70n5DSNZ3CuTDjv+Z+XpVxbrINpBQGYSemkD8LxjrUx461/
+2S9cuGFZQrmDzZNwgFAxlwmw80efI8AS1ewvmbuUnrxhbieOBmUjyKZm6PUKuaRb8sycstQnTdWd
+1t7oVulvc7LaqqriiSL+hIUQX/LuBZCVPiS+F8CmAenUPmMV8prQxBvmmrIIDAmSS6K1FQMDs0LT
+LbRyJlMkJCnU/11DH9h/K23M0to9PF2H/3H1OGKKwn8RJ4sBhRG+VDNKLqyJfuz9ujFwv6hDifCi
+BJktHuPRT4yDoaDZIsWOhXxpLa1BNDdL8EECAwEAAaOCBS0wggUpMAsGA1UdDwQEAwIGwDBnBgNV
+HSAEYDBeMFwGCysGAQQBgqg7AgIBME0wSwYIKwYBBQUHAgEWP2h0dHA6Ly93d3cuZWNpLmJjZS5l
+Yy9wb2xpdGljYS1jZXJ0aWZpY2Fkby9wZXJzb25hLWp1cmlkaWNhLnBkZjCBkQYIKwYBBQUHAQEE
+gYQwgYEwPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmVjaS5iY2UuZWMvZWpiY2EvcHVibGljd2Vi
+L3N0YXR1cy9vY3NwMD8GCCsGAQUFBzABhjNodHRwOi8vb2NzcDEuZWNpLmJjZS5lYy9lamJjYS9w
+dWJsaWN3ZWIvc3RhdHVzL29jc3AwMwYKKwYBBAGCqDsDCgQlEyNFTVBSRVNBIEVMRUNUUklDQSBR
+VUlUTyBTLkEuIEUuRS5RLjAdBgorBgEEAYKoOwMLBA8TDTE3OTAwNTM4ODEwMDEwGgYKKwYBBAGC
+qDsDAQQMEwoxNzE2Nzg3OTE0MB8GCisGAQQBgqg7AwIEERMPTVlSSUFNIEdBQlJJRUxBMBoGCisG
+AQQBgqg7AwMEDBMKVklMTEFSUkVBTDAZBgorBgEEAYKoOwMEBAsTCUhFUk5BTkRFWjAgBgorBgEE
+AYKoOwMFBBITEEplZmUgZGUgU2VjY2nDs24wJAYKKwYBBAGCqDsDBwQWExRBVi4gVEVMTU8gUEFa
+IFkgTUlOTzAZBgorBgEEAYKoOwMIBAsTCTAyMjUyNzA2MDAVBgorBgEEAYKoOwMJBAcTBVFVSVRP
+MBcGCisGAQQBgqg7AwwECRMHRUNVQURPUjAgBgorBgEEAYKoOwMzBBITEFNPRlRXQVJFLUFSQ0hJ
+Vk8wJwYDVR0RBCAwHoEcZ2FieXZpbGxhcnJlYWwyMzMxQGdtYWlsLmNvbTCCAeEGA1UdHwSCAdgw
+ggHUMIIB0KCCAcygggHIhoHWbGRhcDovL2JjZXFsZGFwc3VicDEuYmNlLmVjL2NuPUNSTDIyOTUs
+Y249QUMlMjBCQU5DTyUyMENFTlRSQUwlMjBERUwlMjBFQ1VBRE9SLGw9UVVJVE8sb3U9RU5USURB
+RCUyMERFJTIwQ0VSVElGSUNBQ0lPTiUyMERFJTIwSU5GT1JNQUNJT04tRUNJQkNFLG89QkFOQ08l
+MjBDRU5UUkFMJTIwREVMJTIwRUNVQURPUixjPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/
+YmFzZYY0aHR0cDovL3d3dy5lY2kuYmNlLmVjL0NSTC9lY2lfYmNlX2VjX2NybGZpbGVjb21iLmNy
+bKSBtjCBszELMAkGA1UEBhMCRUMxIjAgBgNVBAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1Ix
+NzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0Ux
+DjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxBQyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMRAw
+DgYDVQQDEwdDUkwyMjk1MCsGA1UdEAQkMCKADzIwMjUxMTA2MjAxNzA2WoEPMjAyNzExMDYyMDQ3
+MDVaMB8GA1UdIwQYMBaAFEii3yMfHfgsUXqMA81JMqUJwZSrMB0GA1UdDgQWBBSkNtmPCwr/3X5R
+idpiZaNodewguzAJBgNVHRMEAjAAMBoGCSqGSIb2fQdBAAQNMAsbBVYxMC4wAwIEMDANBgkqhkiG
+9w0BAQsFAAOCAgEAiFnXhdRdZlzBMHqVdEnKsmTrecFJFt8xw5JEB1fgIKQSfk9+zGZBEVkIFgNh
+ihyypnDw4tBt3GjkPeXGMOA5sMMn5jBH9P3+N2QCFyQqIcOVv51VUtlOQuys5CmVdIA5Kfkxbl3T
+ixTHGyMNu3zYXDq0DXEDB+XPBfBbZ2edjPUSd7gxk150G/2V2r8PEZAFgJe3qRANF2f3oxC/Oxoo
+JabktXSQs1CGSd2BPhPTsfN6SQjiJ7v3CIU17dlrgnEkxnPzuzFWRNu/NJyIyvpi8d9no4YV05Fe
+sfexZXuMvQnZWHCScqEFm8ZkvmRdueM5kN58uf48PzUZ25KCBb0PGlxQeemynW9QdlygCqopwjDj
+aj8x7GItZA9cMM9eG+dPzsThsCkobU4x8y1bWgK9sT/3hUgxylH1xApzoLLpqRe96V8KTegdhper
+tj+xGrqAFTOQ9jTN9okGwb0KDMRgcxxTs8ootbqvYPsAgyvCz5bqJm5O8dH1SjL5fMT52L8HoHYq
+bu36aVMoT7vyOMyns8rmhlkyBa9xgaquk+PdFPYrsjPFSzzZqZcVpNXYe57v42A1Svw4fPBa6pOn
+6BqRmzOpFvxIPXfk7Xq5ncsquB/NAwVe79PO8cJpKYGi1lKX1in9CsID+PCvR6nAJS8nYiCtm9pI
+it0lhzg7OM0zJHA=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+vSyyMz+XaLOqLfK3neEBhFqwBosSBYQDvSfkNI1ncK5MOO/5n5elXFusg2kFAZhJ6aQPwvGOtTHj
+rX/ZL1y4YVlCuYPNk3CAUDGXCbDzR58jwBLV7C+Zu5SevGFuJ44GZSPIpmbo9Qq5pFvyzJyy1CdN
+1Z3W3uhW6W9zstqqquKJIv6EhRBf8u4FkJU+JL4XwKYB6dQ+YxXymtDEG+aasggMCZJLorUVAwOz
+QtMttHImUyQkKdT/XUMf2H8rbczS2j08XYf/cfU4YorCfxEniwGFEb5UM0ourIl+7P26MXC/qEOJ
+8KIEmS0e49FPjIOhoNkixY6FfGktrUE0N0vwQQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature643517-Object293175"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature643517"&gt;
+                &lt;etsi:SignedProperties Id="Signature643517-SignedProperties656720"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2025-12-04T19:46:08-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;eba4f2hdq71nudt4nKSwjwXBYXg=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1709659901&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-250103"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

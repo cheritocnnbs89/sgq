@@ -1,0 +1,2180 @@
+{% extends 'base.html' %}
+{% block title %}Reclamos{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reclamos/reclamos_lista.css') }}">
+<script src="{{ url_for('static', filename='js/reclamos/reclamos_lista.js') }}" defer></script>
+
+<div class="container mt-4 reclamos-page">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <h3 class="mb-0"><i class="bi bi-exclamation-octagon me-2"></i>Oportunidad de Mejora</h3>
+            <div class="small-muted">
+                Gestión de OM, aprobaciones y respuestas técnicas.
+            </div>
+        </div>
+        <!-- Derecha: usuario/rol ARRIBA, botones ABAJO -->
+        <div class="d-flex flex-column align-items-end gap-2">
+
+            <!-- usuario + rol (arriba a la derecha) -->
+            <div class="d-flex align-items-center gap-2 text-muted small">
+                <span class="badge bg-light text-dark border">
+                    <i class="bi bi-person-circle me-1"></i>
+                    {{ (usuario or session.get('usuario') or session.get('username') or '—') }}
+                </span>
+                <span class="badge bg-light text-dark border">
+                    <i class="bi bi-shield-lock me-1"></i>
+                    {{ (rol or session.get('rol') or '—') }}
+                </span>
+            </div>
+
+            <!-- Botones (abajo a la derecha) -->
+            <!-- Botones (abajo a la derecha) -->
+            <div class="d-flex align-items-center gap-2 header-actions">
+                <button class="btn btn-outline-secondary btn-sm btn-top" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#filtrosCollapse" aria-expanded="true" aria-controls="filtrosCollapse">
+                    <i class="bi bi-funnel me-1"></i>
+                    <span>Filtros</span>
+                    <i class="bi bi-chevron-down ms-1"></i>
+                </button>
+
+                <button id="themeToggle" class="btn btn-outline-secondary btn-sm no-print btn-top">
+                    <i class="bi bi-moon-stars me-1"></i><span>Tema</span>
+                </button>
+
+                {% if has_permission('reclamos','crear') %}
+                <button class="btn btn-primary btn-sm no-print btn-top" data-bs-toggle="modal"
+                    data-bs-target="#modalNuevoReclamo">
+                    <i class="bi bi-plus-circle me-1"></i><span>Nueva OM</span>
+                </button>
+                {% endif %}
+
+                <a class="btn btn-outline-success btn-sm btn-top" href="{{ url_for(
+      'reclamos_export_mis',
+      tab=request.args.get('tab','tab-mios'),
+      estado=request.args.get('estado',''),
+      codigo=request.args.get('codigo',''),
+      cliente=request.args.get('cliente',''),
+      proceso=request.args.get('proceso',''),
+      motivo=request.args.get('motivo',''),
+      estado_global=request.args.get('estado_global',''),
+      desde=request.args.get('desde',''),
+      hasta=request.args.get('hasta','')
+   ) }}">
+                    <i class="bi bi-file-earmark-excel me-1"></i><span>Exportar a Excel</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =========================
+     COLLAPSE: FILTROS
+     ========================= -->
+    <div class="collapse show" id="filtrosCollapse">
+        <div class="card card-elev mb-3 card-filtros">
+            <div class="card-body">
+
+                <form class="row g-2 align-items-end" method="GET" action="{{ url_for('reclamos') }}">
+                    <!-- mantiene el estado si lo usas -->
+                    <input type="hidden" name="estado" value="{{ filtros.estado or '' }}">
+                    <input type="hidden" name="tab" id="activeTabInput"
+                        value="{{ request.args.get('tab','tab-mios') }}">
+                    <div class="col-md-2">
+                        <label class="form-label">Código</label>
+                        <input class="form-control form-control-sm" name="codigo" value="{{ filtros.codigo or '' }}"
+                            placeholder="OM-0001">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Cliente</label>
+                        <input class="form-control form-control-sm" name="cliente" value="{{ filtros.cliente or '' }}"
+                            placeholder="Nombre cliente">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Proceso</label>
+                        <select class="form-select form-select-sm" name="proceso">
+                            <option value="">Todos</option>
+                            {% for p in procesos %}
+                            <option value="{{ p.valor }}" {{ 'selected' if (filtros.proceso==p.valor) else '' }}>
+                                {{ p.valor }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Motivo</label>
+                        <select class="form-select form-select-sm" name="motivo">
+                            <option value="">Todos</option>
+                            {% for m in tipos_reclamo %}
+                            <option value="{{ m.nombre }}" {{ 'selected' if (filtros.motivo==m.nombre) else '' }}>
+                                {{ m.valor }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Estado</label>
+                        <select class="form-select form-select-sm" name="estado_global">
+                            <option value="">Todos</option>
+                            <option value="abierto" {{ 'selected' if filtros.estado_global=='abierto' else '' }}>Abierto
+                            </option>
+                            <option value="cerrado" {{ 'selected' if filtros.estado_global=='cerrado' else '' }}>Cerrado
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Desde</label>
+                        <input type="date" class="form-control form-control-sm" name="desde"
+                            value="{{ filtros.desde or '' }}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Hasta</label>
+                        <input type="date" class="form-control form-control-sm" name="hasta"
+                            value="{{ filtros.hasta or '' }}">
+                    </div>
+
+                    <div class="col-md-3 d-flex gap-2">
+                        <button class="btn btn-primary btn-sm" type="submit">
+                            <i class="bi bi-funnel me-1"></i>Filtrar
+                        </button>
+
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('reclamos') }}">
+                            <i class="bi bi-x-circle me-1"></i>Limpiar
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-pills gap-2 mb-3 no-print" id="reclTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tab-mios" data-bs-toggle="pill" data-bs-target="#pane-mios"
+                type="button" role="tab" aria-controls="pane-mios" aria-selected="true" data-tab-id="tab-mios">
+                Oportunidades de mejora
+            </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-aprobar" data-bs-toggle="pill" data-bs-target="#pane-aprobar" type="button"
+                role="tab" aria-controls="pane-aprobar" aria-selected="false" data-tab-id="tab-aprobar">
+                Por aprobar (Responsable)
+            </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-imputado" data-bs-toggle="pill" data-bs-target="#pane-imputado"
+                type="button" role="tab" aria-controls="pane-imputado" aria-selected="false" data-tab-id="tab-imputado">
+                Soy Sponsor
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-equipo" data-bs-toggle="pill" data-bs-target="#pane-equipo" type="button"
+                role="tab" aria-controls="pane-equipo" aria-selected="false" data-tab-id="tab-equipo">
+                OM Asignadas
+            </button>
+        </li>
+
+    </ul>
+
+    <div class="tab-content" id="reclTabsContent">
+
+        <!-- ================== TAB 1: MIS RECLAMOS ================== -->
+        <div class="tab-pane fade show active" id="pane-mios" role="tabpanel" aria-labelledby="tab-mios">
+            <div class="table-responsive mb-4">
+                <table class="table table-striped align-middle recl-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="text"><span class="th-sortable">Código <i
+                                        class="bi bi-arrow-down-up ms-1"></i></span></th>
+                            <th data-sort="date"><span class="th-sortable">Fecha OM <i
+                                        class="bi bi-arrow-down-up ms-1"></i></span></th>
+                            <th data-sort="text"><span class="th-sortable">Cliente <i
+                                        class="bi bi-arrow-down-up ms-1"></i></span></th>
+                            <th data-sort="text"><span class="th-sortable">Motivo / Sub Motivo <i
+                                        class="bi bi-arrow-down-up ms-1"></i></span></th>
+                            <th data-sort="text"><span class="th-sortable">Proceso <i
+                                        class="bi bi-arrow-down-up ms-1"></i></span></th>
+                            <th data-sort="text"><span class="th-sortable">Estado Global <i
+                                        class="bi bi-arrow-down-up ms-1"></i></span></th>
+                            <th class="sticky-end text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if created_list and created_list|length > 0 %}
+                        {% for r in created_list %}
+                        <tr data-row="created" data-reclamo-id="{{ r.id }}"
+                            data-imputacion-id="{{ r.imputacion_id or '' }}" data-codigo="{{ (r.codigo or '')|e }}"
+                            data-fecha-reclamo="{{ (r.fecha_reclamo or '')|e }}"
+                            data-fecha-creacion="{{ (r.fecha_creacion or '')|e }}"
+                            data-cliente="{{ (r.cliente_nombre or '')|e }}"
+                            data-proceso="{{ (r.proceso_nombre or r.proceso_text or '')|e }}"
+                            data-material="{{ (r.material_desc or '')|e }}"
+                            data-imputados="{{ (r.imputados_resumen or '')|e }}"
+                            data-equipo="{{ (r.equipo_resumen or '')|e }}"
+                            data-observacion="{{ (r.observacion or '')|e }}" data-estado="{{ (r.estado or '')|e }}"
+                            data-causas-detalle="{{ r.causas_detalle }}" data-control-detalle="{{ r.control_detalle }}"
+                            data-correctiva-detalle="{{ r.correctiva_detalle }}"
+                            data-fecha-causa="{{ (r.fecha_causa or '')|e }}"
+                            data-fecha-preventiva="{{ (r.fecha_preventiva or '')|e }}"
+                            data-fecha-correctiva="{{ (r.fecha_correctiva or '')|e }}"
+                            data-tipo-reclamo="{{ (r.motivo or r.tipo_reclamo or '')|e }}"
+                            data-antecedente="{{ (r.submotivo or r.antecedente or '')|e }}"
+                            data-metodo-analisis="{{ (r.metodo_analisis or '')|e }}" data-why1="{{ (r.why1 or '')|e }}"
+                            data-why2="{{ (r.why2 or '')|e }}" data-why3="{{ (r.why3 or '')|e }}"
+                            data-why4="{{ (r.why4 or '')|e }}" data-why5="{{ (r.why5 or '')|e }}"
+                            data-fish-metodo="{{ (r.fish_metodo or '')|e }}"
+                            data-fish-maquinas="{{ (r.fish_maquinas or '')|e }}"
+                            data-fish-materiales="{{ (r.fish_materiales or '')|e }}"
+                            data-fish-personas="{{ (r.fish_personas or '')|e }}"
+                            data-fish-entorno="{{ (r.fish_entorno or '')|e }}"
+                            data-fish-medicion="{{ (r.fish_medicion or '')|e }}">
+
+                            <td data-th="Código">{{ r.codigo or '' }}</td>
+                            <td data-th="Fecha OM">
+                                {{ (r.fecha_reclamo or '')[8:10] }}/{{ (r.fecha_reclamo or '')[5:7] }}/{{
+                                (r.fecha_reclamo or '')[0:4] }}
+                            </td>
+                            <td data-th="Cliente">{{ r.cliente_nombre or '' }}</td>
+                            <td data-th="Motivo / Observación" class="cell-max-280">
+                                <div class="fw-semibold">{{ r.motivo or '' }}</div>
+                                <div class="small-muted text-truncate cell-max-270">
+                                    {{ r.submotivo or '' }}
+                                </div>
+                            </td>
+                            <td data-th="Proceso">{{ r.proceso_nombre or '' }}</td>
+                            <!--     <td data-th="Ciudad">{{ r.ciudad or '' }}</td>
+                          <td data-th="Trámite">{{ r.tramite or '' }}</td>-->
+                            <td data-th="Estado Global">
+                                {% set est = (r.estado or '').upper() %}
+
+                                {% if 'RECHAZ' in est %}
+                                <span class="badge-estado estado-rech">{{ r.estado }}</span>
+
+                                {% elif 'CERRAD' in est %}
+                                <span class="badge-estado estado-cerrado">{{ r.estado }}</span>
+
+                                {% elif 'APROB' in est %}
+                                <span class="badge-estado estado-aprob">{{ r.estado }}</span>
+
+                                {% elif 'RESPUESTA' in est %}
+                                <span class="badge-estado estado-info">{{ r.estado }}</span>
+
+                                {% else %}
+                                <span class="badge-estado estado-pend">{{ r.estado or 'Pendiente' }}</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="sticky-end text-end" data-th="Acciones">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary btn-sm js-ver-detalle" title="Ver Detalle"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalle">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                    <button class="btn btn-outline-danger btn-sm js-eliminar-om"
+                                        data-reclamo-id="{{ r.id }}" data-codigo="{{ r.codigo }}" title="Eliminar OM">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center py-4 small-muted">
+                                No tienes oportunidades de mejora creadas.
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================== TAB 2: POR APROBAR (JEFE) ================== -->
+        <div class="tab-pane fade" id="pane-aprobar" role="tabpanel" aria-labelledby="tab-aprobar">
+            <div class="table-responsive mb-4">
+                <table class="table table-striped align-middle recl-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Fecha OM</th>
+                            <th>Cliente</th>
+                            <th>Imputado</th>
+                            <th>Observación</th>
+                            <th>Estado OM</th>
+                            <th class="sticky-end text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if approve_list and approve_list|length > 0 %}
+                        {% for a in approve_list %}
+                        <tr data-row="aprobar" data-imputacion-id="{{ a.imputacion_id }}" data-reclamo-id="{{ a.id }}"
+                            data-codigo="{{ a.codigo or '' }}" data-fecha-reclamo="{{ a.fecha_reclamo or '' }}"
+                            data-fecha-creacion="{{ a.fecha_creacion or '' }}"
+                            data-cliente="{{ a.cliente_nombre or '' }}" data-proceso="{{ a.proceso_text or '' }}"
+                            data-tramite="{{ a.tipo_tramite or '' }}" data-ciudad="{{ a.ciudad or '' }}"
+                            data-material="{{ a.material_desc or '' }}" data-procede="{{ a.procede or '' }}"
+                            data-imputado="{{ a.imputado_nombre or '' }}" data-observacion="{{ a.observacion or '' }}"
+                            data-estado-imputacion="{{ a.estado_imputacion or '' }}"
+                            data-rechazo-motivo="{{ a.rechazo_motivo or '' }}" data-causa="{{ a.causa or '' }}"
+                            data-preventiva="{{ a.preventiva or '' }}" data-correctiva="{{ a.correctiva or '' }}">
+                            <td data-th="Código">{{ a.codigo or '' }}</td>
+                            <td data-th="Fecha Reclamo">{{ (a.fecha_reclamo or '')[8:10] }}/{{ (a.fecha_reclamo or
+                                '')[5:7] }}/{{
+                                (a.fecha_reclamo or '')[0:4] }}</td>
+
+                            <td data-th="Cliente">{{ a.cliente_nombre or '' }}</td>
+                            <td data-th="Imputado">{{ a.imputado_nombre or '' }}</td>
+
+                            <td data-th="Observación" class="cell-max-280">
+                                <div class="small-muted text-truncate cell-max-270">
+                                    {{ a.observacion or '' }}
+                                </div>
+                            </td>
+                            <td data-th="Estado Imputación">
+                                {% set ei = (a.estado_imputacion or '')|upper %}
+                                {% set is_cerrada = 'CERRAD' in ei %}
+                                {% set is_pend_acept_resp = ('PENDIENTE' in ei) and ('ACEPT' in ei) and ('RESPONS' in
+                                ei) %}
+                                {% set is_resp_pend_aprob = ('RESPUESTA' in ei) and ('PEND' in ei) and ('APROB' in ei)
+                                %}
+
+                                {% if 'RECHAZ' in ei %}
+                                <span class="badge-estado estado-rech">{{ a.estado_imputacion }}</span>
+                                {% elif 'APROB' in ei %}
+                                <span class="badge-estado estado-aprob">{{ a.estado_imputacion }}</span>
+                                {% elif 'RESP' in ei %}
+                                <span class="badge-estado estado-info">{{ a.estado_imputacion }}</span>
+                                {% elif 'CERRAD' in ei %}
+                                <span class="badge-estado estado-pend">{{ a.estado_imputacion }}</span>
+                                {% else %}
+                                <span class="badge-estado estado-pend">
+                                    {{ a.estado_imputacion or 'Pendiente' }}
+                                </span>
+                                {% endif %}
+                            </td>
+
+                            <td class="sticky-end text-end" data-th="Acciones">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary btn-sm js-ver-detalle" type="button"
+                                        title="Ver Detalle" data-bs-toggle="modal" data-bs-target="#modalDetalle">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                    <button class="btn btn-outline-success btn-sm js-aprobar-imputacion" type="button"
+                                        data-bs-toggle="modal" data-bs-target="#modalAprobarImputacion" {% if is_cerrada
+                                        or is_resp_pend_aprob %} disabled aria-disabled="true"
+                                        title="{% if is_cerrada %}OM cerrada{% else %}Respuesta pendiente de aprobación{% endif %}"
+                                        {% endif %}>
+                                        <i class="bi bi-check2-circle"></i>
+                                    </button>
+
+                                    <button class="btn btn-outline-primary btn-sm js-validar-respuesta" type="button"
+                                        data-bs-toggle="modal" data-bs-target="#modalValidarRespuesta" {% if is_cerrada
+                                        or is_pend_acept_resp %} disabled aria-disabled="true"
+                                        title="{% if is_cerrada %}OM cerrada{% else %}Pendiente aceptación del responsable{% endif %}"
+                                        {% endif %}>
+                                        <i class="bi bi-clipboard2-check"></i>
+                                    </button>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 small-muted">
+                                No tienes OM pendientes de aprobación.
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                        <!-- Busy / Procesando -->
+                        <div class="modal fade" id="busyModal" tabindex="-1" data-bs-backdrop="static"
+                            data-bs-keyboard="false" aria-hidden="true">
+                            <div class="modal-dialog modal-sm modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body text-center">
+                                        <div class="spinner-border" role="status" aria-hidden="true"></div>
+                                        <div class="mt-2 fw-semibold">Procesando…</div>
+                                        <div id="busyMsg" class="small text-muted"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================== TAB 3: SOY RESPONSABLE / IMPUTADO ================== -->
+        <div class="tab-pane fade" id="pane-imputado" role="tabpanel" aria-labelledby="tab-imputado">
+            <div class="table-responsive mb-4">
+                <table class="table table-striped align-middle recl-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Fecha OM</th>
+                            <th>Cliente</th>
+                            <th>Creador OM</th>
+
+                            <th>Motivo / Sub Motivo</th>
+                            <th data-sort="text"><span class="th-sortable">Proceso <i
+                                        class="bi bi-arrow-down-up ms-1"></i></span></th>
+                            <th>Plazo</th>
+                            <th>Estado OM</th>
+                            <th class="sticky-end text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if imputado_list and imputado_list|length > 0 %}
+                        {% for i in imputado_list %}
+                        <tr data-row="imputado" data-imputacion-id="{{ i.imputacion_id }}" data-reclamo-id="{{ i.id }}"
+                            data-codigo="{{ i.codigo or '' }}" data-fecha-reclamo="{{ i.fecha_reclamo or '' }}"
+                            data-fecha-creacion="{{ i.fecha_creacion or '' }}"
+                            data-cliente="{{ i.cliente_nombre or '' }}" data-proceso="{{ i.proceso_text or '' }}"
+                            data-tramite="{{ i.tipo_tramite or '' }}" data-ciudad="{{ i.ciudad or '' }}"
+                            data-material="{{ i.material_desc or '' }}" data-procede="{{ i.procede or '' }}"
+                            data-observacion="{{ i.observacion or '' }}" data-estado="{{ i.estado_imputacion or '' }}"
+                            data-estado-imputacion="{{ i.estado_imputacion or '' }}" data-causa="{{ i.causa or '' }}"
+                            data-preventiva="{{ i.preventiva or '' }}" data-correctiva="{{ i.correctiva or '' }}"
+                            data-fecha-causa="{{ i.fecha_causa or '' }}"
+                            data-fecha-preventiva="{{ i.fecha_preventiva or '' }}"
+                            data-fecha-correctiva="{{ i.fecha_correctiva or '' }}"
+                            data-metodo-analisis="{{ i.metodo_analisis or '' }}" data-why1="{{ i.why1 or '' }}"
+                            data-why2="{{ i.why2 or '' }}" data-why3="{{ i.why3 or '' }}" data-why4="{{ i.why4 or '' }}"
+                            data-why5="{{ i.why5 or '' }}" data-fish-metodo="{{ i.fish_metodo or '' }}"
+                            data-fish-maquinas="{{ i.fish_maquinas or '' }}"
+                            data-fish-materiales="{{ i.fish_materiales or '' }}"
+                            data-fish-personas="{{ i.fish_personas or '' }}"
+                            data-fish-entorno="{{ i.fish_entorno or '' }}"
+                            data-fish-medicion="{{ i.fish_medicion or '' }}"
+                            data-fecha-limite="{{ i.fecha_limite or '' }}" data-dias-plazo="{{ i.dias_plazo or 0 }}"
+                            data-pct-avance="{{ i.pct_avance or 0 }}"
+                            data-deadline-estado="{{ i.deadline_estado or 'ok' }}"
+                            data-equipo="{{ i.equipo_resumen or '' }}"
+                            data-proceso="{{ (i.proceso_nombre or i.proceso_text or '')|e }}"
+                            data-imputados="{{ (i.imputados_resumen or '')|e }}"
+                            data-tipo-reclamo="{{ (i.motivo or i.tipo_reclamo or '')|e }}"
+                            data-antecedente="{{ (i.submotivo or i.antecedente or '')|e }}">
+
+                            <td data-th="Código">{{ i.codigo or '' }}</td>
+                            <td data-th="Fecha Reclamo">{{ (i.fecha_reclamo or '')[8:10] }}/{{ (i.fecha_reclamo or
+                                '')[5:7] }}/{{
+                                (i.fecha_reclamo or '')[0:4] }}</td>
+
+                            <td data-th="Cliente">{{ i.cliente_nombre or '' }}</td>
+                            <td data-th="Creador OM">
+                                <div class="fw-semibold">
+                                    {{ i.creador_nombre or i.creador_username }}
+                                </div>
+                                {% if i.creador_username %}
+                                <div class="text-muted small">
+                                    {{ i.creador_username }}
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td data-th="Motivo / Observación" class="cell-max-280">
+                                <div class="fw-semibold">{{ i.motivo or '' }}</div>
+                                <div class="small-muted text-truncate cell-max-270">
+                                    {{ i.submotivo or '' }}
+                                </div>
+                            </td>
+                            <td data-th="Proceso">{{ i.proceso_nombre or '' }}</td>
+
+                            <td data-th="Plazo">
+                                <div class="deadline-wrap">
+                                    <div class="deadline-meta">
+                                        Fecha esperada: <strong>{{ (i.fecha_limite or '')[8:10] }}/{{ (i.fecha_limite or
+                                            '')[5:7] }}/{{
+                                            (i.fecha_limite or '')[0:4] }}</strong>
+
+                                    </div>
+
+                                    {% if (i.deadline_estado or '') == 'done' %}
+                                    <!-- ✅ Cerrado: sin barra, sin hitos, sin ruido -->
+                                    <div class="deadline-foot">
+                                        <span class="text-muted">OM cerrada (respuesta aprobada)</span>
+                                    </div>
+                                    {% else %}
+                                    <!-- ✅ Abierta: barra + hitos -->
+                                    <div class="deadline-bar" aria-label="avance plazo">
+                                        {% set cls = i.deadline_estado or 'ok' %}
+
+                                        <progress class="deadline-progress deadline-{{ cls }}" value="{{ i.pct_avance_10 or 0 }}" max="100"></progress>
+
+                                        <div class="deadline-mark d5"></div>
+                                        <div class="deadline-mark d10"></div>
+                                    </div>
+
+                                    <!-- ✅ Abierta: texto claro -->
+                                    <div class="deadline-foot">
+                                        {% set t = i.dias_transcurridos or 0 %}
+                                        <span class="text-muted">D+{{ t }}</span>
+
+                                        {% if t < 5 %} <span class="mx-2 text-muted">|</span>
+                                            <span>1ra notif en <strong>{{ i.dias_para_d5 }}</strong> día(s)</span>
+                                            {% elif t < 10 %} <span class="mx-2 text-muted">|</span>
+                                                <span class="text-warning">Notif D5 vencida</span>
+                                                <span class="mx-2 text-muted">|</span>
+                                                <span>Escala en <strong>{{ i.dias_para_d10 }}</strong> día(s)</span>
+                                                {% else %}
+                                                <span class="mx-2 text-muted">|</span>
+                                                <span class="text-danger">Escalado (D10)</span>
+                                                {% endif %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </td>
+
+                            <td data-th="Estado Imputación">
+                                {% set ei = (i.estado_imputacion or '')|upper %}
+                                {% set is_cerrada = 'CERRAD' in ei %}
+                                {% if 'RECHAZ' in ei %}
+                                <span class="badge-estado estado-rech">{{ i.estado_imputacion }}</span>
+                                {% elif 'APROB' in ei %}
+                                <span class="badge-estado estado-aprob">{{ i.estado_imputacion }}</span>
+                                {% elif 'RESP' in ei %}
+                                <span class="badge-estado estado-info">{{ i.estado_imputacion }}</span>
+                                {% elif 'CERRAD' in ei %}
+
+                                <span class="badge-estado estado-cerrado">{{ i.estado_imputacion }}</span>
+                                {% else %}
+                                <span class="badge-estado estado-pend">
+                                    {{ i.estado_imputacion or 'Pendiente' }}
+                                </span>
+                                {% endif %}
+                            </td>
+
+                            <td class="sticky-end text-end" data-th="Acciones">
+                                <div class="btn-group btn-group-sm">
+                                    <!-- Ver detalle reclamo -->
+                                    <button class="btn btn-outline-secondary btn-sm js-ver-detalle" title="Ver Detalle"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalle">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                    <!-- Responder medidas (responsable / imputado) -->
+                                    <button class="btn btn-outline-warning btn-sm js-responder-medidas"
+                                        title="Responder OM" data-bs-toggle="modal"
+                                        data-bs-target="#modalResponderMedidas">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+
+                                    <!-- NUEVO: Gestionar equipo de respuestas -->
+                                    <button class="btn btn-outline-primary btn-sm js-equipo-respuestas"
+                                        data-bs-toggle="modal" data-bs-target="#modalEquipoRespuestas"
+                                        title="Gestionar equipo de respuestas">
+                                        <i class="bi bi-people"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 small-muted">
+                                No tienes imputaciones activas.
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- ================== TAB 4: MI EQUIPO (COLABORADOR) ================== -->
+        <div class="tab-pane fade" id="pane-equipo" role="tabpanel" aria-labelledby="tab-equipo">
+            <div class="table-responsive mb-4">
+                <table class="table table-striped align-middle recl-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Fecha OM</th>
+                            <th>Cliente</th>
+                            <th>Motivo / Sub Motivo</th>
+
+                            <th>Sponsor</th>
+                            <th>Observación</th>
+                            <th>Estado equipo</th>
+                            <th class="sticky-end text-end">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% if equipo_list and equipo_list|length > 0 %}
+                        {% for e in equipo_list %}
+                        <tr data-row="equipo" data-soy-equipo="1" data-reclamo-id="{{ e.reclamo_id }}"
+                            data-imputacion-id="{{ e.imputacion_id or '' }}"
+                            data-miembro-id="{{ e.usuario_id or e.miembro_id or '' }}"
+                            data-codigo="{{ e.codigo or '' }}" data-fecha-reclamo="{{ e.fecha_reclamo or '' }}"
+                            data-fecha-creacion="{{ e.fecha_creacion or '' }}"
+                            data-cliente="{{ e.cliente_nombre or '' }}" data-observacion="{{ e.observacion or '' }}"
+                            data-proceso="{{ e.proceso_text or '' }}" data-material="{{ e.material_desc or '' }}"
+                            data-estado="{{ e.estado_equipo or '' }}" {# ✅ NUEVO: campos de respuesta del equipo (para
+                            mostrar/precargar) #} data-causa="{{ e.causa or '' }}"
+                            data-causas-detalle="{{ e.causas_detalle or '' }}"
+                            data-control-detalle="{{ e.control_detalle or '' }}"
+                            data-correctiva-detalle="{{ e.correctiva_detalle or '' }}"
+                            data-fecha-preventiva="{{ e.fecha_preventiva or '' }}"
+                            data-fecha-correctiva="{{ e.fecha_correctiva or '' }}"
+                            data-causas-detalle="{{ e.causas_detalle or '' }}"
+                            data-control-detalle="{{ e.control_detalle or '' }}"
+                            data-correctiva-detalle="{{ e.correctiva_detalle or '' }}"
+                            data-metodo-analisis="{{ e.metodo_analisis or '' }}" data-why1="{{ e.why1 or '' }}"
+                            data-why2="{{ e.why2 or '' }}" data-why3="{{ e.why3 or '' }}" data-why4="{{ e.why4 or '' }}"
+                            data-why5="{{ e.why5 or '' }}" data-fish-metodo="{{ e.fish_metodo or '' }}"
+                            data-fish-maquinas="{{ e.fish_maquinas or '' }}"
+                            data-fish-materiales="{{ e.fish_materiales or '' }}"
+                            data-fish-personas="{{ e.fish_personas or '' }}"
+                            data-fish-entorno="{{ e.fish_entorno or '' }}"
+                            data-fish-medicion="{{ e.fish_medicion or '' }}" data-tipo-reclamo="{{ e.motivo or '' }}"
+                            data-antecedente="{{ e.submotivo or '' }}" data-imputados="{{ e.sponsor or '' }}"
+                            data-estado-global="{{ e.estado_global or '' }}">
+
+                            <td data-th="Código">{{ e.codigo or '' }}</td>
+                            <td data-th="Fecha Reclamo"> {{ (e.fecha_limite or '')[8:10] }}/{{ (e.fecha_limite or
+                                '')[5:7] }}/{{
+                                (e.fecha_limite or '')[0:4] }}</td>
+
+                            <td data-th="Cliente">{{ e.cliente_nombre or '' }}</td>
+
+                            <td data-th="Motivo" class="cell-max-280">
+                                <div class="fw-semibold">{{ e.motivo or '' }}</div>
+                                <div class="small-muted text-truncate cell-max-270">
+                                    {{ e.submotivo or '' }}
+                                </div>
+                            </td>
+
+                            <td data-th="Sponsor">{{ e.sponsor or '' }}</td>
+
+                            <td data-th="Observación" class="cell-max-280">
+                                <div class="small-muted text-truncate cell-max-270">
+                                    {{ e.observacion or '' }}
+                                </div>
+                            </td>
+
+                            <td data-th="Estado equipo">
+                                {{ e.estado_equipo }}
+                                {# ✅ OPCIONAL: indicador visual si ya respondió #}
+                                {% if (e.causa or '')|trim or (e.preventiva or '')|trim or (e.correctiva or '')|trim %}
+                                <span class="badge bg-success ms-2">Respondido</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="sticky-end text-end" data-th="Acciones">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary btn-sm js-ver-detalle" title="Ver Detalle"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalle">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                    {% set om_cerrada = (e.estado_global or '')|lower == 'cerrado' %}
+
+                                    <button class="btn btn-outline-warning btn-sm js-responder-medidas"
+                                        title="{{ 'OM cerrada: solo lectura' if om_cerrada else 'Responder OM' }}"
+                                        data-bs-toggle="modal" data-bs-target="#modalResponderMedidas" {% if om_cerrada
+                                        %}disabled aria-disabled="true" {% endif %}>
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 small-muted">
+                                No tienes OM asignadas como miembro de equipo.
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div> <!-- /tab-content -->
+
+</div> <!-- /container -->
+
+<!-- Toast flotante -->
+<div class="position-fixed bottom-0 end-0 p-3 no-print toast-fixed-wrap">
+    <div id="toast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body"></div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL: NUEVO RECLAMO
+     ========================================================= -->
+<div class="modal fade" id="modalNuevoReclamo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="formNuevoReclamo" method="post" action="{{ url_for('reclamos_nuevo') }}"
+                enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nuevo OM</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Sección Cliente / Cabecera -->
+                    <div class="row g-3">
+                        <div class="col-md-3 field-fecha-reclamo">
+                            <label class="form-label">Fecha de la OM</label>
+                            <input type="date" name="fecha_reclamo" id="recl-fecha-om" class="form-control" required
+                                disabled>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Cliente</label>
+                            <input type="hidden" name="cliente_id" id="recl-cliente-id" required>
+
+                            <input required type="text" class="form-control" id="recl-cliente-nombre"
+                                name="cliente_nombre" list="recl-dl-clientes" placeholder="Escribe para buscar…"
+                                autocomplete="off">
+                            <datalist id="recl-dl-clientes"></datalist>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Motivo de la OM</label>
+                            <select class="form-select" name="tipo_reclamo" id="recl-tipo-reclamo" required>
+                                <option value="">— Seleccione —</option>
+                                {% for t in tipos_reclamo %}
+                                {% set cfg = tipos_campos.get(t.nombre) %}
+                                <option value="{{ t.nombre }}" data-id="{{ t.id }}"
+                                    data-usa-region="{{ 1 if cfg and cfg.usa_region else 0 }}"
+                                    data-usa-tramite="{{ 1 if cfg and cfg.usa_tramite else 0 }}"
+                                    data-usa-proceso="{{ 1 if cfg and cfg.usa_proceso else 0 }}"
+                                    data-usa-fecha-reclamo="{{ 1 if cfg and cfg.usa_fecha_reclamo else 0 }}"
+                                    data-usa-fecha-pedido="{{ 1 if cfg and cfg.usa_fecha_pedido else 0 }}"
+                                    data-usa-fecha-ofrec="{{ 1 if cfg and cfg.usa_fecha_ofrec else 0 }}"
+                                    data-usa-fecha-entrega="{{ 1 if cfg and cfg.usa_fecha_entrega else 0 }}"
+                                    data-usa-material="{{ 1 if cfg and cfg.usa_material else 0 }}"
+                                    data-usa-persona-atendio="{{ 1 if cfg and cfg.usa_persona_atendio else 0 }}"
+                                    data-usa-colaborador="{{ 1 if cfg and cfg.usa_colaborador else 0 }}"
+                                    data-usa-factura-guia="{{ 1 if cfg and cfg.usa_factura_guia else 0 }}"
+                                    data-usa-antecedente="{{ 1 if cfg and cfg.usa_antecedente else 0 }}"
+                                    data-usa-observacion="{{ 1 if cfg and cfg.usa_observacion else 0 }}">
+                                    {{ t.valor or t.nombre }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!--
+                        <div class="col-md-2 field-tramite" d-none>
+                            <label class="form-label">Trámite</label>
+                            <select class="form-select" name="tipo_tramite" id="recl-tipo-tramite">
+                                <option value="">— Seleccione —</option>
+                                {% for t in tipos_tramite %}
+                                <option value="{{ t.nombre }}">{{ t.valor or t.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    -->
+                        <div class="col-md-3 field-proceso">
+                            <label class="form-label">Proceso</label>
+
+                            <!-- lo que realmente se envía al backend (texto) -->
+                            <input type="hidden" name="proceso_text" id="recl-proceso-text">
+                            <input type="hidden" name="antecedente" id="recl-antecedente">
+                            <!-- selector múltiple (NO tiene name para no romper el backend) -->
+                            <select class="form-select" id="recl-proceso" multiple size="4">
+                                {% for p in procesos %}
+                                <option value="{{ p.valor }}" data-cedula="{{ p.nombre }}">
+                                    {{ p.valor }}
+                                </option>
+                                {% endfor %}
+                            </select>
+
+                            <div class="small-muted mt-1">Ctrl/Shift para seleccionar varios.</div>
+                        </div>
+
+                        <div class="col-md-12 field-antecedente">
+                            <label class="form-label">Sub Motivo de la OM</label>
+
+                            <!-- SELECT de submotivos -->
+                            <select id="recl-subtipo" class="form-select" disabled>
+                                <option value="">— Seleccione un tipo de reclamo primero —</option>
+                            </select>
+
+                            <!-- Input libre cuando no hay submotivos o es "Otro" -->
+                            <input type="text" id="recl-subtipo-otro" class="form-control mt-2 d-none"
+                                placeholder="Especifique el motivo…">
+                        </div>
+
+                        <div class="col-md-12 field-observacion">
+                            <label class="form-label">Descripción / Observación</label>
+                            <textarea name="observacion" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <div class="col-md-4 field-factura-guia">
+                            <label class="form-label">Factura / Guía</label>
+                            <input type="text" name="factura" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-4 field-fecha-pedido">
+                            <label class="form-label">Fecha del Evento</label>
+                            <input type="date" name="fecha_pedido" class="form-control" id="fechaEvento">
+                        </div>
+
+                        
+
+                        <div class="col-md-4 field-material">
+                            <label class="form-label">Producto / Material</label>
+                            <div class="input-group">
+                                <select name="material_id" id="recl-material" class="form-select">
+                                    <option value="">— Seleccione —</option>
+                                    {% for m in materiales %}
+                                    <option value="{{ m.id }}">{{ m.valor or m.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                {% if puede_crear_materiales %}
+                                <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#modalNuevoMaterial">
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Esponsor de la OM</label>
+
+                            <input type="text" class="form-control" id="recl-imputado-search" list="recl-dl-usuarios"
+                                disabled placeholder="Escriba el nombre y presione Enter para agregar…"
+                                autocomplete="off">
+
+                            <datalist id="recl-dl-usuarios">
+                                {% for u in usuarios_imputables %}
+                                <option value="{{ (u.nombre_completo or u.username)|e }}" data-id="{{ u.id }}"
+                                    data-username="{{ u.username|e }}" data-depto="{{ u.departamento_nombre or '' }}"
+                                    data-jefe="{{ u.jefe_nombre or '' }}">
+                                </option>
+                                {% endfor %}
+                            </datalist>
+
+                            <div id="recl-imputados-chips" class="mt-2 d-flex flex-wrap gap-1"></div>
+
+                            <div id="recl-imputado-info" class="small-muted mt-1"></div>
+
+                            <div class="small-muted mt-1">
+                                Puede seleccionar varios. Cada uno requerirá aprobación de su jefe.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small text-muted">
+                        Adjuntar documentos (máx. 5 archivos, hasta 5 MB c/u)
+                    </label>
+
+                    <input type="file" id="recl-adjuntos" name="adjuntos" class="form-control form-control-sm" multiple>
+                    <div id="recl-adjuntos-invalid" class="invalid-feedback">
+                        Debe adjuntar al menos un archivo para guardar.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">
+                        Guardar OM
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL: VER DETALLE (solo lectura)
+     ========================================================= -->
+<div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable"> <!-- ✅ antes: modal-lg -->
+        <div class="modal-content">
+            <input type="hidden" id="det-reclamo-id">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-eye me-2"></i>Detalle de la Oportunidad de Mejora
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- ===== Tarjeta: Datos de la OM ===== -->
+                <div class="detail-card mb-3">
+                    <div class="detail-section-title">Datos de la OM</div>
+
+                    <div class="detail-grid mb-2">
+                        <div>
+                            <div class="detail-item-label">Código</div>
+                            <div class="detail-item-value" id="det-codigo"></div>
+                        </div>
+                        <div>
+                            <div class="detail-item-label">Fecha OM</div>
+                            <div class="detail-item-value" id="det-fecha"></div>
+                        </div>
+
+                        <div>
+                            <div class="detail-item-label">Cliente</div>
+                            <div class="detail-item-value" id="det-cliente"></div>
+                        </div>
+                        <div>
+                            <div class="detail-item-label">Proceso</div>
+                            <div class="detail-item-value" id="det-proceso"></div>
+                        </div>
+
+                        <div>
+                            <div class="detail-item-label">Material</div>
+                            <div class="detail-item-value" id="det-material"></div>
+                        </div>
+
+                        <!-- ✅ Sponsor + Participaron, con chips -->
+                        <div class="det-people-block">
+                            <div class="detail-item-label">Sponsor</div>
+                            <div id="det-imputados" class="det-chips"></div>
+
+                            <div id="det-equipo-wrap" class="mt-2 d-none">
+                                <div class="detail-item-label">Participaron</div>
+                                <div id="det-equipo" class="det-chips"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="detail-item-label mb-1">Observación</div>
+                        <div id="det-observacion" class="detail-observacion"></div>
+                    </div>
+                    <div>
+                        <div class="detail-item-label">Tipo de reclamo</div>
+                        <div class="detail-item-value" id="det-tipo-reclamo"></div>
+                    </div>
+
+                    <div>
+                        <div class="detail-item-label">Antecedente / Sub motivo</div>
+                        <div class="detail-item-value" id="det-antecedente"></div>
+                    </div>
+                </div>
+
+                <!-- ===== Tarjeta: Seguimiento ===== -->
+                <div class="detail-card mb-3">
+                    <div class="detail-section-title">Seguimiento</div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="detail-item-label">Estado</div>
+                            <div class="detail-item-value">
+                                <span id="det-estado" class="detail-status-pill"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="detail-item-label">Procede</div>
+                            <div class="detail-item-value" id="det-procede"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="detail-item-label">Fecha creación (sistema)</div>
+                            <div class="detail-item-value" id="det-fcreacion"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== Tarjeta: Respuesta técnica (más pro + ocupa todo) ===== -->
+                <div class="detail-card det-rt-wrap">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="detail-section-title mb-0">Respuesta técnica</div>
+                        <div class="small-muted">
+                            <i class="bi bi-person-check me-1"></i>Respuestas por imputado
+                        </div>
+                    </div>
+
+                    <!-- múltiples imputados -->
+                    <div id="det-respuestas-multiples" class="d-none mb-2">
+                        <div class="small-muted mb-1">Respuestas por imputado</div>
+                        <div id="det-respuestas-list" class="d-flex flex-column gap-2"></div>
+                    </div>
+
+                    <!-- respuesta única -->
+                    <div class="row g-3 row-respuesta-unica det-rt-grid">
+                        <!-- CAUSA -->
+                        <div class="col-12 col-lg-4">
+                            <div class="border rounded-4 p-3 h-100 bg-white shadow-sm det-rt-card">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge rounded-pill text-bg-primary">
+                                        <i class="bi bi-exclamation-circle me-1"></i>Causa
+                                    </span>
+                                    <div id="det-fecha-causa"
+                                        class="small text-muted px-2 py-1 rounded-pill det-fecha-pill det-fecha-gray">
+                                    </div>
+                                </div>
+
+                                <div id="det-causa" class="border rounded-3 p-2 det-rt-body det-bg-gray"
+                                    class="ws-pre-wrap"></div>
+
+                                <div class="small text-muted mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>Descripción de la causa raíz identificada.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACCIÓN PREVENTIVA -->
+                        <div class="col-12 col-lg-4">
+                            <div class="border rounded-4 p-3 h-100 bg-white shadow-sm det-rt-card">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge rounded-pill text-bg-warning">
+                                        <i class="bi bi-shield-check me-1"></i>Acción de Control
+                                    </span>
+                                    <div id="det-fecha-preventiva"
+                                        class="small text-muted px-2 py-1 rounded-pill det-fecha-pill det-fecha-warn">
+                                    </div>
+                                </div>
+
+                                <div id="det-preventiva" class="border rounded-3 p-2 det-rt-body det-bg-warn"
+                                    class="ws-pre-wrap"></div>
+
+                                <div class="small text-muted mt-2">
+                                    <i class="bi bi-lightbulb me-1"></i>Control aplicado para evitar recurrencia
+                                    inmediata.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACCIÓN CORRECTIVA -->
+                        <div class="col-12 col-lg-4">
+                            <div class="border rounded-4 p-3 h-100 bg-white shadow-sm det-rt-card">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge rounded-pill text-bg-success">
+                                        <i class="bi bi-check2-circle me-1"></i>Acción Correctiva
+                                    </span>
+                                    <div id="det-fecha-correctiva"
+                                        class="small text-muted px-2 py-1 rounded-pill det-fecha-pill det-fecha-ok">
+                                    </div>
+                                </div>
+
+                                <div id="det-correctiva" class="border rounded-3 p-2 det-rt-body det-bg-ok"
+                                    class="ws-pre-wrap"></div>
+
+                                <div class="small text-muted mt-2">
+                                    <i class="bi bi-flag me-1"></i>Acción definitiva para eliminar la causa.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ===== Tarjeta: Seguimiento de acciones ===== -->
+                        <div class="detail-card mt-3" id="det-seguimiento-acciones-wrap">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="detail-section-title mb-0">Seguimiento de acciones</div>
+                                <div class="small-muted">
+                                    <i class="bi bi-check2-square me-1"></i>Cumplimiento y evidencia por acción
+                                </div>
+                            </div>
+
+                            <div id="det-seguimiento-acciones-list">
+                                <div class="text-muted small">Sin acciones de seguimiento.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== Tarjeta: Análisis de Causa Raíz ===== -->
+                <div class="detail-card mt-3">
+                    <div class="detail-section-title">Análisis de Causa Raíz</div>
+
+                    <div id="det-5why" class="d-none">
+                        <div class="fw-semibold mb-2">Metodología: 5 Por Qué</div>
+                        <ol class="mb-0">
+                            <li>
+                                <div id="det-why1"></div>
+                            </li>
+                            <li>
+                                <div id="det-why2"></div>
+                            </li>
+                            <li>
+                                <div id="det-why3"></div>
+                            </li>
+                            <li>
+                                <div id="det-why4"></div>
+                            </li>
+                            <li>
+                                <div id="det-why5"></div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div id="det-fishbone" class="d-none">
+                        <div class="fw-semibold mb-2">Metodología: Espina de Pez</div>
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <div class="small fw-semibold">Método</div>
+                                <div id="det-fish-metodo" class="border rounded p-2"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="small fw-semibold">Máquinas</div>
+                                <div id="det-fish-maquinas" class="border rounded p-2"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="small fw-semibold">Materiales</div>
+                                <div id="det-fish-materiales" class="border rounded p-2"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="small fw-semibold">Personas</div>
+                                <div id="det-fish-personas" class="border rounded p-2"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="small fw-semibold">Entorno</div>
+                                <div id="det-fish-entorno" class="border rounded p-2"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="small fw-semibold">Medición</div>
+                                <div id="det-fish-medicion" class="border rounded p-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== Tarjeta: Adjuntos ===== -->
+                <div class="detail-card mt-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="detail-section-title mb-0">Adjuntos</div>
+                        <div class="small text-muted">Máx. 5 archivos, hasta 5 MB cada uno.</div>
+                    </div>
+
+                    <div class="table-responsive mb-2">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Archivo</th>
+                                    <th class="w-90px">Tamaño</th>
+                                    <th class="w-150px">Fecha</th>
+                                    <th class="w-160px">Cargado por</th>
+                                    <th class="text-end w-56px">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="det-adjuntos-body">
+                                <tr>
+                                    <td colspan="5" class="text-muted small">Sin adjuntos.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <input type="file" id="det-adjuntos-input" name="adjuntos"
+                                class="form-control form-control-sm" multiple>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" id="btn-det-subir-adjuntos" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-upload me-1"></i>Subir adjuntos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /modal-body -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- =========================================================
+     MODAL: APROBAR / RECHAZAR IMPUTACIÓN (JEFE)
+     ========================================================= -->
+<div class="modal fade" id="modalAprobarImputacion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="formAprobarImputacion">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-check2-circle me-2"></i>Aprobación de Oportunida de Mejora
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="imputacion_id" id="aprob-imp-id">
+
+                    <div class="mb-2">
+                        <strong>Oportunidad de Mejora:</strong> <span id="aprob-reclamo-codigo"></span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Imputado:</strong> <span id="aprob-imputado-nombre"></span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Observación:</strong>
+                        <div id="aprob-observacion" class="border rounded p-2 ws-pre-wrap"></div>
+                    </div>
+
+                    <div class="alert alert-warning small">
+                        Al aprobar, se notificará por correo al creador de la OM y al usuario imputado.
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success flex-fill" id="btnAprobarImp">
+                            Aprobar Oportunidad de Mejora
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL: RESPONDER MEDIDAS (USUARIO IMPUTADO\SPONSOR)
+     ========================================================= -->
+<div class="modal fade" id="modalResponderMedidas" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-responder-wide">
+        <div class="modal-content">
+            <form id="formResponderMedidas">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Responder medidas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="imputacion_id" id="resp-imp-id">
+
+                    <div class="mb-2">
+                        <strong>Oportunidad de Mejora:</strong> <span id="resp-reclamo-codigo"></span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Observación:</strong>
+                        <div id="resp-observacion" class="border rounded p-2 ws-pre-wrap"></div>
+                    </div>
+
+                    <!-- Selector de metodología -->
+                    <div class="mb-3">
+                        <label class="form-label small text-muted mb-1">Metodología de análisis</label>
+                        <div class="btn-group" role="group" aria-label="Metodología de análisis">
+                            <button type="button" class="btn btn-outline-primary btn-sm active js-metodo-btn"
+                                data-metodo="FISHBONE">
+                                <i class="bi bi-diagram-3 me-1"></i>Espina de pescado
+                            </button>
+                            <button type="button" class="btn btn-outline-primary btn-sm js-metodo-btn"
+                                data-metodo="5WHYS">
+                                <i class="bi bi-123 me-1"></i>5 porqués
+                            </button>
+                        </div>
+                        <input type="hidden" name="metodo_analisis" id="resp-metodo" value="FISHBONE">
+                        <div class="small-muted mt-1">
+                            Selecciona <strong>una sola metodología</strong> para esta Oportunidad de Mejora.
+                        </div>
+                    </div>
+
+                    <!-- Guía visual + campos editables de espina de pescado -->
+                    <div id="fishbone-help" class="fishbone-help">
+                        <div class="fishbone-help-title">
+                            Guía visual – Diagrama de espina de pescado (Ishikawa)
+                        </div>
+                        <div class="small-muted">
+                            Usa las ramas para pensar en posibles causas por categoría.
+                            Lo que finalmente registres como <strong>Causa raíz</strong>
+                            puede resumir este análisis.
+                        </div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 260" width="100%" height="260"
+                            role="img" aria-label="Diagrama de espina de pescado (Ishikawa)"
+                            class="fishbone-svg">
+                            <defs>
+                                <linearGradient id="bg" x1="0" x2="1" y1="0" y2="0">
+                                    <stop offset="0" stop-color="var(--bg1)" />
+                                    <stop offset="1" stop-color="var(--bg2)" />
+                                </linearGradient>
+
+                                <filter id="soft" x="-20%" y="-30%" width="140%" height="160%">
+                                    <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1F3A8A"
+                                        flood-opacity="0.12" />
+                                    <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#1F3A8A"
+                                        flood-opacity="0.10" />
+                                </filter>
+
+                                
+                            </defs>
+
+                            <!-- fondo -->
+                            <rect x="10" y="10" width="1080" height="240" rx="18" fill="url(#bg)" filter="url(#soft)" />
+
+                            <!-- espina central -->
+                            <line class="spine" x1="160" y1="130" x2="848" y2="130" />
+
+                            <!-- cuello / unión suave -->
+                            <path class="spine" d="M848 130 C858 124, 868 124, 878 130 C868 136, 858 136, 848 130 Z"
+                                fill="var(--fish)" stroke="none" opacity="0.95" />
+                            <path class="rib2" d="M852 130 C862 126, 870 126, 878 130" opacity=".65" />
+                            <path class="rib2" d="M852 130 C862 134, 870 134, 878 130" opacity=".45" />
+
+                            <!-- cola -->
+                            <!-- cola (aleta caudal más realista) -->
+                            <g>
+                                <!-- aleta principal -->
+                                <path class="spine" d="M160 130
+       C145 106, 122 96, 96 92
+       C108 112, 108 148, 96 168
+       C122 164, 145 154, 160 130 Z" fill="var(--fish2)" fill-opacity=".22" stroke-linejoin="round" />
+
+                                <!-- “mordida” central (separa lóbulos, más pez) -->
+                                <path d="M160 130
+       C142 124, 124 126, 108 130
+       C124 134, 142 136, 160 130 Z" fill="var(--bg2)" fill-opacity=".65" stroke="none" />
+
+                                <!-- radios internos -->
+                                <path class="rib2" d="M150 118 L112 104" />
+                                <path class="rib2" d="M148 130 L106 130" />
+                                <path class="rib2" d="M150 142 L112 156" />
+                            </g>
+
+                            <!-- costillas principales -->
+                            <!-- 1 -->
+                            <path class="rib" d="M320 130 L270 80" />
+                            <path class="rib" d="M320 130 L270 180" />
+                            <path class="rib2" d="M290 120 L265 95" />
+                            <path class="rib2" d="M290 140 L265 165" />
+
+                            <!-- 2 -->
+                            <path class="rib" d="M500 130 L450 78" />
+                            <path class="rib" d="M500 130 L450 182" />
+                            <path class="rib2" d="M470 120 L445 95" />
+                            <path class="rib2" d="M470 140 L445 165" />
+
+                            <!-- 3 -->
+                            <path class="rib" d="M680 130 L630 80" />
+                            <path class="rib" d="M680 130 L630 180" />
+                            <path class="rib2" d="M650 120 L625 95" />
+                            <path class="rib2" d="M650 140 L625 165" />
+
+                            <!-- cabeza -->
+                            <!-- cabeza (más realista, no circular) -->
+                            <!-- cabeza (más realista + aletas sutiles) -->
+                            <g filter="url(#soft)">
+                                <!-- forma cabeza -->
+                                <path d="M848 130
+       C 862 88, 912 74, 952 102
+       C 972 116, 990 124, 996 130
+       C 990 136, 972 144, 952 158
+       C 912 186, 862 172, 848 130 Z" fill="var(--fish)" />
+
+                                <!-- aleta dorsal (sutil) -->
+                                <path d="M900 92
+       C 910 70, 936 70, 952 98
+       C 936 90, 918 92, 900 92 Z" fill="var(--fish2)" opacity=".30" />
+
+                                <!-- aleta pectoral (sutil) -->
+                                <path d="M930 150
+       C 944 164, 932 178, 910 182
+       C 918 170, 922 158, 930 150 Z" fill="var(--fish2)" opacity=".22" />
+
+                                <!-- brillo para volumen -->
+                                <path d="M868 116
+       C 888 90, 922 88, 948 108" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="6" stroke-linecap="round" />
+
+                                <!-- ojo -->
+                                <circle cx="912" cy="116" r="9" fill="#FFFFFF" opacity="0.95" />
+                                <circle cx="914" cy="116" r="4" fill="#1E40AF" opacity="0.9" />
+
+                                <!-- branquias -->
+                                <path d="M930 108 C910 124, 910 136, 930 152" fill="none" stroke="var(--fish2)"
+                                    stroke-width="2.6" stroke-linecap="round" opacity=".95" />
+                                <path d="M944 106 C924 124, 924 136, 944 154" fill="none" stroke="var(--fish2)"
+                                    stroke-width="2.2" stroke-linecap="round" opacity=".70" />
+
+                                <!-- boca -->
+                                <path d="M990 130 C1008 124, 1016 130, 1006 138" fill="none" stroke="var(--fish2)"
+                                    stroke-width="3" stroke-linecap="round" />
+                            </g>
+
+                            <!-- etiquetas (píldoras) -->
+                            <g class="pill">
+                                <g transform="translate(95,34)">
+                                    <rect rx="16" width="170" height="34" />
+                                    <text x="85" y="21" text-anchor="middle">Método / Proceso</text>
+                                </g>
+
+                                <g transform="translate(420,18)">
+                                    <rect rx="16" width="190" height="34" />
+                                    <text x="95" y="21" text-anchor="middle">Máquinas / Equipos</text>
+                                </g>
+
+                                <g transform="translate(650,34)">
+                                    <rect rx="16" width="200" height="34" />
+                                    <text x="100" y="21" text-anchor="middle">Materiales / Insumos</text>
+                                </g>
+
+                                <g transform="translate(85,192)">
+                                    <rect rx="16" width="190" height="34" />
+                                    <text x="95" y="21" text-anchor="middle">Mano de obra / Personas</text>
+                                </g>
+
+                                <g transform="translate(370,206)">
+                                    <rect rx="16" width="210" height="34" />
+                                    <text x="105" y="21" text-anchor="middle">Medio ambiente / Entorno</text>
+                                </g>
+
+                                <g transform="translate(610,192)">
+                                    <rect rx="16" width="190" height="34" />
+                                    <text x="95" y="21" text-anchor="middle">Medición / Información</text>
+                                </g>
+                            </g>
+
+                            <!-- causa raíz (botón visual) -->
+                            <g class="pill small" transform="translate(965,114)">
+                                <rect rx="16" width="120" height="34" fill="#EEF2FF" stroke="#C7D2FE" filter="none" />
+                                <circle cx="18" cy="17" r="6.5" fill="#2563EB" />
+                                <text x="68" y="21" text-anchor="middle" class="note">Causa raíz</text>
+                            </g>
+                        </svg>
+
+                        <!-- Campos editables por categoría -->
+                        <div class="row g-2 mt-3">
+                            <div class="col-md-4">
+                                <label class="form-label small">Método / Proceso</label>
+                                <textarea class="form-control form-control-sm" name="fish_metodo" id="resp-fish-metodo"
+                                    rows="2"></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Máquinas / Equipos</label>
+                                <textarea class="form-control form-control-sm" name="fish_maquinas"
+                                    id="resp-fish-maquinas" rows="2"></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Materiales / Insumos</label>
+                                <textarea class="form-control form-control-sm" name="fish_materiales"
+                                    id="resp-fish-materiales" rows="2"></textarea>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label small">Mano de obra / Personas</label>
+                                <textarea class="form-control form-control-sm" name="fish_personas"
+                                    id="resp-fish-personas" rows="2"></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Medio ambiente / Entorno</label>
+                                <textarea class="form-control form-control-sm" name="fish_entorno"
+                                    id="resp-fish-entorno" rows="2"></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Medición / Información</label>
+                                <textarea class="form-control form-control-sm" name="fish_medicion"
+                                    id="resp-fish-medicion" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div> <!-- /fishbone-help -->
+
+                    <!-- Bloque extra: 5 porqués (solo visible si se elige ese método) -->
+                    <div id="resp-bloque-5whys" class="mt-3 d-none">
+                        <div class="small-muted mb-1">
+                            Desarrollo de los <strong>5 porqués</strong>
+                            (cuando uses esta metodología).
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">¿Por qué? #1</label>
+                                <textarea class="form-control" id="resp-why1" rows="2"></textarea>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">¿Por qué? #2</label>
+                                <textarea class="form-control" id="resp-why2" rows="2"></textarea>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">¿Por qué? #3</label>
+                                <textarea class="form-control" id="resp-why3" rows="2"></textarea>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">¿Por qué? #4</label>
+                                <textarea class="form-control" id="resp-why4" rows="2"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">¿Por qué? #5 (causa raíz)</label>
+                                <textarea class="form-control" id="resp-why5" rows="2"></textarea>
+                                <div class="form-text small">
+                                    La <strong>causa raíz</strong> que se grabará en el sistema
+                                    puede ser el resumen de este último "por qué".
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bloque principal: Causa / Acciones (común a ambos métodos) -->
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Causas</label>
+
+                            <div id="resp-lista-causas"></div>
+
+                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btn-add-causa">
+                                <i class="bi bi-plus"></i> Agregar causa
+                            </button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Acciones de control</label>
+
+                            <div id="resp-lista-control"></div>
+
+                            <button type="button" class="btn btn-sm btn-outline-warning mt-2" id="btn-add-control">
+                                <i class="bi bi-plus"></i> Agregar acción
+                            </button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Acciones correctivas</label>
+
+                            <div id="resp-lista-correctiva"></div>
+
+                            <button type="button" class="btn btn-sm btn-outline-success mt-2" id="btn-add-correctiva">
+                                <i class="bi bi-plus"></i> Agregar acción
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="alert alert-info small mt-3">
+                        Al enviar, se notificará a tu jefe para aprobación de la respuesta.
+                    </div>
+                    <div id="ia-help-box" class="alert alert-warning small py-2 mb-2">
+                        <i class="bi bi-lightbulb me-1"></i>
+                        Para obtener una mejor propuesta con IA, completa el análisis, las causas y las acciones con el
+                        mayor detalle posible.
+                        Cada campo debe tener al menos 12 caracteres.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" id="btnMejorarIA">
+                        <i class="bi bi-stars me-1"></i>Mejorar con IA
+                        <span id="ia-count-badge" class="badge bg-light text-dark border ms-2">0/2</span>
+                    </button>
+
+                    <button class="btn btn-primary" id="btnEnviarRespuesta" type="submit">Enviar respuesta</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+            <!-- ✅ Overlay visible para el usuario (solo este modal) -->
+            <div id="resp-loading" class="d-none">
+                <div class="resp-loading-card">
+                    <div class="spinner-border" role="status" aria-hidden="true"></div>
+                    <div class="mt-2 fw-semibold">Guardando…</div>
+                    <div id="resp-loading-msg" class="small text-muted">Por favor espere.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     MODAL: VALIDAR RESPUESTA (JEFE)
+     ========================================================= -->
+<div class="modal fade" id="modalValidarRespuesta" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="formValidarRespuesta">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-clipboard2-check me-2"></i>Validar respuesta técnica</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="imputacion_id" id="val-imp-id">
+
+                    <div class="mb-2">
+                        <strong>Oportunidad de Mejora:</strong> <span id="val-reclamo-codigo"></span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Observación:</strong>
+                        <div id="val-observacion" class="border rounded p-2 ws-pre-wrap"></div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="small-muted">Responsable / Causa raíz</div>
+                            <div id="val-causa" class="border rounded p-2"
+                                class="ws-pre-wrap min-h-4rem"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small-muted">Acción de Control</div>
+                            <div id="val-preventiva" class="border rounded p-2"
+                                class="ws-pre-wrap min-h-4rem"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small-muted">Acción Correctiva</div>
+                            <div id="val-correctiva" class="border rounded p-2"
+                                class="ws-pre-wrap min-h-4rem"></div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning small mt-3">
+                        Al aprobar, se notificará al usuario que creo la OM.
+                    </div>
+
+                    <!--<div class="mb-3">
+                        <label class="form-label">Motivo de rechazo (obligatorio SOLO si rechaza)</label>
+                        <textarea class="form-control" id="val-motivo-rechazo" name="motivo_rechazo"
+                            rows="3"></textarea>
+                    </div>-->
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success flex-fill" id="btnAprobarResp">Aprobar
+                            respuesta</button>
+                        <!-- <button type="button" class="btn btn-danger flex-fill" id="btnRechazarResp">Rechazar
+                            respuesta</button>-->
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if puede_crear_materiales %}
+<!-- =========================================================
+     MODAL: Materiales
+     ========================================================= -->
+<div class="modal fade" id="modalNuevoMaterial" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formNuevoMaterial">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-box-seam me-2"></i>Nuevo material
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del material</label>
+                        <input type="text" name="nombre" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Guardar material</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if puede_crear_materiales %}
+
+{% endif %}
+
+<!-- ================= MODAL: EQUIPO DE RESPUESTAS ================= -->
+<div class="modal fade" id="modalEquipoRespuestas" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Equipo de respuestas –
+                    <span id="eq-titulo-codigo" class="fw-semibold"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Se rellenan vía JS -->
+                <input type="hidden" id="eq-reclamo-id">
+                <input type="hidden" id="eq-imputacion-id">
+
+                <!-- Bloque para agregar miembro -->
+                <div class="mb-3">
+                    <label for="eq-usuario-id" class="form-label">Agregar miembro del equipo</label>
+                    <div class="input-group">
+                        <select id="eq-usuario-id" class="form-select">
+                            <option value="">-- Seleccione un usuario --</option>
+                            {% for u in usuarios_imputables %}
+                            <option value="{{ u.id }}">
+                                {{ u.nombre_completo or u.full_name or u.username }} ({{ u.username }})
+                            </option>
+                            {% endfor %}
+                        </select>
+
+                        <button class="btn btn-primary" type="button" id="btn-eq-agregar">
+                            <i class="bi bi-person-plus"></i> Agregar
+                        </button>
+                    </div>
+                    <div class="form-text">
+                        Los usuarios agregados aquí podrán registrar respuestas en este reclamo dentro de la sección
+                        “Soy sponsor”.
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Tabla de miembros actuales -->
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle" id="tabla-equipo-respuestas">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Rol / Área</th>
+                                <th>Puede responder</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <!-- 👇 ESTE ES EL PASO 3 IMPORTANTE -->
+                        <tbody id="equipo-respuestas-body">
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">
+                                    Aún no has agregado miembros al equipo para este reclamo.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="alert alert-info small mb-0">
+                    <strong>Nota:</strong> Las respuestas de los miembros del equipo son insumos para ti como
+                    responsable.
+                    Solo tu respuesta final es la que se considera oficial para la OM.
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ================= MODAL: VER APORTE DEL EQUIPO (MISMO FORMATO SPONSOR) ================= -->
+<div class="modal fade" id="modalAporteEquipo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-eye me-2"></i>Aporte del miembro:
+                    <span id="ap-miembro" class="fw-semibold"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Metodología -->
+                <div class="detail-card mb-3">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="detail-item-label mb-0">Metodología de análisis</div>
+                        <span id="ap-metodo-badge-fish" class="badge rounded-pill text-bg-light border">Espina de
+                            pescado</span>
+                        <span id="ap-metodo-badge-why" class="badge rounded-pill text-bg-light border">5 porqués</span>
+                    </div>
+                </div>
+
+                <!-- Fishbone -->
+                <div id="ap-fish-wrap" class="detail-card mb-3 d-none">
+                    <div class="small-muted mb-2">Guía visual – Diagrama de espina de pescado (Ishikawa)</div>
+                    <div class="small-muted mb-3">Aporte registrado por el miembro del equipo (solo lectura).</div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small">Método / Proceso</label>
+                            <textarea id="ap-fish-metodo" class="form-control" rows="2" readonly></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Máquinas / Equipos</label>
+                            <textarea id="ap-fish-maquinas" class="form-control" rows="2" readonly></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Materiales / Insumos</label>
+                            <textarea id="ap-fish-materiales" class="form-control" rows="2" readonly></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Mano de obra / Personas</label>
+                            <textarea id="ap-fish-personas" class="form-control" rows="2" readonly></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Medio ambiente / Entorno</label>
+                            <textarea id="ap-fish-entorno" class="form-control" rows="2" readonly></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Medición / Información</label>
+                            <textarea id="ap-fish-medicion" class="form-control" rows="2" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5 Whys -->
+                <div id="ap-why-wrap" class="detail-card mb-3 d-none">
+                    <div class="small-muted mb-2">Guía visual – Metodología 5 Porqués</div>
+                    <div class="small-muted mb-3">Aporte registrado por el miembro del equipo (solo lectura).</div>
+
+                    <div class="row g-3">
+                        <div class="col-md-12"><label class="form-label small">1. ¿Por qué?</label><input id="ap-why1"
+                                class="form-control" readonly></div>
+                        <div class="col-md-12"><label class="form-label small">2. ¿Por qué?</label><input id="ap-why2"
+                                class="form-control" readonly></div>
+                        <div class="col-md-12"><label class="form-label small">3. ¿Por qué?</label><input id="ap-why3"
+                                class="form-control" readonly></div>
+                        <div class="col-md-12"><label class="form-label small">4. ¿Por qué?</label><input id="ap-why4"
+                                class="form-control" readonly></div>
+                        <div class="col-md-12"><label class="form-label small">5. ¿Por qué?</label><input id="ap-why5"
+                                class="form-control" readonly></div>
+                    </div>
+                </div>
+
+                <!-- Respuesta técnica -->
+                <div class="detail-card det-rt-wrap mb-3">
+                    <div class="detail-section-title mb-2">Respuesta técnica del miembro</div>
+
+                    <div class="row g-3 row-respuesta-unica det-rt-grid">
+                        <div class="col-12 col-lg-4">
+                            <div class="border rounded-4 p-3 h-100 bg-white shadow-sm det-rt-card">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge rounded-pill text-bg-primary">
+                                        <i class="bi bi-exclamation-circle me-1"></i>Causa
+                                    </span>
+                                </div>
+                                <div id="ap-causa" class="border rounded-3 p-2 det-rt-body det-bg-gray"
+                                    class="ws-pre-wrap"></div>
+                                <div class="small text-muted mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>Causa registrada por el miembro.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-4">
+                            <div class="border rounded-4 p-3 h-100 bg-white shadow-sm det-rt-card">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge rounded-pill text-bg-warning">
+                                        <i class="bi bi-shield-check me-1"></i>Acción de control
+                                    </span>
+                                </div>
+                                <div id="ap-prev" class="border rounded-3 p-2 det-rt-body det-bg-warn"
+                                    class="ws-pre-wrap"></div>
+                                <div class="small text-muted mt-2">
+                                    <i class="bi bi-lightbulb me-1"></i>Acción de control registrada por el miembro.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-4">
+                            <div class="border rounded-4 p-3 h-100 bg-white shadow-sm det-rt-card">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge rounded-pill text-bg-success">
+                                        <i class="bi bi-flag me-1"></i>Acción correctiva
+                                    </span>
+                                </div>
+                                <div id="ap-corr" class="border rounded-3 p-2 det-rt-body det-bg-ok"
+                                    class="ws-pre-wrap"></div>
+                                <div class="small text-muted mt-2">
+                                    <i class="bi bi-check2-circle me-1"></i>Acción correctiva registrada por el miembro.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seguimiento -->
+                <div class="detail-card mt-3" id="ap-seguimiento-acciones-wrap">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="detail-section-title mb-0">Seguimiento de acciones</div>
+                        <div class="small-muted">
+                            <i class="bi bi-check2-square me-1"></i>Cumplimiento y evidencia por acción
+                        </div>
+                    </div>
+
+                    <div id="ap-seguimiento-acciones-list">
+                        <div class="text-muted small">Sin acciones de seguimiento.</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" id="btn-ap-rechazar">
+                    <i class="bi bi-x-circle me-1"></i>Rechazar respuesta
+                </button>
+
+                <button type="button" class="btn btn-success" id="btn-ap-aprobar">
+                    <i class="bi bi-check-circle me-1"></i>Aprobar y usar como base de respuesta final
+                </button>
+
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL: VER DIAGRAMA / ANÁLISIS (para TAB 1 - creador) ================= -->
+<div class="modal fade" id="modalAnalisisImputado" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-diagram-3 me-2"></i>Diagrama / análisis del imputado
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div>
+                        <div class="small text-muted">Imputado</div>
+                        <div id="ana-imputado" class="fw-semibold"></div>
+                    </div>
+
+                    <span id="ana-metodo" class="badge bg-light text-dark border"></span>
+                </div>
+
+                <!-- ===== Vista FISHBONE ===== -->
+                <div id="ana-vista-fish">
+
+                    <div class="fishbone-help">
+                        <div class="fishbone-help-title fw-semibold mb-1">
+                            Diagrama de espina de pescado (Ishikawa)
+                        </div>
+                        <div class="small-muted">
+                            Visualiza las categorías y revisa el detalle por cada una debajo del gráfico.
+                        </div>
+
+                        <!-- ✅ MISMO PEZ QUE TAB 3 (con IDs distintos para evitar conflictos) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 260" width="100%" height="260"
+                            role="img" aria-label="Diagrama de espina de pescado (Ishikawa)"
+                            class="fishbone-svg fishbone-svg-mt">
+                            <defs>
+                                <linearGradient id="ana-bg" x1="0" x2="1" y1="0" y2="0">
+                                    <stop offset="0" stop-color="var(--bg1)" />
+                                    <stop offset="1" stop-color="var(--bg2)" />
+                                </linearGradient>
+
+                                <filter id="ana-soft" x="-20%" y="-30%" width="140%" height="160%">
+                                    <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1F3A8A"
+                                        flood-opacity="0.12" />
+                                    <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#1F3A8A"
+                                        flood-opacity="0.10" />
+                                </filter>
+
+                                
+                            </defs>
+
+                            <!-- fondo -->
+                            <rect x="10" y="10" width="1080" height="240" rx="18" fill="url(#ana-bg)"
+                                filter="url(#ana-soft)" />
+
+                            <!-- espina central -->
+                            <line class="spine" x1="160" y1="130" x2="848" y2="130" />
+
+                            <!-- cuello / unión suave -->
+                            <path class="spine" d="M848 130 C858 124, 868 124, 878 130 C868 136, 858 136, 848 130 Z"
+                                fill="var(--fish)" stroke="none" opacity="0.95" />
+                            <path class="rib2" d="M852 130 C862 126, 870 126, 878 130" opacity=".65" />
+                            <path class="rib2" d="M852 130 C862 134, 870 134, 878 130" opacity=".45" />
+
+                            <!-- cola -->
+                            <g>
+                                <path class="spine" d="M160 130
+                  C145 106, 122 96, 96 92
+                  C108 112, 108 148, 96 168
+                  C122 164, 145 154, 160 130 Z" fill="var(--fish2)" fill-opacity=".22" stroke-linejoin="round" />
+
+                                <path d="M160 130
+                  C142 124, 124 126, 108 130
+                  C124 134, 142 136, 160 130 Z" fill="var(--bg2)" fill-opacity=".65" stroke="none" />
+
+                                <path class="rib2" d="M150 118 L112 104" />
+                                <path class="rib2" d="M148 130 L106 130" />
+                                <path class="rib2" d="M150 142 L112 156" />
+                            </g>
+
+                            <!-- costillas -->
+                            <path class="rib" d="M320 130 L270 80" />
+                            <path class="rib" d="M320 130 L270 180" />
+                            <path class="rib2" d="M290 120 L265 95" />
+                            <path class="rib2" d="M290 140 L265 165" />
+
+                            <path class="rib" d="M500 130 L450 78" />
+                            <path class="rib" d="M500 130 L450 182" />
+                            <path class="rib2" d="M470 120 L445 95" />
+                            <path class="rib2" d="M470 140 L445 165" />
+
+                            <path class="rib" d="M680 130 L630 80" />
+                            <path class="rib" d="M680 130 L630 180" />
+                            <path class="rib2" d="M650 120 L625 95" />
+                            <path class="rib2" d="M650 140 L625 165" />
+
+                            <!-- cabeza -->
+                            <g filter="url(#ana-soft)">
+                                <path d="M848 130
+                  C 862 88, 912 74, 952 102
+                  C 972 116, 990 124, 996 130
+                  C 990 136, 972 144, 952 158
+                  C 912 186, 862 172, 848 130 Z" fill="var(--fish)" />
+
+                                <path d="M900 92
+                  C 910 70, 936 70, 952 98
+                  C 936 90, 918 92, 900 92 Z" fill="var(--fish2)" opacity=".30" />
+
+                                <path d="M930 150
+                  C 944 164, 932 178, 910 182
+                  C 918 170, 922 158, 930 150 Z" fill="var(--fish2)" opacity=".22" />
+
+                                <path d="M868 116
+                  C 888 90, 922 88, 948 108" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="6"
+                                    stroke-linecap="round" />
+
+                                <circle cx="912" cy="116" r="9" fill="#FFFFFF" opacity="0.95" />
+                                <circle cx="914" cy="116" r="4" fill="#1E40AF" opacity="0.9" />
+
+                                <path d="M930 108 C910 124, 910 136, 930 152" fill="none" stroke="var(--fish2)"
+                                    stroke-width="2.6" stroke-linecap="round" opacity=".95" />
+                                <path d="M944 106 C924 124, 924 136, 944 154" fill="none" stroke="var(--fish2)"
+                                    stroke-width="2.2" stroke-linecap="round" opacity=".70" />
+
+                                <path d="M990 130 C1008 124, 1016 130, 1006 138" fill="none" stroke="var(--fish2)"
+                                    stroke-width="3" stroke-linecap="round" />
+                            </g>
+
+                            <!-- etiquetas -->
+                            <g class="pill">
+                                <g transform="translate(95,34)">
+                                    <rect rx="16" width="170" height="34" />
+                                    <text x="85" y="21" text-anchor="middle">Método / Proceso</text>
+                                </g>
+
+                                <g transform="translate(420,18)">
+                                    <rect rx="16" width="190" height="34" />
+                                    <text x="95" y="21" text-anchor="middle">Máquinas / Equipos</text>
+                                </g>
+
+                                <g transform="translate(650,34)">
+                                    <rect rx="16" width="200" height="34" />
+                                    <text x="100" y="21" text-anchor="middle">Materiales / Insumos</text>
+                                </g>
+
+                                <g transform="translate(85,192)">
+                                    <rect rx="16" width="190" height="34" />
+                                    <text x="95" y="21" text-anchor="middle">Mano de obra / Personas</text>
+                                </g>
+
+                                <g transform="translate(370,206)">
+                                    <rect rx="16" width="210" height="34" />
+                                    <text x="105" y="21" text-anchor="middle">Medio ambiente / Entorno</text>
+                                </g>
+
+                                <g transform="translate(610,192)">
+                                    <rect rx="16" width="190" height="34" />
+                                    <text x="95" y="21" text-anchor="middle">Medición / Información</text>
+                                </g>
+                            </g>
+
+                            <!-- causa raíz -->
+                            <g class="pill small" transform="translate(965,114)">
+                                <rect rx="16" width="120" height="34" fill="#EEF2FF" stroke="#C7D2FE" filter="none" />
+                                <circle cx="18" cy="17" r="6.5" fill="#2563EB" />
+                                <text x="68" y="21" text-anchor="middle" class="note">Causa raíz</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- Detalle por categoría -->
+                    <div class="row g-2 mt-3">
+                        <div class="col-md-4">
+                            <div class="small text-muted fw-semibold mb-1">Método / Proceso</div>
+                            <div class="resp-card ws-pre-wrap" id="ana-fish-metodo"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small text-muted fw-semibold mb-1">Máquinas / Equipos</div>
+                            <div class="resp-card ws-pre-wrap" id="ana-fish-maquinas"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small text-muted fw-semibold mb-1">Materiales / Insumos</div>
+                            <div class="resp-card ws-pre-wrap" id="ana-fish-materiales"></div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="small text-muted fw-semibold mb-1">Mano de obra / Personas</div>
+                            <div class="resp-card ws-pre-wrap" id="ana-fish-personas"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small text-muted fw-semibold mb-1">Medio ambiente / Entorno</div>
+                            <div class="resp-card ws-pre-wrap" id="ana-fish-entorno"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small text-muted fw-semibold mb-1">Medición / Información</div>
+                            <div class="resp-card ws-pre-wrap" id="ana-fish-medicion"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ===== Vista 5WHYS ===== -->
+                <div id="ana-vista-why" class="d-none">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <div class="resp-card">
+                                <div class="small text-muted fw-semibold mb-1">¿Por qué? #1</div>
+                                <div id="ana-why1" class="ws-pre-wrap"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="resp-card">
+                                <div class="small text-muted fw-semibold mb-1">¿Por qué? #2</div>
+                                <div id="ana-why2" class="ws-pre-wrap"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="resp-card">
+                                <div class="small text-muted fw-semibold mb-1">¿Por qué? #3</div>
+                                <div id="ana-why3" class="ws-pre-wrap"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="resp-card">
+                                <div class="small text-muted fw-semibold mb-1">¿Por qué? #4</div>
+                                <div id="ana-why4" class="ws-pre-wrap"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="resp-card">
+                                <div class="small text-muted fw-semibold mb-1">¿Por qué? #5 (causa raíz)</div>
+                                <div id="ana-why5" class="ws-pre-wrap"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

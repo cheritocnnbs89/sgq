@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1601202601099339140600120010020000002370188670911</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-16T20:52:07-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;INMAQUINSA MOTORS S.A.S.&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;INMAQUINSA MOTORS S.A.S.&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0993391406001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;1601202601099339140600120010020000002370188670911&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;001&lt;/estab&gt;
+	    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000000237&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;GUAYAS / GUAYAQUIL / GUAYAQUIL / MANZANA 2130 COOPERATIVA 31 DE AGOSTO Y PROSPERINA&lt;/dirMatriz&gt;
+		
+		
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;16/01/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;GUAYAS / GUAYAQUIL / GUAYAQUIL / MANZANA 2130 COOPERATIVA 31 DE AGOSTO Y PROSPERINA&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+			&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;KM 16.5 VIA A DAULE&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;320.00000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;320.00&lt;/baseImponible&gt;
+				&lt;valor&gt;48.00000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;368.00000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;20&lt;/formaPago&gt;
+	    		&lt;total&gt;368.00&lt;/total&gt;
+	    		&lt;plazo&gt;0&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;MO-008&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;MO-008&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Embancar equipo para sacar las 4 ruedas -retirar 32 pernos por rueda - reemplazar los aros por nuevos -montar las llantas con aros nuevos&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;320.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;320.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;320.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;48.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;Reemplazo de los 4 aros a la cargadora   Orden de servicio = 7500051996  Hoja de entrada de servicio = 1001567025&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature924907"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo45327"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID77355" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature924907-SignedProperties323290"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;auix7Ecif4m6iSj3WkEvt/FmAks=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate420171"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Ltcj/aa3IvRYNl2clc9o/EjgNxo=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-767189" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Y09DguimQOdkvmVetw1hgH9YpTk=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue340051"&gt;
+fcD4IV6LZEs0WyzneQRhgz7Y3pXythPyns3JlTNy1kBM5UFr3hLvxBhvIqj8CaBbqIAqBmBVXTAK
+AoxgzmBuOHYnQmVcgYD7VV3iDl4y0Rk3RNiT4oGengqwTMw3EyIwNATtkdKuUH9K1526mHfxaZHN
+GxfIT2lLaSefJEoBa3eUchiAirz2gKUY8Vec7FTN90ksE9tH+QBuYm1be9zfggKNzv0axHQq9X3p
+C/2AftB6mbN2WIi69iIHUJcxziYZVqKWzVFk80vI90pzKPDgY6v+dhGajMdQsbv8PH47eG6ka0Ww
+xsR67qo0CbcLUdlABPG0PLw5Vyy808eObB+uFA==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate420171"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJxzCCB6+gAwIBAgIILAwzVkHDir0wDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI1MDYyNjE5MDYwMFoXDTI2MDYyNjE5MDYwMFowgeExCzAJBgNVBAYTAkVDMSEwHwYDVQQKDBhJ
+Tk1BUVVJTlNBIE1PVE9SUyBTLkEuUy4xGDAWBgNVBAwMD0dFUkVOVEUgR0VORVJBTDEVMBMGA1UE
+BAwMR0FFVEUgSUJBUkJPMRswGQYDVQQqDBJDSFJJU1RPUEhFUiBBTEVYSVMxGTAXBgNVBAUTEElE
+Q0VDLTA5MjcxMDY3MTYxKDAmBgNVBAMMH0NIUklTVE9QSEVSIEFMRVhJUyBHQUVURSBJQkFSQk8x
+HDAaBgNVBGEME1ZBVEVDLTA5OTMzOTE0MDYwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+AoIBAQCxHDqVHPgoRMNyUT15zG0NpbCSifr1xHRwKZi5HJEpUStqtaPGKK8OVZhPLOWFYmmhTiBr
+PnNdRMKSUl0jaxadfb94WFka1J6RFjtbjRVdtS+iWuOnf1MOTtOzKJWGTMXAzoeTbk/nd02LRIlt
+4xML4cKfJVcKxD+wxv1fwmWKCIM7SZTDbJ6NhTSlFsc8tkf6eBh+tQmm2rc+s1ooDoNadtTbVbgA
+R6qAxrzGg1klpMS79CmV5xN0Ubb2tdH4N4ZUP1R/tj/zQ+a2VfxVMpn0swXnbNerJsiBmEd3NMzJ
+1FZqiB07cPuzeu4ddKOonhjS5U5GVdIJWH4b0j2eD9WlAgMBAAGjggSoMIIEpDAbBgsrBgEEAYLx
+NmYDAQQMDAowOTI3MTA2NzE2MB4GCysGAQQBgvE2ZgMLBA8MDTA5OTMzOTE0MDYwMDEwgdcGCCsG
+AQUFBwEBBIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMv
+ZG93bmxvYWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipo
+dHRwOi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0
+dHA6Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQU0XQqNEAF
+yTFctIduwiBpYSFeUXEwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGy
+dJJz/TCBjgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6
+Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJU
+SUZJQ0FETyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6
+aHR0cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNy
+bDBAoD6gPIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9y
+ZGluYWRhLmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwME
+MIIB6QYDVR0RBIIB4DCCAdyBEWVjdWFqYWNAZ21haWwuY29toBsGCysGAQQBgvE2ZgMBoAwMCjA5
+MjcxMDY3MTagIwYLKwYBBAGC8TZmAwKgFAwSQ0hSSVNUT1BIRVIgQUxFWElToBYGCysGAQQBgvE2
+ZgMDoAcMBUdBRVRFoBcGCysGAQQBgvE2ZgMEoAgMBklCQVJCT6AgBgsrBgEEAYLxNmYDBaARDA9H
+RVJFTlRFIEdFTkVSQUygVQYLKwYBBAGC8TZmAwegRgxEUFJPU1BFUklOQS9NQU5aQU5BIDIxMzAv
+IENPT1BFUkFUSVZBIDMxIERFIEFHT1NUTy8gTk1FUk8gREUgUElTTzogMTOgHwYLKwYBBAGC8TZm
+AwigEAwOMDA1OTM5OTczMDgwOTCgGgYLKwYBBAGC8TZmAwmgCwwJR1VBWUFRVUlMoCkGCysGAQQB
+gvE2ZgMKoBoMGElOTUFRVUlOU0EgTU9UT1JTIFMuQS5TLqAeBgsrBgEEAYLxNmYDC6APDA0wOTkz
+MzkxNDA2MDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCQGCysGAQQBgvE2ZgMyoBUME1JFUFJFU0VO
+VEFOVEUgTEVHQUygGAYLKwYBBAGC8TZmAzOgCQwHQVJDSElWTzANBgkqhkiG9w0BAQsFAAOCAgEA
+quj5fyTzOc+4RMdtQC2G1/f0L80OK678cPPgMHx9gkf2NqpRI8CwH00+q1610eWpm6mogZzFEqh/
+anzFKXQVqOwdEMyYyouZXMMk6beEn1IXvfcsJsGmUVOE+0sK87ZVlgQdVWOd+BTFe5rnleRjknys
+hEyMyFdxfuRrhwudDtJhkwgAX5P0EcNyBNR5EW1IHCfC/c/8F+D0jo1Vpim2h0E1TVfZa7tZuAuG
+OQrinRfzSrHfiDEBNnqNkkOXN7k3/FK4sGBQ6YUaBRzJQTRqrIPfa5FetojZlGhcyNx3wKTSnkvk
+u1BJk5LvVwbRYTww8bKxNEUDQOpmaeuBeXV7BndgFkCr54KXGCaseCY+5KttIwlT3iFfVQpdlS1T
+nfxSZMWcBas6HZzZs3Dtl4gw+f+8LGszym42wjndgSr+A9NxerwUMhq5lQeqOHRtfIwIFUgjeu09
+a9TZKkfsVqsLxCr6P6smHhwA/SuNUfNyS50bLFGD9ePSOq6xIAhCFjZmCcRSSy38fJxqp6c0q7Lc
+lMVTHhmpu9hkgkcfulgjvSwlCKhQU9DIi2mlD7YbKT+ael/fRHicKUamdk1ORLbd8QIlXfopDQk+
+IldG5r9ihI1FA1d3pauGyd74SvjmLqcGLwgBvaSrve3jiTRDPHWSUwvJ7kExpS4nmvaqiL2Ou/w=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+sRw6lRz4KETDclE9ecxtDaWwkon69cR0cCmYuRyRKVErarWjxiivDlWYTyzlhWJpoU4gaz5zXUTC
+klJdI2sWnX2/eFhZGtSekRY7W40VXbUvolrjp39TDk7TsyiVhkzFwM6Hk25P53dNi0SJbeMTC+HC
+nyVXCsQ/sMb9X8JligiDO0mUw2yejYU0pRbHPLZH+ngYfrUJptq3PrNaKA6DWnbU21W4AEeqgMa8
+xoNZJaTEu/QplecTdFG29rXR+DeGVD9Uf7Y/80PmtlX8VTKZ9LMF52zXqybIgZhHdzTMydRWaogd
+O3D7s3ruHXSjqJ4Y0uVORlXSCVh+G9I9ng/VpQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature924907-Object120604"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature924907"&gt;
+                &lt;etsi:SignedProperties Id="Signature924907-SignedProperties323290"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-16T20:52:04-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;ha/lLPao9Nv4o1CEBuRVGlYKKX8=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;3173968282952895165&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

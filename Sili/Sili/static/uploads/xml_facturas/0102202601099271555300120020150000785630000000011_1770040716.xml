@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0102202601099271555300120020150000785630000000011</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-01T14:05:41-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;DISCAREM S.A&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;DISCAREM S.A&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0992715553001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0102202601099271555300120020150000785630000000011&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;002&lt;/estab&gt;
+    &lt;ptoEmi&gt;015&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000078563&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;Km 5.5 Vía Samborondón&lt;/dirMatriz&gt;
+    &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;01/02/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;GUAYAS / SAMBORONDON / SAMBORONDON / MANGLERO SOLAR 84B&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;567&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR SA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;totalSinImpuestos&gt;36.57&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;36.57&lt;/baseImponible&gt;
+        &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+        &lt;valor&gt;0.00&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;36.57&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;19&lt;/formaPago&gt;
+        &lt;total&gt;36.57&lt;/total&gt;
+        &lt;plazo&gt;0&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;00037181&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PT FILETE DE PECHUGA DE POLLO ABIERTA POR KILO&lt;/descripcion&gt;
+      &lt;cantidad&gt;2.845300&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;8.470000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;24.10&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;24.10&lt;/baseImponible&gt;
+          &lt;valor&gt;0.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;00039201&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;39201&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;DURAZNO IMPORTADO POR KILO&lt;/descripcion&gt;
+      &lt;cantidad&gt;0.475000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;3.200000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;1.52&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;1.52&lt;/baseImponible&gt;
+          &lt;valor&gt;0.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;00043090&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PT PULPA PAJARILLA DE RES FILETEADA POR KILO&lt;/descripcion&gt;
+      &lt;cantidad&gt;0.679700&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;11.990000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;8.15&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;8.15&lt;/baseImponible&gt;
+          &lt;valor&gt;0.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;00071973&lt;/codigoPrincipal&gt;
+      &lt;codigoAuxiliar&gt;7862103433054&lt;/codigoAuxiliar&gt;
+      &lt;descripcion&gt;PAPA ENSALADA GREEN GARDEN 800 GR&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;2.800000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;2.80&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;0.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;2.80&lt;/baseImponible&gt;
+          &lt;valor&gt;0.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Contribuyente"&gt;CONTRIBUYENTE ESPECIAL SEGÚN RESOLUCIÓN Nº 567&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Dirección"&gt;KM 16.5 VIA DAULE&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Email"&gt;bespinoza@quimpac.com.ec&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Tipo de Venta"&gt;CONTADO&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature714208"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo254319"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID82094" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature714208-SignedProperties699052"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;H+TZbp20xGnmsHaFPu4LLUx07aE=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1720042"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;wJmgbCjzSaO+ZsQKrOWrCrJMfvY=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-865113" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;+hN3HLaAiiRGXuQQROqZ/rQz0l4=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue480581"&gt;
+ELO6mHdbVGoDKc2KpwNQLOJysMtoEmEq92TRcT0CMKE3BD+bYE1zEszMTg1DRH98Iv0fj976eV7s
+RYgC1lRRIPBzTFUDqbZnBi6tAMlyCirs1iNH51Q1UZIA+fRQk47AVq+h38inLCvgfyWGDPjMtn4C
+caoRowyneRsB2IJHOxBaziqfdveCbvAhMhf7NePadJx46xR62DwL8n5LmcGRBa9aiucG1WMoNQai
+PzU9zbIDDjlkpen7oHHXxrA3RHlaOHgjRBx7x1N1Q9y7xor7rO7ywncJ0bsIxUorFp3KVywtxw8D
+pdWzJtX4XNGCP6QZ0O6eLzqfpE9hI5QJ/zxsXg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1720042"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIJ5TCCB82gAwIBAgIIQWVw6okO8OswDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI0MTEyNjIyMzEwMFoXDTI2MTEyNjIyMzEwMFowgd4xCzAJBgNVBAYTAkVDMRYwFAYDVQQKDA1E
+SVNDQVJFTSBTLkEuMRgwFgYDVQQMDA9HRVJFTlRFIEdFTkVSQUwxGjAYBgNVBAQMEVZFTEFTQ08g
+QVNUVURJTExPMRowGAYDVQQqDBFKRVNTSUNBIEVMSVpBQkVUSDEZMBcGA1UEBRMQSURDRUMtMDkx
+Mzg3NTMxNjEsMCoGA1UEAwwjSkVTU0lDQSBFTElaQUJFVEggVkVMQVNDTyBBU1RVRElMTE8xHDAa
+BgNVBGEME1ZBVEVDLTA5OTI3MTU1NTMwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+AQCFkYLYLVRtIYJkcRuIF7SkVcro7ZyQE7y9L1SVTACe4tSbuLygs+Wezd+X2LgD7xBoOt9TBT8Y
+/9VxJ0DX+2FNaRn66HHSTRlYFpwRuCEG/Lrf7gw+hGEQIzYYFisM8SKhfJrzMWcPbP2kaUaLh7E3
+zKVWuljL6qeAGTOLyV74G3cMKSkP2iXHrLSHmdVNQpRidVj+ismWe0ShAsvkYVToAHlZUaG412pi
+M7k1hkvoKqVZax6QF2fNeBGswZvoB/P4CNVFIeOkf23TVp0nGloXJ0eSJrmrxmP72Oz28vkzxDbL
+vmtNadr9hPrzuekrdY2/ZyBCIM5dsklDS92TgoZlAgMBAAGjggTJMIIExTAbBgsrBgEEAYLxNmYD
+AQQMDAowOTEzODc1MzE2MB4GCysGAQQBgvE2ZgMLBA8MDTA5OTI3MTU1NTMwMDEwgdcGCCsGAQUF
+BwEBBIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMvZG93
+bmxvYWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipodHRw
+Oi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6
+Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQUBUoe9fUTKekA
+5wDo8nHXFHkaXu0wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGydJJz
+/TCBjgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6Ly93
+d3cudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJUSUZJ
+Q0FETyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6aHR0
+cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDBA
+oD6gPIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGlu
+YWRhLmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIIC
+CgYDVR0RBIICATCCAf2BJWNvbnRhYmlsaWRhZC5sYWpveWFAbGFlc3Bhbm9sYS5jb20uZWOgGwYL
+KwYBBAGC8TZmAwGgDAwKMDkxMzg3NTMxNqAiBgsrBgEEAYLxNmYDAqATDBFKRVNTSUNBIEVMSVpB
+QkVUSKAYBgsrBgEEAYLxNmYDA6AJDAdWRUxBU0NPoBoGCysGAQQBgvE2ZgMEoAsMCUFTVFVESUxM
+T6AgBgsrBgEEAYLxNmYDBaARDA9HRVJFTlRFIEdFTkVSQUygZgYLKwYBBAGC8TZmAwegVwxVQ0FM
+TEU6IENPU01FIFJFTkVMTEEgTk1FUk86IDIxNiBJTlRFUlNFQ0NJTjogQVYuIERFIExBUyBBTUVS
+SUNBUyBFRElGSUNJTzogTEEgRVNQQU9MQaAfBgsrBgEEAYLxNmYDCKAQDA4wMDU5Mzk4MTE2NTU3
+MqAdBgsrBgEEAYLxNmYDCaAODAxTQU1CT1JPTkTDk06gHgYLKwYBBAGC8TZmAwqgDwwNRElTQ0FS
+RU0gUy5BLqAeBgsrBgEEAYLxNmYDC6APDA0wOTkyNzE1NTUzMDAxoBMGCysGAQQBgvE2ZgMMoAQM
+AkVDoCQGCysGAQQBgvE2ZgMyoBUME1JFUFJFU0VOVEFOVEUgTEVHQUygGAYLKwYBBAGC8TZmAzOg
+CQwHQVJDSElWTzANBgkqhkiG9w0BAQsFAAOCAgEAZrb6zo4GmMBuCM3ixTCGryZQho3HFY4NnInv
+mQPzmiQlqWT01y/8tC1fqQTP9shJBePk/GkZXFhLxg6HdljELbB9qmYXAGnAzEw607GiGDaBfMk8
+CtekDO5e1YEYrYv+TK81+sKEPlUt9upxqQmZ1wvnd7Px/UW1Hg9WMt9xN2k1ozDtn6dNP9TY1dQt
+N+adJ0GLdeRrqC/7wkZ9dM1UiTFlnM5xY5+FjyNggqPJvLFOJoCMBd+zU68iUy1B05DW6dAEsMUU
+Bv96LKBDknARPK0qUjd+uzXvVx9e1sdtKnoovr1qrel7OxpM1hMQ+6eT61ydFljDylQmSfSbAQzP
+t6RKa93t384fDgU1oai9XcTYWepbKHKGPRLTs9bujsjqcvwho9ll7zuFB7DAgSnWRcnBVH2i6E7H
+jkmz1dcZU6J1C2AeQ/lQPWPkn9u1CRIq580WU4VmSQfMMM8ua1iNES2ty5P+stcHuOdc0ADZn0pS
+L7I+LGRtOGCB+mA/Pf3bRgb5Gy3twnNs6gy9cVyIl0hdzh+t4YaLQgJr71nmE3lncYwjT5n7zx53
+rQKrH8TPqgym/THCD31XDPfK63kmt+dkhu1pUI8udbBw2DXncQ8HICa9nIQp6vMVG0FvsMMC1i1+
+KPIRYnCVuBc2v4DW6uLMQL2PcgbPrFaQyiBIAB4=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+hZGC2C1UbSGCZHEbiBe0pFXK6O2ckBO8vS9UlUwAnuLUm7i8oLPlns3fl9i4A+8QaDrfUwU/GP/V
+cSdA1/thTWkZ+uhx0k0ZWBacEbghBvy63+4MPoRhECM2GBYrDPEioXya8zFnD2z9pGlGi4exN8yl
+VrpYy+qngBkzi8le+Bt3DCkpD9olx6y0h5nVTUKUYnVY/orJlntEoQLL5GFU6AB5WVGhuNdqYjO5
+NYZL6CqlWWsekBdnzXgRrMGb6Afz+AjVRSHjpH9t01adJxpaFydHkia5q8Zj+9js9vL5M8Q2y75r
+TWna/YT687npK3WNv2cgQiDOXbJJQ0vdk4KGZQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature714208-Object467815"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature714208"&gt;
+                &lt;etsi:SignedProperties Id="Signature714208-SignedProperties699052"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-01T14:05:40-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;xBEYjJwoT3OIaAFft3xc1Q1jpSA=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;4712296737737208043&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-865113"&gt;
+                            &lt;etsi:Description&gt;GuruSoft S.A Tel.045109312&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

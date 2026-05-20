@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0112202501099266504100120020090000718390007183911</numeroAutorizacion>
+    <fechaAutorizacion>2025-12-01T21:46:38-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="comprobante" version="2.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;FIDEICOMISO HOTEL AEROPUERTO&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;HOLIDAY INN GUAYAQUIL AIRPORT&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0992665041001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0112202501099266504100120020090000718390007183911&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;002&lt;/estab&gt;
+    &lt;ptoEmi&gt;009&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000071839&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;AV. MIGUEL H. ALCIVAR No. 106 Y NAHIM ISAIAS&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;01/12/2025&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;BAHIA NORTE MZ. 47 SOLAR 21 EDIF. HOTEL HOLIDAY INN&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;NAC-DGERCGC25-00000011&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt; Quimpac Ecuador S.A Quimpacsa&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;Via a Daule Km 16.5 Rosavin Lote 1 y Cobre Via a Daule Km 16.5 Rosavin Lote 1 y Cobre&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;397.20&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+        &lt;baseImponible&gt;397.20&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+        &lt;valor&gt;59.58&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;39.72&lt;/propina&gt;
+    &lt;importeTotal&gt;504.00&lt;/importeTotal&gt;
+    &lt;moneda&gt;USD&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;504.00&lt;/total&gt;
+        &lt;plazo&gt;0&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;Dias&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;GROUP_1&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Alojamiento&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;270.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;270.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;270.00&lt;/baseImponible&gt;
+          &lt;valor&gt;40.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;GROUP_10&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Consumo Restaurante&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;66.80&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;66.80&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;66.80&lt;/baseImponible&gt;
+          &lt;valor&gt;10.02&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;GROUP_11&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;Consumo Connexion Bar&lt;/descripcion&gt;
+      &lt;cantidad&gt;1&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;60.40&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;60.40&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;60.40&lt;/baseImponible&gt;
+          &lt;valor&gt;9.06&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;otrosRubrosTerceros&gt;
+    &lt;rubro&gt;
+      &lt;concepto&gt;Tasa Municipal&lt;/concepto&gt;
+      &lt;total&gt;7.50&lt;/total&gt;
+    &lt;/rubro&gt;
+  &lt;/otrosRubrosTerceros&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="FPDirect Billing/City Ledger"&gt;504&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="FOLIO"&gt;1088367&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="ADULTOS"&gt;1&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="BILL NO"&gt;120190&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="CAJERO"&gt;266&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="HUESPED"&gt;Carlos Borja&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="IMPRESION"&gt;False&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="LLEGADA"&gt;2025-11-26&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="NOCHES"&gt;5&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="RESERVA"&gt;643350&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="ROOM"&gt;9061&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="SALIDA"&gt;2025-12-01&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="TARIFA"&gt;0&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="TASA"&gt;7.50&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="EMAIL"&gt;atorres@quimpac.com.ec&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature482741"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo92925"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID241324" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature482741-SignedProperties743647"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;8hZTJi2yUjNrrDsCaM/Iw5tSxdc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate14417"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;07LUr0w36LmMiUT78LkheJH9544=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-1041969" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;FTezYuAiH/BPHoMtblhSiirVExA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue806973"&gt;
+cxLd3iqztTokXy+Dyfd0y1fdt4wMrH7CDt7Roi66Wt+pIUkAeANmd6Gs9usRXA4u6Dfk4+7R60F4
+DqTGScggUpxEHf90l5Mm7NY6xe98n4nrwA9nwBFFexA6quVcnSRG8dd9s+vE5VMHXv0XY1E7ycZu
+E3Wx6LGG1RTf/B05AYEPK6UldkPCvFGrJPILWX1XKCcH7d3u5H0DgLAKY4tFGKJCCmPtYK3ttOw0
+pa0zMWLPHqe9ACD93xVYXlsAFzcwi+QoeUjQ7R6dbwmPr0zIx2iZgdoyBqaVoApx4v51XXTX4VJb
+gph7KF8u+vJNa5BbH/mFekup+RVxo46uVAmDmw==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate14417"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+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
+fw==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+zBmvE/2SAHMUX2k62tbokznUjeGHp9rtT2veuwigo6zhDL9eMdJxVeL5kgtFQg7z6khDpH51VD2r
+oC8IwmFaB/MnvWNqyzRHsdnzEpOOnBsBDFNB3jgMuBUvw5Ve30XIQQPRoD/Agcm7zix/R0yPvNN+
+m2CagBYC/egWLuw4tMSRLFWzWkKN3eZq59EC4PprZ55GxU6yQMEdQWdFGJOJbHavIetUwZiincsj
+KvgOyzNd4EjDKndMQRTi+2H1inEKwI66ZCTW2k2jIshu9Z3Pqe5dKHl4xu0JODGhASpf1ycFZzLo
+c9BoMqVQKfX2cTK8NQGcET2R8+Y39BSGONSGCw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature482741-Object800680"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature482741"&gt;
+                &lt;etsi:SignedProperties Id="Signature482741-SignedProperties743647"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2025-12-01T21:46:37-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;k1YUQAT8KnisdqRf+SNOhhjfzzs=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=Lazzate Emisor CA,OU=Ente de Certificacion,O=Lazzate Cia. Ltda.,2.5.4.97=#13053539333832,1.2.840.113549.1.9.1=#1615636572746966696361646f7340656e6578742e6563,L=Quito,ST=Quito - Pichincha,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;630150092530718229972150435104323826769439126717&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-1041969"&gt;
+                            &lt;etsi:Description&gt;SATCOM Servicios Profesionales&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

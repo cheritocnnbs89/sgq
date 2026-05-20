@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0501202601179125123700120010640341281481234567815</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-05T20:27:29-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;Consorcio Ecuatoriano de Telecomunicaciones S.A. CONECEL&lt;/razonSocial&gt;
+        &lt;ruc&gt;1791251237001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;0501202601179125123700120010640341281481234567815&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;064&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;034128148&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;Av. Fco. Orellana S/N y Av.Alberto Borges, Edificio Centrum, Planta Baja, pisos 1, 2, 3, 4&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;05/01/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;AV. FRANCISCO DE ORELLANA Y ALBERTO BORGES, EDIFICIO CENTRUM&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;5368&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A  QUIMPACSA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;totalSinImpuestos&gt;1353.90&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;1353.90&lt;/baseImponible&gt;
+                &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                &lt;valor&gt;203.09&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;1556.99&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;19&lt;/formaPago&gt;
+                &lt;total&gt;1556.99&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;DIAS&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;EVB72&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;Servicios Adicionales&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.990000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.99&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="ExImpuestos" valor="NO"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.99&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.15&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;GAW34&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;PLAN EMPRESA SIN LIMITE 20(*)&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;10.320000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;10.32&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="ExImpuestos" valor="NO"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;10.32&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.55&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;GLE51&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;PLAN EMPRESA SIN LIMITE 20(*)&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;9.030000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;9.03&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="ExImpuestos" valor="NO"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;9.03&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.35&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;GVA01&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;EMPRESA SIN LIMITE 70&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;70.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;70.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="ExImpuestos" valor="NO"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;70.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;10.50&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;GLE51&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;PLAN EMPRESA SIN LIMITE 20&lt;/descripcion&gt;
+            &lt;cantidad&gt;3.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;20.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;60.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="ExImpuestos" valor="NO"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;60.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;9.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;GAW34&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;PLAN EMPRESA SIN LIMITE 20&lt;/descripcion&gt;
+            &lt;cantidad&gt;60.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;20.000000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1200.00&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="ExImpuestos" valor="NO"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1200.00&lt;/baseImponible&gt;
+                    &lt;valor&gt;180.00&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;GAW34&lt;/codigoPrincipal&gt;
+            &lt;descripcion&gt;Claro VR&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;3.560000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;3.56&lt;/precioTotalSinImpuesto&gt;
+            &lt;detallesAdicionales&gt;
+                &lt;detAdicional nombre="ExImpuestos" valor="NO"/&gt;
+            &lt;/detallesAdicionales&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;3.56&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.53&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="direccionCliente"&gt;ROSAVIN LOTE 1 INTERSECCIÓN COBRE MZ 385EDIFICIO QUIMPAC ECUADOR&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="correoCliente"&gt;RSANCHEZ@QUIMPAC.COM.EC&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="telefonoCliente"&gt;0939009080&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="cuentaCliente"&gt;1.19612719&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="glosaLegal"&gt;Para la atención de reclamos comunícate con nosotros al *611. Para la atención de reclamos no resueltos por la operadora, llame gratis a la ARCOTEL 1800-567-567 o al número 159 desde su celular, también puede hacerlo escribiendo al correo electrónico cir@arcotel.gob.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="banner1"&gt;Banner1&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="banner2"&gt;Banner2&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="formaPago"&gt;Tarjeta&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="fechaPago"&gt;10/01/2026&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="ciudad"&gt;GUAYAQUIL&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Gran Contribuyente"&gt;Resolución No.NAC-GCFOIOC21-00000867-E&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="valorPendienteDePago"&gt;1600.34&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="fechaCorte"&gt;01/01/2026&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="descFact1"&gt;1600.341556.61-1556.611600.3401/01/2026Factura Claro040.00&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="descFact2"&gt;0.000.00Financiamientos43.3543.35&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature246708"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo100005"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID403297" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature246708-SignedProperties160245"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;6mswn8k6J0N8+SEM8O8O8L3rNfw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1368193"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;f7BNBI7rgaYG5OL+EVm68cGSlrs=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-395108" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;9YrOG8rW0FY1xawn0QFSGgLgOvQ=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue754619"&gt;
+Qfu5yywNly1f1QUEEbwFwjUEQiiD6Te6OUzsqBT9iSfPtiP3mDTFeeyYD04ZdidiQVhSpD0iEBI2
+HJbDXsFQBhTPhJybjZ8QLOy1nZh1tXluEiWHCsruL+VGXusUERb8kVI4ibJTwe0COBoTW/rwPM88
+Tnp+DQMZZFWpQY7HAY6X128s6ouIcsjCdcon39VCxbK5DR9efiot6F5jpJ6Zb4kbt92DNI5BZ0Bl
+uJ8EVVGc4YfKRC2iq7mZEQBgRgauE6/dBa5VvGHuu2dIvyc7e3G/Kd9XgpASY+TXL4gtBFaIMwYp
+NT5/qaFHztkThBqvdOa7dH9HZifYLcACspm5AQ==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1368193"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIMMDCCChigAwIBAgIEY9+/ijANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMzA5MjkxODEzMTNaFw0yODA5MjgxODEzMTNaMIGbMSQw
+IgYDVQQDDBtNQVJJTyBBTlRPTklPIEFZQ0FSVCBMRUNBUk8xFTATBgNVBAUTDDI5MDkyMzEzMjI1
+NjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYD
+VQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEBAQUA
+A4IBDwAwggEKAoIBAQC37STlZz94oiofM6f8sNdkAZLHONNB9AD84tBH3hdvAgBNPp5cP9h4v58X
+p7h4rnBpWEpsZhV49VvKvgfFqjD8qa+/FNEvcmJH7pHhFb+nr648NFvWsFhoeXPOUAbRg6I5kzZ9
+vsXGtbdjFmy+O6cE4W9oQtKdia/ESsm68K5pSlf3vzbWAmycFfupRlG3Sp5aLdpm6MZ2c2vx1zyt
+cl3AyNMkukm122Wmk/uCAyr8Z5VhhAKN+cHCyzZrokBWLy+soAyxiFNadGFwIEso/rLW44O29Tgt
+z8/VL1rd4HTlRxYvn4X1MhBRhKUIKwkltyOx3c5+UI5uzxmlv3452Tr7AgMBAAGjggd6MIIHdjAM
+BgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUFBwEB
+BE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNh
+L3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4bGRhcDovL2xk
+YXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9O
+IFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5G
+T1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2NhdGlvbkxpc3Q/
+YmFzZTAfBgNVHREEGDAWgRRtYXljYXJ0QGNsYXJvLmNvbS5lYzCCARIGA1UdIASCAQkwggEFMGAG
+CisGAQQBgqZyAgowUjBQBggrBgEFBQcCAjBEHkIAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABl
+ACAATQBpAGUAbQBiAHIAbwAgAGQAZQAgAEUAbQBwAHIAZQBzAGEwgaAGCisGAQQBgqZyAgQwgZEw
+gY4GCCsGAQUFBwIBFoGBaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50
+L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0
+aWZpY2FkbyBNaWVtYnJvIGRlIEVtcHJlc2EucGRmMIICogYDVR0fBIICmTCCApUwgeWgQaA/hj1o
+dHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9v
+Y3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0y
+IFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZP
+Uk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIHHoIHE
+oIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJ
+RklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2NlcnRp
+ZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJh
+ZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0
+P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VD
+VVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1T
+RUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBSpdG2j+Fjrkn+uILIbOeRWQDCsdzAr
+BgNVHRAEJDAigA8yMDIzMDkyOTE4MTMxM1qBDzIwMjgwOTI4MTgxMzEzWjALBgNVHQ8EBAMCBeAw
+IAYKKwYBBAGCpnIDBQQSDBBKRUZFIERFIEJJTExJTkcgMBoGCisGAQQBgqZyAwEEDAwKMDkxNzM3
+NjgyNDAZBgorBgEEAYKmcgMJBAsMCUdVQVlBUVVJTDARBgorBgEEAYKmcgMiBAMMAS4wQAYKKwYB
+BAGCpnIDBwQyDDBBViBGUkFOQ0lTQ08gREUgT1JFTExBTkEgUyBOIFkgQVYgQUxCRVJUTyBCT1JH
+RVMwHQYKKwYBBAGCpnIDAgQPDA1NQVJJTyBBTlRPTklPMB8GCisGAQQBgqZyAyAEEQwPMDEwMDAx
+MDAwMDA0MjcyMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAW
+BgorBgEEAYKmcgMDBAgMBkFZQ0FSVDBHBgorBgEEAYKmcgMKBDkMN0NPTlNPUkNJTyBFQ1VBVE9S
+SUFOTyBERSBURUxFQ09NVU5JQ0FDSU9ORVMgUyBBIENPTkVDRUwwHQYKKwYBBAGCpnIDCwQPDA0x
+NzkxMjUxMjM3MDAxMBIGCisGAQQBgqZyAx0EBAwCTm8wFgYKKwYBBAGCpnIDBAQIDAZMRUNBUk8w
+GgYKKwYBBAGCpnIDCAQMDAowOTk5NDIwMDE3MA0GCSqGSIb3DQEBCwUAA4ICAQCQxr3SUl3iQUTx
+6Yghiw02OTwkjYhJi/ehY2wX2p9n9q44SFUMb6uD44V4YjkPnpPJ1t0UlfpcHlRpKQ6H6fqo727n
+1jcZ2o8bHoXwnUXr3BW2dLAO6mm5HkFLUixAr9zOQykG9GxNRh+UJLhmjzMtA39l4wCxa8vKD8N5
+F9PdkTWTy/dxCs0AgItpYWwYL/U4z3bX8W0esvvCCQNhA7VEb3/b7giS12PhMzQonKYwB2rUO8s3
+AzZArJWg1UHOD48HWXTsd82o5L4ZJzHfI60mt/lU2SI2rrI2fxnBtRbcxy6IjfRZNhK0XI3GcAce
+uRtpGgfCZlDiIM0NM/bx4lTTgbJTUYeRbJ+K26ikHO1ET8pYWvoV9lTwng1/kvVdUT2imqTgraKQ
+Ui2SwItrjKzJxSbH2s22ymlqZaD5fK+3epYqJZb6bmRtGh7xtZUoje/Fle0l/EDA29rES1Rg7wBB
+K7mYYbHXqJDEIETPBOPruKShQeSQ04WQxuHkDNwOIf+anlFY68Ccznp3FdIMPz3JyYBQC1ftsGy/
+0NHf/xFg1mRe3lFC0hxqjqybtR82SgAx2FPtkg6lozES5BIsykVa+vzsQX8aH2HYMgqPvZz4XOx7
+Fm/YUhsCaYdfQtUcoxCNfeVJhdPcP8oLG+Dtijm12dlLxqmBIhAgLfJ290/hOg==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+t+0k5Wc/eKIqHzOn/LDXZAGSxzjTQfQA/OLQR94XbwIATT6eXD/YeL+fF6e4eK5waVhKbGYVePVb
+yr4Hxaow/KmvvxTRL3JiR+6R4RW/p6+uPDRb1rBYaHlzzlAG0YOiOZM2fb7FxrW3YxZsvjunBOFv
+aELSnYmvxErJuvCuaUpX97821gJsnBX7qUZRt0qeWi3aZujGdnNr8dc8rXJdwMjTJLpJtdtlppP7
+ggMq/GeVYYQCjfnBwss2a6JAVi8vrKAMsYhTWnRhcCBLKP6y1uODtvU4Lc/P1S9a3eB05UcWL5+F
+9TIQUYSlCCsJJbcjsd3OflCObs8Zpb9+Odk6+w==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature246708-Object921157"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature246708"&gt;
+                &lt;etsi:SignedProperties Id="Signature246708-SignedProperties160245"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-05T20:27:28-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;k91gg+O28lbf7nDvoMFiAfO/+Mg=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1675607946&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-395108"&gt;
+                            &lt;etsi:Description&gt;comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

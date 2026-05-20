@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>CORRAL FALCONI ANA CRISTINA</razonSocial>
+    <nombreComercial>PUNTA GRILL</nombreComercial>
+    <ruc>1307475580001</ruc>
+    <claveAcceso>0105202601130747558000120020010000079260000792619</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>002</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000007926</secuencial>
+    <dirMatriz>SANTA ELENA / PRINCIPAL S/N</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>01/05/2026</fechaEmision>
+    <dirEstablecimiento>SANTA ELENA / PRINCIPAL LOTE 15</dirEstablecimiento>
+    <obligadoContabilidad>NO</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>CONSUMIDOR FINAL</direccionComprador>
+    <totalSinImpuestos>34.08</totalSinImpuestos>
+    <totalSubsidio>0</totalSubsidio>
+    <totalDescuento>0.0000</totalDescuento>
+    <totalComprobantesReembolso>0</totalComprobantesReembolso>
+    <totalBaseImponibleReembolso>0</totalBaseImponibleReembolso>
+    <totalImpuestoReembolso>0</totalImpuestoReembolso>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <descuentoAdicional>0</descuentoAdicional>
+        <baseImponible>34.08</baseImponible>
+        <tarifa>15</tarifa>
+        <valor>5.12</valor>
+        <valorDevolucionIva>0</valorDevolucionIva>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>3.40</propina>
+    <fleteInternacional>0</fleteInternacional>
+    <seguroInternacional>0</seguroInternacional>
+    <gastosAduaneros>0</gastosAduaneros>
+    <gastosTransporteOtros>0</gastosTransporteOtros>
+    <importeTotal>42.6000</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>19</formaPago>
+        <total>42.60</total>
+        <plazo>0</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+    <valorRetIva>0</valorRetIva>
+    <valorRetRenta>0</valorRetRenta>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>GENERAL</codigoPrincipal>
+      <codigoAuxiliar>1</codigoAuxiliar>
+      <descripcion>PESCADO A LA PLANCHA</descripcion>
+      <cantidad>1.0000</cantidad>
+      <precioUnitario>8.26</precioUnitario>
+      <descuento>0.0000</descuento>
+      <precioTotalSinImpuesto>8.26</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Det Adicional" valor="A Y M FREJOL"></detAdicional>
+        <detAdicional nombre="Código" valor="GENERAL"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>8.26</baseImponible>
+          <valor>1.24</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>GENERAL</codigoPrincipal>
+      <codigoAuxiliar>2</codigoAuxiliar>
+      <descripcion>HAMBURGUESA PUNTA BRAVA</descripcion>
+      <cantidad>2.0000</cantidad>
+      <precioUnitario>7.825</precioUnitario>
+      <descuento>0.0000</descuento>
+      <precioTotalSinImpuesto>15.65</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Código" valor="GENERAL"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>15.65</baseImponible>
+          <valor>2.35</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>CCZ300ML</codigoPrincipal>
+      <codigoAuxiliar>3</codigoAuxiliar>
+      <descripcion>COCA COLA ZERO 300ML</descripcion>
+      <cantidad>1.0000</cantidad>
+      <precioUnitario>1.74</precioUnitario>
+      <descuento>0.0000</descuento>
+      <precioTotalSinImpuesto>1.74</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Código" valor="CCZ300ML"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1.74</baseImponible>
+          <valor>0.26</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>AGUA02</codigoPrincipal>
+      <codigoAuxiliar>4</codigoAuxiliar>
+      <descripcion>AGUA SIN GAS</descripcion>
+      <cantidad>1.0000</cantidad>
+      <precioUnitario>1.39</precioUnitario>
+      <descuento>0.0000</descuento>
+      <precioTotalSinImpuesto>1.39</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Código" valor="AGUA02"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1.39</baseImponible>
+          <valor>0.21</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>GENERAL</codigoPrincipal>
+      <codigoAuxiliar>5</codigoAuxiliar>
+      <descripcion>LIMONADA CLASICA</descripcion>
+      <cantidad>1.0000</cantidad>
+      <precioUnitario>3.04</precioUnitario>
+      <descuento>0.0000</descuento>
+      <precioTotalSinImpuesto>3.04</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Código" valor="GENERAL"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>3.04</baseImponible>
+          <valor>0.46</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>CAF01</codigoPrincipal>
+      <codigoAuxiliar>6</codigoAuxiliar>
+      <descripcion>CAFE AMERICANO</descripcion>
+      <cantidad>1.0000</cantidad>
+      <precioUnitario>2.61</precioUnitario>
+      <descuento>0.0000</descuento>
+      <precioTotalSinImpuesto>2.61</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Código" valor="CAF01"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2.61</baseImponible>
+          <valor>0.39</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>AGUA02</codigoPrincipal>
+      <codigoAuxiliar>7</codigoAuxiliar>
+      <descripcion>AGUA SIN GAS</descripcion>
+      <cantidad>1.0000</cantidad>
+      <precioUnitario>1.39</precioUnitario>
+      <descuento>0.0000</descuento>
+      <precioTotalSinImpuesto>1.39</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Código" valor="AGUA02"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1.39</baseImponible>
+          <valor>0.21</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="email">DCUNNINGHAN@QUIMPAC.COM.EC</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature252112">
+<ds:SignedInfo Id="Signature-SignedInfo75818">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID825770" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature252112-SignedProperties923054">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>4PjnQB9FHlxEChLboFk8VrhTQOY=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1270381">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>sO+zMC7Qkr4Q6Vnn/2zWJuvrgeo=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-409769" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>OKY/lXv7mtrYL+AVYcehFpae6XY=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue16243">
+VeNRGcErG9drN0GThHNogAMDyMk7VpJ4SDOD11J0LXSrZp4aOUI7cK6cfWlW6Uri+U6gPMU1xTL7
+DNpaPldRC0QmZ6FnRg0q7DMu+Sf0PD9Qb2tW1zsrMgoYWKX7smN85eAIxvU7Pw46kRS96pbWzF3w
+GoLEjRZhpiHhWUHKWaurCQJa6t0mQhHlxj2UMmz39gopeBBncMDLcKBdpiByJ6NPUtRD3h0ml2km
+lZFu6MCvn1Hnr9IaSnTmbghONw883aURXhAuwprAP3cRza7hXzS9Jx8rN/gFZxypDp5fdShxV/9j
+m/KHwz0YIdD7//6wdHmdEaT8V0Pu/fog7STmaQ==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1270381">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKnjCCCIagAwIBAgIIT63xDOQkmpQwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUxMDAxMTY0NDE0WhcNMjcxMDAxMTY0NDE0WjCB
+pjEkMCIGA1UEAwwbQU5BIENSSVNUSU5BIENPUlJBTCBGQUxDT05JMSAwHgYDVQQFExcxMzA3NDc1
+NTgwLTAxMTAyNTExNTQwNDEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCoEaAzo2Jepuag4XB9DvBeLFuHJ3saBOeAp8xi
+iE3ujvoVzk66GWuaYbqoaThK/rxg9DzajV8Lmv6LOKENWUGgCkBzcvIPCnJ6C8pV8tHIDjse4/Gj
+i1vQTscDiX1kj6+Wwog4ErIjwl+TU9UpmJcQ/+XNYw13QXkPzU5+W8AYPl3dcnMPwCQnqx4eUvWV
+dPvi7s34a8HB57PMezZP9ob5iF3G2IDYrNK2qfLLGD8xJiEpa4rPTwgYDHGyOt1AFIppE3bNTxU3
+dnZRVAcjwuokQnkAVba+kNXttH8cccHt8hzUzQx+082qrz2/1vThcuYTfPUer0VhQT2l+wZXQ/nZ
+AgMBAAGjggXZMIIF1TAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i
+3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRh
+dGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAmBgNVHREEHzAdgRthbmFjcmlz
+dGluYWNvcnJhbEBnbWFpbC5jb20wggEGBgNVHSAEgf4wgfswWgYKKwYBBAGCpnICBzBMMEoGCCsG
+AQUFBwICMD4ePABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABQAGUAcgBzAG8AbgBhACAA
+TgBhAHQAdQByAGEAbDCBnAYKKwYBBAGCpnICATCBjTCBigYIKwYBBQUHAgEWfmh0dHBzOi8vd3d3
+LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2Rl
+X0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUGVyc29uYSBOYXR1cmFsLnBk
+ZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB3qA6oDiG
+Nmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxlLmNybKKB
+n6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNV
+UklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJ
+T04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqgOIY2aHR0
+cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3JsMIHgoIHd
+oIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2Ev
+cHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERF
+IENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0O
+BBYEFAeoNj0vTVjf5vl6dMppr0gkr8PxMCsGA1UdEAQkMCKADzIwMjUxMDAxMTY0NDE0WoEPMjAy
+NzEwMDExNjQ0MTRaMAsGA1UdDwQEAwIF4DAaBgorBgEEAYKmcgMBBAwMCjEzMDc0NzU1ODAwGwYK
+KwYBBAGCpnIDCQQNDAtTQU5UQSBFTEVOQTARBgorBgEEAYKmcgMiBAMMAS4wIQYKKwYBBAGCpnID
+BwQTDBFQUklOQ0lQQUwgTE9URSAxNTAcBgorBgEEAYKmcgMCBA4MDEFOQSBDUklTVElOQTAfBgor
+BgEEAYKmcgMgBBEMDzAwMTAwMjAwMTA1MzA5MTARBgorBgEEAYKmcgMjBAMMAS4wEwYKKwYBBAGC
+pnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBYGCisGAQQBgqZyAwMECAwGQ09S
+UkFMMB4GCisGAQQBgqZyAx4EEAwOQURNSU5JU1RSQURPUkEwHQYKKwYBBAGCpnIDCwQPDA0xMzA3
+NDc1NTgwMDAxMBEGCisGAQQBgqZyAx0EAwwBLjAXBgorBgEEAYKmcgMEBAkMB0ZBTENPTkkwGgYK
+KwYBBAGCpnIDCAQMDAowOTgwNzgyMzQ1MA0GCSqGSIb3DQEBCwUAA4ICAQBWLedDkPyIIAAuEKGZ
+iVKIsrpqKMrywoMkCqgQKaBeqPoPJ5McN8He8QM9pa2w8vMpi72TQ9GMW10+kP5RtIzWtpb1F0Zp
+7ZajRbyimL2yHyVx3ZeZonPcbBaA/R7snUeTJbcJyOxQRvXsj1EvHjSIR9ZfNkJfJZJkEZk8B0+V
+EHoAJkojd9efGHiFHfUVK1eJ/s4enC8j7lf+VxXTXafrKUJf/Uk7HHinDHJqq9a/2FarWF8Sw+YO
+T/lOO3cGgF7UtxL+6erzHbRqL16h39Q3lsh596vsVwFE0TPICbndTpZAPusj2j3pknIXW2GOU7CI
+eRWisyt5zdVpL1n+BosITNr3Sy2mnByn8mkLqPwfkfZt7Hm44woZEB/18p1qxl+L+PbWy0LEWkja
+wemyJ533v8G4MdhqVOIIocurriUUzjDh12ls1ZzGnZHyxYkQEcXr8cMvf3PcKyguvhMQM5Qa4YH1
+zD/qhQso1nfTfAv34EBFZRfVFp7wl/nmP6yH+bVFvfubVbusHCZUXFX5Wm+4+Ypo4371dyGVT2bk
+5hQ8XcF7LZa1V8HqGO4WpbOWv+V907uqQSqT+PYdw+ZKob6kO6Fp/9GzhM/YE4V5eT3fgrOQxW2H
+LxOHeSwiKCMEfywEXG79kvbFNn1n2XxweiQFU8UZqu8zfVbMS3hBea8nfA==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+qBGgM6NiXqbmoOFwfQ7wXixbhyd7GgTngKfMYohN7o76Fc5OuhlrmmG6qGk4Sv68YPQ82o1fC5r+
+izihDVlBoApAc3LyDwpyegvKVfLRyA47HuPxo4tb0E7HA4l9ZI+vlsKIOBKyI8Jfk1PVKZiXEP/l
+zWMNd0F5D81OflvAGD5d3XJzD8AkJ6seHlL1lXT74u7N+GvBweezzHs2T/aG+YhdxtiA2KzStqny
+yxg/MSYhKWuKz08IGAxxsjrdQBSKaRN2zU8VN3Z2UVQHI8LqJEJ5AFW2vpDV7bR/HHHB7fIc1M0M
+ftPNqq89v9b04XLmE3z1Hq9FYUE9pfsGV0P52Q==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature252112-Object382560"><etsi:QualifyingProperties Target="#Signature252112"><etsi:SignedProperties Id="Signature252112-SignedProperties923054"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-05-01T20:07:01-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>q1lBGzmgkFZD+RmHILlgL720HDA=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>5741510137636756116</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-409769"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

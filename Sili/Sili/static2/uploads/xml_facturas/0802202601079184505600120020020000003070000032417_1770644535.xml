@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0802202601079184505600120020020000003070000032417</numeroAutorizacion>
+    <fechaAutorizacion>2026-02-08T13:08:00-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+	&lt;infoTributaria&gt;
+		&lt;ambiente&gt;2&lt;/ambiente&gt;
+	    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+	    &lt;razonSocial&gt;GASTROLOJATAZTAZ S.A.S.&lt;/razonSocial&gt;
+	    &lt;nombreComercial&gt;GASTROLOJATAZTAZ S.A.S.&lt;/nombreComercial&gt;
+	    &lt;ruc&gt;0791845056001&lt;/ruc&gt;
+	    &lt;claveAcceso&gt;0802202601079184505600120020020000003070000032417&lt;/claveAcceso&gt;
+	    &lt;codDoc&gt;01&lt;/codDoc&gt;
+	    &lt;estab&gt;002&lt;/estab&gt;
+	    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+	    &lt;secuencial&gt;000000307&lt;/secuencial&gt;
+	    &lt;dirMatriz&gt;EL ORO / MACHALA / MACHALA / AVENIDA SEGUNDA Y TERCERA AVENIDA MANZANA E3&lt;/dirMatriz&gt;
+		
+		
+		
+  	&lt;/infoTributaria&gt;
+	&lt;infoFactura&gt;
+	    &lt;fechaEmision&gt;08/02/2026&lt;/fechaEmision&gt;
+		
+			&lt;dirEstablecimiento&gt;EL ORO / MACHALA / MACHALA / AVENIDA SEGUNDA Y TERCERA AVENIDA MANZANA E3&lt;/dirEstablecimiento&gt;
+		
+	    
+	    
+			&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+		
+		
+	    
+	    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+		
+		&lt;razonSocialComprador&gt;QUIMPAC ECUADOR&lt;/razonSocialComprador&gt;
+	    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+		&lt;direccionComprador&gt;GUAYAQUIL&lt;/direccionComprador&gt;
+	    
+	    &lt;totalSinImpuestos&gt;42.42000&lt;/totalSinImpuestos&gt;
+		
+	  	
+	    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+	    
+	    &lt;totalConImpuestos&gt;
+		
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;42.42&lt;/baseImponible&gt;
+				&lt;valor&gt;6.36000&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+			
+			&lt;totalImpuesto&gt;
+				&lt;codigo&gt;2&lt;/codigo&gt;
+				&lt;codigoPorcentaje&gt;5&lt;/codigoPorcentaje&gt;
+				&lt;descuentoAdicional&gt;0&lt;/descuentoAdicional&gt;
+				&lt;baseImponible&gt;0&lt;/baseImponible&gt;
+				&lt;valor&gt;0.00&lt;/valor&gt;
+			&lt;/totalImpuesto&gt;
+			
+		
+		
+	      
+		  
+		  
+	    &lt;/totalConImpuestos&gt;
+	    &lt;propina&gt;0&lt;/propina&gt;
+	    &lt;importeTotal&gt;48.78000&lt;/importeTotal&gt;
+	    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+		
+	    
+	    &lt;pagos&gt;
+	    	
+	    	&lt;pago&gt;
+	    		&lt;formaPago&gt;19&lt;/formaPago&gt;
+	    		&lt;total&gt;48.78&lt;/total&gt;
+	    		&lt;plazo&gt;0&lt;/plazo&gt;
+	    		&lt;unidadTiempo&gt;días&lt;/unidadTiempo&gt;
+	    	&lt;/pago&gt;
+	    	
+	    &lt;/pagos&gt;
+	    
+  	&lt;/infoFactura&gt;
+  	&lt;detalles&gt;
+  	
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;MDIA001&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;MDIA001&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Seco de Gallina&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;7.650000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;7.65&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;7.65000&lt;/baseImponible&gt;
+          &lt;valor&gt;1.15&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;MDIA002&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;MDIA002&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Seco de Costilla&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;10.000000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;10.00&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;10.00000&lt;/baseImponible&gt;
+          &lt;valor&gt;1.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;MDIA003&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;MDIA003&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Seco de Chivo&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;12.170000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;12.17&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;12.17000&lt;/baseImponible&gt;
+          &lt;valor&gt;1.83&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;BEF002&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;BEF002&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Jugo Maracuya&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;3.040000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.04&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.04000&lt;/baseImponible&gt;
+          &lt;valor&gt;0.46&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;BEF010&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;BEF010&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Jamaica&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;3.040000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.04&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.04000&lt;/baseImponible&gt;
+          &lt;valor&gt;0.46&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;BEF008&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;BEF008&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Jugo Tomate de arbol&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;1.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;3.040000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.04&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.04000&lt;/baseImponible&gt;
+          &lt;valor&gt;0.46&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+    &lt;detalle&gt;
+      
+      	&lt;codigoPrincipal&gt;VAR049&lt;/codigoPrincipal&gt;
+		&lt;codigoAuxiliar&gt;VAR049&lt;/codigoAuxiliar&gt;
+      	&lt;descripcion&gt;Porcion De Aguacate&lt;/descripcion&gt;
+      
+      &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.870000&lt;/precioUnitario&gt;
+	  
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;3.48&lt;/precioTotalSinImpuesto&gt;
+	  
+	  
+            
+      
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;3.48000&lt;/baseImponible&gt;
+          &lt;valor&gt;0.52&lt;/valor&gt;
+        &lt;/impuesto&gt;
+        
+		
+		
+      &lt;/impuestos&gt;
+	  
+	&lt;/detalle&gt;
+    
+	
+	
+	
+    &lt;/detalles&gt;
+    
+	
+    
+    &lt;infoAdicional&gt;
+    	
+    		
+    			&lt;campoAdicional nombre="Descripción"&gt;VENTA PUNTO DE VENTA&lt;/campoAdicional&gt;
+    		
+    	
+		
+    &lt;/infoAdicional&gt;
+	
+	
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature282294"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo594981"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID559748" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature282294-SignedProperties819780"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;BWzAHgIf+5tTjDYPOt3VcFEpLXw=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate169683"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;u5LFKWwV6a7vYbcr5lPdoVKEUI8=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-933261" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;yvn5f3atqK/AamL8CieEg6hagCM=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue447707"&gt;
+K3WuCtUWsBT92p83IevOLWC3u1SNpeAPbedIyufpnSE+5rR7w9SuOJ1UyyD0cvXWe3t1vWZ72QNg
+/4G46Mf1KGE4g2h4DDlpQC7AwiDqzSdia6hwcJe5Q6BSdsD+a+hxpuDXMzqNkFmx43cDqAzW/2Ue
+UcXM32d2g1kNXjSTig7Mj/tSnmVNpHj2yXBIIioIZibb1nDIfHNrCMkJ+LxoXVv2r6QcfdhRapU8
+bCb2BpQmirIP2DT0PF3xpnghvKk9PEOJRBbJEItZIBQohixyFoABUiiX+iyUtuByw2SruVG/BD1n
+WpEXt6M7++qLiAjemVKjGNeCfKQsAl5yDpY9SA==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate169683"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIK3DCCCMSgAwIBAgIIBvxUIR++6/wwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwMTIwMTgwNTE2WhcNMjgwMTIwMTgwNTE2WjCB
+qjEoMCYGA1UEAwwfSk9IQU5OQSBERUwgUk9DSU8gUVVFWkFEQSBBUklBUzEgMB4GA1UEBRMXMTEw
+NDAyNzYwMC0yMDAxMjYxMzE1MDYxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBE
+RSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVD
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAk3HGXXxqS6IsqhKZ8xn7w4wlrMIIOiBo
+DRwXYPk4i91zUfWQj5ywn/Gj9ICJins09LjnwsbXlDNYYvUpDGWy3Jqu2Vb+ow9hTgsML55GDt0l
+kNdPZuGdnAJffgwTt2Jcvae3/9EbA37D0HEd4IhqvyyTsuqMF2l55uhNV3gLJ8xzBiQXzdF69b3A
+o3LArx9glNgzLuR+TCRDHypXXtSHnOvqp4Nla8QdvI9Zy/Zm3qgUc1ZE14Xsqybjc9aK1JW/Agxd
+z8VLNOUh8KukHmdnLRft87Wc2cXRlrPGkW/i5yEE57yV77dbpWPYIO/nDsGn55cnaqzl5pBfalIW
+f4QcVQIDAQABo4IGEzCCBg8wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktV
+v42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJp
+dHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwIAYDVR0RBBkwF4EVam9o
+YW5uYTgxcWFAZ21haWwuY29tMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsG
+AQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4A
+dABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0
+dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0
+aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50
+YW50ZSBMZWdhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIIC
+BjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEv
+Y3JsZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9O
+IFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9O
+IERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMC
+RUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxm
+aWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNO
+PUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4g
+MixDPUVDMB0GA1UdDgQWBBS7Yp8Hdc1ll641BuzE2Nzt+sFFfjArBgNVHRAEJDAigA8yMDI2MDEy
+MDE4MDUxNlqBDzIwMjgwMTIwMTgwNTE2WjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9H
+RVJFTlRFIEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQMDAoxMTA0MDI3NjAwMBcGCisGAQQBgqZyAwkE
+CQwHTUFDSEFMQTARBgorBgEEAYKmcgMiBAMMAS4wPAYKKwYBBAGCpnIDBwQuDCxBVkVOSURBIFNF
+R1VOREEgWSBURVJDRVJBIEFWRU5JREEgTUFOWkFOQSBFMzAhBgorBgEEAYKmcgMCBBMMEUpPSEFO
+TkEgREVMIFJPQ0lPMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAxMDk1OTQwMBMGCisGAQQBgqZy
+AyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAXBgorBgEEAYKmcgMDBAkMB1FVRVpB
+REEwJgYKKwYBBAGCpnIDCgQYDBZHQVNUUk9MT0pBVEFaVEFaIFMgQSBTMB0GCisGAQQBgqZyAwsE
+DwwNMDc5MTg0NTA1NjAwMTARBgorBgEEAYKmcgMdBAMMAS4wFQYKKwYBBAGCpnIDBAQHDAVBUklB
+UzAaBgorBgEEAYKmcgMIBAwMCjA5NTk5MjAwNzAwDQYJKoZIhvcNAQELBQADggIBAGMRxLenq+JS
+VcF+ZhKpRVO1t53j1SyEJFk2CktxupNrO854q99pSC/L6by0zhdN63U77rVl0Rz9MGoS1sW+U2EM
+Z0cAlZdA81iw1fZRSvDGqyJbL7Z+182loLq/UMfFcYxN+YO7nriWh4gZbmtIN1Lz4V3r1pMNkVOh
+YQo5ityxYAcyKblSTbfCIUay49ofmw15JYZxFfWS+EoqcX9BBLTRgh4ZqPTHMmybZl0ch7dPDQRT
+c3v/ecQrjB3huCYqESZG98LGRdN/FiRIvhstuTdHVtO/9qZS3jCpTK50lzT4zSz5mVTBG0qqXadl
+k+vtCUOrmuLzUhmBdilGTjQMRX5/FQpfsJvYabH8e3HrAfChUDvisdzcedOqqijnQx7mRR65qAIm
+537tXRX9aaiIrNM7zu5JloxzZBgMYENbtEFhGVlDsFy6lWgDWKzpl5J8SsdEgTOebiiiFnE/VXyU
+GqrFO5ifP31rXeSkwZMrhjg/TPbBb300BTq5UwBKTpBpLRk73U6A4XVoFvyHN27pYVGv2imLJJu/
+LV8dx2Xx+5z2vaqzsv1MG9KWXjPI7rhJeg/OnkvaFtBjvAlcPJ+ZYjRkxrkW91xnPhfBKQnSXLvG
+5NrKbycjQMZe4bMln3FwrMNps7f1SWEFziu6UjVj704ZTeLgz8Brd/IZQO9zRdIH
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+k3HGXXxqS6IsqhKZ8xn7w4wlrMIIOiBoDRwXYPk4i91zUfWQj5ywn/Gj9ICJins09LjnwsbXlDNY
+YvUpDGWy3Jqu2Vb+ow9hTgsML55GDt0lkNdPZuGdnAJffgwTt2Jcvae3/9EbA37D0HEd4IhqvyyT
+suqMF2l55uhNV3gLJ8xzBiQXzdF69b3Ao3LArx9glNgzLuR+TCRDHypXXtSHnOvqp4Nla8QdvI9Z
+y/Zm3qgUc1ZE14Xsqybjc9aK1JW/Agxdz8VLNOUh8KukHmdnLRft87Wc2cXRlrPGkW/i5yEE57yV
+77dbpWPYIO/nDsGn55cnaqzl5pBfalIWf4QcVQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature282294-Object655622"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature282294"&gt;
+                &lt;etsi:SignedProperties Id="Signature282294-SignedProperties819780"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-02-08T13:07:57-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;0RRlwAysSSuhHGG65h9BQDlx8m0=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;503369759601912828&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

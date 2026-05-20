@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1901202601099214791100120010020000105551234567813</numeroAutorizacion>
+    <fechaAutorizacion>2026-01-19T16:26:15-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="2.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;SUFERSA SA&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;SUFERSA SA&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0992147911001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;1901202601099214791100120010020000105551234567813&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;001&lt;/estab&gt;
+    &lt;ptoEmi&gt;002&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000010555&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;CAÑAR 1208 Y VILLAVICENCIO&lt;/dirMatriz&gt;
+    &lt;agenteRetencion&gt;1&lt;/agenteRetencion&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;19/01/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;CAÑAR 1208 Y VILLAVICENCIO&lt;/dirEstablecimiento&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A. QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;355.56&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;355.56&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+        &lt;valor&gt;53.33&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;408.89&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;408.89&lt;/total&gt;
+        &lt;plazo&gt;30&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;1958&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TAPON AC INOX MACHO 3/8"&lt;/descripcion&gt;
+      &lt;cantidad&gt;2.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.28&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;0.56&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;0.56&lt;/baseImponible&gt;
+          &lt;valor&gt;0.08&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;3002&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;NEPLO H/NEGRO 1/2" X 3" SH80&lt;/descripcion&gt;
+      &lt;cantidad&gt;3.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.9&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;5.70&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;5.70&lt;/baseImponible&gt;
+          &lt;valor&gt;0.86&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;293&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;ADAPTADOR ROSC/MANG 1 1/2" INOX&lt;/descripcion&gt;
+      &lt;cantidad&gt;2.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;5.8&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;11.60&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;11.60&lt;/baseImponible&gt;
+          &lt;valor&gt;1.74&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;1572&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;NEPLO AC INOX 1/4" X 2"&lt;/descripcion&gt;
+      &lt;cantidad&gt;10.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.7&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;7.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;7.00&lt;/baseImponible&gt;
+          &lt;valor&gt;1.05&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;5408&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;LLAVE MIXTA 15/16" 86-842 STANLEY&lt;/descripcion&gt;
+      &lt;cantidad&gt;4.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;7.6&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;30.40&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;30.40&lt;/baseImponible&gt;
+          &lt;valor&gt;4.56&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;1702&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;LLAVE MIXTA 3/4" 86-839 STANLEY&lt;/descripcion&gt;
+      &lt;cantidad&gt;4.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;4.8&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;19.20&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;19.20&lt;/baseImponible&gt;
+          &lt;valor&gt;2.88&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;1816&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;BUSHING AC INOX 1/2" X 1/4"&lt;/descripcion&gt;
+      &lt;cantidad&gt;10.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.56&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;5.60&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;5.60&lt;/baseImponible&gt;
+          &lt;valor&gt;0.84&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;991&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;DESOXIDANTE - FOSFATIZANTE TITANIUM 490A UNIDAS&lt;/descripcion&gt;
+      &lt;cantidad&gt;8.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;9&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;72.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;72.00&lt;/baseImponible&gt;
+          &lt;valor&gt;10.80&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;4735&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;ADAPTADOR ROSC/MANG 1/2" INOX&lt;/descripcion&gt;
+      &lt;cantidad&gt;9.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;0.9&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;8.10&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;8.10&lt;/baseImponible&gt;
+          &lt;valor&gt;1.22&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;130&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;ACEITE 3 EN 1 90ML&lt;/descripcion&gt;
+      &lt;cantidad&gt;12.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.6&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;19.20&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;19.20&lt;/baseImponible&gt;
+          &lt;valor&gt;2.88&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;787&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;PINTURA SPRAY DORADO 18KT GOLD ABRO&lt;/descripcion&gt;
+      &lt;cantidad&gt;36.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;1.7&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;61.20&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;61.20&lt;/baseImponible&gt;
+          &lt;valor&gt;9.18&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;6680&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;CANDADO VIRO 50MM&lt;/descripcion&gt;
+      &lt;cantidad&gt;5.0000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;23&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;115.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+          &lt;baseImponible&gt;115.00&lt;/baseImponible&gt;
+          &lt;valor&gt;17.25&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Observacion: "&gt;OC# 1000604579 DESPACHO# 9347 INGR.# 5000011178&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature890628"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo946525"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID725427" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature890628-SignedProperties322376"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ysk3zVnxb8VGpD8/nGAkX1IAsPc=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1948711"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;zliMhReCIyQ/ZaVV4DAK6C5wX3U=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-521711" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;5rNVtA9v1/6WouNsaIVd14R69Vo=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue938049"&gt;
+MSDdrfxz+lOI6qmh0V88iv7gxChTeBVcKMilZeL1u9Pue50nRwPf586ooP1YT7mGrSgCUtvx2To1
+DG9JBlNHdZNgy/7vL+Itiphx6WpPTHruHp3FA1+CAgExaVx9EDpyFvhBGuzCoaPk83zdwlVadObF
+0IClqeSWiNg7EUJjhf8iuhr3r+K7isSd+4bHv/CSd2VX+Ad9+F1d/mu6fr48zNPwKS6ejbDrBSQP
+48OkK3nlj4G/2cU1/NtF9r04S0SpZgsGmiaXVEil68QHtbA1WZGYZZJUPCns0xfzZA1l6kwP/8g9
+aNJeJvsbuHW09Jl0Ncm3J/u+WOX1qjex4uiMlA==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1948711"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKBTCCB+2gAwIBAgIIM46Te3Vi+58wDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTIzMTExNTIwMjIwMFoXDTI2MTExNDIwMjIwMFowge0xCzAJBgNVBAYTAkVDMTMwMQYDVQQKDCpT
+VUZFUlNBIFMuQS4gU1VNSU5JU1RSTyBGRVJSRVRFUk8gU09DSUVEQUQxGDAWBgNVBAwMD0dFUkVO
+VEUgR0VORVJBTDEWMBQGA1UEBAwNUk9NRVJPIENVTENBWTEXMBUGA1UEKgwOSk9SR0UgV0lMRlJJ
+RE8xGTAXBgNVBAUTEElEQ0VDLTA5MTIxMjcxMDcxJTAjBgNVBAMMHEpPUkdFIFdJTEZSSURPIFJP
+TUVSTyBDVUxDQVkxHDAaBgNVBGEME1ZBVEVDLTA5OTIxNDc5MTEwMDEwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQCVus6dM1J1z3FEcrMo4bGEWCzmSy+XHZgqy6oPjRbsV7oPPEfmctKF
+HRTHHHuhWFfUlQxUSnYEegb5YE7eNTnavl0xf6NakoQ+LmEuq5chBeqwUecxwO6vuxb1c5TOGb1d
+CBqnd1OM/JGsr3JOThulFQV6IsauZGtZrxg5oUxSgp6pW4iodGh1UcApTVxWaovwE8053riddHBN
+GPe+1xZTVMlFlmWxCcj2rtL/Mx0vwyyWfX6UHviD1Wg9QTYU5YoBACsEkwhBxyDrFsIputW7BnUu
+xYmFat9EJ0EASuFKq481et7E5a9BdrfFq71CUkYHBPoOa2JF0lX2BUJTQjM/AgMBAAGjggTaMIIE
+1jAbBgsrBgEEAYLxNmYDAQQMDAowOTEyMTI3MTA3MB4GCysGAQQBgvE2ZgMLBA8MDTA5OTIxNDc5
+MTEwMDEwgdcGCCsGAQUFBwEBBIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNh
+LmNvbS9wdWJsaWMvZG93bmxvYWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYG
+CCsGAQUFBzABhipodHRwOi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYI
+KwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNV
+HQ4EFgQUWT34Vt5fWRU1N9+sPCHtjRsVB6MwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dg
+c84HRqnio2jw4RGydJJz/TCBjgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEF
+BQcCARYraHR0cHM6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEF
+BQcCAjApDCdDRVJUSUZJQ0FETyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSB
+hzCBhDBAoD6gPIY6aHR0cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1
+Ym9yZGluYWRhLmNybDBAoD6gPIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kv
+Y3JsL0NBMnN1Ym9yZGluYWRhLmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUH
+AwIGCCsGAQUFBwMEMIICGwYDVR0RBIICEjCCAg6BF2Vyd19mcmFuY2lzQGhvdG1haWwuY29toBsG
+CysGAQQBgvE2ZgMBoAwMCjA5MTIxMjcxMDegHwYLKwYBBAGC8TZmAwKgEAwOSk9SR0UgV0lMRlJJ
+RE+gFwYLKwYBBAGC8TZmAwOgCAwGUk9NRVJPoBcGCysGAQQBgvE2ZgMEoAgMBkNVTENBWaAgBgsr
+BgEEAYLxNmYDBaARDA9HRVJFTlRFIEdFTkVSQUygcgYLKwYBBAGC8TZmAwegYwxhQ0FBUiBOTUVS
+TzogMTIwOCBJTlRFUlNFQ0NJTjogVklMTEFWSUNFTkNJTyBSRUZFUkVOQ0lBOiBGUkVOVEUgQSBK
+QVJESU4gREUgSU5GQU5URVMgTE9TIFBJTExVRUxPU6AfBgsrBgEEAYLxNmYDCKAQDA4wMDU5Mzkz
+OTMzMjgwOKAaBgsrBgEEAYLxNmYDCaALDAlHVUFZQVFVSUygOwYLKwYBBAGC8TZmAwqgLAwqU1VG
+RVJTQSBTLkEuIFNVTUlOSVNUUk8gRkVSUkVURVJPIFNPQ0lFREFEoB4GCysGAQQBgvE2ZgMLoA8M
+DTA5OTIxNDc5MTEwMDGgEwYLKwYBBAGC8TZmAwygBAwCRUOgJAYLKwYBBAGC8TZmAzKgFQwTUkVQ
+UkVTRU5UQU5URSBMRUdBTKAYBgsrBgEEAYLxNmYDM6AJDAdBUkNISVZPMA0GCSqGSIb3DQEBCwUA
+A4ICAQAbrfL3ay7JWqeUaC2jlaaauc1dwbTM6AjXl6FGAfWBoY80pg8JokTKI8Ff/MSO/6JU03su
+K4ikQO9ZV6U2cxbyCGZCue37oSS9MpKOxTR9thsmWStkbdFHRFgB4Cg08NEyqUKHyscSpZIwK2sh
+eeVSWArJDPljvMIQfywYbWTMp8EZtKn68KyDG08mwk813/KaM2r/wyUbDckvbmtGcMj2VPnG0S2e
+ARiH0xGqJEpboFDDTvuebTGEDJgMAyUsBW/A0hogXwRQMZG2t702DEBPjks/4B/dzAhwdnbcw002
+GGk/1c15z7fzni/EHNGvdcM5O7e4Xm4XnwaDu1QxHoahoUGik2RFajsg6fcsl+3ZLeSts2dbaOQ5
+m8BmBYhzrU/nE0NqdCGoT8i3y43ysjqgYwAwfG7nkJ0vfW/Jb7bRl2p36XgdNPK36hb0UBs6Oc/T
+lrH6GrFRa+oUhJf0hWuZFYYHL6+ZoLLqOG1/S2QNd5hlWIIJ8CJsVlqFkKkYAS0bvL34WHfXdJfL
+JlUHSRruVUf2yZM+yINih9gBlLdP3Uq+sqwpmUg7+/H7jXeeK7b5vD9umYZqhR/UrVi6gOabSRyg
+TtfV1psqQDQT2XH5wEECbHlaEgx3ChEOz3kJafg36s77VVDovyzNkCoXlSY9wNfUCljf3aWxKSHC
+ur8tRQ==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+lbrOnTNSdc9xRHKzKOGxhFgs5ksvlx2YKsuqD40W7Fe6DzxH5nLShR0Uxxx7oVhX1JUMVEp2BHoG
++WBO3jU52r5dMX+jWpKEPi5hLquXIQXqsFHnMcDur7sW9XOUzhm9XQgap3dTjPyRrK9yTk4bpRUF
+eiLGrmRrWa8YOaFMUoKeqVuIqHRodVHAKU1cVmqL8BPNOd64nXRwTRj3vtcWU1TJRZZlsQnI9q7S
+/zMdL8Msln1+lB74g9VoPUE2FOWKAQArBJMIQccg6xbCKbrVuwZ1LsWJhWrfRCdBAErhSquPNXre
+xOWvQXa3xau9QlJGBwT6DmtiRdJV9gVCU0IzPw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature890628-Object476314"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature890628"&gt;
+                &lt;etsi:SignedProperties Id="Signature890628-SignedProperties322376"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-01-19T16:26:00-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;PjaarBPTfWn2vOpfIlONupWE6Gk=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;3715068901086919583&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-521711"&gt;
+                            &lt;etsi:Description&gt;SUFERSA 2020 &lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>
