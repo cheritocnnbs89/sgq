@@ -9,7 +9,6 @@
 
 import os
 from pathlib import Path
-
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
 from jinja2 import ChoiceLoader, FileSystemLoader

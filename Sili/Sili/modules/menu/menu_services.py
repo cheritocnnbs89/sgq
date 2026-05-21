@@ -245,9 +245,9 @@ def save_menu_item(conn, form_payload, item_id=None):
             update_menu_item_endpoint(conn, new_id, created_slug)
 
         created_table = f"crud_{created_slug}"
-        ensure_dynamic_crud_table(conn, created_table)
-        ensure_autogen_templates(created_slug, data["label"])
-        register_dynamic_crud_endpoints(created_slug, data["label"], created_table)
+        #ensure_dynamic_crud_table(conn, created_table)
+        #ensure_autogen_templates(created_slug, data["label"])
+        #register_dynamic_crud_endpoints(created_slug, data["label"], created_table)
 
     return {"mode": "create", "item_id": new_id, "slug": created_slug, "table": created_table}
 

@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
       alert(msg);
     }
   }
-
+ 
   function showBulkOverlay() {
     const overlay = document.getElementById('bulkOverlay');
     if (overlay) {

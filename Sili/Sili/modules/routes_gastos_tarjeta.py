@@ -3063,20 +3063,20 @@ def register_gastos_routes(app):
         return render_template("factura_xml_detalle.html", f=f, detalles=detalles)
 
 
-
-    # DETALLE (visual)
+    # ✅ Reemplaza AMBAS definiciones de ver_gasto / ver_gasto2 por esta única:
     @app.route('/reembolsos/gastos/<int:gid>/ver', methods=['GET'], endpoint='ver_gasto2')
     @require_login
     @require_permission('gastos_tarjeta', 'ver')
     def ver_gasto2(gid):
-        conn = get_db(); cur = conn.cursor()
+        conn = get_db()
+        cur = conn.cursor()
+
         cur.execute(f"""
             SELECT
                 g.*,
                 t.identificacion AS proveedor_identificacion
             FROM {TABLE_GASTOS} g
-            LEFT JOIN terceros t
-                ON t.id = g.proveedor_id
+            LEFT JOIN terceros t ON t.id = g.proveedor_id
             WHERE g.id = ?
         """, (gid,))
 
@@ -3086,6 +3086,8 @@ def register_gastos_routes(app):
             flash('Gasto no encontrado.', 'warning')
             return redirect(url_for('lista_gastos'))
 
+        # ✅ OUTER APPLY con TOP 1 evita duplicados cuando param_values
+        #    tiene más de un registro con el mismo valor en el mismo group_id
         cur.execute("""
             SELECT
                 d.id,
@@ -3104,56 +3106,50 @@ def register_gastos_routes(app):
                 d.iva,
                 d.total_con_iva
             FROM gastos_tarjeta_detalle d
-            LEFT JOIN param_values pc
-                ON pc.group_id = 7
-            AND pc.activo = 1
-            AND TRIM(COALESCE(pc.valor,'')) = TRIM(COALESCE(d.centro_costo,''))
-            LEFT JOIN param_values pm
-                ON pm.group_id = 1
-            AND pm.activo = 1
-            AND TRIM(COALESCE(pm.valor,'')) = TRIM(COALESCE(d.motivo,''))
-            WHERE d.gasto_id=?
+            OUTER APPLY (
+                SELECT TOP 1 nombre
+                FROM param_values
+                WHERE group_id = 7
+                AND activo = 1
+                AND TRIM(COALESCE(valor,'')) = TRIM(COALESCE(d.centro_costo,''))
+                ORDER BY id
+            ) pc
+            OUTER APPLY (
+                SELECT TOP 1 nombre
+                FROM param_values
+                WHERE group_id = 1
+                AND activo = 1
+                AND TRIM(COALESCE(valor,'')) = TRIM(COALESCE(d.motivo,''))
+                ORDER BY id
+            ) pm
+            WHERE d.gasto_id = ?
             ORDER BY d.id
         """, (gid,))
         dets = cur.fetchall()
 
-
-
-
-
-        # (OPCIONAL recomendado) si tienes multi-adjuntos en tabla:
         adjuntos = []
         try:
             cur.execute("""
                 SELECT filename
                 FROM gastos_tarjeta_archivos
-                WHERE gasto_id=?
+                WHERE gasto_id = ?
                 ORDER BY id
             """, (gid,))
             adjuntos = [r['filename'] for r in cur.fetchall() if r and r['filename']]
         except Exception:
             adjuntos = []
 
-
         conn.close()
 
         popup = request.args.get('popup') == '1'
-        tpls = ('gastosdetalle_popup.html',) if popup else ('gastosdetalle.html','gasto_detalle.html')
+        tpls = ('gastosdetalle_popup.html',) if popup else ('gastosdetalle.html', 'gasto_detalle.html')
         for tpl in tpls:
             try:
                 return render_template(tpl, g=row, detalles=dets, popup=popup, adjuntos=adjuntos)
             except TemplateNotFound:
                 continue
 
-
-        for tpl in ('gastosdetalle.html', 'gasto_detalle.html'):
-            try:
-                return render_template(tpl, g=row, detalles=dets, popup=popup, adjuntos=adjuntos)
-            except TemplateNotFound:
-                continue
-
         return f"<h1>Detalle de gasto #{row['id']}</h1>"
-
     # DETALLE (visual)
     @app.route('/reembolsos/gastos/<int:gid>/ver', methods=['GET'], endpoint='ver_gasto')
     @require_login
@@ -6224,7 +6220,7 @@ def register_gastos_routes(app):
                 "Clase_Documento": "KR",
                 "Lugar": "0001",
                 "Texto_Cabecera": g.get('motivo') or "",
-                "Num_Tienda": "0002",
+                "Num_Tienda": "0001",
                 "Clave_Referencia_3": "01",
                 "Via_Pago": "T",
                 "Condicion_Pago": "Z01D",
