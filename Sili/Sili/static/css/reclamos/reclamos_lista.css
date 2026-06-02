@@ -1566,8 +1566,115 @@ table.recl-table tbody td {
     width: 85px;
 }
 /* =========================================================
-   ASISTENTE OM - CHAT PRO
+   ASISTENTE OM — PANEL FLOTANTE (no usa Bootstrap Modal)
    ========================================================= */
+
+#omChatPanel {
+  display: none;          /* oculto por defecto */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 420px;
+  max-height: 600px;
+  z-index: 1060;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(15,23,42,.18), 0 2px 8px rgba(15,23,42,.08);
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#omChatPanel.omc-visible {
+  display: flex;
+}
+
+.omc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #ffffff;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: .9rem;
+  flex-shrink: 0;
+}
+
+.omc-header-btns {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.omc-btn-nueva {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.35);
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: .78rem;
+  cursor: pointer;
+}
+
+.omc-btn-nueva:hover { background: rgba(255,255,255,.28); }
+
+.omc-btn-close {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,.8);
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.omc-btn-close:hover { color: #ffffff; }
+
+.omc-footer {
+  padding: 10px 12px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.omc-input-row {
+  display: flex;
+  gap: 6px;
+}
+
+.omc-input {
+  flex: 1;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-size: .875rem;
+  outline: none;
+}
+
+.omc-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+
+.omc-send {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-size: .9rem;
+}
+
+.omc-send:hover { background: #1d4ed8; }
+.omc-send:disabled { opacity: .6; cursor: wait; }
+
+.omc-disclaimer {
+  font-size: .7rem;
+  color: #94a3b8;
+  margin-top: 5px;
+}
 
 /* Contenedor general del chat */
 #om-chat-messages {
@@ -1579,9 +1686,6 @@ table.recl-table tbody td {
     linear-gradient(180deg, #f8fbff 0%, #f3f6fb 100%);
   border: 1px solid #dbe5f3;
   border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
   scroll-behavior: smooth;
 }
 
@@ -2065,4 +2169,61 @@ table.recl-table tbody td {
 
 .om-action-meta strong {
   color: #334155;
+}
+.recl-proceso-multi { min-height: 90px; }
+
+/* Botones validacion creador */
+.js-validar-creador { min-width: 32px; }
+#vc-motivo.is-invalid { border-color: #dc3545; }
+#vc-motivo.is-invalid + .form-text { color: #dc3545; }
+.recl-badge-validacion-aprobado {
+    background-color: #16a34a;
+    color: #ffffff;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+.recl-badge-validacion-rechazado {
+    background-color: #dc2626;
+    color: #ffffff;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Ajustes CSP / Carta cliente / Asistente OM */
+.om-chat-example {
+    color: #94a3b8;
+}
+
+.recl-badge-validacion-aprobado {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.recl-badge-validacion-rechazado {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.field-carta-cliente .form-check-input,
+.field-carta-cliente .form-check-label {
+    cursor: pointer;
+}
+
+.w-56px { width: 56px; }
+.w-90px { width: 90px; }
+.w-150px { width: 150px; }
+.w-160px { width: 160px; }
+
+#det-creado-por-wrap.d-none {
+    display: none !important;
 }

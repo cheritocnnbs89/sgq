@@ -1,6 +1,4 @@
-let selectedEstados = [];
-let selectedTipos = [];
-let selectedDeptos = [];
+// selectedEstados / selectedTipos / selectedDeptos removed — filters moved to top-bar selects
 
 (function initTheme() {
   const key = 'ui_theme';
@@ -34,25 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const countVisibles = document.getElementById('countVisibles');
   const noResultsDiv = document.getElementById('noResults');
 
-  const qInp = document.getElementById('liveFilter');
+  const qInp   = document.getElementById('liveFilter');
   const fEstado = document.getElementById('fEstado');
-  const fProp = document.getElementById('fProp');
-  const fDepto = document.getElementById('fDepto');
-
-  const estadoMenu = document.getElementById('estadoMenu');
-  const tipoMenu = document.getElementById('tipoMenu');
-  const deptoMenu = document.getElementById('deptoMenu');
-
-  const quickFilters = { titulo: '', prop: '', depto: '' };
+  const fTipo   = document.getElementById('fTipo');
+  const fProp   = document.getElementById('fProp');
+  const fDepto  = document.getElementById('fDepto');
 
   let pageLength = parseInt(localStorage.getItem('tareas_page_len') || '10', 10);
   let currentPage = 1;
   let currentSortCol = null;
   let currentSortDir = null;
 
-  rows.forEach(row => {
-    row.dataset.match = '1';
-  });
+  rows.forEach(row => { row.dataset.match = '1'; });
+
+  // ── Helpers ─────────────────────────────────────────────────
 
   function textOf(row, dataTh) {
     return (row.querySelector(`td[data-th="${dataTh}"]`)?.innerText || '').trim();
@@ -63,52 +56,37 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateInfo(start, end, total) {
-    if (info) {
-      info.textContent = `Mostrando ${total ? start + 1 : 0} a ${end} de ${total}`;
-    }
-
+    if (info) info.textContent = `Mostrando ${total ? start + 1 : 0} a ${end} de ${total}`;
     if (countTotal) countTotal.textContent = rows.length;
     if (countVisibles) countVisibles.textContent = total;
-
     noResultsDiv?.classList.toggle('d-none', total !== 0);
   }
 
   function makePageItem(label, page, disabled = false, active = false) {
     const li = document.createElement('li');
     li.className = `page-item${disabled ? ' disabled' : ''}${active ? ' active' : ''}`;
-
     const link = document.createElement('a');
     link.className = 'page-link';
     link.href = '#';
     link.textContent = label;
-
     link.addEventListener('click', event => {
       event.preventDefault();
-      if (!disabled) {
-        currentPage = page;
-        render();
-      }
+      if (!disabled) { currentPage = page; render(); }
     });
-
     li.appendChild(link);
     return li;
   }
 
   function renderPagination(totalPages) {
     if (!pager) return;
-
     pager.innerHTML = '';
-
     const total = Math.max(1, totalPages);
     const start = Math.max(1, currentPage - 3);
     const end = Math.min(total, start + 6);
-
     pager.appendChild(makePageItem('Anterior', currentPage - 1, currentPage === 1));
-
     for (let page = start; page <= end; page += 1) {
       pager.appendChild(makePageItem(String(page), page, false, page === currentPage));
     }
-
     pager.appendChild(makePageItem('Siguiente', currentPage + 1, currentPage === total));
   }
 
@@ -116,76 +94,51 @@ document.addEventListener('DOMContentLoaded', () => {
     const list = matchedRows();
     const total = list.length;
     const totalPages = Math.max(1, Math.ceil(total / pageLength));
-
     currentPage = Math.min(Math.max(1, currentPage), totalPages);
-
     rows.forEach(row => row.classList.add('d-none'));
-
     const start = (currentPage - 1) * pageLength;
     const end = Math.min(start + pageLength, total);
-
-    for (let i = start; i < end; i += 1) {
-      list[i].classList.remove('d-none');
-    }
-
+    for (let i = start; i < end; i += 1) list[i].classList.remove('d-none');
     updateInfo(start, end, total);
     renderPagination(totalPages);
   }
 
+  // ── Filtrado ─────────────────────────────────────────────────
+
   function applyFilters() {
-    const q = (qInp?.value || '').toLowerCase().trim();
-    const estadoSelect = fEstado?.value || '';
-    const prop = (fProp?.value || '').toLowerCase().trim();
-    const deptoTexto = (fDepto?.value || '').toLowerCase().trim();
+    const q        = (qInp?.value    || '').toLowerCase().trim();
+    const estadoVal = fEstado?.value || '';
+    const tipoVal   = fTipo?.value   || '';
+    const propVal   = (fProp?.value  || '').toLowerCase().trim();
+    const deptoVal  = fDepto?.value  || '';
 
     rows.forEach(row => {
-      const rowText = row.innerText.toLowerCase();
-
-      const tipo = textOf(row, 'Tipo');
-      const estado = textOf(row, 'Estado');
-      const responsable = textOf(row, 'Responsable').toLowerCase();
+      const rowText      = row.innerText.toLowerCase();
+      const estado       = textOf(row, 'Estado');
+      const tipo         = textOf(row, 'Tipo');
+      const responsable  = textOf(row, 'Responsable').toLowerCase();
       const departamento = textOf(row, 'Departamento');
-      const departamentoLower = departamento.toLowerCase();
-      const titulo = textOf(row, 'Título').toLowerCase();
 
-      const okQ = !q || rowText.includes(q);
-      const okProp = !prop || responsable.includes(prop);
-      const okDeptoTexto = !deptoTexto || departamentoLower.includes(deptoTexto);
+      const okQ      = !q        || rowText.includes(q);
+      const okEstado = !estadoVal || estado       === estadoVal;
+      const okTipo   = !tipoVal  || tipo          === tipoVal;
+      const okProp   = !propVal  || responsable.includes(propVal);
+      const okDepto  = !deptoVal || departamento  === deptoVal;
 
-      const okTituloRapido = !quickFilters.titulo || titulo.includes(quickFilters.titulo);
-      const okPropRapido = !quickFilters.prop || responsable.includes(quickFilters.prop);
-      const okDeptoRapido = !quickFilters.depto || departamentoLower.includes(quickFilters.depto);
-
-      const okEstadoSelect = !estadoSelect || estado === estadoSelect;
-      const okEstadoMulti = selectedEstados.length === 0 || selectedEstados.includes(estado);
-      const okTipoMulti = selectedTipos.length === 0 || selectedTipos.includes(tipo);
-      const okDeptoMulti = selectedDeptos.length === 0 || selectedDeptos.includes(departamento);
-
-      row.dataset.match = (
-        okQ &&
-        okProp &&
-        okDeptoTexto &&
-        okTituloRapido &&
-        okPropRapido &&
-        okDeptoRapido &&
-        okEstadoSelect &&
-        okEstadoMulti &&
-        okTipoMulti &&
-        okDeptoMulti
-      ) ? '1' : '0';
+      row.dataset.match = (okQ && okEstado && okTipo && okProp && okDepto) ? '1' : '0';
     });
 
     currentPage = 1;
     render();
   }
 
+  // ── Ordenamiento ─────────────────────────────────────────────
+
   function parseDate(value) {
     if (!value) return null;
-
     const normalized = value.replace(/\s+/g, 'T');
-    const date = new Date(normalized);
-
-    return Number.isNaN(date.getTime()) ? null : date;
+    const d = new Date(normalized);
+    return Number.isNaN(d.getTime()) ? null : d;
   }
 
   function cellText(row, index) {
@@ -198,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
         button.dataset.sortCol === currentSortCol &&
         button.dataset.sortDir === currentSortDir
       );
-
       button.classList.toggle('disabled', active);
       button.setAttribute('aria-disabled', active ? 'true' : 'false');
     });
@@ -209,27 +161,24 @@ document.addEventListener('DOMContentLoaded', () => {
     currentSortDir = dir;
 
     const idxMap = {
-      id: 1,
-      titulo: 2,
-      tipo: 4,
-      inicio: 7,
-      'inicio Real': 8,
-      fin: 9,
-      'Fin Real': 10,
-      propietario: 12,
-      depto: 13
+      id: 1, titulo: 2, tipo: 4, avance: 6,
+      inicio: 7, 'inicio Real': 8, fin: 9, 'Fin Real': 10,
+      horas: 11,          // Horas de atención (col nueva)
+      propietario: 14,    // Responsable (posición corregida)
+      depto: 15,          // Departamento (posición corregida)
     };
 
     const idx = idxMap[col] || 1;
     const multiplier = dir === 'asc' ? 1 : -1;
 
     rows.sort((a, b) => {
-      let va;
-      let vb;
-
-      if (col === 'id') {
+      let va, vb;
+      if (col === 'id' || col === 'avance') {
         va = parseInt(cellText(a, idx), 10) || 0;
         vb = parseInt(cellText(b, idx), 10) || 0;
+      } else if (col === 'horas') {
+        va = parseFloat(cellText(a, idx).replace('h', '').replace('min', '')) || 0;
+        vb = parseFloat(cellText(b, idx).replace('h', '').replace('min', '')) || 0;
       } else if (['inicio', 'inicio Real', 'fin', 'Fin Real'].includes(col)) {
         va = parseDate(cellText(a, idx))?.getTime() || 0;
         vb = parseDate(cellText(b, idx))?.getTime() || 0;
@@ -237,195 +186,72 @@ document.addEventListener('DOMContentLoaded', () => {
         va = cellText(a, idx).toLowerCase();
         vb = cellText(b, idx).toLowerCase();
       }
-
       if (va < vb) return -1 * multiplier;
       if (va > vb) return 1 * multiplier;
       return 0;
     });
 
     rows.forEach(row => tbody.appendChild(row));
-
     updateSortButtons();
     render();
   }
 
-  function closeMenus(exceptMenu = null) {
-    [estadoMenu, tipoMenu, deptoMenu].forEach(menu => {
-      if (menu && menu !== exceptMenu) menu.classList.remove('show');
+  // ── Poblar selects desde las filas del DOM ────────────────────
+
+  function populateSelect(selectEl, values, allLabel) {
+    if (!selectEl) return;
+    const current = selectEl.value;
+    selectEl.innerHTML = `<option value="">${allLabel}</option>`;
+    [...new Set(values)].filter(Boolean).sort().forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      if (v === current) opt.selected = true;
+      selectEl.appendChild(opt);
     });
-
-    document.querySelectorAll('.col-search-box').forEach(box => {
-      if (box !== exceptMenu) box.classList.remove('show');
-    });
-  }
-
-  function toggleMenu(menu) {
-    if (!menu) return;
-
-    const willShow = !menu.classList.contains('show');
-    closeMenus(menu);
-    menu.classList.toggle('show', willShow);
   }
 
   function populateTipoFilter() {
-    const container = document.getElementById('tipoChecklist');
-    if (!container) return;
-
-    const tipos = rows.map(row => textOf(row, 'Tipo')).filter(Boolean);
-    const tiposUnicos = [...new Set(tipos)];
-
-    if (!tiposUnicos.length) {
-      container.innerHTML = '<div class="small text-muted p-2">No hay tipos detectados</div>';
-      return;
-    }
-
-    container.innerHTML = tiposUnicos
-      .map(tipo => `
-        <label class="estado-check">
-          <input type="checkbox" value="${tipo}"> ${tipo}
-        </label>
-      `)
-      .join('');
+    populateSelect(
+      fTipo,
+      rows.map(row => textOf(row, 'Tipo')),
+      'Tipo: Todos'
+    );
   }
 
-  function clearDeptoFilter() {
-    selectedDeptos = [];
-
-    document.querySelectorAll('#deptoChecklist input[type="checkbox"]').forEach(checkbox => {
-      checkbox.checked = false;
-    });
-
-    deptoMenu?.classList.remove('show');
-    applyFilters();
+  function populateDeptoFilter() {
+    populateSelect(
+      fDepto,
+      rows.map(row => textOf(row, 'Departamento')),
+      'Departamento: Todos'
+    );
   }
+
+  // ── Limpiar todo ─────────────────────────────────────────────
 
   function limpiarTodo() {
     if (window.location.search.includes('due=')) {
       window.location.href = '/tareas';
       return;
     }
-
-    if (qInp) qInp.value = '';
+    if (qInp)   qInp.value   = '';
     if (fEstado) fEstado.value = '';
-    if (fProp) fProp.value = '';
-    if (fDepto) fDepto.value = '';
-
+    if (fTipo)   fTipo.value  = '';
+    if (fProp)   fProp.value  = '';
+    if (fDepto)  fDepto.value = '';
     document.querySelector('input[name="fecha_desde"]')?.setAttribute('value', '');
     document.querySelector('input[name="fecha_hasta"]')?.setAttribute('value', '');
-
-    Object.keys(quickFilters).forEach(key => {
-      quickFilters[key] = '';
-    });
-
-    document.querySelectorAll('.col-search-box input').forEach(input => {
-      input.value = '';
-    });
-
-    selectedEstados = [];
-    selectedTipos = [];
-    selectedDeptos = [];
-
-    document.querySelectorAll('#estadoMenu input[type="checkbox"], #tipoChecklist input[type="checkbox"], #deptoChecklist input[type="checkbox"]')
-      .forEach(checkbox => {
-        checkbox.checked = false;
-      });
-
-    closeMenus();
     applyFilters();
   }
 
+  // ── Inicializar ──────────────────────────────────────────────
+
   populateTipoFilter();
+  populateDeptoFilter();
 
-  document.getElementById('btnTipoFilter')?.addEventListener('click', event => {
-    event.preventDefault();
-    event.stopPropagation();
-    toggleMenu(tipoMenu);
-  });
-
-  document.getElementById('btnTipoBuscar')?.addEventListener('click', event => {
-    event.preventDefault();
-    selectedTipos = [...document.querySelectorAll('#tipoChecklist input:checked')].map(input => input.value);
-    tipoMenu?.classList.remove('show');
-    applyFilters();
-  });
-
-  document.getElementById('btnTipoLimpiar')?.addEventListener('click', event => {
-    event.preventDefault();
-    selectedTipos = [];
-    document.querySelectorAll('#tipoChecklist input').forEach(input => {
-      input.checked = false;
-    });
-    tipoMenu?.classList.remove('show');
-    applyFilters();
-  });
-
-  document.getElementById('btnEstadoFilter')?.addEventListener('click', event => {
-    event.preventDefault();
-    event.stopPropagation();
-    toggleMenu(estadoMenu);
-  });
-
-  document.getElementById('btnEstadoBuscar')?.addEventListener('click', event => {
-    event.preventDefault();
-    selectedEstados = [...document.querySelectorAll('#estadoMenu input:checked')].map(input => input.value);
-    estadoMenu?.classList.remove('show');
-    applyFilters();
-  });
-
-  document.getElementById('btnEstadoLimpiar')?.addEventListener('click', event => {
-    event.preventDefault();
-    selectedEstados = [];
-    document.querySelectorAll('#estadoMenu input').forEach(input => {
-      input.checked = false;
-    });
-    estadoMenu?.classList.remove('show');
-    applyFilters();
-  });
-
-  document.querySelectorAll('[data-menu-target]').forEach(button => {
-    button.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      toggleMenu(document.getElementById(button.dataset.menuTarget));
-    });
-  });
-
-  document.getElementById('btnDeptoBuscar')?.addEventListener('click', event => {
-    event.preventDefault();
-    selectedDeptos = [...document.querySelectorAll('#deptoChecklist input:checked')].map(input => input.value);
-    deptoMenu?.classList.remove('show');
-    applyFilters();
-  });
-
-  document.getElementById('btnDeptoLimpiar')?.addEventListener('click', event => {
-    event.preventDefault();
-    clearDeptoFilter();
-  });
-
-  document.getElementById('densityNormal')?.addEventListener('click', () => {
-    table.classList.remove('table-compact', 'table-supercompact');
-  });
-
-  document.getElementById('densityCompact')?.addEventListener('click', () => {
-    table.classList.add('table-compact', 'table-supercompact');
-  });
-
-  document.getElementById('btnGerencial')?.addEventListener('click', event => {
-    const button = event.currentTarget;
-
-    table.classList.toggle('table-gerencial');
-
-    if (table.classList.contains('table-gerencial')) {
-      button.classList.replace('btn-outline-primary', 'btn-primary');
-      document.getElementById('densityCompact')?.click();
-    } else {
-      button.classList.replace('btn-primary', 'btn-outline-primary');
-    }
-  });
-
-  [qInp, fEstado, fProp, fDepto].forEach(element => {
-    element?.addEventListener('input', applyFilters);
-    element?.addEventListener('change', applyFilters);
+  [qInp, fEstado, fTipo, fProp, fDepto].forEach(el => {
+    el?.addEventListener('input',  applyFilters);
+    el?.addEventListener('change', applyFilters);
   });
 
   document.querySelectorAll('.sort-btn').forEach(button => {
@@ -441,101 +267,64 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('advBox')?.classList.toggle('show');
   });
 
-  document.querySelectorAll('.magnify-btn[data-target]').forEach(button => {
-    button.addEventListener('click', event => {
-      event.stopPropagation();
-
-      const box = document.querySelector(`.col-search-box[data-col="${button.dataset.target}"]`);
-      if (!box) return;
-
-      const willShow = !box.classList.contains('show');
-      closeMenus(box);
-      box.classList.toggle('show', willShow);
-
-      if (willShow) {
-        const input = box.querySelector('input');
-        input?.focus();
-        input?.select();
-      }
-    });
+  document.getElementById('densityNormal')?.addEventListener('click', () => {
+    table.classList.remove('table-compact', 'table-supercompact');
   });
 
-  document.querySelectorAll('.col-search-box').forEach(box => {
-    const col = box.dataset.col;
-    const input = box.querySelector('input');
+  document.getElementById('densityCompact')?.addEventListener('click', () => {
+    table.classList.add('table-compact', 'table-supercompact');
+  });
 
-    input?.addEventListener('input', () => {
-      quickFilters[col] = input.value.toLowerCase().trim();
-      applyFilters();
-    });
-
-    input?.addEventListener('keydown', event => {
-      if (event.key === 'Escape') {
-        input.value = '';
-        quickFilters[col] = '';
-        box.classList.remove('show');
-        applyFilters();
-      }
-    });
+  document.getElementById('btnGerencial')?.addEventListener('click', event => {
+    const button = event.currentTarget;
+    table.classList.toggle('table-gerencial');
+    if (table.classList.contains('table-gerencial')) {
+      button.classList.replace('btn-outline-primary', 'btn-primary');
+      document.getElementById('densityCompact')?.click();
+    } else {
+      button.classList.replace('btn-primary', 'btn-outline-primary');
+    }
   });
 
   document.querySelectorAll('[data-alert]').forEach(button => {
-    button.addEventListener('click', () => {
-      alert(button.dataset.alert);
-    });
+    button.addEventListener('click', () => { alert(button.dataset.alert); });
   });
 
   document.querySelectorAll('.js-delete-tarea-form').forEach(form => {
     form.addEventListener('submit', event => {
-      if (!confirm('¿Eliminar tarea?')) {
-        event.preventDefault();
-      }
+      if (!confirm('¿Eliminar tarea?')) event.preventDefault();
     });
   });
 
   document.getElementById('btnExportarExcel')?.addEventListener('click', event => {
     event.preventDefault();
-
     const vista = document.querySelector('.tasks-page')?.dataset.vista || '';
     const fechaDesde = document.querySelector('input[name="fecha_desde"]')?.value || '';
     const fechaHasta = document.querySelector('input[name="fecha_hasta"]')?.value || '';
-
     const params = new URLSearchParams({
       vista,
-      q: qInp?.value || '',
-      estado: fEstado?.value || '',
-      prop: fProp?.value || '',
-      depto: fDepto?.value || '',
+      q:           qInp?.value    || '',
+      estado:      fEstado?.value || '',
+      tipo:        fTipo?.value   || '',
+      prop:        fProp?.value   || '',
+      depto:       fDepto?.value  || '',
       fecha_desde: fechaDesde,
       fecha_hasta: fechaHasta
     });
-
     window.location.href = `/tareas/reporte/excel?${params.toString()}`;
   });
 
   document.addEventListener('keydown', event => {
     const tag = event.target.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
     if (event.key === '/') {
       event.preventDefault();
       document.getElementById('advBox')?.classList.add('show');
       qInp?.focus();
     }
-
     if (event.key === 'n') {
       event.preventDefault();
       document.querySelector('a[href*="nueva_tarea"]')?.click();
-    }
-  });
-
-  document.addEventListener('click', event => {
-    if (
-      !event.target.closest('.estado-menu') &&
-      !event.target.closest('.magnify-btn') &&
-      !event.target.closest('.col-search-box')
-    ) {
-      closeMenus();
     }
   });
 

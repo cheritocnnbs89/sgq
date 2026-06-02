@@ -8,7 +8,7 @@ from modules.db import get_db
 
 log = logging.getLogger(__name__)
 
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-mini")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 # Vistas autorizadas. El asistente NO debe consultar tablas físicas.
 TABLAS_PERMITIDAS = [
@@ -131,6 +131,20 @@ Indicadores ejecutivos:
 - Total de OM abiertas, cerradas y sin respuesta.
 - Total de OM por mes y estado.
 """
+
+
+def _kw(*keywords: str):
+    """Devuelve un callable que verifica si TODOS los keywords están en el texto."""
+    def _check(text: str) -> bool:
+        return all(kw in text for kw in keywords)
+    return _check
+
+
+def _any_kw(*keywords: str):
+    """Devuelve un callable que verifica si ALGUNO de los keywords está en el texto."""
+    def _check(text: str) -> bool:
+        return any(kw in text for kw in keywords)
+    return _check
 
 
 def normalizar_pregunta(txt: str) -> str:
@@ -501,32 +515,34 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
     # =========================================================
     # Conteos generales
     # =========================================================
-    if pregunta_norm in (
-        "cuantas om hay en total",
-        "total de om",
-        "total om",
-    ):
+    # Total general — sin filtro de estado y sin otros agrupadores
+    _sin_grupo = not any(x in pregunta_norm for x in [
+        "por cliente", "por proceso", "por departamento", "por sponsor",
+        "por usuario", "por tipo", "por mes", "por dia", "abiert",
+        "cerrad", "pendiente", "sin respuesta", "vencid",
+    ])
+    if _sin_grupo and any(x in pregunta_norm for x in [
+        "total om", "total de om", "cuantas om hay", "cuantas om existen",
+        "cuantas oportunidades hay", "cuantas oportunidades de mejora hay",
+        "total oportunidades", "numero de om", "resumen general",
+    ]):
         return """
             SELECT COUNT(DISTINCT reclamo_id) AS total_om
             FROM vw_om_reporte_base
         """, [], "predefinido_vista"
 
-    if pregunta_norm in (
-        "cuantas om hay abiertas",
-        "total de om abiertas",
-        "om abiertas",
-    ):
+    # OM abiertas — sin otros agrupadores
+    if any(x in pregunta_norm for x in ["om abiert", "oportunidades abiert", "abiertas hay", "hay abiert"]) \
+            and not any(x in pregunta_norm for x in ["por ", "cada "]):
         return """
             SELECT COUNT(DISTINCT reclamo_id) AS total_om
             FROM vw_om_reporte_base
             WHERE LOWER(ISNULL(estado_global,'')) = 'abierto'
         """, [], "predefinido_vista"
 
-    if pregunta_norm in (
-        "cuantas om hay cerradas",
-        "total de om cerradas",
-        "om cerradas",
-    ):
+    # OM cerradas — sin otros agrupadores
+    if any(x in pregunta_norm for x in ["om cerrad", "oportunidades cerrad", "cerradas hay", "hay cerrad"]) \
+            and not any(x in pregunta_norm for x in ["por ", "cada "]):
         return """
             SELECT COUNT(DISTINCT reclamo_id) AS total_om
             FROM vw_om_reporte_base
@@ -536,15 +552,10 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
     # =========================================================
     # Por cliente / proceso / tipo / sponsor / usuario
     # =========================================================
-    if pregunta_norm in (
-        "dame el numero de om por clientes",
-        "numero de om por clientes",
-        "numero de om por cliente",
-        "cuantas om por clientes",
-        "cuantas om hay por cliente",
-        "om por cliente",
-        "cuantas om hay por clientes",
-    ):
+    # ── Por cliente ──────────────────────────────────────────────
+    _kw_cliente = any(x in pregunta_norm for x in ["por cliente", "por clientes", "cliente tiene", "clientes tienen"])
+    _kw_tipo    = any(x in pregunta_norm for x in ["por tipo", "tipos de reclamo", "tipo de reclamo", "tipo reclamo"])
+    if _kw_cliente and not _kw_tipo:
         return """
             SELECT TOP 100
                 ISNULL(cliente, 'SIN CLIENTE') AS cliente,
@@ -554,28 +565,11 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
             ORDER BY total_om DESC
         """, [], "predefinido_vista"
 
-    if pregunta_norm in (
-        "que cliente tiene mas om",
-        "cual cliente tiene mas om",
-    ):
-        return """
-            SELECT TOP 10
-                ISNULL(cliente, 'SIN CLIENTE') AS cliente,
-                COUNT(DISTINCT reclamo_id) AS total_om
-            FROM vw_om_reporte_base
-            GROUP BY ISNULL(cliente, 'SIN CLIENTE')
-            ORDER BY total_om DESC
-        """, [], "predefinido_vista"
-
-    if pregunta_norm in (
-        "cuantas om hay por proceso",
-        "om por proceso",
-        "om por departamento",
-        "que proceso tiene mas om",
-        "cual proceso tiene mas om",
-        "que departamento tiene mas om",
-        "cual departamento tiene mas om",
-    ):
+    # ── Por proceso / departamento ────────────────────────────────
+    if any(x in pregunta_norm for x in [
+        "por proceso", "por departamento", "proceso tiene", "departamento tiene",
+        "procesos con mas", "departamentos con mas",
+    ]) and not _kw_tipo and not _kw_cliente:
         return """
             SELECT TOP 100
                 ISNULL(proceso, 'SIN PROCESO') AS proceso,
@@ -585,29 +579,8 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
             ORDER BY total_om DESC
         """, [], "predefinido_vista"
 
-    if pregunta_norm in (
-        "cuantas om hay por tipo de reclamo",
-        "om por tipo de reclamo",
-        "reclamos por tipo",
-        "cual es el tipo de reclamo mas frecuente",
-        "que tipo de reclamo tiene mas om",
-    ):
-        return """
-            SELECT TOP 100
-                ISNULL(tipo_reclamo, 'SIN TIPO') AS tipo_reclamo,
-                COUNT(DISTINCT reclamo_id) AS total_om
-            FROM vw_om_reporte_base
-            GROUP BY ISNULL(tipo_reclamo, 'SIN TIPO')
-            ORDER BY total_om DESC
-        """, [], "predefinido_vista"
-
-    if pregunta_norm in (
-        "tipo de reclamo por cliente",
-        "tipos de reclamo por cliente",
-        "reclamos por tipo y cliente",
-        "om por tipo de reclamo y cliente",
-        "cuantas om por tipo de reclamo y cliente",
-    ):
+    # ── Por tipo de reclamo ───────────────────────────────────────
+    if _kw_tipo and _kw_cliente:
         return """
             SELECT TOP 100
                 ISNULL(cliente, 'SIN CLIENTE') AS cliente,
@@ -618,51 +591,53 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
             ORDER BY total_om DESC
         """, [], "predefinido_vista"
 
-    if pregunta_norm in (
-        "cuantas om tiene cada sponsor",
-        "om por sponsor",
-        "que sponsor tiene mas om asignadas",
-        "quienes son los sponsor asignados",
-        "quienes son los sponsors asignados",
-        "cuales son los sponsor asignados",
-        "cuales son los sponsors asignados",
-    ):
+    if _kw_tipo and not _kw_cliente:
         return """
             SELECT TOP 100
-                sponsor_username,
+                ISNULL(tipo_reclamo, 'SIN TIPO') AS tipo_reclamo,
+                COUNT(DISTINCT reclamo_id) AS total_om
+            FROM vw_om_reporte_base
+            GROUP BY ISNULL(tipo_reclamo, 'SIN TIPO')
+            ORDER BY total_om DESC
+        """, [], "predefinido_vista"
+
+    # ── Por sponsor ───────────────────────────────────────────────
+    if any(x in pregunta_norm for x in [
+        "por sponsor", "sponsor tiene", "sponsors asignados",
+        "sponsor asignado", "cada sponsor",
+    ]):
+        return """
+            SELECT TOP 100
                 sponsor_nombre,
                 COUNT(DISTINCT reclamo_id) AS total_om
             FROM vw_om_reporte_base
             WHERE ISNULL(sponsor_nombre, '') <> ''
-            GROUP BY sponsor_username, sponsor_nombre
+            GROUP BY sponsor_nombre
             ORDER BY total_om DESC
         """, [], "predefinido_vista"
 
-    if pregunta_norm in (
-        "cuantas om creo cada usuario",
-        "om por usuario",
-        "que usuario creo mas om",
-        "cuantas om creo cada usuario por mes",
-    ):
+    # ── Por usuario / creador ─────────────────────────────────────
+    if any(x in pregunta_norm for x in [
+        "por usuario", "cada usuario", "creo cada", "creador",
+        "usuario creo", "usuarios crearon",
+    ]):
         if "por mes" in pregunta_norm:
             return """
                 SELECT TOP 100
                     FORMAT(TRY_CONVERT(date, fecha_creacion), 'yyyy-MM') AS mes,
-                    creador_username,
                     creador_nombre,
                     COUNT(DISTINCT reclamo_id) AS total_om
                 FROM vw_om_reporte_base
-                GROUP BY FORMAT(TRY_CONVERT(date, fecha_creacion), 'yyyy-MM'), creador_username, creador_nombre
+                GROUP BY FORMAT(TRY_CONVERT(date, fecha_creacion), 'yyyy-MM'), creador_nombre
                 ORDER BY mes DESC, total_om DESC
             """, [], "predefinido_vista"
 
         return """
             SELECT TOP 100
-                creador_username,
                 creador_nombre,
                 COUNT(DISTINCT reclamo_id) AS total_om
             FROM vw_om_reporte_base
-            GROUP BY creador_username, creador_nombre
+            GROUP BY creador_nombre
             ORDER BY total_om DESC
         """, [], "predefinido_vista"
 
@@ -1015,7 +990,26 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
 
 
 
-def generar_sql_openai(pregunta: str) -> str:
+def _corregir_sql_openai(sql_fallido: str, error_msg: str, pregunta: str) -> str:
+    """Pide a OpenAI que corrija un SQL que falló en ejecución."""
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    prompt = (
+        f"El siguiente SQL generado para la pregunta '{pregunta}' falló con el error:\n"
+        f"{error_msg}\n\n"
+        f"SQL original:\n{sql_fallido}\n\n"
+        f"Vistas disponibles: vw_om_reporte_base, vw_om_acciones_base.\n"
+        f"Devuelve SOLO el SQL corregido como JSON: {{\"sql\":\"SELECT ...\"}}"
+    )
+    resp = client.chat.completions.create(
+        model=OPENAI_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=400,
+    )
+    raw = resp.choices[0].message.content.strip()
+    return json.loads(raw).get("sql", "")
+
+
+def generar_sql_openai(pregunta: str, historial: list[dict] | None = None) -> str:
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     prompt = f"""
@@ -1098,12 +1092,28 @@ Pregunta del usuario:
 {pregunta}
 """
 
+    # Incluye contexto conversacional para follow-ups ("¿y las cerradas?")
+    contexto_historial = ""
+    if historial:
+        ultimos = historial[-6:]
+        pares = []
+        for msg in ultimos:
+            rol = "Usuario" if msg["role"] == "user" else "Asistente"
+            pares.append(f"{rol}: {msg['content']}")
+        if pares:
+            contexto_historial = (
+                "\n\nContexto de la conversación previa (para interpretar follow-ups):\n"
+                + "\n".join(pares)
+            )
+
+    msgs = [
+        {"role": "developer", "content": "Devuelve únicamente JSON válido. No expliques."},
+        {"role": "user", "content": prompt + contexto_historial},
+    ]
+
     completion = client.chat.completions.create(
         model=OPENAI_MODEL,
-        messages=[
-            {"role": "developer", "content": "Devuelve únicamente JSON válido. No expliques."},
-            {"role": "user", "content": prompt},
-        ],
+        messages=msgs,
     )
 
     raw = completion.choices[0].message.content.strip()
@@ -1145,6 +1155,95 @@ def cargar_diccionario_campos(conn, modulo="om"):
     return dic
 
 
+def generar_respuesta_natural(
+    pregunta: str,
+    data: list[dict],
+    historial: list[dict] | None = None,
+) -> str:
+    """
+    Usa OpenAI para convertir los resultados SQL en una respuesta
+    conversacional en lenguaje natural.
+    """
+    if not data:
+        return "No encontré resultados para esa consulta. Intenta reformular la pregunta."
+
+    # Casos simples sin IA
+    if len(data) == 1 and len(data[0]) == 1:
+        key, val = next(iter(data[0].items()))
+        if "total" in key.lower():
+            return f"Hay **{val}** oportunidad(es) de mejora que coinciden con tu consulta."
+
+    try:
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+        muestra = data[:20]
+        total_registros = len(data)
+
+        msgs: list[dict] = [
+            {
+                "role": "system",
+                "content": (
+                    "Eres el asistente de Oportunidades de Mejora (OM) de QUIMPAC Ecuador. "
+                    "Responde siempre en español, de forma clara, concisa y profesional. "
+                    "Usa **negrita** para valores numéricos importantes. "
+                    "Cuando sean listados, preséntalo de forma ordenada y legible. "
+                    "Máximo 200 palabras. "
+                    "No menciones SQL, vistas, columnas internas ni términos técnicos de base de datos."
+                ),
+            }
+        ]
+
+        # Contexto conversacional (últimos 4 turnos)
+        for msg in (historial or [])[-8:]:
+            msgs.append({"role": msg["role"], "content": msg["content"]})
+
+        aviso_total = (
+            f"\n(Mostrando {len(muestra)} de {total_registros} registros en total)"
+            if total_registros > len(muestra)
+            else ""
+        )
+
+        msgs.append({
+            "role": "user",
+            "content": (
+                f"Pregunta: {pregunta}\n\n"
+                f"Datos obtenidos:{aviso_total}\n"
+                f"{json.dumps(muestra, ensure_ascii=False, default=str)}"
+            ),
+        })
+
+        completion = client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=msgs,
+            max_tokens=400,
+            temperature=0.2,
+        )
+
+        return completion.choices[0].message.content.strip()
+
+    except Exception as exc:
+        log.error("[om_chat] generar_respuesta_natural error: %s", exc)
+        # Fallback al formato básico
+        return _respuesta_fallback(data)
+
+
+def _respuesta_fallback(data: list[dict]) -> str:
+    """Respuesta simple cuando OpenAI no está disponible."""
+    if not data:
+        return "Sin resultados."
+    if len(data) == 1:
+        row = data[0]
+        if "total_om" in row:
+            return f"Total: {row['total_om']} OM."
+        partes = [f"{k}: {v}" for k, v in row.items() if v is not None]
+        return " | ".join(partes)
+    filas = []
+    for row in data[:10]:
+        partes = [f"{v}" for v in row.values() if v is not None]
+        filas.append(" | ".join(partes))
+    return f"{len(data)} resultado(s):\n" + "\n".join(filas)
+
+
 def responder_simple(conn, pregunta: str, data: list[dict], modulo="om"):
     if not data:
         return "No encontré resultados para esa consulta."
@@ -1184,9 +1283,14 @@ def responder_simple(conn, pregunta: str, data: list[dict], modulo="om"):
     return "Estos son los principales resultados:\n" + "\n".join(filas)
 
 
-def om_chat_responder(pregunta: str, user_id: int | None):
+def om_chat_responder(
+    pregunta: str,
+    user_id: int | None,
+    historial: list[dict] | None = None,
+):
     conn = get_db()
     pregunta_norm = normalizar_pregunta(pregunta)
+    historial = historial or []
     sql = None
     params = []
     source = "desconocido"
@@ -1195,30 +1299,33 @@ def om_chat_responder(pregunta: str, user_id: int | None):
         if not pregunta_permitida_modulo(conn, pregunta_norm, "om"):
             return {
                 "ok": False,
-                "error": "Solo puedo responder preguntas relacionadas con Oportunidades de Mejora."
+                "error": "Solo puedo responder preguntas relacionadas con Oportunidades de Mejora.",
             }
 
+        # 1. SQL predefinido (rápido, sin IA)
         pre = sql_predefinido_vista(pregunta_norm, pregunta, user_id)
         if pre:
             sql, params, source = pre
 
+        # 2. Caché de consultas previas
         if not sql:
             cache = buscar_cache(conn, pregunta_norm)
             if cache:
-                sql_cache = normalizar_sql_server(cache["sql_generado"])
                 try:
-                    sql_cache = validar_sql_solo_select(sql_cache)
+                    sql_cache = validar_sql_solo_select(
+                        normalizar_sql_server(cache["sql_generado"])
+                    )
                     sql = sql_cache
                     params = []
                     marcar_uso_cache(conn, cache["id"])
                     source = "cache"
                 except Exception:
                     sql = None
-                    params = []
 
+        # 3. OpenAI genera SQL con contexto de historial
         if not sql:
-            sql = generar_sql_openai(pregunta)
-            sql = normalizar_sql_server(sql)
+            sql_raw = generar_sql_openai(pregunta, historial)
+            sql = normalizar_sql_server(sql_raw)
             sql = validar_sql_solo_select(sql)
             guardar_cache(conn, pregunta_norm, pregunta, sql, user_id)
             sugerir_regla(conn, "om", pregunta_norm)
@@ -1228,32 +1335,50 @@ def om_chat_responder(pregunta: str, user_id: int | None):
         sql = validar_sql_solo_select(sql)
 
         data = ejecutar_sql(conn, sql, params)
-        respuesta = responder_simple(conn, pregunta, data, "om")
+
+        # 4. Respuesta en lenguaje natural (con contexto de historial)
+        respuesta = generar_respuesta_natural(pregunta, data, historial)
 
         return {
             "ok": True,
             "source": source,
-            "sql": sql,
             "rows": data[:50],
             "respuesta": respuesta,
         }
 
-    except pyodbc.ProgrammingError:
-        log.exception("SQL inválido generado por asistente OM. SQL=%s", sql)
-        return {
-            "ok": True,
-            "source": source,
-            "rows": [],
-            "respuesta": "No pude interpretar correctamente esa pregunta. Intenta reformularla con más detalle."
-        }
+    except pyodbc.ProgrammingError as exc:
+        # Reintento: pide a OpenAI corregir el SQL con el error específico
+        log.warning("[om_chat] SQL falló, intentando corrección. SQL=%s err=%s", sql, exc)
+        try:
+            sql_corregido = _corregir_sql_openai(sql or "", str(exc), pregunta)
+            sql_corregido = normalizar_sql_server(sql_corregido)
+            sql_corregido = validar_sql_solo_select(sql_corregido)
+            data = ejecutar_sql(conn, sql_corregido, [])
+            respuesta = generar_respuesta_natural(pregunta, data, historial)
+            return {
+                "ok": True,
+                "source": "openai_retry",
+                "rows": data[:50],
+                "respuesta": respuesta,
+            }
+        except Exception:
+            return {
+                "ok": True,
+                "source": source,
+                "rows": [],
+                "respuesta": (
+                    "No pude obtener los datos para esa consulta. "
+                    "Intenta ser más específico, por ejemplo indicando el código de OM o el nombre exacto del proceso."
+                ),
+            }
 
     except Exception:
-        log.exception("Error general en asistente OM")
+        log.exception("[om_chat] Error general")
         return {
             "ok": True,
             "source": source,
             "rows": [],
-            "respuesta": "No pude procesar la consulta en este momento."
+            "respuesta": "No pude procesar la consulta en este momento. Intenta de nuevo.",
         }
 
     finally:

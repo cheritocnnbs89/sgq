@@ -71,11 +71,18 @@
         <option {{ 'Cerrado por sistema'==_estado and 'selected' or '' }}>Cerrado por sistema</option>
       </select>
 
+      <!-- fTipo: opciones pobladas por JS desde las filas del DOM -->
+      <select id="fTipo" name="tipo" class="form-select form-select-sm tareas-maxw-180">
+        <option value="">Tipo: Todos</option>
+      </select>
+
       <input id="fProp" name="prop" class="form-control form-control-sm tareas-maxw-180"
         value="{{ request.args.get('prop','') }}" placeholder="Responsable">
 
-      <input id="fDepto" name="depto" class="form-control form-control-sm tareas-maxw-180"
-        value="{{ request.args.get('depto','') }}" placeholder="Departamento">
+      <!-- fDepto: opciones pobladas por JS desde las filas del DOM -->
+      <select id="fDepto" name="depto" class="form-select form-select-sm tareas-maxw-180">
+        <option value="">Departamento: Todos</option>
+      </select>
 
       <input type="date" name="fecha_desde" class="form-control form-control-sm tareas-date"
         value="{{ request.args.get('fecha_desde','') }}" title="Desde">
@@ -151,66 +158,23 @@
                     <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="titulo"
                       data-sort-dir="desc" title="Alfabético (Z → A)">▼</button>
                   </span>
-                  <button type="button" class="btn btn-outline-info magnify-btn" data-target="titulo"
-                    title="Buscar por título">🔎</button>
                 </span>
-                <div class="col-search-box" data-col="titulo">
-                  <input type="text" placeholder="Buscar título...">
-                </div>
               </th>
 
 
               <th>Descripción</th>
-              <th class="th-filter">
-                <span class="hdr">
-                  <span class="label">Tipo</span>
-                  <button type="button" id="btnTipoFilter" class="btn btn-outline-info magnify-btn">▾</button>
-                </span>
-                <div id="tipoMenu" class="estado-menu">
-                  <div class="mb-1 menu-title">Filtrar por tipo</div>
-                  <div id="tipoChecklist" class="filter-checklist"></div>
-                  <div class="d-grid mt-2">
-                    <button id="btnTipoBuscar" class="btn btn-primary btn-sm">Buscar</button>
-                    <button id="btnTipoLimpiar" class="btn btn-outline-secondary btn-sm mt-1">Quitar filtros</button>
-                  </div>
-                </div>
-              </th>
+              <th>Tipo</th>
               <!-- Estado -->
-              <th class="th-filter">
-                <span class="hdr">
-                  <span class="label">Estado</span>
-                  <button type="button" id="btnEstadoFilter" class="btn btn-outline-info magnify-btn"
-                    title="Filtrar por estado">▾</button>
-                </span>
-
-                <div id="estadoMenu" class="estado-menu">
-                  <div class="mb-1 menu-title">
-                    Filtrar por estado
-                  </div>
-                  <label class="estado-check"><input type="checkbox" value="Por iniciar"> Por iniciar</label>
-                  <label class="estado-check"><input type="checkbox" value="En desarrollo"> En desarrollo</label>
-                  <label class="estado-check"><input type="checkbox" value="Atrasada"> Atrasada</label>
-                  <label class="estado-check"><input type="checkbox" value="Terminado"> Terminado</label>
-                  <label class="estado-check"><input type="checkbox" value="Cerrado por sistema"> Cerrado por
-                    sistema</label>
-
-                  <div class="d-grid mt-2">
-                    <button id="btnEstadoBuscar" class="btn btn-primary btn-sm">Buscar</button>
-                    <button id="btnEstadoLimpiar" class="btn btn-outline-secondary btn-sm mt-1">
-                      Quitar filtros
-                    </button>
-                  </div>
-                </div>
-              </th>
+              <th>Estado</th>
 
               <th class="th-filter">
                 <span class="hdr">
 
                   <span class="label">Avance</span>
                   <span class="col-sort">
-                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="id"
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="avance"
                       data-sort-dir="asc" title="Ascendente (menor → mayor)">▲</button>
-                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="id"
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="avance"
                       data-sort-dir="desc" title="Descendente (mayor → menor)">▼</button>
                   </span>
                 </span>
@@ -266,52 +230,30 @@
                   </span>
                 </span>
               </th>
+
+              <!-- Horas de atención -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label" title="Fecha fin − Fecha inicio">Horas</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="horas"
+                      data-sort-dir="asc" title="Menor a mayor">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="horas"
+                      data-sort-dir="desc" title="Mayor a menor">▼</button>
+                  </span>
+                </span>
+              </th>
+
               <th>Empresa</th>
               <th>Solicitante</th>
 
               <!-- Responsable -->
-              <th class="th-filter">
-                <span class="hdr">
-                  <span class="label">Responsable</span>
-                  <button type="button" class="btn btn-outline-info magnify-btn" data-target="prop"
-                    title="Buscar por responsable">🔎</button>
-                </span>
-                <div class="col-search-box" data-col="prop">
-                  <input type="text" placeholder="Buscar responsable...">
-                </div>
-              </th>
+              <th>Responsable</th>
 
 
 
               <!-- Departamento -->
-              <th class="th-filter">
-                <span class="hdr">
-                  <span class="label">Departamento</span>
-                  <button type="button" class="btn btn-outline-info magnify-btn" data-menu-target="deptoMenu">▾</button>
-                </span>
-
-                <div id="deptoMenu" class="estado-menu">
-                  <div class="mb-1 menu-title">Filtrar Departamento</div>
-
-                  <div id="deptoChecklist" class="filter-checklist">
-                    {% set deptos_unicos = [] %}
-                    {% for t in tareas %}
-                    {% if t.departamento_nombre and t.departamento_nombre not in deptos_unicos %}
-                    {% if deptos_unicos.append(t.departamento_nombre) %}{% endif %}
-                    <label class="estado-check">
-                      <input type="checkbox" value="{{ t.departamento_nombre }}"> {{ t.departamento_nombre }}
-                    </label>
-                    {% endif %}
-                    {% endfor %}
-                  </div>
-
-                  <div class="d-grid mt-2">
-                    <button type="button" id="btnDeptoBuscar" class="btn btn-primary btn-sm">Buscar</button>
-                    <button type="button" id="btnDeptoLimpiar" class="btn btn-outline-secondary btn-sm mt-1">Quitar
-                      filtros</button>
-                  </div>
-                </div>
-              </th>
+              <th>Departamento</th>
 
               <th>Acciones</th>
             </tr>
@@ -408,7 +350,24 @@
                 {% endif %}
               </td>
 
-              <td data-th="Título">
+              <td data-th="Horas">
+                {% if t.horas_atencion is not none %}
+                  {% set h = t.horas_atencion %}
+                  {% if h < 1 %}
+                    <span class="badge bg-success bg-opacity-75 text-white">{{ "%.0f"|format(h * 60) }}min</span>
+                  {% elif h < 8 %}
+                    <span class="badge bg-primary bg-opacity-75 text-white">{{ "%.1f"|format(h) }}h</span>
+                  {% elif h < 24 %}
+                    <span class="badge bg-warning text-dark">{{ "%.1f"|format(h) }}h</span>
+                  {% else %}
+                    <span class="badge bg-danger bg-opacity-75 text-white">{{ "%.1f"|format(h) }}h</span>
+                  {% endif %}
+                {% else %}
+                  <span class="text-muted small">—</span>
+                {% endif %}
+              </td>
+
+              <td data-th="Empresa">
                 {% if t['empresa_nombre'] %}
                 <div class="text-primary small empresa-text">
                   <i class="bi bi-building"></i> {{ t['empresa_nombre'] }}

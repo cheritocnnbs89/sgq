@@ -38,42 +38,56 @@
         <form class="filters-panel" method="GET">
           <input type="hidden" name="buscar" value="1">
 
-          <div class="row g-3 align-items-end">
-            <div class="col-lg-4 col-md-6">
-              <label class="form-label">Proveedor</label>
-              <input name="proveedor" type="text" class="form-control"
-                     value="{{ request.args.get('proveedor','') }}">
-            </div>
+<div class="row g-3 align-items-end">
+  <div class="col-lg-3 col-md-6">
+    <label class="form-label">Proveedor</label>
+    <input name="proveedor" type="text" class="form-control"
+           value="{{ request.args.get('proveedor','') }}">
+  </div>
 
-            <div class="col-lg-3 col-md-6">
-              <label class="form-label">Pedido</label>
-              <input name="pedido" type="text" class="form-control"
-                     value="{{ request.args.get('pedido','') }}">
-            </div>
+  <div class="col-lg-2 col-md-6">
+    <label class="form-label">Pedido</label>
+    <input name="pedido" type="text" class="form-control"
+           value="{{ request.args.get('pedido','') }}">
+  </div>
 
-            <div class="col-lg-3 col-md-6">
-              <label class="form-label">Pagaré / Póliza</label>
-              {% set tpp = request.args.get('tipo_pp','') %}
-              <select name="tipo_pp" class="form-select">
-                <option value="" {% if not tpp %}selected{% endif %}>Todos</option>
-                <option value="PAGARE" {% if tpp == 'PAGARE' %}selected{% endif %}>Pagaré</option>
-                <option value="POLIZA" {% if tpp == 'POLIZA' %}selected{% endif %}>Póliza</option>
-                <option value="AMBOS" {% if tpp == 'AMBOS' %}selected{% endif %}>Ambos</option>
-              </select>
-            </div>
+  <div class="col-lg-2 col-md-6">
+    <label class="form-label">Pagaré / Póliza</label>
+    {% set tpp = request.args.get('tipo_pp','') %}
+    <select name="tipo_pp" class="form-select">
+      <option value="" {% if not tpp %}selected{% endif %}>Todos</option>
+      <option value="PAGARE" {% if tpp == 'PAGARE' %}selected{% endif %}>Pagaré</option>
+      <option value="POLIZA" {% if tpp == 'POLIZA' %}selected{% endif %}>Póliza</option>
+      <option value="AMBOS" {% if tpp == 'AMBOS' %}selected{% endif %}>Ambos</option>
+    </select>
+  </div>
 
-            <div class="col-lg-2 col-md-12">
-              <div class="btn-group btn-group-sm compras-filter-actions">
-                <button class="btn btn-outline-secondary" type="submit">
-                  <i class="bi bi-search me-1"></i>Buscar
-                </button>
+  <div class="col-lg-2 col-md-6">
+    <label class="form-label">Fecha desde</label>
+    <input name="fecha_desde" type="date" class="form-control"
+           value="{{ request.args.get('fecha_desde','') }}">
+  </div>
 
-                <a class="btn btn-outline-secondary" href="{{ url_for('contratos.compras_lista') }}">
-                  <i class="bi bi-x-circle me-1"></i>Limpiar
-                </a>
-              </div>
-            </div>
-          </div>
+  <div class="col-lg-2 col-md-6">
+    <label class="form-label">Fecha hasta</label>
+    <input name="fecha_hasta" type="date" class="form-control"
+           value="{{ request.args.get('fecha_hasta','') }}">
+  </div>
+
+  <div class="col-lg-1 col-md-12">
+    <div class="btn-group btn-group-sm compras-filter-actions">
+      <button class="btn btn-outline-secondary" type="submit">
+        <i class="bi bi-search me-1"></i>Buscar
+      </button>
+
+      <a class="btn btn-outline-secondary" href="{{ url_for('contratos.compras_lista') }}">
+        <i class="bi bi-x-circle me-1"></i>Limpiar
+      </a>
+    </div>
+  </div>
+</div>
+
+
         </form>
       </div>
 

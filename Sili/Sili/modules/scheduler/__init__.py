@@ -24,6 +24,10 @@ from .scheduler_notifications import (
     ensure_om_templates,
     enqueue_gasto_approved,
     enqueue_gasto_rejected_gg,
+    ensure_om_evento_templates,
+    enqueue_om_nueva_asignado,
+    enqueue_om_rechazo_creador,
+    enqueue_om_nueva_registro,
 )
 
 from .scheduler_repository import (

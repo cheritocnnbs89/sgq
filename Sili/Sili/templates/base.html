@@ -27,9 +27,9 @@
         <div class="system-name">Sistema Gestión Quimpac</div>
       </div>
 
-      <a href="{{ url_for('dashboard') }}" class="nav-link-simple {% if active_page == 'dashboard' %}active{% endif %}">
+      <a href="{{ url_for('reclamos_dashboard') }}" class="nav-link-simple {% if active_page in ('dashboard', 'reclamos_dashboard') %}active{% endif %}">
         <span class="bullet">
-          {% if active_page == 'dashboard' %}
+          {% if active_page in ('dashboard', 'reclamos_dashboard') %}
             <i class="bi bi-check-lg"></i>
           {% else %}
             &nbsp;

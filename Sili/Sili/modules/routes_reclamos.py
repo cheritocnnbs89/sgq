@@ -40,6 +40,8 @@ from .security import (
     require_login,
     require_permission,
 )
+from .routes_reclamos_querys import *
+from .routes_reclamos_constants import *
 
 # =========================================================
 # Helpers internos
@@ -62,28 +64,7 @@ BOSS_ROLES = (
 import sqlite3
 def _get_sponsors_by_proceso(conn, proceso_id):
     cur = conn.cursor()
-    cur.execute("""
-        SELECT
-            u.id AS usuario_id,
-            UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) AS tipo_sponsor
-        FROM param_values pv
-        JOIN param_groups pg ON pg.id = pv.group_id
-        JOIN usuarios u
-          ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
-        WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
-          AND COALESCE(pv.activo, 1) = 1
-          AND pv.parent_id = ?
-          AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
-          AND COALESCE(u.disabled, 0) = 0
-        ORDER BY
-          CASE UPPER(LTRIM(RTRIM(COALESCE(pv.valor, ''))))
-            WHEN 'PRINCIPAL' THEN 1
-            WHEN 'BACKUP' THEN 2
-            ELSE 9
-          END,
-          COALESCE(pv.orden, 0),
-          pv.id
-    """, (proceso_id,))
+    cur.execute(SQL__GET_SPONSORS_BY_PROCESO_SEL_1, (proceso_id,))
 
     ids = []
     seen = set()
@@ -96,39 +77,89 @@ def _get_sponsors_by_proceso(conn, proceso_id):
 
     return ids
 
+
+def _can_upload_carta_cliente(conn, uid: int | None) -> bool:
+    role = (session.get("rol") or "").strip().lower()
+
+    if role in ("admin", "administrador"):
+        return True
+
+    if not uid:
+        return False
+
+    cur = conn.cursor()
+
+    cur.execute(SQL__CAN_UPLOAD_CARTA_CLIENTE_SEL_1, (uid,))
+
+    row = cur.fetchone()
+
+    if not row:
+        return False
+
+    departamento = (row["departamento_nombre"] or "").strip().lower()
+    puesto = (row["puesto_nombre"] or "").strip().lower()
+
+    if departamento == "servicio al cliente":
+        return True
+
+    if "servicio al cliente" in puesto:
+        return True
+
+    return False
+
+def _can_delete_om(conn, uid: int | None) -> bool:
+    """
+    Puede eliminar OM:
+    - admin / coordinador
+    - usuarios del departamento Servicio al Cliente
+    - usuarios con puesto que contenga Servicio al Cliente
+    """
+    role = (session.get("rol") or "").strip().lower()
+
+    if role in ("admin", "administrador", "coordinador"):
+        return True
+
+    if not uid:
+        return False
+
+    cur = conn.cursor()
+
+    cur.execute(SQL__CAN_UPLOAD_CARTA_CLIENTE_SEL_1, (uid,))
+
+    row = cur.fetchone()
+
+    if not row:
+        return False
+
+    departamento = (row["departamento_nombre"] or "").strip().lower()
+    puesto = (row["puesto_nombre"] or "").strip().lower()
+
+    if departamento == "servicio al cliente":
+        return True
+
+    if "servicio al cliente" in puesto:
+        return True
+
+    return False
+
+
+def _usuario_es_sponsor_del_proceso(conn, proceso_id: int | None, user_id: int | None) -> bool:
+    if not proceso_id or not user_id:
+        return False
+
+    cur = conn.cursor()
+    cur.execute(SQL__USUARIO_ES_SPONSOR_DEL_PROCESO_SEL_1, (proceso_id, user_id))
+
+    return cur.fetchone() is not None
+
 def _fetch_recl_procesos(conn):
     cur = conn.cursor()
-    cur.execute("""
-        SELECT
-            pv.id,
-            pv.nombre,
-            pv.valor,
-            pv.orden
-        FROM param_values pv
-        JOIN param_groups pg ON pg.id = pv.group_id
-        WHERE pg.nombre = 'RECL_PROCESO'
-          AND COALESCE(pv.activo, 1) = 1
-          AND pv.parent_id IS NULL
-        ORDER BY COALESCE(pv.orden, 0), pv.valor, pv.nombre
-    """)
+    cur.execute(SQL__FETCH_RECL_PROCESOS_SEL_1)
     return cur.fetchall()
 
 def _get_sponsor_principal_by_proceso(conn, proceso_id):
     cur = conn.cursor()
-    cur.execute("""
-        SELECT TOP 1
-            u.id AS usuario_id
-        FROM param_values pv
-        JOIN param_groups pg ON pg.id = pv.group_id
-        JOIN usuarios u
-          ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
-        WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
-          AND COALESCE(pv.activo, 1) = 1
-          AND pv.parent_id = ?
-          AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) = 'PRINCIPAL'
-          AND COALESCE(u.disabled, 0) = 0
-        ORDER BY COALESCE(pv.orden, 0), pv.id
-    """, (proceso_id,))
+    cur.execute(SQL__GET_SPONSOR_PRINCIPAL_BY_PROCESO_SEL_1, (proceso_id,))
 
     row = cur.fetchone()
     return int(row["usuario_id"]) if row and row["usuario_id"] else None
@@ -147,18 +178,10 @@ def _table_exists(conn, table: str) -> bool:
     cur = conn.cursor()
 
     if _is_sqlserver_conn(conn):
-        cur.execute("""
-            SELECT 1
-            FROM INFORMATION_SCHEMA.TABLES
-            WHERE TABLE_NAME = ?
-        """, (table,))
+        cur.execute(SQL__TABLE_EXISTS_SEL_1, (table,))
         return cur.fetchone() is not None
 
-    cur.execute("""
-        SELECT name
-        FROM sqlite_master
-        WHERE type = 'table' AND name = ?
-    """, (table,))
+    cur.execute(SQL__TABLE_EXISTS_SEL_2, (table,))
     return cur.fetchone() is not None
 
 def _col_names(conn, table: str) -> set[str]:
@@ -166,11 +189,7 @@ def _col_names(conn, table: str) -> set[str]:
 
     try:
         if _is_sqlserver_conn(conn):
-            cur.execute("""
-                SELECT COLUMN_NAME AS name
-                FROM INFORMATION_SCHEMA.COLUMNS
-                WHERE TABLE_NAME = ?
-            """, (table,))
+            cur.execute(SQL__COL_NAMES_SEL_1, (table,))
             return {str(r["name"]) for r in cur.fetchall()}
 
         cur.execute(f"PRAGMA table_info({table})")
@@ -221,22 +240,9 @@ def _can_export_all_reclamos(conn, uid: int | None) -> bool:
     cur = conn.cursor()
 
     if _is_sqlserver_conn(conn):
-        cur.execute("""
-            SELECT TOP 1
-                UPPER(LTRIM(RTRIM(COALESCE(p.nombre,'')))) AS puesto_nombre
-            FROM usuarios u
-            LEFT JOIN puestos p ON p.id = u.puesto_id
-            WHERE u.id = ?
-        """, (uid,))
+        cur.execute(SQL__CAN_EXPORT_ALL_RECLAMOS_SEL_1, (uid,))
     else:
-        cur.execute("""
-            SELECT TOP 1
-                UPPER(TRIM(COALESCE(p.nombre,''))) AS puesto_nombre
-            FROM usuarios u
-            LEFT JOIN puestos p ON p.id = u.puesto_id
-            WHERE u.id = ?
-            
-        """, (uid,))
+        cur.execute(SQL__CAN_EXPORT_ALL_RECLAMOS_SEL_2, (uid,))
 
     row = cur.fetchone()
     if not row:
@@ -268,35 +274,9 @@ def _puede_gestionar_imputado_accion(accion_id: int, user_id: int | None = None)
     db = get_db()
 
     if _is_sqlserver_conn(db):
-        row = db.execute("""
-            SELECT TOP 1
-                a.id,
-                a.imputacion_id,
-                a.reclamo_id,
-                COALESCE(a.activo, 1) AS accion_activa,
-                COALESCE(a.cumplido, 0) AS cumplido,
-                ri.imputado_id,
-                COALESCE(ri.estado_asignacion, '') AS estado_asignacion
-            FROM reclamo_imputado_acciones a
-            JOIN reclamo_imputados ri
-              ON ri.id = a.imputacion_id
-            WHERE a.id = ?
-        """, (accion_id,)).fetchone()
+        row = db.execute(SQL__PUEDE_GESTIONAR_IMPUTADO_ACCION_SEL_1, (accion_id,)).fetchone()
     else:
-        row = db.execute("""
-            SELECT TOP 1
-                a.id,
-                a.imputacion_id,
-                a.reclamo_id,
-                COALESCE(a.activo, 1) AS accion_activa,
-                COALESCE(a.cumplido, 0) AS cumplido,
-                ri.imputado_id,
-                COALESCE(ri.estado_asignacion, '') AS estado_asignacion
-            FROM reclamo_imputado_acciones a
-            JOIN reclamo_imputados ri
-              ON ri.id = a.imputacion_id
-            WHERE a.id = ?
-         """, (accion_id,)).fetchone()
+        row = db.execute(SQL__PUEDE_GESTIONAR_IMPUTADO_ACCION_SEL_1, (accion_id,)).fetchone()
 
     if not row:
         return False, None
@@ -325,26 +305,9 @@ def _can_view_all_reclamos(conn, uid: int | None) -> bool:
 
     try:
         if _is_sqlserver_conn(conn):
-            cur.execute("""
-                SELECT TOP 1
-                    d.nombre AS departamento_nombre,
-                    p.nombre AS puesto_nombre
-                FROM usuarios u
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
-                LEFT JOIN puestos p ON p.id = u.puesto_id
-                WHERE u.id = ?
-            """, (uid,))
+            cur.execute(SQL__CAN_VIEW_ALL_RECLAMOS_SEL_1, (uid,))
         else:
-            cur.execute("""
-                SELECT
-                    d.nombre AS departamento_nombre,
-                    p.nombre AS puesto_nombre
-                FROM usuarios u
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
-                LEFT JOIN puestos p ON p.id = u.puesto_id
-                WHERE u.id = ?
-                LIMIT 1
-            """, (uid,))
+            cur.execute(SQL__CAN_VIEW_ALL_RECLAMOS_SEL_2, (uid,))
 
         row = cur.fetchone()
         if not row:
@@ -390,26 +353,9 @@ def _can_view_all_reclamos_sn_sponsor(conn, uid: int | None) -> bool:
 
     try:
         if _is_sqlserver_conn(conn):
-            cur.execute("""
-                SELECT TOP 1
-                    COALESCE(d.nombre, '') AS departamento_nombre,
-                    COALESCE(p.nombre, '') AS puesto_nombre
-                FROM usuarios u
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
-                LEFT JOIN puestos p ON p.id = u.puesto_id
-                WHERE u.id = ?
-            """, (uid,))
+            cur.execute(SQL__CAN_UPLOAD_CARTA_CLIENTE_SEL_1, (uid,))
         else:
-            cur.execute("""
-                SELECT
-                    COALESCE(d.nombre, '') AS departamento_nombre,
-                    COALESCE(p.nombre, '') AS puesto_nombre
-                FROM usuarios u
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
-                LEFT JOIN puestos p ON p.id = u.puesto_id
-                WHERE u.id = ?
-                LIMIT 1
-            """, (uid,))
+            cur.execute(SQL__CAN_VIEW_ALL_RECLAMOS_SN_SPONSOR_SEL_1, (uid,))
 
         row = cur.fetchone()
         if not row:
@@ -442,13 +388,7 @@ def _es_miembro_equipo_reclamo(reclamo_id, user_id):
 
     db = get_db()
 
-    row = db.execute("""
-        SELECT TOP 1 1 AS ok
-        FROM reclamo_equipo_respuestas
-        WHERE reclamo_id = ?
-          AND usuario_id = ?
-          AND activo = 1
-    """, (reclamo_id, user_id)).fetchone()
+    row = db.execute(SQL__ES_MIEMBRO_EQUIPO_RECLAMO_SEL_1, (reclamo_id, user_id)).fetchone()
 
     current_app.logger.debug(
         "[equipo] Resultado query miembro equipo: row=%r -> %s",
@@ -460,64 +400,47 @@ def _es_miembro_equipo_reclamo(reclamo_id, user_id):
 def _notify_sponsor_respuesta_equipo(conn, imputacion_id: int, miembro_id: int, reclamo_codigo: str):
     cur = conn.cursor()
 
-    cur.execute("""
-        SELECT TOP 1 reclamo_id
-        FROM reclamo_imputados
-        WHERE id = ?
-    """, (imputacion_id,))
+    # =========================================================
+    # 1) Obtener datos base de la imputación / reclamo
+    # =========================================================
+    cur.execute(SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_1, (miembro_id, miembro_id, miembro_id, imputacion_id))
+
     base = cur.fetchone()
 
     if not base:
         return
 
     reclamo_id = base["reclamo_id"]
+    proceso_id = base["proceso_id"]
+    miembro_nombre = (
+        base["miembro_nombre"]
+        or base["miembro_username"]
+        or f"UID {miembro_id}"
+    )
 
-    cur.execute("""
-        SELECT
-            ri.imputado_id,
-            COALESCE(us.nombre_completo, us.username) AS sponsor_nombre,
-            us.email AS sponsor_email,
-            COALESCE(um.nombre_completo, um.username) AS miembro_nombre,
-            um.username AS miembro_username,
-            r.id AS reclamo_id,
-            r.codigo,
-            r.tipo_reclamo,
-            r.tipo_tramite,
-            r.cliente_nombre,
-            r.proceso_text,
-            r.observacion,
-            r.antecedente,
+    # =========================================================
+    # 2) Obtener destinatarios: PRINCIPAL + BACKUP del proceso
+    #    No desde reclamo_imputados, porque ahí solo existe principal.
+    # =========================================================
+    sponsor_rows = []
 
-            eq.creado_at AS fecha_asignacion_miembro,
-            rre.created_at AS fecha_respuesta_miembro
+    if proceso_id:
+        cur.execute(SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_2, (proceso_id,))
 
-        FROM reclamo_imputados ri
-        JOIN reclamos r ON r.id = ri.reclamo_id
-        LEFT JOIN usuarios us ON us.id = ri.imputado_id
-        LEFT JOIN usuarios um ON um.id = ?
+        sponsor_rows = cur.fetchall()
 
-        LEFT JOIN reclamo_equipo_respuestas eq
-          ON eq.reclamo_id = ri.reclamo_id
-         AND eq.imputacion_id = ri.id
-         AND eq.usuario_id = ?
+    # =========================================================
+    # 3) Fallback de seguridad:
+    #    Si por algún motivo no encuentra sponsors por proceso,
+    #    notifica al imputado principal de reclamo_imputados.
+    # =========================================================
+    if not sponsor_rows:
+        cur.execute(SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_3, (imputacion_id,))
 
-        LEFT JOIN reclamo_respuestas_equipo rre
-          ON rre.reclamo_id = ri.reclamo_id
-         AND rre.imputacion_id = ri.id
-         AND rre.miembro_id = ?
+        sponsor_rows = cur.fetchall()
 
-        WHERE ri.reclamo_id = ?
-          AND COALESCE(us.disabled, 0) = 0
-          AND us.email IS NOT NULL
-          AND LTRIM(RTRIM(us.email)) <> ''
-        ORDER BY ri.id
-    """, (miembro_id, miembro_id, miembro_id, reclamo_id))
-
-    rows = cur.fetchall()
-    if not rows:
+    if not sponsor_rows:
         return
-
-    miembro_nombre = rows[0]["miembro_nombre"] or rows[0]["miembro_username"] or f"UID {miembro_id}"
 
     try:
         link_sponsor = url_for("reclamos", _external=True) + "?tab=imputado"
@@ -529,15 +452,23 @@ def _notify_sponsor_respuesta_equipo(conn, imputacion_id: int, miembro_id: int, 
     def _parse_dt(v):
         if not v:
             return None
+
         if isinstance(v, datetime):
             return v
 
         s = str(v).strip()
-        for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d", "%Y-%m-%dT%H:%M:%S"):
+
+        for fmt in (
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d %H:%M",
+            "%Y-%m-%d",
+            "%Y-%m-%dT%H:%M:%S"
+        ):
             try:
                 return datetime.strptime(s[:19], fmt)
             except Exception:
                 pass
+
         return None
 
     def _dias_respuesta(row):
@@ -563,6 +494,7 @@ def _notify_sponsor_respuesta_equipo(conn, imputacion_id: int, miembro_id: int, 
     def _row_mail(lbl, val):
         val = "" if val is None else str(val)
         val = val.replace("\n", "<br>")
+
         return (
             "<tr>"
             f"<td style='width:210px;background:#ffedd5;font-weight:600;"
@@ -573,26 +505,38 @@ def _notify_sponsor_respuesta_equipo(conn, imputacion_id: int, miembro_id: int, 
             "</tr>"
         )
 
+    tiempo_respuesta = _dias_respuesta(base)
     enviados = set()
 
-    for row in rows:
-        sponsor_email = (row["sponsor_email"] or "").strip().lower()
+    # =========================================================
+    # 4) Enviar a principal + backup, sin duplicar por correo
+    # =========================================================
+    for s in sponsor_rows:
+        sponsor_email = (s["sponsor_email"] or "").strip().lower()
+
         if not sponsor_email or sponsor_email in enviados:
             continue
 
         enviados.add(sponsor_email)
-        sponsor_nombre = row["sponsor_nombre"] or "Usuario"
-        tiempo_respuesta = _dias_respuesta(row)
+
+        sponsor_nombre = (
+            s["sponsor_nombre"]
+            or s["sponsor_username"]
+            or "Usuario"
+        )
+
+        tipo_sponsor = (s["tipo_sponsor"] or "").strip().upper()
 
         text_body = f"""Hola {sponsor_nombre},
 
 El miembro de equipo {miembro_nombre} registró su respuesta de apoyo para la Oportunidad de Mejora {reclamo_codigo}.
 
 Resumen:
-- Cliente: {row["cliente_nombre"] or ""}
-- Tipo de OM: {row["tipo_reclamo"] or ""}
-- Tipo de trámite: {row["tipo_tramite"] or ""}
-- Proceso: {row["proceso_text"] or ""}
+- Cliente: {base["cliente_nombre"] or ""}
+- Tipo de OM: {base["tipo_reclamo"] or ""}
+- Tipo de trámite: {base["tipo_tramite"] or ""}
+- Proceso: {base["proceso_text"] or ""}
+- Rol sponsor: {tipo_sponsor}
 - Tiempo de respuesta: {tiempo_respuesta}
 
 Por favor ingresa al sistema y revisa el aporte en la pestaña "Soy Sponsor".
@@ -631,13 +575,14 @@ Este es un mensaje automático.
               <td style="padding:18px 20px 10px 20px;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
                        style="border-collapse:collapse;">
-                  {_row_mail('Código', row['codigo'])}
+                  {_row_mail('Código', base['codigo'])}
                   {_row_mail('Miembro que respondió', miembro_nombre)}
-                  {_row_mail('Cliente', row['cliente_nombre'])}
-                  {_row_mail('Tipo de OM', row['tipo_reclamo'])}
-                   {_row_mail('Proceso', row['proceso_text'])}
-                   {_row_mail('Antecedente', row['antecedente'])}
-                  {_row_mail('Observación', row['observacion'])}
+                  {_row_mail('Rol sponsor', tipo_sponsor)}
+                  {_row_mail('Cliente', base['cliente_nombre'])}
+                  {_row_mail('Tipo de OM', base['tipo_reclamo'])}
+                  {_row_mail('Proceso', base['proceso_text'])}
+                  {_row_mail('Antecedente', base['antecedente'])}
+                  {_row_mail('Observación', base['observacion'])}
                 </table>
 
                 <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
@@ -669,7 +614,14 @@ Este es un mensaje automático.
 </html>
 """
 
-        _send_mail_safe(sponsor_email, subject, text_body, html_body=html_body)
+        _send_mail_safe(
+            sponsor_email,
+            subject,
+            text_body,
+            html_body=html_body
+        )
+
+
 def _now_iso() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -682,30 +634,7 @@ def _current_user_id() -> int | None:
     )
 
 def _get_respuesta_equipo_acciones_full(db, respuesta_equipo_id: int):
-    rows = db.execute("""
-        SELECT
-            a.id,
-            a.tipo,
-            a.descripcion,
-            a.fecha_compromiso,
-            COALESCE(a.orden, 1) AS orden,
-            COALESCE(a.requiere_evidencia, 0) AS requiere_evidencia,
-            COALESCE(a.cumplido, 0) AS cumplido,
-            COALESCE(a.fecha_cumplimiento, '') AS fecha_cumplimiento,
-            COALESCE(a.observacion_cumplimiento, '') AS observacion_cumplimiento
-        FROM reclamo_respuesta_equipo_acciones a
-        WHERE a.respuesta_equipo_id = ?
-          AND COALESCE(a.activo, 1) = 1
-        ORDER BY
-            CASE a.tipo
-                WHEN 'CAUSA' THEN 1
-                WHEN 'CONTROL' THEN 2
-                WHEN 'CORRECTIVA' THEN 3
-                ELSE 9
-            END,
-            COALESCE(a.orden, 1),
-            a.id
-    """, (respuesta_equipo_id,)).fetchall()
+    rows = db.execute(SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_1, (respuesta_equipo_id,)).fetchall()
 
     causas = []
     control = []
@@ -714,19 +643,7 @@ def _get_respuesta_equipo_acciones_full(db, respuesta_equipo_id: int):
     for r in rows:
         accion_id = int(r["id"])
 
-        evid_rows = db.execute("""
-            SELECT
-                e.id,
-                e.filename,
-                e.original_name,
-                COALESCE(e.content_type, '') AS content_type,
-                COALESCE(e.size_bytes, 0) AS size_bytes,
-                COALESCE(e.created_at, '') AS created_at
-            FROM reclamo_respuesta_equipo_accion_evidencias e
-            WHERE e.accion_id = ?
-              AND COALESCE(e.activo, 1) = 1
-            ORDER BY e.id
-        """, (accion_id,)).fetchall()
+        evid_rows = db.execute(SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_2, (accion_id,)).fetchall()
 
         evidencias = []
         for e in evid_rows:
@@ -784,11 +701,7 @@ def _notify_reclamo_adjuntos_change(conn, reclamo_id: int, actor_id: int | None,
     filenames: lista de nombres originales afectados
     """
     cur = conn.cursor()
-    cur.execute("""
-        SELECT codigo, creado_por
-        FROM reclamos
-        WHERE id = ?
-    """, (reclamo_id,))
+    cur.execute(SQL__NOTIFY_RECLAMO_ADJUNTOS_CHANGE_SEL_1, (reclamo_id,))
     r = cur.fetchone()
     if not r:
         return
@@ -867,14 +780,7 @@ def _save_respuesta_equipo_acciones(
     now = _now_iso()
 
     # Inactivar acciones anteriores de esta respuesta
-    cur.execute("""
-        UPDATE reclamo_respuesta_equipo_acciones
-        SET activo = 0,
-            updated_at = ?,
-            updated_by = ?
-        WHERE respuesta_equipo_id = ?
-          AND activo = 1
-    """, (now, user_id, respuesta_id))
+    cur.execute(SQL__SAVE_RESPUESTA_EQUIPO_ACCIONES_UPD_1, (now, user_id, respuesta_id))
 
     def _normalizar_items(items):
         normalizados = []
@@ -900,23 +806,7 @@ def _save_respuesta_equipo_acciones(
         items_norm = _normalizar_items(items)
 
         for idx, (desc, fecha) in enumerate(items_norm, start=1):
-            cur.execute("""
-                INSERT INTO reclamo_respuesta_equipo_acciones (
-                    respuesta_equipo_id,
-                    reclamo_id,
-                    imputacion_id,
-                    miembro_id,
-                    tipo,
-                    descripcion,
-                    fecha_compromiso,
-                    orden,
-                    requiere_evidencia,
-                    activo,
-                    created_at,
-                    created_by
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
-            """, (
+            cur.execute(SQL__SAVE_RESPUESTA_EQUIPO_ACCIONES_INS_2, (
                 respuesta_id,
                 reclamo_id,
                 imputacion_id,
@@ -940,59 +830,9 @@ def _save_respuesta_equipo_acciones(
 def ensure_reclamo_respuesta_equipo_acciones_schema(conn: sqlite3.Connection):
     cur = conn.cursor()
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS reclamo_respuesta_equipo_acciones (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_1)
 
-            respuesta_equipo_id INTEGER NOT NULL,
-            reclamo_id INTEGER NOT NULL,
-            imputacion_id INTEGER NOT NULL,
-            miembro_id INTEGER NOT NULL,
-
-            tipo TEXT NOT NULL,                 -- CAUSA | CONTROL | CORRECTIVA
-            descripcion TEXT NOT NULL,
-            fecha_compromiso TEXT,              -- YYYY-MM-DD
-            orden INTEGER NOT NULL DEFAULT 1,
-
-            requiere_evidencia INTEGER NOT NULL DEFAULT 0,
-            cumplido INTEGER NOT NULL DEFAULT 0,
-            fecha_cumplimiento TEXT,
-
-            reminder_3d_sent INTEGER NOT NULL DEFAULT 0,
-            reminder_2d_sent INTEGER NOT NULL DEFAULT 0,
-            reminder_1d_sent INTEGER NOT NULL DEFAULT 0,
-            escalado_jefe INTEGER NOT NULL DEFAULT 0,
-
-            activo INTEGER NOT NULL DEFAULT 1,
-            created_at TEXT,
-            created_by INTEGER,
-            updated_at TEXT,
-            updated_by INTEGER,
-
-            FOREIGN KEY (respuesta_equipo_id) REFERENCES reclamo_respuestas_equipo(id),
-            FOREIGN KEY (reclamo_id) REFERENCES reclamos(id),
-            FOREIGN KEY (imputacion_id) REFERENCES reclamo_imputados(id),
-            FOREIGN KEY (miembro_id) REFERENCES usuarios(id)
-        );
-    """)
-
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS reclamo_respuesta_equipo_accion_evidencias (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            accion_id INTEGER NOT NULL,
-
-            filename TEXT NOT NULL,
-            original_name TEXT NOT NULL,
-            content_type TEXT,
-            size_bytes INTEGER,
-
-            creado_por INTEGER,
-            created_at TEXT,
-            activo INTEGER NOT NULL DEFAULT 1,
-
-            FOREIGN KEY (accion_id) REFERENCES reclamo_respuesta_equipo_acciones(id)
-        );
-    """)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_2)
 
     cur.execute("PRAGMA table_info(reclamo_respuesta_equipo_acciones)")
     cols = {r[1] for r in cur.fetchall()}
@@ -1024,43 +864,16 @@ def ensure_reclamo_respuesta_equipo_acciones_schema(conn: sqlite3.Connection):
         if col not in cols:
             cur.execute(f"ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN {col} {ddl}")
 
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rrea_respuesta
-        ON reclamo_respuesta_equipo_acciones(respuesta_equipo_id)
-    """)
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rrea_reclamo
-        ON reclamo_respuesta_equipo_acciones(reclamo_id)
-    """)
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rrea_imputacion
-        ON reclamo_respuesta_equipo_acciones(imputacion_id)
-    """)
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rrea_miembro
-        ON reclamo_respuesta_equipo_acciones(miembro_id)
-    """)
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rrea_tipo
-        ON reclamo_respuesta_equipo_acciones(tipo)
-    """)
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rrea_fecha_compromiso
-        ON reclamo_respuesta_equipo_acciones(fecha_compromiso)
-    """)
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rrea_cumplido
-        ON reclamo_respuesta_equipo_acciones(cumplido, activo)
-    """)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_3)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_4)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_5)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_6)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_7)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_8)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_9)
 
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rree_accion
-        ON reclamo_respuesta_equipo_accion_evidencias(accion_id)
-    """)
-    cur.execute("""
-        CREATE INDEX IF NOT EXISTS idx_rree_activo
-        ON reclamo_respuesta_equipo_accion_evidencias(activo)
-    """)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_10)
+    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_11)
 
 
 
@@ -1081,14 +894,7 @@ def ensure_reclamo_respuesta_equipo_acciones_schema(conn: sqlite3.Connection):
 
 def _get_respuesta_equipo_acciones(conn: sqlite3.Connection, respuesta_equipo_id: int):
     cur = conn.cursor()
-    rows = cur.execute("""
-        SELECT id, tipo, descripcion, fecha_compromiso, orden,
-               requiere_evidencia, cumplido, fecha_cumplimiento
-        FROM reclamo_respuesta_equipo_acciones
-        WHERE respuesta_equipo_id = ?
-          AND activo = 1
-        ORDER BY tipo, orden, id
-    """, (respuesta_equipo_id,)).fetchall()
+    rows = cur.execute(SQL__GET_RESPUESTA_EQUIPO_ACCIONES_SEL_1, (respuesta_equipo_id,)).fetchall()
 
     causas, controles, correctivas = [], [], []
 
@@ -1148,30 +954,7 @@ def _normalizar_acciones_payload(items, label: str):
 
 
 def _get_imputado_acciones_full(db, imputacion_id: int):
-    rows = db.execute("""
-        SELECT
-            a.id,
-            a.tipo,
-            a.descripcion,
-            a.fecha_compromiso,
-            COALESCE(a.orden, 1) AS orden,
-            COALESCE(a.requiere_evidencia, 0) AS requiere_evidencia,
-            COALESCE(a.cumplido, 0) AS cumplido,
-            COALESCE(a.fecha_cumplimiento, '') AS fecha_cumplimiento,
-            COALESCE(a.observacion_cumplimiento, '') AS observacion_cumplimiento
-        FROM reclamo_imputado_acciones a
-        WHERE a.imputacion_id = ?
-          AND COALESCE(a.activo, 1) = 1
-        ORDER BY
-            CASE a.tipo
-                WHEN 'CAUSA' THEN 1
-                WHEN 'CONTROL' THEN 2
-                WHEN 'CORRECTIVA' THEN 3
-                ELSE 9
-            END,
-            COALESCE(a.orden, 1),
-            a.id
-    """, (imputacion_id,)).fetchall()
+    rows = db.execute(SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_1, (imputacion_id,)).fetchall()
 
     causas = []
     control = []
@@ -1180,19 +963,7 @@ def _get_imputado_acciones_full(db, imputacion_id: int):
     for r in rows:
         accion_id = int(r["id"])
 
-        evid_rows = db.execute("""
-            SELECT
-                e.id,
-                e.filename,
-                e.original_name,
-                COALESCE(e.content_type, '') AS content_type,
-                COALESCE(e.size_bytes, 0) AS size_bytes,
-                COALESCE(e.created_at, '') AS created_at
-            FROM reclamo_accion_evidencias e
-            WHERE e.accion_id = ?
-              AND COALESCE(e.activo, 1) = 1
-            ORDER BY e.id
-        """, (accion_id,)).fetchall()
+        evid_rows = db.execute(SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_2, (accion_id,)).fetchall()
 
         evidencias = []
         for e in evid_rows:
@@ -1249,29 +1020,18 @@ BOSS_ROLES = (
  
 
 def _puede_gestionar_equipo(reclamo_id: int, user_id: int | None = None) -> bool:
-    """
-    Solo el IMPUTADO APROBADO del reclamo puede gestionar el equipo.
-    """
     if not user_id:
         user_id = _current_user_id()
         if not user_id:
             return False
 
     db = get_db()
-    fila = db.execute(
-        """
-        SELECT TOP 1 1 AS ok
-        FROM reclamo_imputados ri
-        WHERE ri.reclamo_id = ?
-          AND ri.imputado_id = ?
-          AND ri.estado_asignacion = 'aprobado'
-        """,
-        (reclamo_id, user_id),
-    ).fetchone()
+
+    fila = db.execute(SQL__PUEDE_GESTIONAR_EQUIPO_SEL_1, (reclamo_id, user_id, user_id)).fetchone()
 
     return fila is not None
 
- 
+
 def _puede_ver_equipo(reclamo_id: int, user_id: int | None = None) -> bool:
     """
     Puede ver:
@@ -1292,13 +1052,7 @@ def _puede_ver_equipo(reclamo_id: int, user_id: int | None = None) -> bool:
 
     # 2) miembro del equipo
     fila = db.execute(
-        """
-        SELECT TOP 1 1 AS ok
-        FROM reclamo_equipo_respuestas er
-        WHERE er.reclamo_id = ?
-          AND er.usuario_id = ?
-          AND COALESCE(er.activo, 1) = 1
-        """,
+        SQL__PUEDE_VER_EQUIPO_SEL_1,
         (reclamo_id, user_id),
     ).fetchone()
 
@@ -1307,12 +1061,7 @@ def _puede_ver_equipo(reclamo_id: int, user_id: int | None = None) -> bool:
 
     # 3) creador del reclamo
     fila = db.execute(
-        """
-        SELECT TOP 1 1 AS ok
-        FROM reclamos r
-        WHERE r.id = ?
-          AND r.creado_por = ?
-        """,
+        SQL__PUEDE_VER_EQUIPO_SEL_2,
         (reclamo_id, user_id),
     ).fetchone()
 
@@ -1354,12 +1103,7 @@ def ensure_reclamo_adjuntos_schema(conn: sqlite3.Connection):
 
 def fetch_productos(conn):
     cur = conn.cursor()
-    cur.execute("""
-        SELECT id, nombre
-        FROM productos
-        WHERE COALESCE(activo, 1) = 1
-        ORDER BY nombre
-    """)
+    cur.execute(SQL_FETCH_PRODUCTOS_SEL_1)
     return cur.fetchall()
 
 
@@ -1375,24 +1119,9 @@ def _ensure_param_tables(conn: sqlite3.Connection):
     """
     cur = conn.cursor()
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS param_groups(
-            id      INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre  TEXT UNIQUE NOT NULL
-        )
-    """)
+    cur.execute(SQL__ENSURE_PARAM_TABLES_DDL_1)
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS param_values(
-            id       INTEGER PRIMARY KEY AUTOINCREMENT,
-            group_id INTEGER NOT NULL,
-            nombre   TEXT NOT NULL,
-            valor    TEXT,
-            activo   INTEGER NOT NULL DEFAULT 1,
-            orden    INTEGER NOT NULL DEFAULT 1,
-            FOREIGN KEY(group_id) REFERENCES param_groups(id)
-        )
-    """)
+    cur.execute(SQL__ENSURE_PARAM_TABLES_DDL_2)
 
     cur.execute("PRAGMA table_info(param_values)")
     cols = {r[1] for r in cur.fetchall()}
@@ -1410,11 +1139,7 @@ def _ensure_param_group(conn, nombre: str, descripcion: str | None = None):
     Solo devuelve el id existente o None si no existe.
     """
     cur = conn.cursor()
-    cur.execute("""
-        SELECT TOP 1 id
-        FROM param_groups
-        WHERE nombre = ?
-    """, (nombre,))
+    cur.execute(SQL__ENSURE_PARAM_GROUP_SEL_1, (nombre,))
     row = cur.fetchone()
     return row["id"] if row else None
 
@@ -1433,26 +1158,13 @@ def _ensure_param_value(conn: sqlite3.Connection,
     gid = _ensure_param_group(conn, group_codigo, group_codigo)
     cur = conn.cursor()
 
-    cur.execute("""
-        SELECT id
-        FROM param_values
-        WHERE group_id = ? AND nombre = ?
-    """, (gid, clave))
+    cur.execute(SQL__ENSURE_PARAM_VALUE_SEL_1, (gid, clave))
     row = cur.fetchone()
 
     if row:
-        cur.execute("""
-            UPDATE param_values
-               SET valor = ?,
-                   orden = ?,
-                   activo = ?
-             WHERE id = ?
-        """, (valor, orden, activo, row["id"]))
+        cur.execute(SQL__ENSURE_PARAM_VALUE_UPD_2, (valor, orden, activo, row["id"]))
     else:
-        cur.execute("""
-            INSERT INTO param_values(group_id, nombre, valor, orden, activo)
-            VALUES (?, ?, ?, ?, ?)
-        """, (gid, clave, valor, orden, activo))
+        cur.execute(SQL__ENSURE_PARAM_VALUE_INS_3, (gid, clave, valor, orden, activo))
 
     conn.commit()
 
@@ -1466,14 +1178,7 @@ def _fetch_param_values(conn: sqlite3.Connection, group_codigo: str):
     """
     #_ensure_param_tables(conn)
     cur = conn.cursor()
-    cur.execute("""
-        SELECT pv.id, pv.nombre, pv.valor, pv.orden
-        FROM param_values pv
-        JOIN param_groups pg ON pg.id = pv.group_id
-        WHERE pg.nombre = ?
-          AND COALESCE(pv.activo, 1) = 1
-        ORDER BY pv.orden, pv.valor, pv.nombre
-    """, (group_codigo,))
+    cur.execute(SQL__FETCH_PARAM_VALUES_SEL_1, (group_codigo,))
     return cur.fetchall()
 
 
@@ -1503,11 +1208,7 @@ def _can_edit_equipo(equipo_id: int) -> bool:
 
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("""
-        SELECT responsable_id, colaborador_id
-        FROM reclamo_equipo
-        WHERE id = ?
-    """, (equipo_id,))
+    cur.execute(SQL__CAN_EDIT_EQUIPO_SEL_1, (equipo_id,))
     row = cur.fetchone()
     if not row:
         return False
@@ -1540,50 +1241,25 @@ def ensure_geo_schema(conn):
 
 def fetch_regiones(conn: sqlite3.Connection):
     cur = conn.cursor()
-    cur.execute("""
-        SELECT id, nombre
-        FROM regiones
-        WHERE COALESCE(activo,1) = 1
-        ORDER BY orden, nombre
-    """)
+    cur.execute(SQL_FETCH_REGIONES_SEL_1)
     return cur.fetchall()
 
 
 def fetch_provincias(conn: sqlite3.Connection, region_id: int | None):
     cur = conn.cursor()
     if region_id:
-        cur.execute("""
-            SELECT id, nombre
-            FROM provincias
-            WHERE region_id = ? AND COALESCE(activo,1)=1
-            ORDER BY orden, nombre
-        """, (region_id,))
+        cur.execute(SQL_FETCH_PROVINCIAS_SEL_1, (region_id,))
     else:
-        cur.execute("""
-            SELECT id, nombre
-            FROM provincias
-            WHERE COALESCE(activo,1)=1
-            ORDER BY orden, nombre
-        """)
+        cur.execute(SQL_FETCH_PROVINCIAS_SEL_2)
     return cur.fetchall()
 
 
 def fetch_cantones(conn: sqlite3.Connection, provincia_id: int | None):
     cur = conn.cursor()
     if provincia_id:
-        cur.execute("""
-            SELECT id, nombre
-            FROM cantones
-            WHERE provincia_id = ? AND COALESCE(activo,1)=1
-            ORDER BY orden, nombre
-        """, (provincia_id,))
+        cur.execute(SQL_FETCH_CANTONES_SEL_1, (provincia_id,))
     else:
-        cur.execute("""
-            SELECT id, nombre
-            FROM cantones
-            WHERE COALESCE(activo,1)=1
-            ORDER BY orden, nombre
-        """)
+        cur.execute(SQL_FETCH_CANTONES_SEL_2)
     return cur.fetchall()
 
 
@@ -1600,13 +1276,7 @@ def _fetch_tipo_campos(conn: sqlite3.Connection):
 
 def _generate_codigo_reclamo(conn: sqlite3.Connection) -> str:
     cur = conn.cursor()
-    cur.execute("""
-        SELECT TOP 1 codigo 
-                FROM reclamos
-        WHERE codigo LIKE 'RECL%'
-        ORDER BY id DESC
-         
-    """)
+    cur.execute(SQL__GENERATE_CODIGO_RECLAMO_SEL_1)
     row = cur.fetchone()
     if row and row["codigo"]:
         num_part = "".join(ch for ch in row["codigo"] if ch.isdigit())
@@ -1624,11 +1294,7 @@ def _guess_aprobador_for_user2(conn: sqlite3.Connection, user_id: int | None) ->
         return None
 
     cur = conn.cursor()
-    cur.execute("""
-        SELECT departamento_id, LOWER(rol) AS rol
-        FROM usuarios
-        WHERE id = ?
-    """, (user_id,))
+    cur.execute(SQL__GUESS_APROBADOR_FOR_USER2_SEL_1, (user_id,))
     u = cur.fetchone()
     if not u:
         return None
@@ -1658,11 +1324,7 @@ def _guess_aprobador_for_user(conn: sqlite3.Connection, user_id: int | None) -> 
 
     cur = conn.cursor()
     # Primero intentamos con jefe_id
-    cur.execute("""
-        SELECT jefe_id, departamento_id
-        FROM usuarios
-        WHERE id = ?
-    """, (user_id,))
+    cur.execute(SQL__GUESS_APROBADOR_FOR_USER_SEL_1, (user_id,))
     u = cur.fetchone()
     if not u:
         return None
@@ -1672,12 +1334,7 @@ def _guess_aprobador_for_user(conn: sqlite3.Connection, user_id: int | None) -> 
 
     # Si tiene jefe_id definido, validamos que exista y no esté deshabilitado
     if jefe_id:
-        cur.execute("""
-            SELECT id
-            FROM usuarios
-            WHERE id = ?
-              AND COALESCE(disabled, 0) = 0
-        """, (jefe_id,))
+        cur.execute(SQL__GUESS_APROBADOR_FOR_USER_SEL_2, (jefe_id,))
         j = cur.fetchone()
         if j:
             return j["id"]
@@ -1836,11 +1493,7 @@ def _get_user_basic(conn: sqlite3.Connection, uid: int | None):
     if not uid:
         return None
     cur = conn.cursor()
-    cur.execute("""
-        SELECT id, username, email, rol, departamento_id, nombre_completo
-        FROM usuarios
-        WHERE id = ?
-    """, (uid,))
+    cur.execute(SQL__GET_USER_BASIC_SEL_1, (uid,))
     return cur.fetchone()
 
 
@@ -1856,48 +1509,19 @@ def _notify_colaborador_asignado(
 
     # --- Datos del reclamo (por codigo) ---
     cur = conn.cursor()
-    cur.execute("""
-        SELECT TOP 1 id, fecha_reclamo, tipo_reclamo, tipo_tramite,
-               cliente_nombre, proceso_text, material_desc,
-               fecha_pedido, factura, guia_remision,
-               antecedente, observacion
-        FROM reclamos
-        WHERE codigo = ?
-        
-    """, (reclamo_codigo,))
+    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
     r = cur.fetchone()
 
     # Imputados (si aplica)
     imputados = ""
     if r:
         if _is_sqlserver_conn(conn):
-            cur.execute("""
-                SELECT STUFF((
-                    SELECT ', ' + COALESCE(u.username, '')
-                    FROM reclamo_imputados ri
-                    JOIN usuarios u ON u.id = ri.imputado_id
-                    WHERE ri.reclamo_id = ?
-                    FOR XML PATH(''), TYPE
-                ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS lista
-            """, (r["id"],))
+            cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_2, (r["id"],))
         else:
             if _is_sqlserver_conn(conn):
-                cur.execute("""
-                    SELECT STUFF((
-                        SELECT ', ' + COALESCE(u.username, '')
-                        FROM reclamo_imputados ri
-                        JOIN usuarios u ON u.id = ri.imputado_id
-                        WHERE ri.reclamo_id = ?
-                        FOR XML PATH(''), TYPE
-                    ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS lista
-                """, (r["id"],))
+                cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_2, (r["id"],))
             else:
-                cur.execute("""
-                    SELECT GROUP_CONCAT(u.username, ', ') AS lista
-                    FROM reclamo_imputados ri
-                    JOIN usuarios u ON u.id = ri.imputado_id
-                    WHERE ri.reclamo_id = ?
-                """, (r["id"],))
+                cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_3, (r["id"],))
             row = cur.fetchone()
             if row and row["lista"]:
                 imputados = row["lista"]
@@ -2061,29 +1685,220 @@ Este es un mensaje automático.
 """
     _send_mail_safe(r["email"], subject, text_body)
 
-
 def _notify_colaborador_aporte_rechazado(conn, colaborador_id: int, reclamo_codigo: str, motivo: str):
-    u = _get_user_basic(conn, colaborador_id)
-    if not u or ("email" not in u.keys()) or not u["email"]:
-        return
+    """
+    Notifica rechazo de aporte de equipo a:
+    - miembro/colaborador que registró el aporte
+    - sponsor principal y backup del proceso
+    - usuarios de Servicio al Cliente
 
-    nombre = u["nombre_completo"] if u.get("nombre_completo") else u["username"]
+    Reutiliza:
+    - _get_user_basic
+    - _get_sponsor_emails_by_reclamo
+    - _send_mail_safe
+    """
+
+    colaborador = _get_user_basic(conn, colaborador_id)
+
+    colaborador_email = ""
+    colaborador_nombre = "Miembro de equipo"
+
+    if colaborador:
+        colaborador_email = (colaborador["email"] or "").strip()
+        colaborador_nombre = (
+            colaborador["nombre_completo"]
+            if "nombre_completo" in colaborador.keys() and colaborador["nombre_completo"]
+            else colaborador["username"]
+        )
+
     motivo_txt = (motivo or "Sin detalle").strip()
 
-    subject = f"[Oportunidad de Mejora] Aporte rechazado en {reclamo_codigo}"
-    text_body = f"""Hola {nombre},
+    cur = conn.cursor()
 
-Tu aporte técnico para la Oportunidad de Mejora {reclamo_codigo} fue marcado
-como rechazado por el responsable.
+    # =========================================================
+    # Datos base de la OM
+    # =========================================================
+    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
 
-Motivo:
+    r = cur.fetchone()
+
+    try:
+        link_sistema = url_for("reclamos", _external=True) + "?tab=sponsor"
+    except Exception:
+        link_sistema = "https://tu-sistema/reclamos?tab=sponsor"
+
+    subject = f"[Oportunidad de Mejora] Aporte de equipo rechazado {reclamo_codigo}"
+
+    def _row(lbl, val):
+        val = "" if val is None else str(val)
+        val = val.replace("\n", "<br>")
+        return (
+            "<tr>"
+            f"<td style='width:210px;background:#fef3c7;font-weight:600;"
+            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
+            f"{lbl}</td>"
+            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
+            f"{val}</td>"
+            "</tr>"
+        )
+
+    # =========================================================
+    # Destinatarios
+    # =========================================================
+    destinatarios = []
+
+    # 1) Miembro/colaborador
+    if colaborador_email:
+        destinatarios.append({
+            "email": colaborador_email,
+            "nombre": colaborador_nombre,
+            "rol_notificacion": "MIEMBRO DE EQUIPO"
+        })
+
+    # 2) Sponsor principal + backup
+    try:
+        for s in _get_sponsor_emails_by_reclamo(conn, reclamo_codigo):
+            destinatarios.append({
+                "email": s["email"],
+                "nombre": s["nombre"] or s["username"] or "Usuario",
+                "rol_notificacion": s["tipo_sponsor"] or "SPONSOR"
+            })
+    except Exception:
+        current_app.logger.exception(
+            "No se pudo obtener sponsor principal/backup para OM %s",
+            reclamo_codigo
+        )
+
+    # 3) Servicio al Cliente
+    cur.execute(SQL__NOTIFY_COLABORADOR_APORTE_RECHAZADO_SEL_1)
+
+    for sc in cur.fetchall():
+        destinatarios.append({
+            "email": sc["email"],
+            "nombre": sc["nombre"] or sc["username"] or "Servicio al Cliente",
+            "rol_notificacion": "SERVICIO AL CLIENTE"
+        })
+
+    # =========================================================
+    # Enviar sin duplicar correos
+    # =========================================================
+    enviados = set()
+
+    for d in destinatarios:
+        email = (d.get("email") or "").strip().lower()
+
+        if not email or email in enviados:
+            continue
+
+        enviados.add(email)
+
+        nombre_destinatario = d.get("nombre") or "Usuario"
+        rol_notificacion = d.get("rol_notificacion") or ""
+
+        text_body = f"""Hola {nombre_destinatario},
+
+El aporte técnico registrado por {colaborador_nombre} para la Oportunidad de Mejora {reclamo_codigo} fue RECHAZADO.
+
+Rol de notificación:
+{rol_notificacion}
+
+Motivo del rechazo:
 {motivo_txt}
 
-Puedes coordinar con tu responsable si necesitas más detalles.
+Por favor ingresa al sistema para revisar el detalle de la OM.
+
+Ir al sistema:
+{link_sistema}
 
 Este es un mensaje automático.
 """
-    _send_mail_safe(u["email"], subject, text_body)
+
+        html_body = f"""\
+<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f3f4f6;
+               font-family:Segoe UI,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+           style="background:#f3f4f6;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
+                 style="max-width:720px;background:#ffffff;border-radius:8px;
+                        border:1px solid #e5e7eb;overflow:hidden;">
+
+            <tr>
+              <td style="background:#b45309;padding:16px 20px;color:#ffffff;">
+                <div style="font-size:12px;text-transform:uppercase;
+                            letter-spacing:.08em;opacity:.9;">
+                  Oportunidad de Mejora
+                </div>
+                <div style="font-size:18px;font-weight:700;margin-top:4px;">
+                  Aporte de equipo rechazado {reclamo_codigo}
+                </div>
+                <div style="font-size:12px;opacity:.9;margin-top:6px;">
+                  Hola {nombre_destinatario}, se rechazó un aporte de equipo y requiere seguimiento.
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:18px 20px 10px 20px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                       style="border-collapse:collapse;">
+                  {_row('Código', reclamo_codigo)}
+                  {_row('Miembro de equipo', colaborador_nombre)}
+                  {_row('Rol de notificación', rol_notificacion)}
+                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
+                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
+                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
+                  { _row('Cliente', r['cliente_nombre']) if r else '' }
+                  { _row('Proceso', r['proceso_text']) if r else '' }
+                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
+                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
+                  { _row('Factura', r['factura']) if r else '' }
+                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
+                  { _row('Antecedente', r['antecedente']) if r else '' }
+                  { _row('Observación', r['observacion']) if r else '' }
+                  {_row('Motivo del rechazo', motivo_txt)}
+                </table>
+
+                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
+                  <a href="{link_sistema}"
+                     style="display:inline-block;background:#f97316;color:#ffffff;
+                            text-decoration:none;padding:10px 18px;border-radius:6px;
+                            font-weight:600;font-size:13px;">
+                    Revisar OM en el sistema
+                  </a>
+                </div>
+
+                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
+                  Este correo fue enviado al miembro de equipo, sponsor principal,
+                  backup y Servicio al Cliente.
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
+                         font-size:11px;color:#9ca3af;">
+                Este es un mensaje automático. No responda a este correo.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+"""
+
+        _send_mail_safe(
+            email,
+            subject,
+            text_body,
+            html_body=html_body
+        )
 
 
 MAX_FILES_PER_RECLAMO = 5
@@ -2118,11 +1933,7 @@ def _save_adjuntos_for_reclamo(conn: sqlite3.Connection,
     cur = conn.cursor()
 
     # Cuántos adjuntos ya tiene esta OM
-    cur.execute("""
-        SELECT COUNT(*) AS c
-        FROM reclamo_adjuntos
-        WHERE reclamo_id = ?
-    """, (reclamo_id,))
+    cur.execute(SQL__SAVE_ADJUNTOS_FOR_RECLAMO_SEL_1, (reclamo_id,))
     row = cur.fetchone()
     existing = row["c"] if row else 0
 
@@ -2157,14 +1968,7 @@ def _save_adjuntos_for_reclamo(conn: sqlite3.Connection,
         f.save(path)
 
         # Registrar en BD
-        cur.execute("""
-            INSERT INTO reclamo_adjuntos(
-                reclamo_id, filename, original_name,
-                content_type, size_bytes,
-                creado_por, created_at
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (
+        cur.execute(SQL__SAVE_ADJUNTOS_FOR_RECLAMO_INS_2, (
             reclamo_id,
             filename_on_disk,
             original_name,
@@ -2188,26 +1992,13 @@ def _notify_aprobador_imputacion(conn, aprobador_id, reclamo_codigo, imputado_us
 
     # --- Datos del reclamo (por codigo) ---
     cur = conn.cursor()
-    cur.execute("""
-        SELECT TOP 1
-               id, fecha_reclamo, tipo_reclamo, tipo_tramite,
-               cliente_nombre, proceso_text, material_desc,
-               fecha_pedido, factura, guia_remision,
-               antecedente, observacion
-        FROM reclamos
-        WHERE codigo = ?
-    """, (reclamo_codigo,))
+    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
     r = cur.fetchone()
 
     # Imputados del caso (por si hay más de uno)
     imputados = imputado_username or ""
     if r:
-        cur.execute("""
-            SELECT STRING_AGG(CAST(u.username AS VARCHAR(MAX)), ', ') AS lista
-            FROM reclamo_imputados ri
-            JOIN usuarios u ON u.id = ri.imputado_id
-            WHERE ri.reclamo_id = ?
-        """, (r["id"],))
+        cur.execute(SQL__NOTIFY_APROBADOR_IMPUTACION_SEL_1, (r["id"],))
         row = cur.fetchone()
         if row and row["lista"]:
             imputados = row["lista"]
@@ -2348,15 +2139,7 @@ def _notify_imputado_aprobado(conn, imputado_id, reclamo_codigo):
 
     # --- Datos del reclamo (por código) ---
     cur = conn.cursor()
-    cur.execute("""
-        SELECT TOP 1 id, fecha_reclamo, tipo_reclamo, tipo_tramite,
-               cliente_nombre, proceso_text, material_desc,
-               fecha_pedido, factura, guia_remision,
-               antecedente, observacion
-        FROM reclamos
-        WHERE codigo = ?
-        
-    """, (reclamo_codigo,))
+    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
     r = cur.fetchone()
 
     # Link directo al tab "Soy responsable"
@@ -2491,37 +2274,15 @@ def _notify_jefe_respuesta_listo(conn, aprobador_id, reclamo_codigo, imputado_us
     # --- Datos del reclamo (por código) ---
     cur = conn.cursor()
     if _is_sqlserver_conn(conn):
-        cur.execute("""
-            SELECT TOP 1
-                id, fecha_reclamo, tipo_reclamo, tipo_tramite,
-                cliente_nombre, proceso_text, material_desc,
-                fecha_pedido, factura, guia_remision,
-                antecedente, observacion
-            FROM reclamos
-            WHERE codigo = ?
-        """, (reclamo_codigo,))
+        cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
     else:
-        cur.execute("""
-            SELECT TOP 1
-                id, fecha_reclamo, tipo_reclamo, tipo_tramite,
-                cliente_nombre, proceso_text, material_desc,
-                fecha_pedido, factura, guia_remision,
-                antecedente, observacion
-            FROM reclamos
-            WHERE codigo = ?
-            
-        """, (reclamo_codigo,))
+        cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
     r = cur.fetchone()
  
     # Imputados del caso (por si hay más de uno)
     imputados = imputado_username or ""
     if r:
-        cur.execute("""
-            SELECT GROUP_CONCAT(u.username, ', ') AS lista
-            FROM reclamo_imputados ri
-            JOIN usuarios u ON u.id = ri.imputado_id
-            WHERE ri.reclamo_id = ?
-        """, (r["id"],))
+        cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_3, (r["id"],))
         row = cur.fetchone()
         if row and row["lista"]:
             imputados = row["lista"]
@@ -2651,61 +2412,55 @@ Este es un mensaje automático.
 
     _send_mail_safe(jefe["email"], subject, text_body, html_body=html_body)
 
-
-
 def _notify_imputado_respuesta_rechazada(conn, imputado_id, reclamo_codigo, motivo):
+    """
+    Notifica rechazo de respuesta técnica a:
+    - imputado/responsable que debe corregir
+    - sponsor principal y backup del proceso
+    - usuarios de Servicio al Cliente
+
+    Reutiliza:
+    - _get_user_basic
+    - _get_sponsor_emails_by_reclamo
+    - _send_mail_safe
+    """
+
     u = _get_user_basic(conn, imputado_id)
     if not u or ("email" not in u.keys()) or not u["email"]:
-        return
+        imputado_email = None
+        imputado_nombre = "Responsable técnico"
+    else:
+        imputado_email = (u["email"] or "").strip()
+        imputado_nombre = (
+            u["nombre_completo"]
+            if "nombre_completo" in u.keys() and u["nombre_completo"]
+            else u["username"]
+        )
 
-    # --- Datos del reclamo (por código) ---
     cur = conn.cursor()
-    cur.execute("""
-        SELECT TOP 1 id, fecha_reclamo, tipo_reclamo, tipo_tramite,
-               cliente_nombre, proceso_text, material_desc,
-               fecha_pedido, factura, guia_remision,
-               antecedente, observacion
-        FROM reclamos
-        WHERE codigo = ?
-        
-    """, (reclamo_codigo,))
+
+    # =========================================================
+    # Datos del reclamo
+    # =========================================================
+    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
+
     r = cur.fetchone()
 
-    # Link directo al tab "Soy responsable" para que ajuste la respuesta
     try:
         link_responder = url_for("reclamos", _external=True) + "?tab=imputado"
     except Exception:
         link_responder = "https://tu-sistema/reclamos?tab=imputado"
 
-    nombre = (
-        u['nombre_completo']
-        if 'nombre_completo' in u.keys() and u['nombre_completo']
-        else u['username']
-    )
-
     motivo_txt = (motivo or "Sin detalle").strip()
 
     subject = f"[Oportunidad de Mejora] Ajuste requerido en respuesta {reclamo_codigo}"
 
-    # Texto plano (fallback)
-    text_body = f"""Hola {nombre},
-
-Tu respuesta técnica para la Oportunidad de Mejora {reclamo_codigo} fue RECHAZADA
-y requiere ajustes.
-
-Motivo del rechazo:
-{motivo_txt or 'Sin detalle'}
-
-Por favor actualiza la causa, acción preventiva y acción correctiva.
-
-Ir al sistema: {link_responder}
-
-Este es un mensaje automático.
-"""
-
-    # ---------- HTML mejorado ----------
+    # =========================================================
+    # Helper visual para correo HTML
+    # =========================================================
     def _row(lbl, val):
-        val = (val or "").replace("\n", "<br>")
+        val = "" if val is None else str(val)
+        val = val.replace("\n", "<br>")
         return (
             "<tr>"
             f"<td style='width:210px;background:#fef3c7;font-weight:600;"
@@ -2716,7 +2471,86 @@ Este es un mensaje automático.
             "</tr>"
         )
 
-    html_body = f"""\
+    # =========================================================
+    # Servicio al Cliente
+    # No existe actualmente una función que devuelva la lista.
+    # Se reutiliza la misma regla ya usada en _can_view_all_reclamos:
+    # departamento Servicio al Cliente o puesto que contenga Servicio al Cliente.
+    # =========================================================
+    cur.execute(SQL__NOTIFY_COLABORADOR_APORTE_RECHAZADO_SEL_1)
+
+    servicio_cliente_rows = cur.fetchall()
+
+    # =========================================================
+    # Destinatarios
+    # =========================================================
+    destinatarios = []
+
+    # 1) Imputado / responsable que debe corregir
+    if imputado_email:
+        destinatarios.append({
+            "email": imputado_email,
+            "nombre": imputado_nombre,
+            "rol_notificacion": "RESPONSABLE"
+        })
+
+    # 2) Sponsor principal + backup
+    # Reutiliza función existente.
+    try:
+        for s in _get_sponsor_emails_by_reclamo(conn, reclamo_codigo):
+            destinatarios.append({
+                "email": s["email"],
+                "nombre": s["nombre"] or s["username"] or "Usuario",
+                "rol_notificacion": s["tipo_sponsor"] or "SPONSOR"
+            })
+    except Exception:
+        current_app.logger.exception(
+            "No se pudo obtener sponsor principal/backup para reclamo %s",
+            reclamo_codigo
+        )
+
+    # 3) Servicio al Cliente
+    for sc in servicio_cliente_rows:
+        destinatarios.append({
+            "email": sc["email"],
+            "nombre": sc["nombre"] or sc["username"] or "Servicio al Cliente",
+            "rol_notificacion": "SERVICIO AL CLIENTE"
+        })
+
+    enviados = set()
+
+    for d in destinatarios:
+        email = (d.get("email") or "").strip().lower()
+        if not email or email in enviados:
+            continue
+
+        enviados.add(email)
+
+        nombre_destinatario = d.get("nombre") or "Usuario"
+        rol_notificacion = d.get("rol_notificacion") or ""
+
+        text_body = f"""Hola {nombre_destinatario},
+
+La respuesta técnica de la Oportunidad de Mejora {reclamo_codigo} fue RECHAZADA y requiere ajustes.
+
+Responsable técnico:
+{imputado_nombre}
+
+Rol de notificación:
+{rol_notificacion}
+
+Motivo del rechazo:
+{motivo_txt or 'Sin detalle'}
+
+El responsable debe actualizar la causa, acción de control y acción correctiva en el sistema.
+
+Ir al sistema:
+{link_responder}
+
+Este es un mensaje automático.
+"""
+
+        html_body = f"""\
 <!doctype html>
 <html>
   <body style="margin:0;padding:0;background:#f3f4f6;
@@ -2728,7 +2562,7 @@ Este es un mensaje automático.
           <table role="presentation" width="720" cellpadding="0" cellspacing="0"
                  style="max-width:720px;background:#ffffff;border-radius:8px;
                         border:1px solid #e5e7eb;overflow:hidden;">
-            <!-- Encabezado -->
+
             <tr>
               <td style="background:#b45309;padding:16px 20px;color:#ffffff;">
                 <div style="font-size:12px;text-transform:uppercase;
@@ -2739,17 +2573,18 @@ Este es un mensaje automático.
                   Ajuste requerido en respuesta {reclamo_codigo}
                 </div>
                 <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {nombre}, tu respuesta técnica fue rechazada y requiere ajustes.
+                  Hola {nombre_destinatario}, se rechazó la respuesta técnica y requiere seguimiento.
                 </div>
               </td>
             </tr>
 
-            <!-- Cuerpo -->
             <tr>
               <td style="padding:18px 20px 10px 20px;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
                        style="border-collapse:collapse;">
                   {_row('Código', reclamo_codigo)}
+                  {_row('Responsable técnico', imputado_nombre)}
+                  {_row('Rol de notificación', rol_notificacion)}
                   { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
                   { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
                   { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
@@ -2764,25 +2599,23 @@ Este es un mensaje automático.
                   {_row('Motivo del rechazo', motivo_txt or 'Sin detalle')}
                 </table>
 
-                <!-- Botón CTA -->
                 <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
                   <a href="{link_responder}"
                      style="display:inline-block;background:#f97316;color:#ffffff;
                             text-decoration:none;padding:10px 18px;border-radius:6px;
                             font-weight:600;font-size:13px;">
-                    Ajustar respuesta técnica
+                    Revisar respuesta técnica
                   </a>
                 </div>
 
                 <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  Ingresa al módulo de reclamos, pestaña
-                  <strong>“Soy responsable”</strong>, selecciona la OM y actualiza
-                  la causa raíz, acción preventiva y acción correctiva.
+                  El responsable debe ingresar al módulo de reclamos, pestaña
+                  <strong>“Soy responsable”</strong>, seleccionar la OM y actualizar
+                  la causa raíz, acción de control y acción correctiva.
                 </div>
               </td>
             </tr>
 
-            <!-- Pie -->
             <tr>
               <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
                          font-size:11px;color:#9ca3af;">
@@ -2798,57 +2631,17 @@ Este es un mensaje automático.
 </html>
 """
 
-    _send_mail_safe(u["email"], subject, text_body, html_body=html_body)
+        _send_mail_safe(
+            email,
+            subject,
+            text_body,
+            html_body=html_body
+        )
 
+ 
 def _get_sponsor_emails_by_reclamo(conn, reclamo_codigo: str):
     cur = conn.cursor()
-    cur.execute("""
-        SELECT
-            x.id,
-            x.nombre,
-            x.username,
-            x.email,
-            x.tipo_sponsor
-        FROM (
-            SELECT
-                u.id,
-                COALESCE(u.nombre_completo, u.username) AS nombre,
-                u.username,
-                u.email,
-                UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) AS tipo_sponsor,
-                CASE UPPER(LTRIM(RTRIM(COALESCE(pv.valor, ''))))
-                    WHEN 'PRINCIPAL' THEN 1
-                    WHEN 'BACKUP' THEN 2
-                    ELSE 9
-                END AS orden_sponsor,
-                ROW_NUMBER() OVER (
-                    PARTITION BY u.email
-                    ORDER BY
-                        CASE UPPER(LTRIM(RTRIM(COALESCE(pv.valor, ''))))
-                            WHEN 'PRINCIPAL' THEN 1
-                            WHEN 'BACKUP' THEN 2
-                            ELSE 9
-                        END,
-                        pv.id
-                ) AS rn
-            FROM reclamos r
-            JOIN param_values pv
-              ON pv.parent_id = r.proceso_id
-            JOIN param_groups pg
-              ON pg.id = pv.group_id
-            JOIN usuarios u
-              ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
-            WHERE r.codigo = ?
-              AND pg.nombre = 'RECL_PROCESO_SPONSOR'
-              AND COALESCE(pv.activo, 1) = 1
-              AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
-              AND COALESCE(u.disabled, 0) = 0
-              AND u.email IS NOT NULL
-              AND LTRIM(RTRIM(u.email)) <> ''
-        ) x
-        WHERE x.rn = 1
-        ORDER BY x.orden_sponsor, x.id
-    """, (reclamo_codigo,))
+    cur.execute(SQL__GET_SPONSOR_EMAILS_BY_RECLAMO_SEL_1, (reclamo_codigo,))
 
     return cur.fetchall()
 
@@ -2860,15 +2653,7 @@ def _notify_creador_respuesta_aprobada(conn, creador_id, reclamo_codigo, imputad
 
     # --- Datos del reclamo (por código) ---
     cur = conn.cursor()
-    cur.execute("""
-        SELECT TOP 1 id, fecha_reclamo, tipo_reclamo, tipo_tramite,
-               cliente_nombre, proceso_text, material_desc,
-               fecha_pedido, factura, guia_remision,
-               antecedente, observacion
-        FROM reclamos
-        WHERE codigo = ?
-        
-    """, (reclamo_codigo,))
+    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
     r = cur.fetchone()
 
     # Link directo a "Mis reclamos"
@@ -3026,6 +2811,162 @@ Este es un mensaje automático.
         _send_mail_safe(email, subject, text_final, html_body=html_final)
 
 
+def _notify_creador_rechazo_validacion(conn, reclamo_id: int, reclamo_codigo: str,
+                                        creador_nombre: str, motivo: str):
+    """
+    Notifica a sponsors (principal+backup), Servicio al Cliente y miembros de
+    equipo cuando el creador de la OM rechaza la respuesta técnica.
+    """
+    cur = conn.cursor()
+
+    # Datos completos de la OM
+    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
+    r = cur.fetchone()
+
+    try:
+        link = url_for("reclamos", _external=True) + "?tab=imputado"
+    except Exception:
+        link = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=imputado"
+
+    subject = f"[Oportunidad de Mejora] Respuesta rechazada por el creador — {reclamo_codigo}"
+
+    motivo_visible = motivo.strip() if motivo else "Sin motivo especificado."
+
+    def _row(lbl, val):
+        val = (val or "").replace("\n", "<br>")
+        return (
+            "<tr>"
+            f"<td style='width:210px;background:#fee2e2;font-weight:600;"
+            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
+            f"{lbl}</td>"
+            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
+            f"{val}</td>"
+            "</tr>"
+        )
+
+    def _html(dest_nombre):
+        return f"""\
+<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f3f4f6;
+               font-family:Segoe UI,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+           style="background:#f3f4f6;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
+                 style="max-width:720px;background:#ffffff;border-radius:8px;
+                        border:1px solid #e5e7eb;overflow:hidden;">
+            <!-- Encabezado -->
+            <tr>
+              <td style="background:#dc2626;padding:16px 20px;color:#ffffff;">
+                <div style="font-size:12px;text-transform:uppercase;
+                            letter-spacing:.08em;opacity:.9;">
+                  Oportunidad de Mejora
+                </div>
+                <div style="font-size:18px;font-weight:700;margin-top:4px;">
+                  Respuesta rechazada — {reclamo_codigo}
+                </div>
+                <div style="font-size:12px;opacity:.9;margin-top:6px;">
+                  Hola {dest_nombre}, el creador <strong>{creador_nombre}</strong>
+                  rechazó la respuesta técnica de esta OM.
+                </div>
+              </td>
+            </tr>
+
+            <!-- Cuerpo -->
+            <tr>
+              <td style="padding:18px 20px 10px 20px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                       style="border-collapse:collapse;">
+                  {_row('Código', reclamo_codigo)}
+                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
+                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
+                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
+                  { _row('Cliente', r['cliente_nombre']) if r else '' }
+                  { _row('Proceso', r['proceso_text']) if r else '' }
+                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
+                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
+                  { _row('Factura', r['factura']) if r else '' }
+                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
+                  { _row('Observación', r['observacion']) if r else '' }
+                  {_row('Rechazado por', creador_nombre)}
+                  {_row('Motivo del rechazo', motivo_visible)}
+                </table>
+
+                <!-- Botón CTA -->
+                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
+                  <a href="{link}"
+                     style="display:inline-block;background:#dc2626;color:#ffffff;
+                            text-decoration:none;padding:10px 18px;border-radius:6px;
+                            font-weight:600;font-size:13px;">
+                    Ingresar y registrar nueva respuesta
+                  </a>
+                </div>
+
+                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
+                  La OM ha vuelto a estado <strong>Abierto</strong>.
+                  Se requiere registrar una nueva respuesta técnica.
+                </div>
+              </td>
+            </tr>
+
+            <!-- Pie -->
+            <tr>
+              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
+                         font-size:11px;color:#9ca3af;">
+                Este es un mensaje automático. No responda a este correo.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>"""
+
+    enviados = set()
+
+    def _enviar(email, nombre):
+        email = (email or "").strip().lower()
+        if not email or email in enviados:
+            return
+        enviados.add(email)
+        txt = (
+            f"Hola {nombre},\n\n"
+            f"El creador {creador_nombre} rechazó la respuesta de la OM {reclamo_codigo}.\n\n"
+            f"Motivo: {motivo_visible}\n\n"
+            f"La OM volvió a estado Abierto. Por favor ingresa al sistema y "
+            f"registra una nueva respuesta técnica.\n\n"
+            f"Ir al sistema: {link}\n\nEste es un mensaje automático."
+        )
+        _send_mail_safe(email, subject, txt, html_body=_html(nombre))
+
+    # 1. Sponsors PRINCIPAL + BACKUP de cada proceso de la OM
+    cur.execute(SQL_VALIDAR_CREADOR_SEL_BASE, (reclamo_id,))
+    row_om = cur.fetchone()
+    if row_om and row_om["proceso_id"]:
+        cur.execute(SQL_VALIDAR_CREADOR_SEL_SPONSORS, (row_om["proceso_id"],))
+        for s in cur.fetchall():
+            _enviar(s["sponsor_email"], s["sponsor_nombre"])
+
+    # 2. Imputados directos del reclamo
+    cur.execute(SQL_VALIDAR_CREADOR_SEL_IMPUTADOS, (reclamo_id,))
+    for row in cur.fetchall():
+        _enviar(row["imputado_email"], row["imputado_nombre"])
+
+    # 3. Servicio al Cliente
+    cur.execute(SQL_VALIDAR_CREADOR_SEL_SAC)
+    for row in cur.fetchall():
+        _enviar(row["email"], row["nombre"])
+
+    # 4. Miembros de equipo
+    cur.execute(SQL_VALIDAR_CREADOR_SEL_EQUIPO, (reclamo_id,))
+    for row in cur.fetchall():
+        _enviar(row["miembro_email"], row["miembro_nombre"])
+
+
 import re
 
 def _acciones_v2_start() -> str:
@@ -3149,11 +3090,7 @@ def register_reclamos_routes(app):
 
         # No crear tablas ni grupos desde backend.
         # Buscar directamente el grupo de subtipos existente.
-        cur.execute("""
-            SELECT TOP 1 id
-            FROM param_groups
-            WHERE nombre = 'RECL_SUBTIPO'
-        """)
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_1)
         row = cur.fetchone()
 
         if not row:
@@ -3161,20 +3098,7 @@ def register_reclamos_routes(app):
 
         gid = row["id"]
 
-        cur.execute("""
-            SELECT
-                id,
-                nombre,
-                valor,
-                orden
-            FROM param_values
-            WHERE group_id = ?
-            AND COALESCE(activo, 1) = 1
-            AND COALESCE(parent_id, 0) = ?
-            ORDER BY
-            COALESCE(orden, 0),
-            valor
-        """, (gid, tipo_id))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_2, (gid, tipo_id))
 
         data = [
             {
@@ -3325,11 +3249,7 @@ def register_reclamos_routes(app):
 
         def _insert_many(tipo, items):
             for desc, fecha in items:
-                cur.execute("""
-                    INSERT INTO reclamo_equipo_acciones (
-                        equipo_id, tipo, descripcion, fecha_compromiso, created_at, created_by
-                    ) VALUES (?, ?, ?, ?, ?, ?)
-                """, (equipo_id, tipo, desc, fecha, now, user_id))
+                cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_3, (equipo_id, tipo, desc, fecha, now, user_id))
 
         _insert_many("CAUSA", causas_n)
         _insert_many("CONTROL", control_n)
@@ -3340,15 +3260,7 @@ def register_reclamos_routes(app):
             # "- texto (YYYY-MM-DD)"
             return "\n".join([f"- {d} ({f})" for d, f in items])
 
-        cur.execute("""
-            UPDATE reclamo_equipo
-            SET
-                respuesta_causa      = ?,
-                respuesta_preventiva = ?,
-                respuesta_correctiva = ?,
-                fecha_respuesta      = COALESCE(fecha_respuesta, ?)
-            WHERE id = ?
-        """, (_join(causas_n), _join(control_n), _join(correctiva_n), now, equipo_id))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_4, (_join(causas_n), _join(control_n), _join(correctiva_n), now, equipo_id))
 
         conn.commit()
         return jsonify(ok=True)
@@ -3423,12 +3335,7 @@ def register_reclamos_routes(app):
 
         # ✅ V2: intenta leer SIEMPRE desde la tabla nueva.
         # Esto evita el problema de que _equipo_es_v2() falle y no cargue fechas.
-        cur.execute("""
-            SELECT id, tipo, descripcion, fecha_compromiso
-            FROM reclamo_equipo_acciones
-            WHERE equipo_id = ?
-            ORDER BY id ASC
-        """, (equipo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_5, (equipo_id,))
         rows = cur.fetchall() or []
 
         if rows:
@@ -3452,12 +3359,7 @@ def register_reclamos_routes(app):
             return jsonify(ok=True, causas=causas, control=control, correctiva=correctiva)
 
         # 🔁 Fallback histórico: lee campos viejos y parsea también la fecha si está en "(YYYY-MM-DD)"
-        cur.execute("""
-            SELECT TOP 1 respuesta_causa, respuesta_preventiva, respuesta_correctiva
-            FROM reclamo_equipo
-            WHERE id = ?
-           
-        """, (equipo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_6, (equipo_id,))
         row = cur.fetchone()
 
         causas_txt     = _row_get(row, "respuesta_causa", 0, "")
@@ -3489,89 +3391,20 @@ def register_reclamos_routes(app):
 
         # Si el front no manda imputacion_id, tomamos la última imputación del reclamo
         if not imputacion_id:
-            row_imp = db.execute("""
-                SELECT TOP 1 id
-                FROM reclamo_imputados
-                WHERE reclamo_id = ?
-                ORDER BY id DESC
-               
-            """, (reclamo_id,)).fetchone()
+            row_imp = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_7, (reclamo_id,)).fetchone()
             imputacion_id = row_imp["id"] if row_imp else None
 
         # -------------------------
         # Caso 1: SIN imputación
         # -------------------------
         if not imputacion_id:
-            rows = db.execute("""
-                SELECT
-                    er.id AS equipo_id,
-                    er.id AS id,                 -- por compatibilidad si tu front usa "id"
-                    er.reclamo_id,
-                    NULL AS imputacion_id,
-                    er.usuario_id,
-                    er.puede_responder,
-                    er.activo,
-                    er.creado_por,
-                    er.creado_at,
-                    u.username,
-                    COALESCE(u.nombre_completo, u.username) AS nombre,
-                    u.rol AS rol,
-                    d.nombre AS departamento,
-                    0 AS tiene_respuesta,
-                    NULL AS fecha_respuesta,
-                    NULL AS respuesta_id
-                FROM reclamo_equipo_respuestas er
-                JOIN usuarios u ON er.usuario_id = u.id
-                LEFT JOIN departamentos d ON u.departamento_id = d.id
-                WHERE er.reclamo_id = ?
-                AND er.activo = 1
-                ORDER BY nombre
-            """, (reclamo_id,)).fetchall()
+            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_8, (reclamo_id,)).fetchall()
 
         # -------------------------
         # Caso 2: CON imputación
         # -------------------------
         else:
-            rows = db.execute("""
-                SELECT
-                    er.id AS equipo_id,
-                    er.id AS id,                 -- por compatibilidad
-                    er.reclamo_id,
-                    er.imputacion_id,
-                    er.usuario_id,
-                    u.username,
-                    COALESCE(u.nombre_completo, u.username) AS nombre,
-                    er.puede_responder,
-                    er.activo,
-                    u.rol AS rol,
-                    d.nombre AS departamento,
-
-                    CASE WHEN rrmax.id IS NULL THEN 0 ELSE 1 END AS tiene_respuesta,
-                    rre.created_at AS fecha_respuesta,
-                    rrmax.id AS respuesta_id
-
-                FROM reclamo_equipo_respuestas er
-                JOIN usuarios u ON u.id = er.usuario_id
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
-
-                LEFT JOIN (
-                    SELECT MAX(id) AS id, reclamo_id, imputacion_id, miembro_id
-                    FROM reclamo_respuestas_equipo
-                    WHERE activo = 1
-                    GROUP BY reclamo_id, imputacion_id, miembro_id
-                ) rrmax
-                ON rrmax.reclamo_id   = er.reclamo_id
-                AND rrmax.imputacion_id = er.imputacion_id
-                AND rrmax.miembro_id    = er.usuario_id
-
-                LEFT JOIN reclamo_respuestas_equipo rre
-                ON rre.id = rrmax.id
-
-                WHERE er.reclamo_id = ?
-                AND er.activo = 1
-
-                ORDER BY nombre
-                """, (reclamo_id,)).fetchall()
+            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_9, (reclamo_id,)).fetchall()
         # -------------------------
         # Payload (para ambos casos)
         # -------------------------
@@ -3634,23 +3467,13 @@ def register_reclamos_routes(app):
         if not usuario_id:
             return jsonify({"error": "Selecciona un usuario para agregar al equipo."}), 400
 
-        row_user = db.execute("""
-            SELECT TOP 1 id
-            FROM usuarios
-            WHERE id = ?
-        """, (usuario_id,)).fetchone()
+        row_user = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_10, (usuario_id,)).fetchone()
         if not row_user:
             return jsonify({"error": "El usuario seleccionado no existe."}), 400
 
         # Si el front no manda imputacion_id, lo deducimos desde el sponsor actual
         if not imputacion_id:
-            row_imp = db.execute("""
-                SELECT TOP 1 id
-                FROM reclamo_imputados
-                WHERE reclamo_id = ?
-                AND imputado_id = ?
-                ORDER BY id DESC
-            """, (reclamo_id, uid)).fetchone()
+            row_imp = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_11, (reclamo_id, uid)).fetchone()
 
             if not row_imp:
                 return jsonify({"error": "No se pudo determinar imputación_id para este reclamo."}), 400
@@ -3658,62 +3481,30 @@ def register_reclamos_routes(app):
             imputacion_id = row_imp["id"]
 
         # Validar que la imputación pertenezca al reclamo
-        row_ok = db.execute("""
-            SELECT TOP 1 1 AS ok
-            FROM reclamo_imputados
-            WHERE id = ?
-            AND reclamo_id = ?
-        """, (imputacion_id, reclamo_id)).fetchone()
+        row_ok = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_12, (imputacion_id, reclamo_id)).fetchone()
 
         if not row_ok:
             return jsonify({"error": "La imputación no pertenece a este reclamo."}), 400
 
         # Evita duplicado en el mismo reclamo
-        dup = db.execute("""
-            SELECT TOP 1 1 AS ok
-            FROM reclamo_equipo_respuestas
-            WHERE reclamo_id = ?
-            AND usuario_id = ?
-            AND activo = 1
-        """, (reclamo_id, usuario_id)).fetchone()
+        dup = db.execute(SQL__ES_MIEMBRO_EQUIPO_RECLAMO_SEL_1, (reclamo_id, usuario_id)).fetchone()
 
         if dup:
             return jsonify({"error": "El usuario ya está en el equipo de respuestas."}), 400
 
         now = _now_iso()
 
-        db.execute("""
-            INSERT INTO reclamo_equipo_respuestas (
-                reclamo_id,
-                imputacion_id,
-                usuario_id,
-                puede_responder,
-                activo,
-                creado_por,
-                creado_at
-            )
-            VALUES (?, ?, ?, 1, 1, ?, ?)
-        """, (reclamo_id, imputacion_id, usuario_id, uid, now))
+        db.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_13, (reclamo_id, imputacion_id, usuario_id, uid, now))
 
         db.commit()
 
         # Notificar por correo al miembro agregado
         try:
-            row_r = db.execute("""
-                SELECT TOP 1 codigo
-                FROM reclamos
-                WHERE id = ?
-            """, (reclamo_id,)).fetchone()
+            row_r = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_14, (reclamo_id,)).fetchone()
 
             reclamo_codigo = row_r["codigo"] if row_r and row_r["codigo"] else f"RECL#{reclamo_id}"
 
-            row_actor = db.execute("""
-                SELECT TOP 1
-                    username,
-                    nombre_completo
-                FROM usuarios
-                WHERE id = ?
-            """, (uid,)).fetchone()
+            row_actor = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_15, (uid,)).fetchone()
 
             if row_actor:
                 resp_username = (
@@ -3827,14 +3618,7 @@ def register_reclamos_routes(app):
 
         # Si no viene imputacion_id, deducirla desde la asignación del equipo del usuario actual
         if not imputacion_id:
-            row_eq = db.execute("""
-                SELECT TOP 1 imputacion_id
-                FROM reclamo_equipo_respuestas
-                WHERE reclamo_id = ?
-                AND usuario_id = ?
-                AND activo = 1
-                ORDER BY id DESC
-            """, (reclamo_id, uid)).fetchone()
+            row_eq = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_16, (reclamo_id, uid)).fetchone()
 
             if not row_eq or not row_eq["imputacion_id"]:
                 return jsonify({"error": "No se pudo determinar imputación_id para guardar la respuesta."}), 400
@@ -3842,29 +3626,13 @@ def register_reclamos_routes(app):
             imputacion_id = row_eq["imputacion_id"]
 
         # Validar permisos
-        row_perm = db.execute("""
-            SELECT TOP 1 1 AS ok
-            FROM reclamo_equipo_respuestas
-            WHERE reclamo_id = ?
-            AND imputacion_id = ?
-            AND usuario_id = ?
-            AND activo = 1
-            AND puede_responder = 1
-        """, (reclamo_id, imputacion_id, uid)).fetchone()
+        row_perm = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_17, (reclamo_id, imputacion_id, uid)).fetchone()
 
         if not row_perm and not _is_admin_like():
             return jsonify({"error": "No tienes permiso para responder en este reclamo."}), 403
 
         # ¿Existe respuesta previa?
-        row_exist = db.execute("""
-            SELECT TOP 1 id
-            FROM reclamo_respuestas_equipo
-            WHERE reclamo_id = ?
-            AND imputacion_id = ?
-            AND miembro_id = ?
-            AND activo = 1
-            ORDER BY id DESC
-        """, (reclamo_id, imputacion_id, uid)).fetchone()
+        row_exist = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_18, (reclamo_id, imputacion_id, uid)).fetchone()
 
         es_nueva_respuesta = row_exist is None
         now = _now_iso()
@@ -3881,30 +3649,7 @@ def register_reclamos_routes(app):
         if row_exist:
             respuesta_equipo_id = row_exist["id"]
 
-            db.execute("""
-                UPDATE reclamo_respuestas_equipo
-                SET metodo_analisis = ?,
-                    causa = ?,
-                    preventiva = ?,
-                    correctiva = ?,
-                    fecha_causa = ?,
-                    fecha_preventiva = ?,
-                    fecha_correctiva = ?,
-                    fish_metodo = ?,
-                    fish_maquinas = ?,
-                    fish_materiales = ?,
-                    fish_personas = ?,
-                    fish_entorno = ?,
-                    fish_medicion = ?,
-                    why1 = ?,
-                    why2 = ?,
-                    why3 = ?,
-                    why4 = ?,
-                    why5 = ?,
-                    created_at = ?,
-                    created_by = ?
-                WHERE id = ?
-            """, (
+            db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_19, (
                 metodo_analisis,
                 causa_txt,
                 preventiva_txt,
@@ -3928,36 +3673,7 @@ def register_reclamos_routes(app):
                 respuesta_equipo_id
             ))
         else:
-            row_new = db.execute("""
-                INSERT INTO reclamo_respuestas_equipo (
-                    reclamo_id,
-                    imputacion_id,
-                    miembro_id,
-                    metodo_analisis,
-                    causa,
-                    preventiva,
-                    correctiva,
-                    fecha_causa,
-                    fecha_preventiva,
-                    fecha_correctiva,
-                    fish_metodo,
-                    fish_maquinas,
-                    fish_materiales,
-                    fish_personas,
-                    fish_entorno,
-                    fish_medicion,
-                    why1,
-                    why2,
-                    why3,
-                    why4,
-                    why5,
-                    activo,
-                    created_by,
-                    created_at
-                )
-                OUTPUT inserted.id
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
-            """, (
+            row_new = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_20, (
                 reclamo_id,
                 imputacion_id,
                 uid,
@@ -4007,11 +3723,7 @@ def register_reclamos_routes(app):
         # Notificar al sponsor SOLO la primera vez
         if es_nueva_respuesta:
             try:
-                row_r = db.execute("""
-                    SELECT TOP 1 codigo
-                    FROM reclamos
-                    WHERE id = ?
-                """, (reclamo_id,)).fetchone()
+                row_r = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_14, (reclamo_id,)).fetchone()
 
                 reclamo_codigo = row_r["codigo"] if row_r and row_r["codigo"] else f"RECL#{reclamo_id}"
 
@@ -4038,6 +3750,7 @@ def register_reclamos_routes(app):
         })
 
 
+        
     @app.route("/reclamos/<int:reclamo_id>/equipo-respuestas/aporte", methods=["GET"])
     @require_login
     def equipo_respuestas_ver_aporte(reclamo_id):
@@ -4047,63 +3760,59 @@ def register_reclamos_routes(app):
         imputacion_id = request.args.get("imputacion_id", type=int)
         miembro_id = request.args.get("miembro_id", type=int)
 
+        if not uid:
+            return jsonify(ok=False, error="Sesión inválida. Vuelve a iniciar sesión."), 401
+
         # Si el front manda mal miembro_id (id del registro en tabla puente), lo corregimos
-        if miembro_id and not db.execute("""
-            SELECT TOP 1 1 AS ok
-            FROM usuarios
-            WHERE id = ?
-        """, (miembro_id,)).fetchone():
-            row_fix = db.execute("""
-                SELECT TOP 1 usuario_id
-                FROM reclamo_equipo_respuestas
-                WHERE id = ?
-                AND reclamo_id = ?
-            """, (miembro_id, reclamo_id)).fetchone()
+        if miembro_id and not db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_21, (miembro_id,)).fetchone():
+            row_fix = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_22, (miembro_id, reclamo_id)).fetchone()
+
             if row_fix:
                 miembro_id = row_fix["usuario_id"]
 
         if not imputacion_id or not miembro_id:
             return jsonify(ok=False, error="Falta imputacion_id o miembro_id"), 400
 
+        # =========================================================
+        # Datos base de la OM / imputación
+        # =========================================================
+        row_base = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_23, (reclamo_id, imputacion_id)).fetchone()
+
+        if not row_base:
+            return jsonify(ok=False, error="No se encontró la imputación de la OM."), 404
+
         can_view_all = _can_view_all_reclamos(db, uid)
 
-        row_owner = db.execute("""
-            SELECT TOP 1 1 AS ok
-            FROM reclamo_imputados
-            WHERE id = ?
-            AND reclamo_id = ?
-            AND imputado_id = ?
-        """, (imputacion_id, reclamo_id, uid)).fetchone()
+        # Sponsor principal: está en reclamo_imputados
+        es_sponsor_principal = int(row_base["imputado_id"] or 0) == int(uid or 0)
 
-        is_same_member = (uid == miembro_id)
+        # Sponsor backup o principal configurado por proceso
+        es_sponsor_del_proceso = _usuario_es_sponsor_del_proceso(
+            db,
+            row_base["proceso_id"],
+            uid
+        )
 
-        row_team_member = db.execute("""
-            SELECT TOP 1 1 AS ok
-            FROM reclamo_equipo_respuestas
-            WHERE reclamo_id = ?
-            AND imputacion_id = ?
-            AND usuario_id = ?
-            AND activo = 1
-        """, (reclamo_id, imputacion_id, uid)).fetchone()
+        # El mismo miembro puede ver su propio aporte
+        is_same_member = int(uid or 0) == int(miembro_id or 0)
 
-        can_view = bool(can_view_all or row_owner or (is_same_member and row_team_member))
+        row_team_member = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_24, (reclamo_id, imputacion_id, uid)).fetchone()
+
+        can_view = bool(
+            can_view_all
+            or es_sponsor_principal
+            or es_sponsor_del_proceso
+            or (is_same_member and row_team_member)
+            or _is_admin_like()
+        )
 
         if not can_view:
             return jsonify(ok=False, error="No autorizado"), 403
 
-        row = db.execute("""
-            SELECT TOP 1
-                rre.*,
-                COALESCE(u.nombre_completo, u.username) AS miembro_nombre,
-                u.username AS miembro_username
-            FROM reclamo_respuestas_equipo rre
-            JOIN usuarios u
-            ON u.id = rre.miembro_id
-            WHERE rre.reclamo_id = ?
-             AND rre.miembro_id = ?
-            AND rre.activo = 1
-            ORDER BY rre.id DESC
-        """, (reclamo_id,  miembro_id)).fetchone()
+        # =========================================================
+        # Buscar respuesta del miembro
+        # =========================================================
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_25, (reclamo_id, imputacion_id, miembro_id)).fetchone()
 
         item = dict(row) if row else {}
 
@@ -4117,29 +3826,14 @@ def register_reclamos_routes(app):
             item["control"] = []
             item["correctiva_items"] = []
 
-        return jsonify(ok=True, item=item)        
-  
+        return jsonify(ok=True, item=item)
 
     @app.route("/reclamos/imputacion/<int:imputacion_id>/respuestas_equipo/json")
     @require_login
     def reclamo_respuestas_equipo_json(imputacion_id):
         db = get_db()
 
-        rows = db.execute("""
-            SELECT
-                re.id,
-                u.nombre_completo AS miembro_nombre,
-                u.username AS miembro_username,
-                re.causa,
-                re.preventiva,
-                re.correctiva,
-                re.created_at
-            FROM reclamo_respuestas_equipo re
-            JOIN usuarios u
-            ON u.id = re.miembro_id
-            WHERE re.imputacion_id = ?
-            ORDER BY re.created_at DESC
-        """, (imputacion_id,)).fetchall()
+        rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_26, (imputacion_id,)).fetchall()
 
         items = []
         for r in rows:
@@ -4172,11 +3866,7 @@ def register_reclamos_routes(app):
         )
 
         # 1) Obtener reclamo_id de la imputación
-        imp = db.execute("""
-            SELECT TOP 1 reclamo_id
-            FROM reclamo_imputados
-            WHERE id = ?
-        """, (imputacion_id,)).fetchone()
+        imp = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_27, (imputacion_id,)).fetchone()
 
         current_app.logger.debug(
             "[equipo_responder] imputacion -> %r", dict(imp) if imp else None
@@ -4308,38 +3998,12 @@ def register_reclamos_routes(app):
         fecha_correctiva = correctiva_items[0]["fecha_compromiso"] if correctiva_items else ""
 
         # 3) Verificar si ya existe respuesta activa del miembro
-        row = db.execute("""
-            SELECT TOP 1 id
-            FROM reclamo_respuestas_equipo
-            WHERE reclamo_id = ?
-            AND imputacion_id = ?
-            AND miembro_id = ?
-            AND activo = 1
-            ORDER BY id DESC
-        """, (reclamo_id, imputacion_id, uid)).fetchone()
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_18, (reclamo_id, imputacion_id, uid)).fetchone()
 
         if row:
             respuesta_id = row["id"]
 
-            db.execute("""
-                UPDATE reclamo_respuestas_equipo
-                SET
-                    metodo_analisis = ?,
-                    causa = ?,
-                    preventiva = ?,
-                    correctiva = ?,
-                    fecha_causa = ?,
-                    fecha_preventiva = ?,
-                    fecha_correctiva = ?,
-                    fish_metodo = ?,
-                    fish_maquinas = ?,
-                    fish_materiales = ?,
-                    fish_personas = ?,
-                    fish_entorno = ?,
-                    fish_medicion = ?,
-                    why1 = ?, why2 = ?, why3 = ?, why4 = ?, why5 = ?
-                WHERE id = ?
-            """, (
+            db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_28, (
                 metodo_analisis,
                 causa_txt, preventiva_txt, correctiva_txt,
                 fecha_causa, fecha_preventiva, fecha_correctiva,
@@ -4349,19 +4013,7 @@ def register_reclamos_routes(app):
                 respuesta_id
             ))
         else:
-            cur = db.execute("""
-                INSERT INTO reclamo_respuestas_equipo (
-                    reclamo_id, imputacion_id, miembro_id,
-                    metodo_analisis,
-                    causa, preventiva, correctiva,
-                    fecha_causa, fecha_preventiva, fecha_correctiva,
-                    fish_metodo, fish_maquinas, fish_materiales,
-                    fish_personas, fish_entorno, fish_medicion,
-                    why1, why2, why3, why4, why5,
-                    activo, created_by
-                )
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-            """, (
+            cur = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_29, (
                 reclamo_id,
                 imputacion_id,
                 uid,
@@ -4382,14 +4034,7 @@ def register_reclamos_routes(app):
                 respuesta_id = None
 
             if not respuesta_id:
-                row_new = db.execute("""
-                    SELECT TOP 1 id
-                    FROM reclamo_respuestas_equipo
-                    WHERE reclamo_id = ?
-                    AND imputacion_id = ?
-                    AND miembro_id = ?
-                    ORDER BY id DESC
-                """, (reclamo_id, imputacion_id, uid)).fetchone()
+                row_new = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_30, (reclamo_id, imputacion_id, uid)).fetchone()
                 respuesta_id = row_new["id"] if row_new else None
 
             if not respuesta_id:
@@ -4417,11 +4062,7 @@ def register_reclamos_routes(app):
         db.commit()
 
         try:
-            row_r = db.execute("""
-                SELECT TOP 1 codigo
-                FROM reclamos
-                WHERE id = ?
-            """, (reclamo_id,)).fetchone()
+            row_r = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_14, (reclamo_id,)).fetchone()
 
             reclamo_codigo = row_r["codigo"] if row_r and row_r["codigo"] else f"RECL#{reclamo_id}"
 
@@ -4453,29 +4094,52 @@ def register_reclamos_routes(app):
     def reclamos_equipo_aprobar(eq_id):
         uid = _current_user_id()
         data = request.get_json(silent=True) or {}
+
         accion = (data.get("accion") or "").strip().lower()  # aprobar / rechazar
         motivo = (data.get("motivo") or "").strip()
 
+        if not uid:
+            return jsonify(ok=False, msg="Sesión inválida. Vuelve a iniciar sesión."), 401
+
         conn = get_db()
-   
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT re.*, r.codigo,
-                   u_col.username AS colaborador_username
-            FROM reclamo_equipo re
-            JOIN reclamos r ON r.id = re.reclamo_id
-            LEFT JOIN usuarios u_col ON u_col.id = re.colaborador_id
-            WHERE re.id = ?
-        """, (eq_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_31, (eq_id,))
+
         row = cur.fetchone()
 
         if not row:
             conn.close()
             return jsonify(ok=False, msg="Registro de equipo no encontrado"), 404
 
-        # Solo el responsable original o admin pueden aprobar/rechazar aportes
-        if (row["responsable_id"] != uid) and (not _is_admin_like()):
+        # =========================================================
+        # AUTORIZACIÓN
+        # =========================================================
+        # Puede aprobar/rechazar:
+        # - responsable original
+        # - admin/coordinador
+        # - sponsor principal o backup configurado en RECL_PROCESO_SPONSOR
+        # - cualquier usuario que pueda gestionar equipo en esa OM
+        # =========================================================
+        es_responsable_original = int(row["responsable_id"] or 0) == int(uid or 0)
+
+        es_sponsor_del_proceso = _usuario_es_sponsor_del_proceso(
+            conn,
+            row["proceso_id"],
+            uid
+        )
+
+        puede_gestionar_equipo = _puede_gestionar_equipo(
+            int(row["reclamo_id"]),
+            uid
+        )
+
+        if not (
+            es_responsable_original
+            or es_sponsor_del_proceso
+            or puede_gestionar_equipo
+            or _is_admin_like()
+        ):
             conn.close()
             return jsonify(ok=False, msg="No autorizado"), 403
 
@@ -4486,28 +4150,14 @@ def register_reclamos_routes(app):
         now = _now_iso()
 
         if accion == "aprobar":
-            cur.execute("""
-                UPDATE reclamo_equipo
-                SET estado = 'aprobado',
-                    fecha_aprobacion = ?,
-                    motivo_rechazo = NULL,
-                    fecha_rechazo = NULL
-                WHERE id = ?
-            """, (now, eq_id))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_32, (now, eq_id))
 
         elif accion == "rechazar":
             if not motivo:
                 conn.close()
                 return jsonify(ok=False, msg="Motivo obligatorio al rechazar"), 400
 
-            cur.execute("""
-                UPDATE reclamo_equipo
-                SET estado = 'rechazado',
-                    fecha_rechazo = ?,
-                    motivo_rechazo = ?,
-                    fecha_aprobacion = NULL
-                WHERE id = ?
-            """, (now, motivo, eq_id))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_33, (now, motivo, eq_id))
 
             _notify_colaborador_aporte_rechazado(
                 conn,
@@ -4515,14 +4165,15 @@ def register_reclamos_routes(app):
                 row["codigo"],
                 motivo
             )
+
         else:
             conn.close()
             return jsonify(ok=False, msg="Acción inválida"), 400
 
         conn.commit()
         conn.close()
-        return jsonify(ok=True)
 
+        return jsonify(ok=True)
 
     @app.route("/reclamos/<int:reclamo_id>/equipo-respuestas/<int:er_id>/eliminar", methods=["POST"])
     @require_login
@@ -4534,11 +4185,7 @@ def register_reclamos_routes(app):
         db = get_db()
         #ensure_reclamos_schema(db)
 
-        cur = db.execute("""
-            UPDATE reclamo_equipo_respuestas
-            SET activo = 0
-            WHERE id = ? AND reclamo_id = ?
-        """, (er_id, reclamo_id))
+        cur = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_34, (er_id, reclamo_id))
         db.commit()
 
         if cur.rowcount == 0:
@@ -4555,18 +4202,7 @@ def register_reclamos_routes(app):
         conn = get_db()
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT TOP 1
-                u.id,
-                u.nombre_completo,
-                u.username,
-                d.nombre AS departamento_nombre,
-                j.nombre_completo AS jefe_nombre
-            FROM usuarios u
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
-            LEFT JOIN usuarios j ON j.id = u.jefe_id
-            WHERE u.identificacion = ?
-        """, (cedula,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_35, (cedula,))
 
         row = cur.fetchone()
 
@@ -4605,13 +4241,7 @@ def register_reclamos_routes(app):
         cur = conn.cursor()
 
         # Validar que el usuario actual sea el imputado principal de la OM
-        cur.execute("""
-            SELECT TOP 1 ri.imputado_id, r.codigo
-            FROM reclamos r
-            LEFT JOIN reclamo_imputados ri ON ri.reclamo_id = r.id
-            WHERE r.id = ?
-            
-        """, (reclamo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_36, (reclamo_id,))
         row = cur.fetchone()
 
         if not row:
@@ -4645,20 +4275,11 @@ def register_reclamos_routes(app):
                 continue  # no tiene sentido asignarse a sí mismo como colaborador
 
             # ¿ya existe?
-            cur.execute("""
-                SELECT 1
-                FROM reclamo_equipo
-                WHERE reclamo_id = ? AND colaborador_id = ?
-            """, (reclamo_id, colaborador_id))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_37, (reclamo_id, colaborador_id))
             if cur.fetchone():
                 continue
 
-            cur.execute("""
-                INSERT INTO reclamo_equipo(
-                    reclamo_id, responsable_id, colaborador_id,
-                    estado, fecha_asignacion
-                ) VALUES (?,?,?,?,?)
-            """, (
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_38, (
                 reclamo_id,
                 responsable_id,
                 colaborador_id,
@@ -4687,34 +4308,12 @@ def register_reclamos_routes(app):
     def reclamo_detalle_json(reclamo_id):
         db = get_db()
 
-        reclamo = db.execute("""
-            SELECT
-                r.id,
-                r.codigo,
-                r.fecha_creacion,
-                r.cliente_nombre,
-                r.proceso_text,
-                r.material_desc,
-                r.observacion,
-                r.procede,
-                r.estado_global
-            FROM reclamos r
-            WHERE r.id = ?
-        """, (reclamo_id,)).fetchone()
+        reclamo = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_39, (reclamo_id,)).fetchone()
 
         if not reclamo:
             return jsonify(ok=False), 404
 
-        imputados = db.execute("""
-            SELECT
-                u.username,
-                ri.respuesta_causa,
-                ri.respuesta_preventiva,
-                ri.respuesta_correctiva
-            FROM reclamo_imputados ri
-            JOIN usuarios u ON u.id = ri.imputado_id
-            WHERE ri.reclamo_id = ?
-        """, (reclamo_id,)).fetchall()
+        imputados = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_40, (reclamo_id,)).fetchall()
 
         return jsonify(
             ok=True,
@@ -4731,23 +4330,7 @@ def register_reclamos_routes(app):
             return jsonify({"ok": False, "error": "No autorizado"}), 403
 
         db = get_db()
-        rows = db.execute("""
-            SELECT
-                u.id,
-                COALESCE(u.nombre_completo, u.username) AS nombre,
-                u.username,
-                u.rol,
-                d.nombre AS departamento
-            FROM usuarios u
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
-            WHERE COALESCE(u.disabled,0)=0
-            AND u.id NOT IN (
-                SELECT usuario_id
-                FROM reclamo_equipo_respuestas
-                WHERE reclamo_id = ? AND activo = 1
-            )
-            ORDER BY nombre
-        """, (reclamo_id,)).fetchall()
+        rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_41, (reclamo_id,)).fetchall()
 
         return jsonify({"ok": True, "items": [dict(r) for r in rows]})
 
@@ -4777,16 +4360,7 @@ def register_reclamos_routes(app):
         
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT re.*, r.codigo,
-                   u_resp.username AS responsable_username,
-                   u_col.username  AS colaborador_username
-            FROM reclamo_equipo re
-            JOIN reclamos r       ON r.id = re.reclamo_id
-            LEFT JOIN usuarios u_resp ON u_resp.id = re.responsable_id
-            LEFT JOIN usuarios u_col  ON u_col.id  = re.colaborador_id
-            WHERE re.id = ?
-        """, (eq_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_42, (eq_id,))
         row = cur.fetchone()
 
         if not row:
@@ -4802,15 +4376,7 @@ def register_reclamos_routes(app):
             conn.close()
             return jsonify(ok=False, msg="No se puede modificar este aporte en el estado actual"), 400
 
-        cur.execute("""
-            UPDATE reclamo_equipo
-            SET respuesta_causa      = ?,
-                respuesta_preventiva = ?,
-                respuesta_correctiva = ?,
-                fecha_respuesta      = ?,
-                estado               = 'respondido'
-            WHERE id = ?
-        """, (
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_43, (
             causa,
             preventiva,
             correctiva,
@@ -4842,50 +4408,7 @@ def register_reclamos_routes(app):
         #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
-        cur.execute("""
-        SELECT
-            ri.id AS imputacion_id,
-            COALESCE(u.nombre_completo, u.username) AS imputado_nombre,
-            u.username AS imputado_username,
-
-            CASE
-                WHEN ri.estado_asignacion = 'pend_aprobacion' THEN 'Pendiente aceptación del responsable'
-                WHEN ri.estado_asignacion = 'rechazado' THEN 'Imputación rechazada'
-                WHEN ri.estado_asignacion = 'aprobado' AND ri.estado_respuesta = 'sin_respuesta' THEN 'Pendiente respuesta del imputado'
-                WHEN ri.estado_asignacion = 'aprobado' AND ri.estado_respuesta = 'pendiente_jefe' THEN 'Respuesta pendiente de aprobación'
-                WHEN ri.estado_asignacion = 'aprobado' AND ri.estado_respuesta = 'aprobada' THEN 'Cerrado'
-                WHEN ri.estado_asignacion = 'aprobado' AND ri.estado_respuesta = 'rechazada' THEN 'Respuesta rechazada'
-                ELSE COALESCE(ri.estado_asignacion,'') || '/' || COALESCE(ri.estado_respuesta,'')
-            END AS estado_imputacion,
-
-            COALESCE(ri.respuesta_causa, '')      AS causa,
-            COALESCE(ri.respuesta_preventiva, '') AS preventiva,
-            COALESCE(ri.respuesta_correctiva, '') AS correctiva,
-
-            -- ✅ FECHAS (las que ya agregaste)
-            COALESCE(ri.fecha_causa,'')           AS fecha_causa,
-            COALESCE(ri.fecha_preventiva,'')      AS fecha_preventiva,
-            COALESCE(ri.fecha_correctiva,'')      AS fecha_correctiva,
-
-            -- ✅ PARA EL OJO (diagrama)
-            COALESCE(ri.metodo_analisis,'')       AS metodo_analisis,
-            COALESCE(ri.why1,'')                  AS why1,
-            COALESCE(ri.why2,'')                  AS why2,
-            COALESCE(ri.why3,'')                  AS why3,
-            COALESCE(ri.why4,'')                  AS why4,
-            COALESCE(ri.why5,'')                  AS why5,
-            COALESCE(ri.fish_metodo,'')           AS fish_metodo,
-            COALESCE(ri.fish_maquinas,'')         AS fish_maquinas,
-            COALESCE(ri.fish_materiales,'')       AS fish_materiales,
-            COALESCE(ri.fish_personas,'')         AS fish_personas,
-            COALESCE(ri.fish_entorno,'')          AS fish_entorno,
-            COALESCE(ri.fish_medicion,'')         AS fish_medicion
-
-        FROM reclamo_imputados ri
-        LEFT JOIN usuarios u ON u.id = ri.imputado_id
-        WHERE ri.reclamo_id = ?
-        ORDER BY imputado_nombre, imputado_username
-    """, (reclamo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_44, (reclamo_id,))
 
 
         items = [dict(r) for r in cur.fetchall()]
@@ -4902,66 +4425,7 @@ def register_reclamos_routes(app):
         # =====================================================
         # RESPUESTAS OFICIALES: SPONSOR / IMPUTADO
         # =====================================================
-        cur.execute("""
-            SELECT
-                'imputado' AS origen,
-                ri.id AS imputacion_id,
-                NULL AS respuesta_equipo_id,
-                NULL AS miembro_id,
-
-                COALESCE(u.nombre_completo, u.username) AS nombre,
-                u.username AS username,
-
-                CASE
-                    WHEN ri.estado_asignacion = 'pend_aprobacion'
-                        THEN 'Pendiente aceptación del responsable'
-                    WHEN ri.estado_asignacion = 'rechazado'
-                        THEN 'Imputación rechazada'
-                    WHEN ri.estado_asignacion = 'aprobado'
-                        AND COALESCE(ri.estado_respuesta, '') = 'sin_respuesta'
-                        THEN 'Pendiente respuesta del imputado'
-                    WHEN ri.estado_asignacion = 'aprobado'
-                        AND COALESCE(ri.estado_respuesta, '') = 'pendiente_jefe'
-                        THEN 'Respuesta pendiente de aprobación'
-                    WHEN ri.estado_asignacion = 'aprobado'
-                        AND COALESCE(ri.estado_respuesta, '') = 'aprobada'
-                        THEN 'Cerrado'
-                    WHEN ri.estado_asignacion = 'aprobado'
-                        AND COALESCE(ri.estado_respuesta, '') = 'rechazada'
-                        THEN 'Respuesta rechazada'
-                    ELSE COALESCE(ri.estado_asignacion, '') + '/' + COALESCE(ri.estado_respuesta, '')
-                END AS estado,
-
-                COALESCE(ri.metodo_analisis, '') AS metodo_analisis,
-                COALESCE(ri.why1, '') AS why1,
-                COALESCE(ri.why2, '') AS why2,
-                COALESCE(ri.why3, '') AS why3,
-                COALESCE(ri.why4, '') AS why4,
-                COALESCE(ri.why5, '') AS why5,
-
-                COALESCE(ri.fish_metodo, '') AS fish_metodo,
-                COALESCE(ri.fish_maquinas, '') AS fish_maquinas,
-                COALESCE(ri.fish_materiales, '') AS fish_materiales,
-                COALESCE(ri.fish_personas, '') AS fish_personas,
-                COALESCE(ri.fish_entorno, '') AS fish_entorno,
-                COALESCE(ri.fish_medicion, '') AS fish_medicion,
-
-                COALESCE(ri.respuesta_causa, '') AS respuesta_causa,
-                COALESCE(ri.respuesta_preventiva, '') AS respuesta_preventiva,
-                COALESCE(ri.respuesta_correctiva, '') AS respuesta_correctiva,
-
-                COALESCE(ri.fecha_causa, '') AS fecha_causa,
-                COALESCE(ri.fecha_preventiva, '') AS fecha_preventiva,
-                COALESCE(ri.fecha_correctiva, '') AS fecha_correctiva,
-
-                COALESCE(ri.estado_asignacion, '') AS estado_asignacion_raw,
-                COALESCE(ri.estado_respuesta, '') AS estado_respuesta_raw
-
-            FROM reclamo_imputados ri
-            LEFT JOIN usuarios u ON u.id = ri.imputado_id
-            WHERE ri.reclamo_id = ?
-            ORDER BY COALESCE(u.nombre_completo, u.username), ri.id
-        """, (reclamo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_45, (reclamo_id,))
 
         imputados = cur.fetchall()
 
@@ -5026,45 +4490,7 @@ def register_reclamos_routes(app):
         # =====================================================
         # RESPUESTAS DEL EQUIPO
         # =====================================================
-        cur.execute("""
-            SELECT
-                'equipo' AS origen,
-                rre.imputacion_id,
-                rre.id AS respuesta_equipo_id,
-                rre.miembro_id,
-
-                COALESCE(u.nombre_completo, u.username) AS nombre,
-                u.username AS username,
-                'Aporte de equipo' AS estado,
-
-                COALESCE(rre.metodo_analisis, '') AS metodo_analisis,
-                COALESCE(rre.why1, '') AS why1,
-                COALESCE(rre.why2, '') AS why2,
-                COALESCE(rre.why3, '') AS why3,
-                COALESCE(rre.why4, '') AS why4,
-                COALESCE(rre.why5, '') AS why5,
-
-                COALESCE(rre.fish_metodo, '') AS fish_metodo,
-                COALESCE(rre.fish_maquinas, '') AS fish_maquinas,
-                COALESCE(rre.fish_materiales, '') AS fish_materiales,
-                COALESCE(rre.fish_personas, '') AS fish_personas,
-                COALESCE(rre.fish_entorno, '') AS fish_entorno,
-                COALESCE(rre.fish_medicion, '') AS fish_medicion,
-
-                COALESCE(rre.causa, '') AS causa,
-                COALESCE(rre.preventiva, '') AS preventiva,
-                COALESCE(rre.correctiva, '') AS correctiva,
-
-                COALESCE(rre.fecha_causa, '') AS fecha_causa,
-                COALESCE(rre.fecha_preventiva, '') AS fecha_preventiva,
-                COALESCE(rre.fecha_correctiva, '') AS fecha_correctiva
-
-            FROM reclamo_respuestas_equipo rre
-            LEFT JOIN usuarios u ON u.id = rre.miembro_id
-            WHERE rre.reclamo_id = ?
-            AND COALESCE(rre.activo, 1) = 1
-            ORDER BY COALESCE(u.nombre_completo, u.username), rre.id
-        """, (reclamo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_46, (reclamo_id,))
 
         equipo_rows = cur.fetchall()
 
@@ -5141,15 +4567,7 @@ def register_reclamos_routes(app):
         cumplido = 1 if data.get("cumplido") else 0
         fecha = data.get("fecha_cumplimiento")
 
-        cur.execute("""
-            UPDATE reclamo_respuesta_equipo_acciones
-            SET
-                cumplido = ?,
-                fecha_cumplimiento = ?,
-                updated_at = CURRENT_TIMESTAMP,
-                updated_by = ?
-            WHERE id = ?
-        """, (
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_47, (
             cumplido,
             fecha,
             session.get("usuario_id"),
@@ -5174,17 +4592,7 @@ def register_reclamos_routes(app):
             evidencia_id
         )
 
-        row = db.execute("""
-            SELECT TOP 1
-                e.id,
-                e.accion_id,
-                e.filename,
-                e.original_name,
-                COALESCE(e.content_type, '') AS content_type,
-                COALESCE(e.activo, 1) AS activo
-            FROM reclamo_respuesta_equipo_accion_evidencias e
-            WHERE e.id = ?
-        """, (evidencia_id,)).fetchone()
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_48, (evidencia_id,)).fetchone()
 
         current_app.logger.info(
             "ROW EVIDENCIA EQUIPO -> %s",
@@ -5230,25 +4638,7 @@ def register_reclamos_routes(app):
         if not uid:
             return redirect(url_for("login"))
 
-        row = db.execute("""
-            SELECT TOP 1
-                e.id,
-                e.accion_id,
-                e.filename,
-                e.original_name,
-                COALESCE(e.content_type, '') AS content_type,
-                rea.respuesta_equipo_id,
-                rre.reclamo_id,
-                rre.imputacion_id,
-                rre.miembro_id
-            FROM reclamo_respuesta_equipo_accion_evidencias e
-            INNER JOIN reclamo_respuesta_equipo_acciones rea
-                ON rea.id = e.accion_id
-            INNER JOIN reclamo_respuestas_equipo rre
-                ON rre.id = rea.respuesta_equipo_id
-            WHERE e.id = ?
-            AND COALESCE(e.activo, 1) = 1
-        """, (evidencia_id,)).fetchone()
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_49, (evidencia_id,)).fetchone()
 
         if not row:
             abort(404)
@@ -5259,24 +4649,9 @@ def register_reclamos_routes(app):
 
         can_view_all = _can_view_all_reclamos(db, uid)
 
-        row_owner = db.execute("""
-            SELECT TOP 1 1 AS ok
-            FROM reclamo_imputados
-            WHERE id = ?
-            AND reclamo_id = ?
-            AND imputado_id = ?
-            AND estado_asignacion = 'aprobado'
+        row_owner = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_50, (imputacion_id, reclamo_id, uid)).fetchone()
 
-        """, (imputacion_id, reclamo_id, uid)).fetchone()
-
-        row_team_member = db.execute("""
-            SELECT TOP 1 1 AS ok
-            FROM reclamo_equipo_respuestas
-            WHERE reclamo_id = ?
-            AND imputacion_id = ?
-            AND usuario_id = ?
-            AND activo = 1
-        """, (reclamo_id, imputacion_id, uid)).fetchone()
+        row_team_member = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_24, (reclamo_id, imputacion_id, uid)).fetchone()
 
         is_same_member = (uid == miembro_id)
 
@@ -5323,18 +4698,7 @@ def register_reclamos_routes(app):
         path = os.path.join(folder, filename)
         file.save(path)
 
-        cur.execute("""
-            INSERT INTO reclamo_respuesta_equipo_accion_evidencias (
-                accion_id,
-                filename,
-                original_name,
-                content_type,
-                size_bytes,
-                creado_por,
-                created_at
-            )
-            VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-        """, (
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_51, (
             accion_id,
             filename,
             file.filename,
@@ -5358,26 +4722,7 @@ def register_reclamos_routes(app):
         db = get_db()
         cur = db.cursor()
 
-        cur.execute("""
-            SELECT
-                a.id,
-                a.tipo,
-                a.descripcion,
-                a.fecha_compromiso,
-                a.cumplido,
-                a.fecha_cumplimiento,
-                a.requiere_evidencia,
-
-                COUNT(e.id) AS evidencias
-            FROM reclamo_respuesta_equipo_acciones a
-            LEFT JOIN reclamo_respuesta_equipo_accion_evidencias e
-                ON e.accion_id = a.id
-                AND e.activo = 1
-            WHERE a.respuesta_equipo_id = ?
-            AND a.activo = 1
-            GROUP BY a.id
-            ORDER BY a.orden
-        """, (respuesta_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_52, (respuesta_id,))
 
         rows = [dict(r) for r in cur.fetchall()]
 
@@ -5409,12 +4754,7 @@ def register_reclamos_routes(app):
         if _is_admin_like():
             puede_crear_materiales = True
         elif uid:
-            cur.execute("""
-                SELECT p.nombre
-                FROM usuarios u
-                LEFT JOIN puestos p ON p.id = u.puesto_id
-                WHERE u.id = ?
-            """, (uid,))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_53, (uid,))
             row_p = cur.fetchone()
             if row_p and row_p["nombre"]:
                 nombre_puesto = row_p["nombre"].strip().upper()
@@ -5499,18 +4839,9 @@ def register_reclamos_routes(app):
         def _get_param_int_by_id(conn, pv_id: int, default: int) -> int:
             cur2 = conn.cursor()
             if is_sqlserver:
-                cur2.execute("""
-                    SELECT TOP 1 valor
-                    FROM param_values
-                    WHERE id = ? AND activo = 1
-                """, (pv_id,))
+                cur2.execute(SQL__GET_PARAM_INT_BY_ID_SEL_SS, (pv_id,))
             else:
-                cur2.execute("""
-                    SELECT TOP 1valor
-                    FROM param_values
-                    WHERE id = ? AND activo = 1
-                   
-                """, (pv_id,))
+                cur2.execute(SQL__GET_PARAM_INT_BY_ID_SEL_SL, (pv_id,))
             row = cur2.fetchone()
             if not row:
                 return default
@@ -5693,7 +5024,11 @@ def register_reclamos_routes(app):
                             AND eq2.activo = 1
                             FOR XML PATH(''), TYPE
                         ).value('.', 'NVARCHAR(MAX)'), 1, 2, '')
-                    ) AS equipo_resumen
+                    ) AS equipo_resumen,
+                    r.requiere_carta_cliente,
+                    r.carta_cliente_notif_at,
+                    r.creado_por,
+                    COALESCE(r.validacion_creador, '') AS validacion_creador
 
                 FROM reclamos r
                 OUTER APPLY (
@@ -5816,11 +5151,16 @@ def register_reclamos_routes(app):
                         OR EXISTS (
                             SELECT 1
                             FROM param_values pvs
-                            JOIN param_groups pgs ON pgs.id = pvs.group_id
+                            JOIN param_groups pgs
+                            ON pgs.id = pvs.group_id
+                            JOIN usuarios uspv
+                            ON LTRIM(RTRIM(uspv.identificacion)) = LTRIM(RTRIM(pvs.nombre))
                             WHERE pgs.nombre = 'RECL_PROCESO_SPONSOR'
                             AND COALESCE(pvs.activo, 1) = 1
                             AND pvs.parent_id = r.proceso_id
-                            AND TRY_CAST(pvs.nombre AS BIGINT) = ?
+                            AND uspv.id = ?
+                            AND COALESCE(uspv.disabled, 0) = 0
+                            AND UPPER(LTRIM(RTRIM(COALESCE(pvs.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
                         )
                     )
                 """
@@ -5898,7 +5238,9 @@ def register_reclamos_routes(app):
                             AND eq2.activo = 1
                             FOR XML PATH(''), TYPE
                         ).value('.', 'NVARCHAR(MAX)'), 1, 2, '')
-                    ) AS equipo_resumen
+                    ) AS equipo_resumen,
+                r.requiere_carta_cliente,
+                r.carta_cliente_notif_at
 
                 FROM reclamo_imputados ri
                 JOIN reclamos r ON r.id = ri.reclamo_id
@@ -6042,12 +5384,14 @@ def register_reclamos_routes(app):
                     END AS estado_equipo,
 
                     COALESCE(us.nombre_completo, us.username, '') AS sponsor,
-                    r.estado_global
+                    r.estado_global,
+                    COALESCE(ucr.nombre_completo, ucr.username, '') AS creador_nombre
 
                 FROM reclamo_equipo_respuestas eq
                 JOIN reclamos r ON r.id = eq.reclamo_id
                 LEFT JOIN reclamo_imputados ri ON ri.id = eq.imputacion_id
                 LEFT JOIN usuarios us ON us.id = ri.imputado_id
+                LEFT JOIN usuarios ucr ON ucr.id = r.creado_por
                 LEFT JOIN param_groups gtr ON gtr.nombre = 'RECL_TIPO'
                 LEFT JOIN param_values tr ON tr.group_id = gtr.id AND tr.nombre = r.tipo_reclamo
                 LEFT JOIN param_groups gtt ON gtt.nombre = 'RECL_TRAMITE'
@@ -6083,22 +5427,9 @@ def register_reclamos_routes(app):
         def _get_gerente_general_email(conn):
             cur2 = conn.cursor()
             if is_sqlserver:
-                cur2.execute("""
-                    SELECT TOP 1 email
-                    FROM usuarios
-                    WHERE LOWER(LTRIM(RTRIM(rol))) = 'gerente general'
-                    AND email IS NOT NULL
-                    AND LTRIM(RTRIM(email)) <> ''
-                """)
+                cur2.execute(SQL__GET_GERENTE_GENERAL_EMAIL_SEL_SS)
             else:
-                cur2.execute("""
-                    SELECT  TOP 1 email
-                    FROM usuarios
-                    WHERE LOWER(TRIM(rol)) = 'gerente general'
-                    AND email IS NOT NULL
-                    AND TRIM(email) <> ''
-                   
-                """)
+                cur2.execute(SQL__GET_GERENTE_GENERAL_EMAIL_SEL_SL)
             row = cur2.fetchone()
             return row["email"] if row else None
 
@@ -6110,39 +5441,9 @@ def register_reclamos_routes(app):
             cur2 = conn.cursor()
 
             if is_sqlserver:
-                cur2.execute("""
-                    SELECT r.id, r.codigo, r.fecha_reclamo, COALESCE(r.cliente_nombre,'') AS cliente_nombre
-                    FROM reclamos r
-                    WHERE COALESCE(r.gg_notificado,0) = 0
-                    AND r.id IN (
-                            SELECT ri.reclamo_id
-                            FROM reclamo_imputados ri
-                            WHERE ri.estado_asignacion = 'aprobado'
-                            AND ri.estado_respuesta = 'sin_respuesta'
-                    )
-                    AND DATEDIFF(
-                            DAY,
-                            CAST(TRY_CONVERT(date, r.fecha_reclamo) AS date),
-                            CAST(GETDATE() AS date)
-                    ) >= ?
-                    ORDER BY r.id DESC
-                """, (dias_alerta,))
+                cur2.execute(SQL__NOTIFY_GG_IF_NEEDED_SEL_SS, (dias_alerta,))
             else:
-                cur2.execute("""
-                    SELECT r.id, r.codigo, r.fecha_reclamo, COALESCE(r.cliente_nombre,'') AS cliente_nombre
-                    FROM reclamos r
-                    WHERE COALESCE(r.gg_notificado,0) = 0
-                    AND r.id IN (
-                            SELECT ri.reclamo_id
-                            FROM reclamo_imputados ri
-                            WHERE ri.estado_asignacion = 'aprobado'
-                            AND ri.estado_respuesta = 'sin_respuesta'
-                    )
-                    AND (
-                            CAST(julianday('now') - julianday(substr(r.fecha_reclamo,1,10)) AS INTEGER) >= ?
-                    )
-                    ORDER BY r.id DESC
-                """, (dias_alerta,))
+                cur2.execute(SQL__NOTIFY_GG_IF_NEEDED_SEL_SL, (dias_alerta,))
 
             rows = cur2.fetchall()
             if not rows:
@@ -6183,7 +5484,8 @@ def register_reclamos_routes(app):
         equipo_list   = _enrich_deadline(equipo_list, dias_plazo)
 
         # _notify_gg_if_needed(conn, dias_alerta=5)
-
+        puede_eliminar_om = _can_delete_om(conn, uid)
+        puede_subir_carta_cliente = _can_upload_carta_cliente(conn, uid)
         conn.close()
 
         return render_template(
@@ -6207,8 +5509,11 @@ def register_reclamos_routes(app):
             productos=productos,
             equipo_list=equipo_list,
             filtros=filtros,
-            active_page='reclamos'
-        ) 
+            puede_eliminar_om=puede_eliminar_om,
+            active_page='reclamos',
+            puede_subir_carta_cliente=puede_subir_carta_cliente,
+            current_user_id=int(uid) if uid else None
+        )
 
  # ----------------------------------------------
 # EXPORTAR A EXCEL - RECLAMOS DONDE INTERVIENE EL USUARIO
@@ -6753,12 +6058,7 @@ def register_reclamos_routes(app):
 
         # Permisos:
         if not _is_admin_like():
-            cur.execute("""
-                SELECT p.nombre
-                FROM usuarios u
-                LEFT JOIN puestos p ON p.id = u.puesto_id
-                WHERE u.id = ?
-            """, (uid,))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_53, (uid,))
             row_p = cur.fetchone()
             nombre_puesto = (row_p["nombre"] if row_p and row_p["nombre"] else "").strip().upper()
             if nombre_puesto != "CORRDINADOR(A) SERVICIO AL CLIENTE":
@@ -6775,33 +6075,19 @@ def register_reclamos_routes(app):
         codigo = base
         contador = 1
         while True:
-            cur.execute("""
-                SELECT 1
-                FROM param_values pv
-                JOIN param_groups pg ON pg.id = pv.group_id
-                WHERE pg.nombre = 'RECL_MATERIAL'
-                  AND pv.nombre = ?
-            """, (codigo,))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_54, (codigo,))
             if not cur.fetchone():
                 break
             contador += 1
             codigo = f"{base}_{contador}"
 
-        cur.execute("""
-            SELECT COALESCE(MAX(pv.orden), 0) + 1 AS next_ord
-            FROM param_values pv
-            JOIN param_groups pg ON pg.id = pv.group_id
-            WHERE pg.nombre = 'RECL_MATERIAL'
-        """)
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_55)
         row = cur.fetchone()
         next_ord = row["next_ord"] if row else 1
 
         gid = _ensure_param_group(conn, "RECL_MATERIAL", "Materiales de reclamos")
 
-        cur.execute("""
-            INSERT INTO param_values (group_id, nombre, valor, activo, orden)
-            VALUES (?, ?, ?, 1, ?)
-        """, (gid, codigo, nombre, next_ord))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_56, (gid, codigo, nombre, next_ord))
         mid = cur.lastrowid
 
         conn.commit()
@@ -6829,7 +6115,7 @@ def register_reclamos_routes(app):
     @require_login
     @require_permission('reclamos', 'crear')
     def reclamos_nuevo():
-        print("DEBUG NUEVO RECLAMO:", dict(request.form))   # 👈 agrega esta línea
+        print("DEBUG NUEVO RECLAMO:", dict(request.form))
 
         uid = _current_user_id()
         if not uid:
@@ -6837,7 +6123,7 @@ def register_reclamos_routes(app):
             return redirect(url_for('reclamos'))
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
+        # ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         fecha_reclamo = (request.form.get('fecha_reclamo') or '').strip()
@@ -6856,21 +6142,22 @@ def register_reclamos_routes(app):
         tipo_tramite = (request.form.get('tipo_tramite') or '').strip()
         tipo_reclamo = (request.form.get('tipo_reclamo') or '').strip()
 
-        proceso_id_raw = (request.form.get('proceso_id') or '').strip()
-        proceso_id = int(proceso_id_raw) if proceso_id_raw.isdigit() else None
+        proceso_ids_raw = request.form.getlist('proceso_id')
+        proceso_ids = [int(v) for v in proceso_ids_raw if v.strip().isdigit()]
+        proceso_id = proceso_ids[0] if proceso_ids else None
 
         proceso_text = (request.form.get('proceso_text') or '').strip()
 
-        if proceso_id:
-            cur.execute("""
-                SELECT TOP 1 valor
-                FROM param_values
-                WHERE id = ?
-                AND COALESCE(activo, 1) = 1
-            """, (proceso_id,))
-            row_proc = cur.fetchone()
-            if row_proc and row_proc["valor"]:
-                proceso_text = row_proc["valor"].strip()
+        if proceso_ids:
+            textos = []
+            for pid in proceso_ids:
+                cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_57, (pid,))
+                row_proc = cur.fetchone()
+                if row_proc and row_proc["valor"]:
+                    textos.append(row_proc["valor"].strip())
+            if textos:
+                proceso_text = ', '.join(textos)
+
         antecedente = (request.form.get('antecedente') or '').strip()
         antecedente_raw = (request.form.get('antecedente') or '').strip()
         antecedente = antecedente_raw
@@ -6884,6 +6171,7 @@ def register_reclamos_routes(app):
                     antecedente = row_sub["valor"].strip()
             except Exception:
                 pass
+
         fecha_pedido = (request.form.get('fecha_pedido') or '').strip()
         factura = (request.form.get('factura') or '').strip()
         guia_remision = (request.form.get('guia_remision') or '').strip()
@@ -6905,31 +6193,11 @@ def register_reclamos_routes(app):
 
         observacion = (request.form.get('observacion') or '').strip()
         procede = (request.form.get('procede') or '').strip()
-
+        requiere_carta_cliente = 1 if (request.form.get('requiere_carta_cliente') or '').strip() == '1' else 0
         codigo = _generate_codigo_reclamo(conn)
         archivos = request.files.getlist('adjuntos')
 
-        cur.execute("""
-            INSERT INTO reclamos(
-                codigo, fecha_reclamo, fecha_creacion,
-                cliente_id, cliente_nombre, cliente_identificacion,
-                cliente_direccion, cliente_contacto, cliente_email, cliente_telefono,
-                region_id, provincia_id, canton_id,
-                tipo_tramite, tipo_reclamo,
-                proceso_id, proceso_text, antecedente,
-                fecha_pedido, factura, guia_remision,
-                material_id, material_desc,
-                persona_atendio, persona_atendio_cedula,
-                fecha_ofrec_entrega, fecha_entrega,
-                observacion,
-                procede,
-                creado_por,
-                estado_global
-            )
-            OUTPUT INSERTED.id
-            
-            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-                            """, (
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_58, (
             codigo,
             _now_iso(),
             _now_iso(),
@@ -6944,33 +6212,54 @@ def register_reclamos_routes(app):
             fecha_ofrec_entrega, fecha_entrega,
             observacion,
             procede,
+            requiere_carta_cliente,
+            None,
             uid,
             'abierto'
         ))
-
         row_new = cur.fetchone()
         reclamo_id = row_new["id"] if row_new and row_new["id"] is not None else None
 
         if reclamo_id is None:
             conn.rollback()
             flash("No se pudo recuperar el ID del reclamo creado.", "danger")
-            return redirect(url_for('reclamos'))     
+            return redirect(url_for('reclamos'))
 
+        # =========================================================
+        # IMPUTADOS / SPONSOR RESPONSABLE
+        # =========================================================
         imputados_ids = request.form.getlist('imputados[]')
 
-        if proceso_id:
-            sponsors_proceso = _get_sponsors_by_proceso(conn, proceso_id)
+        # Lista separada SOLO para notificaciones.
+        # Esto evita crear dos líneas, pero permite notificar principal + backup.
+        sponsor_notify_ids = []
 
-            # Si quieres que SIEMPRE notifique principal + backup del proceso:
-            imputados_ids = sponsors_proceso
+        if proceso_ids:
+            seen_principals = set()
+            seen_notify = set()
+            collected_principals = []
+            collected_notify = []
 
-            # Si quieres mezclar lo que venga del front + sponsors:
-            # imputados_ids = list(dict.fromkeys([*imputados_ids, *sponsors_proceso]))
+            for pid in proceso_ids:
+                sp = _get_sponsor_principal_by_proceso(conn, pid)
+                if sp and sp not in seen_principals:
+                    seen_principals.add(sp)
+                    collected_principals.append(str(sp))
+                for nid in _get_sponsors_by_proceso(conn, pid):
+                    if nid not in seen_notify:
+                        seen_notify.add(nid)
+                        collected_notify.append(nid)
+
+            imputados_ids = collected_principals
+            sponsor_notify_ids = collected_notify
 
         if not imputados_ids:
             conn.rollback()
-            flash("El proceso seleccionado no tiene sponsor principal ni backup configurado.", "danger")
+            flash("Los procesos seleccionados no tienen sponsor principal configurado.", "danger")
             return redirect(url_for('reclamos'))
+
+        responsable_username = None
+        sponsor_principal_id_creado = None
 
         for raw_uid in imputados_ids:
             try:
@@ -6981,32 +6270,114 @@ def register_reclamos_routes(app):
             # ✅ Ahora el aprobador ES el mismo imputado
             aprobador_id = imputado_id
 
-            cur.execute("""
-                INSERT INTO reclamo_imputados(
-                    reclamo_id,
-                    imputado_id,
-                    aprobador_id,
-                    estado_asignacion,
-                    estado_respuesta
-                )
-                VALUES(?,?,?,?,?)
-            """, (
-                    reclamo_id,
-                    imputado_id,
-                    aprobador_id,
-                    'aprobado',
-                    'sin_respuesta'
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_59, (
+                reclamo_id,
+                imputado_id,
+                aprobador_id,
+                'aprobado',
+                'sin_respuesta'
             ))
 
             imp_user = _get_user_basic(conn, imputado_id)
-            # Sigue notificando al aprobador (que ahora es el propio imputado)
-            _notify_aprobador_imputacion(
-                conn,
-                aprobador_id,
-                codigo,
-                imp_user["username"] if imp_user else f"UID {imputado_id}"
-            )
-    # Guardar adjuntos (si los hay)
+
+            if responsable_username is None:
+                responsable_username = imp_user["username"] if imp_user else f"UID {imputado_id}"
+
+            if sponsor_principal_id_creado is None:
+                sponsor_principal_id_creado = imputado_id
+
+            # IMPORTANTE:
+            # Ya no enviamos el correo aquí, porque aquí solo está el principal.
+            # El envío se hace abajo usando sponsor_notify_ids para incluir backup.
+
+        # =========================================================
+        # NOTIFICACIÓN PRINCIPAL + BACKUP
+        # =========================================================
+        # Si hay proceso, notificamos a los sponsors configurados:
+        # PRINCIPAL + BACKUP.
+        #
+        # Si no hay proceso, conservamos el comportamiento anterior:
+        # notificar a los imputados manuales.
+        # =========================================================
+        if proceso_id:
+            ids_para_notificar = sponsor_notify_ids
+        else:
+            ids_para_notificar = imputados_ids
+
+        # Datos completos de la OM para el payload del correo
+        try:
+            from modules.scheduler_jobs import enqueue_om_nueva_registro, ensure_om_evento_templates
+            ensure_om_evento_templates(conn)
+
+            _cur_om = conn.cursor()
+            _cur_om.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (codigo,))
+            _r_om = _cur_om.fetchone()
+
+            try:
+                _cta_url = url_for("reclamos", _external=True) + "?tab=aprobar"
+            except Exception:
+                _cta_url = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=aprobar"
+
+            # Resumen de imputados para incluir en el correo
+            _cur_om.execute(SQL__NOTIFY_APROBADOR_IMPUTACION_SEL_1, (reclamo_id,))
+            _row_imp = _cur_om.fetchone()
+            _imputados_txt = (_row_imp["lista"] if _row_imp and _row_imp["lista"]
+                              else responsable_username or "")
+
+            _base_payload = {
+                "codigo":      codigo,
+                "fecha_om":    str(_r_om["fecha_reclamo"]) if _r_om else "",
+                "tipo_om":     str(_r_om["tipo_reclamo"])  if _r_om else "",
+                "tipo_tramite":str(_r_om["tipo_tramite"])  if _r_om else "",
+                "cliente":     str(_r_om["cliente_nombre"])if _r_om else "",
+                "proceso":     str(_r_om["proceso_text"])  if _r_om else "",
+                "material":    str(_r_om["material_desc"]) if (_r_om and "material_desc" in _r_om.keys()) else "",
+                "factura":     str(_r_om["factura"])       if _r_om else "",
+                "observacion": str(_r_om["observacion"])   if _r_om else "",
+                "imputados":   _imputados_txt,
+                "cta_url":     _cta_url,
+            }
+            _use_queue = True
+        except Exception as _eq_err:
+            current_app.logger.warning("[nueva_om] enqueue setup error: %s", _eq_err)
+            _use_queue = False
+
+        enviados = set()
+
+        for raw_notify_id in ids_para_notificar:
+            try:
+                notify_user_id = int(raw_notify_id)
+            except Exception:
+                continue
+
+            if notify_user_id in enviados:
+                continue
+
+            enviados.add(notify_user_id)
+
+            if _use_queue:
+                try:
+                    dest = _get_user_basic(conn, notify_user_id)
+                    dest_nombre = (
+                        (dest.get("nombre_completo") or dest.get("username") or "")
+                        if dest else ""
+                    )
+                    p = dict(_base_payload)
+                    p["destinatario_nombre"] = dest_nombre
+                    enqueue_om_nueva_registro(conn,
+                        user_id=notify_user_id,
+                        reclamo_id=reclamo_id,
+                        payload=p,
+                    )
+                except Exception as _eq2:
+                    current_app.logger.warning("[nueva_om] enqueue fallback uid=%s: %s", notify_user_id, _eq2)
+                    _notify_aprobador_imputacion(conn, notify_user_id, codigo,
+                        responsable_username or f"UID {sponsor_principal_id_creado or notify_user_id}")
+            else:
+                _notify_aprobador_imputacion(conn, notify_user_id, codigo,
+                    responsable_username or f"UID {sponsor_principal_id_creado or notify_user_id}")
+
+        # Guardar adjuntos (si los hay)
         error_adj = _save_adjuntos_for_reclamo(conn, reclamo_id, archivos, uid)
         if error_adj:
             # No bloqueamos la creación de la OM, solo avisamos
@@ -7015,8 +6386,9 @@ def register_reclamos_routes(app):
         conn.commit()
         flash("Reclamo creado correctamente.", "success")
         return redirect(url_for('reclamos'))
- 
-
+    
+    
+    
     # ----------------------------------------------
     # APROBACIÓN / RECHAZO IMPUTACIÓN
     # ----------------------------------------------
@@ -7033,15 +6405,7 @@ def register_reclamos_routes(app):
         #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT ri.*, r.codigo, r.creado_por,
-                   u_imp.username AS imputado_username,
-                   u_imp.id AS imputado_uid
-            FROM reclamo_imputados ri
-            JOIN reclamos r ON r.id = ri.reclamo_id
-            LEFT JOIN usuarios u_imp ON u_imp.id = ri.imputado_id
-            WHERE ri.id = ?
-        """, (imp_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_60, (imp_id,))
         row = cur.fetchone()
 
         if not row:
@@ -7057,29 +6421,53 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, msg="La imputación ya fue gestionada"), 400
 
         if accion == "aprobar":
-            cur.execute("""
-                UPDATE reclamo_imputados
-                SET estado_asignacion='aprobado',
-                    fecha_aprobacion_asignacion=?,
-                    motivo_rechazo_asignacion=NULL,
-                    fecha_rechazo_asignacion=NULL
-                WHERE id=?
-            """, (_now_iso(), imp_id))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_61, (_now_iso(), imp_id))
 
-            _notify_imputado_aprobado(conn, row["imputado_uid"], row["codigo"])
+            try:
+                from modules.scheduler_jobs import enqueue_om_nueva_asignado, ensure_om_evento_templates
+                ensure_om_evento_templates(conn)
+
+                dest = _get_user_basic(conn, row["imputado_uid"])
+                dest_nombre = (
+                    (dest.get("nombre_completo") or dest.get("username") or "")
+                    if dest else ""
+                )
+                try:
+                    cta_url = url_for("reclamos", _external=True) + "?tab=imputado"
+                except Exception:
+                    cta_url = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=imputado"
+
+                cur2 = conn.cursor()
+                cur2.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (row["codigo"],))
+                r_om = cur2.fetchone()
+
+                enqueue_om_nueva_asignado(conn,
+                    user_id=row["imputado_uid"],
+                    reclamo_id=row["reclamo_id"],
+                    payload={
+                        "codigo": row["codigo"],
+                        "destinatario_nombre": dest_nombre,
+                        "fecha_om":    str(r_om["fecha_reclamo"]) if r_om else "",
+                        "tipo_om":     str(r_om["tipo_reclamo"])  if r_om else "",
+                        "tipo_tramite":str(r_om["tipo_tramite"])  if r_om else "",
+                        "cliente":     str(r_om["cliente_nombre"])if r_om else "",
+                        "proceso":     str(r_om["proceso_text"])  if r_om else "",
+                        "material":    str(r_om["material_desc"]) if (r_om and "material_desc" in r_om.keys()) else "",
+                        "factura":     str(r_om["factura"])       if r_om else "",
+                        "observacion": str(r_om["observacion"])   if r_om else "",
+                        "cta_url": cta_url,
+                    }
+                )
+            except Exception as _e:
+                current_app.logger.warning("[aprobar_imputacion] enqueue fallback: %s", _e)
+                _notify_imputado_aprobado(conn, row["imputado_uid"], row["codigo"])
 
         elif accion == "rechazar":
             if not motivo:
                 conn.close()
                 return jsonify(ok=False, msg="Motivo es obligatorio al rechazar"), 400
 
-            cur.execute("""
-                UPDATE reclamo_imputados
-                SET estado_asignacion='rechazado',
-                    fecha_rechazo_asignacion=?,
-                    motivo_rechazo_asignacion=?
-                WHERE id=?
-            """, (_now_iso(), motivo, imp_id))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_62, (_now_iso(), motivo, imp_id))
 
             _notify_creador_rechazo_asignacion(
                 conn,
@@ -7155,17 +6543,7 @@ def register_reclamos_routes(app):
         #ensure_reclamo_adjuntos_schema(conn)
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT a.id,
-                a.reclamo_id,
-                a.filename,
-                a.original_name,
-                r.codigo,
-                r.creado_por
-            FROM reclamo_adjuntos a
-            JOIN reclamos r ON r.id = a.reclamo_id
-            WHERE a.id = ?
-        """, (adj_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_63, (adj_id,))
         row = cur.fetchone()
 
         if not row:
@@ -7198,21 +6576,7 @@ def register_reclamos_routes(app):
         conn = get_db()
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT
-                a.id,
-                a.original_name,
-                a.content_type,
-                a.size_bytes,
-                a.created_at,
-                a.creado_por,
-                COALESCE(u.nombre_completo, u.username) AS cargado_por
-            FROM reclamo_adjuntos a
-            LEFT JOIN usuarios u
-                ON u.id = a.creado_por
-            WHERE a.reclamo_id = ?
-            ORDER BY a.id
-        """, (reclamo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_64, (reclamo_id,))
 
         rows = []
         for r in cur.fetchall():
@@ -7236,13 +6600,7 @@ def register_reclamos_routes(app):
         #ensure_reclamo_adjuntos_schema(conn)
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT
-                id, reclamo_id, filename, original_name,
-                content_type
-            FROM reclamo_adjuntos
-            WHERE id = ?
-        """, (adj_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_65, (adj_id,))
         row = cur.fetchone()
         conn.close()
 
@@ -7351,36 +6709,24 @@ def register_reclamos_routes(app):
 
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT
-                ri.*,
-                r.id        AS reclamo_id,
-                r.codigo    AS codigo,
-                r.creado_por AS creado_por,
-
-                u_apr.username AS aprobador_username,
-                u_apr.id       AS aprobador_uid,
-
-                u_imp.username AS imputado_username,
-
-                u_cre.email    AS creador_email,
-                u_cre.username AS creador_username,
-                u_cre.nombre_completo AS creador_nombre
-
-            FROM reclamo_imputados ri
-            JOIN reclamos r          ON r.id = ri.reclamo_id
-            LEFT JOIN usuarios u_imp ON u_imp.id = ri.imputado_id
-            LEFT JOIN usuarios u_apr ON u_apr.id = ri.aprobador_id
-            LEFT JOIN usuarios u_cre ON u_cre.id = r.creado_por
-            WHERE ri.id = ?
-        """, (imp_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_66, (imp_id,))
+        
+        
         row = cur.fetchone()
 
         if not row:
             conn.close()
             return jsonify(ok=False, msg="Imputación no encontrada"), 404
 
-        if row["imputado_id"] != uid and (not _is_admin_like()):
+        es_imputado_principal = int(row["imputado_id"] or 0) == int(uid or 0)
+
+        es_sponsor_backup_o_principal = _usuario_es_sponsor_del_proceso(
+            conn,
+            row["proceso_id"],
+            uid
+        )
+
+        if not (es_imputado_principal or es_sponsor_backup_o_principal or _is_admin_like()):
             conn.close()
             return jsonify(ok=False, msg="No autorizado"), 403
 
@@ -7431,34 +6777,7 @@ def register_reclamos_routes(app):
         fecha_correctiva = _safe_str((correctiva_items[0] or {}).get("fecha_compromiso")) if correctiva_items else ""
 
         # ===== GUARDAR CABECERA OFICIAL =====
-        cur.execute("""
-            UPDATE reclamo_imputados
-            SET metodo_analisis            = ?,
-                respuesta_causa            = ?,
-                fecha_causa                = ?,
-                respuesta_preventiva       = ?,
-                fecha_preventiva           = ?,
-                respuesta_correctiva       = ?,
-                fecha_correctiva           = ?,
-                why1                       = ?,
-                why2                       = ?,
-                why3                       = ?,
-                why4                       = ?,
-                why5                       = ?,
-                fish_metodo                = ?,
-                fish_maquinas              = ?,
-                fish_materiales            = ?,
-                fish_personas              = ?,
-                fish_entorno               = ?,
-                fish_medicion              = ?,
-                fecha_respuesta_imputado   = ?,
-                estado_respuesta           = 'aprobada',
-                fecha_aprobacion_respuesta = ?,
-                motivo_rechazo_respuesta   = NULL,
-                fecha_rechazo_respuesta    = NULL,
-                visible_creador            = 1
-            WHERE id = ?
-        """, (
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_67, (
             metodo,
             respuesta_causa, fecha_causa,
             respuesta_preventiva, fecha_preventiva,
@@ -7471,15 +6790,7 @@ def register_reclamos_routes(app):
         ))
 
         # ===== GUARDAR DETALLE EN TABLA HIJA =====
-        cur.execute("""
-            UPDATE reclamo_imputado_acciones
-            SET activo = 0,
-                updated_at = ?,
-                updated_by = ?
-            WHERE imputacion_id = ?
-            AND reclamo_id = ?
-            AND COALESCE(activo,1) = 1
-        """, (now_iso, uid, imp_id, reclamo_id))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_68, (now_iso, uid, imp_id, reclamo_id))
 
         def _insert_items(tipo, items, requiere_evidencia_default=0):
             orden = 1
@@ -7490,26 +6801,7 @@ def register_reclamos_routes(app):
                 if not descripcion and not fecha_compromiso:
                     continue
 
-                cur.execute("""
-                    INSERT INTO reclamo_imputado_acciones (
-                        imputacion_id,
-                        reclamo_id,
-                        tipo,
-                        descripcion,
-                        fecha_compromiso,
-                        orden,
-                        requiere_evidencia,
-                        cumplido,
-                        fecha_cumplimiento,
-                        created_at,
-                        created_by,
-                        updated_at,
-                        updated_by,
-                        activo,
-                        observacion_cumplimiento
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, 0, NULL, ?, ?, ?, ?, 1, '')
-                """, (
+                cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_69, (
                     imp_id,
                     reclamo_id,
                     tipo,
@@ -7527,22 +6819,12 @@ def register_reclamos_routes(app):
         _insert_items("CORRECTIVA", correctiva_items, 1)
 
         # ===== CIERRE DE OM =====
-        cur.execute("""
-            SELECT COUNT(*) AS pend
-            FROM reclamo_imputados
-            WHERE reclamo_id = ?
-            AND estado_asignacion = 'aprobado'
-            AND COALESCE(TRIM(estado_respuesta),'') <> 'aprobada'
-        """, (reclamo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_70, (reclamo_id,))
         rowp = cur.fetchone()
         pend = int((rowp["pend"] if rowp else 0) or 0)
 
         if pend == 0:
-            cur.execute("""
-                UPDATE reclamos
-                SET estado_global = 'cerrado'
-                WHERE id = ?
-            """, (reclamo_id,))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_71, (reclamo_id,))
 
         try:
             _notify_creador_respuesta_aprobada(
@@ -7582,11 +6864,7 @@ def register_reclamos_routes(app):
         cur = conn.cursor()
 
         # Validar existencia + estado global
-        cur.execute("""
-            SELECT id, codigo, COALESCE(LOWER(TRIM(estado_global)), '') AS estado_global
-            FROM reclamos
-            WHERE id = ?
-        """, (reclamo_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_72, (reclamo_id,))
         r = cur.fetchone()
 
         if not r:
@@ -7604,12 +6882,7 @@ def register_reclamos_routes(app):
 
         # Borrado en cascada (manual)
         try:
-            cur.execute("""
-                DELETE FROM reclamo_equipo_acciones
-                WHERE equipo_id IN (
-                    SELECT id FROM reclamo_equipo_respuestas WHERE reclamo_id = ?
-                )
-            """, (reclamo_id,))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_DEL_73, (reclamo_id,))
         except sqlite3.OperationalError:
             pass
 
@@ -7651,15 +6924,7 @@ def register_reclamos_routes(app):
         #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT ri.*, r.codigo, r.creado_por,
-                   u_imp.username AS imputado_username,
-                   u_imp.id AS imputado_uid
-            FROM reclamo_imputados ri
-            JOIN reclamos r ON r.id = ri.reclamo_id
-            LEFT JOIN usuarios u_imp ON u_imp.id = ri.imputado_id
-            WHERE ri.id = ?
-        """, (imp_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_60, (imp_id,))
         row = cur.fetchone()
 
         if not row:
@@ -7679,21 +6944,9 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, msg="No hay respuesta pendiente de validar"), 400
 
         if accion == "aprobar":
-            cur.execute("""
-                UPDATE reclamo_imputados
-                SET estado_respuesta='aprobada',
-                    fecha_aprobacion_respuesta=?,
-                    motivo_rechazo_respuesta=NULL,
-                    fecha_rechazo_respuesta=NULL,
-                    visible_creador=1
-                WHERE id=?
-            """, (_now_iso(), imp_id))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_74, (_now_iso(), imp_id))
 
-            cur.execute("""
-                UPDATE reclamos
-                SET estado_global = 'cerrado'
-                WHERE id = ?
-            """, (row["reclamo_id"],))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_71, (row["reclamo_id"],))
             
             _notify_creador_respuesta_aprobada(
                 conn,
@@ -7707,14 +6960,7 @@ def register_reclamos_routes(app):
                 conn.close()
                 return jsonify(ok=False, msg="Motivo obligatorio al rechazar"), 400
 
-            cur.execute("""
-                UPDATE reclamo_imputados
-                SET estado_respuesta='rechazada',
-                    fecha_rechazo_respuesta=?,
-                    motivo_rechazo_respuesta=?,
-                    fecha_aprobacion_respuesta=NULL
-                WHERE id=?
-            """, (_now_iso(), motivo, imp_id))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_75, (_now_iso(), motivo, imp_id))
 
             _notify_imputado_respuesta_rechazada(
                 conn,
@@ -7742,26 +6988,10 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_api_dashboard_resumen():
         db = get_db()
-        row = db.execute("""
-            SELECT
-                COUNT(*) AS total_om,
-                SUM(CASE WHEN estado_global LIKE 'CERR%' THEN 1 ELSE 0 END) AS cerradas,
-                SUM(CASE WHEN estado_global LIKE 'RECHA%' THEN 1 ELSE 0 END) AS rechazadas,
-                SUM(CASE WHEN estado_global LIKE 'PEND%' THEN 1 ELSE 0 END) AS pendientes,
-                SUM(CASE WHEN estado_global LIKE 'EN RESP%' THEN 1 ELSE 0 END) AS en_respuesta
-            FROM reclamos
-        """).fetchone()
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_76).fetchone()
 
         # OM creadas por mes (últimos 6 meses)
-        rows_mes = db.execute("""
-            SELECT
-                strftime('%Y-%m', fecha_reclamo) AS ym,
-                COUNT(*) AS total_mes
-            FROM reclamos
-            WHERE fecha_reclamo >= date('now', '-6 months')
-            GROUP BY ym
-            ORDER BY ym
-        """).fetchall()
+        rows_mes = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_77).fetchall()
 
         return jsonify({
             "kpi": dict(row or {}),
@@ -7776,14 +7006,7 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_api_dashboard_estados():
         db = get_db()
-        rows = db.execute("""
-            SELECT
-                estado_global AS estado,
-                COUNT(*) AS total
-            FROM reclamos
-            GROUP BY estado_global
-            ORDER BY total DESC
-        """).fetchall()
+        rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_78).fetchall()
         return jsonify({"items": [dict(r) for r in rows]})
 
 
@@ -7798,40 +7021,9 @@ def register_reclamos_routes(app):
         db = get_db()
 
         if _is_sqlserver_conn(db):
-            rows = db.execute("""
-                SELECT
-                    COALESCE(tipo_reclamo, 'SIN TIPO') AS tipo_reclamo,
-                    AVG(
-                        CAST(
-                            DATEDIFF(
-                                DAY,
-                                TRY_CONVERT(datetime, fecha_reclamo),
-                                COALESCE(TRY_CONVERT(datetime, fecha_cierre), GETDATE())
-                            ) AS FLOAT
-                        )
-                    ) AS dias_promedio,
-                    COUNT(*) AS total
-                FROM reclamos
-                WHERE TRY_CONVERT(datetime, fecha_reclamo) IS NOT NULL
-                GROUP BY COALESCE(tipo_reclamo, 'SIN TIPO')
-                HAVING COUNT(*) >= 3
-                ORDER BY dias_promedio DESC
-            """).fetchall()
+            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_79).fetchall()
         else:
-            rows = db.execute("""
-                SELECT
-                    tipo_reclamo,
-                    AVG(
-                        JULIANDAY(COALESCE(fecha_cierre, DATE('now')))
-                        - JULIANDAY(fecha_reclamo)
-                    ) AS dias_promedio,
-                    COUNT(*) AS total
-                FROM reclamos
-                WHERE fecha_reclamo IS NOT NULL
-                GROUP BY tipo_reclamo
-                HAVING total >= 3
-                ORDER BY dias_promedio DESC
-            """).fetchall()
+            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_80).fetchall()
 
         return jsonify({"items": [dict(r) for r in rows]})
 
@@ -7846,31 +7038,9 @@ def register_reclamos_routes(app):
         db = get_db()
 
         if _is_sqlserver_conn(db):
-            rows = db.execute("""
-                SELECT TOP 10
-                    COALESCE(u.nombre_completo, u.username, 'SIN USUARIO') AS imputado,
-                    COUNT(*) AS total_om,
-                    SUM(CASE WHEN ri.estado_imputacion LIKE 'CERR%' THEN 1 ELSE 0 END) AS cerradas,
-                    SUM(CASE WHEN ri.estado_imputacion LIKE 'APROB%' THEN 1 ELSE 0 END) AS aprobadas,
-                    SUM(CASE WHEN ri.estado_imputacion LIKE 'RECHA%' THEN 1 ELSE 0 END) AS rechazadas
-                FROM reclamo_imputados ri
-                JOIN usuarios u ON u.id = ri.imputado_id
-                GROUP BY u.id, COALESCE(u.nombre_completo, u.username, 'SIN USUARIO')
-                ORDER BY COUNT(*) DESC
-            """).fetchall()
+            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_81).fetchall()
         else:
-            rows = db.execute("""
-                SELECT top 10
-                    u.nombre_completo AS imputado,
-                    COUNT(*) AS total_om,
-                    SUM(CASE WHEN ri.estado_imputacion LIKE 'CERR%' THEN 1 ELSE 0 END) AS cerradas,
-                    SUM(CASE WHEN ri.estado_imputacion LIKE 'APROB%' THEN 1 ELSE 0 END) AS aprobadas,
-                    SUM(CASE WHEN ri.estado_imputacion LIKE 'RECHA%' THEN 1 ELSE 0 END) AS rechazadas
-                FROM reclamo_imputados ri
-                JOIN usuarios u ON u.id = ri.imputado_id
-                GROUP BY u.id, u.nombre_completo
-                ORDER BY total_om DESC
-             """).fetchall()
+            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_82).fetchall()
 
         return jsonify({"items": [dict(r) for r in rows]})
 
@@ -7885,32 +7055,11 @@ def register_reclamos_routes(app):
         db = get_db()
 
         if _is_sqlserver_conn(db):
-            top_clientes = db.execute("""
-                SELECT TOP 10
-                    COALESCE(cliente_nombre, 'SIN CLIENTE') AS cliente,
-                    COUNT(*) AS total_om
-                FROM reclamos
-                GROUP BY COALESCE(cliente_nombre, 'SIN CLIENTE')
-                ORDER BY COUNT(*) DESC
-            """).fetchall()
+            top_clientes = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_83).fetchall()
         else:
-            top_clientes = db.execute("""
-                SELECT TOP 10
-                    cliente_nombre AS cliente,
-                    COUNT(*) AS total_om
-                FROM reclamos
-                GROUP BY cliente_nombre
-                ORDER BY total_om DESC
-             """).fetchall()
+            top_clientes = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_84).fetchall()
 
-        por_proceso = db.execute("""
-            SELECT
-                COALESCE(proceso_text, 'SIN PROCESO') AS proceso,
-                COUNT(*) AS total_om
-            FROM reclamos
-            GROUP BY COALESCE(proceso_text, 'SIN PROCESO')
-            ORDER BY COUNT(*) DESC
-        """).fetchall()
+        por_proceso = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_85).fetchall()
 
         return jsonify({
             "clientes": [dict(r) for r in top_clientes],
@@ -7927,18 +7076,7 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_api_dashboard_departamentos():
         db = get_db()
-        rows = db.execute("""
-            SELECT
-                COALESCE(d.nombre, 'SIN DEPARTAMENTO') AS departamento,
-                COUNT(DISTINCT r.id) AS total_om,
-                SUM(CASE WHEN r.estado_global LIKE 'CERR%' THEN 1 ELSE 0 END) AS cerradas,
-                SUM(CASE WHEN r.estado_global LIKE 'CERR%' THEN 0 ELSE 1 END) AS abiertas
-            FROM reclamos r
-            LEFT JOIN usuarios u   ON u.id = r.creado_por
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
-            GROUP BY d.nombre
-            ORDER BY total_om DESC
-        """).fetchall()
+        rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_86).fetchall()
 
         return jsonify({"items": [dict(row) for row in rows]})
 
@@ -9226,21 +8364,12 @@ def register_reclamos_routes(app):
 
         }
 
-        cur.execute("""
-            SELECT DISTINCT COALESCE(d.nombre, 'SIN DEPARTAMENTO') AS depto
-            FROM reclamos r
-            LEFT JOIN usuarios u ON u.id = r.creado_por
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
-            ORDER BY depto
-        """)
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_87)
         deptos = [r["depto"] for r in cur.fetchall()]
 
         # ========= FILTRO: procesos únicos =========
         # El combo muestra procesos individuales aunque en la OM estén combinados.
-        cur.execute("""
-            SELECT COALESCE(NULLIF(LTRIM(RTRIM(r.proceso_text)), ''), 'SIN PROCESO') AS proceso_text
-            FROM reclamos r
-        """)
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_88)
 
         procesos_set = set()
 
@@ -9284,6 +8413,9 @@ def register_reclamos_routes(app):
         imputacion_id = data.get("imputacion_id")
         miembro_id = data.get("miembro_id")
 
+        if not uid:
+            return jsonify(ok=False, error="Sesión inválida. Vuelve a iniciar sesión."), 401
+
         if not imputacion_id or not miembro_id:
             return jsonify(ok=False, error="Falta imputacion_id o miembro_id"), 400
 
@@ -9294,110 +8426,173 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, error="imputacion_id o miembro_id inválido"), 400
 
         db = get_db()
-        # ensure_reclamos_schema(db)
-        # ensure_reclamo_respuestas_equipo_schema(db)
 
-        # ✅ Solo el responsable (imputado) de esa imputación puede aprobar
-        row = db.execute("""
-            SELECT TOP 1 1
-            FROM reclamo_imputados
-            WHERE id = ?
-            AND reclamo_id = ?
-            AND imputado_id = ?
-        """, (imputacion_id, reclamo_id, uid)).fetchone()
+        # =========================================================
+        # Datos base de la imputación / OM
+        # =========================================================
+        row_base = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_89, (reclamo_id, imputacion_id)).fetchone()
 
-        if not row and not _is_admin_like():
+        if not row_base:
+            return jsonify(ok=False, error="No se encontró la imputación de la OM."), 404
+
+        # =========================================================
+        # Permiso:
+        # - sponsor principal: ri.imputado_id
+        # - sponsor backup/principal por proceso: RECL_PROCESO_SPONSOR
+        # - admin/coordinador
+        # =========================================================
+        es_sponsor_principal = int(row_base["imputado_id"] or 0) == int(uid or 0)
+
+        es_sponsor_del_proceso = _usuario_es_sponsor_del_proceso(
+            db,
+            row_base["proceso_id"],
+            uid
+        )
+
+        puede_gestionar_equipo = _puede_gestionar_equipo(
+            reclamo_id,
+            uid
+        )
+
+        if not (
+            es_sponsor_principal
+            or es_sponsor_del_proceso
+            or puede_gestionar_equipo
+            or _is_admin_like()
+        ):
             return jsonify(ok=False, error="No autorizado"), 403
 
-        # (Opcional) Registrar marca simple (si no tienes columnas, puedes omitir este update)
+        # Validar que el miembro pertenece al equipo de esa imputación
+        row_equipo = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_90, (reclamo_id, imputacion_id, miembro_id)).fetchone()
+
+        if not row_equipo:
+            return jsonify(ok=False, error="El miembro no pertenece al equipo de esta OM."), 404
+
+        # Validar que exista respuesta activa
+        row_resp = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_91, (reclamo_id, imputacion_id, miembro_id)).fetchone()
+
+        if not row_resp:
+            return jsonify(ok=False, error="El miembro aún no tiene respuesta registrada."), 400
+
+        # Registrar aprobación si existen columnas de revisión.
+        # Se deja protegido para no romper si todavía no existen.
         try:
-            db.execute("""
-                UPDATE reclamo_respuestas_equipo
-                SET estado_revision = 'APROBADA',
-                    revision_by = ?,
-                    revision_at = ?
-                WHERE reclamo_id = ?
-                AND imputacion_id = ?
-                AND miembro_id = ?
-                AND activo = 1
-            """, (uid, _now_iso(), reclamo_id, imputacion_id, miembro_id))
+            db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_92, (uid, _now_iso(), reclamo_id, imputacion_id, miembro_id))
             db.commit()
         except Exception:
-            # si no existen columnas, no rompe
+            db.rollback()
+            # No rompemos el flujo si esas columnas no existen
             pass
 
         return jsonify(ok=True)
+
+
 
     @app.route("/reclamos/<int:reclamo_id>/equipo-respuestas/rechazar", methods=["POST"])
     @require_login
     def equipo_respuestas_rechazar(reclamo_id):
         uid = _current_user_id()
         data = request.get_json(silent=True) or {}
+
         imputacion_id = data.get("imputacion_id")
         miembro_id = data.get("miembro_id")
         motivo = (data.get("motivo") or "").strip()
 
+        if not uid:
+            return jsonify(ok=False, error="Sesión inválida. Vuelve a iniciar sesión."), 401
+
         if not imputacion_id or not miembro_id or not motivo:
             return jsonify(ok=False, error="Falta imputacion_id, miembro_id o motivo"), 400
 
+        try:
+            imputacion_id = int(imputacion_id)
+            miembro_id = int(miembro_id)
+        except (TypeError, ValueError):
+            return jsonify(ok=False, error="imputacion_id o miembro_id inválido"), 400
+
         db = get_db()
-        #ensure_reclamos_schema(db)
-        #ensure_reclamo_respuestas_equipo_schema(db)
 
-        # ✅ Solo el responsable (imputado) puede rechazar
-        row = db.execute("""
-            SELECT TOP 1 r.codigo, u_imp.nombre_completo AS imputado_nombre
-            FROM reclamo_imputados ri
-            JOIN reclamos r ON r.id = ri.reclamo_id
-            LEFT JOIN usuarios u_imp ON u_imp.id = ri.imputado_id
-            WHERE ri.id = ?
-            AND ri.reclamo_id = ?
-            AND ri.imputado_id = ?
-            
-        """, (imputacion_id, reclamo_id, uid)).fetchone()
+        # =========================================================
+        # Datos base de la imputación / OM / miembro
+        # =========================================================
+        row_base = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_93, (miembro_id, reclamo_id, imputacion_id)).fetchone()
 
-        if not row and not _is_admin_like():
-            return jsonify(ok=False, error="No autorizado"), 403
+        if not row_base:
+            return jsonify(ok=False, error="No se encontró la imputación de la OM."), 404
 
-        # Email al miembro
-        u = db.execute("""
-            SELECT TOP 1 email, nombre_completo, username
-            FROM usuarios
-            WHERE id = ?
-         """, (miembro_id,)).fetchone()
+        # =========================================================
+        # Permiso:
+        # - sponsor principal: ri.imputado_id
+        # - sponsor backup/principal por proceso: RECL_PROCESO_SPONSOR
+        # - admin/coordinador
+        # =========================================================
+        es_sponsor_principal = int(row_base["imputado_id"] or 0) == int(uid or 0)
 
-        if not u or not (u["email"] or "").strip():
-            return jsonify(ok=False, error="El miembro no tiene email registrado."), 400
-
-        codigo = (row["codigo"] if row else f"OM #{reclamo_id}")
-        sponsor_nombre = (row["imputado_nombre"] if row else "Sponsor")
-
-        subject = f"[OM {codigo}] Corrección solicitada en tu aporte"
-        body = (
-            f"Buenas tardes,\n\n"
-            f"Tu aporte para la OM {codigo} fue revisado por {sponsor_nombre}.\n"
-            f"Se solicita ajustar la respuesta con estas observaciones:\n\n"
-            f"- {motivo}\n\n"
-            f"Por favor ingresa a Bitácora y actualiza tu aporte.\n\n"
-            f"Saludos.\n"
+        es_sponsor_del_proceso = _usuario_es_sponsor_del_proceso(
+            db,
+            row_base["proceso_id"],
+            uid
         )
 
-        _send_mail_safe(u["email"], subject, body)
+        puede_gestionar_equipo = _puede_gestionar_equipo(
+            reclamo_id,
+            uid
+        )
 
-        # (Opcional) marca en DB
+        if not (
+            es_sponsor_principal
+            or es_sponsor_del_proceso
+            or puede_gestionar_equipo
+            or _is_admin_like()
+        ):
+            return jsonify(ok=False, error="No autorizado"), 403
+
+        # Validar que el miembro pertenece al equipo de esa imputación
+        row_equipo = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_90, (reclamo_id, imputacion_id, miembro_id)).fetchone()
+
+        if not row_equipo:
+            return jsonify(ok=False, error="El miembro no pertenece al equipo de esta OM."), 404
+
+        # Validar que exista respuesta activa
+        row_resp = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_91, (reclamo_id, imputacion_id, miembro_id)).fetchone()
+
+        if not row_resp:
+            return jsonify(ok=False, error="El miembro aún no tiene respuesta registrada."), 400
+
+        # Registrar rechazo si existen columnas de revisión.
+        # Se protege para no romper si todavía no existen.
         try:
-            db.execute("""
-                UPDATE reclamo_respuestas_equipo
-                SET estado_revision='RECHAZADA', revision_by=?, revision_at=?, revision_msg=?
-                WHERE reclamo_id=? AND imputacion_id=? AND miembro_id=? AND activo=1
-            """, (uid, _now_iso(), motivo, reclamo_id, imputacion_id, miembro_id))
+            db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_94, (
+                motivo,
+                uid,
+                _now_iso(),
+                reclamo_id,
+                imputacion_id,
+                miembro_id
+            ))
             db.commit()
         except Exception:
+            db.rollback()
+            # No rompemos el flujo si alguna columna todavía no existe.
             pass
 
-        return jsonify(ok=True)
-    
+        # Notificar al miembro
+        try:
+            _notify_colaborador_aporte_rechazado(
+                db,
+                miembro_id,
+                row_base["codigo"],
+                motivo
+            )
+        except Exception:
+            current_app.logger.exception(
+                "No se pudo notificar rechazo de aporte. reclamo_id=%s imputacion_id=%s miembro_id=%s",
+                reclamo_id,
+                imputacion_id,
+                miembro_id
+            )
 
+        return jsonify(ok=True)
     @app.route('/reclamos/equipo-acciones/<int:accion_id>/observacion', methods=['POST'])
     @require_login
     def reclamo_equipo_accion_guardar_observacion(accion_id):
@@ -9409,14 +8604,7 @@ def register_reclamos_routes(app):
         data = request.get_json(silent=True) or {}
         observacion = (data.get("observacion") or "").strip()
 
-        row = db.execute("""
-            SELECT TOP 1
-                id,
-                COALESCE(cumplido, 0) AS cumplido
-            FROM reclamo_respuesta_equipo_acciones
-            WHERE id = ?
-            AND COALESCE(activo, 1) = 1
-         """, (accion_id,)).fetchone()
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_95, (accion_id,)).fetchone()
 
         if not row:
             return jsonify(ok=False, error="Acción no encontrada"), 404
@@ -9424,14 +8612,7 @@ def register_reclamos_routes(app):
         if int(row["cumplido"] or 0) == 1:
             return jsonify(ok=False, error="La acción ya está cumplida y no permite editar observación"), 400
 
-        db.execute("""
-            UPDATE reclamo_respuesta_equipo_acciones
-            SET
-                observacion_cumplimiento = ?,
-                updated_at = CURRENT_TIMESTAMP,
-                updated_by = ?
-            WHERE id = ?
-        """, (observacion, uid, accion_id))
+        db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_96, (observacion, uid, accion_id))
 
         db.commit()
 
@@ -9444,19 +8625,7 @@ def register_reclamos_routes(app):
         db = get_db()
         uid = _current_user_id()
 
-        row = db.execute("""
-            SELECT TOP 1
-                e.id,
-                e.accion_id,
-                e.filename,
-                COALESCE(e.activo, 1) AS evidencia_activa,
-                COALESCE(a.cumplido, 0) AS accion_cumplida
-            FROM reclamo_respuesta_equipo_accion_evidencias e
-            JOIN reclamo_respuesta_equipo_acciones a
-            ON a.id = e.accion_id
-            WHERE e.id = ?
-          
-        """, (evidencia_id,)).fetchone()
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_97, (evidencia_id,)).fetchone()
 
         if not row:
             return jsonify(ok=False, error="Evidencia no encontrada"), 404
@@ -9467,11 +8636,7 @@ def register_reclamos_routes(app):
         if int(row["accion_cumplida"] or 0) == 1:
             return jsonify(ok=False, error="No se puede eliminar evidencia de una acción ya cumplida"), 400
 
-        db.execute("""
-            UPDATE reclamo_respuesta_equipo_accion_evidencias
-            SET activo = 0
-            WHERE id = ?
-        """, (evidencia_id,))
+        db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_98, (evidencia_id,))
 
         db.commit()
 
@@ -9486,19 +8651,7 @@ def register_reclamos_routes(app):
         #ensure_reclamo_imputado_acciones_schema(conn)
 
         cur = conn.cursor()
-        cur.execute("""
-            SELECT TOP 1
-                ri.id,
-                ri.reclamo_id,
-                ri.imputado_id,
-                ri.metodo_analisis,
-                ri.why1, ri.why2, ri.why3, ri.why4, ri.why5,
-                ri.fish_metodo, ri.fish_maquinas, ri.fish_materiales,
-                ri.fish_personas, ri.fish_entorno, ri.fish_medicion
-            FROM reclamo_imputados ri
-            WHERE ri.id = ?
-            
-        """, (imp_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_99, (imp_id,))
         row = cur.fetchone()
 
         if not row:
@@ -9539,14 +8692,7 @@ def register_reclamos_routes(app):
         data = request.get_json(silent=True) or {}
         observacion = (data.get("observacion") or "").strip()
 
-        db.execute("""
-            UPDATE reclamo_imputado_acciones
-            SET
-                observacion_cumplimiento = ?,
-                updated_at = CURRENT_TIMESTAMP,
-                updated_by = ?
-            WHERE id = ?
-        """, (observacion, uid, accion_id))
+        db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_100, (observacion, uid, accion_id))
 
         db.commit()
         return jsonify(ok=True, msg="Observación guardada")
@@ -9586,15 +8732,7 @@ def register_reclamos_routes(app):
         if not _is_date_yyyy_mm_dd(fecha_cumplimiento):
             return jsonify(ok=False, error="Fecha inválida. Use YYYY-MM-DD"), 400
 
-        db.execute("""
-            UPDATE reclamo_imputado_acciones
-            SET
-                cumplido = 1,
-                fecha_cumplimiento = ?,
-                updated_at = CURRENT_TIMESTAMP,
-                updated_by = ?
-            WHERE id = ?
-        """, (fecha_cumplimiento, uid, accion_id))
+        db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_101, (fecha_cumplimiento, uid, accion_id))
 
         db.commit()
         return jsonify(ok=True, msg="Acción marcada como cumplida")
@@ -9641,20 +8779,7 @@ def register_reclamos_routes(app):
             size_bytes = 0
 
         cur = db.cursor()
-        cur.execute("""
-            INSERT INTO reclamo_accion_evidencias (
-                accion_id,
-                filename,
-                original_name,
-                content_type,
-                size_bytes,
-                creado_por,
-                created_at,
-                activo
-            )
-            OUTPUT INSERTED.id
-            VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 1)
-        """, (
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_INS_102, (
             accion_id,
             physical_name,
             original_name,
@@ -9688,20 +8813,7 @@ def register_reclamos_routes(app):
         db = get_db()
         uid = _current_user_id()
 
-        row = db.execute("""
-            SELECT
-                e.id,
-                e.accion_id,
-                e.filename,
-                COALESCE(e.activo, 1) AS evidencia_activa,
-                COALESCE(a.cumplido, 0) AS accion_cumplida,
-                a.imputacion_id,
-                a.reclamo_id
-            FROM reclamo_accion_evidencias e
-            JOIN reclamo_imputado_acciones a
-            ON a.id = e.accion_id
-            WHERE e.id = ?
-        """, (evidencia_id,)).fetchone()
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_103, (evidencia_id,)).fetchone()
 
         if not row:
             return jsonify(ok=False, error="Evidencia no encontrada"), 404
@@ -9725,13 +8837,7 @@ def register_reclamos_routes(app):
             except Exception:
                 pass
 
-        db.execute("""
-            UPDATE reclamo_accion_evidencias
-            SET
-                activo = 0,
-                created_at = created_at
-            WHERE id = ?
-        """, (evidencia_id,))
+        db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_104, (evidencia_id,))
         db.commit()
 
         return jsonify(ok=True, msg="Evidencia eliminada")
@@ -9742,18 +8848,7 @@ def register_reclamos_routes(app):
         db = get_db()
         uid = _current_user_id()
 
-        row = db.execute("""
-            SELECT
-                e.id,
-                e.accion_id,
-                e.filename,
-                e.original_name,
-                e.content_type,
-                e.size_bytes,
-                COALESCE(e.activo, 1) AS evidencia_activa
-            FROM reclamo_accion_evidencias e
-            WHERE e.id = ?
-        """, (evidencia_id,)).fetchone()
+        row = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_105, (evidencia_id,)).fetchone()
 
         if not row:
             return abort(404)
@@ -10127,8 +9222,18 @@ def register_reclamos_routes(app):
 
         user_id = session.get("user_id") or session.get("usuario_id")
 
+        # Recuperar historial de la sesión (máx. 20 mensajes = 10 turnos)
+        historial = session.get("om_chat_historial", [])
+
         try:
-            result = om_chat_responder(pregunta, user_id)
+            result = om_chat_responder(pregunta, user_id, historial)
+
+            # Actualizar historial si la respuesta fue exitosa
+            if result.get("ok") and result.get("respuesta"):
+                historial.append({"role": "user",      "content": pregunta})
+                historial.append({"role": "assistant",  "content": result["respuesta"]})
+                session["om_chat_historial"] = historial[-20:]   # mantener últimos 10 turnos
+
             status = 200 if result.get("ok") else 400
             return jsonify(result), status
 
@@ -10138,6 +9243,13 @@ def register_reclamos_routes(app):
                 ok=False,
                 error=f"No se pudo procesar la pregunta: {e}"
             ), 500
+
+    @app.route("/api/om-chat/reset", methods=["POST"])
+    @require_login
+    def api_om_chat_reset():
+        """Limpia el historial de conversación del asistente OM."""
+        session.pop("om_chat_historial", None)
+        return jsonify(ok=True, msg="Conversación reiniciada.")
     
 
 
@@ -10148,26 +9260,7 @@ def register_reclamos_routes(app):
         cur = conn.cursor()
  
 
-        cur.execute("""
-            SELECT TOP 1
-                u.id,
-                COALESCE(u.nombre_completo, u.username) AS nombre,
-                u.username,
-                COALESCE(d.nombre, '') AS departamento,
-                COALESCE(j.nombre_completo, j.username, '') AS jefe
-            FROM param_values pv
-            JOIN param_groups pg ON pg.id = pv.group_id
-            JOIN usuarios u
-            ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
-            LEFT JOIN usuarios j ON j.id = u.jefe_id
-            WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
-            AND COALESCE(pv.activo, 1) = 1
-            AND pv.parent_id = ?
-            AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) = 'PRINCIPAL'
-            AND COALESCE(u.disabled, 0) = 0
-            ORDER BY COALESCE(pv.orden, 0), pv.id
-        """, (proceso_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_106, (proceso_id,))
 
         row = cur.fetchone()
         conn.close()
@@ -10190,32 +9283,252 @@ def register_reclamos_routes(app):
         conn = get_db()
         cur = conn.cursor()
 
-        cur.execute("""
-            SELECT
-                u.id,
-                COALESCE(u.nombre_completo, u.username) AS nombre,
-                u.username,
-                pv.valor AS tipo
-            FROM param_values pv
-            JOIN param_groups pg ON pg.id = pv.group_id
-            JOIN usuarios u
-            ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
-            WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
-            AND COALESCE(pv.activo, 1) = 1
-            AND pv.parent_id = ?
-            AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
-            AND COALESCE(u.disabled, 0) = 0
-            ORDER BY
-            CASE UPPER(LTRIM(RTRIM(COALESCE(pv.valor, ''))))
-                WHEN 'PRINCIPAL' THEN 1
-                WHEN 'BACKUP' THEN 2
-                ELSE 9
-            END,
-            COALESCE(pv.orden, 0),
-            pv.id
-        """, (proceso_id,))
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_107, (proceso_id,))
 
         return jsonify({
             "ok": True,
             "items": [dict(r) for r in cur.fetchall()]
         })
+
+    @app.route('/reclamos/<int:reclamo_id>/carta-cliente', methods=['POST'], endpoint='reclamos_subir_carta_cliente')
+    @require_login
+    def reclamos_subir_carta_cliente(reclamo_id):
+        uid = _current_user_id()
+
+        if not uid:
+            return jsonify(ok=False, msg="Sesión inválida."), 401
+
+        conn = get_db()
+
+        if not _can_upload_carta_cliente(conn, uid):
+            conn.close()
+            return jsonify(ok=False, msg="No autorizado para subir carta al cliente."), 403
+
+        cur = conn.cursor()
+
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_108, (reclamo_id,))
+
+        row = cur.fetchone()
+
+        if not row:
+            conn.close()
+            return jsonify(ok=False, msg="OM no encontrada."), 404
+
+        if int(row["requiere_carta_cliente"] or 0) != 1:
+            conn.close()
+            return jsonify(ok=False, msg="Esta OM no fue marcada como OM con carta al cliente."), 400
+
+        if "cerrad" not in (row["estado_global"] or ""):
+            conn.close()
+            return jsonify(ok=False, msg="La carta final solo se puede subir cuando la OM esté cerrada."), 400
+
+        file = request.files.get("carta_cliente")
+
+        if not file or not file.filename:
+            conn.close()
+            return jsonify(ok=False, msg="Debe seleccionar un archivo."), 400
+
+        filename_original = secure_filename(file.filename or "")
+        if not filename_original:
+            conn.close()
+            return jsonify(ok=False, msg="Nombre de archivo inválido."), 400
+
+        ext = filename_original.rsplit(".", 1)[-1].lower() if "." in filename_original else ""
+        if ext not in ("pdf", "doc", "docx"):
+            conn.close()
+            return jsonify(ok=False, msg="Solo se permite PDF, DOC o DOCX."), 400
+
+        # =========================================================
+        # Guarda la carta como adjunto normal de la OM.
+        # Usa la misma tabla/carpeta que los demás adjuntos:
+        # reclamo_adjuntos + _get_reclamos_upload_folder()
+        # =========================================================
+        error_adj = _save_adjuntos_for_reclamo(conn, reclamo_id, [file], uid)
+
+        if error_adj:
+            conn.rollback()
+            conn.close()
+            return jsonify(ok=False, msg=error_adj), 400
+
+        # =========================================================
+        # SQL Server: usar GETDATE() para evitar error de conversión
+        # nvarchar -> datetime por formato regional.
+        # =========================================================
+        cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_109, (reclamo_id,))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify(ok=True, msg="Carta final al cliente cargada correctamente.")
+
+    # =========================================================
+    # GENERAR CARTA CLIENTE PDF (OpenAI + WeasyPrint)
+    # =========================================================
+    @app.route('/reclamos/<int:reclamo_id>/generar-carta-pdf', methods=['POST'],
+               endpoint='reclamos_generar_carta_pdf')
+    @require_login
+    def reclamos_generar_carta_pdf(reclamo_id):
+        from flask import send_file
+        import io
+
+        uid = _current_user_id()
+        if not uid:
+            return jsonify(ok=False, msg="No autenticado"), 401
+
+        conn = get_db()
+        if not _can_upload_carta_cliente(conn, uid):
+            conn.close()
+            return jsonify(ok=False, msg="No autorizado para generar la carta al cliente."), 403
+
+        try:
+            from modules.routes_reclamos_pdf import generar_carta_cliente_pdf
+            pdf_bytes, filename = generar_carta_cliente_pdf(conn, reclamo_id, uid)
+            return send_file(
+                io.BytesIO(pdf_bytes),
+                mimetype="application/pdf",
+                as_attachment=True,
+                download_name=filename,
+            )
+        except ValueError as e:
+            return jsonify(ok=False, msg=str(e)), 400
+        except Exception as e:
+            current_app.logger.error("[generar_carta_pdf] error: %s", e)
+            return jsonify(ok=False, msg=f"Error al generar el PDF: {e}"), 500
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+    # =========================================================
+    # VALIDACIÓN DEL CREADOR — aceptar / rechazar respuesta
+    # =========================================================
+    @app.route('/reclamos/<int:reclamo_id>/validar-creador', methods=['POST'],
+               endpoint='reclamos_validar_creador')
+    @require_login
+    def reclamos_validar_creador(reclamo_id):
+        uid = session.get("usuario_id") or session.get("user_id") or session.get("id")
+        if not uid:
+            return jsonify(ok=False, msg="No autenticado"), 401
+
+        data    = request.get_json(silent=True) or {}
+        accion  = (data.get("accion") or "").strip().lower()   # 'aceptar' | 'rechazar'
+        motivo  = (data.get("motivo") or "").strip()
+
+        if accion not in ("aceptar", "rechazar"):
+            return jsonify(ok=False, msg="Acción inválida."), 400
+
+        conn = get_db()
+        cur  = conn.cursor()
+
+        cur.execute(SQL_VALIDAR_CREADOR_SEL_BASE, (reclamo_id,))
+        om = cur.fetchone()
+
+        if not om:
+            conn.close()
+            return jsonify(ok=False, msg="OM no encontrada."), 404
+
+        if int(om["creado_por"] or 0) != int(uid):
+            conn.close()
+            return jsonify(ok=False, msg="Solo el creador puede validar esta OM."), 403
+
+        estado_global_actual = (om["estado_global"] or "").lower()
+        if estado_global_actual != "cerrado":
+            conn.close()
+            return jsonify(ok=False, msg="Solo se puede validar una OM en estado Cerrado."), 400
+
+        if accion == "aceptar":
+            cur.execute(SQL_VALIDAR_CREADOR_UPD_ESTADO, ("aprobado", "cerrado", reclamo_id))
+            conn.commit()
+            conn.close()
+            return jsonify(ok=True, msg="Respuesta aceptada. La OM permanece cerrada.")
+
+        # — rechazar —
+        if not motivo:
+            conn.close()
+            return jsonify(ok=False, msg="Debe indicar el motivo del rechazo."), 400
+
+        cur.execute(SQL_VALIDAR_CREADOR_UPD_ESTADO, ("rechazado", "abierto", reclamo_id))
+        cur.execute(SQL_VALIDAR_CREADOR_UPD_IMPUTACION, (reclamo_id,))
+        conn.commit()
+
+        creador_row = _get_user_basic(conn, uid)
+        creador_nombre = (
+            (creador_row.get("nombre_completo") or creador_row.get("username") or f"UID {uid}")
+            if creador_row else f"UID {uid}"
+        )
+
+        try:
+            from modules.scheduler_jobs import enqueue_om_rechazo_creador, ensure_om_evento_templates
+            ensure_om_evento_templates(conn)
+
+            try:
+                cta_url = url_for("reclamos", _external=True) + "?tab=imputado"
+            except Exception:
+                cta_url = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=imputado"
+
+            cur2 = conn.cursor()
+            cur2.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (om["codigo"],))
+            r_om = cur2.fetchone()
+
+            base_payload = {
+                "codigo":         om["codigo"],
+                "rechazado_por":  creador_nombre,
+                "motivo_rechazo": motivo,
+                "fecha_om":       str(r_om["fecha_reclamo"]) if r_om else "",
+                "tipo_om":        str(r_om["tipo_reclamo"])  if r_om else "",
+                "tipo_tramite":   str(r_om["tipo_tramite"])  if r_om else "",
+                "cliente":        str(r_om["cliente_nombre"])if r_om else "",
+                "proceso":        str(r_om["proceso_text"])  if r_om else "",
+                "material":       str(r_om["material_desc"]) if (r_om and "material_desc" in r_om.keys()) else "",
+                "factura":        str(r_om["factura"])       if r_om else "",
+                "observacion":    str(r_om["observacion"])   if r_om else "",
+                "cta_url": cta_url,
+            }
+
+            enqueued = set()
+
+            def _encolar(dest_uid, dest_nombre):
+                if dest_uid in enqueued:
+                    return
+                enqueued.add(dest_uid)
+                p = dict(base_payload)
+                p["destinatario_nombre"] = dest_nombre
+                enqueue_om_rechazo_creador(conn,
+                    user_id=dest_uid,
+                    reclamo_id=reclamo_id,
+                    payload=p,
+                )
+
+            # 1. Sponsors PRINCIPAL + BACKUP
+            if om.get("proceso_id"):
+                cur2.execute(SQL_VALIDAR_CREADOR_SEL_SPONSORS, (om["proceso_id"],))
+                for s in cur2.fetchall():
+                    if s["sponsor_id"]:
+                        _encolar(s["sponsor_id"], s["sponsor_nombre"] or "")
+
+            # 2. Imputados directos
+            cur2.execute(SQL_VALIDAR_CREADOR_SEL_IMPUTADOS, (reclamo_id,))
+            for row_i in cur2.fetchall():
+                if row_i["imputado_id"]:
+                    _encolar(row_i["imputado_id"], row_i["imputado_nombre"] or "")
+
+            # 3. Servicio al Cliente
+            cur2.execute(SQL_VALIDAR_CREADOR_SEL_SAC)
+            for row_s in cur2.fetchall():
+                if row_s["usuario_id"]:
+                    _encolar(row_s["usuario_id"], row_s["nombre"] or "")
+
+            # 4. Miembros de equipo
+            cur2.execute(SQL_VALIDAR_CREADOR_SEL_EQUIPO, (reclamo_id,))
+            for row_e in cur2.fetchall():
+                if row_e["usuario_id"]:
+                    _encolar(row_e["usuario_id"], row_e["miembro_nombre"] or "")
+
+        except Exception as e:
+            current_app.logger.warning(
+                "[validar_creador] Error al encolar notificación: %s", e
+            )
+
+        conn.close()
+        return jsonify(ok=True, msg="Respuesta rechazada. La OM volvió a estado Abierto.")

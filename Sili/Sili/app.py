@@ -6,7 +6,7 @@
 # Su responsabilidad es orquestar la creación de la app
 # y delegar funcionalidades complementarias a app_core.
 # ==========================================================
-
+ 
 import os
 from pathlib import Path
 from flask import Flask, render_template
@@ -98,59 +98,6 @@ def create_app():
     # ------------------------------------------------------
     register_all_routes(app)
 
-    # ------------------------------------------------------
-    # DEBUG TEMPORAL PARA ENCUESTAS
-    # Quitar este bloque cuando termines la validación.
-    # ------------------------------------------------------
-    from flask import request, jsonify, url_for
-
-    @app.before_request
-    def debug_request_endpoint():
-        if request.path in (
-            "/encuestas",
-            "/tareas",
-            "/test-encuestas-directo",
-            "/__debug/encuestas"
-        ):
-            print(
-                ">>> DEBUG REQUEST",
-                "path=", request.path,
-                "endpoint=", request.endpoint,
-                "url_rule=", request.url_rule,
-                flush=True
-            )
-
-    @app.route("/__debug/encuestas")
-    def debug_encuestas():
-        rules = [
-            {
-                "endpoint": r.endpoint,
-                "rule": str(r),
-                "methods": sorted(list(r.methods or []))
-            }
-            for r in app.url_map.iter_rules()
-            if "encuesta" in r.endpoint.lower()
-            or "encuesta" in str(r).lower()
-        ]
-
-        result = {
-            "listar_encuestas_in_view_functions":
-                "listar_encuestas" in app.view_functions,
-            "listar_encuestas_func":
-                str(app.view_functions.get("listar_encuestas")),
-            "rules": rules,
-        }
-
-        try:
-            result["url_for_listar_encuestas"] = url_for("listar_encuestas")
-        except Exception as e:
-            result["url_for_error"] = repr(e)
-
-        return jsonify(result)
-
-    @app.route("/test-encuestas-directo")
-    def test_encuestas_directo():
-        return "OK test encuestas directo"
 
     # ------------------------------------------------------
     # WHATSAPP CLOUD API - NUEVO

@@ -180,7 +180,6 @@ def compras_eliminar(contrato_id: int):
     flash("Contrato eliminado.", "success")
     return redirect(url_for("contratos.compras_lista"))
 
-
 @contratos_bp.route("/compras", methods=["GET"])
 @require_login
 @require_permission("contratos_ingresar", "ver")
@@ -195,7 +194,6 @@ def compras_lista():
 
     rows = repository.list_contratos(proveedor=prov, pedido=pedi, tipo_pp=tipo)
     return render_template("consulta_compras.html", rows=rows)
-
 
 @contratos_bp.route("/compras/<int:contrato_id>/archivos/fragment", methods=["GET"])
 @require_login

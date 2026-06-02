@@ -65,6 +65,16 @@ TPL_OM_SPONSOR_D4 = "om_sponsor_d4"
 TPL_OM_JEFE_D5 = "om_jefe_d5"
 TPL_OM_SPONSOR_JEFE_D9 = "om_sponsor_jefe_d9"
 TPL_OM_GG_D10 = "om_gg_d10"
+TPL_OM_NUEVA_ASIGNADO = "om_nueva_asignado"
+TPL_OM_RECHAZO_CREADOR = "om_rechazo_creador"
+TPL_OM_NUEVA_REGISTRO = "om_nueva_registro"
+
+# -------------------------
+# Tipos cola OM eventos
+# -------------------------
+TIPO_OM_NUEVA_ASIGNADO = "om_nueva_asignado"
+TIPO_OM_RECHAZO_CREADOR = "om_rechazo_creador"
+TIPO_OM_NUEVA_REGISTRO = "om_nueva_registro"
 
 # -------------------------
 # Roles

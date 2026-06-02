@@ -31,6 +31,23 @@ MIGRATION_LOG_PATH = os.getenv(
 )
 
 
+# =========================
+# Tablas excluidas de migración
+# =========================
+# Agrega aquí cualquier tabla que NO quieras migrar desde SQLite a SQL Server.
+# La comparación se realiza sin distinguir mayúsculas/minúsculas.
+EXCLUDED_TABLES = {
+    "usuarios",
+    "param_values",
+    "param_groups",
+    "opciones",
+    "empresas",
+    "menu_items",
+    "roles",
+    "roles_permisos",
+}
+
+
 def fail(msg: str) -> None:
     print(f"ERROR: {msg}", file=sys.stderr)
     raise SystemExit(1)
@@ -86,6 +103,36 @@ def get_source_tables(src: sqlite3.Connection) -> List[str]:
         """
     ).fetchall()
     return [row["name"] for row in rows]
+
+
+def apply_excluded_tables(tables: Sequence[str], excluded: set[str]) -> List[str]:
+    """
+    Excluye tablas de la migración.
+
+    Se usa una lista centralizada para que, en el futuro, solo tengas que
+    agregar el nombre de la tabla en EXCLUDED_TABLES y el proceso siga igual.
+    La comparación es case-insensitive para evitar problemas por mayúsculas/minúsculas.
+    """
+    excluded_norm = {t.strip().lower() for t in excluded if t and t.strip()}
+
+    return [
+        table
+        for table in tables
+        if table.strip().lower() not in excluded_norm
+    ]
+
+
+def get_excluded_found(tables: Sequence[str], excluded: set[str]) -> List[str]:
+    """
+    Devuelve las tablas excluidas que sí existen en SQLite origen.
+    Sirve solo para imprimirlas y registrarlas en el log.
+    """
+    excluded_norm = {t.strip().lower() for t in excluded if t and t.strip()}
+    return [
+        table
+        for table in tables
+        if table.strip().lower() in excluded_norm
+    ]
 
 
 def get_topological_load_order(src: sqlite3.Connection, tables: Sequence[str]) -> List[str]:
@@ -376,7 +423,16 @@ def main() -> None:
     dst = sqlserver_conn()
 
     try:
-        source_tables = get_source_tables(src)
+        source_tables_all = get_source_tables(src)
+        source_tables = apply_excluded_tables(source_tables_all, EXCLUDED_TABLES)
+        excluded_found = get_excluded_found(source_tables_all, EXCLUDED_TABLES)
+
+        if excluded_found:
+            print(
+                "TABLAS EXCLUIDAS DE LA MIGRACIÓN:\n- "
+                + "\n- ".join(sorted(excluded_found))
+            )
+
         load_order = get_topological_load_order(src, source_tables)
         target_tables = get_existing_target_tables(dst, SQLSERVER_SCHEMA, load_order)
 
@@ -403,6 +459,12 @@ def main() -> None:
             log_fh.write(f"Esquema: {SQLSERVER_SCHEMA}\n")
             log_fh.write(f"Fecha: {datetime.now().isoformat()}\n")
             log_fh.write("=" * 120 + "\n")
+
+            if excluded_found:
+                log_fh.write("TABLAS EXCLUIDAS DE LA MIGRACIÓN:\n")
+                for table in sorted(excluded_found):
+                    log_fh.write(f"- {table}\n")
+                log_fh.write("=" * 120 + "\n")
 
             disable_constraints(dst, SQLSERVER_SCHEMA, target_tables, log_fh)
 

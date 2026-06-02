@@ -112,30 +112,145 @@
 </div>
 
 <div class="row g-3 mb-3">
-  <div class="col-12">
-    <div class="section">
-      <div class="section-header">
-        <i class="bi bi-clock-history"></i> Horas reportadas por persona en tareas cerradas
+
+  {# ── Horas por usuario: gráfico de barras horizontales ── #}
+  <div class="col-md-5">
+    <div class="section h-100">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-person-lines-fill me-1"></i>Horas por técnico</span>
+        <div class="chart-toolbar" data-for="chartHorasUsuario">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box" style="height:280px;"><canvas id="chartHorasUsuario"></canvas></div>
+    </div>
+  </div>
+
+  {# ── Horas por departamento: donut ── #}
+  <div class="col-md-3">
+    <div class="section h-100">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-building me-1"></i>Horas por departamento</span>
+        <div class="chart-toolbar" data-for="chartHorasDepto">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box" style="height:280px;"><canvas id="chartHorasDepto"></canvas></div>
+    </div>
+  </div>
+
+  {# ── Ranking detallado con métricas ── #}
+  <div class="col-md-4">
+    <div class="section h-100">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-clock-history me-1"></i>Ranking de horas
+          <small class="text-muted fw-normal ms-1">(inicio → fin)</small>
+        </span>
+        {% if horas_cerradas_por_usuario %}
+        <span class="badge bg-secondary">{{ horas_cerradas_por_usuario|length }}</span>
+        {% endif %}
       </div>
 
+      {% if horas_cerradas_por_usuario %}
+        {% set max_h = horas_cerradas_por_usuario[0].horas if horas_cerradas_por_usuario[0].horas > 0 else 1 %}
+        <div class="horas-ranking">
+
+          {% for r in horas_cerradas_por_usuario %}
+            {% set pct = [[((r.horas / max_h) * 100)|int, 4]|max, 100]|min %}
+            <div class="horas-row">
+
+              {# Medalla / número de ranking #}
+              <div class="horas-rank">
+                {% if loop.index == 1 %}🥇
+                {% elif loop.index == 2 %}🥈
+                {% elif loop.index == 3 %}🥉
+                {% else %}<span class="rank-num">{{ loop.index }}</span>
+                {% endif %}
+              </div>
+
+              {# Nombre del técnico #}
+              <div class="horas-name" title="{{ r.usuario }}">{{ r.usuario }}</div>
+
+              {# Barra de progreso proporcional #}
+              <div class="horas-bar-wrap">
+                <div class="horas-bar {% if pct > 66 %}bar-high{% elif pct > 33 %}bar-mid{% else %}bar-low{% endif %}"
+                     style="width:{{ pct }}%"></div>
+              </div>
+
+              {# Métricas: horas, tareas, promedio #}
+              <div class="horas-meta">
+                <span class="horas-val">{{ "%.1f"|format(r.horas) }}h</span>
+                <span class="badge bg-light text-dark border" title="Tareas cerradas">
+                  {{ r.tareas }} tarea{{ 's' if r.tareas != 1 else '' }}
+                </span>
+                {% if r.tareas > 0 %}
+                <span class="text-muted small">~{{ "%.1f"|format(r.horas_por_tarea) }}h/tarea</span>
+                {% endif %}
+              </div>
+
+            </div>
+          {% endfor %}
+
+          {# Fila de totales #}
+          {% set total_horas  = namespace(val=0) %}
+          {% set total_tareas = namespace(val=0) %}
+          {% for r in horas_cerradas_por_usuario %}
+            {% set total_horas.val  = total_horas.val  + r.horas  %}
+            {% set total_tareas.val = total_tareas.val + r.tareas %}
+          {% endfor %}
+          <div class="horas-total-row">
+            <strong>Total</strong>
+            <span>
+              <strong>{{ "%.1f"|format(total_horas.val) }} h</strong>
+              en {{ total_tareas.val }} tarea(s)
+              {% if total_tareas.val > 0 %}
+              · promedio <strong>{{ "%.1f"|format(total_horas.val / total_tareas.val) }}h</strong>/tarea
+              {% endif %}
+            </span>
+          </div>
+
+        </div>
+      {% else %}
+        <p class="text-muted text-center small py-3">
+          <i class="bi bi-inbox me-1"></i>Sin horas reportadas.
+        </p>
+      {% endif %}
+    </div>{# /section ranking #}
+  </div>{# /col ranking #}
+
+  {# ── Tabla resumen horas por departamento ── #}
+  {% if horas_por_depto %}
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header"><i class="bi bi-table me-1"></i>Resumen horas por departamento</div>
       <div class="table-responsive">
-        <table class="table table-sm mb-0">
+        <table class="table table-sm table-striped mb-0">
           <thead>
             <tr>
-              <th>Usuario</th>
-              <th class="text-end">Horas</th>
+              <th>#</th>
+              <th>Departamento</th>
+              <th class="text-end">Horas totales</th>
+              <th style="min-width:120px;">Distribución</th>
             </tr>
           </thead>
           <tbody>
-            {% for r in horas_cerradas_por_usuario %}
+            {% set total_h_depto = namespace(val=0) %}
+            {% for d in horas_por_depto %}{% set total_h_depto.val = total_h_depto.val + d.horas %}{% endfor %}
+            {% for d in horas_por_depto %}
+              {% set pct = ((d.horas / total_h_depto.val * 100)|int) if total_h_depto.val > 0 else 0 %}
             <tr>
-              <td>{{ r.usuario }}</td>
-              <td class="text-end">{{ "%.2f"|format(r.horas) }}</td>
-            </tr>
-            {% else %}
-            <tr>
-              <td colspan="2" class="text-muted text-center small">
-                No hay horas reportadas en tareas cerradas.
+              <td class="text-muted small">{{ loop.index }}</td>
+              <td>{{ d.departamento }}</td>
+              <td class="text-end fw-bold">{{ "%.1f"|format(d.horas) }}h</td>
+              <td>
+                <div style="background:var(--surface-2);border-radius:999px;height:8px;overflow:hidden;">
+                  <div style="width:{{ pct }}%;height:100%;background:#3b82f6;border-radius:999px;"></div>
+                </div>
+                <small class="text-muted">{{ pct }}%</small>
               </td>
             </tr>
             {% endfor %}
@@ -144,6 +259,64 @@
       </div>
     </div>
   </div>
+  {% endif %}
+
+</div>{# /row horas #}
+
+{# ===== Gráficos nuevos ===== #}
+<div class="row g-3 mb-3">
+
+  {# Horas de atención por día #}
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-graph-up me-1"></i> Horas de atención por día
+          <small class="text-muted fw-normal ms-1">(tareas cerradas · suma diaria)</small>
+        </span>
+        <div class="chart-toolbar" data-for="chartHorasDia">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box" style="height:200px;"><canvas id="chartHorasDia"></canvas></div>
+    </div>
+  </div>
+
+  {# Tareas por departamento por mes #}
+  <div class="col-md-8">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-bar-chart-steps me-1"></i> Tareas por departamento / mes
+          <small class="text-muted fw-normal ms-1">(top 7 departamentos)</small>
+        </span>
+        <div class="chart-toolbar" data-for="chartDeptoMes">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartDeptoMes"></canvas></div>
+    </div>
+  </div>
+
+  {# Cumplimiento mensual #}
+  <div class="col-md-4">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-patch-check me-1"></i> Cumplimiento mensual
+          <small class="text-muted fw-normal ms-1">(a tiempo vs tardías)</small>
+        </span>
+        <div class="chart-toolbar" data-for="chartCumplimiento">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartCumplimiento"></canvas></div>
+    </div>
+  </div>
+
 </div>
 
 {# ===== Gráficos principales ===== #}

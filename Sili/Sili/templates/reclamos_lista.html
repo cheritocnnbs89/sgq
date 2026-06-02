@@ -4,6 +4,7 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reclamos/reclamos_lista.css') }}">
 <script src="{{ url_for('static', filename='js/reclamos/reclamos_lista.js') }}" defer></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="api-clientes-url" content="{{ url_for('api_reclamos_clientes') }}">
 <meta name="api-provincias-url" content="{{ url_for('reclamos_api_provincias') }}">
 <meta name="api-cantones-url" content="{{ url_for('reclamos_api_cantones') }}">
@@ -35,8 +36,7 @@
             <!-- Botones (abajo a la derecha) -->
             <!-- Botones (abajo a la derecha) -->
             <div class="d-flex align-items-center gap-2 header-actions">
-                <button class="btn btn-outline-primary btn-sm btn-top" type="button" data-bs-toggle="modal"
-                    data-bs-target="#modalOmChat">
+                <button class="btn btn-outline-primary btn-sm btn-top js-open-om-chat" type="button">
                     <i class="bi bi-robot me-1"></i>Asistente OM
                 </button>
                 <button class="btn btn-outline-secondary btn-sm btn-top" type="button" data-bs-toggle="collapse"
@@ -221,6 +221,12 @@
                     <tbody>
                         {% if created_list and created_list|length > 0 %}
                         {% for r in created_list %}
+                        {% set estado_global_txt = (r.estado_global or r.estado or '')|lower %}
+                        {% set om_cerrada = ('cerrad' in estado_global_txt) %}
+
+                        {% set rol_actual = (rol or session.get('rol') or '')|lower %}
+                        {% set es_admin_o_coord = rol_actual in ['admin', 'administrador', 'coordinador'] %}
+                        {% set puede_gestionar_carta = es_admin_o_coord or puede_subir_carta_cliente %}
                         <tr data-row="created" data-reclamo-id="{{ r.id }}"
                             data-imputacion-id="{{ r.imputacion_id or '' }}" data-codigo="{{ (r.codigo or '')|e }}"
                             data-fecha-reclamo="{{ (r.fecha_reclamo or '')|e }}"
@@ -246,7 +252,9 @@
                             data-fish-materiales="{{ (r.fish_materiales or '')|e }}"
                             data-fish-personas="{{ (r.fish_personas or '')|e }}"
                             data-fish-entorno="{{ (r.fish_entorno or '')|e }}"
-                            data-fish-medicion="{{ (r.fish_medicion or '')|e }}">
+                            data-fish-medicion="{{ (r.fish_medicion or '')|e }}"
+                            data-requiere-carta-cliente="{{ r.requiere_carta_cliente or 0 }}"
+                            data-carta-cliente-notif-at="{{ (r.carta_cliente_notif_at or '')|e }}">
                             <td>{{ r.codigo or '' }}</td>
                             <td>{{ (r.fecha_reclamo or '')[8:10] }}/{{ (r.fecha_reclamo or '')[5:7] }}/{{
                                 (r.fecha_reclamo or '')[0:4] }}</td>
@@ -274,17 +282,83 @@
                                 {% else %}
                                 <span class="badge-estado estado-pend">{{ r.estado or 'Pendiente' }}</span>
                                 {% endif %}
+
+                                {% if r.requiere_carta_cliente %}
+                                {% if r.carta_cliente_notif_at %}
+                                <div class="small text-success mt-1">
+                                    <i class="bi bi-file-earmark-check me-1"></i>Carta cliente gestionada
+                                </div>
+                                {% elif om_cerrada %}
+                                <div class="small text-warning mt-1">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>Pendiente carta cliente
+                                </div>
+                                {% else %}
+                                <div class="small text-muted mt-1">
+                                    <i class="bi bi-envelope-paper me-1"></i>Requiere carta cliente
+                                </div>
+                                {% endif %}
+                                {% endif %}
                             </td>
 
                             <td class="text-end">
+                                {% set es_creador_om = (current_user_id and r.creado_por and current_user_id ==
+                                r.creado_por) %}
+                                {% set validacion = (r.validacion_creador or '') %}
+                                {% set puede_validar = es_creador_om and om_cerrada and validacion != 'aprobado' %}
+
                                 <div class="btn-group btn-group-sm">
                                     <button class="btn btn-outline-secondary btn-sm js-ver-detalle" type="button"
                                         title="Ver Detalle" data-bs-toggle="modal" data-bs-target="#modalDetalle">
                                         <i class="bi bi-eye"></i>
                                     </button>
-                                    <button class="btn btn-outline-danger btn-sm js-eliminar-om">
+
+                                    {% if puede_validar %}
+                                    <button class="btn btn-success btn-sm js-validar-creador" type="button"
+                                        title="Aceptar respuesta técnica" data-reclamo-id="{{ r.id }}"
+                                        data-codigo="{{ r.codigo or '' }}" data-accion="aceptar">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm js-validar-creador" type="button"
+                                        title="Rechazar respuesta técnica" data-reclamo-id="{{ r.id }}"
+                                        data-codigo="{{ r.codigo or '' }}" data-accion="rechazar">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                    {% elif es_creador_om and om_cerrada and validacion == 'aprobado' %}
+                                    <span class="badge recl-badge-validacion-aprobado"
+                                        title="Respuesta técnica aceptada por el creador">
+                                        <i class="bi bi-check-circle-fill"></i> Aceptada
+                                    </span>
+                                    {% elif es_creador_om and om_cerrada and validacion == 'rechazado' %}
+                                    <span class="badge recl-badge-validacion-rechazado"
+                                        title="Respuesta técnica rechazada por el creador">
+                                        <i class="bi bi-x-circle-fill"></i> Rechazada
+                                    </span>
+                                    {% endif %}
+
+                                    {% if puede_eliminar_om %}
+                                    <button class="btn btn-outline-danger btn-sm js-eliminar-om" type="button"
+                                        title="Eliminar OM" data-reclamo-id="{{ r.id }}"
+                                        data-codigo="{{ r.codigo or '' }}">
                                         <i class="bi bi-trash"></i>
                                     </button>
+                                    {% endif %}
+
+                                    {% if puede_gestionar_carta and r.requiere_carta_cliente and om_cerrada and not
+                                    r.carta_cliente_notif_at %}
+                                    <button class="btn btn-outline-primary btn-sm js-subir-carta-cliente" type="button"
+                                        title="Subir carta final al cliente" data-reclamo-id="{{ r.id }}"
+                                        data-codigo="{{ r.codigo or '' }}">
+                                        <i class="bi bi-file-earmark-arrow-up"></i>
+                                    </button>
+                                    {% endif %}
+
+                                    {% if puede_gestionar_carta and r.requiere_carta_cliente and om_cerrada %}
+                                    <button class="btn btn-outline-success btn-sm js-generar-carta-pdf" type="button"
+                                        title="Generar carta PDF para el cliente" data-reclamo-id="{{ r.id }}"
+                                        data-codigo="{{ r.codigo or '' }}">
+                                        <i class="bi bi-file-earmark-pdf"></i>
+                                    </button>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
@@ -321,8 +395,7 @@
                 </div>
 
             </div>
-            <button class="btn btn-outline-primary btn-sm btn-top" type="button" data-bs-toggle="modal"
-                data-bs-target="#modalOmChat">
+            <button class="btn btn-outline-primary btn-sm btn-top js-open-om-chat" type="button">
                 <i class="bi bi-robot me-1"></i>Asistente OM
             </button>
 
@@ -428,19 +501,7 @@
                         </tr>
                         {% endif %}
 
-                        <!-- Busy / Procesando -->
-                        <div class="modal fade" id="busyModal" tabindex="-1" data-bs-backdrop="static"
-                            data-bs-keyboard="false" aria-hidden="true">
-                            <div class="modal-dialog modal-sm modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-body text-center">
-                                        <div class="spinner-border" role="status" aria-hidden="true"></div>
-                                        <div class="mt-2 fw-semibold">Procesando…</div>
-                                        <div id="busyMsg" class="small text-muted"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
 
 
 
@@ -474,10 +535,10 @@
                         <tr data-row="imputado" data-imputacion-id="{{ i.imputacion_id }}" data-reclamo-id="{{ i.id }}"
                             data-codigo="{{ i.codigo or '' }}" data-fecha-reclamo="{{ i.fecha_reclamo or '' }}"
                             data-fecha-creacion="{{ i.fecha_creacion or '' }}"
-                            data-cliente="{{ i.cliente_nombre or '' }}" data-proceso="{{ i.proceso_text or '' }}"
-                            data-tramite="{{ i.tipo_tramite or '' }}" data-ciudad="{{ i.ciudad or '' }}"
-                            data-material="{{ i.material_desc or '' }}" data-procede="{{ i.procede or '' }}"
-                            data-observacion="{{ i.observacion or '' }}" data-estado="{{ i.estado_imputacion or '' }}"
+                            data-cliente="{{ i.cliente_nombre or '' }}" data-tramite="{{ i.tipo_tramite or '' }}"
+                            data-ciudad="{{ i.ciudad or '' }}" data-material="{{ i.material_desc or '' }}"
+                            data-procede="{{ i.procede or '' }}" data-observacion="{{ i.observacion or '' }}"
+                            data-estado="{{ i.estado_imputacion or '' }}"
                             data-estado-imputacion="{{ i.estado_imputacion or '' }}" data-causa="{{ i.causa or '' }}"
                             data-preventiva="{{ i.preventiva or '' }}" data-correctiva="{{ i.correctiva or '' }}"
                             data-fecha-causa="{{ i.fecha_causa or '' }}"
@@ -498,7 +559,9 @@
                             data-proceso="{{ (i.proceso_nombre or i.proceso_text or '')|e }}"
                             data-imputados="{{ (i.imputados_resumen or '')|e }}"
                             data-tipo-reclamo="{{ (i.motivo or i.tipo_reclamo or '')|e }}"
-                            data-antecedente="{{ (i.submotivo or i.antecedente or '')|e }}">
+                            data-antecedente="{{ (i.submotivo or i.antecedente or '')|e }}"
+                            data-estado-global="{{ i.estado_global or i.estado or i.estado_imputacion or '' }}"
+                            data-es-admin="{{ 1 if ((rol or session.get('rol') or '')|lower in ['admin', 'administrador']) else 0 }}">
 
                             <td data-th="Código">{{ i.codigo or '' }}</td>
                             <td data-th="Fecha Reclamo">{{ (i.fecha_reclamo or '')[8:10] }}/{{ (i.fecha_reclamo or
@@ -588,28 +651,45 @@
                                 </span>
                                 {% endif %}
                             </td>
-
                             <td class="sticky-end text-end" data-th="Acciones">
+                                {% set estado_cierre = (i.estado_global or i.estado or i.estado_imputacion or '')|lower
+                                %}
+                                {% set es_admin = ((rol or session.get('rol') or '')|lower in ['admin',
+                                'administrador']) %}
+                                {% set om_cerrada = ('cerrad' in estado_cierre) %}
+                                {% set bloquear_edicion = om_cerrada and not es_admin %}
+
                                 <div class="btn-group btn-group-sm">
-                                    <!-- Ver detalle reclamo -->
                                     <button class="btn btn-outline-secondary btn-sm js-ver-detalle" title="Ver Detalle"
                                         data-bs-toggle="modal" data-bs-target="#modalDetalle">
                                         <i class="bi bi-eye"></i>
                                     </button>
 
-                                    <!-- Responder medidas (responsable / imputado) -->
-                                    <button class="btn btn-outline-warning btn-sm js-responder-medidas"
+                                    {% if bloquear_edicion %}
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" disabled
+                                        aria-disabled="true" title="OM cerrada: no se puede responder ni editar">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </button>
+                                    {% else %}
+                                    <button class="btn btn-outline-warning btn-sm js-responder-medidas" type="button"
                                         title="Responder OM" data-bs-toggle="modal"
                                         data-bs-target="#modalResponderMedidas">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
+                                    {% endif %}
 
-                                    <!-- NUEVO: Gestionar equipo de respuestas -->
-                                    <button class="btn btn-outline-primary btn-sm js-equipo-respuestas"
+                                    {% if bloquear_edicion %}
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" disabled
+                                        aria-disabled="true" title="OM cerrada: no se puede gestionar equipo">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </button>
+                                    {% else %}
+                                    <button class="btn btn-outline-primary btn-sm js-equipo-respuestas" type="button"
                                         data-bs-toggle="modal" data-bs-target="#modalEquipoRespuestas"
                                         title="Gestionar equipo de respuestas">
                                         <i class="bi bi-people"></i>
                                     </button>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
@@ -617,7 +697,7 @@
 
                         {% else %}
                         <tr>
-                            <td colspan="6" class="text-center py-4 small-muted">
+                            <td colspan="9" class="text-center py-4 small-muted">
                                 No tienes imputaciones activas.
                             </td>
                         </tr>
@@ -663,118 +743,150 @@
 
 
         </div>
-    </div>
-    <!-- ================== TAB 4: MI EQUIPO (COLABORADOR) ================== -->
-    <div class="tab-pane fade" id="pane-equipo" role="tabpanel" aria-labelledby="tab-equipo">
-        <div class="table-responsive mb-4">
-            <table class="table table-striped align-middle recl-table">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Fecha OM</th>
-                        <th>Cliente</th>
-                        <th>Motivo / Sub Motivo</th>
+        <!-- ================== TAB 4: MI EQUIPO (COLABORADOR) ================== -->
+        <div class="tab-pane fade" id="pane-equipo" role="tabpanel" aria-labelledby="tab-equipo">
+            <div class="table-responsive mb-4">
+                <table class="table table-striped align-middle recl-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Fecha OM</th>
+                            <th>Cliente</th>
+                            <th>Motivo / Sub Motivo</th>
 
-                        <th>Sponsor</th>
-                        <th>Observación</th>
-                        <th>Estado equipo</th>
-                        <th class="sticky-end text-end">Acciones</th>
-                    </tr>
-                </thead>
+                            <th>Sponsor</th>
+                            <th>Observación</th>
+                            <th>Estado equipo</th>
+                            <th class="sticky-end text-end">Acciones</th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-                    {% if equipo_list and equipo_list|length > 0 %}
-                    {% for e in equipo_list %}
-                    <tr data-row="equipo" data-soy-equipo="1" data-reclamo-id="{{ e.reclamo_id }}"
-                        data-imputacion-id="{{ e.imputacion_id or '' }}"
-                        data-miembro-id="{{ e.usuario_id or e.miembro_id or '' }}" data-codigo="{{ e.codigo or '' }}"
-                        data-fecha-reclamo="{{ e.fecha_reclamo or '' }}"
-                        data-fecha-creacion="{{ e.fecha_creacion or '' }}" data-cliente="{{ e.cliente_nombre or '' }}"
-                        data-observacion="{{ e.observacion or '' }}" data-proceso="{{ e.proceso_text or '' }}"
-                        data-material="{{ e.material_desc or '' }}" data-estado="{{ e.estado_equipo or '' }}" {# ✅
-                        NUEVO: campos de respuesta del equipo (para mostrar/precargar) #}
-                        data-causa="{{ e.causa or '' }}" data-causas-detalle="{{ e.causas_detalle or '' }}"
-                        data-control-detalle="{{ e.control_detalle or '' }}"
-                        data-correctiva-detalle="{{ e.correctiva_detalle or '' }}"
-                        data-fecha-preventiva="{{ e.fecha_preventiva or '' }}"
-                        data-fecha-correctiva="{{ e.fecha_correctiva or '' }}"
-                        data-causas-detalle="{{ e.causas_detalle or '' }}"
-                        data-control-detalle="{{ e.control_detalle or '' }}"
-                        data-correctiva-detalle="{{ e.correctiva_detalle or '' }}"
-                        data-metodo-analisis="{{ e.metodo_analisis or '' }}" data-why1="{{ e.why1 or '' }}"
-                        data-why2="{{ e.why2 or '' }}" data-why3="{{ e.why3 or '' }}" data-why4="{{ e.why4 or '' }}"
-                        data-why5="{{ e.why5 or '' }}" data-fish-metodo="{{ e.fish_metodo or '' }}"
-                        data-fish-maquinas="{{ e.fish_maquinas or '' }}"
-                        data-fish-materiales="{{ e.fish_materiales or '' }}"
-                        data-fish-personas="{{ e.fish_personas or '' }}" data-fish-entorno="{{ e.fish_entorno or '' }}"
-                        data-fish-medicion="{{ e.fish_medicion or '' }}" data-tipo-reclamo="{{ e.motivo or '' }}"
-                        data-antecedente="{{ e.submotivo or '' }}" data-imputados="{{ e.sponsor or '' }}"
-                        data-estado-global="{{ e.estado_global or '' }}">
+                    <tbody>
+                        {% if equipo_list and equipo_list|length > 0 %}
+                        {% for e in equipo_list %}
+                        <tr data-row="equipo" data-soy-equipo="1" data-reclamo-id="{{ e.reclamo_id }}"
+                            data-imputacion-id="{{ e.imputacion_id or '' }}"
+                            data-miembro-id="{{ e.usuario_id or e.miembro_id or '' }}"
+                            data-codigo="{{ e.codigo or '' }}" data-fecha-reclamo="{{ e.fecha_reclamo or '' }}"
+                            data-fecha-creacion="{{ e.fecha_creacion or '' }}"
+                            data-cliente="{{ e.cliente_nombre or '' }}" data-observacion="{{ e.observacion or '' }}"
+                            data-proceso="{{ e.proceso_text or '' }}" data-material="{{ e.material_desc or '' }}"
+                            data-estado="{{ e.estado_equipo or '' }}" {# ✅ NUEVO: campos de respuesta del equipo (para
+                            mostrar/precargar) #} data-causa="{{ e.causa or '' }}"
+                            data-causas-detalle="{{ e.causas_detalle or '' }}"
+                            data-control-detalle="{{ e.control_detalle or '' }}"
+                            data-correctiva-detalle="{{ e.correctiva_detalle or '' }}"
+                            data-fecha-preventiva="{{ e.fecha_preventiva or '' }}"
+                            data-fecha-correctiva="{{ e.fecha_correctiva or '' }}"
+                            data-metodo-analisis="{{ e.metodo_analisis or '' }}" data-why1="{{ e.why1 or '' }}"
+                            data-why2="{{ e.why2 or '' }}" data-why3="{{ e.why3 or '' }}" data-why4="{{ e.why4 or '' }}"
+                            data-why5="{{ e.why5 or '' }}" data-fish-metodo="{{ e.fish_metodo or '' }}"
+                            data-fish-maquinas="{{ e.fish_maquinas or '' }}"
+                            data-fish-materiales="{{ e.fish_materiales or '' }}"
+                            data-fish-personas="{{ e.fish_personas or '' }}"
+                            data-fish-entorno="{{ e.fish_entorno or '' }}"
+                            data-fish-medicion="{{ e.fish_medicion or '' }}" data-tipo-reclamo="{{ e.motivo or '' }}"
+                            data-antecedente="{{ e.submotivo or '' }}" data-imputados="{{ e.sponsor or '' }}"
+                            data-estado-global="{{ e.estado_global or '' }}">
 
-                        <td data-th="Código">{{ e.codigo or '' }}</td>
-                        <td data-th="Fecha Reclamo"> {{ (e.fecha_limite or '')[8:10] }}/{{ (e.fecha_limite or
-                            '')[5:7] }}/{{
-                            (e.fecha_limite or '')[0:4] }}</td>
+                            <td data-th="Código">{{ e.codigo or '' }}</td>
+                            <td data-th="Fecha Reclamo"> {{ (e.fecha_reclamo or '')[8:10] }}/{{ (e.fecha_reclamo or
+                                '')[5:7] }}/{{
+                                (e.fecha_reclamo or '')[0:4] }}</td>
 
-                        <td data-th="Cliente">{{ e.cliente_nombre or '' }}</td>
+                            <td data-th="Cliente">{{ e.cliente_nombre or '' }}</td>
 
-                        <td data-th="Motivo" class="cell-max-280">
-                            <div class="fw-semibold">{{ e.motivo or '' }}</div>
-                            <div class="small-muted text-truncate cell-max-270">
-                                {{ e.submotivo or '' }}
-                            </div>
-                        </td>
+                            <td data-th="Motivo" class="cell-max-280">
+                                <div class="fw-semibold">{{ e.motivo or '' }}</div>
+                                <div class="small-muted text-truncate cell-max-270">
+                                    {{ e.submotivo or '' }}
+                                </div>
+                            </td>
 
-                        <td data-th="Sponsor">{{ e.sponsor or '' }}</td>
+                            <td data-th="Sponsor">{{ e.sponsor or '' }}</td>
 
-                        <td data-th="Observación" class="cell-max-280">
-                            <div class="small-muted text-truncate cell-max-270">
-                                {{ e.observacion or '' }}
-                            </div>
-                        </td>
+                            <td data-th="Observación" class="cell-max-280">
+                                <div class="small-muted text-truncate cell-max-270">
+                                    {{ e.observacion or '' }}
+                                </div>
+                            </td>
 
-                        <td data-th="Estado equipo">
-                            {{ e.estado_equipo }}
-                            {# ✅ OPCIONAL: indicador visual si ya respondió #}
-                            {% if (e.causa or '')|trim or (e.preventiva or '')|trim or (e.correctiva or '')|trim %}
-                            <span class="badge bg-success ms-2">Respondido</span>
-                            {% endif %}
-                        </td>
+                            <td data-th="Estado equipo">
+                                {{ e.estado_equipo }}
+                                {# ✅ OPCIONAL: indicador visual si ya respondió #}
+                                {% if (e.causa or '')|trim or (e.preventiva or '')|trim or (e.correctiva or '')|trim %}
+                                <span class="badge bg-success ms-2">Respondido</span>
+                                {% endif %}
+                            </td>
 
-                        <td class="sticky-end text-end" data-th="Acciones">
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-secondary btn-sm js-ver-detalle" title="Ver Detalle"
-                                    data-bs-toggle="modal" data-bs-target="#modalDetalle">
-                                    <i class="bi bi-eye"></i>
-                                </button>
+                            <td class="sticky-end text-end" data-th="Acciones">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary btn-sm js-ver-detalle" title="Ver Detalle"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalle">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
 
-                                {% set om_cerrada = (e.estado_global or '')|lower == 'cerrado' %}
+                                    {% set om_cerrada = (e.estado_global or '')|lower == 'cerrado' %}
 
-                                <button class="btn btn-outline-warning btn-sm js-responder-medidas"
-                                    title="{{ 'OM cerrada: solo lectura' if om_cerrada else 'Responder OM' }}"
-                                    data-bs-toggle="modal" data-bs-target="#modalResponderMedidas" {% if om_cerrada
-                                    %}disabled aria-disabled="true" {% endif %}>
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    {% else %}
-                    <tr>
-                        <td colspan="6" class="text-center py-4 small-muted">
-                            No tienes OM asignadas como miembro de equipo.
-                        </td>
-                    </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+                                    <button class="btn btn-outline-warning btn-sm js-responder-medidas"
+                                        title="{{ 'OM cerrada: solo lectura' if om_cerrada else 'Responder OM' }}"
+                                        data-bs-toggle="modal" data-bs-target="#modalResponderMedidas" {% if om_cerrada
+                                        %}disabled aria-disabled="true" {% endif %}>
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4 small-muted">
+                                No tienes OM asignadas como miembro de equipo.
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div> <!-- /tab-content -->
+
+</div> <!-- /container -->
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL FLOTANTE: ASISTENTE OM
+     ═══════════════════════════════════════════════════════ -->
+<div id="omChatPanel">
+    <div class="omc-header">
+        <span><i class="bi bi-robot me-1"></i>Asistente OM</span>
+        <div class="omc-header-btns">
+            <button id="om-chat-reset" class="omc-btn-nueva" type="button">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>Nueva
+            </button>
+            <button id="omChatClose" class="omc-btn-close" type="button">&#x2715;</button>
         </div>
     </div>
 
-</div> <!-- /tab-content -->
+    <div id="om-chat-messages" class="om-chat-messages">
+        <div class="om-chat-bubble bot">
+            Hola 👋 Puedo responder preguntas sobre Oportunidades de Mejora.<br>
+            <small class="om-chat-example">Ejemplo: “¿OM abiertas por proceso?” o “Estado de RECL00156”</small>
+        </div>
+    </div>
 
-</div> <!-- /container -->
+    <div class="omc-footer">
+        <div class="omc-input-row">
+            <input id="om-chat-input" type="text" class="omc-input" placeholder="Escribe tu pregunta...">
+            <button id="om-chat-send" class="omc-send" type="button">
+                <i class="bi bi-send"></i>
+            </button>
+        </div>
+        <div class="omc-disclaimer">
+            <i class="bi bi-shield-check me-1"></i>Solo consulta datos. Sin crear, modificar ni eliminar.
+        </div>
+    </div>
+</div>
 
 <!-- Toast flotante -->
 <div class="position-fixed bottom-0 end-0 p-3 no-print toast-fixed-wrap">
@@ -782,6 +894,20 @@
         <div class="d-flex">
             <div class="toast-body"></div>
             <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Busy / Procesando -->
+<div class="modal fade" id="busyModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border" role="status" aria-hidden="true"></div>
+                <div class="mt-2 fw-semibold">Procesando…</div>
+                <div id="busyMsg" class="small text-muted"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -862,18 +988,18 @@
                             <input type="hidden" name="proceso_text" id="recl-proceso-text">
                             <input type="hidden" name="antecedente" id="recl-antecedente">
 
-                            <select class="form-select" id="recl-proceso" name="proceso_id" required>
-                                <option value="">— Seleccione —</option>
+                            <select class="form-select recl-proceso-multi" id="recl-proceso" name="proceso_id" multiple
+                                required size="4">
                                 {% for p in procesos %}
-                                <option value="{{ p.id }}" data-text="{{ p.valor }}"> 
+                                <option value="{{ p.id }}" data-text="{{ p.valor }}">
                                     {{ p.valor }}
                                 </option>
                                 {% endfor %}
                             </select>
 
                             <div class="small-muted mt-1">
-                                El sponsor principal queda como responsable oficial. Los backups del proceso podrán
-                                visualizar la OM.
+                                Mantén <kbd>Ctrl</kbd> para seleccionar varios procesos. El sponsor principal de cada
+                                proceso seleccionado queda como responsable oficial.
                             </div>
                         </div>
 
@@ -890,6 +1016,24 @@
                         <div class="col-md-12 field-observacion">
                             <label class="form-label">Descripción / Observación</label>
                             <textarea name="observacion" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <div class="col-md-12 field-carta-cliente">
+                            <div class="border rounded-3 p-3 bg-light">
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" id="recl-requiere-carta-cliente"
+                                        name="requiere_carta_cliente" value="1">
+
+                                    <label class="form-check-label fw-semibold" for="recl-requiere-carta-cliente">
+                                        Esta OM llevará carta al cliente
+                                    </label>
+                                </div>
+
+                                <div class="small-muted mt-2 ps-4">
+                                    Al cerrar la OM, el Coordinador de Servicio al Cliente deberá subir la carta final
+                                    remitida al cliente.
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-md-4 field-factura-guia">
@@ -1091,8 +1235,8 @@
                                     </div>
                                 </div>
 
-                                <div id="det-causa" class="border rounded-3 p-2 det-rt-body det-bg-gray"
-                                    class="ws-pre-wrap"></div>
+                                <div id="det-causa" class="border rounded-3 p-2 det-rt-body det-bg-gray ws-pre-wrap">
+                                </div>
 
                                 <div class="small text-muted mt-2">
                                     <i class="bi bi-info-circle me-1"></i>Descripción de la causa raíz identificada.
@@ -1112,8 +1256,8 @@
                                     </div>
                                 </div>
 
-                                <div id="det-preventiva" class="border rounded-3 p-2 det-rt-body det-bg-warn"
-                                    class="ws-pre-wrap"></div>
+                                <div id="det-preventiva"
+                                    class="border rounded-3 p-2 det-rt-body det-bg-warn ws-pre-wrap"></div>
 
                                 <div class="small text-muted mt-2">
                                     <i class="bi bi-lightbulb me-1"></i>Control aplicado para evitar recurrencia
@@ -1134,8 +1278,8 @@
                                     </div>
                                 </div>
 
-                                <div id="det-correctiva" class="border rounded-3 p-2 det-rt-body det-bg-ok"
-                                    class="ws-pre-wrap"></div>
+                                <div id="det-correctiva" class="border rounded-3 p-2 det-rt-body det-bg-ok ws-pre-wrap">
+                                </div>
 
                                 <div class="small text-muted mt-2">
                                     <i class="bi bi-flag me-1"></i>Acción definitiva para eliminar la causa.
@@ -1673,15 +1817,15 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <div class="small-muted">Responsable / Causa raíz</div>
-                            <div id="val-causa" class="border rounded p-2" class="ws-pre-wrap min-h-4rem"></div>
+                            <div id="val-causa" class="border rounded p-2 ws-pre-wrap min-h-4rem"></div>
                         </div>
                         <div class="col-md-4">
                             <div class="small-muted">Acción de Control</div>
-                            <div id="val-preventiva" class="border rounded p-2" class="ws-pre-wrap min-h-4rem"></div>
+                            <div id="val-preventiva" class="border rounded p-2 ws-pre-wrap min-h-4rem"></div>
                         </div>
                         <div class="col-md-4">
                             <div class="small-muted">Acción Correctiva</div>
-                            <div id="val-correctiva" class="border rounded p-2" class="ws-pre-wrap min-h-4rem"></div>
+                            <div id="val-correctiva" class="border rounded p-2 ws-pre-wrap min-h-4rem"></div>
                         </div>
                     </div>
 
@@ -1912,8 +2056,8 @@
                                         <i class="bi bi-exclamation-circle me-1"></i>Causa
                                     </span>
                                 </div>
-                                <div id="ap-causa" class="border rounded-3 p-2 det-rt-body det-bg-gray"
-                                    class="ws-pre-wrap"></div>
+                                <div id="ap-causa" class="border rounded-3 p-2 det-rt-body det-bg-gray ws-pre-wrap">
+                                </div>
                                 <div class="small text-muted mt-2">
                                     <i class="bi bi-info-circle me-1"></i>Causa registrada por el miembro.
                                 </div>
@@ -1927,8 +2071,8 @@
                                         <i class="bi bi-shield-check me-1"></i>Acción de control
                                     </span>
                                 </div>
-                                <div id="ap-prev" class="border rounded-3 p-2 det-rt-body det-bg-warn"
-                                    class="ws-pre-wrap"></div>
+                                <div id="ap-prev" class="border rounded-3 p-2 det-rt-body det-bg-warn ws-pre-wrap">
+                                </div>
                                 <div class="small text-muted mt-2">
                                     <i class="bi bi-lightbulb me-1"></i>Acción de control registrada por el miembro.
                                 </div>
@@ -1942,8 +2086,7 @@
                                         <i class="bi bi-flag me-1"></i>Acción correctiva
                                     </span>
                                 </div>
-                                <div id="ap-corr" class="border rounded-3 p-2 det-rt-body det-bg-ok"
-                                    class="ws-pre-wrap"></div>
+                                <div id="ap-corr" class="border rounded-3 p-2 det-rt-body det-bg-ok ws-pre-wrap"></div>
                                 <div class="small text-muted mt-2">
                                     <i class="bi bi-check2-circle me-1"></i>Acción correctiva registrada por el miembro.
                                 </div>
@@ -2232,34 +2375,54 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalOmChat" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+<!-- =========================================================
+     MODAL: VALIDAR RESPUESTA — CREADOR DE LA OM
+     ========================================================= -->
+<div class="modal fade" id="modalValidarCreador" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-
-
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-person-check me-2"></i>Validar respuesta técnica
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
 
             <div class="modal-body">
-                <div id="om-chat-messages" class="om-chat-messages mb-3">
-                    <div class="om-chat-bubble bot">
-                        Pregúntame solo sobre Oportunidades de Mejora. Ejemplo: “¿Qué proceso tiene más OM?”.
+                <input type="hidden" id="vc-reclamo-id">
+                <input type="hidden" id="vc-accion">
+
+                <p class="mb-1">
+                    <strong>OM:</strong> <span id="vc-codigo" class="fw-semibold"></span>
+                </p>
+                <p class="mb-3 small-muted" id="vc-texto-accion"></p>
+
+                <div id="vc-motivo-wrap" class="d-none">
+                    <label class="form-label fw-semibold">
+                        Motivo del rechazo <span class="text-danger">*</span>
+                    </label>
+                    <textarea id="vc-motivo" class="form-control" rows="3"
+                        placeholder="Describe qué debe corregirse en la respuesta técnica…"></textarea>
+                    <div class="form-text small-muted mt-1">
+                        Se notificará por correo a los sponsors, miembros del equipo y
+                        Servicio al Cliente. La OM volverá a estado <strong>Abierto</strong>.
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <input id="om-chat-input" type="text" class="form-control"
-                        placeholder="Escribe tu pregunta sobre OM...">
-
-                    <button id="om-chat-send" class="btn btn-primary" type="button">
-                        Preguntar
-                    </button>
-                </div>
-
-                <div class="small-muted mt-2">
-                    Solo consulta datos. No crea, modifica ni elimina información.
+                <div id="vc-aceptar-info" class="alert alert-success small d-none">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Al aceptar, la OM quedará validada y permanecerá cerrada.
                 </div>
             </div>
 
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-vc-confirmar">
+                    Confirmar
+                </button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

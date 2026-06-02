@@ -589,10 +589,16 @@ def send_daily_report():
 
 
 def _sent_today(ts: str | None, today_iso: str) -> bool:
+    """True si la notificación ya fue enviada HOY (evita duplicados en el mismo día)."""
     v = (ts or "").strip()
     if not v:
         return False
     return v[:10] == today_iso
+
+
+def _ever_sent(ts: str | None) -> bool:
+    """True si la notificación ya fue enviada alguna vez (el timestamp existe)."""
+    return bool((ts or "").strip())
 
 
 
@@ -749,7 +755,7 @@ def process_om_notifications(conn):
             "app_url": app_url,
         }
 
-        if dias >= 4 and not d4_sent_today:
+        if dias >= 4 and not _ever_sent(r["om_notif_d4_at"]) and not d4_sent_today:
             _log(
                 "info",
                 "[OM_NOTIFY][D4] encolando sponsors imputacion_id=%s codigo=%s sponsors=%s",
@@ -790,7 +796,7 @@ def process_om_notifications(conn):
                 d4_sent_today,
             )
 
-        if dias >= 5 and not d5_sent_today and jefe_id and jefe:
+        if dias >= 5 and not _ever_sent(r["om_notif_d5_at"]) and not d5_sent_today and jefe_id and jefe:
             _log(
                 "info",
                 "[OM_NOTIFY][D5] encolando jefe imputacion_id=%s codigo=%s jefe_id=%s",
@@ -837,7 +843,7 @@ def process_om_notifications(conn):
                 jefe_id,
             )
 
-        if dias >= 9 and not d9_sent_today:
+        if dias >= 9 and not _ever_sent(r["om_notif_d9_at"]) and not d9_sent_today:
             _log(
                 "info",
                 "[OM_NOTIFY][D9] encolando sponsors+jefe imputacion_id=%s codigo=%s sponsors=%s",
@@ -895,7 +901,7 @@ def process_om_notifications(conn):
                 d9_sent_today,
             )
 
-        if dias >= 10 and not d10_sent_today:
+        if dias >= 10 and not _ever_sent(r["om_notif_d10_at"]) and not d10_sent_today:
             gg_ids = _get_gerente_general_ids(conn)
             sc_ids = _get_servicio_cliente_ids(conn)
 

@@ -43,6 +43,12 @@ from .scheduler_constants import (
     TPL_OM_JEFE_D5,
     TPL_OM_SPONSOR_JEFE_D9,
     TPL_OM_GG_D10,
+    TPL_OM_NUEVA_ASIGNADO,
+    TPL_OM_RECHAZO_CREADOR,
+    TPL_OM_NUEVA_REGISTRO,
+    TIPO_OM_NUEVA_ASIGNADO,
+    TIPO_OM_RECHAZO_CREADOR,
+    TIPO_OM_NUEVA_REGISTRO,
 )
 from modules.routes_planilla_mensual import send_mail as send_mail_planilla
 
@@ -1195,6 +1201,270 @@ def _enqueue_om_notification(
         raise
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Templates de eventos de OM (nueva asignación y rechazo de creador)
+# ──────────────────────────────────────────────────────────────────────────────
+
+_HTML_OM_EVENTO = """\
+<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+           style="background:#f3f4f6;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
+                 style="max-width:720px;background:#ffffff;border-radius:8px;
+                        border:1px solid #e5e7eb;overflow:hidden;">
+
+            <tr>
+              <td style="background:{{ header_color }};padding:16px 20px;color:#ffffff;">
+                <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.9;font-weight:700;">
+                  Oportunidad de Mejora
+                </div>
+                <div style="font-size:18px;font-weight:700;margin-top:4px;">
+                  {{ header_title }}
+                </div>
+                <div style="font-size:12px;opacity:.9;margin-top:6px;">
+                  {{ header_subtitle }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:18px 20px 10px 20px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                       style="border-collapse:collapse;">
+                  <tr>
+                    <td style="width:210px;background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Código</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ codigo }}</td>
+                  </tr>
+                  {% if fecha_om %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Fecha OM</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ fecha_om }}</td>
+                  </tr>{% endif %}
+                  {% if tipo_om %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Tipo de OM</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ tipo_om }}</td>
+                  </tr>{% endif %}
+                  {% if tipo_tramite %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Tipo de Trámite</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ tipo_tramite }}</td>
+                  </tr>{% endif %}
+                  {% if cliente %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Cliente</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ cliente }}</td>
+                  </tr>{% endif %}
+                  {% if proceso %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Proceso</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ proceso }}</td>
+                  </tr>{% endif %}
+                  {% if material %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Material</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ material }}</td>
+                  </tr>{% endif %}
+                  {% if factura %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Factura</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ factura }}</td>
+                  </tr>{% endif %}
+                  {% if observacion %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Observación</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;white-space:pre-wrap;">{{ observacion }}</td>
+                  </tr>{% endif %}
+                  {% if rechazado_por %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Rechazado por</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">{{ rechazado_por }}</td>
+                  </tr>{% endif %}
+                  {% if motivo_rechazo %}<tr>
+                    <td style="background:{{ row_bg }};font-weight:600;padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;">Motivo del rechazo</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;white-space:pre-wrap;">{{ motivo_rechazo }}</td>
+                  </tr>{% endif %}
+                </table>
+
+                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
+                  <a href="{{ cta_url }}"
+                     style="display:inline-block;background:{{ header_color }};color:#ffffff;
+                            text-decoration:none;padding:10px 18px;border-radius:6px;
+                            font-weight:600;font-size:13px;">
+                    {{ cta_label }}
+                  </a>
+                </div>
+
+                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
+                  {{ footer_note }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
+                         font-size:11px;color:#9ca3af;">
+                Este es un mensaje automático. No responda a este correo.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>"""
+
+_TEXT_OM_EVENTO = """\
+Hola {{ destinatario_nombre }},
+
+{{ header_title }} — {{ codigo }}
+
+{% if cliente %}Cliente: {{ cliente }}{% endif %}
+{% if proceso %}Proceso: {{ proceso }}{% endif %}
+{% if rechazado_por %}Rechazado por: {{ rechazado_por }}{% endif %}
+{% if motivo_rechazo %}Motivo: {{ motivo_rechazo }}{% endif %}
+
+{{ footer_note }}
+
+Ir al sistema: {{ cta_url }}
+
+Este es un mensaje automático."""
 
 
+def ensure_om_evento_templates(conn):
+    """Inserta/actualiza los templates de nueva asignación y rechazo de creador."""
+    ensure_notify_schema(conn)
+    cur = conn.cursor()
 
+    def upsert(key, tipo, subject, html, text):
+        cur.execute("""
+            UPDATE notify_templates
+               SET tipo=?, subject=?, html=?, text=?
+             WHERE [key]=?
+        """, (tipo, subject, html, text, key))
+        if cur.rowcount == 0:
+            cur.execute("""
+                INSERT INTO notify_templates ([key], tipo, subject, html, text)
+                VALUES (?, ?, ?, ?, ?)
+            """, (key, tipo, subject, html, text))
+
+    upsert(
+        TPL_OM_NUEVA_ASIGNADO,
+        "om",
+        "[Oportunidad de Mejora] Nueva OM asignada — {{ codigo }}",
+        _HTML_OM_EVENTO,
+        _TEXT_OM_EVENTO,
+    )
+    upsert(
+        TPL_OM_RECHAZO_CREADOR,
+        "om",
+        "[Oportunidad de Mejora] Respuesta rechazada por el creador — {{ codigo }}",
+        _HTML_OM_EVENTO,
+        _TEXT_OM_EVENTO,
+    )
+    upsert(
+        TPL_OM_NUEVA_REGISTRO,
+        "om",
+        "[Oportunidad de Mejora] Aprobación pendiente — {{ codigo }}",
+        _HTML_OM_EVENTO,
+        _TEXT_OM_EVENTO,
+    )
+    conn.commit()
+
+
+def _enqueue_om_evento(conn, *, user_id: int, tipo: str, template_key: str,
+                       reclamo_id: int, fecha_obj: str, payload: dict) -> bool:
+    """Encola una notificación de evento de OM. Idempotente por event_key."""
+    event_key = f"{tipo}-{reclamo_id}-{user_id}"
+    return _enqueue_om_notification(
+        conn,
+        user_id=user_id,
+        tipo=tipo,
+        template_key=template_key,
+        fecha_obj=fecha_obj,
+        payload=payload,
+        event_key=event_key,
+    )
+
+
+def enqueue_om_nueva_asignado(conn, *, user_id: int, reclamo_id: int, payload: dict) -> bool:
+    """
+    Encola el correo "Nueva OM asignada" para un imputado.
+    payload debe incluir: codigo, fecha_om, tipo_om, tipo_tramite, cliente, proceso,
+                          material, factura, observacion, destinatario_nombre, cta_url
+    """
+    from datetime import date
+    payload.setdefault("header_color", "#2563eb")
+    payload.setdefault("row_bg", "#dbeafe")
+    payload.setdefault("header_title", f"Nueva OM asignada — {payload.get('codigo','')}")
+    payload.setdefault("header_subtitle",
+        f"Hola {payload.get('destinatario_nombre','')}, se te ha asignado esta OM para análisis y respuesta técnica.")
+    payload.setdefault("cta_label", "Ingresar y responder medidas")
+    payload.setdefault("footer_note",
+        "Una vez completes la causa, acción preventiva y correctiva, tu jefe revisará y aprobará la respuesta técnica.")
+    payload.setdefault("rechazado_por", "")
+    payload.setdefault("motivo_rechazo", "")
+
+    return _enqueue_om_evento(
+        conn,
+        user_id=user_id,
+        tipo=TIPO_OM_NUEVA_ASIGNADO,
+        template_key=TPL_OM_NUEVA_ASIGNADO,
+        reclamo_id=reclamo_id,
+        fecha_obj=date.today().isoformat(),
+        payload=payload,
+    )
+
+
+def enqueue_om_rechazo_creador(conn, *, user_id: int, reclamo_id: int, payload: dict) -> bool:
+    """
+    Encola el correo "Respuesta rechazada por el creador" para un destinatario.
+    payload debe incluir: codigo, fecha_om, tipo_om, cliente, proceso, observacion,
+                          rechazado_por, motivo_rechazo, destinatario_nombre, cta_url
+    """
+    from datetime import date
+    payload.setdefault("header_color", "#dc2626")
+    payload.setdefault("row_bg", "#fee2e2")
+    payload.setdefault("header_title", f"Respuesta rechazada — {payload.get('codigo','')}")
+    payload.setdefault("header_subtitle",
+        f"Hola {payload.get('destinatario_nombre','')}, el creador {payload.get('rechazado_por','')} "
+        f"rechazó la respuesta técnica de esta OM.")
+    payload.setdefault("cta_label", "Ingresar y registrar nueva respuesta")
+    payload.setdefault("footer_note",
+        "La OM ha vuelto a estado Abierto. Se requiere registrar una nueva respuesta técnica.")
+
+    return _enqueue_om_evento(
+        conn,
+        user_id=user_id,
+        tipo=TIPO_OM_RECHAZO_CREADOR,
+        template_key=TPL_OM_RECHAZO_CREADOR,
+        reclamo_id=reclamo_id,
+        fecha_obj=date.today().isoformat(),
+        payload=payload,
+    )
+
+
+def enqueue_om_nueva_registro(conn, *, user_id: int, reclamo_id: int, payload: dict) -> bool:
+    """
+    Encola el correo "Nueva OM registrada — aprobación pendiente" para el jefe/sponsor.
+    payload debe incluir: codigo, fecha_om, tipo_om, tipo_tramite, cliente, proceso,
+                          material, factura, observacion, imputados,
+                          destinatario_nombre, cta_url
+    """
+    from datetime import date
+    payload.setdefault("header_color", "#b91c1c")
+    payload.setdefault("row_bg", "#fee2e2")
+    payload.setdefault("header_title", f"Aprobación pendiente — {payload.get('codigo', '')}")
+    payload.setdefault("header_subtitle",
+        f"Hola {payload.get('destinatario_nombre', '')}, tienes una imputación pendiente de revisión.")
+    payload.setdefault("cta_label", "Revisar y aprobar imputación")
+    payload.setdefault("footer_note",
+        "Ingresa al módulo de reclamos, bandeja \"Por aprobar (Jefe)\" para revisar y aprobar.")
+    payload.setdefault("rechazado_por", "")
+    payload.setdefault("motivo_rechazo", "")
+
+    return _enqueue_om_evento(
+        conn,
+        user_id=user_id,
+        tipo=TIPO_OM_NUEVA_REGISTRO,
+        template_key=TPL_OM_NUEVA_REGISTRO,
+        reclamo_id=reclamo_id,
+        fecha_obj=date.today().isoformat(),
+        payload=payload,
+    )

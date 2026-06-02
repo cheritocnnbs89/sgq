@@ -702,6 +702,11 @@ def svc_build_dashboard_context(user, request_args=None):
     overdue_by_depto_count = defaultdict(int)
     compromiso_counts = defaultdict(int)
     horas_cerradas_por_usuario_count = defaultdict(float)
+    tareas_cerradas_por_usuario_count = defaultdict(int)
+    horas_por_dia_count = defaultdict(float)
+    horas_por_depto_count = defaultdict(float)
+    tareas_por_depto_mes_count: dict = defaultdict(lambda: defaultdict(int))
+    cumplimiento_mensual_count: dict = defaultdict(lambda: {"a_tiempo": 0, "atrasadas": 0})
 
     for r in tareas_raw:
         t = dict(r)
@@ -712,16 +717,36 @@ def svc_build_dashboard_context(user, request_args=None):
         else:
             conteos[estado] = conteos.get(estado, 0) + 1
 
-        comp_dt = parse_dt(t.get("fecha_compromiso"))
+        comp_dt  = parse_dt(t.get("fecha_compromiso"))
+        depto_t  = t.get("departamento") or "Sin departamento"
 
+        # Horas = fecha_inicio → fecha_fin (tiempo planificado invertido en la tarea)
         inicio_dt = parse_dt(t.get("fecha_inicio"))
-        cierre_dt = parse_dt(t.get("fecha_cierre_real"))
+        fin_dt    = parse_dt(t.get("fecha_fin"))
 
-        if estado in ("Terminado", "Cerrado por sistema") and inicio_dt and cierre_dt:
-            horas = round((cierre_dt - inicio_dt).total_seconds() / 3600, 2)
+        if estado in ("Terminado", "Cerrado por sistema") and inicio_dt and fin_dt:
+            horas = round((fin_dt - inicio_dt).total_seconds() / 3600, 2)
             if horas >= 0:
                 owner = t.get("propietario") or "—"
                 horas_cerradas_por_usuario_count[owner] += horas
+                tareas_cerradas_por_usuario_count[owner] += 1
+                horas_por_dia_count[inicio_dt.strftime("%Y-%m-%d")] += horas
+                horas_por_depto_count[depto_t] += horas
+
+        # Tareas por departamento por mes (todas las tareas)
+        fecha_ref = inicio_dt or parse_dt(str(t.get("fecha_creacion") or "").strip())
+        if fecha_ref:
+            tareas_por_depto_mes_count[depto_t][fecha_ref.strftime("%Y-%m")] += 1
+
+        # Cumplimiento mensual: cerradas a tiempo vs tardías
+        if estado in ("Terminado", "Cerrado por sistema"):
+            cierre_dt_c = parse_dt(str(t.get("fecha_cierre_real") or "").strip())
+            if cierre_dt_c:
+                mes_c = cierre_dt_c.strftime("%Y-%m")
+                if comp_dt and cierre_dt_c > comp_dt:
+                    cumplimiento_mensual_count[mes_c]["atrasadas"] += 1
+                else:
+                    cumplimiento_mensual_count[mes_c]["a_tiempo"] += 1
 
         if comp_dt:
             compromiso_counts[comp_dt.date()] += 1
@@ -761,13 +786,79 @@ def svc_build_dashboard_context(user, request_args=None):
 
     horas_cerradas_por_usuario = sorted(
         [
-            {"usuario": u, "horas": round(h, 2)}
+            {
+                "usuario": u,
+                "horas": round(h, 2),
+                "tareas": tareas_cerradas_por_usuario_count[u],
+                "horas_por_tarea": round(h / tareas_cerradas_por_usuario_count[u], 2)
+                    if tareas_cerradas_por_usuario_count[u] else 0,
+            }
             for u, h in horas_cerradas_por_usuario_count.items()
         ],
         key=lambda x: -x["horas"],
     )
 
     dates_sorted = sorted(compromiso_counts.keys())
+
+    # ── Horas por usuario (top 12, para gráfico) ──────────────
+    _horas_usr_sorted = sorted(
+        horas_cerradas_por_usuario_count.items(), key=lambda x: -x[1]
+    )[:12]
+    chart_horas_usuario = {
+        "labels": [u for u, _ in _horas_usr_sorted],
+        "data":   [round(h, 1) for _, h in _horas_usr_sorted],
+    }
+
+    # ── Horas por departamento ─────────────────────────────────
+    horas_por_depto = sorted(
+        [{"departamento": d, "horas": round(h, 2)}
+         for d, h in horas_por_depto_count.items()],
+        key=lambda x: -x["horas"],
+    )
+    _DONUT_COLORS = [
+        "#3b82f6","#10b981","#f59e0b","#ef4444",
+        "#8b5cf6","#ec4899","#06b6d4","#84cc16",
+        "#f97316","#64748b","#a21caf","#0ea5e9",
+    ]
+    chart_horas_depto = {
+        "labels": [d["departamento"] for d in horas_por_depto],
+        "data":   [d["horas"] for d in horas_por_depto],
+        "colors": [_DONUT_COLORS[i % len(_DONUT_COLORS)] for i in range(len(horas_por_depto))],
+    }
+
+    # ── Horas por día ──────────────────────────────────────────
+    dias_sorted = sorted(horas_por_dia_count.keys())
+    chart_horas_dia = {
+        "labels": dias_sorted,
+        "data":   [round(horas_por_dia_count[d], 1) for d in dias_sorted],
+    }
+
+    # ── Tareas por departamento por mes (top 7 deptos) ─────────
+    _all_meses = sorted({m for dv in tareas_por_depto_mes_count.values() for m in dv})
+    _top_deptos = sorted(
+        tareas_por_depto_mes_count,
+        key=lambda d: -sum(tareas_por_depto_mes_count[d].values()),
+    )[:7]
+    _COLORS = ["#3b82f6","#10b981","#f59e0b","#ef4444","#8b5cf6","#ec4899","#06b6d4"]
+    chart_depto_mes = {
+        "labels": _all_meses,
+        "datasets": [
+            {
+                "label": dep,
+                "data":  [tareas_por_depto_mes_count[dep].get(m, 0) for m in _all_meses],
+                "color": _COLORS[i % len(_COLORS)],
+            }
+            for i, dep in enumerate(_top_deptos)
+        ],
+    }
+
+    # ── Cumplimiento mensual ───────────────────────────────────
+    _meses_c = sorted(cumplimiento_mensual_count.keys())
+    chart_cumplimiento = {
+        "labels":    _meses_c,
+        "a_tiempo":  [cumplimiento_mensual_count[m]["a_tiempo"]  for m in _meses_c],
+        "atrasadas": [cumplimiento_mensual_count[m]["atrasadas"] for m in _meses_c],
+    }
 
     return {
         "usuario": user["username"],
@@ -786,6 +877,7 @@ def svc_build_dashboard_context(user, request_args=None):
         "overdue_by_user": overdue_by_user,
         "overdue_by_depto": overdue_by_depto,
         "horas_cerradas_por_usuario": horas_cerradas_por_usuario,
+        "horas_por_depto": horas_por_depto,
         "chart": {
             "status": {
                 "labels": list(ESTADOS),
@@ -803,6 +895,11 @@ def svc_build_dashboard_context(user, request_args=None):
                 "labels": [d.isoformat() for d in dates_sorted],
                 "data": [compromiso_counts[d] for d in dates_sorted],
             },
+            "horas_dia":     chart_horas_dia,
+            "horas_usuario": chart_horas_usuario,
+            "horas_depto":   chart_horas_depto,
+            "depto_mes":     chart_depto_mes,
+            "cumplimiento":  chart_cumplimiento,
         },
         "active_page": "dashboard",
     }
@@ -919,6 +1016,16 @@ def svc_build_listar_tareas_context(user, request_args):
                 editable = True
 
         t["editable"] = editable
+
+        # Horas de atención = fecha_fin - fecha_inicio
+        _fi = parse_dt(str(t.get("fecha_inicio") or "").strip())
+        _ff = parse_dt(str(t.get("fecha_fin") or "").strip())
+        if _fi and _ff:
+            _h = round((_ff - _fi).total_seconds() / 3600, 2)
+            t["horas_atencion"] = _h if _h >= 0 else None
+        else:
+            t["horas_atencion"] = None
+
         tareas_list.append(t)
 
     return {
@@ -1597,12 +1704,13 @@ def svc_exportar_tareas_excel(request_args):
         if fecha_hasta and (not fecha_base or fecha_base > fecha_hasta):
             continue
 
+        # Horas invertidas = fecha_inicio → fecha_fin (tiempo planificado de la tarea)
         inicio_dt = parse_dt(t.get("fecha_inicio") or t.get("fecha_creacion"))
-        fin_real_dt = parse_dt(t.get("fecha_cierre_real"))
+        fin_dt    = parse_dt(t.get("fecha_fin"))
 
         horas_soporte = ""
-        if inicio_dt and fin_real_dt:
-            horas = round((fin_real_dt - inicio_dt).total_seconds() / 3600, 2)
+        if inicio_dt and fin_dt:
+            horas = round((fin_dt - inicio_dt).total_seconds() / 3600, 2)
             horas_soporte = horas if horas >= 0 else ""
 
         fila = {

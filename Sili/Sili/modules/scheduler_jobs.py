@@ -5,7 +5,7 @@
 # ==========================================================
 
 # Cambia a True cuando quieras activar nuevamente los jobs
-SCHEDULER_JOBS_ENABLED = False
+SCHEDULER_JOBS_ENABLED = True
 
 from modules.scheduler import (
     start_scheduler as _real_start_scheduler,
@@ -46,6 +46,10 @@ from modules.scheduler.scheduler_notifications import (
     _send_inapp,
     _send_slack,
     _enqueue_om_notification,
+    ensure_om_evento_templates,
+    enqueue_om_nueva_asignado,
+    enqueue_om_rechazo_creador,
+    enqueue_om_nueva_registro,
 )
 
 from modules.scheduler.scheduler_services import (
@@ -102,6 +106,10 @@ __all__ = [
     "_send_inapp",
     "_send_slack",
     "_enqueue_om_notification",
+    "ensure_om_evento_templates",
+    "enqueue_om_nueva_asignado",
+    "enqueue_om_rechazo_creador",
+    "enqueue_om_nueva_registro",
     "_tareas_para_usuario_en_fecha",
     "_sent_today",
     "_now_str",

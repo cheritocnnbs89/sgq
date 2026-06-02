@@ -46,6 +46,11 @@
   let overUserChart = null;
   let overDeptChart = null;
   let timelineChart = null;
+  let horasDiaChart = null;
+  let horasUsuarioChart = null;
+  let horasDeptoChart = null;
+  let deptoMesChart = null;
+  let cumplimientoChart = null;
 
   const ctxStatus = document.getElementById("chartStatus");
   if (ctxStatus && CHART.status) {
@@ -130,6 +135,211 @@
     });
   }
 
+  // ── Horas por usuario (barras horizontales) ─────────────────
+  const ctxHorasUsuario = document.getElementById("chartHorasUsuario");
+  if (ctxHorasUsuario && CHART.horas_usuario && CHART.horas_usuario.labels.length) {
+    const maxH = Math.max(...CHART.horas_usuario.data, 1);
+    horasUsuarioChart = new Chart(ctxHorasUsuario, {
+      type: "bar",
+      data: {
+        labels: CHART.horas_usuario.labels,
+        datasets: [{
+          label: "Horas",
+          data: CHART.horas_usuario.data,
+          backgroundColor: CHART.horas_usuario.data.map((v) => {
+            const pct = v / maxH;
+            if (pct > 0.66) return rgba("#6366f1", 0.80);
+            if (pct > 0.33) return rgba("#3b82f6", 0.75);
+            return rgba("#10b981", 0.70);
+          }),
+          borderRadius: 6,
+          borderSkipped: false,
+        }],
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: { label: (c) => ` ${c.parsed.x.toFixed(1)} h` },
+          },
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { drawBorder: false },
+            ticks: { callback: (v) => v + "h" },
+          },
+          y: { grid: { display: false } },
+        },
+      },
+    });
+  } else if (ctxHorasUsuario) {
+    ctxHorasUsuario.closest(".chart-box").innerHTML =
+      '<div class="empty-state">Sin horas registradas</div>';
+  }
+
+  // ── Horas por departamento (donut) ───────────────────────────
+  const ctxHorasDepto = document.getElementById("chartHorasDepto");
+  if (ctxHorasDepto && CHART.horas_depto && CHART.horas_depto.labels.length) {
+    horasDeptoChart = new Chart(ctxHorasDepto, {
+      type: "doughnut",
+      data: {
+        labels: CHART.horas_depto.labels,
+        datasets: [{
+          data: CHART.horas_depto.data,
+          backgroundColor: CHART.horas_depto.colors,
+          borderColor: "#ffffff",
+          borderWidth: 2,
+          hoverOffset: 8,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "62%",
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: { boxWidth: 10, padding: 8, font: { size: 11 } },
+          },
+          tooltip: {
+            callbacks: {
+              label: (c) => {
+                const total = c.dataset.data.reduce((a, b) => a + b, 0);
+                const pct = total > 0 ? ((c.parsed / total) * 100).toFixed(1) : 0;
+                return ` ${c.label}: ${c.parsed.toFixed(1)}h (${pct}%)`;
+              },
+            },
+          },
+        },
+      },
+    });
+  } else if (ctxHorasDepto) {
+    ctxHorasDepto.closest(".chart-box").innerHTML =
+      '<div class="empty-state">Sin horas por departamento</div>';
+  }
+
+  // ── Horas de atención por día ────────────────────────────────
+  const ctxHorasDia = document.getElementById("chartHorasDia");
+  if (ctxHorasDia && CHART.horas_dia && CHART.horas_dia.labels.length) {
+    horasDiaChart = new Chart(ctxHorasDia, {
+      type: "line",
+      data: {
+        labels: CHART.horas_dia.labels,
+        datasets: [{
+          label: "Horas de atención",
+          data: CHART.horas_dia.data,
+          borderColor: "#6366f1",
+          backgroundColor: rgba("#6366f1", 0.12),
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+        }],
+      },
+      options: {
+        ...baseOptions,
+        plugins: {
+          ...baseOptions.plugins,
+          tooltip: {
+            callbacks: {
+              label: (ctx) => ` ${ctx.parsed.y.toFixed(1)} h`,
+            },
+          },
+        },
+        scales: {
+          x: { grid: { display: false } },
+          y: { beginAtZero: true, ticks: { callback: (v) => v + "h" } },
+        },
+      },
+    });
+  } else if (ctxHorasDia) {
+    ctxHorasDia.closest(".chart-box").innerHTML =
+      '<div class="empty-state">Sin datos de horas aún</div>';
+  }
+
+  // ── Tareas por departamento por mes (stacked bar) ────────────
+  const ctxDeptoMes = document.getElementById("chartDeptoMes");
+  if (ctxDeptoMes && CHART.depto_mes && CHART.depto_mes.datasets.length) {
+    deptoMesChart = new Chart(ctxDeptoMes, {
+      type: "bar",
+      data: {
+        labels: CHART.depto_mes.labels,
+        datasets: CHART.depto_mes.datasets.map((ds) => ({
+          label: ds.label,
+          data: ds.data,
+          backgroundColor: rgba(ds.color, 0.75),
+          borderColor: ds.color,
+          borderWidth: 1,
+          borderRadius: 3,
+        })),
+      },
+      options: {
+        ...baseOptions,
+        plugins: {
+          ...baseOptions.plugins,
+          legend: { position: "bottom", labels: { boxWidth: 12, padding: 10 } },
+          tooltip: { mode: "index", intersect: false },
+        },
+        scales: {
+          x: { stacked: true, grid: { display: false } },
+          y: { stacked: true, beginAtZero: true },
+        },
+      },
+    });
+  } else if (ctxDeptoMes) {
+    ctxDeptoMes.closest(".chart-box").innerHTML =
+      '<div class="empty-state">Sin datos por departamento</div>';
+  }
+
+  // ── Cumplimiento mensual (grouped bar) ───────────────────────
+  const ctxCumplimiento = document.getElementById("chartCumplimiento");
+  if (ctxCumplimiento && CHART.cumplimiento && CHART.cumplimiento.labels.length) {
+    cumplimientoChart = new Chart(ctxCumplimiento, {
+      type: "bar",
+      data: {
+        labels: CHART.cumplimiento.labels,
+        datasets: [
+          {
+            label: "A tiempo",
+            data: CHART.cumplimiento.a_tiempo,
+            backgroundColor: rgba("#10b981", 0.7),
+            borderColor: "#10b981",
+            borderWidth: 1,
+            borderRadius: 4,
+          },
+          {
+            label: "Tardías",
+            data: CHART.cumplimiento.atrasadas,
+            backgroundColor: rgba("#ef4444", 0.7),
+            borderColor: "#ef4444",
+            borderWidth: 1,
+            borderRadius: 4,
+          },
+        ],
+      },
+      options: {
+        ...baseOptions,
+        plugins: {
+          ...baseOptions.plugins,
+          legend: { position: "bottom", labels: { boxWidth: 12, padding: 8 } },
+          tooltip: { mode: "index", intersect: false },
+        },
+        scales: {
+          x: { grid: { display: false } },
+          y: { beginAtZero: true },
+        },
+      },
+    });
+  } else if (ctxCumplimiento) {
+    ctxCumplimiento.closest(".chart-box").innerHTML =
+      '<div class="empty-state">Sin cierres registrados</div>';
+  }
+
   const applyTheme = () => {
     const ink = cssVar("--ink") || "#111827";
     const line = cssVar("--line") || "#E5E7EB";
@@ -138,7 +348,9 @@
     Chart.defaults.color = ink;
     Chart.defaults.borderColor = line;
 
-    [statusChart, overUserChart, overDeptChart, timelineChart].forEach((ch) => {
+    [statusChart, overUserChart, overDeptChart, timelineChart,
+     horasUsuarioChart, horasDeptoChart,
+     horasDiaChart, deptoMesChart, cumplimientoChart].forEach((ch) => {
       if (!ch) return;
 
       if (ch.options.scales?.x?.ticks) ch.options.scales.x.ticks.color = muted;
@@ -159,10 +371,15 @@
   };
 
   const charts = {
-    chartStatus: statusChart,
-    chartOverUser: overUserChart,
-    chartOverDept: overDeptChart,
-    chartTimeline: timelineChart,
+    chartStatus:        statusChart,
+    chartOverUser:      overUserChart,
+    chartOverDept:      overDeptChart,
+    chartTimeline:      timelineChart,
+    chartHorasUsuario:  horasUsuarioChart,
+    chartHorasDepto:    horasDeptoChart,
+    chartHorasDia:      horasDiaChart,
+    chartDeptoMes:      deptoMesChart,
+    chartCumplimiento:  cumplimientoChart,
   };
 
   document.querySelectorAll(".chart-toolbar").forEach((tb) => {
@@ -201,13 +418,22 @@
 
     if (btnCsv) {
       btnCsv.addEventListener("click", () => {
-        const csv = toCSV(ch.data.labels, ch.data.datasets[0]);
+        let csv;
+        if (ch.data.datasets.length > 1) {
+          // Multi-dataset (e.g. depto_mes, cumplimiento)
+          const head = ["Mes", ...ch.data.datasets.map((d) => d.label)].join(",");
+          const rows = ch.data.labels.map((lab, i) =>
+            [lab, ...ch.data.datasets.map((d) => d.data[i] ?? "")].join(",")
+          );
+          csv = [head, ...rows].join("\n");
+        } else {
+          csv = toCSV(ch.data.labels, ch.data.datasets[0]);
+        }
         const blob = new Blob([csv], { type: "text/csv" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
         a.download = `${id}.csv`;
         a.click();
-
         setTimeout(() => URL.revokeObjectURL(a.href), 500);
       });
     }

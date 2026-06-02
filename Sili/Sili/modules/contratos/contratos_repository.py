@@ -242,25 +242,47 @@ def fetch_archivo_por_id(archivo_id: int):
     return conn.cursor().execute(SQL_ARCHIVO_POR_ID, (archivo_id,)).fetchone()
 
 
-def list_contratos(proveedor: str = "", pedido: str = "", tipo_pp: str = ""):
+def list_contratos(
+    proveedor: str = "",
+    pedido: str = "",
+    tipo_pp: str = "",
+    fecha_desde: str = "",
+    fecha_hasta: str = "",
+):
     sql = SQL_LISTA_CONTRATOS_BASE
     params: List[Any] = []
+
+    proveedor = (proveedor or "").strip()
+    pedido = (pedido or "").strip()
+    tipo_pp = (tipo_pp or "").strip().upper()
+    fecha_desde = (fecha_desde or "").strip()
+    fecha_hasta = (fecha_hasta or "").strip()
 
     if proveedor:
         sql += " AND c.proveedor LIKE ?"
         params.append(f"%{proveedor}%")
+
     if pedido:
         sql += " AND c.pedido LIKE ?"
         params.append(f"%{pedido}%")
+
     if tipo_pp in ("PAGARE", "POLIZA", "AMBOS"):
         sql += " AND c.tipo_pp = ?"
         params.append(tipo_pp)
+
+    # Filtro por fecha de suscripción del contrato
+    if fecha_desde:
+        sql += " AND CAST(c.fecha_suscripcion AS date) >= CAST(? AS date)"
+        params.append(fecha_desde)
+
+    if fecha_hasta:
+        sql += " AND CAST(c.fecha_suscripcion AS date) <= CAST(? AS date)"
+        params.append(fecha_hasta)
 
     sql += " ORDER BY c.id DESC"
 
     conn = get_conn()
     return conn.cursor().execute(sql, params).fetchall()
-
  
 def list_garantias(
     proveedor: str = "",

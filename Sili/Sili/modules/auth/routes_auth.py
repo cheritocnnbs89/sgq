@@ -105,12 +105,28 @@ def _is_ip_blocked_24h(ip: str) -> bool:
     return c24h >= 40
 
 
+def _landing_after_login() -> str:
+    """
+    Devuelve la URL de destino después de hacer login.
+    Prioridad: Dashboard de Reclamos → Dashboard de Tareas.
+    Si el usuario no tiene el permiso 'reclamos.ver' se cae al de tareas.
+    """
+    try:
+        from modules.security import has_permission
+        rol = session.get("rol", "")
+        if has_permission(rol, "reclamos", "ver"):
+            return url_for("reclamos_dashboard")
+    except Exception:
+        pass
+    return url_for("dashboard")
+
+
 def register_auth_routes(app):
     @app.route('/', methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
             if session.get('usuario_id'):
-                return redirect(url_for('dashboard'))
+                return redirect(_landing_after_login())
 
             delay_sesion = servicio_auth.login_should_slowdown(session)
             if delay_sesion > 0:
@@ -348,7 +364,7 @@ def register_auth_routes(app):
             from ..security import has_permission
             if not has_permission(user['rol'], 'cambio_clave', 'editar'):
                 flash('No tiene permiso para cambiar la clave.', 'danger')
-                return redirect(url_for('dashboard'))
+                return redirect(_landing_after_login())
 
             nueva = request.form.get('password', '').strip()
             confirm = request.form.get('confirm', '').strip()
@@ -357,7 +373,7 @@ def register_auth_routes(app):
 
             flash(resultado["mensaje"], resultado["tipo"])
             if resultado["ok"]:
-                return redirect(url_for('dashboard'))
+                return redirect(_landing_after_login())
 
         return render_template('cambiar_clave.html')
     
@@ -409,7 +425,7 @@ def register_auth_routes(app):
             session.pop('login_mfa_verified', None)
             session.pop('login_mfa_remember', None)
 
-            return redirect(url_for('dashboard'))
+            return redirect(_landing_after_login())
 
         flash(resultado["mensaje"], resultado["tipo"])
         return redirect(url_for(resultado["redirigir"]))

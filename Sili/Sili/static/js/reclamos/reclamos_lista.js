@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const today = new Date().toISOString().split("T")[0];
-    document.getElementById("fechaEvento").setAttribute("max", today);
+    document.getElementById("fechaEvento")?.setAttribute("max", today);
 });
 
 
@@ -10,7 +10,11 @@ function getMetaUrl(name) {
 }
 
 function getCSRFToken() {
-    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    return (
+        document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+        document.querySelector('input[name="csrf_token"]')?.value ||
+        ''
+    );
 }
 
 const csrfToken = getCSRFToken();
@@ -24,33 +28,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const selProceso = document.getElementById('recl-proceso');
 
-    selProceso?.addEventListener('change', async () => {
-        const procesoId = selProceso.value;
+    // Set con los proceso_id actualmente seleccionados
+    let _selectedProcesos = new Set();
 
-        document.querySelectorAll('.js-sponsor-hidden').forEach(x => x.remove());
+    function _removeSponsorsByProceso(procesoId) {
+        const chips = document.getElementById('recl-imputados-chips');
+        if (!chips) return;
+        // Recolectar las keys únicas de este proceso antes de iterar
+        const keysToRemove = new Set();
+        chips.querySelectorAll('.badge[data-auto="1"]').forEach(chip => {
+            (chip.dataset.autoKeys || '').split('|').filter(Boolean).forEach(k => {
+                if (k.startsWith(`proceso-${procesoId}-`)) keysToRemove.add(k);
+            });
+        });
+        // Usar _omRemoveAutoSponsorByKey para que también limpie el Map `selected`
+        keysToRemove.forEach(k => window._omRemoveAutoSponsorByKey?.(k));
+    }
 
-        if (!procesoId) return;
-
+    async function _loadSponsorsByProceso(procesoId) {
         const urlTpl = getMetaUrl('api-proceso-sponsors-url');
         const url = urlTpl.replace('__ID__', encodeURIComponent(procesoId));
-
         const resp = await fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': csrfToken
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrfToken }
         });
-
         const data = await resp.json();
-
-        console.log('Sponsors del proceso:', data.items);
-
         (data.items || []).forEach(s => {
             window.agregarImputadoDesdeProceso?.(s, `proceso-${procesoId}-${s.tipo}`);
         });
+    }
+
+    function _syncProcesoText() {
+        const hidPT = document.getElementById('recl-proceso-text');
+        if (!hidPT) return;
+        const selected = [...selProceso.selectedOptions].map(o => o.dataset.text || o.textContent.trim());
+        hidPT.value = selected.join(', ');
+    }
+
+    selProceso?.addEventListener('change', async () => {
+        // Limpiar hidden inputs legados
+        document.querySelectorAll('.js-sponsor-hidden').forEach(x => x.remove());
+
+        const currentSet = new Set([...selProceso.selectedOptions].map(o => o.value).filter(Boolean));
+
+        // Procesos que se quitaron → eliminar sus sponsors
+        for (const pid of _selectedProcesos) {
+            if (!currentSet.has(pid)) _removeSponsorsByProceso(pid);
+        }
+
+        // Procesos que se añadieron → cargar sus sponsors
+        const toLoad = [...currentSet].filter(pid => !_selectedProcesos.has(pid));
+        _selectedProcesos = currentSet;
+
+        _syncProcesoText();
+
+        await Promise.all(toLoad.map(_loadSponsorsByProceso));
     });
 
     const hidProceso = document.getElementById('recl-proceso-text');
+
 
     const selSub = document.getElementById('recl-subtipo');
     const inpSubOtro = document.getElementById('recl-subtipo-otro');
@@ -1047,6 +1082,14 @@ function desbloquearBtn(btn) {
             document.getElementById('det-antecedente').textContent = tr.dataset.antecedente || '';
             document.getElementById('det-material').textContent = tr.dataset.material || '';
 
+            const creadoPor = (tr.dataset.creadoPor || '').trim();
+            const creadoPorWrap = document.getElementById('det-creado-por-wrap');
+            const creadoPorEl  = document.getElementById('det-creado-por');
+            if (creadoPorWrap && creadoPorEl) {
+                creadoPorEl.textContent = creadoPor;
+                creadoPorWrap.classList.toggle('d-none', !creadoPor);
+            }
+
             renderChips(
                 document.getElementById('det-imputados'),
                 (tr.dataset.imputados || tr.dataset.imputado || ''),
@@ -1344,81 +1387,81 @@ function desbloquearBtn(btn) {
                 return;
             }
 
- if (tipoRow === 'created' && reclamoId) {
-    try {
-        const resp = await fetch(`/reclamos/api/${reclamoId}/respuestas-detalle`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': csrfToken
-            }
-        });
+            if (tipoRow === 'created' && reclamoId) {
+                try {
+                    const resp = await fetch(`/reclamos/api/${reclamoId}/respuestas-detalle`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': csrfToken
+                        }
+                    });
 
-        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
 
-        const data = await resp.json();
-        const items = Array.isArray(data.items) ? data.items : [];
+                    const data = await resp.json();
+                    const items = Array.isArray(data.items) ? data.items : [];
 
-        // Solo respuestas oficiales de sponsors/imputados.
-        const sponsorItems = items.filter(x => x.origen === 'imputado');
+                    // Solo respuestas oficiales de sponsors/imputados.
+                    const sponsorItems = items.filter(x => x.origen === 'imputado');
 
-        filaUnica?.classList.add('d-none');
-        contMult?.classList.remove('d-none');
+                    filaUnica?.classList.add('d-none');
+                    contMult?.classList.remove('d-none');
 
-        if (!listMult) return;
+                    if (!listMult) return;
 
-        if (!sponsorItems.length) {
-            listMult.innerHTML = `
+                    if (!sponsorItems.length) {
+                        listMult.innerHTML = `
                 <div class="text-muted small border rounded-3 p-3">
                     No hay respuestas técnicas registradas.
                 </div>
             `;
-            limpiarSeguimientoAcciones();
+                        limpiarSeguimientoAcciones();
 
-            if (window.renderAnalisisDetalle) {
-                window.renderAnalisisDetalle({ metodo_analisis: "" });
-            }
+                        if (window.renderAnalisisDetalle) {
+                            window.renderAnalisisDetalle({ metodo_analisis: "" });
+                        }
 
-            return;
-        }
+                        return;
+                    }
 
-        function renderListaAcciones(lista, fallbackTexto = '') {
-            if (Array.isArray(lista) && lista.length) {
-                return lista.map(x => {
-                    const desc = escapeHtml(x.descripcion || '');
-                    const fecha = x.fecha_compromiso
-                        ? ` <span class="text-muted">(${fmtDMY(x.fecha_compromiso)})</span>`
-                        : '';
+                    function renderListaAcciones(lista, fallbackTexto = '') {
+                        if (Array.isArray(lista) && lista.length) {
+                            return lista.map(x => {
+                                const desc = escapeHtml(x.descripcion || '');
+                                const fecha = x.fecha_compromiso
+                                    ? ` <span class="text-muted">(${fmtDMY(x.fecha_compromiso)})</span>`
+                                    : '';
 
-                    return `<div class="mb-1">• ${desc}${fecha}</div>`;
-                }).join('');
-            }
+                                return `<div class="mb-1">• ${desc}${fecha}</div>`;
+                            }).join('');
+                        }
 
-            const txt = String(fallbackTexto || '').trim();
+                        const txt = String(fallbackTexto || '').trim();
 
-            if (txt) {
-                return `<div class="mb-1">${escapeHtml(txt)}</div>`;
-            }
+                        if (txt) {
+                            return `<div class="mb-1">${escapeHtml(txt)}</div>`;
+                        }
 
-            return '<span class="text-muted">—</span>';
-        }
+                        return '<span class="text-muted">—</span>';
+                    }
 
-        function renderSeguimientoAccionesReadonlyHtml(itemsAcciones) {
-            if (!Array.isArray(itemsAcciones) || !itemsAcciones.length) {
-                return `<div class="text-muted small">Sin acciones de seguimiento.</div>`;
-            }
+                    function renderSeguimientoAccionesReadonlyHtml(itemsAcciones) {
+                        if (!Array.isArray(itemsAcciones) || !itemsAcciones.length) {
+                            return `<div class="text-muted small">Sin acciones de seguimiento.</div>`;
+                        }
 
-            const html = itemsAcciones.map(x => {
-                const tipo = String(x.tipo || '').toUpperCase();
-                const soloSeguimiento = (tipo === 'CONTROL' || tipo === 'CORRECTIVA');
-                if (!soloSeguimiento) return '';
+                        const html = itemsAcciones.map(x => {
+                            const tipo = String(x.tipo || '').toUpperCase();
+                            const soloSeguimiento = (tipo === 'CONTROL' || tipo === 'CORRECTIVA');
+                            if (!soloSeguimiento) return '';
 
-                const requiereEvidencia = Number(x.requiere_evidencia || 0) === 1;
-                const cumplido = Number(x.cumplido || 0) === 1;
-                const observacion = x.observacion_cumplimiento || '';
-                const evidencias = Array.isArray(x.evidencias) ? x.evidencias : [];
-                const tieneEvidencia = evidencias.length > 0;
+                            const requiereEvidencia = Number(x.requiere_evidencia || 0) === 1;
+                            const cumplido = Number(x.cumplido || 0) === 1;
+                            const observacion = x.observacion_cumplimiento || '';
+                            const evidencias = Array.isArray(x.evidencias) ? x.evidencias : [];
+                            const tieneEvidencia = evidencias.length > 0;
 
-                return `
+                            return `
                     <div class="det-seg-card mb-2">
                         <div class="det-seg-top">
                             <div class="flex-grow-1">
@@ -1444,16 +1487,16 @@ function desbloquearBtn(btn) {
                                 <div class="mt-2">
                                     ${badgeEstadoAccion(cumplido ? 1 : 0)}
                                     ${requiereEvidencia
-                                        ? (
-                                            tieneEvidencia
-                                                ? `<span class="badge text-bg-success ms-2">
+                                    ? (
+                                        tieneEvidencia
+                                            ? `<span class="badge text-bg-success ms-2">
                                                     <i class="bi bi-paperclip me-1"></i>Con evidencia
                                                    </span>`
-                                                : `<span class="badge bg-light text-dark border ms-2">
+                                            : `<span class="badge bg-light text-dark border ms-2">
                                                     <i class="bi bi-exclamation-circle me-1"></i>Requiere evidencia
                                                    </span>`
-                                        )
-                                        : ''}
+                                    )
+                                    : ''}
                                 </div>
 
                                 <div class="mt-2">
@@ -1468,16 +1511,16 @@ function desbloquearBtn(btn) {
                         </div>
                     </div>
                 `;
-            }).filter(Boolean).join('');
+                        }).filter(Boolean).join('');
 
-            return html || `<div class="text-muted small">Sin acciones de seguimiento.</div>`;
-        }
+                        return html || `<div class="text-muted small">Sin acciones de seguimiento.</div>`;
+                    }
 
-        function renderAnalisisSponsor(item) {
-            const metodo = String(item.metodo_analisis || '').toUpperCase();
+                    function renderAnalisisSponsor(item) {
+                        const metodo = String(item.metodo_analisis || '').toUpperCase();
 
-            if (metodo === '5WHYS') {
-                return `
+                        if (metodo === '5WHYS') {
+                            return `
                     <div class="detail-card mt-3">
                         <div class="detail-section-title">Análisis de Causa Raíz</div>
                         <div class="fw-semibold mb-2">Metodología: 5 Por Qué</div>
@@ -1490,10 +1533,10 @@ function desbloquearBtn(btn) {
                         </ol>
                     </div>
                 `;
-            }
+                        }
 
-            if (metodo === 'FISHBONE') {
-                return `
+                        if (metodo === 'FISHBONE') {
+                            return `
                     <div class="detail-card mt-3">
                         <div class="detail-section-title">Análisis de Causa Raíz</div>
                         <div class="fw-semibold mb-2">Metodología: Espina de Pez</div>
@@ -1531,37 +1574,37 @@ function desbloquearBtn(btn) {
                         </div>
                     </div>
                 `;
-            }
+                        }
 
-            return `
+                        return `
                 <div class="detail-card mt-3">
                     <div class="detail-section-title">Análisis de Causa Raíz</div>
                     <div class="text-muted small">Sin análisis registrado.</div>
                 </div>
             `;
-        }
+                    }
 
-        listMult.innerHTML = `
+                    listMult.innerHTML = `
             <div class="accordion" id="accordion-respuestas-sponsor">
                 ${sponsorItems.map((item, idx) => {
-                    const collapseId = `collapse-sponsor-${reclamoId}-${idx}`;
-                    const headingId = `heading-sponsor-${reclamoId}-${idx}`;
+                        const collapseId = `collapse-sponsor-${reclamoId}-${idx}`;
+                        const headingId = `heading-sponsor-${reclamoId}-${idx}`;
 
-                    const nombre = item.nombre || item.username || `Sponsor ${idx + 1}`;
-                    const estado = item.estado || '';
+                        const nombre = item.nombre || item.username || `Sponsor ${idx + 1}`;
+                        const estado = item.estado || '';
 
-                    const causas = item.causas || [];
-                    const control = item.control || [];
-                    const correctivaItems = item.correctiva_items || [];
+                        const causas = item.causas || [];
+                        const control = item.control || [];
+                        const correctivaItems = item.correctiva_items || [];
 
-                    const accionesSeguimiento = [
-                        ...(Array.isArray(control) ? control : []),
-                        ...(Array.isArray(correctivaItems) ? correctivaItems : [])
-                    ];
+                        const accionesSeguimiento = [
+                            ...(Array.isArray(control) ? control : []),
+                            ...(Array.isArray(correctivaItems) ? correctivaItems : [])
+                        ];
 
-                    const abierto = idx === 0;
+                        const abierto = idx === 0;
 
-                    return `
+                        return `
                         <div class="accordion-item border rounded-4 overflow-hidden mb-3 shadow-sm">
                             <h2 class="accordion-header" id="${headingId}">
                                 <button class="accordion-button ${abierto ? '' : 'collapsed'}"
@@ -1673,41 +1716,41 @@ function desbloquearBtn(btn) {
                             </div>
                         </div>
                     `;
-                }).join('')}
+                    }).join('')}
             </div>
         `;
 
-        // Limpiamos la vista vieja inferior para no duplicar/confundir.
-        document.getElementById('det-causa').innerHTML = '';
-        document.getElementById('det-preventiva').innerHTML = '';
-        document.getElementById('det-correctiva').innerHTML = '';
-        limpiarSeguimientoAcciones();
+                    // Limpiamos la vista vieja inferior para no duplicar/confundir.
+                    document.getElementById('det-causa').innerHTML = '';
+                    document.getElementById('det-preventiva').innerHTML = '';
+                    document.getElementById('det-correctiva').innerHTML = '';
+                    limpiarSeguimientoAcciones();
 
-        if (window.renderAnalisisDetalle) {
-            window.renderAnalisisDetalle({ metodo_analisis: "" });
-        }
+                    if (window.renderAnalisisDetalle) {
+                        window.renderAnalisisDetalle({ metodo_analisis: "" });
+                    }
 
-    } catch (err) {
-        console.error('Error cargando respuestas del creador:', err);
+                } catch (err) {
+                    console.error('Error cargando respuestas del creador:', err);
 
-        filaUnica?.classList.remove('d-none');
-        contMult?.classList.add('d-none');
+                    filaUnica?.classList.remove('d-none');
+                    contMult?.classList.add('d-none');
 
-        if (listMult) listMult.innerHTML = '';
+                    if (listMult) listMult.innerHTML = '';
 
-        document.getElementById('det-causa').innerHTML =
-            '<span class="text-muted">Error al cargar respuesta técnica.</span>';
-        document.getElementById('det-preventiva').innerHTML =
-            '<span class="text-muted">—</span>';
-        document.getElementById('det-correctiva').innerHTML =
-            '<span class="text-muted">—</span>';
+                    document.getElementById('det-causa').innerHTML =
+                        '<span class="text-muted">Error al cargar respuesta técnica.</span>';
+                    document.getElementById('det-preventiva').innerHTML =
+                        '<span class="text-muted">—</span>';
+                    document.getElementById('det-correctiva').innerHTML =
+                        '<span class="text-muted">—</span>';
 
-        limpiarSeguimientoAcciones();
-    }
- 
-    return;
-}
- 
+                    limpiarSeguimientoAcciones();
+                }
+
+                return;
+            }
+
 
         });
     });
@@ -2399,6 +2442,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const tr = btn.closest('tr');
         if (!tr) return;
+
+        const estadoGlobal = (
+            tr.dataset.estadoGlobal ||
+            tr.dataset.estado ||
+            tr.dataset.estadoImputacion ||
+            ''
+        ).trim().toLowerCase();
+
+        const esAdmin = String(tr.dataset.esAdmin || '0') === '1';
+
+        if (!esAdmin && (estadoGlobal === 'cerrado' || estadoGlobal.includes('cerrad'))) {
+            alert('Esta OM ya está cerrada. No se puede responder ni modificar la respuesta.');
+            return;
+        }
 
         const impId = (tr.dataset.imputacionId || '').trim();
         const reclamoId = (tr.dataset.reclamoId || '').trim();
@@ -3373,6 +3430,20 @@ document.addEventListener('click', async function (ev) {
         const tr = btn.closest('tr');
         if (!tr) return;
 
+        const estadoGlobal = (
+            tr.dataset.estadoGlobal ||
+            tr.dataset.estado ||
+            tr.dataset.estadoImputacion ||
+            ''
+        ).trim().toLowerCase();
+
+        const esAdmin = String(tr.dataset.esAdmin || '0') === '1';
+
+        if (!esAdmin && (estadoGlobal === 'cerrado' || estadoGlobal.includes('cerrad'))) {
+            alert('Esta OM ya está cerrada. No se puede gestionar el equipo de respuestas.');
+            return;
+        }
+
         const reclamoId = tr.dataset.reclamoId;
         const imputacionId = tr.dataset.imputacionId;
         const codigo = tr.dataset.codigo || '';
@@ -4033,43 +4104,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
 })();
 
-document.addEventListener('click', function (e) {
+document.addEventListener('click', async function (e) {
     const btn = e.target.closest('.js-eliminar-om');
     if (!btn) return;
 
-    const reclamoId = btn.dataset.reclamoId;
-    const codigo = btn.dataset.codigo;
+    const tr = btn.closest('tr');
 
-    if (!confirm(`¿Seguro que deseas eliminar la OM ${codigo}?\nEsta acción no se puede deshacer.`)) {
+    const reclamoId =
+        btn.dataset.reclamoId ||
+        tr?.dataset?.reclamoId ||
+        '';
+
+    const codigo =
+        btn.dataset.codigo ||
+        tr?.dataset?.codigo ||
+        '';
+
+    if (!reclamoId || reclamoId === 'undefined' || reclamoId === 'None') {
+        alert('No se pudo determinar el ID de la OM.');
+        console.error('Eliminar OM sin reclamoId', { btn, tr });
         return;
     }
 
-    fetch(`/reclamos/${reclamoId}/eliminar`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken,
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        credentials: 'same-origin'
-    })
-        .then(r => r.json())
-        .then(data => {
-            if (!data.ok) {
-                alert(data.msg || 'Error al eliminar la OM');
-                return;
-            }
+    if (!confirm(`¿Seguro que deseas eliminar la OM ${codigo || reclamoId}?\nEsta acción no se puede deshacer.`)) {
+        return;
+    }
 
-            // Eliminar la fila visualmente
-            const row = btn.closest('tr');
-            if (row) row.remove();
-
-            alert(data.msg);
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Error inesperado al eliminar la OM');
+    try {
+        const resp = await fetch(`/reclamos/${encodeURIComponent(reclamoId)}/eliminar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin'
         });
+
+        const ct = resp.headers.get('content-type') || '';
+        const data = ct.includes('application/json')
+            ? await resp.json()
+            : { ok: false, msg: await resp.text() };
+
+        if (!resp.ok || data.ok !== true) {
+            alert(data.msg || `Error al eliminar la OM. HTTP ${resp.status}`);
+            return;
+        }
+
+        const row = btn.closest('tr');
+        if (row) row.remove();
+
+        alert(data.msg || 'OM eliminada correctamente.');
+
+    } catch (err) {
+        console.error(err);
+        alert('Error inesperado al eliminar la OM.');
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -4443,7 +4534,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const end = start + pageSize;
 
             rows.forEach((tr, idx) => {
-                tr.style.display = idx >= start && idx < end ? '' : 'none';
+                const visible = idx >= start && idx < end;
+                tr.classList.toggle('d-none', !visible);
             });
 
             info.textContent = `Página ${currentPage} de ${totalPages}`;
@@ -4474,6 +4566,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    // ── Panel flotante Asistente OM (no usa Bootstrap Modal) ─
+    const _panel = document.getElementById("omChatPanel");
+
+    function _abrirPanel() {
+        if (_panel) _panel.classList.add("omc-visible");
+    }
+
+    function _cerrarPanel() {
+        if (_panel) _panel.classList.remove("omc-visible");
+    }
+
+    document.querySelectorAll(".js-open-om-chat").forEach(b => {
+        b.addEventListener("click", _abrirPanel);
+    });
+
+    document.getElementById("omChatClose")?.addEventListener("click", _cerrarPanel);
+
+    // ── Chat ──────────────────────────────────────────────────
     const input = document.getElementById("om-chat-input");
     const btn = document.getElementById("om-chat-send");
     const box = document.getElementById("om-chat-messages");
@@ -4566,10 +4677,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-function renderOmActionsCard(rows) {
-    const first = rows[0] || {};
+    function renderOmActionsCard(rows) {
+        const first = rows[0] || {};
 
-    return `
+        return `
         <div class="om-answer-title">
             <i class="bi bi-check2-square"></i>
             Acciones de la OM
@@ -4611,25 +4722,28 @@ function renderOmActionsCard(rows) {
             </div>
         </div>
     `;
-}
-function renderBotResponse(data) {
-    if (!data.rows || !data.rows.length) {
-        return renderBotAnswer(data.respuesta || "No encontré resultados.");
+    }
+    function renderBotResponse(data) {
+        if (!data.rows || !data.rows.length) {
+            return renderBotAnswer(data.respuesta || "No encontré resultados.");
+        }
+
+        const first = data.rows[0] || {};
+
+        // Si viene una OM específica, pinta tarjeta ejecutiva
+        if (first.tipo_accion || data.source === "predefinido_acciones_om") {
+            return renderOmActionsCard(data.rows);
+        }
+if (first.codigo_om && first.estado_global) {
+    if (data.rows.length > 1) {
+        return renderOmDetailList(data.rows);
     }
 
-    const first = data.rows[0] || {};
-
-    // Si viene una OM específica, pinta tarjeta ejecutiva
-if (first.tipo_accion || data.source === "predefinido_acciones_om") {
-    return renderOmActionsCard(data.rows);
-}
-
-if (first.codigo_om && first.estado_global) {
     return renderOmDetailCard(first);
 }
 
-    // Si es resultado genérico, mantiene formato lista
-    return `
+        // Si es resultado genérico, mantiene formato lista
+        return `
         <div class="om-answer-title">
             <i class="bi bi-list-check"></i> Resultados encontrados
         </div>
@@ -4638,33 +4752,33 @@ if (first.codigo_om && first.estado_global) {
             ${data.rows.slice(0, 10).map(row => `
                 <div class="om-detail-card">
                     ${Object.entries(row).map(([key, value]) => {
-                        if (key.endsWith("_id") || key === "id") return "";
+            if (key.endsWith("_id") || key === "id") return "";
 
-                        return `
+            return `
                             <div class="om-row-field">
                                 <strong>${formatLabel(key)}:</strong>
                                 <span>${escapeHtml(value ?? "—")}</span>
                             </div>
                         `;
-                    }).join("")}
+        }).join("")}
                 </div>
             `).join("")}
         </div>
     `;
-}
+    }
 
 
-function renderOmDetailCard(row) {
-    const estado = String(row.estado_global || "").toLowerCase();
-    const estadoClass = estado.includes("abierto") ? "is-open" : "is-closed";
+    function renderOmDetailCard(row) {
+        const estado = String(row.estado_global || "").toLowerCase();
+        const estadoClass = estado.includes("abierto") ? "is-open" : "is-closed";
 
-    const sponsorOk = !!String(row.sponsor_nombre || "").trim();
-    const equipoOk = !!String(row.miembros_equipo || "").trim();
-    const respEquipoOk = !!String(row.fecha_primera_respuesta_equipo || "").trim();
-    const respSponsorOk = !!String(row.fecha_respuesta_imputado || "").trim();
-    const aprobadoOk = !!String(row.fecha_aprobacion_respuesta || "").trim();
+        const sponsorOk = !!String(row.sponsor_nombre || "").trim();
+        const equipoOk = !!String(row.miembros_equipo || "").trim();
+        const respEquipoOk = !!String(row.fecha_primera_respuesta_equipo || "").trim();
+        const respSponsorOk = !!String(row.fecha_respuesta_imputado || "").trim();
+        const aprobadoOk = !!String(row.fecha_aprobacion_respuesta || "").trim();
 
-    return `
+        return `
         <div class="om-answer-title">
             <i class="bi bi-activity"></i>
             Estado de la OM
@@ -4723,30 +4837,49 @@ function renderOmDetailCard(row) {
             </div>
         </div>
     `;
+    }
+
+    function renderOmDetailList(rows) {
+    const total = Array.isArray(rows) ? rows.length : 0;
+
+    return `
+        <div class="om-answer-title">
+            <i class="bi bi-list-check"></i>
+            Detalle de OMs encontradas
+        </div>
+
+        <div class="small text-muted mb-2">
+            Se encontraron ${total} OM.
+        </div>
+
+        <div class="om-result-list">
+            ${rows.map(row => renderOmDetailCard(row)).join("")}
+        </div>
+    `;
 }
 
-function timelineStep(label, done) {
-    return `
+    function timelineStep(label, done) {
+        return `
         <div class="om-timeline-step ${done ? "done" : "pending"}">
             <span>${done ? "✓" : "○"}</span>
             ${escapeHtml(label)}
         </div>
     `;
-}
-
-function formatDateChat(value) {
-    if (!value) return "";
-    const s = String(value).trim();
-
-    if (s.length >= 10 && s[4] === "-" && s[7] === "-") {
-        const y = s.slice(0, 4);
-        const m = s.slice(5, 7);
-        const d = s.slice(8, 10);
-        return `${d}/${m}/${y}`;
     }
 
-    return s;
-}
+    function formatDateChat(value) {
+        if (!value) return "";
+        const s = String(value).trim();
+
+        if (s.length >= 10 && s[4] === "-" && s[7] === "-") {
+            const y = s.slice(0, 4);
+            const m = s.slice(5, 7);
+            const d = s.slice(8, 10);
+            return `${d}/${m}/${y}`;
+        }
+
+        return s;
+    }
 
 
     function formatLabel(key) {
@@ -4794,15 +4927,15 @@ function formatDateChat(value) {
             if (!data.ok) {
                 addMsg(data.error || "No se pudo procesar la pregunta.", "bot");
             } else {
-                addMsg(renderBotResponse(data), "bot", true);
-                //(renderBotAnswer(data.respuesta || "Consulta ejecutada correctamente."), "bot", true);
+                const html = renderBotResponse(data);
+                addMsg(html, "bot", true);
             }
 
         } catch (err) {
             addMsg("Error consultando el asistente OM.", "bot");
         } finally {
             btn.disabled = false;
-            btn.textContent = "Preguntar";
+            btn.innerHTML = '<i class="bi bi-send me-1"></i>Preguntar';
             input.focus();
         }
     }
@@ -4815,4 +4948,248 @@ function formatDateChat(value) {
             sendQuestion();
         }
     });
+
+    // ── Botón "Nueva conversación" ──────────────────────────────
+    document.getElementById("om-chat-reset")?.addEventListener("click", async () => {
+        try {
+            await fetch("/api/om-chat/reset", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector('meta[name="csrf-token"]')?.content || ""
+                }
+            });
+        } catch (_) { /* silencioso */ }
+
+        box.innerHTML = `
+            <div class="om-chat-bubble bot">
+                Conversación reiniciada. Puedes hacer una nueva pregunta 👋
+            </div>`;
+    });
+
+    // ── Parsear **negrita** de respuestas OpenAI ────────────────
+    function parsearNegritas(text) {
+        return text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+                   .replace(/\n/g, "<br>");
+    }
+
+
+    document.addEventListener('click', async function (ev) {
+        const btn = ev.target.closest('.js-subir-carta-cliente');
+        if (!btn) return;
+
+        const reclamoId = btn.dataset.reclamoId || '';
+        const codigo = btn.dataset.codigo || '';
+
+        if (!reclamoId) {
+            alert('No se pudo determinar la OM.');
+            return;
+        }
+
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf,.doc,.docx';
+
+        input.addEventListener('change', async function () {
+            if (!input.files || !input.files.length) return;
+
+            const ok = confirm(`¿Deseas subir la carta final para la OM ${codigo || reclamoId}?`);
+            if (!ok) return;
+
+            const formData = new FormData();
+            formData.append('carta_cliente', input.files[0]);
+
+            try {
+                bloquearBtn(btn, 'Subiendo...');
+
+                const resp = await fetch(`/reclamos/${encodeURIComponent(reclamoId)}/carta-cliente`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin',
+                    body: formData
+                });
+
+                const ct = resp.headers.get('content-type') || '';
+                const data = ct.includes('application/json') ? await resp.json() : {};
+
+                if (!resp.ok || data.ok !== true) {
+                    alert(data.msg || data.error || `No se pudo subir la carta. HTTP ${resp.status}`);
+                    return;
+                }
+
+                alert(data.msg || 'Carta cargada correctamente.');
+                location.reload();
+
+            } catch (err) {
+                console.error(err);
+                alert('Error inesperado al subir la carta.');
+            } finally {
+                desbloquearBtn(btn);
+            }
+        });
+
+        input.click();
+    });
+
+
+    // ── Generar carta PDF para el cliente ──────────────────────────────────
+    document.addEventListener('click', async function (e) {
+        const btn = e.target.closest('.js-generar-carta-pdf');
+        if (!btn) return;
+
+        const reclamoId = btn.dataset.reclamoId;
+        const codigo    = btn.dataset.codigo || reclamoId;
+
+        if (!confirm(`¿Generar carta PDF para el cliente de la OM ${codigo}?\n\nEsto puede tardar unos segundos mientras se procesa el análisis.`)) return;
+
+        const iconOrig = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+
+        try {
+            const resp = await fetch(`/reclamos/${encodeURIComponent(reclamoId)}/generar-carta-pdf`, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken,
+                },
+            });
+
+            if (!resp.ok) {
+                const data = await resp.json().catch(() => ({}));
+                throw new Error(data.msg || `Error ${resp.status}`);
+            }
+
+            // Descargar el PDF directamente en el browser
+            const blob  = await resp.blob();
+            const url   = URL.createObjectURL(blob);
+            const a     = document.createElement('a');
+            const cd    = resp.headers.get('Content-Disposition') || '';
+            const match = cd.match(/filename="?([^";\n]+)"?/);
+            a.download  = match ? match[1] : `Carta_Cliente_${codigo}.pdf`;
+            a.href      = url;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Toast éxito
+            if (typeof showToast === 'function') {
+                showToast(`Carta PDF generada correctamente para ${codigo}.`);
+            }
+        } catch (err) {
+            alert(`Error al generar la carta: ${err.message}`);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = iconOrig;
+        }
+    });
+
 });
+
+// =========================================================
+// VALIDAR RESPUESTA — CREADOR DE LA OM
+// =========================================================
+(function () {
+    'use strict';
+
+    const modalEl  = document.getElementById('modalValidarCreador');
+    if (!modalEl) return;
+
+    const modal       = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+    const elId        = document.getElementById('vc-reclamo-id');
+    const elAccion    = document.getElementById('vc-accion');
+    const elCodigo    = document.getElementById('vc-codigo');
+    const elTexto     = document.getElementById('vc-texto-accion');
+    const elMotivoW   = document.getElementById('vc-motivo-wrap');
+    const elMotivo    = document.getElementById('vc-motivo');
+    const elAceptInfo = document.getElementById('vc-aceptar-info');
+    const btnConf     = document.getElementById('btn-vc-confirmar');
+
+    // Abrir modal al hacer clic en los botones js-validar-creador
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.js-validar-creador');
+        if (!btn) return;
+
+        const accion   = btn.dataset.accion;   // 'aceptar' | 'rechazar'
+        const reclamoId = btn.dataset.reclamoId;
+        const codigo   = btn.dataset.codigo || '';
+
+        elId.value     = reclamoId;
+        elAccion.value = accion;
+        elCodigo.textContent = codigo;
+
+        if (accion === 'aceptar') {
+            elTexto.textContent  = '¿Confirmas que la respuesta técnica es satisfactoria?';
+            elMotivoW.classList.add('d-none');
+            elAceptInfo.classList.remove('d-none');
+            btnConf.className    = 'btn btn-success';
+            btnConf.textContent  = 'Aceptar respuesta';
+        } else {
+            elTexto.textContent  = 'Indica el motivo del rechazo. La OM volverá a estado Abierto.';
+            elMotivoW.classList.remove('d-none');
+            elAceptInfo.classList.add('d-none');
+            elMotivo.value       = '';
+            btnConf.className    = 'btn btn-danger';
+            btnConf.textContent  = 'Rechazar respuesta';
+        }
+
+        modal.show();
+    });
+
+    // Confirmar acción
+    btnConf?.addEventListener('click', async function () {
+        const reclamoId = elId.value;
+        const accion    = elAccion.value;
+        const motivo    = (elMotivo.value || '').trim();
+
+        if (accion === 'rechazar' && !motivo) {
+            elMotivo.classList.add('is-invalid');
+            elMotivo.focus();
+            return;
+        }
+        elMotivo.classList.remove('is-invalid');
+
+        btnConf.disabled = true;
+        const textoOrig  = btnConf.textContent;
+        btnConf.textContent = 'Procesando…';
+
+        try {
+            const resp = await fetch(`/reclamos/${reclamoId}/validar-creador`, {
+                method : 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken'  : document.querySelector('meta[name="csrf-token"]')
+                                        ?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({ accion, motivo })
+            });
+
+            const data = await resp.json();
+
+            modal.hide();
+
+            if (data.ok) {
+                showToast?.(data.msg || 'Operación realizada.', 'success');
+                setTimeout(() => location.reload(), 1200);
+            } else {
+                showToast?.(data.msg || 'Error al procesar.', 'danger');
+            }
+        } catch (err) {
+            showToast?.('Error de conexión.', 'danger');
+        } finally {
+            btnConf.disabled    = false;
+            btnConf.textContent = textoOrig;
+        }
+    });
+
+    // Limpiar validación al escribir
+    elMotivo?.addEventListener('input', function () {
+        elMotivo.classList.remove('is-invalid');
+    });
+}());
