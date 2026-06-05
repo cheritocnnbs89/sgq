@@ -8,7 +8,7 @@ from flask import (
     session, abort, redirect, url_for, current_app, send_file
 )
 from werkzeug.utils import secure_filename
-from modules.db import get_db
+from .db import get_db
 
 planilla_bp = Blueprint("planilla_mensual", __name__, url_prefix="/planilla-mensual")
 
@@ -194,9 +194,14 @@ def dept_email_for_tarea(conn, tarea_id):
     email = (cfg["notify_email"] if hasattr(cfg, "keys") else cfg[1]) or None
     return email, dept_name, resp_name
 
+
+
+
 def render_mail_template(conn, key, **ctx):
+    """Reemplaza la función existente del mismo nombre."""
     tpl = conn.execute(
-        "SELECT subject, html, text FROM plan_mail_templates WHERE key=?", (key,)
+        "SELECT subject, html, text FROM plan_mail_templates WHERE [key]=?",   # ← [key] corregido
+        (key,)
     ).fetchone()
     if not tpl:
         return ("Evidencia registrada", "Evidencia registrada.", None)
@@ -206,9 +211,11 @@ def render_mail_template(conn, key, **ctx):
     return (
         render_template_string(subj, **ctx),
         render_template_string(html, **ctx),
-        (render_template_string(text, **ctx) if text else None)
+        (render_template_string(text, **ctx) if text else None),
     )
 
+
+ 
 
 # =============== DASHBOARD ===============
  
@@ -1427,6 +1434,27 @@ def api_delete_feriado(fid):
     cur.execute("DELETE FROM plan_feriados WHERE id=?", (fid,))
     conn.commit()
     return jsonify({"ok": True})
+
+
+@planilla_bp.post("/admin/send-weekly-report")
+def admin_send_weekly_report():
+    """
+    Envío manual del reporte semanal de planilla.
+    Solo accesible para administradores.
+    El CSRF lo valida Flask-WTF automáticamente vía el header X-CSRFToken
+    que el JS del template envía.
+    """
+    if not _is_admin():
+        return jsonify(ok=False, error="Sin permisos"), 403
+
+    try:
+        from modules.scheduler.scheduler_planilla_weekly import send_planilla_weekly_report
+        result = send_planilla_weekly_report(force=True)   # force=True → ignora si es viernes
+        return jsonify(ok=True, result=result)
+    except Exception as exc:
+        current_app.logger.exception("[PLANILLA_WEEKLY] admin_send_weekly_report falló")
+        return jsonify(ok=False, error=str(exc)), 500
+
 
 # =============== REGISTRO DEL BLUEPRINT ===============
 def register_planilla_mensual_routes(app):

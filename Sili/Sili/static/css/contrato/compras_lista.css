@@ -279,3 +279,53 @@
 #modalAdjuntosBody .btn-group .btn {
   min-width: auto;
 }
+
+.contrato-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  margin-right: 6px;
+  font-size: 0.85rem;
+  vertical-align: middle;
+}
+
+.contrato-icon-vencido {
+  color: #dc3545;
+}
+
+.contrato-icon-cerrado {
+  color: #6c757d;
+}
+
+.pedido-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.contrato-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  min-width: 16px;
+  font-size: 0.8rem;
+}
+
+.contrato-icon-vencido {
+  color: #dc3545;
+}
+
+.contrato-icon-cerrado {
+  color: #6c757d;
+}
+
+.contrato-icon-empty {
+  visibility: hidden;
+}
+
+.pedido-text {
+  display: inline-block;
+}

@@ -7,7 +7,106 @@ from .contratos_constants import (
     TABLA_USUARIOS,
     TABLA_TERCEROS,
     TABLA_DEPARTAMENTOS,
+    DIAS_AVISO_VENCIMIENTO_GARANTIA,
+
 )
+
+SQL_GARANTIAS_REPORTE_BASE = f"""
+SELECT
+    g.id AS garantia_id,
+    g.contrato_id,
+    g.tipo AS garantia_tipo,
+    g.compania_emisora,
+    g.monto_poliza,
+    g.fecha_suscripcion AS garantia_fecha_suscripcion,
+    g.fecha_vencimiento AS garantia_fecha_vencimiento,
+    g.fecha_vencimiento_actual,
+    g.vigencia_dias,
+    g.estado AS garantia_estado,
+    g.fecha_renovacion,
+    g.requiere_renovacion,
+    g.status_interno AS garantia_status_interno,
+    g.observaciones AS garantia_observaciones,
+    g.creado_at AS garantia_creado_at,
+    g.actualizado_at AS garantia_actualizado_at,
+    COALESCE(g.aprobado_jefe,0) AS garantia_aprobado_jefe,
+    COALESCE(g.aprobado,0) AS garantia_aprobado,
+    COALESCE(g.aprob_gf,0) AS garantia_aprob_gf,
+
+    c.id AS contrato_id_real,
+    c.anio,
+    c.pedido,
+    c.proveedor,
+    c.objeto,
+    c.valor_contrato,
+    c.valor_anticipo,
+    c.tipo_pp,
+    c.fecha_suscripcion AS contrato_fecha_suscripcion,
+    c.fecha_terminacion AS contrato_fecha_terminacion,
+    c.plazo_dias,
+    c.cronograma_pagos,
+    c.fecha_entrega_compras,
+    c.fecha_firma_gerencia,
+    c.fecha_entrega_finanzas_sumilla,
+    c.fecha_entrega_originales_fin,
+    c.fechas_pago_anticipo,
+    c.fecha_entrega_pedido,
+    c.status_interno AS contrato_status_interno,
+    c.observaciones AS contrato_observaciones,
+    COALESCE(c.aprobado_jefe,0) AS contrato_aprobado_jefe,
+    COALESCE(c.aprobado,0) AS contrato_aprobado,
+    COALESCE(c.aprob_gf,0) AS contrato_aprob_gf
+FROM {TABLA_GARANTIAS} g
+JOIN {TABLA_CONTRATOS} c ON c.id = g.contrato_id
+WHERE COALESCE(g.disabled,0)=0
+  AND COALESCE(c.disabled,0)=0
+"""
+
+
+SQL_GARANTIAS_VENCEN_EN_DIAS = f"""
+SELECT
+    g.id AS garantia_id,
+    g.contrato_id,
+    g.tipo AS garantia_tipo,
+    g.compania_emisora,
+    g.monto_poliza,
+    g.fecha_suscripcion AS garantia_fecha_suscripcion,
+    g.fecha_vencimiento AS garantia_fecha_vencimiento,
+    g.fecha_vencimiento_actual,
+    g.vigencia_dias,
+    g.estado AS garantia_estado,
+    g.fecha_renovacion,
+    g.requiere_renovacion,
+    g.status_interno AS garantia_status_interno,
+    g.observaciones AS garantia_observaciones,
+
+    c.id AS contrato_id_real,
+    c.pedido,
+    c.proveedor,
+    c.objeto,
+    c.valor_contrato,
+    c.valor_anticipo,
+    c.fecha_suscripcion AS contrato_fecha_suscripcion,
+    c.fecha_terminacion AS contrato_fecha_terminacion,
+    c.usuario_solicitante_id,
+    c.usuario_compras_id,
+    c.usuario_compras_nombre,
+    c.aprobado_jefe_por,
+
+    DATEDIFF(
+        DAY,
+        CAST(GETDATE() AS date),
+        CAST(g.fecha_vencimiento AS date)
+    ) AS dias_para_vencer
+FROM {TABLA_GARANTIAS} g
+JOIN {TABLA_CONTRATOS} c ON c.id = g.contrato_id
+WHERE COALESCE(g.disabled,0)=0
+  AND COALESCE(c.disabled,0)=0
+  AND g.fecha_vencimiento IS NOT NULL
+   
+  AND COALESCE(g.estado,'') NOT IN ('Liberada', 'Anulada')
+ORDER BY g.fecha_vencimiento ASC, g.id DESC
+"""
 
 SQL_USUARIOS_COMBO = f"""
 SELECT
@@ -399,4 +498,114 @@ WHERE COALESCE(c.disabled,0)=0
         )
       )
 ORDER BY c.id DESC
+"""
+
+
+SQL_NOTIFY_TEMPLATE_GARANTIA_VENCE_15_EXISTS = """
+SELECT TOP 1 1 AS ok
+FROM dbo.notify_templates
+WHERE [key] = ?
+"""
+
+SQL_NOTIFY_TEMPLATE_GARANTIA_VENCE_15_INSERT = """
+INSERT INTO dbo.notify_templates ([key], [subject], html, [text], tipo)
+VALUES (?, ?, ?, ?, ?)
+"""
+
+SQL_USUARIO_ID_POR_EMAIL = """
+SELECT TOP 1 id
+FROM usuarios
+WHERE LOWER(email) = LOWER(?)
+  AND COALESCE(disabled, 0) = 0
+ORDER BY id DESC
+"""
+
+SQL_GARANTIAS_VENCEN_EN_15_DIAS = f"""
+SELECT
+    g.id AS garantia_id,
+    g.contrato_id,
+    g.tipo AS garantia_tipo,
+    g.compania_emisora,
+    g.monto_poliza,
+    g.fecha_suscripcion AS garantia_fecha_suscripcion,
+    g.fecha_vencimiento AS garantia_fecha_vencimiento,
+    g.fecha_vencimiento_actual,
+    g.vigencia_dias,
+    g.estado AS garantia_estado,
+    g.fecha_renovacion,
+    g.requiere_renovacion,
+    g.status_interno AS garantia_status_interno,
+    g.observaciones AS garantia_observaciones,
+
+    c.id AS contrato_id_real,
+    c.pedido,
+    c.proveedor,
+    c.objeto,
+    c.valor_contrato,
+    c.valor_anticipo,
+    c.fecha_suscripcion AS contrato_fecha_suscripcion,
+    c.fecha_terminacion AS contrato_fecha_terminacion,
+    c.usuario_solicitante_id,
+    c.usuario_compras_id,
+    c.usuario_compras_nombre,
+    c.aprobado_jefe_por,
+
+    DATEDIFF(
+        DAY,
+        CAST(GETDATE() AS date),
+        CAST(g.fecha_vencimiento AS date)
+    ) AS dias_para_vencer
+FROM garantias g
+JOIN contratos c ON c.id = g.contrato_id
+WHERE COALESCE(g.disabled,0)=0
+  AND COALESCE(c.disabled,0)=0
+  AND g.fecha_vencimiento IS NOT NULL
+  AND CAST(g.fecha_vencimiento AS date) = DATEADD(DAY, 15, CAST(GETDATE() AS date))
+  AND COALESCE(g.estado,'') NOT IN ('Liberada', 'Anulada')
+ORDER BY g.fecha_vencimiento ASC, g.id DESC
+"""
+
+SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT = """
+SELECT TOP 1 1 AS ok
+FROM dbo.notify_queue
+WHERE user_id = ?
+  AND template_key = ?
+  AND event_key = ?
+"""
+
+SQL_NOTIFY_QUEUE_INSERT_GARANTIA = """
+INSERT INTO dbo.notify_queue (
+    user_id,
+    tarea_id,
+    tipo,
+    fecha_obj,
+    canal,
+    template_key,
+    payload_json,
+    estado,
+    scheduled_at,
+    sent_at,
+    error_msg,
+    gasto_id,
+    area,
+    event_key,
+    comentario
+)
+VALUES (
+    ?,
+    NULL,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    'pending',
+    GETDATE(),
+    NULL,
+    NULL,
+    NULL,
+    ?,
+    ?,
+    NULL
+)
 """

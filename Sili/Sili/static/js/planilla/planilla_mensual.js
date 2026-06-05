@@ -17,7 +17,8 @@
     toggleCheck: root.dataset.toggleCheckUrl || '',
     toggleEvidenceMode: root.dataset.toggleEvidenceModeUrl || '',
     evidencePost: root.dataset.evidencePostUrl || '',
-    planillaBase: root.dataset.planillaBaseUrl || ''
+    planillaBase: root.dataset.planillaBaseUrl || '',
+    weeklyReport: root.dataset.weeklyReportUrl || ''
   };
 
   async function postJSON(url, payload) {
@@ -254,9 +255,36 @@
     });
   }
 
+  function initSendWeeklyReport() {
+    const btn = document.getElementById('btnSendWeeklyReport');
+    if (!btn) return;
+
+    btn.addEventListener('click', async () => {
+      if (!urls.weeklyReport) {
+        alert('URL del reporte no configurada.');
+        return;
+      }
+
+      btn.disabled = true;
+      const original = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Enviando…';
+
+      try {
+        const data = await postJSON(urls.weeklyReport, {});
+        btn.innerHTML = '<i class="bi bi-check-lg me-1"></i> Enviado';
+        setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 3000);
+      } catch (err) {
+        alert(`Error al enviar reporte:\n${err.message}`);
+        btn.innerHTML = original;
+        btn.disabled = false;
+      }
+    });
+  }
+
   initEvidenceModeSwitch();
   initCheckToggles();
   initEvidenceForm();
   initFilters();
   lockPastDays();
+  initSendWeeklyReport();
 })();

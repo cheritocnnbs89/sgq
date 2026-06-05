@@ -37,7 +37,6 @@ MIGRATION_LOG_PATH = os.getenv(
 # Agrega aquí cualquier tabla que NO quieras migrar desde SQLite a SQL Server.
 # La comparación se realiza sin distinguir mayúsculas/minúsculas.
 EXCLUDED_TABLES = {
-    "usuarios",
     "param_values",
     "param_groups",
     "opciones",
@@ -45,6 +44,7 @@ EXCLUDED_TABLES = {
     "menu_items",
     "roles",
     "roles_permisos",
+ 
 }
 
 
@@ -365,10 +365,40 @@ def copy_table(src: sqlite3.Connection, dst: pyodbc.Connection, schema: str, tab
                 cur.execute(insert_sql, filtered_row)
                 inserted += 1
             except pyodbc.Error as exc:
+                # Caso especial: si el usuario ya existe, actualizar solo el email
+                if table.strip().lower() == "usuarios":
+                    try:
+                        row_id = row_dict.get("id")
+                        row_email = row_dict.get("email")
+
+                        if row_id is not None and row_email:
+                            cur.execute(
+                                f"""
+                                UPDATE {qname(schema, table)}
+                                SET email = ?
+                                WHERE id = ?
+                                """,
+                                (row_email, row_id)
+                            )
+
+                            inserted += 0
+                            log_info(
+                                log_fh,
+                                f"[{table}] UPDATE EMAIL | id={row_id} | email={row_email}"
+                            )
+                            continue
+
+                    except pyodbc.Error as upd_exc:
+                        skipped += 1
+                        log_info(
+                            log_fh,
+                            f"[{table}] ERROR UPDATE EMAIL | id={row_dict.get('id')} | motivo={upd_exc}"
+                        )
+                        continue
+
                 skipped += 1
                 log_skip(log_fh, table, common_cols, filtered_row, exc)
                 continue
-
         if has_identity:
             cur.execute(f"SET IDENTITY_INSERT {qname(schema, table)} OFF;")
 

@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from flask import current_app, flash, request, session, url_for
 import os
 import time
 from typing import Any
@@ -787,3 +787,99 @@ def toggle_aprobacion_gf(contrato_id: int, valor: int):
             usuario_compras_nombre=contrato["usuario_compras_nombre"],
             aprobado_jefe_por=contrato["aprobado_jefe_por"],
         )
+
+
+def notificar_garantias_por_vencer_15_dias():
+    rows = repository.list_garantias_vencen_en_15_dias()
+    total = 0
+
+    for row in rows:
+        notifications.notify_garantia_por_vencer_15_dias(
+            garantia_id=row["garantia_id"],
+            contrato_id=row["contrato_id"],
+            pedido=row["pedido"],
+            proveedor=row["proveedor"],
+            objeto=row["objeto"],
+            garantia_tipo=row["garantia_tipo"],
+            fecha_vencimiento=row["garantia_fecha_vencimiento"],
+            dias_para_vencer=row["dias_para_vencer"],
+            usuario_solicitante_id=row["usuario_solicitante_id"],
+            usuario_compras_id=row["usuario_compras_id"],
+            usuario_compras_nombre=row["usuario_compras_nombre"],
+            aprobado_jefe_por=row["aprobado_jefe_por"],
+        )
+        total += 1
+
+    return total        
+
+def encolar_notificaciones_garantias_por_vencer_15_dias():
+    """
+    Busca garantías que vencen exactamente en 15 días y encola correos
+    en notify_queue usando notify_templates.
+    """
+    from .contratos_constants import SAVERA_EMAIL
+
+    conn = repository.get_conn()
+    repository.ensure_garantia_vencimiento_template(conn)
+
+    rows = repository.list_garantias_vencen_en_15_dias()
+
+    total = 0
+
+    for row in rows:
+        garantia_id = row["garantia_id"]
+
+        # Destinatarios:
+        # - Savera, si existe como usuario en tabla usuarios.
+        # - Usuario solicitante.
+        # - Usuario de compras.
+        # - Jefe que aprobó.
+        destinatarios = []
+
+        savera_uid = repository.fetch_usuario_id_por_email(SAVERA_EMAIL)
+        if savera_uid:
+            destinatarios.append(savera_uid)
+
+        for uid in (
+            row["usuario_solicitante_id"],
+            row["usuario_compras_id"],
+            row["aprobado_jefe_por"],
+        ):
+            if uid and uid not in destinatarios:
+                destinatarios.append(uid)
+
+        try:
+            cta_url = url_for("contratos.contab_lista", _external=True)
+        except Exception:
+            cta_url = "http://bitacoraquimpac.com.ec:5000/contratos/contab"
+
+        for user_id in destinatarios:
+            destinatario_nombre = repository.fetch_usuario_nombre_por_id(user_id)
+
+            payload = {
+                "destinatario_nombre": destinatario_nombre,
+                "garantia_id": row["garantia_id"],
+                "contrato_id": row["contrato_id"],
+                "pedido": row["pedido"],
+                "proveedor": row["proveedor"],
+                "objeto": row["objeto"],
+                "garantia_tipo": row["garantia_tipo"],
+                "garantia_estado": row["garantia_estado"],
+                "compania_emisora": row["compania_emisora"],
+                "fecha_vencimiento": str(row["garantia_fecha_vencimiento"] or ""),
+                "dias_para_vencer": row["dias_para_vencer"],
+                "cta_url": cta_url,
+            }
+
+            ok = repository.enqueue_garantia_vence_15(
+                conn,
+                user_id=user_id,
+                garantia_id=garantia_id,
+                payload=payload,
+            )
+
+            if ok:
+                total += 1
+
+    conn.commit()
+    return total

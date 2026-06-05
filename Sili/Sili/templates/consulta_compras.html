@@ -9,91 +9,96 @@
 
 <div class="theme-compras">
 
- {% set filtros_abiertos = request.args.get('buscar') %}
+  {% set filtros_abiertos = request.args.get('buscar') %}
 
-<div class="compras-shell">
+  <div class="compras-shell">
 
-  <div class="d-flex align-items-center justify-content-between mb-3">
-    <h4 class="mb-0">Contratos de Compras</h4>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h4 class="mb-0">Contratos de Compras</h4>
+
+  <div class="d-flex align-items-center gap-2">
+    {% if permissions.get('contratos_ingresar', {}).get('exportar') %}
+    <a href="{{ url_for('contratos.exportar_contratos_compras', **request.args) }}"
+       class="btn btn-success btn-sm">
+      <i class="bi bi-file-earmark-excel me-1"></i>
+      Exportar Excel
+    </a>
+    {% endif %}
 
     {% if permissions.get('contratos_ingresar', {}).get('crear') %}
-    <a href="{{ url_for('contratos.compras_nuevo') }}" class="btn btn-primary">
+    <a href="{{ url_for('contratos.compras_nuevo') }}" class="btn btn-primary btn-sm">
       Nuevo contrato
     </a>
     {% endif %}
   </div>
-
-  <div class="card card-elev mb-3">
-    <div class="card-body">
-      <button class="btn btn-outline-secondary btn-sm"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseFiltrosCompras"
-              aria-expanded="{{ 'true' if filtros_abiertos else 'false' }}"
-              aria-controls="collapseFiltrosCompras">
-        <i class="bi bi-funnel me-1"></i>Filtros
-      </button>
-
-      <div class="collapse {% if filtros_abiertos %}show{% endif %} mt-3" id="collapseFiltrosCompras">
-        <form class="filters-panel" method="GET">
-          <input type="hidden" name="buscar" value="1">
-
-<div class="row g-3 align-items-end">
-  <div class="col-lg-3 col-md-6">
-    <label class="form-label">Proveedor</label>
-    <input name="proveedor" type="text" class="form-control"
-           value="{{ request.args.get('proveedor','') }}">
-  </div>
-
-  <div class="col-lg-2 col-md-6">
-    <label class="form-label">Pedido</label>
-    <input name="pedido" type="text" class="form-control"
-           value="{{ request.args.get('pedido','') }}">
-  </div>
-
-  <div class="col-lg-2 col-md-6">
-    <label class="form-label">Pagaré / Póliza</label>
-    {% set tpp = request.args.get('tipo_pp','') %}
-    <select name="tipo_pp" class="form-select">
-      <option value="" {% if not tpp %}selected{% endif %}>Todos</option>
-      <option value="PAGARE" {% if tpp == 'PAGARE' %}selected{% endif %}>Pagaré</option>
-      <option value="POLIZA" {% if tpp == 'POLIZA' %}selected{% endif %}>Póliza</option>
-      <option value="AMBOS" {% if tpp == 'AMBOS' %}selected{% endif %}>Ambos</option>
-    </select>
-  </div>
-
-  <div class="col-lg-2 col-md-6">
-    <label class="form-label">Fecha desde</label>
-    <input name="fecha_desde" type="date" class="form-control"
-           value="{{ request.args.get('fecha_desde','') }}">
-  </div>
-
-  <div class="col-lg-2 col-md-6">
-    <label class="form-label">Fecha hasta</label>
-    <input name="fecha_hasta" type="date" class="form-control"
-           value="{{ request.args.get('fecha_hasta','') }}">
-  </div>
-
-  <div class="col-lg-1 col-md-12">
-    <div class="btn-group btn-group-sm compras-filter-actions">
-      <button class="btn btn-outline-secondary" type="submit">
-        <i class="bi bi-search me-1"></i>Buscar
-      </button>
-
-      <a class="btn btn-outline-secondary" href="{{ url_for('contratos.compras_lista') }}">
-        <i class="bi bi-x-circle me-1"></i>Limpiar
-      </a>
-    </div>
-  </div>
 </div>
 
+    <div class="card card-elev mb-3">
+      <div class="card-body">
+        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseFiltrosCompras" aria-expanded="{{ 'true' if filtros_abiertos else 'false' }}"
+          aria-controls="collapseFiltrosCompras">
+          <i class="bi bi-funnel me-1"></i>Filtros
+        </button>
 
-        </form>
+        <div class="collapse {% if filtros_abiertos %}show{% endif %} mt-3" id="collapseFiltrosCompras">
+          <form class="filters-panel" method="GET">
+            <input type="hidden" name="buscar" value="1">
+
+            <div class="row g-3 align-items-end">
+              <div class="col-lg-3 col-md-6">
+                <label class="form-label">Proveedor</label>
+                <input name="proveedor" type="text" class="form-control" value="{{ request.args.get('proveedor','') }}">
+              </div>
+
+              <div class="col-lg-2 col-md-6">
+                <label class="form-label">Pedido</label>
+                <input name="pedido" type="text" class="form-control" value="{{ request.args.get('pedido','') }}">
+              </div>
+
+              <div class="col-lg-2 col-md-6">
+                <label class="form-label">Pagaré / Póliza</label>
+                {% set tpp = request.args.get('tipo_pp','') %}
+                <select name="tipo_pp" class="form-select">
+                  <option value="" {% if not tpp %}selected{% endif %}>Todos</option>
+                  <option value="PAGARE" {% if tpp=='PAGARE' %}selected{% endif %}>Pagaré</option>
+                  <option value="POLIZA" {% if tpp=='POLIZA' %}selected{% endif %}>Póliza</option>
+                  <option value="AMBOS" {% if tpp=='AMBOS' %}selected{% endif %}>Ambos</option>
+                </select>
+              </div>
+
+              <div class="col-lg-2 col-md-6">
+                <label class="form-label">Fecha desde</label>
+                <input name="fecha_desde" type="date" class="form-control"
+                  value="{{ request.args.get('fecha_desde','') }}">
+              </div>
+
+              <div class="col-lg-2 col-md-6">
+                <label class="form-label">Fecha hasta</label>
+                <input name="fecha_hasta" type="date" class="form-control"
+                  value="{{ request.args.get('fecha_hasta','') }}">
+              </div>
+
+              <div class="col-lg-1 col-md-12">
+                <div class="btn-group btn-group-sm compras-filter-actions">
+                  <button class="btn btn-outline-secondary" type="submit">
+                    <i class="bi bi-search me-1"></i>Buscar
+                  </button>
+
+                  <a class="btn btn-outline-secondary" href="{{ url_for('contratos.compras_lista') }}">
+                    <i class="bi bi-x-circle me-1"></i>Limpiar
+                  </a>
+                </div>
+              </div>
+            </div>
+
+
+          </form>
+        </div>
+
       </div>
-
     </div>
   </div>
-</div>
 
   <div class="card card-elev mt-4">
     <div class="card-body p-0">
@@ -116,88 +121,98 @@
 
           <tbody>
             {% if rows %}
-              {% for r in rows %}
-              <tr>
-                <td>{{ r.pedido }}</td>
-                <td>{{ r.proveedor }}</td>
-                <td class="text-truncate contrato-objeto">{{ r.objeto }}</td>
-                <td>${{ '%.2f'|format(r.valor_contrato or 0) }}</td>
-                <td>{{ r.tipo_pp }}</td>
-                <td>{{ r.fecha_suscripcion or '' }}</td>
-                <td>{{ r.fecha_terminacion or '' }}</td>
-                <td>
-                  {% if r.aprob_gf|int == 1 %}
-                    Aprobado GF
-                  {% elif r.aprobado|int == 1 %}
-                    Aprobado Gerencia
-                  {% elif r.aprobado_jefe|int == 1 %}
-                    Aprobado Jefatura
-                  {% else %}
-                    No aprobado
+            {% for r in rows %}
+            <tr>
+
+              <td>
+                {% set fecha_fin = (r.fecha_terminacion|string)[:10] %}
+                {% set cerrado = (r.aprob_gf|int == 1) %}
+                {% set vencido = (fecha_fin and fecha_fin < hoy) %} {% if cerrado %} <span
+                  class="contrato-icon contrato-icon-cerrado" title="Contrato cerrado / aprobado final">
+                  <i class="bi bi-lock-fill"></i>
+                  </span>
+                  {% elif vencido %}
+                  <span class="contrato-icon contrato-icon-vencido" title="Contrato con fecha de terminación vencida">
+                    <i class="bi bi-flag-fill"></i>
+                  </span>
                   {% endif %}
-                </td>
-                <td>
-                  {% if permissions.get('contratos_ingresar', {}).get('aprobar') %}
-                  <form method="post" action="{{ url_for('contratos.toggle_aprobacion_jefe', contrato_id=r.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <div class="form-check form-switch m-0">
-                      <input class="form-check-input js-submit-on-change" type="checkbox"
-                             {% if r.aprobado_jefe %}checked{% endif %}>
-                    </div>
-                  </form>
-                  {% else %}
+
+                  {{ r.pedido }}
+              </td>
+              <td>{{ r.proveedor }}</td>
+              <td class="text-truncate contrato-objeto">{{ r.objeto }}</td>
+              <td>${{ '%.2f'|format(r.valor_contrato or 0) }}</td>
+              <td>{{ r.tipo_pp }}</td>
+              <td>{{ r.fecha_suscripcion or '' }}</td>
+              <td>{{ r.fecha_terminacion or '' }}</td>
+              <td>
+                {% if r.aprob_gf|int == 1 %}
+                Aprobado GF
+                {% elif r.aprobado|int == 1 %}
+                Aprobado Gerencia
+                {% elif r.aprobado_jefe|int == 1 %}
+                Aprobado Jefatura
+                {% else %}
+                No aprobado
+                {% endif %}
+              </td>
+              <td>
+                {% if permissions.get('contratos_ingresar', {}).get('aprobar') %}
+                <form method="post" action="{{ url_for('contratos.toggle_aprobacion_jefe', contrato_id=r.id) }}">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                   <div class="form-check form-switch m-0">
-                    <input class="form-check-input" type="checkbox" disabled
-                           {% if r.aprobado_jefe %}checked{% endif %}>
+                    <input class="form-check-input js-submit-on-change" type="checkbox" {% if r.aprobado_jefe
+                      %}checked{% endif %}>
                   </div>
+                </form>
+                {% else %}
+                <div class="form-check form-switch m-0">
+                  <input class="form-check-input" type="checkbox" disabled {% if r.aprobado_jefe %}checked{% endif %}>
+                </div>
+                {% endif %}
+              </td>
+
+              <td class="text-end">
+                <div class="btn-group">
+                  {% set bloqueado = (r.aprobado_jefe or (r.status_interno == 'Aprobado') or (r.aprobado|int == 1) or
+                  (r.aprob_gf|int == 1)) %}
+
+                  {% if r.adjuntos_cnt and (r.adjuntos_cnt|int) > 0 %}
+                  <button type="button" class="btn btn-sm btn-outline-primary btn-eye js-open-adjuntos"
+                    title="Ver adjuntos"
+                    data-url="{{ url_for('contratos.compras_archivos_fragment', contrato_id=r.id) }}"
+                    data-contrato-id="{{ r.id }}" data-pedido="{{ r.pedido }}" data-proveedor="{{ r.proveedor }}">
+                    <i class="bi bi-eye"></i>
+                  </button>
                   {% endif %}
-                </td>
 
-                <td class="text-end">
-                  <div class="btn-group">
-                    {% set bloqueado = (r.aprobado_jefe or (r.status_interno == 'Aprobado') or (r.aprobado|int == 1) or (r.aprob_gf|int == 1)) %}
+                  {% if permissions.get('contratos_ingresar', {}).get('ver') %}
+                  {% if not bloqueado and permissions.get('contratos_ingresar', {}).get('editar') %}
+                  <a class="btn btn-sm btn-outline-secondary"
+                    href="{{ url_for('contratos.compras_editar', contrato_id=r.id) }}">
+                    Editar
+                  </a>
+                  {% else %}
+                  <button type="button" class="btn btn-sm btn-outline-dark js-open-contrato-detalle"
+                    data-contrato-id="{{ r.id }}">
+                    Detalle
+                  </button>
+                  {% endif %}
+                  {% endif %}
 
-                    {% if r.adjuntos_cnt and (r.adjuntos_cnt|int) > 0 %}
-                    <button type="button"
-                            class="btn btn-sm btn-outline-primary btn-eye js-open-adjuntos"
-                            title="Ver adjuntos"
-                            data-url="{{ url_for('contratos.compras_archivos_fragment', contrato_id=r.id) }}"
-                            data-contrato-id="{{ r.id }}"
-                            data-pedido="{{ r.pedido }}"
-                            data-proveedor="{{ r.proveedor }}">
-                      <i class="bi bi-eye"></i>
+                  {% if permissions.get('contratos_ingresar', {}).get('eliminar') and not bloqueado %}
+                  <form method="post" action="{{ url_for('contratos.compras_eliminar', contrato_id=r.id) }}"
+                    class="js-delete-contrato-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                      Eliminar
                     </button>
-                    {% endif %}
-
-                    {% if permissions.get('contratos_ingresar', {}).get('ver') %}
-                      {% if not bloqueado and permissions.get('contratos_ingresar', {}).get('editar') %}
-                      <a class="btn btn-sm btn-outline-secondary"
-                         href="{{ url_for('contratos.compras_editar', contrato_id=r.id) }}">
-                        Editar
-                      </a>
-                      {% else %}
-                      <button type="button"
-                              class="btn btn-sm btn-outline-dark js-open-contrato-detalle"
-                              data-contrato-id="{{ r.id }}">
-                        Detalle
-                      </button>
-                      {% endif %}
-                    {% endif %}
-
-                    {% if permissions.get('contratos_ingresar', {}).get('eliminar') and not bloqueado %}
-                    <form method="post"
-                          action="{{ url_for('contratos.compras_eliminar', contrato_id=r.id) }}"
-                          class="js-delete-contrato-form">
-                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                      <button type="submit" class="btn btn-sm btn-outline-danger">
-                        Eliminar
-                      </button>
-                    </form>
-                    {% endif %}
-                  </div>
-                </td>
-              </tr>
-              {% endfor %}
+                  </form>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
             {% else %}
             <tr>
               <td colspan="10" class="text-center py-4 text-muted">
@@ -216,7 +231,7 @@
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-<h6 class="modal-title" id="modalAdjuntosTitle">Adjuntos</h6>
+        <h6 class="modal-title" id="modalAdjuntosTitle">Adjuntos</h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">

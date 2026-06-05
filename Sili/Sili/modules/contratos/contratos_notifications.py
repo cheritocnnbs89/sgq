@@ -10,20 +10,25 @@ from .contratos_constants import (
     SAVERA_EMAIL,
     GERENTE_FINANCIERO_EMAIL,
 )
+from html import escape
 from . import contratos_repository as repository
 
-
-def send_mail(to_addr: str, subject: str, message_plain: str):
+def send_mail(to_addr: str, subject: str, message_plain: str, message_html: str | None = None):
     if not to_addr:
         return
+
     try:
-        _send_email_async([to_addr], subject, message_plain)
+        # Tu send_email_async solo acepta 3 parámetros.
+        # Si hay HTML, enviamos el HTML como cuerpo del correo.
+        body = message_html if message_html else message_plain
+
+        _send_email_async([to_addr], subject, body)
+
     except Exception as _e:
         try:
             current_app.logger.warning("Fallo envío de correo a %s: %s", to_addr, _e)
         except Exception:
             pass
-
 
 def lookup_email_by_user_id(uid: int | None) -> str:
     return repository.fetch_usuario_email_por_id(uid)
@@ -364,3 +369,250 @@ def notify_pendiente_gf(
             current_app.logger.warning("Fallo aviso GF en contrato %s: %s", contrato_id, _e)
         except Exception:
             pass
+
+
+def notify_garantia_por_vencer_15_dias(
+    garantia_id: int,
+    contrato_id: int,
+    pedido: str,
+    proveedor: str,
+    objeto: str,
+    garantia_tipo: str,
+    fecha_vencimiento: str | None,
+    dias_para_vencer: int | None,
+    usuario_solicitante_id: int | None,
+    usuario_compras_id: int | None,
+    usuario_compras_nombre: str | None,
+    aprobado_jefe_por: int | None,
+):
+    try:
+        solicitante_email = lookup_email_by_user_id(usuario_solicitante_id)
+        compras_email = find_compras_email(usuario_compras_id, usuario_compras_nombre)
+        jefe_email = lookup_email_by_user_id(aprobado_jefe_por)
+        savera_mail = savera_email()
+
+        solicitante_nombre = repository.fetch_usuario_nombre_por_id(usuario_solicitante_id) or "Estimado/a"
+        compras_nombre = repository.fetch_usuario_nombre_por_id(usuario_compras_id) or "Estimado/a"
+        jefe_nombre = repository.fetch_usuario_nombre_por_id(aprobado_jefe_por) or "Estimado/a"
+
+        link = link_garantia(garantia_id)
+
+        subject = f"[SILI] Garantía por vencer en {dias_para_vencer or 15} días: Pedido {pedido}"
+
+        body_plain = (
+            "Estimado/a,\n\n"
+            "Se informa que la garantía asociada al siguiente contrato está próxima a vencer.\n\n"
+            f"Pedido: {pedido}\n"
+            f"Proveedor: {proveedor}\n"
+            f"Objeto: {objeto}\n"
+            f"Tipo de garantía: {garantia_tipo}\n"
+            f"Fecha de vencimiento: {fecha_vencimiento}\n"
+            f"Días para vencer: {dias_para_vencer or 15}\n\n"
+            "Por favor, revisar si corresponde gestionar la renovación, liberación o actualización del estado de la garantía.\n\n"
+            f"Ver garantía: {link}\n\n"
+            "— SILI"
+        )
+
+        enviados = set()
+
+        def _send_unique(email: str, nombre: str):
+            email = (email or "").strip()
+            if not email:
+                return
+
+            email_key = email.lower()
+            if email_key in enviados:
+                return
+
+            body_html = _build_garantia_vencimiento_html(
+                pedido=pedido,
+                proveedor=proveedor,
+                objeto=objeto,
+                garantia_tipo=garantia_tipo,
+                fecha_vencimiento=fecha_vencimiento,
+                dias_para_vencer=dias_para_vencer,
+                link=link,
+                nombre_destinatario=nombre or "Estimado/a",
+            )
+
+            send_mail(email, subject, body_plain, body_html)
+            enviados.add(email_key)
+
+        _send_unique(savera_mail, "Savera")
+        _send_unique(compras_email, compras_nombre)
+        _send_unique(solicitante_email, solicitante_nombre)
+        _send_unique(jefe_email, jefe_nombre)
+
+    except Exception as _e:
+        try:
+            current_app.logger.warning(
+                "Fallo aviso garantía por vencer %s: %s",
+                garantia_id,
+                _e,
+            )
+        except Exception:
+            pass
+
+
+def _safe_html(value) -> str:
+    return escape("" if value is None else str(value))
+
+
+def _build_garantia_vencimiento_html(
+    pedido: str,
+    proveedor: str,
+    objeto: str,
+    garantia_tipo: str,
+    fecha_vencimiento: str | None,
+    dias_para_vencer: int | None,
+    link: str,
+    nombre_destinatario: str = "Estimado/a",
+):
+    pedido = _safe_html(pedido)
+    proveedor = _safe_html(proveedor)
+    objeto = _safe_html(objeto)
+    garantia_tipo = _safe_html(garantia_tipo)
+    fecha_vencimiento = _safe_html(fecha_vencimiento or "")
+    dias_para_vencer = _safe_html(dias_para_vencer or 15)
+    link = _safe_html(link)
+    nombre_destinatario = _safe_html(nombre_destinatario or "Estimado/a")
+
+    return f"""
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Garantía próxima a vencer</title>
+</head>
+
+<body style="margin:0; padding:0; background:#f4f5f7; font-family:Arial, Helvetica, sans-serif; color:#2f2f2f;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f5f7; padding:32px 0;">
+    <tr>
+      <td align="center">
+
+        <table width="720" cellpadding="0" cellspacing="0" border="0"
+               style="width:720px; max-width:720px; background:#ffffff; border-radius:10px; overflow:hidden; border:1px solid #e5e7eb; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+
+          <!-- ENCABEZADO -->
+          <tr>
+            <td style="background:#f28c28; padding:22px 26px 18px 26px;">
+              <div style="font-size:12px; color:#fff4e8; letter-spacing:1.2px; text-transform:uppercase; font-weight:700; margin-bottom:8px;">
+                GESTIÓN DE GARANTÍAS
+              </div>
+
+              <div style="font-size:24px; line-height:1.25; color:#ffffff; font-weight:800; margin-bottom:8px;">
+                Garantía próxima a vencer
+              </div>
+
+              <div style="font-size:14px; color:#fff8f0;">
+                Pedido {pedido} — vence en {dias_para_vencer} día(s)
+              </div>
+            </td>
+          </tr>
+
+          <!-- CUERPO -->
+          <tr>
+            <td style="padding:22px 26px 10px 26px; font-size:14px; line-height:1.6; color:#333333;">
+              Hola <strong>{nombre_destinatario}</strong>,
+              <br><br>
+              Se informa que la garantía asociada al siguiente contrato está próxima a vencer.
+              Por favor, revisar si corresponde gestionar la <strong>renovación</strong>,
+              <strong>liberación</strong> o actualización del estado de la garantía.
+            </td>
+          </tr>
+
+          <!-- TABLA DE DETALLE -->
+          <tr>
+            <td style="padding:8px 26px 20px 26px;">
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                     style="border-collapse:collapse; width:100%; font-size:14px;">
+
+                <tr>
+                  <td style="width:220px; background:#f2f4f8; padding:11px 13px; border-bottom:1px solid #dde3ec; font-weight:700; color:#2f2f2f;">
+                    Pedido
+                  </td>
+                  <td style="padding:11px 13px; border-bottom:1px solid #dde3ec; color:#333333;">
+                    {pedido}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="background:#f2f4f8; padding:11px 13px; border-bottom:1px solid #dde3ec; font-weight:700; color:#2f2f2f;">
+                    Proveedor
+                  </td>
+                  <td style="padding:11px 13px; border-bottom:1px solid #dde3ec; color:#333333;">
+                    {proveedor}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="background:#f2f4f8; padding:11px 13px; border-bottom:1px solid #dde3ec; font-weight:700; color:#2f2f2f;">
+                    Tipo de garantía
+                  </td>
+                  <td style="padding:11px 13px; border-bottom:1px solid #dde3ec; color:#333333;">
+                    {garantia_tipo}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="background:#f2f4f8; padding:11px 13px; border-bottom:1px solid #dde3ec; font-weight:700; color:#2f2f2f;">
+                    Fecha de vencimiento
+                  </td>
+                  <td style="padding:11px 13px; border-bottom:1px solid #dde3ec; color:#333333;">
+                    <strong style="color:#d97706;">{fecha_vencimiento}</strong>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="background:#f2f4f8; padding:11px 13px; border-bottom:1px solid #dde3ec; font-weight:700; color:#2f2f2f;">
+                    Días para vencer
+                  </td>
+                  <td style="padding:11px 13px; border-bottom:1px solid #dde3ec; color:#333333;">
+                    <span style="display:inline-block; background:#fff3e0; color:#b45309; padding:4px 10px; border-radius:999px; font-weight:700;">
+                      {dias_para_vencer} día(s)
+                    </span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="background:#f2f4f8; padding:11px 13px; border-bottom:1px solid #dde3ec; font-weight:700; color:#2f2f2f; vertical-align:top;">
+                    Objeto del contrato
+                  </td>
+                  <td style="padding:11px 13px; border-bottom:1px solid #dde3ec; color:#333333; line-height:1.5;">
+                    {objeto}
+                  </td>
+                </tr>
+
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- BOTÓN -->
+          <tr>
+            <td align="center" style="padding:0 26px 24px 26px;">
+              <a href="{link}"
+                 style="display:inline-block; background:#f28c28; color:#ffffff; text-decoration:none; padding:11px 22px; border-radius:7px; font-size:14px; font-weight:700;">
+                Ver garantía / contrato
+              </a>
+            </td>
+          </tr>
+
+          <!-- PIE -->
+          <tr>
+            <td style="padding:14px 26px 20px 26px; font-size:12px; color:#6b7280; border-top:1px solid #edf0f5;">
+              Este es un mensaje automático. No responda a este correo.
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
+"""

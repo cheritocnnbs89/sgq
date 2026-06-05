@@ -4,7 +4,8 @@ import time
 from typing import Any, List
 
 from modules.db import get_db
-
+import json
+from datetime import date
 from .contratos_querys import (
     SQL_LISTA_CONTRATOS_APROBADOS_PARA_GARANTIA,
     SQL_USUARIOS_COMBO,
@@ -47,6 +48,14 @@ from .contratos_querys import (
     SQL_EXISTE_GARANTIA_APROBADA_ACTIVA_POR_CONTRATO,
     SQL_DETALLE_GARANTIA_FRAGMENT,
     SQL_APROBACION_LISTA_BASE,
+    SQL_GARANTIAS_REPORTE_BASE,
+    SQL_GARANTIAS_VENCEN_EN_DIAS,
+    SQL_NOTIFY_TEMPLATE_GARANTIA_VENCE_15_EXISTS,
+    SQL_NOTIFY_TEMPLATE_GARANTIA_VENCE_15_INSERT,
+    SQL_USUARIO_ID_POR_EMAIL,
+    SQL_GARANTIAS_VENCEN_EN_15_DIAS,
+    SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT,
+    SQL_NOTIFY_QUEUE_INSERT_GARANTIA,
 )
 
 
@@ -284,6 +293,106 @@ def list_contratos(
     conn = get_conn()
     return conn.cursor().execute(sql, params).fetchall()
  
+
+
+def list_contratos_reporte(
+    proveedor: str = "",
+    pedido: str = "",
+    tipo_pp: str = "",
+    fecha_desde: str = "",
+    fecha_hasta: str = "",
+):
+    sql = """
+    SELECT
+        c.id,
+        c.anio,
+        c.pedido,
+        c.proveedor,
+        c.objeto,
+        c.valor_contrato,
+        c.valor_anticipo,
+        c.tipo_pp,
+        c.fecha_suscripcion,
+        c.fecha_terminacion,
+        c.plazo_dias,
+        c.cronograma_pagos,
+        c.fecha_entrega_compras,
+        c.fecha_firma_gerencia,
+        c.fecha_entrega_finanzas_sumilla,
+        c.fecha_entrega_originales_fin,
+        c.fechas_pago_anticipo,
+        c.fecha_entrega_pedido,
+        c.status_interno,
+        c.observaciones,
+        c.usuario_solicitante_id,
+        us.nombre_completo AS usuario_solicitante,
+        c.usuario_compras_nombre,
+        c.usuario_compras_id,
+        uc.nombre_completo AS usuario_compras,
+        c.departamento_id,
+        d.nombre AS departamento,
+        COALESCE(c.aprobado_jefe,0) AS aprobado_jefe,
+        c.aprobado_jefe_por,
+        uj.nombre_completo AS aprobado_jefe_por_nombre,
+        c.aprobado_jefe_en,
+        COALESCE(c.aprobado,0) AS aprobado,
+        c.aprobado_por,
+        ua.nombre_completo AS aprobado_por_nombre,
+        c.aprobado_en,
+        COALESCE(c.aprob_gf,0) AS aprob_gf,
+        c.creado_por,
+        cr.nombre_completo AS creado_por_nombre,
+        c.creado_at,
+        c.actualizado_at,
+        (
+            SELECT COUNT(1)
+            FROM contrato_archivos a
+            WHERE a.contrato_id = c.id
+        ) AS adjuntos_cnt
+    FROM contratos c
+    LEFT JOIN usuarios us ON us.id = c.usuario_solicitante_id
+    LEFT JOIN usuarios uc ON uc.id = c.usuario_compras_id
+    LEFT JOIN usuarios uj ON uj.id = c.aprobado_jefe_por
+    LEFT JOIN usuarios ua ON ua.id = c.aprobado_por
+    LEFT JOIN usuarios cr ON cr.id = c.creado_por
+    LEFT JOIN departamentos d ON d.id = c.departamento_id
+    WHERE COALESCE(c.disabled,0)=0
+    """
+
+    params: List[Any] = []
+
+    proveedor = (proveedor or "").strip()
+    pedido = (pedido or "").strip()
+    tipo_pp = (tipo_pp or "").strip().upper()
+    fecha_desde = (fecha_desde or "").strip()
+    fecha_hasta = (fecha_hasta or "").strip()
+
+    if proveedor:
+        sql += " AND c.proveedor LIKE ?"
+        params.append(f"%{proveedor}%")
+
+    if pedido:
+        sql += " AND c.pedido LIKE ?"
+        params.append(f"%{pedido}%")
+
+    if tipo_pp in ("PAGARE", "POLIZA", "AMBOS"):
+        sql += " AND c.tipo_pp = ?"
+        params.append(tipo_pp)
+
+    if fecha_desde:
+        sql += " AND CAST(c.fecha_suscripcion AS date) >= CAST(? AS date)"
+        params.append(fecha_desde)
+
+    if fecha_hasta:
+        sql += " AND CAST(c.fecha_suscripcion AS date) <= CAST(? AS date)"
+        params.append(fecha_hasta)
+
+    sql += " ORDER BY c.id DESC"
+
+    conn = get_conn()
+    return conn.cursor().execute(sql, params).fetchall()
+
+
 def list_garantias(
     proveedor: str = "",
     pedido: str = "",
@@ -442,58 +551,16 @@ def list_garantias_reporte(
     fecha_vencimiento_desde: str = "",
     fecha_vencimiento_hasta: str = "",
 ):
-    sql = """
-    SELECT
-        g.id AS garantia_id,
-        g.contrato_id,
-        g.tipo AS garantia_tipo,
-        g.compania_emisora,
-        g.monto_poliza,
-        g.fecha_suscripcion AS garantia_fecha_suscripcion,
-        g.fecha_vencimiento AS garantia_fecha_vencimiento,
-        g.fecha_vencimiento_actual,
-        g.vigencia_dias,
-        g.estado AS garantia_estado,
-        g.fecha_renovacion,
-        g.requiere_renovacion,
-        g.status_interno AS garantia_status_interno,
-        g.observaciones AS garantia_observaciones,
-        g.creado_at AS garantia_creado_at,
-        g.actualizado_at AS garantia_actualizado_at,
-        COALESCE(g.aprobado_jefe,0) AS garantia_aprobado_jefe,
-        COALESCE(g.aprobado,0) AS garantia_aprobado,
-        COALESCE(g.aprob_gf,0) AS garantia_aprob_gf,
-
-        c.id AS contrato_id_real,
-        c.anio,
-        c.pedido,
-        c.proveedor,
-        c.objeto,
-        c.valor_contrato,
-        c.valor_anticipo,
-        c.tipo_pp,
-        c.fecha_suscripcion AS contrato_fecha_suscripcion,
-        c.fecha_terminacion AS contrato_fecha_terminacion,
-        c.plazo_dias,
-        c.cronograma_pagos,
-        c.fecha_entrega_compras,
-        c.fecha_firma_gerencia,
-        c.fecha_entrega_finanzas_sumilla,
-        c.fecha_entrega_originales_fin,
-        c.fechas_pago_anticipo,
-        c.fecha_entrega_pedido,
-        c.status_interno AS contrato_status_interno,
-        c.observaciones AS contrato_observaciones,
-        COALESCE(c.aprobado_jefe,0) AS contrato_aprobado_jefe,
-        COALESCE(c.aprobado,0) AS contrato_aprobado,
-        COALESCE(c.aprob_gf,0) AS contrato_aprob_gf
-    FROM garantias g
-    JOIN contratos c ON c.id = g.contrato_id
-    WHERE COALESCE(g.disabled,0)=0
-      AND COALESCE(c.disabled,0)=0
-    """
-
+    sql = SQL_GARANTIAS_REPORTE_BASE
     params: List[Any] = []
+
+    proveedor = (proveedor or "").strip()
+    pedido = (pedido or "").strip()
+    estado = (estado or "").strip()
+    fecha_registro_desde = (fecha_registro_desde or "").strip()
+    fecha_registro_hasta = (fecha_registro_hasta or "").strip()
+    fecha_vencimiento_desde = (fecha_vencimiento_desde or "").strip()
+    fecha_vencimiento_hasta = (fecha_vencimiento_hasta or "").strip()
 
     if proveedor:
         sql += " AND c.proveedor LIKE ?"
@@ -512,25 +579,31 @@ def list_garantias_reporte(
         params.append(requiere_renovacion)
 
     if fecha_registro_desde:
-        sql += " AND CAST(g.creado_at AS date) >= ?"
+        sql += " AND CAST(g.creado_at AS date) >= CAST(? AS date)"
         params.append(fecha_registro_desde)
 
     if fecha_registro_hasta:
-        sql += " AND CAST(g.creado_at AS date) <= ?"
+        sql += " AND CAST(g.creado_at AS date) <= CAST(? AS date)"
         params.append(fecha_registro_hasta)
 
     if fecha_vencimiento_desde:
-        sql += " AND CAST(g.fecha_vencimiento AS date) >= ?"
+        sql += " AND CAST(g.fecha_vencimiento AS date) >= CAST(? AS date)"
         params.append(fecha_vencimiento_desde)
 
     if fecha_vencimiento_hasta:
-        sql += " AND CAST(g.fecha_vencimiento AS date) <= ?"
+        sql += " AND CAST(g.fecha_vencimiento AS date) <= CAST(? AS date)"
         params.append(fecha_vencimiento_hasta)
 
     sql += " ORDER BY g.id DESC"
 
     conn = get_conn()
     return conn.cursor().execute(sql, params).fetchall()
+
+
+
+def list_garantias_vencen_en_15_dias():
+    conn = get_conn()
+    return conn.cursor().execute(SQL_GARANTIAS_VENCEN_EN_DIAS).fetchall()
 
 def list_contratos_aprobados_para_garantia(limit: int = 300, include_id: int | None = None):
     conn = get_conn()
@@ -547,3 +620,249 @@ def list_contratos_aprobados_para_garantia(limit: int = 300, include_id: int | N
             rows = [extra] + list(rows)
 
     return rows
+
+
+def fetch_usuario_id_por_email(email: str | None) -> int | None:
+    email = (email or "").strip()
+    if not email:
+        return None
+
+    conn = get_conn()
+    row = conn.cursor().execute(SQL_USUARIO_ID_POR_EMAIL, (email,)).fetchone()
+    return row["id"] if row else None
+
+
+def list_garantias_vencen_en_15_dias():
+    conn = get_conn()
+    return conn.cursor().execute(SQL_GARANTIAS_VENCEN_EN_15_DIAS).fetchall()
+
+
+def ensure_garantia_vencimiento_template(conn=None) -> None:
+    """
+    Inserta el template de garantía por vencer si no existe.
+    Usa el mismo modelo de notify_templates.
+    """
+    from .contratos_constants import (
+        TPL_GARANTIA_VENCE_15,
+        TIPO_GARANTIA_VENCE_15,
+    )
+
+    own_conn = False
+    if conn is None:
+        conn = get_conn()
+        own_conn = True
+
+    cur = conn.cursor()
+    row = cur.execute(
+        SQL_NOTIFY_TEMPLATE_GARANTIA_VENCE_15_EXISTS,
+        (TPL_GARANTIA_VENCE_15,),
+    ).fetchone()
+
+    if row:
+        return
+
+    subject = "🟠 Garantía por vencer en {{ dias_para_vencer }} día(s): Pedido {{ pedido }}"
+
+    html = """<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="760" cellpadding="0" cellspacing="0"
+                 style="max-width:760px;background:#ffffff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+
+            <tr>
+              <td style="background:{{ header_color }};padding:18px 22px;color:#ffffff;">
+                <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.92;font-weight:700;">
+                  GESTIÓN DE GARANTÍAS
+                </div>
+                <div style="font-size:22px;font-weight:800;margin-top:4px;line-height:1.15;">
+                  {{ header_title }}
+                </div>
+                <div style="font-size:13px;opacity:.95;margin-top:8px;line-height:1.35;">
+                  {{ header_subtitle }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:18px 22px 10px 22px;">
+                <div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
+                  Hola {{ destinatario_nombre or 'Usuario' }},
+                </div>
+
+                <div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
+                  {{ intro_text }}
+                </div>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                       style="border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:10px;">
+
+                  <tr>
+                    <td style="width:260px;background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Pedido</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ pedido }}</td>
+                  </tr>
+
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Proveedor</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ proveedor }}</td>
+                  </tr>
+
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Tipo de garantía</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ garantia_tipo }}</td>
+                  </tr>
+
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Fecha de vencimiento</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#b45309;font-weight:800;">{{ fecha_vencimiento }}</td>
+                  </tr>
+
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Días para vencer</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">
+                      <span style="display:inline-block;background:#ffedd5;color:#9a3412;padding:4px 10px;border-radius:999px;font-weight:800;">
+                        {{ dias_para_vencer }} día(s)
+                      </span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Estado garantía</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ garantia_estado }}</td>
+                  </tr>
+
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Compañía emisora</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ compania_emisora }}</td>
+                  </tr>
+
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;vertical-align:top;">Objeto del contrato</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;white-space:pre-wrap;">{{ objeto }}</td>
+                  </tr>
+
+                </table>
+
+                <div style="margin-top:18px;">
+                  <a href="{{ cta_url }}"
+                     style="display:inline-block;background:#f97316;color:#ffffff;text-decoration:none;
+                            padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;">
+                    {{ cta_label }}
+                  </a>
+                </div>
+
+                <div style="font-size:12px;color:#6b7280;margin-top:12px;">
+                  {{ footer_note }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:12px 22px 14px 22px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;">
+                Este es un mensaje automático. No responda a este correo.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>"""
+
+    text = """Garantía próxima a vencer
+
+Pedido: {{ pedido }}
+Proveedor: {{ proveedor }}
+Tipo de garantía: {{ garantia_tipo }}
+Fecha de vencimiento: {{ fecha_vencimiento }}
+Días para vencer: {{ dias_para_vencer }}
+Estado garantía: {{ garantia_estado }}
+Compañía emisora: {{ compania_emisora }}
+Objeto: {{ objeto }}
+
+{{ footer_note }}
+
+App: {{ cta_url }}
+"""
+
+    cur.execute(
+        SQL_NOTIFY_TEMPLATE_GARANTIA_VENCE_15_INSERT,
+        (
+            TPL_GARANTIA_VENCE_15,
+            subject,
+            html,
+            text,
+            TIPO_GARANTIA_VENCE_15,
+        ),
+    )
+
+    if own_conn:
+        conn.commit()
+
+
+def enqueue_garantia_vence_15(conn, *, user_id: int, garantia_id: int, payload: dict) -> bool:
+    """
+    Encola notificación de garantía próxima a vencer.
+    Evita duplicados por user_id + template_key + event_key.
+    """
+    from .contratos_constants import (
+        TPL_GARANTIA_VENCE_15,
+        TIPO_GARANTIA_VENCE_15,
+    )
+
+    if not user_id:
+        return False
+
+    fecha_vencimiento = str(payload.get("fecha_vencimiento") or "")
+    event_key = f"garantia_vence_15:{garantia_id}:{fecha_vencimiento}:uid:{user_id}"
+
+    payload.setdefault("header_color", "#f97316")
+    payload.setdefault("row_bg", "#fff7ed")
+    payload.setdefault("header_title", "Garantía próxima a vencer")
+    payload.setdefault(
+        "header_subtitle",
+        f"Pedido {payload.get('pedido', '')} — vence en {payload.get('dias_para_vencer', 15)} día(s)",
+    )
+    payload.setdefault(
+        "intro_text",
+        "Se informa que la garantía asociada al siguiente contrato está próxima a vencer. "
+        "Por favor, revisar si corresponde gestionar la renovación, liberación o actualización del estado.",
+    )
+    payload.setdefault("cta_label", "Ver garantía / contrato")
+    payload.setdefault(
+        "footer_note",
+        "Ingresa al módulo de Contratos / Garantías para revisar la información y gestionar la acción correspondiente.",
+    )
+
+    cur = conn.cursor()
+
+    exists = cur.execute(
+        SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT,
+        (
+            user_id,
+            TPL_GARANTIA_VENCE_15,
+            event_key,
+        ),
+    ).fetchone()
+
+    if exists:
+        return False
+
+    cur.execute(
+        SQL_NOTIFY_QUEUE_INSERT_GARANTIA,
+        (
+            user_id,
+            TIPO_GARANTIA_VENCE_15,
+            fecha_vencimiento or date.today().isoformat(),
+            "email",
+            TPL_GARANTIA_VENCE_15,
+            json.dumps(payload, ensure_ascii=False, default=str),
+            "contratos_garantias",
+            event_key,
+        ),
+    )
+
+    return True

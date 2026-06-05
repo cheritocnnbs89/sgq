@@ -2,6 +2,7 @@
 # ==========================================================
 # Worker del scheduler.
 # Conserva el hilo de fondo, bootstrap inicial y loop.
+# CAMBIO: agrega trigger viernes 17:00 para reporte semanal planilla.
 # ==========================================================
 
 from __future__ import annotations
@@ -35,6 +36,7 @@ from .scheduler_services import (
     notify_overdue,
     send_daily_report,
 )
+from .scheduler_planilla_weekly import send_planilla_weekly_report
 
 from .seedbilling_xml_job import process_seedbilling_facturas_recibidas
 
@@ -178,10 +180,11 @@ def start_scheduler(app=None):
 
             _run_tick(target_app, "FIRST_RUN", run_om=False)
 
-            last_overdue = time.time()
-            last_daily_date = None
-            last_om_date = None
+            last_overdue           = time.time()
+            last_daily_date        = None
+            last_om_date           = None
             last_seedbilling_slots = set()
+            last_weekly_report_date = None   # ← control reporte semanal planilla
 
             while True:
                 cycle_start = time.time()
@@ -192,9 +195,7 @@ def start_scheduler(app=None):
                 _log("info", "Worker: OM programado para ejecución diaria de las 08:00")
 
                 _run_tick(target_app, f"TICK {tick_id}", run_om=run_om_now)
-                # ==================================================
-                # SeedBilling XML compras - 08:00 y 14:00
-                # ==================================================
+
                 # ==================================================
                 # SeedBilling XML compras - 08:00 y 14:00
                 # ==================================================
@@ -226,6 +227,9 @@ def start_scheduler(app=None):
                 except Exception:
                     target_app.logger.exception("Worker: SeedBilling XML falló")
 
+                # ==================================================
+                # notify_overdue - cada 30 min
+                # ==================================================
                 now_ts = time.time()
                 if now_ts - last_overdue >= 1800:
                     try:
@@ -236,6 +240,9 @@ def start_scheduler(app=None):
                     except Exception:
                         target_app.logger.exception("Worker: notify_overdue falló")
 
+                # ==================================================
+                # Reporte diario - 07:30
+                # ==================================================
                 now2 = datetime.now()
                 if now2.hour == 7 and now2.minute == 30:
                     if last_daily_date != now2.date():
@@ -246,6 +253,23 @@ def start_scheduler(app=None):
                             _log("info", "Worker: send_daily_report OK")
                         except Exception:
                             target_app.logger.exception("Worker: send_daily_report falló")
+
+                # ==================================================
+                # Reporte SEMANAL planilla - Viernes 17:00
+                # ==================================================
+                now3 = datetime.now()
+                is_friday  = now3.weekday() == 4          # 0=lun … 4=vie
+                is_1700    = now3.hour == 17 and now3.minute < 6  # ventana de 5 min
+                week_key   = now3.strftime("%Y-W%W")              # ej. 2026-W23
+
+                if is_friday and is_1700 and last_weekly_report_date != week_key:
+                    try:
+                        _log("info", "Worker: Ejecutando reporte semanal planilla [%s]...", week_key)
+                        result = send_planilla_weekly_report(force=False)
+                        last_weekly_report_date = week_key
+                        _log("info", "Worker: reporte semanal planilla OK result=%s", result)
+                    except Exception:
+                        target_app.logger.exception("Worker: reporte semanal planilla falló")
 
                 elapsed = time.time() - cycle_start
                 sleep_s = max(5, 300 - elapsed)
