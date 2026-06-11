@@ -20,6 +20,7 @@
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('[tareas.js v3] DOM listo - modal:', !!document.getElementById('tdModalBackdrop'));
   const table = document.getElementById('tabla-tareas');
   if (!table) return;
 
@@ -542,8 +543,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', function (e) {
     const btn = e.target.closest('.js-tarea-detalle');
     if (!btn) return;
+    console.log('[tareas.js] click Ver detalle - btn:', btn.dataset.tareaId);
     e.preventDefault();
     const backdrop = document.getElementById('tdModalBackdrop');
+    console.log('[tareas.js] backdrop:', backdrop);
     if (backdrop) {
       tdOpenModal(btn);
     }
