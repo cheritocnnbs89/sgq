@@ -443,4 +443,46 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ── Modal detalle tarea ─────────────────────────────────────────────
+  const modalDetalle = document.getElementById('modalDetalleTarea');
+  if (modalDetalle) {
+    modalDetalle.addEventListener('show.bs.modal', function (e) {
+      const btn = e.relatedTarget;
+      if (!btn) return;
+
+      const setText = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val || '—';
+      };
+
+      setText('mdCodigo',      btn.dataset.tareaId);
+      setText('mdTitulo',      btn.dataset.tareaTitulo);
+      setText('mdDesc',        btn.dataset.tareaDesc || '(Sin descripción)');
+      setText('mdEstado',      btn.dataset.tareaEstado);
+      setText('mdTipo',        btn.dataset.tareaTipo);
+      setText('mdAvance',      btn.dataset.tareaAvance);
+      setText('mdEmpresa',     btn.dataset.tareaEmpresa);
+      setText('mdResponsable', btn.dataset.tareaResponsable);
+      setText('mdSolicitante', btn.dataset.tareaSolicitante);
+      setText('mdDepto',       btn.dataset.tareaDepto);
+      setText('mdInicio',      btn.dataset.tareaInicio || '—');
+      setText('mdFin',         btn.dataset.tareaFin   || '—');
+
+      const btnVer    = document.getElementById('mdBtnVer');
+      const btnEditar = document.getElementById('mdBtnEditar');
+
+      if (btnVer)    btnVer.href = btn.dataset.tareaUrlVer || '#';
+
+      if (btnEditar) {
+        const urlEd = btn.dataset.tareaUrlEditar || '';
+        if (urlEd) {
+          btnEditar.href = urlEd;
+          btnEditar.classList.remove('d-none');
+        } else {
+          btnEditar.classList.add('d-none');
+        }
+      }
+    });
+  }
 });

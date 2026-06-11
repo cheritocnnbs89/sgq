@@ -275,7 +275,29 @@
 
               <td data-th="Código">{{ "%08d"|format(t['id']) }}</td>
               <td data-th="Título">{{ t['titulo'] }}</td>
-              <td data-th="Descripción">{{ t['descripcion'] }}</td>
+              <td data-th="Descripción">
+                <span class="td-desc-short">{{ t['descripcion'] or '' }}</span>
+                {% if t['descripcion'] %}
+                <button type="button" class="btn btn-link btn-sm btn-ver-desc p-0 ms-1"
+                  data-bs-toggle="modal" data-bs-target="#modalDetalleTarea"
+                  data-tarea-id="{{ '%08d'|format(t['id']) }}"
+                  data-tarea-titulo="{{ t['titulo']|e }}"
+                  data-tarea-desc="{{ (t['descripcion'] or '')|e }}"
+                  data-tarea-estado="{{ (t['estado'] or '')|e }}"
+                  data-tarea-tipo="{{ (t['tipo_tarea_nombre'] or 'N/A')|e }}"
+                  data-tarea-avance="{{ t['porcentaje_avance']|int }}%"
+                  data-tarea-responsable="{{ ((t['propietario_nombre'] or '') ~ ' (' ~ (t['propietario'] or '') ~ ')')|e }}"
+                  data-tarea-solicitante="{{ (t['solicitante_nombre'] or t['solicitante_username'] or 'N/A')|e }}"
+                  data-tarea-empresa="{{ (t['empresa_nombre'] or 'Interno')|e }}"
+                  data-tarea-depto="{{ (t['departamento_nombre'] or 'N/A')|e }}"
+                  data-tarea-inicio="{{ (t['fecha_inicio'] or '')[:10] }}"
+                  data-tarea-fin="{{ (t['fecha_fin'] or '')[:10] }}"
+                  data-tarea-url-ver="{{ url_for('ver_tarea', task_id=t['id']) }}"
+                  data-tarea-url-editar="{{ url_for('editar_tarea', task_id=t['id']) if permissions.get('tareas', {}).get('editar') and (rol == 'admin' or t['editable']) else '' }}">
+                  Ver más
+                </button>
+                {% endif %}
+              </td>
               <td data-th="Tipo">
                 {% set t_nombre = (t['tipo_tarea_nombre'] or '') | lower %}
                 <span class="badge-tipo 
@@ -461,6 +483,86 @@
     <nav class="no-print">
       <ul id="pagination" class="pagination pagination-sm mb-0"></ul>
     </nav>
+  </div>
+</div>
+
+<!-- ── Modal detalle tarea ── -->
+<div class="modal fade" id="modalDetalleTarea" tabindex="-1" aria-labelledby="mdTitulo" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content tarea-modal-content">
+
+      <div class="modal-header tarea-modal-header">
+        <div>
+          <div class="tarea-modal-codigo text-white" id="mdCodigo"></div>
+          <h5 class="modal-title tarea-modal-titulo text-white" id="mdTitulo"></h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+        <p class="tarea-modal-section">Descripción</p>
+        <div class="tarea-modal-desc mb-3" id="mdDesc"></div>
+
+        <p class="tarea-modal-section">Estado y progreso</p>
+        <div class="row g-2 mb-3">
+          <div class="col-6 col-md-3">
+            <div class="tarea-modal-label">Estado</div>
+            <div class="tarea-modal-value" id="mdEstado"></div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="tarea-modal-label">Tipo</div>
+            <div class="tarea-modal-value" id="mdTipo"></div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="tarea-modal-label">Avance</div>
+            <div class="tarea-modal-value" id="mdAvance"></div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="tarea-modal-label">Empresa</div>
+            <div class="tarea-modal-value" id="mdEmpresa"></div>
+          </div>
+        </div>
+
+        <p class="tarea-modal-section">Personas</p>
+        <div class="row g-2 mb-3">
+          <div class="col-6 col-md-4">
+            <div class="tarea-modal-label">Responsable</div>
+            <div class="tarea-modal-value" id="mdResponsable"></div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="tarea-modal-label">Solicitante</div>
+            <div class="tarea-modal-value" id="mdSolicitante"></div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="tarea-modal-label">Departamento</div>
+            <div class="tarea-modal-value" id="mdDepto"></div>
+          </div>
+        </div>
+
+        <p class="tarea-modal-section">Fechas</p>
+        <div class="row g-2">
+          <div class="col-6 col-md-3">
+            <div class="tarea-modal-label">Inicio planificado</div>
+            <div class="tarea-modal-value" id="mdInicio"></div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="tarea-modal-label">Fin planificado</div>
+            <div class="tarea-modal-value" id="mdFin"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <a href="#" id="mdBtnVer" class="btn btn-primary btn-sm">
+          <i class="bi bi-eye me-1"></i>Ver detalle completo
+        </a>
+        <a href="#" id="mdBtnEditar" class="btn btn-warning btn-sm d-none">
+          <i class="bi bi-pencil-square me-1"></i>Editar
+        </a>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+
+    </div>
   </div>
 </div>
 
