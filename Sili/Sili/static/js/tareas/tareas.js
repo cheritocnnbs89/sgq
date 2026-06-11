@@ -19,8 +19,83 @@
   });
 })();
 
+// ── Modal detalle tarea — independiente de la tabla ──────────────────
+(function initTareaModal() {
+  const tdBackdrop = document.getElementById('tdModalBackdrop');
+  const tdClose    = document.getElementById('tdModalClose');
+  if (!tdBackdrop) return;
+
+  function tdOpenModal(btn) {
+    const d = btn.dataset;
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+
+    setText('tdModalCodigo', d.tareaId);
+    setText('tdModalTitulo', d.tareaTitulo);
+    setText('tdModalDesc',   d.tareaDesc || '(Sin descripción)');
+
+    const meta = document.getElementById('tdModalMeta');
+    if (meta) {
+      meta.innerHTML = '';
+      [['bi-flag', d.tareaEstado], ['bi-tag', d.tareaTipo], ['bi-bar-chart', d.tareaAvance], ['bi-building', d.tareaEmpresa]]
+        .forEach(([icon, val]) => {
+          if (!val || val === '—') return;
+          const sp = document.createElement('span');
+          sp.innerHTML = '<i class="bi ' + icon + '"></i>';
+          sp.appendChild(document.createTextNode(' ' + val));
+          meta.appendChild(sp);
+        });
+    }
+
+    [['tdModalPersonas', [['Responsable', d.tareaResponsable], ['Solicitante', d.tareaSolicitante], ['Departamento', d.tareaDepto]]],
+     ['tdModalFechas',   [['Inicio planificado', d.tareaInicio], ['Fin planificado', d.tareaFin]]]
+    ].forEach(([containerId, items]) => {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      items.forEach(([label, val]) => {
+        const div = document.createElement('div');
+        div.className = 'td-modal-item';
+        const labelEl = document.createElement('div');
+        labelEl.className = 'td-modal-label';
+        labelEl.textContent = label;
+        const valEl = document.createElement('div');
+        valEl.className = 'td-modal-value';
+        valEl.textContent = val || '—';
+        div.appendChild(labelEl);
+        div.appendChild(valEl);
+        container.appendChild(div);
+      });
+    });
+
+    const btnVer    = document.getElementById('tdBtnVer');
+    const btnEditar = document.getElementById('tdBtnEditar');
+    if (btnVer) btnVer.href = d.tareaUrlVer || '#';
+    if (btnEditar) {
+      if (d.tareaUrlEditar) { btnEditar.href = d.tareaUrlEditar; btnEditar.classList.remove('d-none'); }
+      else { btnEditar.classList.add('d-none'); }
+    }
+
+    tdBackdrop.classList.add('visible');
+    tdBackdrop.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('bs-modal-open');
+  }
+
+  function tdCloseModal() {
+    tdBackdrop.classList.remove('visible');
+    tdBackdrop.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('bs-modal-open');
+  }
+
+  document.querySelectorAll('.js-tarea-detalle').forEach(function(btn) {
+    btn.addEventListener('click', function(e) { e.preventDefault(); tdOpenModal(btn); });
+  });
+
+  tdClose?.addEventListener('click', tdCloseModal);
+  tdBackdrop.addEventListener('click', function(e) { if (e.target === tdBackdrop) tdCloseModal(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && tdBackdrop.classList.contains('visible')) tdCloseModal(); });
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('[tareas.js v3] DOM listo - modal:', !!document.getElementById('tdModalBackdrop'));
   const table = document.getElementById('tabla-tareas');
   if (!table) return;
 
@@ -445,122 +520,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Modal detalle tarea (mismo patrón que bandeja soporte) ───────────
-  const tdBackdrop = document.getElementById('tdModalBackdrop');
-  const tdClose    = document.getElementById('tdModalClose');
-
-  function tdOpenModal(btn) {
-    const d = btn.dataset;
-
-    const setText = (id, val) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = val || '—';
-    };
-
-    setText('tdModalCodigo', d.tareaId);
-    setText('tdModalTitulo', d.tareaTitulo);
-    setText('tdModalDesc',   d.tareaDesc || '(Sin descripción)');
-
-    // Meta bar: estado · tipo · avance · empresa
-    const meta = document.getElementById('tdModalMeta');
-    if (meta) {
-      meta.innerHTML = '';
-      [
-        ['bi-flag',        d.tareaEstado],
-        ['bi-tag',         d.tareaTipo],
-        ['bi-bar-chart',   d.tareaAvance],
-        ['bi-building',    d.tareaEmpresa],
-      ].forEach(([icon, val]) => {
-        if (!val || val === '—') return;
-        const sp = document.createElement('span');
-        sp.innerHTML = '<i class="bi ' + icon + '"></i>';
-        sp.appendChild(document.createTextNode(' ' + val));
-        meta.appendChild(sp);
-      });
-    }
-
-    // Personas
-    const personas = document.getElementById('tdModalPersonas');
-    if (personas) {
-      personas.innerHTML = '';
-      [
-        ['Responsable',  d.tareaResponsable],
-        ['Solicitante',  d.tareaSolicitante],
-        ['Departamento', d.tareaDepto],
-      ].forEach(([label, val]) => {
-        if (!val || val === '—') return;
-        const div = document.createElement('div');
-        div.className = 'td-modal-item';
-        div.innerHTML = '<div class="td-modal-label">' + label + '</div>'
-                      + '<div class="td-modal-value"></div>';
-        div.querySelector('.td-modal-value').textContent = val;
-        personas.appendChild(div);
-      });
-    }
-
-    // Fechas
-    const fechas = document.getElementById('tdModalFechas');
-    if (fechas) {
-      fechas.innerHTML = '';
-      [
-        ['Inicio planificado', d.tareaInicio],
-        ['Fin planificado',    d.tareaFin],
-      ].forEach(([label, val]) => {
-        const div = document.createElement('div');
-        div.className = 'td-modal-item';
-        div.innerHTML = '<div class="td-modal-label">' + label + '</div>'
-                      + '<div class="td-modal-value"></div>';
-        div.querySelector('.td-modal-value').textContent = val || '—';
-        fechas.appendChild(div);
-      });
-    }
-
-    // Botones
-    const btnVer    = document.getElementById('tdBtnVer');
-    const btnEditar = document.getElementById('tdBtnEditar');
-    if (btnVer)    btnVer.href = d.tareaUrlVer || '#';
-    if (btnEditar) {
-      if (d.tareaUrlEditar) {
-        btnEditar.href = d.tareaUrlEditar;
-        btnEditar.classList.remove('d-none');
-      } else {
-        btnEditar.classList.add('d-none');
-      }
-    }
-
-    tdBackdrop.classList.add('visible');
-    tdBackdrop.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('bs-modal-open');
-  }
-
-  function tdCloseModal() {
-    tdBackdrop.classList.remove('visible');
-    tdBackdrop.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('bs-modal-open');
-  }
-
-  // Listener directo en cada botón "Ver detalle"
-  document.querySelectorAll('.js-tarea-detalle').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log('[tareas.js] click Ver detalle:', btn.dataset.tareaId);
-      tdOpenModal(btn);
-    });
-  });
-  console.log('[tareas.js v3] botones detalle encontrados:', document.querySelectorAll('.js-tarea-detalle').length);
-
-  if (tdBackdrop) {
-    // Cerrar con X
-    tdClose?.addEventListener('click', tdCloseModal);
-
-    // Cerrar al click en el backdrop (fuera del modal)
-    tdBackdrop.addEventListener('click', function (e) {
-      if (e.target === tdBackdrop) tdCloseModal();
-    });
-
-    // Cerrar con Escape
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && tdBackdrop.classList.contains('visible')) tdCloseModal();
-    });
-  }
 });
