@@ -13,86 +13,122 @@
   data-planilla-base-url="{{ url_for('planilla_mensual.planilla') }}"
   data-weekly-report-url="{{ url_for('planilla_mensual.admin_send_weekly_report') }}">
 
-  <!-- ===== BARRA DE FILTROS ===== -->
-  <form id="filtrosForm" class="d-flex align-items-end gap-2 mb-3 filter-bar flex-wrap" method="get">
-    <div>
-      <label class="form-label mb-1">Mes</label>
-      <input type="month" id="month" class="form-control"
-             value="{{'%04d-%02d'|format(y, m)}}">
-    </div>
-    <div>
-      <label class="form-label mb-1">Responsable</label>
-      <select id="f_res" name="responsable_id" class="form-select">
-        <option value="" {{ ''==rid and 'selected' or '' }}>Todos</option>
-        {% for r in responsables %}
-        <option value="{{r.id}}"
-                {{ (rid|string)==(r.id|string) and 'selected' or '' }}>{{r.nombre}}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div>
-      <label class="form-label mb-1">Frecuencia</label>
-      <select id="f_freq" name="frecuencia" class="form-select">
-        <option value="" {{ ''==freq and 'selected' or '' }}>Todas</option>
-        {% for f in ['Diario','Semanal','Mensual'] %}
-        <option value="{{f}}" {{ (freq|string)==f and 'selected' or '' }}>{{f}}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div>
-      <label class="form-label mb-1">Departamento</label>
-      <select id="f_dep" name="departamento_id" class="form-select">
-        <option value="" {{ ''==depid and 'selected' or '' }}>Todos</option>
-        {% for d in departamentos %}
-        <option value="{{ d.id }}"
-                {{ (depid|string)==(d.id|string) and 'selected' or '' }}>{{ d.nombre }}</option>
-        {% endfor %}
-      </select>
+  <!-- ===== TOOLBAR ===== -->
+  <div class="pm-toolbar mb-3">
+    <div class="pm-toolbar-left">
+      <i class="bi bi-table pm-toolbar-icon"></i>
+      <span class="pm-toolbar-title">Planilla Mensual</span>
+      <span class="pm-toolbar-sep"></span>
+      <a class="pm-nav-btn"
+         href="{{ url_for('planilla_mensual.planilla', year=prev_y, month=prev_m, responsable_id=rid, frecuencia=freq, departamento_id=depid) }}">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+      <span class="pm-toolbar-month">{{ ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][m-1] }} {{ y }}</span>
+      <a class="pm-nav-btn"
+         href="{{ url_for('planilla_mensual.planilla', year=next_y, month=next_m, responsable_id=rid, frecuencia=freq, departamento_id=depid) }}">
+        <i class="bi bi-chevron-right"></i>
+      </a>
     </div>
 
-    {% if is_admin %}
-    <div class="form-check form-switch ms-2 align-self-center">
-      <input class="form-check-input" type="checkbox" id="evidenceModeSwitch"
-             {{ 'checked' if evidence_mode else '' }}>
-      <label class="form-check-label small" for="evidenceModeSwitch">
-        Evidencia obligatoria
-      </label>
-    </div>
-    {% endif %}
+    <form id="filtrosForm" class="pm-toolbar-filters" method="get">
+      <div class="pm-filter-group">
+        <i class="bi bi-person pm-filter-icon"></i>
+        <select id="f_res" name="responsable_id" class="pm-select">
+          <option value="" {{ ''==rid and 'selected' or '' }}>Todos</option>
+          {% for r in responsables %}
+          <option value="{{r.id}}" {{ (rid|string)==(r.id|string) and 'selected' or '' }}>{{r.nombre}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="pm-filter-group">
+        <i class="bi bi-calendar2-range pm-filter-icon"></i>
+        <select id="f_freq" name="frecuencia" class="pm-select">
+          <option value="" {{ ''==freq and 'selected' or '' }}>Todas</option>
+          {% for f in ['Diario','Semanal','Mensual'] %}
+          <option value="{{f}}" {{ (freq|string)==f and 'selected' or '' }}>{{f}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="pm-filter-group">
+        <i class="bi bi-building pm-filter-icon"></i>
+        <select id="f_dep" name="departamento_id" class="pm-select">
+          <option value="" {{ ''==depid and 'selected' or '' }}>Todos</option>
+          {% for d in departamentos %}
+          <option value="{{ d.id }}" {{ (depid|string)==(d.id|string) and 'selected' or '' }}>{{ d.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <input type="hidden" id="month" value="{{'%04d-%02d'|format(y, m)}}">
+      <button id="btnFiltrar" class="pm-btn-primary" type="submit">
+        <i class="bi bi-funnel-fill"></i> Filtrar
+      </button>
+    </form>
 
-    <button id="btnFiltrar" class="btn btn-primary" type="submit">Filtrar</button>
-
-    <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
-
+    <div class="pm-toolbar-right">
       {% if is_admin %}
-      <button type="button"
-              id="btnSendWeeklyReport"
-              class="btn btn-outline-success btn-sm"
-              title="Envía el reporte semanal de planilla a los jefes ahora">
-        <i class="bi bi-envelope-paper-fill me-1"></i> Reporte semanal
+      <div class="pm-evidence-toggle">
+        <input class="pm-toggle-input" type="checkbox" id="evidenceModeSwitch"
+               {{ 'checked' if evidence_mode else '' }}>
+        <label class="pm-toggle-label" for="evidenceModeSwitch">
+          <i class="bi bi-paperclip"></i> Evidencia
+        </label>
+      </div>
+      <button type="button" id="btnSendWeeklyReport" class="pm-btn-secondary"
+              title="Envía el reporte semanal">
+        <i class="bi bi-envelope-paper-fill"></i> Reporte
       </button>
       {% endif %}
-
-      <a class="btn btn-outline-secondary btn-sm"
-         href="{{ url_for('planilla_mensual.planilla', year=prev_y, month=prev_m,
-                           responsable_id=rid, frecuencia=freq, departamento_id=depid) }}">
-        &laquo; Mes anterior
-      </a>
-      <a class="btn btn-outline-secondary btn-sm"
-         href="{{ url_for('planilla_mensual.planilla', year=next_y, month=next_m,
-                           responsable_id=rid, frecuencia=freq, departamento_id=depid) }}">
-        Mes siguiente &raquo;
-      </a>
     </div>
-  </form>
+  </div>
+
+  <!-- ===== TARJETAS RESUMEN ===== -->
+  <div class="pm-summary-row mb-3">
+    <div class="pm-summary-card pm-sum-total">
+      <div class="pm-sum-icon"><i class="bi bi-grid-3x2-gap-fill"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.total_act }}</div>
+        <div class="pm-sum-label">Actividades</div>
+      </div>
+    </div>
+    <div class="pm-summary-card pm-sum-done">
+      <div class="pm-sum-icon"><i class="bi bi-check-circle-fill"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.cumplidas }}</div>
+        <div class="pm-sum-label">Cumplidas</div>
+      </div>
+    </div>
+    <div class="pm-summary-card pm-sum-pending">
+      <div class="pm-sum-icon"><i class="bi bi-hourglass-split"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.pendientes }}</div>
+        <div class="pm-sum-label">Pendientes</div>
+      </div>
+    </div>
+    <div class="pm-summary-card pm-sum-overdue">
+      <div class="pm-sum-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.vencidas }}</div>
+        <div class="pm-sum-label">Vencidas</div>
+      </div>
+    </div>
+    <div class="pm-summary-card pm-sum-evi">
+      <div class="pm-sum-icon"><i class="bi bi-paperclip"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.evi_pendientes }}</div>
+        <div class="pm-sum-label">Sin evidencia</div>
+      </div>
+    </div>
+  </div>
 
   <!-- ===== LEYENDA ===== -->
-  <div class="legend mb-2">
-    <span class="legend-item"><span class="dot dot-empty"></span> Vacío</span>
-    <span class="legend-item"><span class="dot dot-done"></span> Marcado</span>
-    <span class="legend-item"><span class="badge freq-diario">Diario</span></span>
-    <span class="legend-item"><span class="badge freq-semanal">Semanal</span></span>
-    <span class="legend-item"><span class="badge freq-mensual">Mensual</span></span>
+  <div class="pm-legend mb-2">
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-done"></span> Cumplido</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-empty"></span> Pendiente</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-overdue"></span> Vencido</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-today"></span> Día actual</span>
+    {% if evidence_mode %}
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-evi"></span> Sin evidencia</span>
+    {% endif %}
   </div>
 
   <!-- ===== TABLA PLANILLA ===== -->
@@ -164,10 +200,15 @@
         <tr data-id="{{t.id}}">
           <td class="sticky-1 text-wrap">
             <div class="act-title {% if 'critica' in _keys and t['critica'] %}is-critical{% endif %}">
-              <div class="act-text clamp-3">{{ t['nombre'] }}</div>
-              <div class="row-meta">
-                <span class="row-progress" aria-label="Progreso"></span>
-              </div>
+              <div class="act-text clamp-2">{{ t['nombre'] }}</div>
+              {% if t['nombre']|length > 80 %}
+              <button type="button" class="act-ver-mas"
+                      data-nombre="{{ t['nombre']|e }}"
+                      data-freq="{{ t['frecuencia'] }}"
+                      data-resp="{{ t['responsable_nombre']|e }}">
+                Ver detalle
+              </button>
+              {% endif %}
             </div>
           </td>
           <td class="sticky-2 text-center">
@@ -213,15 +254,22 @@
           <input type="hidden" name="tarea_id" id="ev_tarea">
           <input type="hidden" name="fecha"    id="ev_fecha">
           <div class="mb-3">
-            <label class="form-label">Observación</label>
+            <label class="form-label">Observación <span class="text-danger">*</span></label>
             <textarea class="form-control" name="obs" rows="3"
                       placeholder="Comentario breve…"></textarea>
+            <div class="invalid-feedback" id="obs_error">La observación es obligatoria.</div>
           </div>
           <div class="mb-1">
             <label class="form-label">Evidencia (PDF o imagen)</label>
-            <input class="form-control" type="file" name="file"
-                   accept="application/pdf,image/*">
-            <div class="form-text">Opcional. Máx. recomendado 10 MB.</div>
+            <div class="ev-drop-zone" id="ev_drop_zone">
+              <input class="form-control" type="file" name="file" id="ev_file_input"
+                     accept="application/pdf,image/*">
+              <div class="ev-drop-hint">
+                <span class="ev-drop-icon">📎</span>
+                <span id="ev_drop_label">Selecciona, arrastra o pega una imagen/PDF (Ctrl+V)</span>
+                <span class="ev-drop-sub">Máx. 10 MB · PDF, PNG, JPG, WEBP</span>
+              </div>
+            </div>
           </div>
           <div id="ev_info" class="form-text mt-1"></div>
         </div>
@@ -232,6 +280,28 @@
                   id="evGuardarBtn">Guardar</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL DETALLE ACTIVIDAD ===== -->
+  <div class="modal fade" id="actDetalleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content act-detalle-content">
+        <div class="modal-header act-detalle-header">
+          <h6 class="modal-title"><i class="bi bi-info-circle me-2"></i>Detalle de actividad</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="act-detalle-nombre" id="actDetalleNombre"></p>
+          <div class="act-detalle-meta">
+            <span><i class="bi bi-calendar2-range me-1"></i><span id="actDetalleFreq"></span></span>
+            <span><i class="bi bi-person me-1"></i><span id="actDetalleResp"></span></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
     </div>
   </div>
 

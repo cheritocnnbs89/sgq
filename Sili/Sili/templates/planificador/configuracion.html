@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% block title %}Planificador – Configuración{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <div>
+      <h4 class="mb-0"><i class="bi bi-gear me-1"></i>Configuración del Planificador</h4>
+      <p class="text-muted mb-0 small">
+        Define qué usuarios son coordinadores y aprobadores por cada tipo de solicitud.
+      </p>
+    </div>
+    <a href="{{ url_for('planificador.planificador_solicitudes') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Volver a Solicitudes
+    </a>
+  </div>
+
+  <div class="row g-3">
+
+    {% if has_permission('planificador.configuracion','crear') %}
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-plus-circle me-1"></i>Agregar asignación
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('planificador.planificador_configuracion') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Tipo de solicitud *</label>
+              <select class="form-select form-select-sm" name="tipo" required>
+                <option value="">Seleccione...</option>
+                {% for t in tipos %}<option value="{{ t }}">{{ t }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Usuario *</label>
+              <select class="form-select form-select-sm" name="usuario_id" id="selUsuario"
+                      data-sync-nombre="hidNombre" required>
+                <option value="">Seleccione...</option>
+                {% for u in usuarios %}
+                <option value="{{ u.id }}" data-nombre="{{ u.nombre }}">{{ u.nombre }} ({{ u.username }})</option>
+                {% endfor %}
+              </select>
+              <input type="hidden" name="usuario_nombre" id="hidNombre">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Rol *</label>
+              <select class="form-select form-select-sm" name="rol_config" required>
+                <option value="">Seleccione...</option>
+                {% for r in roles_config %}<option value="{{ r }}">{{ r }}</option>{% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm w-100">
+              <i class="bi bi-save"></i> Guardar asignación
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="col-lg-{% if has_permission('planificador.configuracion','crear') %}8{% else %}12{% endif %}">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-list-check me-1"></i>Asignaciones activas
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 small">
+            <thead class="table-light">
+              <tr>
+                <th>Tipo de solicitud</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                {% if has_permission('planificador.configuracion','eliminar') %}
+                <th class="text-end">Acción</th>
+                {% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in config_rows %}
+              <tr>
+                <td>{{ r.tipo }}</td>
+                <td>{{ r.usuario_nombre }}</td>
+                <td>
+                  <span class="badge
+                    {% if r.rol_config=='COORDINADOR' %}bg-warning text-dark
+                    {% elif r.rol_config=='APROBADOR' %}bg-success
+                    {% else %}bg-primary{% endif %}">
+                    {% if r.rol_config=='MOTORIZADO' %}🏍️ {% endif %}{{ r.rol_config }}
+                  </span>
+                </td>
+                {% if has_permission('planificador.configuracion','eliminar') %}
+                <td class="text-end">
+                  <form method="post"
+                        action="{{ url_for('planificador.planificador_config_eliminar', cid=r.id) }}"
+                        data-confirm="¿Eliminar esta asignación?"
+                        class="d-inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+                {% endif %}
+              </tr>
+              {% else %}
+              <tr><td colspan="4" class="text-center text-muted py-4">Sin asignaciones configuradas</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="alert alert-info mt-3 small">
+        <i class="bi bi-info-circle me-1"></i>
+        <strong>Coordinador:</strong> asigna horario y envía a aprobación.<br>
+        <strong>Aprobador:</strong> aprueba o rechaza la solicitud coordinada.<br>
+        <strong>🏍️ Motorizado:</strong> recibe notificación al aprobar y puede marcar la actividad como completada.
+      </div>
+    </div>
+
+  </div>
+
+  {# ── Flags por tipo de solicitud ── #}
+  {% if has_permission('planificador.configuracion','editar') %}
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-toggles me-1"></i>Opciones por tipo de solicitud
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('planificador.planificador_tipo_flags') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <table class="table table-sm align-middle mb-3">
+              <thead class="table-light">
+                <tr>
+                  <th>Tipo</th>
+                  <th class="text-center">Requiere aprobación del gerente del solicitante</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for t in tipos %}
+                {% set flags = tipo_flags.get(t, {}) %}
+                {% set field_key = 'req_gerente_' ~ t.replace(' ', '_').replace('/', '_') %}
+                <tr>
+                  <td>{{ t }}</td>
+                  <td class="text-center">
+                    <div class="form-check form-switch d-flex justify-content-center">
+                      <input class="form-check-input" type="checkbox" role="switch"
+                             id="{{ field_key }}"
+                             name="{{ field_key }}"
+                             value="1"
+                             {% if flags.get('requiere_aprobacion_gerente') %}checked{% endif %}>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-save me-1"></i>Guardar opciones
+              </button>
+            </div>
+          </form>
+          <p class="small text-muted mt-2 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Cuando esta opción está activa, después de la aprobación normal la solicitud pasa a
+            <strong>Pendiente aprobación gerente</strong> y se notifica al gerente del área
+            del solicitante (último jefe con rol gerente en la jerarquía).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {# ── Integración Telegram ── #}
+  {% if has_permission('planificador.configuracion','editar') %}
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-telegram me-1 text-primary"></i>Integración Telegram
+          <span class="badge bg-success ms-2 fw-normal">@Quimpac_mensajeria_bot</span>
+        </div>
+        <div class="card-body">
+
+          <div class="row g-3">
+
+            {# -- Estado de registro de motorizados -- #}
+            <div class="col-12">
+              <h6 class="fw-semibold mb-2">
+                <i class="bi bi-list-check me-1"></i>Estado de vinculación Telegram por motorizado
+              </h6>
+              <div class="table-responsive">
+                <table class="table table-sm align-middle small mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Tipo</th>
+                      <th>Usuario</th>
+                      <th>Email</th>
+                      <th class="text-center">Chat ID Telegram</th>
+                      <th class="text-center">Estado</th>
+                      {% if has_permission('planificador.configuracion','editar') %}
+                      <th class="text-end">Editar manualmente</th>
+                      {% endif %}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for m in motorizados_tg %}
+                    <tr>
+                      <td>{{ m.tipo }}</td>
+                      <td>{{ m.usuario_nombre }}</td>
+                      <td class="text-muted">{{ m.email or '—' }}</td>
+                      <td class="text-center font-monospace">
+                        {{ m.telegram_chat_id or '—' }}
+                      </td>
+                      <td class="text-center">
+                        {% if m.telegram_chat_id %}
+                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Vinculado</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-circle me-1"></i>Sin vincular</span>
+                        {% endif %}
+                      </td>
+                      {% if has_permission('planificador.configuracion','editar') %}
+                      <td class="text-end">
+                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#tgEdit{{ m.usuario_id }}"
+                                title="Ingresar chat_id manualmente">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                      </td>
+                      {% endif %}
+                    </tr>
+                    {% if has_permission('planificador.configuracion','editar') %}
+                    <tr class="collapse" id="tgEdit{{ m.usuario_id }}">
+                      <td colspan="6" class="bg-light py-2 px-3">
+                        <form method="post" action="{{ url_for('planificador.planificador_set_telegram_chat_id') }}"
+                              class="d-flex align-items-center gap-2">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                          <input type="hidden" name="usuario_id" value="{{ m.usuario_id }}">
+                          <label class="form-label mb-0 text-nowrap small">Chat ID para <strong>{{ m.usuario_nombre }}</strong>:</label>
+                          <input type="text" class="form-control form-control-sm font-monospace"
+                                 name="telegram_chat_id"
+                                 value="{{ m.telegram_chat_id or '' }}"
+                                 placeholder="Ej: 5842917631"
+                                 style="max-width:200px">
+                          <button type="submit" class="btn btn-primary btn-sm text-nowrap">
+                            <i class="bi bi-save me-1"></i>Guardar
+                          </button>
+                          <span class="text-muted small">
+                            El usuario puede obtener su ID enviando un mensaje a
+                            <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a> en Telegram.
+                          </span>
+                        </form>
+                      </td>
+                    </tr>
+                    {% endif %}
+                    {% else %}
+                    <tr><td colspan="6" class="text-center text-muted py-3">No hay motorizados configurados</td></tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {# -- Instrucciones de registro -- #}
+            <div class="col-md-6">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-person-check me-1"></i>Cómo registrarse (para motorizados)</h6>
+              <ol class="small mb-0 ps-3">
+                <li>Abrir Telegram y buscar <strong>@Quimpac_mensajeria_bot</strong></li>
+                <li>Enviar el comando <code>/start</code></li>
+                <li>El bot pedirá tu correo corporativo SGQ</li>
+                <li>Escribir el correo y quedar vinculado automáticamente</li>
+              </ol>
+              <div class="alert alert-info small mt-2 mb-0 py-2">
+                <i class="bi bi-info-circle me-1"></i>
+                El motorizado recibirá una notificación Telegram cuando su servicio sea aprobado,
+                con fecha, horario, dirección y enlace a Google Maps.
+              </div>
+            </div>
+
+            {# -- Configurar webhook -- #}
+            <div class="col-md-6">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-broadcast me-1"></i>Configurar webhook del servidor</h6>
+              <p class="small text-muted mb-2">
+                Ingresa la URL pública de tu servidor para que Telegram envíe los mensajes al SGQ.
+                Solo se requiere hacer esto una vez (o cuando cambie la IP/dominio).
+              </p>
+              <form method="post" action="{{ url_for('telegram.telegram_setup_webhook') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text"><i class="bi bi-globe"></i></span>
+                  <input type="url" class="form-control" name="base_url"
+                         placeholder="https://tudominio.com"
+                         title="URL base pública (sin barra final)">
+                  <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-send me-1"></i>Registrar webhook
+                  </button>
+                </div>
+                <div class="form-text">Ej: <code>https://sgq.quimpac.com.ec</code></div>
+              </form>
+
+              <div class="mt-2">
+                <a href="{{ url_for('telegram.telegram_status') }}" target="_blank"
+                   class="btn btn-outline-secondary btn-sm">
+                  <i class="bi bi-info-circle me-1"></i>Ver estado actual del webhook
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/planificador.js') }}"></script>
+{% endblock %}

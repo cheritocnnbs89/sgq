@@ -40,6 +40,21 @@ from .scheduler_planilla_weekly import send_planilla_weekly_report
 
 from .seedbilling_xml_job import process_seedbilling_facturas_recibidas
 
+# ── Email-to-Task (Graph API) ──────────────────────────────────────
+try:
+    from modules.email_to_task.email_inbox_service import (
+        process_incoming_emails,
+        ensure_inbox_table,
+        notify_unassigned_tickets,
+    )
+    _EMAIL_TO_TASK_ENABLED = True
+except Exception as _e2t_err:
+    _EMAIL_TO_TASK_ENABLED = False
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "[email_to_task] No se pudo importar email_inbox_service: %s", _e2t_err
+    )
+
 _worker_started = False
 
 
@@ -185,6 +200,15 @@ def start_scheduler(app=None):
             last_om_date           = None
             last_seedbilling_slots = set()
             last_weekly_report_date = None   # ← control reporte semanal planilla
+            last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
+            last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
+
+            # Crear tabla email_tickets_inbox si no existe
+            if _EMAIL_TO_TASK_ENABLED:
+                try:
+                    ensure_inbox_table()
+                except Exception:
+                    target_app.logger.exception("Worker: ensure_inbox_table falló")
 
             while True:
                 cycle_start = time.time()
@@ -270,6 +294,38 @@ def start_scheduler(app=None):
                         _log("info", "Worker: reporte semanal planilla OK result=%s", result)
                     except Exception:
                         target_app.logger.exception("Worker: reporte semanal planilla falló")
+
+                # ==================================================
+                # Email-to-Task (soporteti@quimpac.com.ec) - cada 2 min
+                # ==================================================
+                now_ts2 = time.time()
+                if _EMAIL_TO_TASK_ENABLED and (now_ts2 - last_email_poll >= 120):
+                    try:
+                        _log("info", "Worker: Ejecutando lectura de correos soporteti@...")
+                        count = process_incoming_emails()
+                        last_email_poll = now_ts2
+                        if count:
+                            _log("info", "Worker: email_to_task procesó %d correo(s) nuevos", count)
+                        else:
+                            _log("debug", "Worker: email_to_task — sin correos nuevos")
+                    except Exception:
+                        target_app.logger.exception("Worker: process_incoming_emails falló")
+
+                # ==================================================
+                # Alerta tickets sin asignar +3h - cada 30 min
+                # ==================================================
+                now_ts3 = time.time()
+                if _EMAIL_TO_TASK_ENABLED and (now_ts3 - last_unassigned_check >= 1800):
+                    try:
+                        _log("info", "Worker: Verificando tickets sin asignar +3h...")
+                        alertados = notify_unassigned_tickets()
+                        last_unassigned_check = now_ts3
+                        if alertados:
+                            _log("info", "Worker: alerta enviada por %d ticket(s) sin asignar", alertados)
+                        else:
+                            _log("debug", "Worker: sin tickets con +3h sin asignar")
+                    except Exception:
+                        target_app.logger.exception("Worker: notify_unassigned_tickets falló")
 
                 elapsed = time.time() - cycle_start
                 sleep_s = max(5, 300 - elapsed)

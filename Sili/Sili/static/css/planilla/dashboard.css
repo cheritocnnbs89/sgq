@@ -151,6 +151,103 @@ body {
   animation: dashboard-skeleton 1.1s linear infinite;
 }
 
+/* Stubs ocultos — sin inline style para cumplir CSP */
+.d-none { display: none !important; }
+
+/* ── Fila única de KPI groups ──────────────────────────────── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .75rem;
+  margin-top: .75rem;
+}
+@media (max-width: 900px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .kpi-row { grid-template-columns: 1fr; }
+}
+
+/* ── Grupo (etiqueta + par de tiles) ─────────────────────── */
+.kpi-group {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  padding: .65rem .75rem .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+}
+
+.kpi-group-label {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px dashed var(--line);
+}
+.kpi-group-count {
+  font-weight: 400;
+  font-size: .72rem;
+  margin-left: .2rem;
+}
+
+/* Colores de borde por grupo */
+.kpi-group-total   { border-top: 3px solid #6366f1; }
+.kpi-group-diario  { border-top: 3px solid #ea580c; }
+.kpi-group-semanal { border-top: 3px solid #7c3aed; }
+.kpi-group-mensual { border-top: 3px solid #0891b2; }
+
+/* ── Par de tiles dentro de cada grupo ─────────────────────── */
+.kpi-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .4rem;
+}
+
+.kpi-tile {
+  border-radius: 8px;
+  padding: .5rem .6rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  transition: box-shadow .12s;
+}
+.kpi-tile:hover { box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+
+.kpi-tile-title {
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: .15rem;
+}
+.kpi-tile-val {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: .2rem;
+}
+.kpi-tile-sub {
+  font-size: .72rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  flex-wrap: wrap;
+}
+.kpi-gap { font-weight: 700; }
+
+/* Colores de borde de tiles */
+.kpi-tile-blue  { border-left: 3px solid #2563eb; }
+.kpi-tile-green { border-left: 3px solid #16a34a; }
+.kpi-tile-red   { border-left: 3px solid #dc2626; }
+
 html.theme-dark .chart-box.loading {
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, .05) 50%, transparent 100%);
 }
@@ -227,3 +324,4 @@ html.theme-dark .chart-box.loading {
 #tblQ4 th.sorted-desc .sort-ind::after {
   content: "▼";
 }
+

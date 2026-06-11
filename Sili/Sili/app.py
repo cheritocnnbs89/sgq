@@ -6,7 +6,7 @@
 # Su responsabilidad es orquestar la creación de la app
 # y delegar funcionalidades complementarias a app_core.
 # ==========================================================
- 
+  
 import os
 from pathlib import Path
 from flask import Flask, render_template
@@ -29,7 +29,7 @@ from modules.app_core.app_logging import (
     attach_file_logger, 
     log_registered_routes,
 )
-from modules.app_core.app_scheduler import start_scheduler_if_enabled
+from modules.app_core.app_scheduler import start_scheduler_if_enabled, start_email_poller_if_enabled
 
 
 # ----------------------------------------------------------
@@ -155,6 +155,11 @@ def create_app():
     print(">>> Intentando arrancar scheduler...")
     start_scheduler_if_enabled(app)
     print(">>> Scheduler llamado")
+
+    # ------------------------------------------------------
+    # Poller de correos soporteti@quimpac.com.ec (cada 2 min)
+    # ------------------------------------------------------
+    start_email_poller_if_enabled(app)
 
     # ------------------------------------------------------
     # Registro de rutas cargadas al iniciar.

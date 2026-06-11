@@ -246,7 +246,7 @@ SQL_SELECT_OM_CANDIDATOS = f"""
     WHERE ri.estado_asignacion = 'aprobado'
       AND COALESCE(LTRIM(RTRIM(ri.estado_respuesta)), 'sin_respuesta') = 'sin_respuesta'
       AND r.fecha_creacion IS NOT NULL
-      AND CONVERT(date, r.fecha_creacion) >= '2026-03-13'
+      AND CONVERT(date, r.fecha_creacion) >= '2026-03-01'
 """
 
 
@@ -375,7 +375,7 @@ SQL_SELECT_OM_ACCIONES_SEGUIMIENTO = """
       AND COALESCE(a.cumplido, 0) = 0
       AND UPPER(COALESCE(a.tipo, '')) IN ('CONTROL', 'CORRECTIVA')
       AND TRY_CONVERT(date, a.fecha_compromiso) IS NOT NULL
-      AND CAST(a.fecha_compromiso AS date) > '2000-01-01'
+      AND CAST(a.fecha_compromiso AS date) > '2026-06-01'
       AND LOWER(LTRIM(RTRIM(COALESCE(r.estado_global, '')))) = 'cerrado'
 """
 

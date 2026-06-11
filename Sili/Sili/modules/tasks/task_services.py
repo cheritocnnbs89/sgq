@@ -5,8 +5,11 @@ from datetime import date, datetime, timedelta
 import io
 import smtplib
 import secrets
-from flask import url_for
+import logging
+from flask import url_for, current_app
 from modules.tasks.task_notifications import _send_encuesta_satisfaccion_mail
+
+_log = logging.getLogger(__name__)
 import pandas as pd
 from flask import session
 from openpyxl.styles import Font
@@ -67,42 +70,117 @@ PREGUNTAS_ENCUESTA = [
 def svc_crear_y_enviar_encuesta(task_id: int):
     tarea = repo_obtener_tarea_para_encuesta(task_id)
     if not tarea:
+        _log.warning("[encuesta] tarea %s no encontrada", task_id)
         return False
 
-    if not tarea.get("solicitante_id") or not tarea.get("solicitante_email"):
+    if not tarea.get("solicitante_id"):
+        _log.warning("[encuesta] tarea %s sin solicitante_id", task_id)
+        return False
+
+    if not tarea.get("solicitante_email"):
+        _log.warning(
+            "[encuesta] tarea %s: solicitante_id=%s no tiene email registrado en la BD",
+            task_id, tarea.get("solicitante_id")
+        )
         return False
 
     existente = repo_obtener_encuesta_por_tarea(task_id)
-    if existente:
-        return False
-
     conn = get_db()
-    token = secrets.token_urlsafe(32)
+
+    if existente:
+        estado_enc = (existente.get("estado") or "").strip()
+
+        if estado_enc == "Realizada":
+            _log.info("[encuesta] tarea %s ya tiene encuesta respondida (id=%s), no se reenvía", task_id, existente.get("id"))
+            return False
+
+        # Verificar si la encuesta es de un cierre anterior (registro obsoleto)
+        fecha_cierre = tarea.get("fecha_cierre_real")
+        fecha_enc    = existente.get("fecha_creacion") or existente.get("fecha_envio")
+        es_obsoleta  = False
+        if fecha_cierre and fecha_enc:
+            try:
+                # Normalizar a datetime para comparar
+                if hasattr(fecha_cierre, 'date'):
+                    fc = fecha_cierre
+                else:
+                    fc = datetime.fromisoformat(str(fecha_cierre))
+                if hasattr(fecha_enc, 'date'):
+                    fe = fecha_enc
+                else:
+                    fe = datetime.fromisoformat(str(fecha_enc)[:19])
+                # Obsoleta si la encuesta fue creada más de 1 hora antes del cierre actual
+                if (fc - fe).total_seconds() > 3600:
+                    es_obsoleta = True
+            except Exception as ex:
+                _log.warning("[encuesta] No se pudo comparar fechas: %s", ex)
+
+        if es_obsoleta:
+            _log.info("[encuesta] tarea %s: encuesta id=%s es obsoleta (creada %s, tarea cerrada %s) — se reemplaza",
+                      task_id, existente.get("id"), fecha_enc, fecha_cierre)
+            try:
+                cur = conn.cursor()
+                cur.execute("DELETE FROM encuestas_satisfaccion WHERE id = ?", (existente.get("id"),))
+                conn.commit()
+            except Exception as ex:
+                _log.warning("[encuesta] No se pudo borrar encuesta obsoleta: %s", ex)
+            # Crear nueva encuesta abajo
+            token = secrets.token_urlsafe(32)
+            try:
+                encuesta_id = repo_insertar_encuesta(conn, task_id, tarea.get("solicitante_id"), token)
+                conn.commit()
+            except Exception as e:
+                conn.rollback()
+                _log.exception("[encuesta] Error creando nueva encuesta tras borrar obsoleta: %s", e)
+                return False
+        else:
+            # Encuesta pendiente reciente — reenviar el correo con el token existente
+            _log.info("[encuesta] tarea %s tiene encuesta pendiente (id=%s), reenviando correo", task_id, existente.get("id"))
+            encuesta_id = existente.get("id")
+            token = existente.get("token")
+            if not token:
+                _log.warning("[encuesta] tarea %s: encuesta sin token", task_id)
+                return False
+    else:
+        token = secrets.token_urlsafe(32)
+        try:
+            encuesta_id = repo_insertar_encuesta(
+                conn,
+                task_id,
+                tarea.get("solicitante_id"),
+                token,
+            )
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            _log.exception("[encuesta] Error insertando encuesta para tarea %s: %s", task_id, e)
+            return False
 
     try:
-        encuesta_id = repo_insertar_encuesta(
-            conn,
-            task_id,
-            tarea.get("solicitante_id"),
-            token,
-        )
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        print("Error creando encuesta:", e)
-        return False
+        # url_for requiere contexto de aplicación; fallback a URL manual si falla
+        try:
+            encuesta_url = url_for("responder_encuesta", token=token, _external=True)
+        except RuntimeError:
+            base = get_config_value("app_base_url", "").rstrip("/")
+            encuesta_url = f"{base}/encuestas/responder/{token}"
+            _log.warning("[encuesta] url_for falló, usando base_url=%s", base)
 
-    try:
-        encuesta_url = url_for("responder_encuesta", token=token, _external=True)
         msg, smtp_host, smtp_port, smtp_user, smtp_pass, use_tls = _send_encuesta_satisfaccion_mail(
             tarea,
             encuesta_url,
         )
 
-        if not msg or not smtp_host:
+        if not msg:
+            _log.warning("[encuesta] _send_encuesta_satisfaccion_mail devolvió msg=None — revisar config SMTP (smtp_host, smtp_from)")
+            return False
+
+        if not smtp_host:
+            _log.warning("[encuesta] smtp_host no configurado")
             return False
 
         msg["To"] = tarea["solicitante_email"]
+        _log.info("[encuesta] Enviando encuesta tarea=%s a=%s via %s:%s tls=%s",
+                  task_id, tarea["solicitante_email"], smtp_host, smtp_port, use_tls)
 
         if use_tls:
             with smtplib.SMTP(smtp_host, smtp_port) as server:
@@ -119,10 +197,17 @@ def svc_crear_y_enviar_encuesta(task_id: int):
         conn = get_db()
         repo_marcar_encuesta_enviada(conn, encuesta_id)
         conn.commit()
+        _log.info("[encuesta] Encuesta enviada OK tarea=%s encuesta_id=%s", task_id, encuesta_id)
         return True
 
+    except smtplib.SMTPAuthenticationError as e:
+        _log.error("[encuesta] Error de autenticación SMTP tarea=%s: %s", task_id, e)
+        return False
+    except smtplib.SMTPException as e:
+        _log.error("[encuesta] Error SMTP tarea=%s: %s", task_id, e)
+        return False
     except Exception as e:
-        print("Error enviando encuesta:", e)
+        _log.exception("[encuesta] Error inesperado enviando encuesta tarea=%s: %s", task_id, e)
         return False
 
 
@@ -1028,6 +1113,32 @@ def svc_build_listar_tareas_context(user, request_args):
 
         tareas_list.append(t)
 
+    # Verificar si el usuario pertenece a SISTEMAS QP (para mostrar bandeja)
+    es_sistemas_qp = False
+    try:
+        dep_id = user.get("departamento_id")
+        if dep_id:
+            conn = get_db()
+            dep_row = conn.execute(
+                "SELECT nombre FROM departamentos WHERE id = ?", (dep_id,)
+            ).fetchone()
+            if dep_row and dep_row["nombre"].strip().upper() == "SISTEMAS QP":
+                es_sistemas_qp = True
+    except Exception:
+        pass
+
+    # Contar correos pendientes en bandeja (solo si es SISTEMAS QP)
+    bandeja_pendientes = 0
+    if es_sistemas_qp:
+        try:
+            conn = get_db()
+            row = conn.execute(
+                "SELECT COUNT(*) AS c FROM email_tickets_inbox WHERE estado = 'POR_ASIGNAR'"
+            ).fetchone()
+            bandeja_pendientes = row["c"] if row else 0
+        except Exception:
+            pass
+
     return {
         "tareas": tareas_list,
         "usuario": user["username"],
@@ -1038,6 +1149,8 @@ def svc_build_listar_tareas_context(user, request_args):
         "vista": vista,
         "fecha_desde": fecha_desde_raw,
         "fecha_hasta": fecha_hasta_raw,
+        "es_sistemas_qp": es_sistemas_qp,
+        "bandeja_pendientes": bandeja_pendientes,
     }
 
 

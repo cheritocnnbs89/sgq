@@ -217,7 +217,7 @@ def _get_usuario_header_data(conn):
     cur = conn.cursor()
     cur.execute(
         """
-        SELECT
+        SELECT TOP 1
             COALESCE(e.razon_social, '') AS compania,
             COALESCE(u.nombre_completo, u.username, '') AS nombre,
             COALESCE(p.nombre, '') AS cargo,
@@ -227,7 +227,6 @@ def _get_usuario_header_data(conn):
         LEFT JOIN puestos p       ON p.id = u.puesto_id
         LEFT JOIN departamentos d ON d.id = u.departamento_id
         WHERE u.id = ?
-        LIMIT 1
         """,
         (uid,),
     )
@@ -237,7 +236,7 @@ def _get_usuario_header_data(conn):
     aprobado_por = ""
     if gerente_id:
         cur.execute(
-            "SELECT COALESCE(nombre_completo, username, '') AS n FROM usuarios WHERE id = ? LIMIT 1",
+            "SELECT TOP 1 COALESCE(nombre_completo, username, '') AS n FROM usuarios WHERE id = ?",
             (int(gerente_id),),
         )
         j = cur.fetchone()

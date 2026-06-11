@@ -294,5 +294,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     }
+
+    /* Auto-dismiss success/info alerts after 3 s */
+    const isAutoClose = alert.classList.contains("alert-success") ||
+                        alert.classList.contains("alert-info");
+    if (isAutoClose) {
+      setTimeout(function () {
+        alert.style.transition = "opacity .5s ease";
+        alert.style.opacity = "0";
+        setTimeout(function () { alert.remove(); }, 500);
+      }, 3000);
+    }
   });
 });

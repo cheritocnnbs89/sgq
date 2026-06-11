@@ -1,6 +1,6 @@
 from flask import app, render_template, request, redirect, url_for, flash, session, send_file, jsonify
 from datetime import datetime
-from modules.tasks.task_services import svc_abrir_o_crear_encuesta_desde_bandeja
+from modules.tasks.task_services import svc_abrir_o_crear_encuesta_desde_bandeja, svc_crear_y_enviar_encuesta
 from .security import require_login, require_permission, get_user
 from modules.tasks.task_services import (
     TaskServiceError,
@@ -167,6 +167,55 @@ def register_task_routes(app):
         resultado = svc_build_responder_encuesta_context(token)
         return render_template('encuesta_responder.html', **resultado)
     
+
+    @app.route('/encuestas/diagnostico/<int:task_id>')
+    @require_login
+    def encuesta_diagnostico(task_id):
+        """Ruta de diagnóstico: muestra qué pasaría al enviar la encuesta de una tarea."""
+        from modules.db import get_db, get_config_value
+        from modules.tasks.task_repository import repo_obtener_tarea_para_encuesta, repo_obtener_encuesta_por_tarea
+        conn = get_db()
+        tarea = repo_obtener_tarea_para_encuesta(task_id)
+        encuesta = repo_obtener_encuesta_por_tarea(task_id)
+        smtp_host = get_config_value('smtp_host', '')
+        smtp_from = get_config_value('smtp_from', '')
+        smtp_user = get_config_value('smtp_user', '')
+        info = {
+            "task_id": task_id,
+            "tarea_encontrada": bool(tarea),
+            "titulo": tarea.get("titulo") if tarea else None,
+            "solicitante_id": tarea.get("solicitante_id") if tarea else None,
+            "solicitante_email": tarea.get("solicitante_email") if tarea else None,
+            "solicitante_nombre": tarea.get("solicitante_nombre") if tarea else None,
+            "encuesta_existente": bool(encuesta),
+            "encuesta_id": encuesta.get("id") if encuesta else None,
+            "encuesta_estado": encuesta.get("estado") if encuesta else None,
+            "encuesta_enviada": str(encuesta.get("fecha_envio") or encuesta.get("enviada")) if encuesta else None,
+            "smtp_host": smtp_host or "(no configurado)",
+            "smtp_from": smtp_from or "(no configurado)",
+            "smtp_user": smtp_user or "(vacío)",
+        }
+        return jsonify(info)
+
+    @app.route('/encuestas/reenviar/<int:task_id>', methods=['POST'])
+    @require_login
+    def encuesta_reenviar(task_id):
+        """Reenvía (o crea y envía) la encuesta para una tarea terminada."""
+        from modules.db import get_db
+        from modules.tasks.task_repository import repo_obtener_encuesta_por_tarea
+        conn = get_db()
+        # Eliminar encuesta previa para forzar reenvío
+        existente = repo_obtener_encuesta_por_tarea(task_id)
+        if existente:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM encuestas_satisfaccion WHERE tarea_id = ?", (task_id,))
+            conn.commit()
+        ok = svc_crear_y_enviar_encuesta(task_id)
+        if ok:
+            flash("Encuesta reenviada correctamente.", "success")
+        else:
+            flash("No se pudo reenviar la encuesta. Revisa el log del servidor.", "danger")
+        return redirect(url_for("listar_encuestas"))
 
     @app.route('/encuestas/tarea/<int:task_id>/responder', methods=['POST'])
     @require_login

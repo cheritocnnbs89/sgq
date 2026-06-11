@@ -119,13 +119,88 @@
     });
   }
 
+  function initEvidenceDrop() {
+    const modalEl  = document.getElementById('evidenceModal');
+    const fileEl   = document.getElementById('ev_file_input');
+    const dropZone = document.getElementById('ev_drop_zone');
+    const dropLabel= document.getElementById('ev_drop_label');
+    if (!dropZone) return;
+
+    function setFile(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+        alert('Solo se permiten imágenes o PDF.');
+        return;
+      }
+      try {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        if (fileEl) fileEl.files = dt.files;
+      } catch (_) {}
+      if (dropLabel) dropLabel.textContent = '✅ ' + (file.name || 'imagen pegada');
+      dropZone.classList.add('has-file');
+    }
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer?.files?.[0];
+      if (file) setFile(file);
+    });
+
+    modalEl?.addEventListener('paste', e => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          const file = item.getAsFile();
+          if (file) { setFile(file); break; }
+        }
+      }
+    });
+
+    // resetear zona al cerrar el modal
+    modalEl?.addEventListener('hidden.bs.modal', () => {
+      dropZone.classList.remove('has-file', 'drag-over');
+      if (dropLabel) dropLabel.textContent = 'Selecciona, arrastra o pega una imagen/PDF (Ctrl+V)';
+    });
+  }
+
   function initEvidenceForm() {
-    const form = document.getElementById('evidenceForm');
+    const form   = document.getElementById('evidenceForm');
+    const obsEl  = form?.querySelector('textarea[name="obs"]');
+    const obsErr = document.getElementById('obs_error');
     if (!form) return;
+
+    // limpiar validación al cerrar el modal
+    document.getElementById('evidenceModal')?.addEventListener('hidden.bs.modal', () => {
+      obsEl?.classList.remove('is-invalid');
+      if (obsErr) obsErr.style.display = '';
+    });
 
     form.addEventListener('submit', async event => {
       event.preventDefault();
       event.stopPropagation();
+
+      // validación obs obligatoria
+      const obsVal = (obsEl?.value || '').trim();
+      if (!obsVal) {
+        obsEl?.classList.add('is-invalid');
+        if (obsErr) obsErr.style.display = 'block';
+        obsEl?.focus();
+        return;
+      }
+      obsEl?.classList.remove('is-invalid');
+      if (obsErr) obsErr.style.display = '';
+
+      const btn = document.getElementById('evGuardarBtn');
+      const btnOriginal = btn?.innerHTML || 'Guardar';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Guardando…';
+      }
 
       try {
         const fd = new FormData(form);
@@ -159,13 +234,16 @@
         const modalEl = document.getElementById('evidenceModal');
         (bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl)).hide();
 
-        const pendingCheck = window.Planilla.getPendingCheck();
-        if (pendingCheck?.cb) pendingCheck.cb.checked = true;
-
         window.Planilla.setPendingCheck(null);
         form.reset();
+        window.location.reload();
       } catch (error) {
         alert(`No se pudo guardar la evidencia.\n${error.message}`);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = btnOriginal;
+        }
       }
     }, { capture: true });
   }
@@ -281,10 +359,52 @@
     });
   }
 
+  function markOverdue() {
+    const todayStr = (root.dataset.today || '').trim();
+    if (!todayStr) return;
+    document.querySelectorAll('td.day-cell input.tick[data-date]').forEach(inp => {
+      const d = inp.dataset.date;
+      if (d < todayStr && !inp.checked && !inp.disabled) {
+        const cell = inp.closest('td');
+        cell?.classList.add('is-overdue');
+        inp.title = 'Pendiente vencido';
+      }
+    });
+  }
+
+  function initActDetalle() {
+    const modalEl = document.getElementById('actDetalleModal');
+    if (!modalEl) return;
+    const bsModal = new bootstrap.Modal(modalEl);
+    document.querySelectorAll('.act-ver-mas').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('actDetalleNombre').textContent = btn.dataset.nombre || '';
+        document.getElementById('actDetalleFreq').textContent  = btn.dataset.freq  || '';
+        document.getElementById('actDetalleResp').textContent  = btn.dataset.resp  || '';
+        bsModal.show();
+      });
+    });
+  }
+
+  function highlightToday() {
+    const todayStr = (root.dataset.today || '').trim();
+    if (!todayStr) return;
+    // cabecera
+    document.querySelectorAll('th.day-col[data-date="' + todayStr + '"]')
+      .forEach(th => th.classList.add('is-today'));
+    // celdas del cuerpo
+    document.querySelectorAll('td.day-cell input.tick[data-date="' + todayStr + '"]')
+      .forEach(inp => inp.closest('td')?.classList.add('is-today'));
+  }
+
   initEvidenceModeSwitch();
   initCheckToggles();
+  initEvidenceDrop();
   initEvidenceForm();
   initFilters();
   lockPastDays();
+  highlightToday();
+  markOverdue();
+  initActDetalle();
   initSendWeeklyReport();
 })();

@@ -303,14 +303,17 @@ def planilla_dashboard():
             trend={"labels": [], "realizadas": []},
             burnup={"labels": [], "plan_acum": [], "real_acum": []}
         )
+        _empty_kf = dict(real_pct=0.0, esp_pct=0.0, realizadas=0, planeadas=0, plan_h=0, real_h=0)
         return render_template(
             "planilla/dashboard.html",
             y=y, m=m, kpis=kpis, chart=chart,
+            kpis_freq={"diario": _empty_kf, "semanal": _empty_kf, "mensual": _empty_kf},
             top_high=[], top_low=[], dept_rows=[],
             freq=freq, departamentos_list=departamentos_list,
             responsables_list=responsables_list, depto_sel=depto_sel,
             resp_sel=resp_sel, prev_y=prev_y, prev_m=prev_m,
-            next_y=next_y, next_m=next_m, summary_rows=[]
+            next_y=next_y, next_m=next_m, summary_rows=[],
+            proj_rows=[], proj_cols=[],
         )
 
     ph = ",".join(["?"] * len(task_ids))
@@ -645,6 +648,34 @@ def planilla_dashboard():
         proyeccion_pct=proyeccion_pct
     )
 
+    # ── KPIs desglosados por frecuencia ──────────────────────────
+    # Usa las mismas estructuras por-tarea ya calculadas.
+    # Cuando freq=="todos" todos los grupos tienen datos.
+    # Cuando se filtró una frecuencia específica, solo ese grupo tendrá datos.
+    def _kpi_for_freq(fr_name):
+        _t = [t for t in tareas if (t.get("frecuencia") or "").lower() == fr_name]
+        if not _t:
+            return dict(real_pct=0.0, esp_pct=0.0, realizadas=0, planeadas=0,
+                        plan_h=0, real_h=0)
+        _plan   = sum(planeadas_por_tarea.get(t["id"], 0) for t in _t)
+        _real   = sum(realizados_por_tarea.get(t["id"], 0) for t in _t)
+        _plan_h = sum(planeadas_hoy_por_tarea.get(t["id"], 0) for t in _t)
+        _real_h = sum(realizados_hoy_por_tarea.get(t["id"], 0) for t in _t)
+        # Ambos porcentajes usan el mismo denominador (_plan = total mensual)
+        # para que la comparación Esperado vs Real sea sobre la misma base.
+        #   Esperado = plan_h / plan  → "qué % del mes debería estar hecho a hoy"
+        #   Real     = real_h / plan  → "qué % del mes está realmente hecho a hoy"
+        _esp    = (100.0 * _plan_h / _plan) if _plan else 0.0
+        _real_p = (100.0 * _real_h / _plan) if _plan else 0.0
+        return dict(real_pct=round(_real_p, 1), esp_pct=round(_esp, 1),
+                    realizadas=_real, planeadas=_plan, plan_h=_plan_h, real_h=_real_h)
+
+    kpis_freq = {
+        "diario":  _kpi_for_freq("diario"),
+        "semanal": _kpi_for_freq("semanal"),
+        "mensual": _kpi_for_freq("mensual"),
+    }
+
     session["active_page"] = "planilla_mensual"
 
     def months_to_year_end(y0, m0):
@@ -738,6 +769,7 @@ def planilla_dashboard():
         "planilla/dashboard.html",
         y=y, m=m,
         kpis=kpis,
+        kpis_freq=kpis_freq,
         chart=chart,
         top_high=top_high,
         top_low=top_low,
@@ -837,14 +869,46 @@ def planilla():
 
     prev_y, prev_m, next_y, next_m = prev_next(y, m)
     session["active_page"] = "planilla_mensual"
- 
+
+    # ── Tarjetas resumen ──────────────────────────────────────────
+    today = date.today()
+    total_act    = len(tareas)
+    cumplidas    = sum(1 for v in checks.values() if v)
+    # días hábiles ya pasados × tareas (aproximación: días con check posible)
+    dias_pasados = [d for d in dias if d <= today]
+    total_esperadas = len(tareas) * len(dias_pasados)
+    pendientes   = max(0, total_esperadas - cumplidas)
+    # vencidas: celdas de días pasados sin check y sin evidencia
+    vencidas = 0
+    for t in tareas:
+        tid = str(t["id"])
+        for d in dias_pasados:
+            k = f"{tid}-{d.isoformat()}"
+            if not checks.get(k):
+                vencidas += 1
+    evi_pendientes = sum(
+        1 for t in tareas
+        for d in dias_pasados
+        if checks.get(f"{str(t['id'])}-{d.isoformat()}")
+        and not evidencias.get(f"{str(t['id'])}-{d.isoformat()}")
+    )
+    resumen = dict(
+        total_act=total_act,
+        cumplidas=cumplidas,
+        pendientes=pendientes,
+        vencidas=vencidas,
+        evi_pendientes=evi_pendientes,
+    )
+    # ─────────────────────────────────────────────────────────────
+
     is_admin = _is_admin()
-    evidence_mode = bool(int(cfg_get(conn, "evidence_mode", "1") or 0))
+    evidence_mode = bool(int(cfg_get(conn, "planilla_evidence_mode", "1") or 0))
     return render_template(
         "planilla/planilla_mensual.html",
         evidence_mode=evidence_mode,
         is_admin=is_admin,
-        today_iso=date.today().isoformat(),  # ya lo usas arriba en tu HTML
+        today_iso=date.today().isoformat(),
+        resumen=resumen,
         y=y, m=m, dias=dias, tareas=tareas, checks=checks, evidencias=evidencias,
         responsables=responsables, rid=str(rid or ""), freq=str(freq or ""),
         departamentos=departamentos, depid=str(depid or ""),
@@ -867,7 +931,7 @@ def toggle_check():
     if not _can_access_task(conn, tarea_id):
         abort(403)
 
-    evidence_mode = bool(int(cfg_get(conn, "evidence_mode", "1") or 0))
+    evidence_mode = bool(int(cfg_get(conn, "planilla_evidence_mode", "1") or 0))
 
     if checked:
         if evidence_mode:
@@ -904,6 +968,9 @@ def evidence_post():
     fecha    = request.form.get("fecha")
     obs      = (request.form.get("obs") or "").strip()
     f        = request.files.get("file")
+
+    if not obs:
+        return ("La observación es obligatoria.", 400)
 
     conn = get_db(); cur = conn.cursor()
 

@@ -5,7 +5,7 @@
 # ==========================================================
 
 # Cambia a True cuando quieras activar nuevamente los jobs
-SCHEDULER_JOBS_ENABLED = True
+SCHEDULER_JOBS_ENABLED = False
 
 from modules.scheduler import (
     start_scheduler as _real_start_scheduler,

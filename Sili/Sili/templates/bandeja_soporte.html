@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% block title %}Bandeja Soporte TI{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bandeja/bandeja_soporte.css') }}">
+<script src="{{ url_for('static', filename='js/bandeja/bandeja_soporte.js') }}" defer></script>
+
+<div class="container-fluid mt-3">
+
+  <!-- ── TOOLBAR ─────────────────────────────────────────── -->
+  <div class="bs-toolbar">
+    <i class="bi bi-inbox-fill bs-toolbar-icon"></i>
+    <span class="bs-toolbar-title">Bandeja Soporte TI</span>
+    <span class="bs-toolbar-sep"></span>
+    <span class="bs-toolbar-sub">
+      <i class="bi bi-envelope me-1"></i>soporteti@quimpac.com.ec
+    </span>
+    <div class="bs-toolbar-right">
+      <a href="{{ url_for('listar_tareas') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Volver a Tareas
+      </a>
+    </div>
+  </div>
+
+  <!-- ── TABS ────────────────────────────────────────────── -->
+  <div class="bs-tabs">
+    <a class="bs-tab {% if estado_activo == 'POR_ASIGNAR' %}active{% endif %}"
+       href="{{ url_for('bandeja_soporte', estado='POR_ASIGNAR') }}">
+      <i class="bi bi-hourglass-split"></i> Por asignar
+      {% if conteos.POR_ASIGNAR > 0 %}
+      <span class="bs-tab-badge">{{ conteos.POR_ASIGNAR }}</span>
+      {% endif %}
+    </a>
+    <a class="bs-tab {% if estado_activo == 'ASIGNADA' %}active{% endif %}"
+       href="{{ url_for('bandeja_soporte', estado='ASIGNADA') }}">
+      <i class="bi bi-check2-circle"></i> Asignadas
+      {% if conteos.ASIGNADA > 0 %}
+      <span class="bs-tab-badge verde">{{ conteos.ASIGNADA }}</span>
+      {% endif %}
+    </a>
+    <a class="bs-tab {% if estado_activo == 'DESCARTADA' %}active{% endif %}"
+       href="{{ url_for('bandeja_soporte', estado='DESCARTADA') }}">
+      <i class="bi bi-x-circle"></i> Descartadas
+    </a>
+  </div>
+
+  <!-- ── TABLA ───────────────────────────────────────────── -->
+  {% if correos %}
+  <div class="bs-table-wrap">
+    <table class="bs-table">
+      <thead>
+        <tr>
+          <th class="col-ticket">Ticket</th>
+          <th>Asunto / Descripción</th>
+          <th>Remitente</th>
+          <th class="col-fecha">Recepción</th>
+          {% if estado_activo == 'POR_ASIGNAR' %}
+          <th class="col-asignar">Asignar responsable</th>
+          {% else %}
+          <th class="col-estado">Estado</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in correos %}
+        <tr>
+          <!-- Ticket ID -->
+          <td>
+            <span class="tk-id">TK-{{ '%05d' % c.id }}</span>
+          </td>
+
+          <!-- Asunto + cuerpo -->
+          <td>
+            <div class="tk-subject">{{ c.subject }}</div>
+            {% if c.body_text %}
+            <div class="tk-body">{{ c.body_text[:200] }}{% if c.body_text|length > 200 %}…{% endif %}</div>
+            {% endif %}
+            <div class="tk-actions-secondary">
+              {% set n_replies = reply_counts.get(c.id, 0) %}
+              <button type="button" class="btn-ver-detalle"
+                      data-inbox-id="{{ c.id }}"
+                      data-message-id="{{ c.message_id | default('') | e }}"
+                      data-subject="{{ c.subject | e }}"
+                      data-from="{{ (c.solicitante_nombre or c.from_name or c.from_email) | e }}"
+                      data-email="{{ c.from_email | e }}"
+                      data-fecha="{% set dt = c.received_at or c.fecha_registro %}{% if dt %}{{ dt.strftime('%d/%m/%Y %H:%M') }}{% endif %}"
+                      data-replies="{{ n_replies }}">
+                <i class="bi bi-eye"></i> Ver detalle
+                {% if n_replies > 0 %}
+                <span class="bs-reply-badge">{{ n_replies }}</span>
+                {% endif %}
+              </button>
+              {% if c.tarea_id %}
+              <a href="{{ url_for('ver_tarea', task_id=c.tarea_id) }}" class="tk-tarea-link">
+                <i class="bi bi-link-45deg"></i> Tarea #{{ c.tarea_id }}
+              </a>
+              {% endif %}
+            </div>
+          </td>
+
+          <!-- Remitente -->
+          <td>
+            <div class="tk-from">
+              {% if c.solicitante_nombre %}
+                {{ c.solicitante_nombre }}
+                <span class="badge-reg ms-1">Registrado</span>
+              {% else %}
+                {{ c.from_name or c.from_email }}
+                <span class="badge-noreg ms-1">No registrado</span>
+              {% endif %}
+            </div>
+            <div class="tk-email">{{ c.from_email }}</div>
+            {% if c.confirmacion_enviada %}
+            <div class="tk-confirm">
+              <i class="bi bi-envelope-check-fill"></i> Confirmación enviada
+            </div>
+            {% endif %}
+          </td>
+
+          <!-- Fecha recepción -->
+          <td>
+            <div class="tk-date">
+              {% set dt = c.received_at or c.fecha_registro %}
+              {% if dt %}
+                {{ dt.strftime('%d/%m/%Y') }}<br>
+                <span class="tk-date-hour">{{ dt.strftime('%H:%M') }}</span>
+              {% else %}—{% endif %}
+            </div>
+          </td>
+
+          <!-- Acción -->
+          <td>
+            {% if estado_activo == 'POR_ASIGNAR' %}
+            <div class="tk-actions">
+              <form method="post" action="{{ url_for('bandeja_asignar', inbox_id=c.id) }}"
+                    class="bs-form-asignar d-flex align-items-center gap-2 flex-wrap">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="responsable_id" class="tk-select" required>
+                  <option value="">— Seleccionar responsable —</option>
+                  {% for u in usuarios %}
+                  <option value="{{ u.id }}">
+                    {{ u.nombre }}{% if u.departamento %} · {{ u.departamento }}{% endif %}
+                  </option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="btn-asignar">
+                  <i class="bi bi-person-check-fill"></i> Asignar
+                </button>
+              </form>
+              <form method="post" action="{{ url_for('bandeja_descartar', inbox_id=c.id) }}"
+                    class="bs-form-descartar">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn-descartar">
+                  <i class="bi bi-x-lg"></i> Descartar
+                </button>
+              </form>
+            </div>
+            {% else %}
+            <span class="tk-estado {% if c.estado == 'ASIGNADA' %}asignada{% else %}descartada{% endif %}">
+              {{ c.estado | replace('_', ' ') }}
+            </span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── PAGINACIÓN ────────────────────────────────────────────── -->
+  {% if total_paginas > 1 %}
+  <div class="bs-pagination">
+    <span class="bs-pag-info">
+      {{ (pagina - 1) * page_size + 1 }}–{{ [pagina * page_size, total] | min }} de {{ total }}
+    </span>
+    <div class="bs-pag-controls">
+      {% if pagina > 1 %}
+      <a class="bs-pag-btn" href="{{ url_for('bandeja_soporte', estado=estado_activo, p=1) }}" title="Primera">
+        <i class="bi bi-chevron-double-left"></i>
+      </a>
+      <a class="bs-pag-btn" href="{{ url_for('bandeja_soporte', estado=estado_activo, p=pagina-1) }}" title="Anterior">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+      {% else %}
+      <span class="bs-pag-btn disabled"><i class="bi bi-chevron-double-left"></i></span>
+      <span class="bs-pag-btn disabled"><i class="bi bi-chevron-left"></i></span>
+      {% endif %}
+
+      {% set pag_start = [1, pagina - 2] | max %}
+      {% set pag_end   = [total_paginas, pagina + 2] | min %}
+      {% for p in range(pag_start, pag_end + 1) %}
+        {% if p == pagina %}
+        <span class="bs-pag-btn active">{{ p }}</span>
+        {% else %}
+        <a class="bs-pag-btn" href="{{ url_for('bandeja_soporte', estado=estado_activo, p=p) }}">{{ p }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if pagina < total_paginas %}
+      <a class="bs-pag-btn" href="{{ url_for('bandeja_soporte', estado=estado_activo, p=pagina+1) }}" title="Siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+      <a class="bs-pag-btn" href="{{ url_for('bandeja_soporte', estado=estado_activo, p=total_paginas) }}" title="Última">
+        <i class="bi bi-chevron-double-right"></i>
+      </a>
+      {% else %}
+      <span class="bs-pag-btn disabled"><i class="bi bi-chevron-right"></i></span>
+      <span class="bs-pag-btn disabled"><i class="bi bi-chevron-double-right"></i></span>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="bs-empty">
+    <i class="bi bi-inbox bs-empty-icon"></i>
+    <p class="bs-empty-title">
+      {% if estado_activo == 'POR_ASIGNAR' %}Sin correos pendientes por asignar
+      {% elif estado_activo == 'ASIGNADA' %}No hay correos asignados todavía
+      {% else %}No hay correos descartados
+      {% endif %}
+    </p>
+    {% if estado_activo == 'POR_ASIGNAR' %}
+    <p class="bs-empty-sub">Los nuevos correos de soporteti@quimpac.com.ec aparecerán aquí automáticamente cada 2 minutos.</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- ── MODAL DETALLE ─────────────────────────────────────────── -->
+<div class="bs-modal-backdrop" id="bsModalBackdrop" aria-hidden="true">
+  <div class="bs-modal" role="dialog" aria-modal="true" aria-labelledby="bsModalTitle">
+
+    <div class="bs-modal-header">
+      <div class="bs-modal-ticket" id="bsModalTicket"></div>
+      <h5 class="bs-modal-title" id="bsModalTitle"></h5>
+      <button type="button" class="bs-modal-close" id="bsModalClose" aria-label="Cerrar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="bs-modal-meta" id="bsModalMeta"></div>
+
+    <div class="bs-modal-body">
+      <!-- Cuerpo original -->
+      <div class="bs-modal-section-label">
+        <i class="bi bi-envelope-open"></i> Mensaje original
+      </div>
+      <div class="bs-modal-iframe-wrap">
+        <iframe id="bsModalIframe" class="bs-modal-iframe"
+                sandbox="allow-same-origin allow-popups"
+                title="Contenido del correo"></iframe>
+      </div>
+
+      <!-- Adjuntos / imágenes -->
+      <div id="bsModalAttachWrap" class="bs-modal-attach-wrap" hidden>
+        <div class="bs-modal-section-label">
+          <i class="bi bi-paperclip"></i> Adjuntos e imágenes
+          <button type="button" class="bs-load-attach-btn" id="bsLoadAttachBtn">
+            <i class="bi bi-cloud-download"></i> Cargar
+          </button>
+        </div>
+        <div id="bsAttachList" class="bs-attach-list"></div>
+      </div>
+
+      <!-- Hilo de respuestas -->
+      <div id="bsModalRepliesWrap" hidden>
+        <div class="bs-modal-section-label">
+          <i class="bi bi-chat-left-text"></i> Conversación
+          <span class="bs-reply-count-label" id="bsRepliesCount"></span>
+        </div>
+        <div id="bsRepliesList" class="bs-replies-list"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

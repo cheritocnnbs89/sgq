@@ -29,8 +29,53 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalEl = document.getElementById('evidenceModal');
   const form = document.getElementById('evidenceForm');
   const obsEl = form?.querySelector('textarea[name="obs"]');
-  const fileEl = form?.querySelector('input[name="file"]');
+  const fileEl = document.getElementById('ev_file_input') || form?.querySelector('input[name="file"]');
+  const dropZone = document.getElementById('ev_drop_zone');
+  const dropLabel = document.getElementById('ev_drop_label');
   let bsModal = null, activeCheckbox = null, saved = false;
+
+  // ──────────────────────────────────────────────
+  // Helper: asignar un File al input de archivo
+  // ──────────────────────────────────────────────
+  function setDroppedFile(file) {
+    if (!file || !fileEl) return;
+    if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+      alert('Solo se permiten imágenes o PDF.');
+      return;
+    }
+    try {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      fileEl.files = dt.files;
+    } catch (_) { /* navegadores sin DataTransfer constructor */ }
+    if (dropLabel) dropLabel.textContent = '✅ ' + (file.name || 'imagen pegada');
+    if (dropZone) dropZone.classList.add('has-file');
+  }
+
+  // ── Drag & drop sobre la zona ──
+  dropZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  dropZone?.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) setDroppedFile(file);
+  });
+
+  // ── Pegar con Ctrl+V (modal abierto) ──
+  modalEl?.addEventListener('paste', (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) { setDroppedFile(file); break; }
+      }
+    }
+  });
 
   function ensureModal() {
     if (!window.bootstrap || !window.bootstrap.Modal) return null;
@@ -43,8 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!saved && activeCheckbox) activeCheckbox.checked = false;
     activeCheckbox = null; saved = false;
     form?.reset();
-    const info = document.getElementById('ev_info');
-    if (info) info.textContent = '';
+    obsEl?.classList.remove('is-invalid');
+    const obsErrEl = document.getElementById('obs_error');
+    if (obsErrEl) obsErrEl.style.display = '';
+    if (dropZone) dropZone.classList.remove('has-file', 'drag-over');
+    if (dropLabel) dropLabel.textContent = 'Selecciona, arrastra o pega una imagen/PDF aquí (Ctrl+V)';
   });
 
   const openModal = async (cb) => {
@@ -65,13 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (meta.ok) {
         const data = await meta.json();
         if (obsEl) obsEl.value = data?.obs || '';
-        const info = document.getElementById('ev_info');
-        if (info) {
-          if (data?.file_name) {
-            info.innerHTML = `Archivo actual: <a target="_blank" href="/planilla-mensual/evidencia/${tareaId}/${fecha}">${data.file_name}</a>`;
-          } else {
-            info.textContent = 'Sin archivo previo';
-          }
+        if (data?.file_name) {
+          if (dropLabel) dropLabel.innerHTML = `📎 Archivo actual: <a target="_blank" href="/planilla-mensual/evidencia/${tareaId}/${fecha}">${data.file_name}</a>`;
+          if (dropZone) dropZone.classList.add('has-file');
+        } else {
+          if (dropLabel) dropLabel.textContent = 'Selecciona, arrastra o pega una imagen/PDF aquí (Ctrl+V)';
+          if (dropZone) dropZone.classList.remove('has-file');
         }
       }
     } catch (e) {
@@ -158,6 +205,18 @@ document.getElementById('evidenceModeSwitch')?.addEventListener('change', async 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form) return;
+
+    // Validación: observación obligatoria
+    const obsVal = obsEl?.value?.trim() || '';
+    const obsErrEl = document.getElementById('obs_error');
+    if (!obsVal) {
+      obsEl?.classList.add('is-invalid');
+      if (obsErrEl) obsErrEl.style.display = 'block';
+      obsEl?.focus();
+      return;
+    }
+    obsEl?.classList.remove('is-invalid');
+    if (obsErrEl) obsErrEl.style.display = '';
 
     const f = fileEl?.files?.[0];
     if (f && f.size > MAX_MB * 1024 * 1024) {

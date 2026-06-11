@@ -92,13 +92,20 @@
         <input type="hidden" name="tarea_id" id="ev_tarea">
         <input type="hidden" name="fecha" id="ev_fecha">
         <div class="mb-3">
-          <label class="form-label">Observación</label>
+          <label class="form-label">Observación <span class="text-danger">*</span></label>
           <textarea class="form-control" name="obs" rows="3" placeholder="Comentario breve…"></textarea>
+          <div class="invalid-feedback" id="obs_error">La observación es obligatoria.</div>
         </div>
         <div class="mb-1">
           <label class="form-label">Evidencia (PDF o imagen)</label>
-          <input class="form-control" type="file" name="file" accept="application/pdf,image/*">
-          <div class="form-text">Opcional. Máx. recomendado 10 MB.</div>
+          <div class="ev-drop-zone" id="ev_drop_zone">
+            <input class="form-control" type="file" name="file" accept="application/pdf,image/*" id="ev_file_input">
+            <div class="ev-drop-hint" id="ev_info">
+              <span class="ev-drop-icon">📎</span>
+              <span id="ev_drop_label">Selecciona, arrastra o pega una imagen/PDF aquí (Ctrl+V)</span>
+              <span class="ev-drop-sub">Máx. 10 MB · PDF, PNG, JPG, WEBP</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">

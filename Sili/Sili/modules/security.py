@@ -348,12 +348,13 @@ def init_security(app):
         "default-src 'self'; "
         "script-src 'self'; "
         "style-src 'self'; "
-        "img-src 'self' data:; "
+        "img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com https://*.tile.openstreetmap.org; "
         "font-src 'self' data:; "
         "connect-src 'self'; "
         "object-src 'none'; "
         "base-uri 'self'; "
         "form-action 'self'; "
+        "frame-src 'self' https://maps.google.com https://www.google.com; "
         "frame-ancestors 'self';"
     )
 
