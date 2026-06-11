@@ -234,11 +234,9 @@
         const modalEl = document.getElementById('evidenceModal');
         (bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl)).hide();
 
-        const pendingCheck = window.Planilla.getPendingCheck();
-        if (pendingCheck?.cb) pendingCheck.cb.checked = true;
-
         window.Planilla.setPendingCheck(null);
         form.reset();
+        window.location.reload();
       } catch (error) {
         alert(`No se pudo guardar la evidencia.\n${error.message}`);
       } finally {
@@ -361,6 +359,33 @@
     });
   }
 
+  function markOverdue() {
+    const todayStr = (root.dataset.today || '').trim();
+    if (!todayStr) return;
+    document.querySelectorAll('td.day-cell input.tick[data-date]').forEach(inp => {
+      const d = inp.dataset.date;
+      if (d < todayStr && !inp.checked && !inp.disabled) {
+        const cell = inp.closest('td');
+        cell?.classList.add('is-overdue');
+        inp.title = 'Pendiente vencido';
+      }
+    });
+  }
+
+  function initActDetalle() {
+    const modalEl = document.getElementById('actDetalleModal');
+    if (!modalEl) return;
+    const bsModal = new bootstrap.Modal(modalEl);
+    document.querySelectorAll('.act-ver-mas').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('actDetalleNombre').textContent = btn.dataset.nombre || '';
+        document.getElementById('actDetalleFreq').textContent  = btn.dataset.freq  || '';
+        document.getElementById('actDetalleResp').textContent  = btn.dataset.resp  || '';
+        bsModal.show();
+      });
+    });
+  }
+
   function highlightToday() {
     const todayStr = (root.dataset.today || '').trim();
     if (!todayStr) return;
@@ -379,5 +404,7 @@
   initFilters();
   lockPastDays();
   highlightToday();
+  markOverdue();
+  initActDetalle();
   initSendWeeklyReport();
 })();

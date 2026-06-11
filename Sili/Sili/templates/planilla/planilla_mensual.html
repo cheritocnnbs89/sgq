@@ -81,6 +81,56 @@
     </div>
   </div>
 
+  <!-- ===== TARJETAS RESUMEN ===== -->
+  <div class="pm-summary-row mb-3">
+    <div class="pm-summary-card pm-sum-total">
+      <div class="pm-sum-icon"><i class="bi bi-grid-3x2-gap-fill"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.total_act }}</div>
+        <div class="pm-sum-label">Actividades</div>
+      </div>
+    </div>
+    <div class="pm-summary-card pm-sum-done">
+      <div class="pm-sum-icon"><i class="bi bi-check-circle-fill"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.cumplidas }}</div>
+        <div class="pm-sum-label">Cumplidas</div>
+      </div>
+    </div>
+    <div class="pm-summary-card pm-sum-pending">
+      <div class="pm-sum-icon"><i class="bi bi-hourglass-split"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.pendientes }}</div>
+        <div class="pm-sum-label">Pendientes</div>
+      </div>
+    </div>
+    <div class="pm-summary-card pm-sum-overdue">
+      <div class="pm-sum-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.vencidas }}</div>
+        <div class="pm-sum-label">Vencidas</div>
+      </div>
+    </div>
+    <div class="pm-summary-card pm-sum-evi">
+      <div class="pm-sum-icon"><i class="bi bi-paperclip"></i></div>
+      <div class="pm-sum-body">
+        <div class="pm-sum-val">{{ resumen.evi_pendientes }}</div>
+        <div class="pm-sum-label">Sin evidencia</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LEYENDA ===== -->
+  <div class="pm-legend mb-2">
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-done"></span> Cumplido</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-empty"></span> Pendiente</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-overdue"></span> Vencido</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-today"></span> Día actual</span>
+    {% if evidence_mode %}
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-evi"></span> Sin evidencia</span>
+    {% endif %}
+  </div>
+
   <!-- ===== TABLA PLANILLA ===== -->
   <div class="planilla-wrap table-responsive cosy">
     <table id="planillaTable"
@@ -150,10 +200,15 @@
         <tr data-id="{{t.id}}">
           <td class="sticky-1 text-wrap">
             <div class="act-title {% if 'critica' in _keys and t['critica'] %}is-critical{% endif %}">
-              <div class="act-text clamp-3">{{ t['nombre'] }}</div>
-              <div class="row-meta">
-                <span class="row-progress" aria-label="Progreso"></span>
-              </div>
+              <div class="act-text clamp-2">{{ t['nombre'] }}</div>
+              {% if t['nombre']|length > 80 %}
+              <button type="button" class="act-ver-mas"
+                      data-nombre="{{ t['nombre']|e }}"
+                      data-freq="{{ t['frecuencia'] }}"
+                      data-resp="{{ t['responsable_nombre']|e }}">
+                Ver detalle
+              </button>
+              {% endif %}
             </div>
           </td>
           <td class="sticky-2 text-center">
@@ -225,6 +280,28 @@
                   id="evGuardarBtn">Guardar</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL DETALLE ACTIVIDAD ===== -->
+  <div class="modal fade" id="actDetalleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content act-detalle-content">
+        <div class="modal-header act-detalle-header">
+          <h6 class="modal-title"><i class="bi bi-info-circle me-2"></i>Detalle de actividad</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="act-detalle-nombre" id="actDetalleNombre"></p>
+          <div class="act-detalle-meta">
+            <span><i class="bi bi-calendar2-range me-1"></i><span id="actDetalleFreq"></span></span>
+            <span><i class="bi bi-person me-1"></i><span id="actDetalleResp"></span></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -354,7 +354,7 @@ def init_security(app):
         "object-src 'none'; "
         "base-uri 'self'; "
         "form-action 'self'; "
-        "frame-src https://maps.google.com https://www.google.com; "
+        "frame-src 'self' https://maps.google.com https://www.google.com; "
         "frame-ancestors 'self';"
     )
 

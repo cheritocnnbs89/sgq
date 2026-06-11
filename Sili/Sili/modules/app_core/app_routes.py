@@ -32,6 +32,11 @@ def register_all_routes(app):
         register_task_routes = None
 
     try:
+        from modules.routes_email_bandeja import register_bandeja_routes
+    except Exception:
+        register_bandeja_routes = None
+
+    try:
         from modules.routes_gastos_tarjeta import register_gastos_routes
     except Exception:
         register_gastos_routes = None
@@ -168,6 +173,12 @@ def register_all_routes(app):
             register_task_routes(app)
         except Exception as e:
             app.logger.exception("Fallo register_task_routes: %s", e)
+
+    if register_bandeja_routes:
+        try:
+            register_bandeja_routes(app)
+        except Exception as e:
+            app.logger.exception("Fallo register_bandeja_routes: %s", e)
 
     if register_gastos_routes:
         try:

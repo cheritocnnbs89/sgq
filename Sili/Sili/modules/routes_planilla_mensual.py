@@ -869,14 +869,46 @@ def planilla():
 
     prev_y, prev_m, next_y, next_m = prev_next(y, m)
     session["active_page"] = "planilla_mensual"
- 
+
+    # ── Tarjetas resumen ──────────────────────────────────────────
+    today = date.today()
+    total_act    = len(tareas)
+    cumplidas    = sum(1 for v in checks.values() if v)
+    # días hábiles ya pasados × tareas (aproximación: días con check posible)
+    dias_pasados = [d for d in dias if d <= today]
+    total_esperadas = len(tareas) * len(dias_pasados)
+    pendientes   = max(0, total_esperadas - cumplidas)
+    # vencidas: celdas de días pasados sin check y sin evidencia
+    vencidas = 0
+    for t in tareas:
+        tid = str(t["id"])
+        for d in dias_pasados:
+            k = f"{tid}-{d.isoformat()}"
+            if not checks.get(k):
+                vencidas += 1
+    evi_pendientes = sum(
+        1 for t in tareas
+        for d in dias_pasados
+        if checks.get(f"{str(t['id'])}-{d.isoformat()}")
+        and not evidencias.get(f"{str(t['id'])}-{d.isoformat()}")
+    )
+    resumen = dict(
+        total_act=total_act,
+        cumplidas=cumplidas,
+        pendientes=pendientes,
+        vencidas=vencidas,
+        evi_pendientes=evi_pendientes,
+    )
+    # ─────────────────────────────────────────────────────────────
+
     is_admin = _is_admin()
     evidence_mode = bool(int(cfg_get(conn, "planilla_evidence_mode", "1") or 0))
     return render_template(
         "planilla/planilla_mensual.html",
         evidence_mode=evidence_mode,
         is_admin=is_admin,
-        today_iso=date.today().isoformat(),  # ya lo usas arriba en tu HTML
+        today_iso=date.today().isoformat(),
+        resumen=resumen,
         y=y, m=m, dias=dias, tareas=tareas, checks=checks, evidencias=evidencias,
         responsables=responsables, rid=str(rid or ""), freq=str(freq or ""),
         departamentos=departamentos, depid=str(depid or ""),

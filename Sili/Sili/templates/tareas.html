@@ -30,6 +30,16 @@
       <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-moon-stars me-1"></i>Tema
       </button>
+      {% if es_sistemas_qp %}
+      <a href="{{ url_for('bandeja_soporte') }}" class="btn btn-outline-primary btn-sm position-relative">
+        <i class="bi bi-inbox me-1"></i>Bandeja Soporte
+        {% if bandeja_pendientes > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger bs-bandeja-badge">
+          {{ bandeja_pendientes }}
+        </span>
+        {% endif %}
+      </a>
+      {% endif %}
       {% if permissions.get('tareas', {}).get('crear') %}
       {% if vista == 'mis' %}
       <a href="{{ url_for('nueva_tarea', modo='asignar') }}" class="btn btn-cta-blue btn-sm">
