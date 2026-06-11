@@ -22,7 +22,9 @@ def send_email(recipients, subject, message):
         print('  Mensaje:\n', message)
         return
 
-    msg = MIMEText(message, 'plain', 'utf-8')
+    # Detectar si el mensaje es HTML y enviar con el Content-Type correcto
+    _subtype = 'html' if message.lstrip().startswith(('<', '<!')) else 'plain'
+    msg = MIMEText(message, _subtype, 'utf-8')
     msg['Subject'] = subject
     msg['From'] = sender
     msg['To'] = ', '.join(recipients)

@@ -119,13 +119,88 @@
     });
   }
 
+  function initEvidenceDrop() {
+    const modalEl  = document.getElementById('evidenceModal');
+    const fileEl   = document.getElementById('ev_file_input');
+    const dropZone = document.getElementById('ev_drop_zone');
+    const dropLabel= document.getElementById('ev_drop_label');
+    if (!dropZone) return;
+
+    function setFile(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+        alert('Solo se permiten imágenes o PDF.');
+        return;
+      }
+      try {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        if (fileEl) fileEl.files = dt.files;
+      } catch (_) {}
+      if (dropLabel) dropLabel.textContent = '✅ ' + (file.name || 'imagen pegada');
+      dropZone.classList.add('has-file');
+    }
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer?.files?.[0];
+      if (file) setFile(file);
+    });
+
+    modalEl?.addEventListener('paste', e => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          const file = item.getAsFile();
+          if (file) { setFile(file); break; }
+        }
+      }
+    });
+
+    // resetear zona al cerrar el modal
+    modalEl?.addEventListener('hidden.bs.modal', () => {
+      dropZone.classList.remove('has-file', 'drag-over');
+      if (dropLabel) dropLabel.textContent = 'Selecciona, arrastra o pega una imagen/PDF (Ctrl+V)';
+    });
+  }
+
   function initEvidenceForm() {
-    const form = document.getElementById('evidenceForm');
+    const form   = document.getElementById('evidenceForm');
+    const obsEl  = form?.querySelector('textarea[name="obs"]');
+    const obsErr = document.getElementById('obs_error');
     if (!form) return;
+
+    // limpiar validación al cerrar el modal
+    document.getElementById('evidenceModal')?.addEventListener('hidden.bs.modal', () => {
+      obsEl?.classList.remove('is-invalid');
+      if (obsErr) obsErr.style.display = '';
+    });
 
     form.addEventListener('submit', async event => {
       event.preventDefault();
       event.stopPropagation();
+
+      // validación obs obligatoria
+      const obsVal = (obsEl?.value || '').trim();
+      if (!obsVal) {
+        obsEl?.classList.add('is-invalid');
+        if (obsErr) obsErr.style.display = 'block';
+        obsEl?.focus();
+        return;
+      }
+      obsEl?.classList.remove('is-invalid');
+      if (obsErr) obsErr.style.display = '';
+
+      const btn = document.getElementById('evGuardarBtn');
+      const btnOriginal = btn?.innerHTML || 'Guardar';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Guardando…';
+      }
 
       try {
         const fd = new FormData(form);
@@ -166,6 +241,11 @@
         form.reset();
       } catch (error) {
         alert(`No se pudo guardar la evidencia.\n${error.message}`);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = btnOriginal;
+        }
       }
     }, { capture: true });
   }
@@ -281,10 +361,23 @@
     });
   }
 
+  function highlightToday() {
+    const todayStr = (root.dataset.today || '').trim();
+    if (!todayStr) return;
+    // cabecera
+    document.querySelectorAll('th.day-col[data-date="' + todayStr + '"]')
+      .forEach(th => th.classList.add('is-today'));
+    // celdas del cuerpo
+    document.querySelectorAll('td.day-cell input.tick[data-date="' + todayStr + '"]')
+      .forEach(inp => inp.closest('td')?.classList.add('is-today'));
+  }
+
   initEvidenceModeSwitch();
   initCheckToggles();
+  initEvidenceDrop();
   initEvidenceForm();
   initFilters();
   lockPastDays();
+  highlightToday();
   initSendWeeklyReport();
 })();

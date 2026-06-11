@@ -34,5 +34,7 @@ DEFAULT_OPCIONES = (
     "reporte_gastos",
     "proveedores",
     "listar_encuestas",
+    "planificador.solicitudes",
+    "planificador.configuracion",
 
 )

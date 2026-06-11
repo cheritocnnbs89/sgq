@@ -73,67 +73,113 @@
   </div>
 </div>
 
-<div class="row g-3">
-  <div class="col-6 col-md-3">
-    <div class="section kpi-card" data-target="#chartDep">
-      <div class="section-header"><i class="bi bi-check2-circle"></i> Cumplimiento</div>
-      <div class="d-flex align-items-end justify-content-between">
-        <div>
-          <div class="fs-2 fw-bold" id="kpiCumplTxt">{{ kpis.cumplimiento|round(1) }}%</div>
-          <div class="text-muted">Realizadas: {{ kpis.realizadas }}/{{ kpis.planeadas }}</div>
-        </div>
-        <div class="kpi-delta" id="kpiCumplDelta">—</div>
+{# ═══════════════════════════════════════════════
+   KPI – Fila única: Total + Diario + Semanal + Mensual
+═══════════════════════════════════════════════ #}
+{% set gap_total = (kpis.real_a_hoy_pct or 0) - (kpis.esperado_hoy_pct or 0) %}
+{% set kf_d = kpis_freq.get('diario',  {}) %}
+{% set kf_s = kpis_freq.get('semanal', {}) %}
+{% set kf_m = kpis_freq.get('mensual', {}) %}
+{% set gap_d = (kf_d.real_pct or 0) - (kf_d.esp_pct or 0) %}
+{% set gap_s = (kf_s.real_pct or 0) - (kf_s.esp_pct or 0) %}
+{% set gap_m = (kf_m.real_pct or 0) - (kf_m.esp_pct or 0) %}
+
+<div class="kpi-row">
+
+  {# ── Total general ── #}
+  <div class="kpi-group kpi-group-total">
+    <div class="kpi-group-label"><i class="bi bi-grid-3x2-gap"></i> Total general</div>
+    <div class="kpi-pair">
+      <div class="kpi-tile kpi-tile-blue">
+        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
+        <div class="kpi-tile-val">{{ (kpis.esperado_hoy_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">Plan: {{ kpis.planeadas }}</div>
       </div>
-      <div class="sparkline-wrap mt-2"><canvas id="sparkCumpl"></canvas></div>
+      <div class="kpi-tile {% if gap_total >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
+        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
+        <div class="kpi-tile-val">{{ (kpis.real_a_hoy_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">
+          Real: {{ kpis.realizadas }}
+          <span class="kpi-gap {% if gap_total >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_total) }}%</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="col-6 col-md-3">
-    <div class="section kpi-card" data-target="#chartTrend">
-      <div class="section-header"><i class="bi bi-clock-history"></i> Puntualidad</div>
-      <div class="fs-2 fw-bold" id="kpiPuntTxt">{{ kpis.puntualidad|round(1) }}%</div>
-      <div class="text-muted">Evidencias del mes</div>
-      <div class="sparkline-wrap mt-2"><canvas id="sparkPunt"></canvas></div>
+  {# ── Diario ── #}
+  <div class="kpi-group kpi-group-diario">
+    <div class="kpi-group-label"><i class="bi bi-calendar-day"></i> Diario <span class="kpi-group-count">{{ kf_d.planeadas or 0 }} plan.</span></div>
+    <div class="kpi-pair">
+      <div class="kpi-tile kpi-tile-blue">
+        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
+        <div class="kpi-tile-val">{{ (kf_d.esp_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">A hoy: {{ kf_d.plan_h or 0 }}</div>
+      </div>
+      <div class="kpi-tile {% if gap_d >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
+        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
+        <div class="kpi-tile-val">{{ (kf_d.real_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">
+          Real: {{ kf_d.real_h or 0 }}
+          <span class="kpi-gap {% if gap_d >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_d) }}%</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="col-6 col-md-3">
-    <div class="section kpi-card" data-target="#chartRep">
-      <div class="section-header"><i class="bi bi-file-earmark-check"></i> Con archivo</div>
-      <div class="fs-2 fw-bold" id="kpiArchTxt">{{ kpis.con_archivo|round(1) }}%</div>
-      <div class="text-muted">Evidencias con adjunto</div>
-      <div class="sparkline-wrap mt-2"><canvas id="sparkArch"></canvas></div>
+  {# ── Semanal ── #}
+  <div class="kpi-group kpi-group-semanal">
+    <div class="kpi-group-label"><i class="bi bi-calendar-week"></i> Semanal <span class="kpi-group-count">{{ kf_s.planeadas or 0 }} plan.</span></div>
+    <div class="kpi-pair">
+      <div class="kpi-tile kpi-tile-blue">
+        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
+        <div class="kpi-tile-val">{{ (kf_s.esp_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">A hoy: {{ kf_s.plan_h or 0 }}</div>
+      </div>
+      <div class="kpi-tile {% if gap_s >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
+        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
+        <div class="kpi-tile-val">{{ (kf_s.real_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">
+          Real: {{ kf_s.real_h or 0 }}
+          <span class="kpi-gap {% if gap_s >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_s) }}%</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="col-6 col-md-3">
-    <div class="section section-warning kpi-card" data-target="#chartTrend">
-      <div class="section-header"><i class="bi bi-exclamation-circle"></i> Pendientes hoy</div>
-      <div class="fs-2 fw-bold">{{ kpis.pendientes_hoy }}</div>
-      <div class="text-muted">Solo si es el mes actual</div>
-      <div class="sparkline-wrap mt-2"><canvas id="sparkPend"></canvas></div>
+  {# ── Mensual ── #}
+  <div class="kpi-group kpi-group-mensual">
+    <div class="kpi-group-label"><i class="bi bi-calendar-month"></i> Mensual <span class="kpi-group-count">{{ kf_m.planeadas or 0 }} plan.</span></div>
+    <div class="kpi-pair">
+      <div class="kpi-tile kpi-tile-blue">
+        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
+        <div class="kpi-tile-val">{{ (kf_m.esp_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">A hoy: {{ kf_m.plan_h or 0 }}</div>
+      </div>
+      <div class="kpi-tile {% if gap_m >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
+        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
+        <div class="kpi-tile-val">{{ (kf_m.real_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">
+          Real: {{ kf_m.real_h or 0 }}
+          <span class="kpi-gap {% if gap_m >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_m) }}%</span>
+        </div>
+      </div>
     </div>
   </div>
+
 </div>
 
-<div class="row g-3 mt-1">
-  <div class="col-6 col-md-3"><div class="section kpi-card"><div class="section-header"><i class="bi bi-flag"></i> Cumplimiento esperado a hoy</div><div class="fs-2 fw-bold">{{ (kpis.esperado_hoy_pct or 0)|round(1) }}%</div><div class="text-muted">Baseline acumulada</div></div></div>
-  <div class="col-6 col-md-3"><div class="section kpi-card"><div class="section-header"><i class="bi bi-graph-up-arrow"></i> Cumplimiento real a hoy</div><div class="fs-2 fw-bold">{{ (kpis.real_a_hoy_pct or 0)|round(1) }}%</div><div class="text-muted">Sobre lo planeado a la fecha</div></div></div>
-  <div class="col-6 col-md-3">{% set gap = (kpis.real_a_hoy_pct or 0) - (kpis.esperado_hoy_pct or 0) %}<div class="section kpi-card"><div class="section-header"><i class="bi bi-target"></i> Gap vs esperado</div><div class="fs-2 fw-bold">{{ gap|round(1) }}%</div><div class="text-muted">{{ 'Por encima' if gap>=0 else 'Por debajo' }} de la baseline</div></div></div>
-  <div class="col-6 col-md-3"><div class="section kpi-card"><div class="section-header"><i class="bi bi-calendar2-check"></i> Proyección fin de mes</div><div class="fs-2 fw-bold">{{ (kpis.proyeccion_pct or 0)|round(1) }}%</div><div class="text-muted">Backlog: {{ kpis.backlog or 0 }}</div></div></div>
-</div>
-
-<div class="row g-3 mt-1">
+{# ── Burn-up chart ── #}
+<div class="row g-3 mt-2">
   <div class="col-12">
     <div class="section">
       <div class="section-header d-flex align-items-center justify-content-between">
         <span><i class="bi bi-lightning-charge"></i> Burn-up: Planeado (baseline) vs Real acumulado</span>
         <div class="chart-toolbar" data-for="chartBurn">
-          <button class="btn btn-light btn-sm ct-full" type="button"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-zoom" type="button"><i class="bi bi-zoom-in"></i></button>
+          <button class="btn btn-light btn-sm ct-full"  type="button"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-zoom"  type="button"><i class="bi bi-zoom-in"></i></button>
           <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
-          <button class="btn btn-light btn-sm ct-png" type="button"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv" type="button"><i class="bi bi-filetype-csv"></i></button>
+          <button class="btn btn-light btn-sm ct-png"   type="button"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"   type="button"><i class="bi bi-filetype-csv"></i></button>
         </div>
       </div>
       <div class="chart-box tall"><canvas id="chartBurn"></canvas></div>
@@ -141,104 +187,12 @@
   </div>
 </div>
 
-<div class="row g-3 mt-1">
-  <div class="col-12 col-lg-6">
-    <div class="section">
-      <div class="section-header d-flex align-items-center justify-content-between">
-        <span><i class="bi bi-building"></i> Cumplimiento por departamento</span>
-        <div class="chart-toolbar" data-for="chartDep">
-          <button class="btn btn-light btn-sm ct-full" type="button"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-zoom" type="button"><i class="bi bi-zoom-in"></i></button>
-          <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
-          <button class="btn btn-light btn-sm ct-png" type="button"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv" type="button"><i class="bi bi-filetype-csv"></i></button>
-        </div>
-      </div>
-      <div class="chart-box"><canvas id="chartDep"></canvas></div>
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="section">
-      <div class="section-header d-flex align-items-center justify-content-between">
-        <span><i class="bi bi-person-check"></i> Cumplimiento por responsable</span>
-        <div class="chart-toolbar" data-for="chartRep">
-          <button class="btn btn-light btn-sm ct-full" type="button"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-zoom" type="button"><i class="bi bi-zoom-in"></i></button>
-          <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
-          <button class="btn btn-light btn-sm ct-png" type="button"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv" type="button"><i class="bi bi-filetype-csv"></i></button>
-        </div>
-      </div>
-      <div class="chart-box"><canvas id="chartRep"></canvas></div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-3 mt-1">
-  <div class="col-12">
-    <div class="section">
-      <div class="section-header d-flex align-items-center justify-content-between">
-        <span><i class="bi bi-graph-up"></i> Tendencia diaria</span>
-        <div class="chart-toolbar" data-for="chartTrend">
-          <button class="btn btn-light btn-sm ct-full" type="button"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-zoom" type="button"><i class="bi bi-zoom-in"></i></button>
-          <button class="btn btn-light btn-sm ct-ma7" type="button"><i class="bi bi-activity"></i> MA7</button>
-          <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
-          <button class="btn btn-light btn-sm ct-png" type="button"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv" type="button"><i class="bi bi-filetype-csv"></i></button>
-        </div>
-      </div>
-      <div class="chart-box tall"><canvas id="chartTrend"></canvas></div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-3 mt-1">
-  <div class="col-12 col-lg-4">
-    <div class="section"><div class="section-header"><i class="bi bi-trophy"></i> Top 3 usuarios con mayor cumplimiento</div><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>Usuario</th><th class="text-end">Real/Plan</th><th class="text-end">Cumpl.</th></tr></thead><tbody>{% for r in top_high[:3] %}<tr><td>{{ r.usuario }}</td><td class="text-end">{{ r.realizadas }}/{{ r.planeadas }}</td><td class="text-end">{{ (r.porc or 0)|round(1) }}%</td></tr>{% else %}<tr><td colspan="3" class="text-muted">Sin datos</td></tr>{% endfor %}</tbody></table></div></div>
-  </div>
-  <div class="col-12 col-lg-4">
-    <div class="section"><div class="section-header"><i class="bi bi-emoji-frown"></i> Top 3 usuarios con menor cumplimiento</div><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>Usuario</th><th class="text-end">Real/Plan</th><th class="text-end">Cumpl.</th></tr></thead><tbody>{% for r in top_low[:3] %}<tr><td>{{ r.usuario }}</td><td class="text-end">{{ r.realizadas }}/{{ r.planeadas }}</td><td class="text-end">{{ (r.porc or 0)|round(1) }}%</td></tr>{% else %}<tr><td colspan="3" class="text-muted">Sin datos</td></tr>{% endfor %}</tbody></table></div></div>
-  </div>
-  <div class="col-12 col-lg-4">
-    <div class="section"><div class="section-header"><i class="bi bi-building-gear"></i> Cumplimiento por departamento</div><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>Departamento</th><th class="text-end">Real/Plan</th><th class="text-end">Cumpl.</th></tr></thead><tbody>{% for r in dept_rows %}<tr><td>{{ r.depto or '—' }}</td><td class="text-end">{{ r.realizadas }}/{{ r.planeadas }}</td><td class="text-end">{{ (r.porc or 0)|round(1) }}%</td></tr>{% else %}<tr><td colspan="3" class="text-muted">Sin datos</td></tr>{% endfor %}</tbody></table></div></div>
-  </div>
-</div>
-
-<div class="row g-3 mt-1">
-  <div class="col-12">
-    <div class="section">
-      <div class="section-header d-flex align-items-center justify-content-between">
-        <span><i class="bi bi-people"></i> Resumen por usuario y departamento</span>
-        <button class="btn btn-light btn-sm" id="btnExpSummaryCsv" type="button"><i class="bi bi-filetype-csv"></i> CSV</button>
-      </div>
-      <div class="table-responsive">
-        <table id="summary-table" class="table table-sm table-bordered table-hover">
-          <thead><tr><th>Departamento</th><th>Responsable</th><th class="text-end" data-type="int">Planeadas (mes)</th><th class="text-end" data-type="int">Tareas a hoy</th><th class="text-end" data-type="int">Realizadas (mes)</th><th class="text-end" data-type="pct">Cumpl. mes %</th><th class="text-end" data-type="pct">Esperado a hoy %</th><th class="text-end" data-type="pct">Gap %</th><th class="text-end" data-type="pct">Proyección fin mes %</th></tr></thead>
-          <tbody>{% for r in summary_rows %}<tr><td>{{ r.depto or '—' }}</td><td>{{ r.resp or '—' }}</td><td class="text-end">{{ r.plan_mes }}</td><td class="text-end">{{ r.plan_hoy }}</td><td class="text-end">{{ r.real_mes }}</td><td class="text-end">{{ (r.cumpl_mes_pct or 0)|round(1) }}%</td><td class="text-end">{{ (r.esperado_hoy_pct or 0)|round(1) }}%</td>{% set gap = (r.cumpl_mes_pct|float) - (r.esperado_hoy_pct|float) %}<td class="text-end"><span class="{{ 'text-success' if gap >= 0 else 'text-danger' }}">{{ '%0.1f' % gap }}%</span></td><td class="text-end">{{ (r.proy_pct or 0)|round(1) }}%</td></tr>{% else %}<tr><td colspan="9" class="text-muted">Sin datos para este período/filtros</td></tr>{% endfor %}</tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-3 mt-1">
-  <div class="col-12">
-    <div class="section">
-      <div class="section-header d-flex align-items-center justify-content-between">
-        <span><i class="bi bi-calendar3"></i> Proyección resto del año</span>
-        <button class="btn btn-light btn-sm" id="btnExpQ4Csv" type="button"><i class="bi bi-filetype-csv"></i> CSV</button>
-      </div>
-      <div class="table-responsive">
-        <table class="table table-sm mb-0" id="tblQ4">
-          <thead><tr><th data-type="text">Departamento</th><th data-type="text">Responsable</th>{% for c in proj_cols %}<th class="text-end" data-type="pct">Proy. {{ c.label }}</th>{% endfor %}<th class="text-end" data-type="pct">Prom. resto año %</th><th data-type="text">Estado</th></tr></thead>
-          <tbody>{% for r in proj_rows %}<tr><td>{{ r.depto or '—' }}</td><td>{{ r.resp or '—' }}</td>{% for c in proj_cols %}<td class="text-end">{{ (r[c.key] or 0)|round(1) }}%</td>{% endfor %}<td class="text-end fw-semibold">{{ (r.q_total_pct or 0)|round(1) }}%</td><td><span class="badge text-bg-{{ r.estado_level }}">{{ r.estado }}</span></td></tr>{% else %}<tr><td colspan="{{ 4 + (proj_cols|length) }}" class="text-muted">Sin datos</td></tr>{% endfor %}</tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+{# Stubs mínimos para dashboard.js (sin chart-box, sin alto visible) #}
+<canvas id="chartDep"   class="d-none"></canvas>
+<canvas id="chartRep"   class="d-none"></canvas>
+<canvas id="chartTrend" class="d-none"></canvas>
+<table  id="summary-table" class="d-none"></table>
+<table  id="tblQ4"         class="d-none"></table>
 
 
 <div class="modal fade" id="feriadosModal" tabindex="-1" aria-hidden="true">

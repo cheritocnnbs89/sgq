@@ -1,0 +1,202 @@
+{# Partial cargado vía AJAX – sin inline scripts ni style= #}
+<div class="detail-grid">
+  <div class="detail-box"><span>Tipo de solicitud</span><strong>{{ s.tipo }}</strong></div>
+  <div class="detail-box"><span>Área solicitante</span><strong>{{ s.area_solicitante }}</strong></div>
+  <div class="detail-box"><span>Prioridad</span>
+    <strong>
+      <span class="badge {% if s.prioridad=='Urgente' %}bg-danger{% elif s.prioridad=='Alta' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+        {{ s.prioridad }}
+      </span>
+    </strong>
+  </div>
+  <div class="detail-box"><span>Estado</span>
+    <strong><span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span></strong>
+  </div>
+  <div class="detail-box"><span>Fecha</span><strong>{{ s.fecha_str }}</strong></div>
+  <div class="detail-box"><span>Horario asignado</span>
+    <strong>
+      {% if s.hora_inicio %}{{ s.hora_inicio }} – {{ s.hora_fin }}
+      {% else %}<span class="text-muted">Sin asignar</span>{% endif %}
+    </strong>
+  </div>
+  <div class="detail-box">
+    <span>Lugar / destino</span>
+    <strong>{{ s.lugar_destino }}</strong>
+    <a class="maps-link"
+       href="https://www.google.com/maps/search/?api=1&query={{ s.lugar_destino | urlencode }}"
+       target="_blank" rel="noopener">
+      <i class="bi bi-geo-alt-fill"></i> Ver en mapa
+    </a>
+  </div>
+  {% if s.ciudad %}
+  <div class="detail-box"><span>Ciudad</span><strong>{{ s.ciudad }}</strong></div>
+  {% endif %}
+  <div class="detail-box"><span>Contacto</span><strong>{{ s.contacto or '—' }}</strong></div>
+  <div class="detail-box"><span>Solicitante</span><strong>{{ s.solicitante_nombre }}</strong></div>
+  {% if s.coordinador_nombre %}
+  <div class="detail-box"><span>Coordinado por</span><strong>{{ s.coordinador_nombre }}</strong></div>
+  {% endif %}
+  {% if s.aprobador_nombre %}
+  <div class="detail-box"><span>Aprobado/Rechazado por</span><strong>{{ s.aprobador_nombre }}</strong></div>
+  {% endif %}
+  {% if s.gerente_nombre %}
+  <div class="detail-box"><span>Gerente asignado</span><strong>{{ s.gerente_nombre }}</strong></div>
+  {% endif %}
+  <div class="detail-box detail-full"><span>Descripción</span><strong>{{ s.descripcion }}</strong></div>
+  {% if s.detalle_direccion %}
+  <div class="detail-box detail-full"><span>Detalle de dirección</span><strong>{{ s.detalle_direccion }}</strong></div>
+  {% endif %}
+  {% if s.observacion_coordinador %}
+  <div class="detail-box detail-full"><span>Observación del coordinador</span><strong>{{ s.observacion_coordinador }}</strong></div>
+  {% endif %}
+  {% if s.observacion_aprobador %}
+  <div class="detail-box detail-full"><span>Observación del aprobador</span><strong>{{ s.observacion_aprobador }}</strong></div>
+  {% endif %}
+</div>
+
+{% if s.grupo_id and grupo_solicitudes %}
+<div class="grupo-detalle-banner mt-3">
+  <i class="bi bi-collection-fill"></i>
+  <strong>Grupo de recorrido #{{ s.grupo_id }}</strong> — coordinadas juntas
+  <span class="grupo-detalle-count">{{ grupo_solicitudes|length + 1 }} solicitudes en este horario</span>
+  <div class="grupo-detalle-list">
+    {% for g in grupo_solicitudes %}
+    <span class="grupo-detalle-item">
+      <span class="grupo-check-id">#{{ g.id }}</span>
+      {{ g.area_solicitante }} · {{ g.lugar_destino }}
+      <span class="badge {{ {'APROBADA':'bg-success','PENDIENTE_APROBACION':'bg-info text-dark','COMPLETADA':'bg-dark','RECHAZADA':'bg-danger'}.get(g.estado, 'bg-secondary') }}">{{ g.estado|replace('_',' ') }}</span>
+    </span>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if s.puede_coordinar %}
+<div class="action-zone mt-3">
+  <h3><i class="bi bi-clock me-1"></i>Coordinar solicitud</h3>
+  <form method="post" action="{{ url_for('planificador.planificador_coordinar', sid=s.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-2 mb-2">
+      <div class="col-6">
+        <label class="form-label">Hora inicio *</label>
+        <input class="form-control form-control-sm" type="time" name="hora_inicio" min="08:00" max="16:59" required>
+      </div>
+      <div class="col-6">
+        <label class="form-label">Hora fin *</label>
+        <input class="form-control form-control-sm" type="time" name="hora_fin" min="08:01" max="17:00" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Observación</label>
+        <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion_coordinador"
+                  placeholder="Instrucciones para el asistente (opcional)"></textarea>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-send"></i> Enviar a aprobación</button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{% if s.puede_aprobar %}
+<div class="action-zone action-zone-green mt-3">
+  <h3><i class="bi bi-check2-circle me-1"></i>Aprobar o rechazar</h3>
+  <label class="form-label">Observación</label>
+  <textarea class="form-control form-control-sm textarea-obs" id="obsAprobDetalle"
+            placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
+  <div class="d-flex gap-2 justify-content-end mt-2">
+    <form method="post" action="{{ url_for('planificador.planificador_rechazar', sid=s.id) }}"
+          id="formRechazarDetalle"
+          data-confirm="¿Rechazar esta solicitud?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion_aprobador" id="obsRechDetalle">
+      <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-x-lg"></i> Rechazar</button>
+    </form>
+    <form method="post" action="{{ url_for('planificador.planificador_aprobar', sid=s.id) }}"
+          id="formAprobarDetalle">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion_aprobador" id="obsAprobHidden">
+      <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check2"></i> Aprobar</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% if s.puede_aprobar_gerente %}
+<div class="action-zone action-zone-blue mt-3">
+  <h3><i class="bi bi-person-check me-1"></i>Aprobación gerencial</h3>
+  <p class="small text-muted mb-2">Esta solicitud fue aprobada y requiere su validación final como gerente.</p>
+  <label class="form-label">Observación</label>
+  <textarea class="form-control form-control-sm textarea-obs" id="obsGerenteDetalle"
+            placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
+  <div class="d-flex gap-2 justify-content-end mt-2">
+    <form method="post" action="{{ url_for('planificador.planificador_rechazar_gerente', sid=s.id) }}"
+          id="formRechazarGerenteDetalle"
+          data-confirm="¿Rechazar esta solicitud?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion_aprobador" id="obsRechGerenteDetalle">
+      <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-x-lg"></i> Rechazar</button>
+    </form>
+    <form method="post" action="{{ url_for('planificador.planificador_aprobar_gerente', sid=s.id) }}"
+          id="formAprobarGerenteDetalle">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion_aprobador" id="obsAprobGerenteHidden">
+      <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check2"></i> Aprobar</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% if s.puede_reagendar %}
+<div class="action-zone action-zone-orange mt-3">
+  <h3><i class="bi bi-calendar-event me-1"></i>Reagendar solicitud</h3>
+  <p class="small text-muted mb-2">Cambia la fecha y reinicia el flujo de coordinación. El solicitante será notificado.</p>
+  <form method="post" action="{{ url_for('planificador.planificador_reagendar', sid=s.id) }}"
+        id="formReagendar"
+        data-confirm="¿Reagendar esta solicitud? Se restablecerá el estado a Pendiente coordinación.">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-2">
+      <div class="col-6">
+        <label class="form-label">Nueva fecha *</label>
+        <input class="form-control form-control-sm" type="date" name="nueva_fecha" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Motivo de la reagenda *</label>
+        <textarea class="form-control form-control-sm textarea-obs-sm" name="motivo_reagenda"
+                  placeholder="Explica por qué se reagenda..." required></textarea>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="submit" class="btn btn-warning btn-sm text-dark">
+        <i class="bi bi-calendar-event me-1"></i>Reagendar
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{% if s.puede_completar %}
+<div class="d-flex justify-content-end mt-3">
+  <form method="post" action="{{ url_for('planificador.planificador_completar', sid=s.id) }}"
+        data-confirm="¿Marcar como completada?">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-dark btn-sm"><i class="bi bi-flag-fill me-1"></i>Completar</button>
+  </form>
+</div>
+{% endif %}
+
+{% if logs %}
+<div class="mt-4">
+  <h6 class="text-muted fw-semibold mb-2"><i class="bi bi-clock-history me-1"></i>Historial de acciones</h6>
+  <div class="log-timeline">
+    {% for log in logs %}
+    <div class="log-item">
+      <span class="log-accion log-{{ log[0]|lower }}">{{ log[0] }}</span>
+      <span class="log-usuario">{{ log[1] }}</span>
+      <span class="log-detalle">{{ log[2] }}</span>
+      <span class="log-fecha text-muted">{{ log[3] }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}

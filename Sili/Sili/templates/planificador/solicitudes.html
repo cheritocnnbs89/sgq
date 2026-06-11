@@ -1,0 +1,606 @@
+{% extends "base.html" %}
+{% block title %}Planificador de Solicitudes{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador.css') }}">
+{% endblock %}
+
+{% block content %}
+
+{# Datos para el JS – sin inline script #}
+<div id="planner-data"
+     data-today="{{ today }}"
+     data-perm-crear="{{ 'true' if has_permission('planificador.solicitudes','crear') else 'false' }}"
+     data-puede-ver="{{ 'true' if puede_ver_detalle else 'false' }}"
+     data-events='{{ cal_events | tojson }}'
+     hidden></div>
+
+<div class="recorrido-page">
+
+  {# ── Hero ── #}
+  <div class="planner-hero">
+    <div>
+      <h1><i class="bi bi-calendar-check me-1"></i>Planificador de Solicitudes</h1>
+      <p>Gestione recorridos, vouchers y vuelos · Lunes a viernes, 08:00 – 17:00</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      {% if ctx.es_admin or ctx.tipos_coordinador or ctx.tipos_aprobador %}
+      <a href="{{ url_for('planificador.planificador_reporte') }}"
+         class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-filetype-csv"></i> CSV
+      </a>
+      <a href="{{ url_for('planificador.planificador_reporte_excel') }}"
+         class="btn btn-outline-success btn-sm">
+        <i class="bi bi-file-earmark-excel"></i> Excel
+      </a>
+      {% endif %}
+      {% if has_permission('planificador.solicitudes','crear') %}
+      <button type="button" class="btn btn-primary btn-sm" data-open-modal="modalNueva">
+        <i class="bi bi-plus-lg"></i> Nueva solicitud
+      </button>
+      {% endif %}
+    </div>
+  </div>
+
+  {# ── Filtros ── #}
+  <form class="row g-2 mb-3" method="get" action="{{ url_for('planificador.planificador_solicitudes') }}">
+    <div class="col-6 col-md-3 col-lg-2">
+      <select class="form-select form-select-sm" name="tipo">
+        <option value="">Todos los tipos</option>
+        {% for t in tipos %}<option value="{{ t }}" {{ 'selected' if filters.tipo==t }}>{{ t }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-3 col-lg-2">
+      <select class="form-select form-select-sm" name="estado">
+        <option value="">Todos los estados</option>
+        {% for k,v in estados.items() %}<option value="{{ k }}" {{ 'selected' if filters.estado==k }}>{{ v }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-2 col-lg-2">
+      <input type="date" class="form-control form-select-sm" name="fecha_desde" value="{{ filters.fecha_desde }}" title="Desde">
+    </div>
+    <div class="col-6 col-md-2 col-lg-2">
+      <input type="date" class="form-control form-select-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}" title="Hasta">
+    </div>
+    <div class="col-12 col-md-2 d-flex gap-2">
+      <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search"></i> Filtrar</button>
+      <a class="btn btn-outline-dark btn-sm" href="{{ url_for('planificador.planificador_solicitudes') }}"><i class="bi bi-x-circle"></i></a>
+    </div>
+  </form>
+
+  {# ── Layout principal ── #}
+  <div class="planner-layout">
+
+    {# Columna izquierda: calendario + tabla #}
+    <div>
+      <div class="rec-card">
+        <div class="rec-card-header">
+          <h2 id="weekTitle">Agenda semanal</h2>
+          <div class="week-controls">
+            <button type="button" class="btn btn-light btn-sm" data-week-dir="-1">&#8592;</button>
+            <button type="button" class="btn btn-light btn-sm" data-week-today="1">Hoy</button>
+            <button type="button" class="btn btn-light btn-sm" data-week-dir="1">&#8594;</button>
+          </div>
+        </div>
+        <div class="calendar-scroll">
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+      </div>
+
+      {# ── Tabs de secciones ── #}
+      <div class="rec-card mt-3">
+
+        {# Nav tabs #}
+        <div class="planner-tabs-nav">
+          <button class="planner-tab active" data-tab="tab-reservadas">
+            <i class="bi bi-calendar-plus me-1"></i>Reservadas
+            <span class="badge bg-warning text-dark ms-1">{{ reservadas|length }}</span>
+          </button>
+          <button class="planner-tab" data-tab="tab-coordinadas">
+            <i class="bi bi-calendar-check me-1"></i>Coordinadas
+            <span class="badge bg-info text-dark ms-1">{{ coordinadas|length }}</span>
+          </button>
+          <button class="planner-tab" data-tab="tab-atendidas">
+            <i class="bi bi-calendar2-check me-1"></i>Atendidas
+            <span class="badge bg-secondary ms-1">{{ atendidas|length }}</span>
+          </button>
+        </div>
+
+        {# Macro tabla interna #}
+        {% macro tabla_tab(section_rows, empty_msg) %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 table-sm">
+            <thead class="table-light">
+              <tr>
+                <th>#</th><th>Tipo</th><th>Área</th><th>Ciudad</th>
+                <th>Fecha</th><th>Horario</th><th>Prioridad</th>
+                <th>Estado</th><th>Solicitante</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in section_rows %}
+              <tr>
+                <td class="text-muted small">
+                  {{ r.id }}
+                  {% if r.grupo_id %}
+                  <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ r.tipo }}</td>
+                <td>{{ r.area_solicitante }}</td>
+                <td class="text-muted small">{{ r.ciudad or '—' }}</td>
+                <td class="text-nowrap">{{ r.fecha_str }}</td>
+                <td class="text-nowrap">
+                  {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
+                  {% else %}<span class="text-muted">Sin asignar</span>{% endif %}
+                </td>
+                <td>
+                  <span class="badge {% if r.prioridad=='Urgente' %}bg-danger{% elif r.prioridad=='Alta' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                    {{ r.prioridad }}
+                  </span>
+                </td>
+                <td><span class="badge {{ r.estado_class }}">{{ r.estado_label }}</span></td>
+                <td class="small">{{ r.solicitante_nombre }}</td>
+                <td class="text-end text-nowrap">
+                  <button type="button" class="btn btn-sm btn-outline-secondary"
+                          data-open-detalle="{{ r.id }}" title="Ver detalle">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  {% if r.puede_coordinar %}
+                  <button type="button" class="btn btn-sm btn-outline-warning"
+                          data-open-coordinar="1" data-sid="{{ r.id }}"
+                          data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}">
+                    <i class="bi bi-clock"></i> Coordinar
+                  </button>
+                  {% elif r.estado == 'PENDIENTE_COORDINACION' and r.fecha_str < today and r.puede_reagendar %}
+                  <span class="badge bg-warning text-dark" title="Fecha pasada — use Reagendar">
+                    <i class="bi bi-exclamation-triangle"></i> Fecha pasada
+                  </span>
+                  {% endif %}
+                  {% if r.puede_reagendar %}
+                  <button type="button" class="btn btn-sm btn-outline-warning"
+                          data-open-reagendar="1" data-sid="{{ r.id }}"
+                          data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}"
+                          title="Reagendar">
+                    <i class="bi bi-calendar-event"></i>
+                  </button>
+                  {% endif %}
+                  {% if r.puede_aprobar %}
+                  <button type="button" class="btn btn-sm btn-outline-success"
+                          data-open-aprobar="1" data-sid="{{ r.id }}" data-tipo="{{ r.tipo }}">
+                    <i class="bi bi-check2-circle"></i> Aprobar
+                  </button>
+                  {% if r.grupo_id %}
+                  <button type="button" class="btn btn-sm btn-success"
+                          data-open-aprobar-grupo="1"
+                          data-grupo-id="{{ r.grupo_id }}"
+                          data-tipo="{{ r.tipo }}"
+                          title="Aprobar todas las solicitudes de este grupo juntas">
+                    <i class="bi bi-collection"></i> Aprobar grupo
+                  </button>
+                  {% endif %}
+                  {% endif %}
+                  {% if r.puede_aprobar_gerente %}
+                  <button type="button" class="btn btn-sm btn-outline-primary"
+                          data-open-detalle="{{ r.id }}" title="Aprobación gerencial">
+                    <i class="bi bi-person-check"></i>
+                  </button>
+                  {% endif %}
+                  {% if r.puede_completar %}
+                  <form method="post"
+                        action="{{ url_for('planificador.planificador_completar', sid=r.id) }}"
+                        class="d-inline" data-confirm="¿Marcar como completada?">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-dark">
+                      <i class="bi bi-flag-fill"></i> Completar
+                    </button>
+                  </form>
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="10" class="text-center text-muted py-4">{{ empty_msg }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endmacro %}
+
+        {# Contenido de cada tab #}
+        <div class="planner-tab-content active" id="tab-reservadas">
+          {{ tabla_tab(reservadas, "Sin solicitudes pendientes de coordinación") }}
+        </div>
+        <div class="planner-tab-content" id="tab-coordinadas">
+          {{ tabla_tab(coordinadas, "Sin solicitudes en proceso") }}
+        </div>
+        <div class="planner-tab-content" id="tab-atendidas">
+          {{ tabla_tab(atendidas, "Sin solicitudes atendidas con los filtros aplicados") }}
+        </div>
+
+      </div>{# /rec-card tabs #}
+    </div>
+
+    {# Panel derecho #}
+    <aside class="right-panel">
+
+      <div class="rec-card">
+        <div class="rec-card-header"><h3>Indicadores</h3></div>
+        <div class="stats-grid">
+          {% set n_reservadas = reservadas|length %}
+          <div class="stat-box {% if n_reservadas > 0 %}stat-box-alert{% endif %}">
+            <div class="stat-number">{{ n_reservadas }}</div>
+            <div class="stat-label">
+              {% if n_reservadas > 0 %}<i class="bi bi-exclamation-circle-fill text-warning me-1"></i>{% endif %}
+              Necesitan coordinación
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">{{ rows|selectattr('estado','eq','PENDIENTE_APROBACION')|list|length }}</div>
+            <div class="stat-label">Pend. aprobación</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">{{ rows|selectattr('estado','eq','APROBADA')|list|length }}</div>
+            <div class="stat-label">Aprobadas</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">{{ rows|selectattr('estado','eq','COMPLETADA')|list|length }}</div>
+            <div class="stat-label">Completadas</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">{{ rows|length }}</div>
+            <div class="stat-label">Total visibles</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rec-card">
+        <div class="rec-card-header"><h3>Estados</h3></div>
+        <div class="legend-list">
+          {% for k,v in estados.items() %}
+          <div class="legend-item"><span class="dot {{ k }}"></span>{{ v }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if ctx.es_admin or ctx.tipos_coordinador or ctx.tipos_aprobador %}
+      <div class="rec-card">
+        <div class="rec-card-header"><h3>Mi rol en el planificador</h3></div>
+        <div class="rol-panel">
+          {% if ctx.es_admin %}
+          <div><i class="bi bi-shield-fill text-primary me-1"></i><strong>Administrador</strong></div>
+          {% endif %}
+          {% for t in ctx.tipos_coordinador %}
+          <div><i class="bi bi-pencil-square text-warning me-1"></i>Coordinador · {{ t }}</div>
+          {% endfor %}
+          {% for t in ctx.tipos_aprobador %}
+          <div><i class="bi bi-check2-circle text-success me-1"></i>Aprobador · {{ t }}</div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </aside>
+  </div>
+
+</div>{# /recorrido-page #}
+
+
+{# ══════════════════════════════════════════
+   MODAL – Nueva solicitud
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalNueva">
+  <div class="sgq-modal">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title">Nueva solicitud</h2>
+      <button class="close-btn" data-close-modal="modalNueva">&#215;</button>
+    </div>
+    <form method="post" action="{{ url_for('planificador.planificador_crear') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="sgq-modal-body">
+        <div class="form-grid">
+          <div>
+            <label class="form-label">Tipo de solicitud *</label>
+            <select class="form-select" name="tipo" required>
+              <option value="">Seleccione...</option>
+              {% for t in tipos %}<option value="{{ t }}">{{ t }}</option>{% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Área solicitante *</label>
+            {% if ctx.es_admin %}
+            <select class="form-select" name="area_solicitante" required>
+              <option value="">Seleccione...</option>
+              {% for d in departamentos %}
+              <option value="{{ d.nombre }}">{{ d.nombre }}</option>
+              {% endfor %}
+            </select>
+            {% else %}
+            <input class="form-control" name="area_solicitante" required
+                   value="{{ usuario_dept.dept_nombre }}" readonly>
+            {% endif %}
+          </div>
+          <div>
+            <label class="form-label">Fecha *</label>
+            <input class="form-control" type="date" name="fecha" id="nfecha" required>
+          </div>
+          <div>
+            <label class="form-label">Prioridad</label>
+            <select class="form-select" name="prioridad">
+              {% for p in prioridades %}<option>{{ p }}</option>{% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Lugar / destino *</label>
+            <div class="lugar-input-group">
+              <input class="form-control" name="lugar_destino" id="nlugar" required
+                     placeholder="Ej. Banco SRI Guayaquil, Dirección exacta..."
+                     autocomplete="off">
+              <button type="button" class="btn btn-outline-secondary btn-sm lugar-map-btn"
+                      data-open-map="nlugar" title="Buscar en mapa">
+                <i class="bi bi-geo-alt-fill"></i>
+              </button>
+              <button type="button" class="btn btn-outline-primary btn-sm lugar-map-btn"
+                      data-geolocate="nlugar" title="Usar mi ubicación actual">
+                <i class="bi bi-crosshair"></i>
+              </button>
+            </div>
+            <div class="lugar-hint">
+              <i class="bi bi-info-circle"></i>
+              Usa el botón del mapa para buscar y confirmar la dirección exacta
+            </div>
+          </div>
+          <div>
+            <label class="form-label">Persona de contacto</label>
+            <input class="form-control" name="contacto" placeholder="Nombre y teléfono">
+          </div>
+          <div class="full">
+            <label class="form-label">Detalle de dirección <span class="text-muted">(opcional)</span></label>
+            <input class="form-control" name="detalle_direccion"
+                   placeholder="Ej: Piso 3, oficina 301, junto al banco...">
+          </div>
+          <div class="full">
+            <label class="form-label">Descripción de la actividad *</label>
+            <textarea class="form-control textarea-desc" name="descripcion" required
+                      placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
+          </div>
+        </div>
+        <div class="rec-notice">
+          La solicitud quedará <strong>Pendiente de coordinación</strong> hasta que el coordinador asigne horario.<br>
+          <i class="bi bi-clock"></i> El coordinador solo puede asignar horarios de <strong>08:00 a 17:00</strong>.
+          Solicitudes para el día actual no pueden coordinarse pasadas las 17:00.
+        </div>
+      </div>
+      <div class="sgq-modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalNueva">Cancelar</button>
+        <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-send"></i> Enviar solicitud</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{# ══════════════════════════════════════════
+   MODAL – Reagendar
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalReagendar">
+  <div class="sgq-modal modal-sm">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-calendar-event me-1"></i>Reagendar solicitud</h2>
+      <button class="close-btn" data-close-modal="modalReagendar">&#215;</button>
+    </div>
+    <form method="post" id="formReagendarModal"
+          data-confirm="¿Reagendar esta solicitud? Se restablecerá el estado a Pendiente coordinación.">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="sgq-modal-body">
+        <p id="reagendarInfo" class="modal-info-text"></p>
+        <div class="rec-notice mb-3">
+          <i class="bi bi-info-circle me-1"></i>
+          La solicitud volverá a estado <strong>Pendiente coordinación</strong> con la nueva fecha.
+          El solicitante recibirá una notificación.
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="form-label">Nueva fecha *</label>
+            <input class="form-control" type="date" name="nueva_fecha" required>
+          </div>
+          <div class="full">
+            <label class="form-label">Motivo de la reagenda *</label>
+            <textarea class="form-control textarea-obs-sm" name="motivo_reagenda" required
+                      placeholder="Explica por qué se cambia la fecha..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="sgq-modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalReagendar">Cancelar</button>
+        <button type="submit" class="btn btn-warning btn-sm text-dark">
+          <i class="bi bi-calendar-event"></i> Confirmar reagenda
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{# ══════════════════════════════════════════
+   MODAL – Coordinar
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalCoordinar">
+  <div class="sgq-modal modal-coordinar">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-calendar-check me-1"></i>Coordinar solicitud</h2>
+      <button class="close-btn" data-close-modal="modalCoordinar">&#215;</button>
+    </div>
+    <form method="post" id="formCoordinar">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="sgq-modal-body">
+        <p id="coordTipo" class="modal-info-text"></p>
+
+        {# ── Horario ── #}
+        <div class="form-grid">
+          <div>
+            <label class="form-label">Hora inicio *</label>
+            <input class="form-control" type="time" name="hora_inicio" min="08:00" max="16:59" required>
+          </div>
+          <div>
+            <label class="form-label">Hora fin *</label>
+            <input class="form-control" type="time" name="hora_fin" min="08:01" max="17:00" required>
+          </div>
+          <div class="full">
+            <label class="form-label">Observación / instrucciones</label>
+            <textarea class="form-control textarea-obs-sm" name="observacion_coordinador"
+                      placeholder="Instrucciones adicionales para el asistente."></textarea>
+          </div>
+        </div>
+
+        {# ── Sección de agrupación (se muestra si hay otras pendientes del mismo tipo) ── #}
+        <div id="grupoSection" style="display:none; margin-top:.85rem;">
+          <div class="grupo-section-header">
+            <i class="bi bi-collection-fill"></i>
+            Agrupar otras solicitudes del mismo tipo en este horario
+            <span class="grupo-section-hint">Selecciona las que se atenderán juntos en el mismo recorrido</span>
+          </div>
+          <div id="grupoCheckList" class="grupo-check-list"></div>
+        </div>
+
+      </div>
+      <div class="sgq-modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalCoordinar">Cancelar</button>
+        <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-send"></i> Enviar a aprobación</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{# ══════════════════════════════════════════
+   MODAL – Aprobar / Rechazar
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalAprobar">
+  <div class="sgq-modal modal-sm">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title">Aprobación de solicitud</h2>
+      <button class="close-btn" data-close-modal="modalAprobar">&#215;</button>
+    </div>
+    <div class="sgq-modal-body">
+      <p id="aprobarTipo" class="modal-info-text"></p>
+      <label class="form-label">Observación</label>
+      <textarea class="form-control textarea-obs" id="obsAprobador"
+                placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
+    </div>
+    <div class="sgq-modal-footer">
+      <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalAprobar">Cancelar</button>
+      <form id="formRechazar" method="post" class="d-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="observacion_aprobador" id="obsRechazo">
+        <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-x-lg"></i> Rechazar</button>
+      </form>
+      <form id="formAprobar" method="post" class="d-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="observacion_aprobador" id="obsAprobacion">
+        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check2"></i> Aprobar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{# ══════════════════════════════════════════
+   MODAL – Aprobar Grupo
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalAprobarGrupo">
+  <div class="sgq-modal modal-sm">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-collection me-1"></i>Aprobar grupo</h2>
+      <button class="close-btn" data-close-modal="modalAprobarGrupo">&#215;</button>
+    </div>
+    <form id="formAprobarGrupo" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="sgq-modal-body">
+        <p id="aprobarGrupoInfo" class="modal-info-text"></p>
+        <div class="rec-notice mb-3">
+          <i class="bi bi-collection-fill me-1"></i>
+          Se aprobarán <strong>todas</strong> las solicitudes de este grupo de recorrido con el mismo horario asignado.
+        </div>
+        <label class="form-label">Observación <span class="text-muted">(opcional)</span></label>
+        <textarea class="form-control textarea-obs-sm" name="observacion_aprobador"
+                  placeholder="Instrucciones o comentarios para todas las solicitudes del grupo."></textarea>
+      </div>
+      <div class="sgq-modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalAprobarGrupo">Cancelar</button>
+        <button type="submit" class="btn btn-success btn-sm">
+          <i class="bi bi-check2-all"></i> Aprobar todas
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{# ══════════════════════════════════════════
+   MODAL – Detalle
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalDetalle">
+  <div class="sgq-modal">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title">Detalle de solicitud</h2>
+      <button class="close-btn" data-close-modal="modalDetalle">&#215;</button>
+    </div>
+    <div class="sgq-modal-body" id="detalleBody">
+      <div class="text-center text-muted py-4"><i class="bi bi-arrow-repeat"></i> Cargando...</div>
+    </div>
+    <div class="sgq-modal-footer">
+      <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalDetalle">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════
+   MODAL – Selector de mapa
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalMapa">
+  <div class="sgq-modal modal-mapa">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-geo-alt-fill me-1"></i>Seleccionar ubicación</h2>
+      <button class="close-btn" data-close-modal="modalMapa">&#215;</button>
+    </div>
+    <div class="sgq-modal-body">
+      <div class="map-search-row">
+        <input type="text" class="form-control" id="mapSearchInput"
+               placeholder="Escribe la dirección o nombre del lugar...">
+        <button type="button" class="btn btn-primary btn-sm" data-search-map="1">
+          <i class="bi bi-search"></i> Buscar
+        </button>
+      </div>
+      <div class="map-frame-wrap">
+        <iframe id="mapFrame" class="map-iframe"
+                src="about:blank"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="lugar-hint mt-2">
+        <i class="bi bi-info-circle"></i>
+        Busca la dirección, verifica en el mapa y pulsa "Usar esta dirección"
+      </div>
+    </div>
+    <div class="sgq-modal-footer">
+      <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalMapa">Cancelar</button>
+      <button type="button" class="btn btn-success btn-sm" data-use-map-address="1">
+        <i class="bi bi-check2-circle"></i> Usar esta dirección
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{# ── Overlay de carga ── #}
+<div class="planner-loading-overlay" id="plannerLoadingOverlay">
+  <div class="planner-spinner"></div>
+  <div class="planner-loading-label">Procesando...</div>
+</div>
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/planificador.js') }}"></script>
+{% endblock %}

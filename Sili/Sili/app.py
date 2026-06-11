@@ -6,7 +6,7 @@
 # Su responsabilidad es orquestar la creación de la app
 # y delegar funcionalidades complementarias a app_core.
 # ==========================================================
- 
+  
 import os
 from pathlib import Path
 from flask import Flask, render_template

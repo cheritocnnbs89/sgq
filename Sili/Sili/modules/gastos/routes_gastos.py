@@ -39,7 +39,6 @@ from .gastos_exports import (
 
 from ..db import get_db
 from ..security import require_login, require_permission
-from .gastos_exports_service import build_reporte_excel_bytes_from_rows
 
 
 
@@ -147,27 +146,8 @@ def register_gastos_routes(app):
     @require_login
     @require_permission("gastos_tarjeta", "exportar")
     def export_gastos_reporte_excel():
-        conn = get_db()
-
-        # reutiliza exactamente los filtros de la pantalla
-        data = get_lista_gastos_data(conn, request.args, dict(session))
-        gastos = data["gastos"]
-
-        # si el front manda ids visibles, limitar a esos ids
-        ids_raw = (request.args.get("ids") or "").strip()
-        if ids_raw:
-            ids = {int(x) for x in ids_raw.split(",") if x.strip().isdigit()}
-            gastos = [g for g in gastos if int(g.get("id") or 0) in ids]
-
-        output = build_reporte_excel_bytes_from_rows(conn, gastos)
-        filename = f"reporte_gastos_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-
-        return send_file(
-            output,
-            as_attachment=True,
-            download_name=filename,
-            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        )
+        # Usa el generador completo con cabecera (compañía, nombre, cargo, etc.)
+        return export_gastos_excel_response()
 
 
     # ==========================================================

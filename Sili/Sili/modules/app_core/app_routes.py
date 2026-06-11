@@ -113,9 +113,19 @@ def register_all_routes(app):
     # Contratos se sigue importando directo como en tu app.py.
     # ------------------------------------------------------
     try:
+        from modules.planificador import register_planificador_routes
+    except Exception:
+        register_planificador_routes = None
+
+    try:
         from modules.contratos import register_contratos_routes
     except Exception:
         register_contratos_routes = None
+
+    try:
+        from modules.telegram_webhook import register_telegram_routes
+    except Exception:
+        register_telegram_routes = None
 
     # ------------------------------------------------------
     # Registro de blueprints simples.
@@ -235,11 +245,23 @@ def register_all_routes(app):
     # ------------------------------------------------------
     # Registro del blueprint de contratos.
     # ------------------------------------------------------
+    if register_planificador_routes:
+        try:
+            register_planificador_routes(app)
+        except Exception as e:
+            app.logger.exception("Fallo register_planificador_routes: %s", e)
+
     if register_contratos_routes:
         try:
             register_contratos_routes(app)
         except Exception as e:
             app.logger.exception("Fallo register_contratos_routes: %s", e)
+
+    if register_telegram_routes:
+        try:
+            register_telegram_routes(app)
+        except Exception as e:
+            app.logger.exception("Fallo register_telegram_routes: %s", e)
 
     # ------------------------------------------------------
     # Ruta HOME de respaldo cuando no exista una explícita.
