@@ -538,13 +538,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('bs-modal-open');
   }
 
-  if (tdBackdrop) {
-    // Botones "Ver detalle"
-    document.addEventListener('click', function (e) {
-      const btn = e.target.closest('.js-tarea-detalle');
-      if (btn) { e.preventDefault(); tdOpenModal(btn); }
-    });
+  // Siempre registrar el click handler (no depende de que tdBackdrop exista)
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.js-tarea-detalle');
+    if (!btn) return;
+    e.preventDefault();
+    const backdrop = document.getElementById('tdModalBackdrop');
+    if (backdrop) {
+      tdOpenModal(btn);
+    }
+  });
 
+  if (tdBackdrop) {
     // Cerrar con X
     tdClose?.addEventListener('click', tdCloseModal);
 
