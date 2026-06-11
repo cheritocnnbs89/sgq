@@ -701,109 +701,192 @@
   align-items: end !important;
 }
 
-/* ── Descripción truncada en tabla ── */
-.td-desc-short {
+/* ── Descripción truncada en tabla (igual a .tk-body de bandeja) ── */
+.tk-body {
+  font-size: 12px;
+  color: #6c757d;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  max-width: 260px;
-  font-size: .85rem;
-  color: var(--ink);
-  vertical-align: top;
+  max-width: 360px;
 }
 
-.btn-ver-desc {
-  font-size: .75rem;
-  color: var(--primary);
-  text-decoration: none;
-  white-space: nowrap;
-  display: inline-block;
+.tk-actions-secondary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  flex-wrap: wrap;
 }
 
-.btn-ver-desc:hover {
-  text-decoration: underline;
-  color: var(--primary-600);
-}
-
-/* ── Modal detalle tarea ── */
-.tarea-modal-content {
-  background: var(--card);
-  color: var(--ink);
-  border: none;
-  border-radius: .75rem;
-  overflow: hidden;
-}
-
-.tarea-modal-header {
-  background: var(--grad-hero);
-  border-bottom: none;
-  padding: 1rem 1.25rem;
-  align-items: flex-start;
-}
-
-.tarea-modal-codigo {
-  font-size: .75rem;
-  letter-spacing: .08em;
-  opacity: .85;
+.btn-ver-detalle {
+  font-size: 11px;
   font-weight: 600;
-  margin-bottom: .2rem;
+  color: #0d6efd;
+  background: none;
+  border: 1px solid #c8d9f8;
+  border-radius: 4px;
+  padding: 2px 9px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background .12s, color .12s;
+  text-decoration: none;
+}
+.btn-ver-detalle:hover { background: #e7f0ff; color: #0a58ca; text-decoration: none; }
+
+/* ── Modal detalle tarea (mismo estilo que bandeja soporte) ── */
+.bs-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1050;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.bs-modal-backdrop.visible { display: flex; }
+
+body.bs-modal-open { overflow: hidden; }
+
+.bs-modal {
+  background: #fff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,.22);
+  animation: bs-modal-in .18s ease;
+}
+@keyframes bs-modal-in {
+  from { opacity: 0; transform: translateY(-14px) scale(.97); }
+  to   { opacity: 1; transform: none; }
 }
 
-.tarea-modal-titulo {
-  font-size: 1.05rem;
+.bs-modal-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+.bs-modal-ticket {
+  font-size: 11px;
   font-weight: 700;
-  line-height: 1.3;
+  font-family: monospace;
+  color: #6c757d;
+  white-space: nowrap;
+  padding-top: 2px;
+}
+.bs-modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #212529;
   margin: 0;
+  flex: 1;
+  line-height: 1.35;
+}
+.bs-modal-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.bs-modal-close:hover { background: #f0f0f0; color: #212529; }
+
+.bs-modal-meta {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+  background: #f8f9fa;
+  font-size: 12px;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+.bs-modal-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.tarea-modal-section {
-  font-size: .68rem;
+.bs-modal-body {
+  overflow-y: auto;
+  padding: 16px 20px 20px;
+  flex: 1;
+}
+
+.bs-modal-section-label {
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--muted);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: .3rem;
-  margin-bottom: .75rem;
-  margin-top: 0;
+  letter-spacing: .4px;
+  color: #6c757d;
+  margin: 16px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+.bs-modal-section-label:first-child { margin-top: 0; }
+.bs-modal-section-label i { font-size: 13px; }
 
-.tarea-modal-desc {
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: .5rem;
-  padding: .8rem 1rem;
-  font-size: .88rem;
-  line-height: 1.75;
-  max-height: 220px;
-  overflow-y: auto;
+/* Descripción completa en el modal */
+.td-modal-desc {
+  font-size: 13px;
+  color: #212529;
+  line-height: 1.7;
   white-space: pre-wrap;
   word-break: break-word;
-  color: var(--ink);
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 10px 14px;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-.tarea-modal-label {
-  font-size: .7rem;
-  color: var(--muted);
+/* Grid de datos (personas, fechas) */
+.td-modal-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 4px;
+}
+.td-modal-item { min-width: 140px; }
+.td-modal-label {
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .05em;
-  margin-bottom: .2rem;
+  letter-spacing: .4px;
+  color: #6c757d;
+  margin-bottom: 2px;
 }
-
-.tarea-modal-value {
-  font-size: .88rem;
-  color: var(--ink);
+.td-modal-value {
+  font-size: 13px;
+  color: #212529;
   font-weight: 500;
 }
 
-html.theme-dark .tarea-modal-content {
-  background: var(--card);
-  color: var(--ink);
+/* Botones del footer del modal */
+.td-modal-footer-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
 }
-
-html.theme-dark .tarea-modal-desc {
-  background: var(--surface-2);
-  border-color: var(--line);
+.td-btn-edit {
+  border-color: #ffc107;
+  color: #856404;
 }
+.td-btn-edit:hover { background: #fff8e1; color: #664d03; }

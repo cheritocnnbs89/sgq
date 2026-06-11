@@ -444,45 +444,118 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Modal detalle tarea ─────────────────────────────────────────────
-  const modalDetalle = document.getElementById('modalDetalleTarea');
-  if (modalDetalle) {
-    modalDetalle.addEventListener('show.bs.modal', function (e) {
-      const btn = e.relatedTarget;
-      if (!btn) return;
+  // ── Modal detalle tarea (mismo patrón que bandeja soporte) ───────────
+  const tdBackdrop = document.getElementById('tdModalBackdrop');
+  const tdClose    = document.getElementById('tdModalClose');
 
-      const setText = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val || '—';
-      };
+  function tdOpenModal(btn) {
+    const d = btn.dataset;
 
-      setText('mdCodigo',      btn.dataset.tareaId);
-      setText('mdTitulo',      btn.dataset.tareaTitulo);
-      setText('mdDesc',        btn.dataset.tareaDesc || '(Sin descripción)');
-      setText('mdEstado',      btn.dataset.tareaEstado);
-      setText('mdTipo',        btn.dataset.tareaTipo);
-      setText('mdAvance',      btn.dataset.tareaAvance);
-      setText('mdEmpresa',     btn.dataset.tareaEmpresa);
-      setText('mdResponsable', btn.dataset.tareaResponsable);
-      setText('mdSolicitante', btn.dataset.tareaSolicitante);
-      setText('mdDepto',       btn.dataset.tareaDepto);
-      setText('mdInicio',      btn.dataset.tareaInicio || '—');
-      setText('mdFin',         btn.dataset.tareaFin   || '—');
+    const setText = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val || '—';
+    };
 
-      const btnVer    = document.getElementById('mdBtnVer');
-      const btnEditar = document.getElementById('mdBtnEditar');
+    setText('tdModalCodigo', d.tareaId);
+    setText('tdModalTitulo', d.tareaTitulo);
+    setText('tdModalDesc',   d.tareaDesc || '(Sin descripción)');
 
-      if (btnVer)    btnVer.href = btn.dataset.tareaUrlVer || '#';
+    // Meta bar: estado · tipo · avance · empresa
+    const meta = document.getElementById('tdModalMeta');
+    if (meta) {
+      meta.innerHTML = '';
+      [
+        ['bi-flag',        d.tareaEstado],
+        ['bi-tag',         d.tareaTipo],
+        ['bi-bar-chart',   d.tareaAvance],
+        ['bi-building',    d.tareaEmpresa],
+      ].forEach(([icon, val]) => {
+        if (!val || val === '—') return;
+        const sp = document.createElement('span');
+        sp.innerHTML = '<i class="bi ' + icon + '"></i>';
+        sp.appendChild(document.createTextNode(' ' + val));
+        meta.appendChild(sp);
+      });
+    }
 
-      if (btnEditar) {
-        const urlEd = btn.dataset.tareaUrlEditar || '';
-        if (urlEd) {
-          btnEditar.href = urlEd;
-          btnEditar.classList.remove('d-none');
-        } else {
-          btnEditar.classList.add('d-none');
-        }
+    // Personas
+    const personas = document.getElementById('tdModalPersonas');
+    if (personas) {
+      personas.innerHTML = '';
+      [
+        ['Responsable',  d.tareaResponsable],
+        ['Solicitante',  d.tareaSolicitante],
+        ['Departamento', d.tareaDepto],
+      ].forEach(([label, val]) => {
+        if (!val || val === '—') return;
+        const div = document.createElement('div');
+        div.className = 'td-modal-item';
+        div.innerHTML = '<div class="td-modal-label">' + label + '</div>'
+                      + '<div class="td-modal-value"></div>';
+        div.querySelector('.td-modal-value').textContent = val;
+        personas.appendChild(div);
+      });
+    }
+
+    // Fechas
+    const fechas = document.getElementById('tdModalFechas');
+    if (fechas) {
+      fechas.innerHTML = '';
+      [
+        ['Inicio planificado', d.tareaInicio],
+        ['Fin planificado',    d.tareaFin],
+      ].forEach(([label, val]) => {
+        const div = document.createElement('div');
+        div.className = 'td-modal-item';
+        div.innerHTML = '<div class="td-modal-label">' + label + '</div>'
+                      + '<div class="td-modal-value"></div>';
+        div.querySelector('.td-modal-value').textContent = val || '—';
+        fechas.appendChild(div);
+      });
+    }
+
+    // Botones
+    const btnVer    = document.getElementById('tdBtnVer');
+    const btnEditar = document.getElementById('tdBtnEditar');
+    if (btnVer)    btnVer.href = d.tareaUrlVer || '#';
+    if (btnEditar) {
+      if (d.tareaUrlEditar) {
+        btnEditar.href = d.tareaUrlEditar;
+        btnEditar.classList.remove('d-none');
+      } else {
+        btnEditar.classList.add('d-none');
       }
+    }
+
+    tdBackdrop.classList.add('visible');
+    tdBackdrop.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('bs-modal-open');
+  }
+
+  function tdCloseModal() {
+    tdBackdrop.classList.remove('visible');
+    tdBackdrop.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('bs-modal-open');
+  }
+
+  if (tdBackdrop) {
+    // Botones "Ver detalle"
+    document.addEventListener('click', function (e) {
+      const btn = e.target.closest('.js-tarea-detalle');
+      if (btn) { e.preventDefault(); tdOpenModal(btn); }
+    });
+
+    // Cerrar con X
+    tdClose?.addEventListener('click', tdCloseModal);
+
+    // Cerrar al click en el backdrop (fuera del modal)
+    tdBackdrop.addEventListener('click', function (e) {
+      if (e.target === tdBackdrop) tdCloseModal();
+    });
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && tdBackdrop.classList.contains('visible')) tdCloseModal();
     });
   }
 });
