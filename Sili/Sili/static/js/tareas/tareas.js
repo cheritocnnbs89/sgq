@@ -539,18 +539,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('bs-modal-open');
   }
 
-  // Siempre registrar el click handler (no depende de que tdBackdrop exista)
-  document.addEventListener('click', function (e) {
-    const btn = e.target.closest('.js-tarea-detalle');
-    if (!btn) return;
-    console.log('[tareas.js] click Ver detalle - btn:', btn.dataset.tareaId);
-    e.preventDefault();
-    const backdrop = document.getElementById('tdModalBackdrop');
-    console.log('[tareas.js] backdrop:', backdrop);
-    if (backdrop) {
+  // Listener directo en cada botón "Ver detalle"
+  document.querySelectorAll('.js-tarea-detalle').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('[tareas.js] click Ver detalle:', btn.dataset.tareaId);
       tdOpenModal(btn);
-    }
+    });
   });
+  console.log('[tareas.js v3] botones detalle encontrados:', document.querySelectorAll('.js-tarea-detalle').length);
 
   if (tdBackdrop) {
     // Cerrar con X
