@@ -9272,17 +9272,18 @@ def register_reclamos_routes(app):
 Descripción del usuario:
 \"\"\"{texto}\"\"\"
 
-Evalúa estos 7 criterios y responde SOLO con JSON válido:
+Evalúa estos 8 criterios y responde SOLO con JSON válido:
 {{
-  "puntaje": <número del 1 al 7 de cuántos criterios se cumplen>,
+  "puntaje": <número del 1 al 8 de cuántos criterios se cumplen>,
   "criterios": [
-    {{"id": 1, "texto": "¿Describe claramente qué ocurrió?",              "estado": "ok|warn|fail", "nota": "...breve..."}},
-    {{"id": 2, "texto": "¿Se enfoca en el proceso, no en culpar personas?","estado": "ok|warn|fail", "nota": "..."}},
-    {{"id": 3, "texto": "¿Tiene fecha, contexto o evidencia mínima?",      "estado": "ok|warn|fail", "nota": "..."}},
-    {{"id": 4, "texto": "¿Indica el impacto causado?",                     "estado": "ok|warn|fail", "nota": "..."}},
-    {{"id": 5, "texto": "¿Permite identificar el proceso responsable?",    "estado": "ok|warn|fail", "nota": "..."}},
-    {{"id": 6, "texto": "¿El motivo/submotivo parece correcto?",           "estado": "ok|warn|fail", "nota": "..."}},
-    {{"id": 7, "texto": "¿La redacción es profesional y objetiva?",        "estado": "ok|warn|fail", "nota": "..."}}
+    {{"id": 1, "texto": "¿Describe claramente qué ocurrió?",                                    "estado": "ok|warn|fail", "nota": "...breve..."}},
+    {{"id": 2, "texto": "¿Se enfoca en el proceso, no en culpar personas?",                     "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 3, "texto": "¿La fecha/contexto es coherente con el evento?",                       "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 4, "texto": "¿Indica el impacto causado (cliente, producto u operación)?",          "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 5, "texto": "¿Es consistente con el motivo/proceso seleccionado?",                  "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 6, "texto": "¿El sponsor podría entenderlo sin contexto adicional?",                "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 7, "texto": "¿Permite intuir una posible causa raíz?",                              "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 8, "texto": "¿La redacción es profesional y objetiva?",                             "estado": "ok|warn|fail", "nota": "..."}}
   ],
   "sugerencia": "Una sugerencia concreta de cómo mejorar la descripción (máx 2 oraciones). Si está bien, di que está lista."
 }}

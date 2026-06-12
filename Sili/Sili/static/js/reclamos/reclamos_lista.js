@@ -5204,66 +5204,119 @@ if (first.codigo_om && first.estado_global) {
     const ICONOS = { ok: '✅', warn: '⚠️', fail: '❌' };
     const CLASES = { ok: 'ia-ic-ok', warn: 'ia-ic-warn', fail: 'ia-ic-fail' };
 
+    function setPanelMsg(msg, cssClass) {
+        panel.className = 'om-ia-feedback';
+        var sp = document.createElement('span');
+        sp.className = cssClass || '';
+        sp.textContent = msg;
+        panel.innerHTML = '';
+        panel.appendChild(sp);
+    }
+
     btn.addEventListener('click', function () {
         const texto = (textarea.value || '').trim();
         if (texto.length < 15) {
-            panel.className = 'om-ia-feedback';
-            panel.innerHTML = '<span style="color:#dc2626">Escribe una descripción más detallada antes de analizar.</span>';
+            setPanelMsg('Escribe una descripción más detallada antes de analizar.', 'ia-msg-error');
             return;
         }
 
-        // Tomar motivo y submotivo seleccionados
-        const motivo    = (document.querySelector('#modal-nuevo-om [name="tipo_reclamo"]')?.value || '').trim();
-        const submotivo = (document.querySelector('#modal-nuevo-om [name="subtipo"]')?.value || '').trim();
+        // Tomar motivo y submotivo del formulario actual
+        const form      = btn.closest('form') || document.querySelector('form');
+        const motivo    = (form && form.querySelector('[name="tipo_reclamo"]') ? form.querySelector('[name="tipo_reclamo"]').value : '').trim();
+        const submotivo = (form && form.querySelector('[name="subtipo"]')      ? form.querySelector('[name="subtipo"]').value      : '').trim();
 
         btn.disabled = true;
         const textoOrig = btn.innerHTML;
         btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Analizando…';
 
         panel.className = 'om-ia-feedback';
-        panel.innerHTML = '<span style="color:#6d28d9;font-size:12px"><i class="bi bi-stars"></i> Analizando con IA…</span>';
+        var loadEl = document.createElement('span');
+        loadEl.className = 'ia-msg-info';
+        var icon = document.createElement('i');
+        icon.className = 'bi bi-stars';
+        loadEl.appendChild(icon);
+        loadEl.appendChild(document.createTextNode(' Analizando con IA…'));
+        panel.innerHTML = '';
+        panel.appendChild(loadEl);
 
         fetch('/api/om/analizar-descripcion', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ texto, motivo, submotivo }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ texto: texto, motivo: motivo, submotivo: submotivo }),
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {
             if (!data.ok) {
-                panel.innerHTML = '<span style="color:#dc2626">' + (data.error || 'Error al analizar.') + '</span>';
+                setPanelMsg(data.error || 'Error al analizar.', 'ia-msg-error');
                 return;
             }
             const puntaje   = data.puntaje || 0;
             const criterios = data.criterios || [];
             const sug       = data.sugerencia || '';
 
-            let html = '<div class="ia-score-bar">'
-                     + '<div class="ia-score-num">' + puntaje + '/7</div>'
-                     + '<div class="ia-score-label">criterios cumplidos<br>'
-                     + (puntaje >= 6 ? '✅ Descripción lista' : puntaje >= 4 ? '⚠️ Puede mejorar' : '❌ Necesita mejoras')
-                     + '</div></div>'
-                     + '<div class="ia-criterios">';
+            panel.className = 'om-ia-feedback';
+            panel.innerHTML = '';
 
+            // Score bar
+            var scoreBar = document.createElement('div');
+            scoreBar.className = 'ia-score-bar';
+            var scoreNum = document.createElement('div');
+            scoreNum.className = 'ia-score-num';
+            scoreNum.textContent = puntaje + '/8';
+            var scoreLabel = document.createElement('div');
+            scoreLabel.className = 'ia-score-label';
+            scoreLabel.textContent = 'criterios cumplidos';
+            var scoreSub = document.createElement('div');
+            scoreSub.className = puntaje >= 7 ? 'ia-ic-ok' : (puntaje >= 5 ? 'ia-ic-warn' : 'ia-ic-fail');
+            scoreSub.textContent = puntaje >= 7 ? '✅ Descripción lista' : (puntaje >= 5 ? '⚠️ Puede mejorar' : '❌ Necesita mejoras');
+            scoreLabel.appendChild(document.createElement('br'));
+            scoreLabel.appendChild(scoreSub);
+            scoreBar.appendChild(scoreNum);
+            scoreBar.appendChild(scoreLabel);
+            panel.appendChild(scoreBar);
+
+            // Criterios
+            var lista = document.createElement('div');
+            lista.className = 'ia-criterios';
             criterios.forEach(function (c) {
-                const ic  = ICONOS[c.estado] || '•';
-                const cls = CLASES[c.estado] || '';
-                html += '<div class="ia-criterio">'
-                      + '<span class="ia-ic ' + cls + '">' + ic + '</span>'
-                      + '<span><strong>' + c.texto + '</strong>'
-                      + (c.nota ? ' — <em>' + c.nota + '</em>' : '')
-                      + '</span></div>';
+                var row = document.createElement('div');
+                row.className = 'ia-criterio';
+                var ic = document.createElement('span');
+                ic.className = 'ia-ic ' + (CLASES[c.estado] || '');
+                ic.textContent = ICONOS[c.estado] || '•';
+                var txt = document.createElement('span');
+                var strong = document.createElement('strong');
+                strong.textContent = c.texto;
+                txt.appendChild(strong);
+                if (c.nota) {
+                    txt.appendChild(document.createTextNode(' — '));
+                    var em = document.createElement('em');
+                    em.textContent = c.nota;
+                    txt.appendChild(em);
+                }
+                row.appendChild(ic);
+                row.appendChild(txt);
+                lista.appendChild(row);
             });
+            panel.appendChild(lista);
 
-            html += '</div>';
+            // Sugerencia
             if (sug) {
-                html += '<div class="ia-sugerencia"><i class="bi bi-lightbulb"></i> ' + sug + '</div>';
+                var sugDiv = document.createElement('div');
+                sugDiv.className = 'ia-sugerencia';
+                var sugIcon = document.createElement('i');
+                sugIcon.className = 'bi bi-lightbulb';
+                sugDiv.appendChild(sugIcon);
+                sugDiv.appendChild(document.createTextNode(' ' + sug));
+                panel.appendChild(sugDiv);
             }
-
-            panel.innerHTML = html;
         })
         .catch(function () {
-            panel.innerHTML = '<span style="color:#dc2626">Error de conexión. Intenta de nuevo.</span>';
+            setPanelMsg('Error de conexión. Intenta de nuevo.', 'ia-msg-error');
         })
         .finally(function () {
             btn.disabled = false;
@@ -5273,8 +5326,6 @@ if (first.codigo_om && first.estado_global) {
 
     // Ocultar panel si el usuario edita el texto
     textarea.addEventListener('input', function () {
-        if (!panel.classList.contains('d-none')) {
-            panel.classList.add('d-none');
-        }
+        panel.classList.add('d-none');
     });
 }());
