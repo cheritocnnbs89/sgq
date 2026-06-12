@@ -1304,6 +1304,98 @@ def responder_simple(conn, pregunta: str, data: list[dict], modulo="om"):
     return "Estos son los principales resultados:\n" + "\n".join(filas)
 
 
+def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
+    """
+    Detecta preguntas sobre sponsor de un proceso/área y consulta param_values.
+    Maneja relación padre (proceso) → hijos (PRINCIPAL/BACKUP con username).
+    """
+    texto = (pregunta_original or "").strip()
+    # Detectar patrón: "quien es el sponsor de X" / "sponsor de X" / "sponsors de X"
+    m = re.search(
+        r"(?:quien\s+es\s+(?:el\s+)?sponsor|sponsors?\s+de|responsable\s+de)\s+(?:el\s+area\s+de\s+|el\s+proceso\s+de\s+|la\s+)?(.+)",
+        texto, re.I
+    )
+    if not m:
+        return None
+
+    proceso_buscado = m.group(1).strip().rstrip("?").upper()
+
+    cur = conn.cursor()
+
+    # 1. Buscar el grupo RECL_PROCESO_SPONSOR
+    cur.execute("""
+        SELECT id FROM param_groups WHERE nombre = 'RECL_PROCESO_SPONSOR'
+    """)
+    grupo = cur.fetchone()
+    if not grupo:
+        return None
+    group_id = grupo["id"]
+
+    # 2. Buscar el proceso padre (sin parent_id)
+    cur.execute("""
+        SELECT id, nombre, valor
+        FROM param_values
+        WHERE group_id = ?
+          AND parent_id IS NULL
+          AND UPPER(nombre) LIKE UPPER(?)
+          AND activo = 1
+    """, (group_id, f"%{proceso_buscado}%"))
+    proceso_row = cur.fetchone()
+    if not proceso_row:
+        return {"encontrado": False, "proceso": proceso_buscado}
+
+    proceso_id   = proceso_row["id"]
+    proceso_name = proceso_row["nombre"]
+
+    # 3. Buscar hijos (PRINCIPAL y BACKUP) — nombre contiene el username/cedula
+    cur.execute("""
+        SELECT pv.nombre AS username_param, pv.valor AS tipo,
+               u.nombre_completo, u.email
+        FROM param_values pv
+        LEFT JOIN usuarios u ON u.username = pv.nombre OR u.cedula = pv.nombre
+        WHERE pv.group_id = ?
+          AND pv.parent_id = ?
+          AND pv.activo = 1
+        ORDER BY CASE WHEN UPPER(pv.valor) = 'PRINCIPAL' THEN 0 ELSE 1 END
+    """, (group_id, proceso_id))
+    sponsors = cur.fetchall()
+
+    resultado = {
+        "encontrado": True,
+        "proceso": proceso_name,
+        "sponsors": [],
+    }
+    for s in sponsors:
+        nombre = s["nombre_completo"] or s["username_param"]
+        resultado["sponsors"].append({
+            "tipo": s["tipo"],
+            "nombre": nombre,
+            "email": s["email"] or "",
+        })
+    return resultado
+
+
+def formatear_respuesta_sponsor(resultado: dict) -> str:
+    if not resultado or not resultado.get("encontrado"):
+        proc = (resultado or {}).get("proceso", "ese proceso")
+        return f"No encontré configuración de sponsor para el proceso **{proc}**. Verifica que esté registrado en los parámetros RECL_PROCESO_SPONSOR."
+
+    proceso = resultado["proceso"]
+    sponsors = resultado.get("sponsors", [])
+
+    if not sponsors:
+        return f"El proceso **{proceso}** existe pero no tiene sponsors configurados."
+
+    lineas = [f"Sponsors configurados para el proceso **{proceso}**:\n"]
+    for s in sponsors:
+        tipo  = s["tipo"].upper()
+        nombre = s["nombre"]
+        email  = f" ({s['email']})" if s["email"] else ""
+        lineas.append(f"- **{tipo}:** {nombre}{email}")
+
+    return "\n".join(lineas)
+
+
 PREGUNTAS_CONCEPTUALES = [
     "que es una om", "que es om", "que son las om", "que son om",
     "que es una oportunidad de mejora", "que son las oportunidades de mejora",
@@ -1386,13 +1478,24 @@ def om_chat_responder(
     source = "desconocido"
 
     try:
-        # 0. Preguntas conceptuales/definicionales (sin SQL)
+        # 0a. Preguntas conceptuales/definicionales (sin SQL)
         if es_pregunta_conceptual(pregunta_norm):
             respuesta = responder_conceptual(pregunta, historial)
             return {
                 "ok": True,
                 "source": "conceptual",
                 "rows": [],
+                "respuesta": respuesta,
+            }
+
+        # 0b. Consulta de sponsor por proceso (param_values, relación padre-hijo)
+        resultado_sponsor = buscar_sponsor_proceso(conn, pregunta)
+        if resultado_sponsor is not None:
+            respuesta = formatear_respuesta_sponsor(resultado_sponsor)
+            return {
+                "ok": True,
+                "source": "sponsor_params",
+                "rows": resultado_sponsor.get("sponsors", []),
                 "respuesta": respuesta,
             }
 
