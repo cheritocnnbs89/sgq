@@ -5315,6 +5315,89 @@ if (first.codigo_om && first.estado_global) {
                 panel.appendChild(sugDiv);
             }
 
+            // Acordeón recomendación de acción
+            var recAcc = data.recomendacion_accion;
+            if (recAcc && recAcc.nivel) {
+                var NIVEL_LABELS = {
+                    'om_simple':       'OM simple',
+                    'om_proceso':      'OM + propuesta de proceso',
+                    'om_escalamiento': 'Requiere escalamiento',
+                    'reunion_previa':  'Reúnete primero con el área',
+                };
+                var accionWrap = document.createElement('div');
+                accionWrap.className = 'ia-accion-wrap';
+
+                // Toggle del acordeón
+                var toggle = document.createElement('button');
+                toggle.type = 'button';
+                toggle.className = 'ia-accion-toggle';
+                var toggleLeft = document.createElement('span');
+                var toggleIco = document.createElement('i');
+                toggleIco.className = 'bi bi-clipboard2-check';
+                toggleLeft.appendChild(toggleIco);
+                toggleLeft.appendChild(document.createTextNode(' ¿Qué deberías hacer con este problema?'));
+                var chevron = document.createElement('i');
+                chevron.className = 'bi bi-chevron-down ia-accion-chevron';
+                toggle.appendChild(toggleLeft);
+                toggle.appendChild(chevron);
+
+                // Cuerpo del acordeón
+                var body = document.createElement('div');
+                body.className = 'ia-accion-body';
+
+                // Nivel badge
+                var nivelBadge = document.createElement('span');
+                nivelBadge.className = 'ia-accion-nivel ia-accion-nivel-' + recAcc.nivel;
+                nivelBadge.textContent = NIVEL_LABELS[recAcc.nivel] || recAcc.nivel;
+                body.appendChild(nivelBadge);
+
+                // Título
+                if (recAcc.titulo) {
+                    var tituloEl = document.createElement('div');
+                    tituloEl.className = 'ia-accion-resumen';
+                    var tituloStrong = document.createElement('strong');
+                    tituloStrong.textContent = recAcc.titulo;
+                    tituloEl.appendChild(tituloStrong);
+                    body.appendChild(tituloEl);
+                }
+
+                // Resumen
+                if (recAcc.resumen) {
+                    var resumenEl = document.createElement('div');
+                    resumenEl.className = 'ia-accion-resumen';
+                    resumenEl.textContent = recAcc.resumen;
+                    body.appendChild(resumenEl);
+                }
+
+                // Pasos
+                if (recAcc.pasos && recAcc.pasos.length) {
+                    var ul = document.createElement('ul');
+                    ul.className = 'ia-accion-pasos';
+                    recAcc.pasos.forEach(function (paso) {
+                        var li = document.createElement('li');
+                        li.textContent = paso;
+                        ul.appendChild(li);
+                    });
+                    body.appendChild(ul);
+                }
+
+                // Toggle handler
+                toggle.addEventListener('click', function () {
+                    var isOpen = body.classList.contains('open');
+                    if (isOpen) {
+                        body.classList.remove('open');
+                        toggle.classList.remove('open');
+                    } else {
+                        body.classList.add('open');
+                        toggle.classList.add('open');
+                    }
+                });
+
+                accionWrap.appendChild(toggle);
+                accionWrap.appendChild(body);
+                panel.appendChild(accionWrap);
+            }
+
             // Botón "Mejorar con IA"
             var mejoraBtnWrap = document.createElement('div');
             mejoraBtnWrap.className = 'ia-mejora-btn-wrap';

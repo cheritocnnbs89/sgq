@@ -9272,7 +9272,7 @@ def register_reclamos_routes(app):
 Descripción del usuario:
 \"\"\"{texto}\"\"\"
 
-Evalúa estos 8 criterios y responde SOLO con JSON válido:
+Responde SOLO con JSON válido con esta estructura exacta:
 {{
   "puntaje": <número del 1 al 8 de cuántos criterios se cumplen>,
   "criterios": [
@@ -9285,15 +9285,33 @@ Evalúa estos 8 criterios y responde SOLO con JSON válido:
     {{"id": 7, "texto": "¿Permite intuir una posible causa raíz?",                              "estado": "ok|warn|fail", "nota": "..."}},
     {{"id": 8, "texto": "¿La redacción es profesional y objetiva?",                             "estado": "ok|warn|fail", "nota": "..."}}
   ],
-  "sugerencia": "Una sugerencia concreta de cómo mejorar la descripción (máx 2 oraciones). Si está bien, di que está lista."
+  "sugerencia": "Una sugerencia concreta de cómo mejorar la descripción (máx 2 oraciones). Si está bien, di que está lista.",
+  "recomendacion_accion": {{
+    "nivel": "<om_simple|om_proceso|om_escalamiento|reunion_previa>",
+    "titulo": "<título corto de la recomendación, máx 8 palabras>",
+    "resumen": "<1 oración explicando por qué se recomienda esta acción>",
+    "pasos": [
+      "<paso concreto 1>",
+      "<paso concreto 2>",
+      "<paso concreto 3 (opcional)>"
+    ]
+  }}
 }}
 
-Reglas:
+Reglas para criterios:
 - "ok" = cumple bien el criterio
 - "warn" = cumple parcialmente o podría mejorar
 - "fail" = no cumple el criterio
 - La nota debe ser muy breve (máx 10 palabras)
-- No inventes información que no esté en el texto"""
+- No inventes información que no esté en el texto
+
+Reglas para recomendacion_accion:
+- "reunion_previa": el texto sugiere que el problema no fue conversado aún con el área involucrada
+- "om_simple": hecho puntual, primera vez, bajo impacto, sin riesgo financiero ni legal
+- "om_proceso": el texto describe una falla recurrente o una ausencia de procedimiento formal
+- "om_escalamiento": hay riesgo financiero significativo, riesgo legal, riesgo de auditoría, o múltiples áreas afectadas
+- Los pasos deben ser acciones concretas que el usuario debería tomar, en orden lógico
+- Máximo 3 pasos, mínimo 2"""
 
             resp = client.chat.completions.create(
                 model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
@@ -9301,7 +9319,7 @@ Reglas:
                     {"role": "system", "content": "Responde únicamente con JSON válido. Sin explicaciones adicionales."},
                     {"role": "user",   "content": prompt},
                 ],
-                max_tokens=600,
+                max_tokens=900,
                 temperature=0.2,
             )
             raw = resp.choices[0].message.content.strip()

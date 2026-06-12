@@ -2310,3 +2310,49 @@ table.recl-table tbody td {
 }
 .btn-om-ia-usar-no:hover { background: #f3f4f6; }
 
+/* ── Acordeón recomendación de acción ── */
+.ia-accion-wrap { margin-top: 10px; }
+.ia-accion-toggle {
+  width: 100%; text-align: left; cursor: pointer;
+  background: #f5f3ff; border: 1px solid #ddd6fe;
+  border-radius: 7px; padding: 7px 12px;
+  font-size: 12px; font-weight: 600; color: #5b21b6;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background .15s;
+}
+.ia-accion-toggle:hover { background: #ede9fe; }
+.ia-accion-toggle .ia-accion-chevron {
+  font-size: 11px; transition: transform .2s;
+}
+.ia-accion-toggle.open .ia-accion-chevron { transform: rotate(180deg); }
+
+.ia-accion-body {
+  display: none; border: 1px solid #ddd6fe;
+  border-top: none; border-radius: 0 0 7px 7px;
+  background: #faf5ff; padding: 12px 14px;
+  font-size: 12.5px;
+}
+.ia-accion-body.open { display: block; }
+
+.ia-accion-nivel {
+  display: inline-block; font-size: 10.5px; font-weight: 700;
+  border-radius: 4px; padding: 2px 8px; margin-bottom: 6px;
+  text-transform: uppercase; letter-spacing: .4px;
+}
+.ia-accion-nivel-om_simple      { background: #dcfce7; color: #166534; }
+.ia-accion-nivel-om_proceso     { background: #fef9c3; color: #854d0e; }
+.ia-accion-nivel-om_escalamiento{ background: #fee2e2; color: #991b1b; }
+.ia-accion-nivel-reunion_previa { background: #dbeafe; color: #1e40af; }
+
+.ia-accion-resumen { color: #374151; margin-bottom: 8px; line-height: 1.5; }
+.ia-accion-pasos { padding-left: 0; margin: 0; list-style: none; }
+.ia-accion-pasos li {
+  padding: 4px 0 4px 20px; position: relative;
+  color: #4b5563; font-size: 12px; border-bottom: 1px dashed #e9d5ff;
+}
+.ia-accion-pasos li:last-child { border-bottom: none; }
+.ia-accion-pasos li::before {
+  content: "→"; position: absolute; left: 0;
+  color: #7c3aed; font-weight: 700;
+}
+
