@@ -1325,12 +1325,12 @@ def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
 
     cur = conn.cursor()
 
-    # 1. Buscar el proceso en RECL_PROCESO (aquí viven los procesos raíz)
+    # 1. Buscar la fila padre del proceso en RECL_PROCESO_SPONSOR (parent_id IS NULL)
     cur.execute("""
         SELECT TOP 1 pv.id, pv.nombre, pv.valor
         FROM param_values pv
         JOIN param_groups pg ON pg.id = pv.group_id
-        WHERE pg.nombre = 'RECL_PROCESO'
+        WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
           AND COALESCE(pv.activo, 1) = 1
           AND pv.parent_id IS NULL
           AND (UPPER(LTRIM(RTRIM(pv.nombre))) LIKE UPPER(?)
@@ -1344,7 +1344,7 @@ def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
     proceso_id   = proceso_row["id"]
     proceso_name = proceso_row["valor"] or proceso_row["nombre"]
 
-    # 2. Buscar sponsors PRINCIPAL/BACKUP en RECL_PROCESO_SPONSOR con parent_id = proceso_id
+    # 2. Buscar sponsors PRINCIPAL/BACKUP (hijos de ese proceso)
     cur.execute("""
         SELECT
             pv.nombre    AS identificacion,
