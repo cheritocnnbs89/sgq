@@ -567,9 +567,10 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
 
     # ── Por proceso / departamento ────────────────────────────────
     if any(x in pregunta_norm for x in [
-        "por proceso", "por departamento", "proceso tiene", "departamento tiene",
-        "procesos con mas", "departamentos con mas",
-    ]) and not _kw_tipo and not _kw_cliente:
+        "por proceso", "por departamento", "por area", "proceso tiene", "departamento tiene",
+        "area tiene", "procesos con mas", "departamentos con mas", "areas con mas",
+    ]) and not _kw_tipo and not _kw_cliente \
+      and not any(x in pregunta_norm for x in ["demor", "tarda", "tiempo", "dias", "respuesta"]):
         return """
             SELECT TOP 100
                 ISNULL(proceso, 'SIN PROCESO') AS proceso,
@@ -743,37 +744,57 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
     # =========================================================
     # Tiempos de respuesta agregados
     # =========================================================
-    if pregunta_norm in (
+    _kw_demora_sponsor = any(x in pregunta_norm for x in [
         "promedio de dias de respuesta por sponsor",
         "dias promedio de respuesta por sponsor",
         "tiempo promedio de respuesta por sponsor",
         "que sponsor tarda mas en responder",
-    ):
+        "sponsor mas demorado",
+        "sponsor tarda mas",
+        "demora por sponsor",
+        "tiempo de respuesta por sponsor",
+    ])
+    if _kw_demora_sponsor:
         return """
             SELECT TOP 100
-                sponsor_username,
                 sponsor_nombre,
                 AVG(CAST(dias_respuesta_sponsor AS decimal(18,2))) AS dias_promedio_respuesta,
-                COUNT(DISTINCT reclamo_id) AS total_om
+                COUNT(DISTINCT reclamo_id) AS total_om,
+                SUM(CASE WHEN dias_respuesta_sponsor IS NOT NULL THEN 1 ELSE 0 END) AS om_con_respuesta
             FROM vw_om_reporte_base
-            WHERE dias_respuesta_sponsor IS NOT NULL
-            GROUP BY sponsor_username, sponsor_nombre
+            WHERE ISNULL(sponsor_nombre,'') <> ''
+            GROUP BY sponsor_nombre
+            HAVING SUM(CASE WHEN dias_respuesta_sponsor IS NOT NULL THEN 1 ELSE 0 END) > 0
             ORDER BY dias_promedio_respuesta DESC
         """, [], "predefinido_vista"
 
-    if pregunta_norm in (
+    _kw_demora_proceso = any(x in pregunta_norm for x in [
         "promedio de dias de respuesta por proceso",
         "dias promedio de respuesta por proceso",
-        "que proceso tiene mayor demora promedio de respuesta",
-    ):
+        "que proceso tiene mayor demora",
+        "que area tiene mayor demora",
+        "que area es la mas demorada",
+        "que proceso es el mas demorado",
+        "area mas demorada",
+        "proceso mas demorado",
+        "tiempo de respuesta por proceso",
+        "tiempo de respuesta por area",
+        "demora por proceso",
+        "demora por area",
+        "tarda mas en responder",
+        "demoran mas en responder",
+    ])
+    if _kw_demora_proceso and not any(x in pregunta_norm for x in ["sponsor", "cliente", "usuario"]):
         return """
             SELECT TOP 100
                 ISNULL(proceso, 'SIN PROCESO') AS proceso,
                 AVG(CAST(dias_respuesta_sponsor AS decimal(18,2))) AS dias_promedio_respuesta,
-                COUNT(DISTINCT reclamo_id) AS total_om
+                COUNT(DISTINCT reclamo_id) AS total_om,
+                SUM(CASE WHEN dias_respuesta_sponsor IS NOT NULL THEN 1 ELSE 0 END) AS om_con_respuesta
             FROM vw_om_reporte_base
-            WHERE dias_respuesta_sponsor IS NOT NULL
+            WHERE ISNULL(proceso,'') <> ''
             GROUP BY ISNULL(proceso, 'SIN PROCESO')
+            HAVING SUM(CASE WHEN dias_respuesta_sponsor IS NOT NULL THEN 1 ELSE 0 END) > 0
             ORDER BY dias_promedio_respuesta DESC
         """, [], "predefinido_vista"
 
