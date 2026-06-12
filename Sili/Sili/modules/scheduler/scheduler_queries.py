@@ -201,7 +201,7 @@ SQL_SELECT_OVERDUE_TASKS = f"""
       JOIN {TB_USUARIOS} u ON t.usuario_id = u.id
      WHERE t.estado != 'Terminado'
        AND COALESCE(t.notificado,0)=0
-       AND datetime(t.fecha_fin) < datetime('now')
+       AND t.fecha_fin < GETDATE()
 """
 
 SQL_SELECT_DAILY_REPORT_TASKS = f"""
