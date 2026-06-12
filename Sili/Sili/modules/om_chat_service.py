@@ -1309,25 +1309,25 @@ def listar_todos_sponsors(conn) -> dict:
     cur = conn.cursor()
     cur.execute("""
         SELECT
-            proc.nombre  AS proceso,
-            proc.valor   AS proceso_label,
-            sp.nombre    AS identificacion,
+            prc.nombre  AS proceso,
+            prc.valor   AS proceso_label,
+            sp.nombre   AS identificacion,
             UPPER(LTRIM(RTRIM(COALESCE(sp.valor, '')))) AS tipo,
             u.nombre_completo,
             u.username,
             u.email
-        FROM param_values proc
-        JOIN param_groups pg_proc ON pg_proc.id = proc.group_id
-        JOIN param_values sp      ON sp.parent_id = proc.id
-        JOIN param_groups pg_sp   ON pg_sp.id = sp.group_id
+        FROM param_values prc
+        JOIN param_groups pg_prc ON pg_prc.id = prc.group_id
+        JOIN param_values sp     ON sp.parent_id = prc.id
+        JOIN param_groups pg_sp  ON pg_sp.id = sp.group_id
         LEFT JOIN usuarios u
                ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(sp.nombre))
-        WHERE pg_proc.nombre = 'RECL_PROCESO'
-          AND pg_sp.nombre   = 'RECL_PROCESO_SPONSOR'
-          AND COALESCE(proc.activo, 1) = 1
-          AND COALESCE(sp.activo, 1)   = 1
+        WHERE pg_prc.nombre = 'RECL_PROCESO'
+          AND pg_sp.nombre  = 'RECL_PROCESO_SPONSOR'
+          AND COALESCE(prc.activo, 1) = 1
+          AND COALESCE(sp.activo, 1)  = 1
           AND UPPER(LTRIM(RTRIM(COALESCE(sp.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
-        ORDER BY proc.nombre,
+        ORDER BY prc.nombre,
           CASE UPPER(LTRIM(RTRIM(COALESCE(sp.valor,''))))
             WHEN 'PRINCIPAL' THEN 1 ELSE 2 END,
           COALESCE(sp.orden, 0), sp.id
