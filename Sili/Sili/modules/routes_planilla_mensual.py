@@ -280,7 +280,10 @@ def planilla_dashboard():
 
     # Listas para combos
     departamentos_list = sorted({t["depto"] for t in tareas if t.get("depto")})
-    responsables_list  = sorted({t["responsable"] for t in tareas if t.get("responsable")})
+
+    # responsables_list filtrado por departamento seleccionado (si aplica)
+    tareas_para_resp = tareas if not depto_sel else [t for t in tareas if (t.get("depto") or "") == depto_sel]
+    responsables_list = sorted({t["responsable"] for t in tareas_para_resp if t.get("responsable")})
 
     # ===== Filtros de vista =====
     if freq != "todos":
