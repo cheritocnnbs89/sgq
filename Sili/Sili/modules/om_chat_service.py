@@ -1338,11 +1338,13 @@ def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
         ORDER BY COALESCE(pv.orden, 0), pv.nombre
     """, (f"%{proceso_buscado}%", f"%{proceso_buscado}%"))
     proceso_row = cur.fetchone()
+    log.info("[om_chat][sponsor] buscando proceso='%s' → encontrado=%s", proceso_buscado, proceso_row is not None)
     if not proceso_row:
         return {"encontrado": False, "proceso": proceso_buscado}
 
     proceso_id   = proceso_row["id"]
     proceso_name = proceso_row["valor"] or proceso_row["nombre"]
+    log.info("[om_chat][sponsor] proceso_id=%s nombre=%s", proceso_id, proceso_name)
 
     # 2. Buscar sponsors PRINCIPAL/BACKUP (hijos de ese proceso)
     cur.execute("""
@@ -1490,7 +1492,11 @@ def om_chat_responder(
     try:
         # 0a. Consulta de sponsor por proceso (param_values, relación padre-hijo)
         # Va ANTES que el check conceptual porque "quien es el sponsor" está en ambos
-        resultado_sponsor = buscar_sponsor_proceso(conn, pregunta)
+        try:
+            resultado_sponsor = buscar_sponsor_proceso(conn, pregunta)
+        except Exception as _exc_sp:
+            log.error("[om_chat] buscar_sponsor_proceso error: %s", _exc_sp, exc_info=True)
+            resultado_sponsor = None
         if resultado_sponsor is not None:
             respuesta = formatear_respuesta_sponsor(resultado_sponsor)
             return {
