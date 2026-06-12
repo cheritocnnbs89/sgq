@@ -1304,6 +1304,61 @@ def responder_simple(conn, pregunta: str, data: list[dict], modulo="om"):
     return "Estos son los principales resultados:\n" + "\n".join(filas)
 
 
+def listar_todos_sponsors(conn) -> dict:
+    """Lista todos los procesos con sus sponsors PRINCIPAL y BACKUP."""
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT
+            proc.nombre  AS proceso,
+            proc.valor   AS proceso_label,
+            sp.nombre    AS identificacion,
+            UPPER(LTRIM(RTRIM(COALESCE(sp.valor, '')))) AS tipo,
+            u.nombre_completo,
+            u.username,
+            u.email
+        FROM param_values proc
+        JOIN param_groups pg_proc ON pg_proc.id = proc.group_id
+        JOIN param_values sp      ON sp.parent_id = proc.id
+        JOIN param_groups pg_sp   ON pg_sp.id = sp.group_id
+        LEFT JOIN usuarios u
+               ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(sp.nombre))
+        WHERE pg_proc.nombre = 'RECL_PROCESO'
+          AND pg_sp.nombre   = 'RECL_PROCESO_SPONSOR'
+          AND COALESCE(proc.activo, 1) = 1
+          AND COALESCE(sp.activo, 1)   = 1
+          AND UPPER(LTRIM(RTRIM(COALESCE(sp.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
+        ORDER BY proc.nombre,
+          CASE UPPER(LTRIM(RTRIM(COALESCE(sp.valor,''))))
+            WHEN 'PRINCIPAL' THEN 1 ELSE 2 END,
+          COALESCE(sp.orden, 0), sp.id
+    """)
+    rows = cur.fetchall()
+
+    # Agrupar por proceso
+    procesos = {}
+    for r in rows:
+        key = r["proceso_label"] or r["proceso"]
+        if key not in procesos:
+            procesos[key] = []
+        nombre = r["nombre_completo"] or r["username"] or r["identificacion"]
+        procesos[key].append({"tipo": r["tipo"], "nombre": nombre, "email": r["email"] or ""})
+
+    return {"encontrado": True, "todos": procesos}
+
+
+def formatear_todos_sponsors(resultado: dict) -> str:
+    todos = resultado.get("todos", {})
+    if not todos:
+        return "No encontré ningún sponsor configurado en el sistema."
+    lineas = ["**Sponsors configurados por proceso:**\n"]
+    for proceso, sponsors in todos.items():
+        lineas.append(f"**{proceso}**")
+        for s in sponsors:
+            email = f" ({s['email']})" if s["email"] else ""
+            lineas.append(f"  - {s['tipo']}: {s['nombre']}{email}")
+    return "\n".join(lineas)
+
+
 def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
     """
     Detecta preguntas sobre sponsor de un proceso/área y consulta param_values.
@@ -1490,9 +1545,19 @@ def om_chat_responder(
     source = "desconocido"
 
     try:
-        # 0a. Consulta de sponsor por proceso (param_values, relación padre-hijo)
-        # Va ANTES que el check conceptual porque "quien es el sponsor" está en ambos
+        # 0a. Sponsor: listar todos o buscar por proceso
+        _pn = pregunta_norm
+        _es_lista_sponsors = any(x in _pn for x in [
+            "listame los sponsor", "lista los sponsor", "listar sponsor",
+            "todos los sponsor", "que sponsors hay", "cuales son los sponsor",
+            "dame los sponsor", "sponsors configurados", "listame los responsables",
+        ])
         try:
+            if _es_lista_sponsors:
+                resultado_sponsor = listar_todos_sponsors(conn)
+                respuesta = formatear_todos_sponsors(resultado_sponsor)
+                return {"ok": True, "source": "sponsor_params", "rows": [], "respuesta": respuesta}
+
             resultado_sponsor = buscar_sponsor_proceso(conn, pregunta)
         except Exception as _exc_sp:
             log.error("[om_chat] buscar_sponsor_proceso error: %s", _exc_sp, exc_info=True)
