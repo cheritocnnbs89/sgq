@@ -9317,6 +9317,76 @@ Reglas:
             current_app.logger.error("api_om_analizar_descripcion error: %s", exc)
             return jsonify(ok=False, error="No se pudo analizar en este momento."), 500
 
+    @app.route("/api/om/mejorar-descripcion", methods=["POST"])
+    @require_login
+    def api_om_mejorar_descripcion():
+        """Reescribe la descripción de una OM de forma profesional con IA."""
+        data      = request.get_json(silent=True) or {}
+        texto     = (data.get("texto") or "").strip()
+        motivo    = (data.get("motivo") or "").strip()
+        submotivo = (data.get("submotivo") or "").strip()
+
+        if not texto or len(texto) < 10:
+            return jsonify(ok=False, error="Escribe una descripción antes de mejorar."), 400
+
+        try:
+            from openai import OpenAI
+            import os
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+            ctx = ""
+            if motivo:
+                ctx = f"\nMotivo: {motivo}"
+                if submotivo:
+                    ctx += f" / {submotivo}"
+
+            prompt = f"""Eres un experto en gestión de calidad ISO 9001. Reescribe la siguiente descripción de una Oportunidad de Mejora (OM) para que cumpla estos 8 criterios:
+
+1. Describe claramente qué ocurrió
+2. Se enfoca en el proceso, NO culpa personas ni áreas
+3. La fecha/contexto es coherente
+4. Indica el impacto causado (cliente, producto u operación)
+5. Es consistente con el motivo/proceso
+6. El sponsor puede entenderlo sin contexto adicional
+7. Permite intuir una posible causa raíz
+8. Redacción profesional, objetiva y en tercera persona{ctx}
+
+Descripción original:
+\"\"\"{texto}\"\"\"
+
+Reglas de reescritura:
+- NO menciones nombres de personas ni uses frases como "no sabe trabajar", "no cumplió", "culpa de..."
+- Usa lenguaje técnico y objetivo: "Se identificó un retraso en...", "El proceso de... presentó..."
+- Mantén los hechos concretos (fechas, productos, cantidades) del texto original
+- Máximo 3 oraciones
+
+Responde SOLO con JSON:
+{{"descripcion_mejorada": "...", "cambios": ["cambio 1 aplicado", "cambio 2 aplicado"]}}"""
+
+            resp = client.chat.completions.create(
+                model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+                messages=[
+                    {"role": "system", "content": "Responde únicamente con JSON válido."},
+                    {"role": "user",   "content": prompt},
+                ],
+                max_tokens=400,
+                temperature=0.3,
+            )
+            import json as _json
+            raw = resp.choices[0].message.content.strip()
+            if raw.startswith("```"):
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+            result = _json.loads(raw.strip())
+            return jsonify(ok=True,
+                           descripcion_mejorada=result.get("descripcion_mejorada", ""),
+                           cambios=result.get("cambios", []))
+
+        except Exception as exc:
+            current_app.logger.error("api_om_mejorar_descripcion error: %s", exc)
+            return jsonify(ok=False, error="No se pudo mejorar en este momento."), 500
+
     @app.route("/api/om-chat/debug-sponsor", methods=["GET"])
     @require_login
     def api_om_chat_debug_sponsor():

@@ -5314,6 +5314,136 @@ if (first.codigo_om && first.estado_global) {
                 sugDiv.appendChild(document.createTextNode(' ' + sug));
                 panel.appendChild(sugDiv);
             }
+
+            // Botón "Mejorar con IA"
+            var mejoraBtnWrap = document.createElement('div');
+            mejoraBtnWrap.className = 'ia-mejora-btn-wrap';
+            var btnMejorar = document.createElement('button');
+            btnMejorar.type = 'button';
+            btnMejorar.className = 'btn-om-ia-analizar';
+            var icoMejorar = document.createElement('i');
+            icoMejorar.className = 'bi bi-magic';
+            btnMejorar.appendChild(icoMejorar);
+            btnMejorar.appendChild(document.createTextNode(' Mejorar con IA'));
+            mejoraBtnWrap.appendChild(btnMejorar);
+            panel.appendChild(mejoraBtnWrap);
+
+            // Panel de sugerencia de mejora (oculto al inicio)
+            var mejoraPanel = document.createElement('div');
+            mejoraPanel.className = 'om-ia-mejora d-none';
+            panel.appendChild(mejoraPanel);
+
+            btnMejorar.addEventListener('click', function () {
+                var textoActual = (textarea.value || '').trim();
+                if (!textoActual) { return; }
+
+                var form2      = btn.closest('form') || document.querySelector('form');
+                var motivo2    = (form2 && form2.querySelector('[name="tipo_reclamo"]') ? form2.querySelector('[name="tipo_reclamo"]').value : '').trim();
+                var submotivo2 = (form2 && form2.querySelector('[name="subtipo"]')      ? form2.querySelector('[name="subtipo"]').value      : '').trim();
+
+                btnMejorar.disabled = true;
+                btnMejorar.innerHTML = '';
+                btnMejorar.appendChild(document.createTextNode('Mejorando…'));
+
+                mejoraPanel.className = 'om-ia-mejora';
+                mejoraPanel.innerHTML = '';
+                var loadMej = document.createElement('span');
+                loadMej.className = 'ia-msg-info';
+                loadMej.textContent = '✨ Generando versión mejorada…';
+                mejoraPanel.appendChild(loadMej);
+
+                fetch('/api/om/mejorar-descripcion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ texto: textoActual, motivo: motivo2, submotivo: submotivo2 }),
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (mdata) {
+                    mejoraPanel.innerHTML = '';
+                    if (!mdata.ok) {
+                        var errEl = document.createElement('span');
+                        errEl.className = 'ia-msg-error';
+                        errEl.textContent = mdata.error || 'Error al mejorar.';
+                        mejoraPanel.appendChild(errEl);
+                        return;
+                    }
+                    var descMejorada = mdata.descripcion_mejorada || '';
+                    var cambios      = mdata.cambios || [];
+
+                    // Label
+                    var lbl = document.createElement('div');
+                    lbl.className = 'ia-mejora-label';
+                    var lIcon = document.createElement('i');
+                    lIcon.className = 'bi bi-stars';
+                    lbl.appendChild(lIcon);
+                    lbl.appendChild(document.createTextNode(' Versión mejorada'));
+                    mejoraPanel.appendChild(lbl);
+
+                    // Texto mejorado
+                    var txEl = document.createElement('div');
+                    txEl.className = 'ia-mejora-texto';
+                    txEl.textContent = descMejorada;
+                    mejoraPanel.appendChild(txEl);
+
+                    // Lista de cambios
+                    if (cambios.length) {
+                        var camDiv = document.createElement('div');
+                        camDiv.className = 'ia-cambios';
+                        cambios.forEach(function (c) {
+                            var ci = document.createElement('div');
+                            ci.className = 'ia-cambio-item';
+                            ci.textContent = '• ' + c;
+                            camDiv.appendChild(ci);
+                        });
+                        mejoraPanel.appendChild(camDiv);
+                    }
+
+                    // Botones aceptar / descartar
+                    var mbtns = document.createElement('div');
+                    mbtns.className = 'ia-mejora-btns';
+
+                    var btnUsar = document.createElement('button');
+                    btnUsar.type = 'button';
+                    btnUsar.className = 'btn-om-ia-usar btn-om-ia-usar-si';
+                    btnUsar.textContent = '✅ Usar esta descripción';
+                    btnUsar.addEventListener('click', function () {
+                        textarea.value = descMejorada;
+                        mejoraPanel.className = 'om-ia-mejora d-none';
+                        panel.classList.add('d-none');
+                    });
+
+                    var btnDesc = document.createElement('button');
+                    btnDesc.type = 'button';
+                    btnDesc.className = 'btn-om-ia-usar btn-om-ia-usar-no';
+                    btnDesc.textContent = '✖ Descartar';
+                    btnDesc.addEventListener('click', function () {
+                        mejoraPanel.className = 'om-ia-mejora d-none';
+                    });
+
+                    mbtns.appendChild(btnUsar);
+                    mbtns.appendChild(btnDesc);
+                    mejoraPanel.appendChild(mbtns);
+                })
+                .catch(function () {
+                    mejoraPanel.innerHTML = '';
+                    var errEl2 = document.createElement('span');
+                    errEl2.className = 'ia-msg-error';
+                    errEl2.textContent = 'Error de conexión al mejorar.';
+                    mejoraPanel.appendChild(errEl2);
+                })
+                .finally(function () {
+                    btnMejorar.disabled = false;
+                    btnMejorar.innerHTML = '';
+                    var icoM2 = document.createElement('i');
+                    icoM2.className = 'bi bi-magic';
+                    btnMejorar.appendChild(icoM2);
+                    btnMejorar.appendChild(document.createTextNode(' Mejorar con IA'));
+                });
+            });
         })
         .catch(function () {
             setPanelMsg('Error de conexión. Intenta de nuevo.', 'ia-msg-error');
