@@ -1483,17 +1483,8 @@ def om_chat_responder(
     source = "desconocido"
 
     try:
-        # 0a. Preguntas conceptuales/definicionales (sin SQL)
-        if es_pregunta_conceptual(pregunta_norm):
-            respuesta = responder_conceptual(pregunta, historial)
-            return {
-                "ok": True,
-                "source": "conceptual",
-                "rows": [],
-                "respuesta": respuesta,
-            }
-
-        # 0b. Consulta de sponsor por proceso (param_values, relación padre-hijo)
+        # 0a. Consulta de sponsor por proceso (param_values, relación padre-hijo)
+        # Va ANTES que el check conceptual porque "quien es el sponsor" está en ambos
         resultado_sponsor = buscar_sponsor_proceso(conn, pregunta)
         if resultado_sponsor is not None:
             respuesta = formatear_respuesta_sponsor(resultado_sponsor)
@@ -1501,6 +1492,16 @@ def om_chat_responder(
                 "ok": True,
                 "source": "sponsor_params",
                 "rows": resultado_sponsor.get("sponsors", []),
+                "respuesta": respuesta,
+            }
+
+        # 0b. Preguntas conceptuales/definicionales (sin SQL)
+        if es_pregunta_conceptual(pregunta_norm):
+            respuesta = responder_conceptual(pregunta, historial)
+            return {
+                "ok": True,
+                "source": "conceptual",
+                "rows": [],
                 "respuesta": respuesta,
             }
 
