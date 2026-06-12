@@ -1283,6 +1283,75 @@ def responder_simple(conn, pregunta: str, data: list[dict], modulo="om"):
     return "Estos son los principales resultados:\n" + "\n".join(filas)
 
 
+PREGUNTAS_CONCEPTUALES = [
+    "que es una om", "que es om", "que son las om", "que son om",
+    "que es una oportunidad de mejora", "que son las oportunidades de mejora",
+    "para que sirve una om", "como funciona una om", "como funciona el modulo",
+    "que hace este modulo", "como se usa el asistente", "que puedes hacer",
+    "que puedo preguntar", "que tipos de consultas puedo hacer",
+    "como se crea una om", "quien crea una om", "quien aprueba una om",
+    "que estados tiene una om", "cuales son los estados de una om",
+    "que es un sponsor", "quien es el sponsor", "que hace el sponsor",
+    "que es una accion de control", "que es una accion correctiva",
+    "que es la trazabilidad", "que es el flujo de una om",
+    "ayuda", "help", "como te uso", "instrucciones",
+]
+
+
+def es_pregunta_conceptual(pregunta_norm: str) -> bool:
+    """Detecta preguntas definicionales que no requieren SQL."""
+    for patron in PREGUNTAS_CONCEPTUALES:
+        if patron in pregunta_norm:
+            return True
+    # Patrones adicionales
+    inicio = ["que es", "que son", "como funciona", "para que sirve",
+              "como se", "quien es", "quien crea", "quien aprueba",
+              "que hace", "cuales son los", "que tipos"]
+    return any(pregunta_norm.startswith(p) for p in inicio)
+
+
+def responder_conceptual(pregunta: str, historial: list[dict] | None = None) -> str:
+    """Responde preguntas conceptuales sobre el módulo OM usando OpenAI en modo chat."""
+    try:
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        msgs = [
+            {
+                "role": "system",
+                "content": (
+                    "Eres el asistente del módulo de Oportunidades de Mejora (OM) de QUIMPAC Ecuador. "
+                    "Una OM (Oportunidad de Mejora) es un registro formal de un reclamo, queja o incidencia "
+                    "de cliente que requiere análisis de causa, respuesta técnica y acciones correctivas/de control. "
+                    "El flujo típico es: creación → asignación de sponsor → formación de equipo → "
+                    "análisis → respuesta → aprobación → cierre. "
+                    "Los estados son: Abierto, Cerrado. "
+                    "El sponsor es el responsable principal de gestionar la OM. "
+                    "Las acciones de control son inmediatas; las correctivas atacan la causa raíz. "
+                    "Responde en español, de forma clara y concisa (máximo 150 palabras). "
+                    "No menciones SQL ni términos técnicos."
+                ),
+            }
+        ]
+        for msg in (historial or [])[-6:]:
+            msgs.append({"role": msg["role"], "content": msg["content"]})
+        msgs.append({"role": "user", "content": pregunta})
+
+        completion = client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=msgs,
+            max_tokens=300,
+            temperature=0.3,
+        )
+        return completion.choices[0].message.content.strip()
+    except Exception as exc:
+        log.error("[om_chat] responder_conceptual error: %s", exc)
+        return (
+            "Una **OM (Oportunidad de Mejora)** es un registro formal de un reclamo o incidencia de cliente "
+            "que requiere análisis, respuesta técnica y acciones correctivas. "
+            "Puedes preguntarme: cuántas OM hay abiertas, OM por proceso, acciones por vencer, "
+            "tiempo de respuesta por sponsor, entre otros."
+        )
+
+
 def om_chat_responder(
     pregunta: str,
     user_id: int | None,
@@ -1296,6 +1365,16 @@ def om_chat_responder(
     source = "desconocido"
 
     try:
+        # 0. Preguntas conceptuales/definicionales (sin SQL)
+        if es_pregunta_conceptual(pregunta_norm):
+            respuesta = responder_conceptual(pregunta, historial)
+            return {
+                "ok": True,
+                "source": "conceptual",
+                "rows": [],
+                "respuesta": respuesta,
+            }
+
         if not pregunta_permitida_modulo(conn, pregunta_norm, "om"):
             return {
                 "ok": False,
@@ -1324,7 +1403,17 @@ def om_chat_responder(
 
         # 3. OpenAI genera SQL con contexto de historial
         if not sql:
-            sql_raw = generar_sql_openai(pregunta, historial)
+            try:
+                sql_raw = generar_sql_openai(pregunta, historial)
+            except ValueError:
+                # OpenAI indicó que la pregunta no es de datos → responder conceptualmente
+                respuesta = responder_conceptual(pregunta, historial)
+                return {
+                    "ok": True,
+                    "source": "conceptual_fallback",
+                    "rows": [],
+                    "respuesta": respuesta,
+                }
             sql = normalizar_sql_server(sql_raw)
             sql = validar_sql_solo_select(sql)
             guardar_cache(conn, pregunta_norm, pregunta, sql, user_id)
