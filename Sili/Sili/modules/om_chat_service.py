@@ -1325,44 +1325,49 @@ def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
 
     cur = conn.cursor()
 
-    # 1. Buscar el grupo RECL_PROCESO_SPONSOR
+    # 1. Buscar el proceso en RECL_PROCESO (aquí viven los procesos raíz)
     cur.execute("""
-        SELECT id FROM param_groups WHERE nombre = 'RECL_PROCESO_SPONSOR'
-    """)
-    grupo = cur.fetchone()
-    if not grupo:
-        return None
-    group_id = grupo["id"]
-
-    # 2. Buscar el proceso padre (sin parent_id)
-    cur.execute("""
-        SELECT id, nombre, valor
-        FROM param_values
-        WHERE group_id = ?
-          AND parent_id IS NULL
-          AND UPPER(nombre) LIKE UPPER(?)
-          AND activo = 1
-    """, (group_id, f"%{proceso_buscado}%"))
+        SELECT TOP 1 pv.id, pv.nombre, pv.valor
+        FROM param_values pv
+        JOIN param_groups pg ON pg.id = pv.group_id
+        WHERE pg.nombre = 'RECL_PROCESO'
+          AND COALESCE(pv.activo, 1) = 1
+          AND pv.parent_id IS NULL
+          AND (UPPER(LTRIM(RTRIM(pv.nombre))) LIKE UPPER(?)
+            OR UPPER(LTRIM(RTRIM(pv.valor)))  LIKE UPPER(?))
+        ORDER BY COALESCE(pv.orden, 0), pv.nombre
+    """, (f"%{proceso_buscado}%", f"%{proceso_buscado}%"))
     proceso_row = cur.fetchone()
     if not proceso_row:
         return {"encontrado": False, "proceso": proceso_buscado}
 
     proceso_id   = proceso_row["id"]
-    proceso_name = proceso_row["nombre"]
+    proceso_name = proceso_row["valor"] or proceso_row["nombre"]
 
-    # 3. Buscar hijos (PRINCIPAL y BACKUP) — nombre contiene la cédula (identificacion)
+    # 2. Buscar sponsors PRINCIPAL/BACKUP en RECL_PROCESO_SPONSOR con parent_id = proceso_id
     cur.execute("""
-        SELECT pv.nombre AS id_param, pv.valor AS tipo,
-               u.nombre_completo, u.username, u.email
+        SELECT
+            pv.nombre    AS identificacion,
+            UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) AS tipo,
+            u.nombre_completo,
+            u.username,
+            u.email
         FROM param_values pv
+        JOIN param_groups pg ON pg.id = pv.group_id
         LEFT JOIN usuarios u
-               ON u.identificacion = pv.nombre
-               OR u.username       = pv.nombre
-        WHERE pv.group_id = ?
+               ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
+        WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
+          AND COALESCE(pv.activo, 1) = 1
           AND pv.parent_id = ?
-          AND pv.activo = 1
-        ORDER BY CASE WHEN UPPER(pv.valor) = 'PRINCIPAL' THEN 0 ELSE 1 END
-    """, (group_id, proceso_id))
+          AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
+        ORDER BY
+          CASE UPPER(LTRIM(RTRIM(COALESCE(pv.valor, ''))))
+            WHEN 'PRINCIPAL' THEN 1
+            WHEN 'BACKUP'    THEN 2
+            ELSE 9
+          END,
+          COALESCE(pv.orden, 0), pv.id
+    """, (proceso_id,))
     sponsors = cur.fetchall()
 
     resultado = {
@@ -1371,7 +1376,7 @@ def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
         "sponsors": [],
     }
     for s in sponsors:
-        nombre = s["nombre_completo"] or s["username"] or s["id_param"]
+        nombre = s["nombre_completo"] or s["username"] or s["identificacion"]
         resultado["sponsors"].append({
             "tipo": s["tipo"],
             "nombre": nombre,
