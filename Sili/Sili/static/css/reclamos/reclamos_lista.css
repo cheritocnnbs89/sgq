@@ -2227,3 +2227,45 @@ table.recl-table tbody td {
 #det-creado-por-wrap.d-none {
     display: none !important;
 }
+
+/* ── Botón Analizar con IA ── */
+.btn-om-ia-analizar {
+  font-size: 11px; font-weight: 600;
+  color: #6d28d9; background: #f5f3ff;
+  border: 1px solid #c4b5fd; border-radius: 5px;
+  padding: 3px 10px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px;
+  transition: background .12s, color .12s;
+}
+.btn-om-ia-analizar:hover { background: #ede9fe; color: #4c1d95; }
+.btn-om-ia-analizar:disabled { opacity: .55; cursor: not-allowed; }
+
+/* ── Panel de feedback IA ── */
+.om-ia-feedback {
+  margin-top: 8px; border: 1px solid #c4b5fd;
+  border-radius: 8px; background: #faf5ff;
+  padding: 12px 14px; font-size: 12.5px;
+}
+.om-ia-feedback .ia-score-bar {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.om-ia-feedback .ia-score-num {
+  font-size: 22px; font-weight: 700; color: #6d28d9; min-width: 40px;
+}
+.om-ia-feedback .ia-score-label { font-size: 12px; color: #6b7280; }
+.om-ia-feedback .ia-criterios { margin-bottom: 8px; }
+.om-ia-feedback .ia-criterio {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 4px 0; border-bottom: 1px solid #ede9fe; font-size: 12px;
+}
+.om-ia-feedback .ia-criterio:last-child { border-bottom: none; }
+.om-ia-feedback .ia-ic { font-size: 14px; flex-shrink: 0; }
+.om-ia-feedback .ia-ic-ok   { color: #16a34a; }
+.om-ia-feedback .ia-ic-warn { color: #d97706; }
+.om-ia-feedback .ia-ic-fail { color: #dc2626; }
+.om-ia-feedback .ia-sugerencia {
+  margin-top: 8px; padding: 7px 10px;
+  background: #f0fdf4; border: 1px solid #bbf7d0;
+  border-radius: 6px; font-size: 12px; color: #166534;
+}
+

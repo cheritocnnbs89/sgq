@@ -9244,6 +9244,103 @@ def register_reclamos_routes(app):
                 error=f"No se pudo procesar la pregunta: {e}"
             ), 500
 
+    @app.route("/api/om/analizar-descripcion", methods=["POST"])
+    @require_login
+    def api_om_analizar_descripcion():
+        """Analiza la descripción de una OM con IA y devuelve feedback por criterio."""
+        data      = request.get_json(silent=True) or {}
+        texto     = (data.get("texto") or "").strip()
+        motivo    = (data.get("motivo") or "").strip()
+        submotivo = (data.get("submotivo") or "").strip()
+
+        if not texto or len(texto) < 10:
+            return jsonify(ok=False, error="Escribe una descripción antes de analizar."), 400
+
+        try:
+            from openai import OpenAI
+            import os, json as _json
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+            contexto_motivo = ""
+            if motivo:
+                contexto_motivo = f"\nMotivo seleccionado: {motivo}"
+                if submotivo:
+                    contexto_motivo += f" / {submotivo}"
+
+            prompt = f"""Eres un experto en gestión de calidad ISO 9001. Analiza la siguiente descripción de una Oportunidad de Mejora (OM / reclamo de cliente) y evalúa cada criterio.{contexto_motivo}
+
+Descripción del usuario:
+\"\"\"{texto}\"\"\"
+
+Evalúa estos 7 criterios y responde SOLO con JSON válido:
+{{
+  "puntaje": <número del 1 al 7 de cuántos criterios se cumplen>,
+  "criterios": [
+    {{"id": 1, "texto": "¿Describe claramente qué ocurrió?",              "estado": "ok|warn|fail", "nota": "...breve..."}},
+    {{"id": 2, "texto": "¿Se enfoca en el proceso, no en culpar personas?","estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 3, "texto": "¿Tiene fecha, contexto o evidencia mínima?",      "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 4, "texto": "¿Indica el impacto causado?",                     "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 5, "texto": "¿Permite identificar el proceso responsable?",    "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 6, "texto": "¿El motivo/submotivo parece correcto?",           "estado": "ok|warn|fail", "nota": "..."}},
+    {{"id": 7, "texto": "¿La redacción es profesional y objetiva?",        "estado": "ok|warn|fail", "nota": "..."}}
+  ],
+  "sugerencia": "Una sugerencia concreta de cómo mejorar la descripción (máx 2 oraciones). Si está bien, di que está lista."
+}}
+
+Reglas:
+- "ok" = cumple bien el criterio
+- "warn" = cumple parcialmente o podría mejorar
+- "fail" = no cumple el criterio
+- La nota debe ser muy breve (máx 10 palabras)
+- No inventes información que no esté en el texto"""
+
+            resp = client.chat.completions.create(
+                model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+                messages=[
+                    {"role": "system", "content": "Responde únicamente con JSON válido. Sin explicaciones adicionales."},
+                    {"role": "user",   "content": prompt},
+                ],
+                max_tokens=600,
+                temperature=0.2,
+            )
+            raw = resp.choices[0].message.content.strip()
+            # Limpiar posibles bloques ```json
+            if raw.startswith("```"):
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+            result = _json.loads(raw.strip())
+            return jsonify(ok=True, **result)
+
+        except Exception as exc:
+            current_app.logger.error("api_om_analizar_descripcion error: %s", exc)
+            return jsonify(ok=False, error="No se pudo analizar en este momento."), 500
+
+    @app.route("/api/om-chat/debug-sponsor", methods=["GET"])
+    @require_login
+    def api_om_chat_debug_sponsor():
+        """Diagnóstico temporal: muestra qué encuentra en param_groups/param_values."""
+        from modules.db import get_db as _get_db
+        conn = _get_db()
+        cur = conn.cursor()
+        out = {}
+        try:
+            cur.execute("SELECT TOP 5 id, nombre FROM param_groups WHERE nombre LIKE '%SPONSOR%' OR nombre LIKE '%PROCESO%'")
+            out["grupos"] = [dict(r) for r in cur.fetchall()]
+        except Exception as e:
+            out["grupos_error"] = str(e)
+        try:
+            cur.execute("""
+                SELECT TOP 10 pv.id, pv.nombre, pv.valor, pv.parent_id, pv.activo, pg.nombre AS grupo
+                FROM param_values pv JOIN param_groups pg ON pg.id = pv.group_id
+                WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
+                ORDER BY pv.parent_id, pv.id
+            """)
+            out["sponsor_values"] = [dict(r) for r in cur.fetchall()]
+        except Exception as e:
+            out["sponsor_values_error"] = str(e)
+        return jsonify(out)
+
     @app.route("/api/om-chat/reset", methods=["POST"])
     @require_login
     def api_om_chat_reset():

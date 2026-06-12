@@ -1014,8 +1014,14 @@
                         </div>
 
                         <div class="col-md-12 field-observacion">
-                            <label class="form-label">Descripción / Observación</label>
-                            <textarea name="observacion" class="form-control" rows="3" required></textarea>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label mb-0">Descripción / Observación</label>
+                                <button type="button" id="btn-analizar-desc" class="btn-om-ia-analizar">
+                                    <i class="bi bi-stars"></i> Analizar con IA
+                                </button>
+                            </div>
+                            <textarea name="observacion" id="om-observacion" class="form-control" rows="3" required></textarea>
+                            <div id="om-ia-feedback" class="om-ia-feedback d-none"></div>
                         </div>
 
                         <div class="col-md-12 field-carta-cliente">
