@@ -104,7 +104,7 @@ def start_scheduler(app=None):
                     com = get_db_standalone()
                     try:
                         _log("info", "Worker: Ejecutando notificaciones OM (job diario 08:00)...")
-                        #process_om_notifications(com)
+                        process_om_notifications(com)
                         _log("info", "Worker: process_om_notifications OK")
                     finally:
                         try:
