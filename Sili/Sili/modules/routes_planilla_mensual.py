@@ -260,7 +260,10 @@ def planilla_dashboard():
                d.nombre   AS depto
         FROM plan_tareas t
         JOIN plan_responsables r ON r.id = t.responsable_id
-        JOIN usuarios u ON LOWER(LTRIM(RTRIM(u.username))) = LOWER(LTRIM(RTRIM(r.nombre)))
+        JOIN usuarios u ON (
+            LOWER(LTRIM(RTRIM(u.username)))        = LOWER(LTRIM(RTRIM(r.nombre)))
+         OR LOWER(LTRIM(RTRIM(u.nombre_completo))) = LOWER(LTRIM(RTRIM(r.nombre)))
+        )
         LEFT JOIN departamentos d ON d.id = t.departamento_id
         WHERE t.activo = 1
           AND COALESCE(u.disabled, 0) = 0
