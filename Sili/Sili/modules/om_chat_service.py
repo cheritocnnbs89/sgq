@@ -1307,18 +1307,21 @@ def responder_simple(conn, pregunta: str, data: list[dict], modulo="om"):
 def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
     """
     Detecta preguntas sobre sponsor de un proceso/área y consulta param_values.
-    Maneja relación padre (proceso) → hijos (PRINCIPAL/BACKUP con username).
+    Maneja relación padre (proceso) → hijos (PRINCIPAL/BACKUP con username/cedula).
     """
     texto = (pregunta_original or "").strip()
     # Detectar patrón: "quien es el sponsor de X" / "sponsor de X" / "sponsors de X"
     m = re.search(
-        r"(?:quien\s+es\s+(?:el\s+)?sponsor|sponsors?\s+de|responsable\s+de)\s+(?:el\s+area\s+de\s+|el\s+proceso\s+de\s+|la\s+)?(.+)",
+        r"(?:quien\s+es\s+(?:el\s+)?sponsor|sponsors?\s+de|responsable\s+de)\s+"
+        r"(?:el\s+area\s+de\s+|el\s+proceso\s+de\s+|el\s+departamento\s+de\s+|la\s+area\s+de\s+|de\s+la\s+area\s+|de\s+)?(.+)",
         texto, re.I
     )
     if not m:
         return None
 
-    proceso_buscado = m.group(1).strip().rstrip("?").upper()
+    # Limpiar "de " inicial que puede quedar en el grupo
+    proceso_buscado = m.group(1).strip().rstrip("?")
+    proceso_buscado = re.sub(r"^de\s+", "", proceso_buscado, flags=re.I).strip().upper()
 
     cur = conn.cursor()
 
@@ -1347,12 +1350,14 @@ def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
     proceso_id   = proceso_row["id"]
     proceso_name = proceso_row["nombre"]
 
-    # 3. Buscar hijos (PRINCIPAL y BACKUP) — nombre contiene el username/cedula
+    # 3. Buscar hijos (PRINCIPAL y BACKUP) — nombre contiene la cédula (identificacion)
     cur.execute("""
-        SELECT pv.nombre AS username_param, pv.valor AS tipo,
-               u.nombre_completo, u.email
+        SELECT pv.nombre AS id_param, pv.valor AS tipo,
+               u.nombre_completo, u.username, u.email
         FROM param_values pv
-        LEFT JOIN usuarios u ON u.username = pv.nombre OR u.cedula = pv.nombre
+        LEFT JOIN usuarios u
+               ON u.identificacion = pv.nombre
+               OR u.username       = pv.nombre
         WHERE pv.group_id = ?
           AND pv.parent_id = ?
           AND pv.activo = 1
@@ -1366,7 +1371,7 @@ def buscar_sponsor_proceso(conn, pregunta_original: str) -> dict | None:
         "sponsors": [],
     }
     for s in sponsors:
-        nombre = s["nombre_completo"] or s["username_param"]
+        nombre = s["nombre_completo"] or s["username"] or s["id_param"]
         resultado["sponsors"].append({
             "tipo": s["tipo"],
             "nombre": nombre,
