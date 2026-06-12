@@ -1582,6 +1582,17 @@ def svc_obtener_tarea_para_editar(user, task_id: int):
             "redirect_kwargs": {},
         }
 
+    # Tareas originadas desde Bandeja Soporte: solo admin puede editar
+    es_de_soporte = bool(tarea.get("inbox_id"))
+    if es_de_soporte and user["rol"] != "admin":
+        return {
+            "ok": False,
+            "message": "Esta tarea fue creada automáticamente desde la Bandeja de Soporte y solo puede ser modificada por un administrador.",
+            "category": "warning",
+            "redirect_endpoint": "listar_tareas",
+            "redirect_kwargs": {},
+        }
+
     es_responsable = repo_es_responsable_tarea(task_id, user["id"])
     editable = (user["rol"] == "admin") or (es_responsable and tarea["estado"] not in ESTADOS_NO_EDITABLES)
 
@@ -1602,6 +1613,7 @@ def svc_obtener_tarea_para_editar(user, task_id: int):
         "usuario": user["username"],
         "rol": user["rol"],
         "is_admin": (user["rol"] == "admin"),
+        "es_de_soporte": es_de_soporte,
         "solicitantes": repo_obtener_solicitantes(),
         "tipos_tarea": repo_obtener_tipos_tarea(),
         "active_page": "tareas",
@@ -1614,6 +1626,16 @@ def svc_guardar_edicion_tarea(user, task_id: int, form):
         return {
             "ok": False,
             "message": "Tarea no encontrada.",
+            "category": "warning",
+            "redirect_endpoint": "listar_tareas",
+            "redirect_kwargs": {},
+        }
+
+    # Bloqueo tareas de Bandeja Soporte para no-admin
+    if bool(tarea.get("inbox_id")) and user["rol"] != "admin":
+        return {
+            "ok": False,
+            "message": "Esta tarea fue creada automáticamente desde la Bandeja de Soporte y solo puede ser modificada por un administrador.",
             "category": "warning",
             "redirect_endpoint": "listar_tareas",
             "redirect_kwargs": {},

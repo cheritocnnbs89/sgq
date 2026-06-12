@@ -297,22 +297,27 @@ SQL_FINALIZAR_ACCION = f"""
 """
 
 SQL_OBTENER_TAREA_EDICION = f"""
-    SELECT id,
-           titulo,
-           descripcion,
-           estado,
-           fecha_inicio,
-           fecha_compromiso,
-           fecha_cierre_real,
-           usuario_id,
-           fecha_fin,
-           creador_id,
-           solicitante_id,
-           tipo_tarea_id,
-           porcentaje_avance,
-           empresa_id
-    FROM {TABLA_TAREAS}
-    WHERE id = ?
+    SELECT t.id,
+           t.titulo,
+           t.descripcion,
+           t.estado,
+           t.fecha_inicio,
+           t.fecha_compromiso,
+           t.fecha_cierre_real,
+           t.usuario_id,
+           t.fecha_fin,
+           t.creador_id,
+           t.solicitante_id,
+           t.tipo_tarea_id,
+           t.porcentaje_avance,
+           t.empresa_id,
+           ei.id          AS inbox_id,
+           ei.from_name   AS inbox_from_name,
+           ei.from_email  AS inbox_from_email,
+           ei.subject     AS inbox_subject
+    FROM {TABLA_TAREAS} t
+    LEFT JOIN email_tickets_inbox ei ON ei.tarea_id = t.id
+    WHERE t.id = ?
 """
 
 SQL_ES_RESPONSABLE_TAREA = f"""

@@ -15,6 +15,21 @@
 
 <h4 class="mb-3">Editar tarea</h4>
 
+{% if es_de_soporte %}
+<div class="alert alert-warning d-flex align-items-start gap-2 mb-3" role="alert">
+  <i class="bi bi-shield-lock-fill fs-5 mt-1"></i>
+  <div>
+    <strong>Tarea protegida — Bandeja de Soporte</strong><br>
+    Esta tarea fue creada automáticamente a partir de un correo recibido en la bandeja de soporte TI.
+    {% if is_admin %}
+      Como administrador puedes modificarla.
+    {% else %}
+      Solo los administradores pueden modificarla para mantener la trazabilidad.
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
 <div class="card card-custom shadow-sm">
   <div class="card-body">
     {% with messages = get_flashed_messages(with_categories=true) %}
