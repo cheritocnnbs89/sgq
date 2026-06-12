@@ -1552,6 +1552,7 @@ def om_chat_responder(
             "todos los sponsor", "que sponsors hay", "cuales son los sponsor",
             "dame los sponsor", "sponsors configurados", "listame los responsables",
         ])
+        log.info("[om_chat] pregunta_norm='%s' | es_lista_sponsors=%s", _pn, _es_lista_sponsors)
         try:
             if _es_lista_sponsors:
                 resultado_sponsor = listar_todos_sponsors(conn)
@@ -1560,7 +1561,7 @@ def om_chat_responder(
 
             resultado_sponsor = buscar_sponsor_proceso(conn, pregunta)
         except Exception as _exc_sp:
-            log.error("[om_chat] buscar_sponsor_proceso error: %s", _exc_sp, exc_info=True)
+            log.error("[om_chat] sponsor error: %s", _exc_sp, exc_info=True)
             resultado_sponsor = None
         if resultado_sponsor is not None:
             respuesta = formatear_respuesta_sponsor(resultado_sponsor)
