@@ -256,8 +256,10 @@ def planilla_dashboard():
     base_sql = """
         SELECT t.id, t.nombre, t.frecuencia, t.activo,
                t.departamento_id, t.dia_semana, t.dia_mes,
-               r.nombre   AS responsable,
-               d.nombre   AS depto
+               u.username                                              AS responsable,
+               COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''),
+                        u.username)                                    AS responsable_display,
+               d.nombre                                                AS depto
         FROM plan_tareas t
         JOIN plan_responsables r ON r.id = t.responsable_id
         JOIN usuarios u ON (
@@ -285,8 +287,13 @@ def planilla_dashboard():
     departamentos_list = sorted({t["depto"] for t in tareas if t.get("depto")})
 
     # responsables_list filtrado por departamento seleccionado (si aplica)
+    # Usa username (responsable) como clave de filtro pero muestra nombre_completo (responsable_display)
     tareas_para_resp = tareas if not depto_sel else [t for t in tareas if (t.get("depto") or "") == depto_sel]
-    responsables_list = sorted({t["responsable"] for t in tareas_para_resp if t.get("responsable")})
+    # dict username → display para evitar duplicados (Jorge Chávez / jchavez = misma persona)
+    _resp_map = {t["responsable"]: t.get("responsable_display") or t["responsable"]
+                 for t in tareas_para_resp if t.get("responsable")}
+    responsables_list = sorted(_resp_map.keys())           # claves = usernames únicos
+    responsables_display = _resp_map                        # pasado al template
 
     # ===== Filtros de vista =====
     if freq != "todos":
@@ -318,7 +325,8 @@ def planilla_dashboard():
             kpis_freq={"diario": _empty_kf, "semanal": _empty_kf, "mensual": _empty_kf},
             top_high=[], top_low=[], dept_rows=[],
             freq=freq, departamentos_list=departamentos_list,
-            responsables_list=responsables_list, depto_sel=depto_sel,
+            responsables_list=responsables_list, responsables_display=responsables_display,
+            depto_sel=depto_sel,
             resp_sel=resp_sel, prev_y=prev_y, prev_m=prev_m,
             next_y=next_y, next_m=next_m, summary_rows=[],
             proj_rows=[], proj_cols=[],
@@ -785,6 +793,7 @@ def planilla_dashboard():
         freq=freq,
         departamentos_list=departamentos_list,
         responsables_list=responsables_list,
+        responsables_display=responsables_display,
         depto_sel=depto_sel,
         resp_sel=resp_sel,
         prev_y=prev_y, prev_m=prev_m, next_y=next_y, next_m=next_m,

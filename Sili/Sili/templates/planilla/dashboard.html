@@ -46,7 +46,7 @@
       <select id="respFilter" class="form-select form-select-sm dashboard-minw-220">
         <option value="" {{ 'selected' if not resp_sel }}>Todos</option>
         {% for r in responsables_list %}
-        <option value="{{ r }}" {{ 'selected' if r==resp_sel }}>{{ r }}</option>
+        <option value="{{ r }}" {{ 'selected' if r==resp_sel }}>{{ responsables_display.get(r, r) }}</option>
         {% endfor %}
       </select>
     </div>
