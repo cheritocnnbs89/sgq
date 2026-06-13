@@ -581,6 +581,57 @@ WHERE COALESCE(g.disabled,0)=0
 ORDER BY g.fecha_vencimiento ASC, g.id DESC
 """
 
+# ── Contratos que terminan exactamente en N días ──────────────────────────
+SQL_CONTRATOS_VENCEN_EN_DIAS = f"""
+SELECT
+    c.id AS contrato_id,
+    c.pedido,
+    c.proveedor,
+    c.objeto,
+    c.valor_contrato,
+    c.tipo_pp,
+    c.fecha_suscripcion,
+    c.fecha_terminacion,
+    c.usuario_solicitante_id,
+    c.usuario_compras_id,
+    c.usuario_compras_nombre,
+    c.aprobado_jefe_por,
+    DATEDIFF(
+        DAY,
+        CAST(GETDATE() AS date),
+        CAST(c.fecha_terminacion AS date)
+    ) AS dias_para_terminar
+FROM {TABLA_CONTRATOS} c
+WHERE COALESCE(c.disabled, 0) = 0
+  AND c.fecha_terminacion IS NOT NULL
+  AND DATEDIFF(DAY, CAST(GETDATE() AS date), CAST(c.fecha_terminacion AS date)) = ?
+  AND COALESCE(c.aprob_gf, 0) = 0
+ORDER BY c.fecha_terminacion ASC, c.id DESC
+"""
+
+# ── Jefes activos de un departamento (por nombre, case-insensitive) ────────
+SQL_JEFES_POR_NOMBRE_DEPARTAMENTO = f"""
+SELECT u.id AS user_id,
+       COALESCE(NULLIF(TRIM(u.nombre_completo),''), u.username) AS nombre,
+       TRIM(u.email) AS email
+FROM {TABLA_USUARIOS} u
+JOIN {TABLA_DEPARTAMENTOS} d ON d.id = u.departamento_id
+WHERE LOWER(TRIM(COALESCE(d.nombre, ''))) = LOWER(?)
+  AND LOWER(TRIM(COALESCE(u.rol, ''))) = 'jefe'
+  AND COALESCE(u.disabled, 0) = 0
+ORDER BY u.id
+"""
+
+# ── Template contrato por vencer ────────────────────────────────────────────
+SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_EXISTS = """
+SELECT TOP 1 1 AS ok FROM notify_templates WHERE [key] = ?
+"""
+
+SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT = """
+INSERT INTO notify_templates ([key], tipo, subject, html, text)
+VALUES (?, ?, ?, ?, ?)
+"""
+
 SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT = """
 SELECT TOP 1 1 AS ok
 FROM dbo.notify_queue

@@ -11,6 +11,19 @@ DIAS_AVISO_VENCIMIENTO_GARANTIA = 15
 
 TIPO_GARANTIA_VENCE_15 = "garantia"
 TPL_GARANTIA_VENCE_15 = "garantia_vence_15"
+
+# Notificaciones multi-día garantías (20, 10, 5, 0)
+DIAS_AVISO_GARANTIA = [20, 10, 5, 0]
+TIPO_GARANTIA_VENCE_N  = "garantia_vence"
+TPL_GARANTIA_VENCE_N   = "garantia_vence_15"   # reutilizamos el mismo template HTML
+
+# Notificaciones de contratos por vencer (15 días)
+TIPO_CONTRATO_VENCE_15 = "contrato_vence_15"
+TPL_CONTRATO_VENCE_15  = "contrato_vence_15"
+
+# Departamentos destino de notificaciones de contratos/garantías
+DEPT_COMPRAS       = "compras e importaciones qp"
+DEPT_FINANCIERO    = "financiero qp"
  
 TIPO_PAGARE = "PAGARE"
 TIPO_POLIZA = "POLIZA"

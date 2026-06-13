@@ -58,6 +58,10 @@ from .contratos_querys import (
     SQL_NOTIFY_QUEUE_INSERT_GARANTIA,
     SQL_UPDATE_FINANZAS_CONTRATO,
     SQL_USUARIO_DEPT_NOMBRE_POR_ID,
+    SQL_CONTRATOS_VENCEN_EN_DIAS,
+    SQL_JEFES_POR_NOMBRE_DEPARTAMENTO,
+    SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_EXISTS,
+    SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT,
 )
 
 
@@ -884,3 +888,207 @@ def enqueue_garantia_vence_15(conn, *, user_id: int, garantia_id: int, payload: 
     )
 
     return True
+
+
+# ── Contratos que terminan en exactamente N días ───────────────────────────
+def list_contratos_vencen_en_dias(dias: int) -> list:
+    conn = get_conn()
+    cur = conn.cursor()
+    rows = cur.execute(SQL_CONTRATOS_VENCEN_EN_DIAS, (dias,)).fetchall()
+    return [dict(r) if hasattr(r, "keys") else dict(zip([c[0] for c in cur.description], r)) for r in rows]
+
+
+# ── Jefes activos de un departamento por nombre ───────────────────────────
+def fetch_jefes_por_nombre_departamento(dept_nombre: str) -> list:
+    conn = get_conn()
+    cur = conn.cursor()
+    rows = cur.execute(SQL_JEFES_POR_NOMBRE_DEPARTAMENTO, (dept_nombre,)).fetchall()
+    return [dict(r) if hasattr(r, "keys") else {"user_id": r[0], "nombre": r[1], "email": r[2]} for r in rows]
+
+
+# ── Encola notificación de contrato por vencer ────────────────────────────
+def enqueue_contrato_vence_15(conn, *, user_id: int, contrato_id: int, payload: dict) -> bool:
+    from .contratos_constants import TPL_CONTRATO_VENCE_15, TIPO_CONTRATO_VENCE_15
+    if not user_id:
+        return False
+
+    fecha_terminacion = str(payload.get("fecha_terminacion") or "")
+    event_key = f"contrato_vence_15:{contrato_id}:{fecha_terminacion}:uid:{user_id}"
+
+    cur = conn.cursor()
+    exists = cur.execute(
+        SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT,
+        (user_id, TPL_CONTRATO_VENCE_15, event_key),
+    ).fetchone()
+    if exists:
+        return False
+
+    cur.execute(
+        SQL_NOTIFY_QUEUE_INSERT_GARANTIA,   # mismo INSERT genérico
+        (
+            user_id,
+            TIPO_CONTRATO_VENCE_15,
+            fecha_terminacion or date.today().isoformat(),
+            "email",
+            TPL_CONTRATO_VENCE_15,
+            json.dumps(payload, ensure_ascii=False, default=str),
+            "contratos_vencimiento",
+            event_key,
+        ),
+    )
+    return True
+
+
+# ── Encola notificación de garantía en N días ─────────────────────────────
+def enqueue_garantia_vence_n(conn, *, user_id: int, garantia_id: int, dias: int, payload: dict) -> bool:
+    from .contratos_constants import TPL_GARANTIA_VENCE_N, TIPO_GARANTIA_VENCE_N
+    if not user_id:
+        return False
+
+    fecha_vencimiento = str(payload.get("fecha_vencimiento") or "")
+    event_key = f"garantia_vence_{dias}d:{garantia_id}:{fecha_vencimiento}:uid:{user_id}"
+
+    cur = conn.cursor()
+    exists = cur.execute(
+        SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT,
+        (user_id, TPL_GARANTIA_VENCE_N, event_key),
+    ).fetchone()
+    if exists:
+        return False
+
+    cur.execute(
+        SQL_NOTIFY_QUEUE_INSERT_GARANTIA,
+        (
+            user_id,
+            f"{TIPO_GARANTIA_VENCE_N}_{dias}d",
+            fecha_vencimiento or date.today().isoformat(),
+            "email",
+            TPL_GARANTIA_VENCE_N,
+            json.dumps(payload, ensure_ascii=False, default=str),
+            "contratos_garantias",
+            event_key,
+        ),
+    )
+    return True
+
+
+# ── Asegura template de contrato por vencer ───────────────────────────────
+def ensure_contrato_vencimiento_template(conn=None) -> None:
+    from .contratos_constants import TPL_CONTRATO_VENCE_15, TIPO_CONTRATO_VENCE_15
+    own_conn = False
+    if conn is None:
+        conn = get_conn()
+        own_conn = True
+
+    cur = conn.cursor()
+    row = cur.execute(
+        SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_EXISTS,
+        (TPL_CONTRATO_VENCE_15,),
+    ).fetchone()
+    if row:
+        return
+
+    subject = "🔔 Contrato por terminar en {{ dias_para_terminar }} día(s): Pedido {{ pedido }}"
+
+    html = """<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="760" cellpadding="0" cellspacing="0"
+                 style="max-width:760px;background:#ffffff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+
+            <tr>
+              <td style="background:{{ header_color }};padding:18px 22px;color:#ffffff;">
+                <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.92;font-weight:700;">
+                  GESTIÓN DE CONTRATOS
+                </div>
+                <div style="font-size:22px;font-weight:800;margin-top:4px;line-height:1.15;">
+                  {{ header_title }}
+                </div>
+                <div style="font-size:13px;opacity:.95;margin-top:8px;line-height:1.35;">
+                  {{ header_subtitle }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:18px 22px 10px 22px;">
+                <div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
+                  Hola {{ destinatario_nombre or 'Usuario' }},
+                </div>
+                <div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
+                  {{ intro_text }}
+                </div>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                       style="border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:10px;">
+                  <tr>
+                    <td style="width:260px;background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Pedido</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ pedido }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Proveedor</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ proveedor }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Objeto del contrato</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;white-space:pre-wrap;">{{ objeto }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Fecha de terminación</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#b45309;font-weight:800;">{{ fecha_terminacion }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Días para terminar</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">
+                      <span style="display:inline-block;background:#ffedd5;color:#9a3412;padding:4px 10px;border-radius:999px;font-weight:800;">
+                        {{ dias_para_terminar }} día(s)
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Valor del contrato</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">${{ valor_contrato }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Tipo</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ tipo_pp }}</td>
+                  </tr>
+                </table>
+
+                <div style="margin-top:18px;">
+                  <a href="{{ cta_url }}"
+                     style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;
+                            padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;">
+                    Ver contratos
+                  </a>
+                </div>
+
+                <div style="font-size:12px;color:#6b7280;margin-top:12px;">
+                  {{ footer_note }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px 22px 14px 22px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;">
+                Este es un mensaje automático. No responda a este correo.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>"""
+
+    text = "Contrato Pedido {{ pedido }} termina en {{ dias_para_terminar }} día(s) el {{ fecha_terminacion }}."
+
+    cur.execute(
+        SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT,
+        (TPL_CONTRATO_VENCE_15, TIPO_CONTRATO_VENCE_15, subject, html, text),
+    )
+    conn.commit()

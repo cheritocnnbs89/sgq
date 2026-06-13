@@ -144,6 +144,22 @@ def start_scheduler(app=None):
             except Exception:
                 target_app.logger.exception("Worker: process_om_acciones_seguimiento falló")
 
+            try:
+                _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
+                from modules.contratos.contratos_services import encolar_notificaciones_contratos_por_vencer
+                n_contratos = encolar_notificaciones_contratos_por_vencer()
+                _log("info", "Worker: contratos_por_vencer encolados=%s", n_contratos)
+            except Exception:
+                target_app.logger.exception("Worker: encolar_notificaciones_contratos_por_vencer falló")
+
+            try:
+                _log("info", "Worker: Encolando notificaciones de garantías por vencer (20/10/5/0d)...")
+                from modules.contratos.contratos_services import encolar_notificaciones_garantias_multi_dia
+                n_garantias = encolar_notificaciones_garantias_multi_dia()
+                _log("info", "Worker: garantias_multi_dia encoladas=%s", n_garantias)
+            except Exception:
+                target_app.logger.exception("Worker: encolar_notificaciones_garantias_multi_dia falló")
+
         except Exception:
             target_app.logger.exception("Worker: fallo general en %s", tick_label)
 

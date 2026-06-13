@@ -430,7 +430,27 @@ def contab_lista():
         fecha_vencimiento_desde=fecha_vencimiento_desde,
         fecha_vencimiento_hasta=fecha_vencimiento_hasta,
     )
-    return render_template("consulta_contabilidad.html", rows=rows)
+
+    # ── Paginación ──────────────────────────────────────────
+    PER_PAGE = 15
+    total = len(rows)
+    try:
+        page = max(1, int(request.args.get("page") or 1))
+    except (ValueError, TypeError):
+        page = 1
+    total_pages = max(1, -(-total // PER_PAGE))
+    page = min(page, total_pages)
+    offset = (page - 1) * PER_PAGE
+    rows_page = rows[offset: offset + PER_PAGE]
+
+    return render_template(
+        "consulta_contabilidad.html",
+        rows=rows_page,
+        page=page,
+        total_pages=total_pages,
+        total=total,
+        per_page=PER_PAGE,
+    )
 
 
 @contratos_bp.route("/ver/garantia/<int:garantia_id>/fragment", methods=["GET"])
@@ -961,3 +981,29 @@ def encolar_vencimientos_garantias():
         flash("No existen garantías próximas a vencer en 15 días o ya fueron encoladas.", "info")
 
     return redirect(url_for("contratos.contab_lista"))
+
+
+@contratos_bp.route("/contab/encolar-vencimientos-multi", methods=["POST"])
+@require_login
+@require_permission("contratos_garantias", "exportar")
+def encolar_vencimientos_garantias_multi():
+    """Encola notificaciones de garantías a 20, 10, 5 y 0 días para jefes."""
+    total = services.encolar_notificaciones_garantias_multi_dia()
+    if total:
+        flash(f"Se encolaron {total} notificación(es) de garantías (20/10/5/0 días).", "success")
+    else:
+        flash("No hay garantías en los umbrales de 20/10/5/0 días o ya fueron encoladas.", "info")
+    return redirect(url_for("contratos.contab_lista"))
+
+
+@contratos_bp.route("/compras/encolar-vencimientos-contratos", methods=["POST"])
+@require_login
+@require_permission("contratos_ingresar", "exportar")
+def encolar_vencimientos_contratos():
+    """Encola notificaciones de contratos a 15 días para jefes de Compras y Finanzas."""
+    total = services.encolar_notificaciones_contratos_por_vencer()
+    if total:
+        flash(f"Se encolaron {total} notificación(es) de contratos próximos a terminar.", "success")
+    else:
+        flash("No hay contratos que terminen en 15 días o ya fueron encolados.", "info")
+    return redirect(url_for("contratos.compras_lista"))
