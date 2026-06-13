@@ -208,11 +208,26 @@ def compras_lista():
         fecha_hasta=fecha_hasta,
     )
 
+    # ── Paginación ──────────────────────────────────────────
+    PER_PAGE = 15
+    total = len(rows)
+    try:
+        page = max(1, int(request.args.get("page") or 1))
+    except (ValueError, TypeError):
+        page = 1
+    total_pages = max(1, -(-total // PER_PAGE))   # ceil division
+    page = min(page, total_pages)
+    offset = (page - 1) * PER_PAGE
+    rows_page = rows[offset: offset + PER_PAGE]
 
     return render_template(
         "consulta_compras.html",
-        rows=rows,
+        rows=rows_page,
         hoy=date.today().isoformat(),
+        page=page,
+        total_pages=total_pages,
+        total=total,
+        per_page=PER_PAGE,
     )
 
 
