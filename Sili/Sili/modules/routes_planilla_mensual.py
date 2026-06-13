@@ -43,13 +43,13 @@ def _current_username() -> str:
     return (session.get("usuario") or "").strip()
 
 def _can_access_task(conn, tarea_id: int) -> bool:
-    """Admin = True. Usuario no admin: solo si responsable (plan_responsables.nombre) coincide con su username."""
+    """Admin = True. Usuario no admin: solo si usuario_id coincide con el usuario logueado."""
     if _is_admin():
         return True
     row = conn.execute("""
-        SELECT LOWER(r.nombre) AS resp
+        SELECT LOWER(u.username) AS resp
         FROM plan_tareas t
-        JOIN plan_responsables r ON r.id = t.responsable_id
+        JOIN usuarios u ON u.id = t.usuario_id
         WHERE t.id = ?
     """, (tarea_id,)).fetchone()
     if not row:
@@ -160,10 +160,10 @@ def dept_email_for_tarea(conn, tarea_id):
     cur = conn.cursor()
     row = cur.execute("""
         SELECT t.departamento_id, d.nombre as depto_nombre,
-               r.nombre as resp_nombre
+               COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''), u.username) as resp_nombre
         FROM plan_tareas t
         LEFT JOIN departamentos d ON d.id = t.departamento_id
-        LEFT JOIN plan_responsables r ON r.id = t.responsable_id
+        LEFT JOIN usuarios u ON u.id = t.usuario_id
         WHERE t.id = ?
     """, (tarea_id,)).fetchone()
 
@@ -261,18 +261,14 @@ def planilla_dashboard():
                         u.username)                                    AS responsable_display,
                d.nombre                                                AS depto
         FROM plan_tareas t
-        JOIN plan_responsables r ON r.id = t.responsable_id
-        JOIN usuarios u ON (
-            LOWER(LTRIM(RTRIM(u.username)))        = LOWER(LTRIM(RTRIM(r.nombre)))
-         OR LOWER(LTRIM(RTRIM(u.nombre_completo))) = LOWER(LTRIM(RTRIM(r.nombre)))
-        )
+        JOIN usuarios u ON u.id = t.usuario_id
         LEFT JOIN departamentos d ON d.id = t.departamento_id
         WHERE t.activo = 1
           AND COALESCE(u.disabled, 0) = 0
     """
     params = []
     if not is_admin:
-        base_sql += " AND LOWER(r.nombre)=LOWER(?) "
+        base_sql += " AND LOWER(u.username)=LOWER(?) "
         params.append(username)
 
     tareas = [dict(row) for row in cur.execute(base_sql, params).fetchall()]
@@ -847,26 +843,32 @@ def planilla():
     if not _is_admin():
         rid = None
 
-    responsables  = cur.execute("SELECT id, nombre FROM plan_responsables ORDER BY nombre").fetchall()
+    responsables  = cur.execute("""
+        SELECT u.id, COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''), u.username) AS nombre
+        FROM usuarios u
+        WHERE COALESCE(u.disabled,0)=0
+          AND EXISTS (SELECT 1 FROM plan_tareas t WHERE t.usuario_id = u.id AND t.activo=1)
+        ORDER BY nombre
+    """).fetchall()
     departamentos = cur.execute("SELECT id, nombre FROM departamentos ORDER BY nombre").fetchall()
 
     sql = [
-        "SELECT t.id, t.nombre, t.frecuencia, t.responsable_id, t.activo, t.departamento_id,",
-        "       r.nombre AS responsable_nombre",
-        "FROM plan_tareas t JOIN plan_responsables r ON r.id = t.responsable_id",
+        "SELECT t.id, t.nombre, t.frecuencia, t.usuario_id, t.activo, t.departamento_id,",
+        "       COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''), u.username) AS responsable_nombre",
+        "FROM plan_tareas t JOIN usuarios u ON u.id = t.usuario_id",
         "WHERE t.activo = 1"
     ]
     params = []
-    if rid:   sql.append("AND t.responsable_id = ?");  params.append(int(rid))
+    if rid:   sql.append("AND t.usuario_id = ?");      params.append(int(rid))
     if freq:  sql.append("AND t.frecuencia = ?");      params.append(freq)
     if depid: sql.append("AND t.departamento_id = ?"); params.append(int(depid))
 
     # filtro por usuario logeado (no admin)
     if not _is_admin():
-        sql.append("AND LOWER(r.nombre) = LOWER(?)")
+        sql.append("AND LOWER(u.username) = LOWER(?)")
         params.append(_current_username())
 
-    sql.append("ORDER BY t.departamento_id, r.nombre, t.nombre")
+    sql.append("ORDER BY t.departamento_id, u.username, t.nombre")
     tareas = cur.execute(" ".join(sql), params).fetchall()
 
     dias = month_days(y, m)
@@ -1136,19 +1138,19 @@ def tareas_list():
 
     base = [
         "SELECT t.id, t.nombre, t.frecuencia, t.activo,",
-        "       r.nombre AS responsable,",
+        "       COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''), u.username) AS responsable,",
         "       d.nombre AS departamento",
         "FROM plan_tareas t",
-        "JOIN plan_responsables r ON r.id = t.responsable_id",
+        "JOIN usuarios u ON u.id = t.usuario_id",
         "LEFT JOIN departamentos d ON d.id = t.departamento_id",
         "WHERE 1=1"
     ]
     params = []
     if not _is_admin():
-        base.append("AND LOWER(r.nombre) = LOWER(?)")
+        base.append("AND LOWER(u.username) = LOWER(?)")
         params.append(_current_username())
 
-    base.append("ORDER BY d.nombre, r.nombre, t.nombre")
+    base.append("ORDER BY d.nombre, u.username, t.nombre")
     tareas = cur.execute(" ".join(base), params).fetchall()
 
     session["active_page"] = "planilla_mensual"
@@ -1160,7 +1162,10 @@ def tareas_new():
     if request.method == "GET":
         if not has_perm("Planilla Mensual", "crear"):
             abort(403)
-        responsables = cur.execute("SELECT id, nombre FROM plan_responsables ORDER BY nombre").fetchall()
+        responsables = cur.execute("""
+            SELECT id, COALESCE(NULLIF(LTRIM(RTRIM(nombre_completo)),''), username) AS nombre
+            FROM usuarios WHERE COALESCE(disabled,0)=0 ORDER BY nombre_completo, username
+        """).fetchall()
         departamentos = cur.execute("SELECT id, nombre FROM departamentos ORDER BY nombre").fetchall()
         return render_template(
             "planilla/tarea_form.html",
@@ -1195,31 +1200,18 @@ def tareas_new():
     if not nombre or frecuencia not in FRECUENCIAS:
         return "Datos inválidos", 400
 
-    # Mapear usuario -> plan_responsables
-    if responsable_user_id:
-        row_u = cur.execute("SELECT username FROM usuarios WHERE id=?", (int(responsable_user_id),)).fetchone()
-        if not row_u:
-            return "Usuario responsable inválido", 400
-        uname = row_u["username"] if hasattr(row_u, "keys") else row_u[0]
-        row_r = cur.execute("SELECT TOP 1 id FROM plan_responsables WHERE nombre=?", (uname,)).fetchone()
-        if not row_r:
-            cur.execute("INSERT INTO plan_responsables(nombre) VALUES (?)", (uname,))
-            row_r = cur.execute("SELECT TOP 1 id FROM plan_responsables WHERE nombre=?", (uname,)).fetchone()
-        responsable_id = row_r["id"] if hasattr(row_r, "keys") else row_r[0]
-    elif nuevo_resp:
-        row_r = cur.execute("SELECT TOP 1 id FROM plan_responsables WHERE LOWER(nombre)=LOWER(?)", (nuevo_resp,)).fetchone()
-        if not row_r:
-            cur.execute("INSERT INTO plan_responsables(nombre) VALUES (?)", (nuevo_resp,))
-            row_r = cur.execute("SELECT TOP 1 id FROM plan_responsables WHERE LOWER(nombre)=LOWER(?)", (nuevo_resp,)).fetchone()
-        responsable_id = row_r["id"] if hasattr(row_r, "keys") else row_r[0]
-    else:
+    # Mapear directo a usuarios.id
+    if not responsable_user_id:
         return "Seleccione responsable.", 400
-
+    row_u = cur.execute("SELECT id FROM usuarios WHERE id=? AND COALESCE(disabled,0)=0",
+                        (int(responsable_user_id),)).fetchone()
+    if not row_u:
+        return "Usuario responsable inválido", 400
 
     cur.execute("""
-    INSERT INTO plan_tareas(nombre, frecuencia, responsable_id, departamento_id, activo, dia_semana, dia_mes)
+    INSERT INTO plan_tareas(nombre, frecuencia, usuario_id, departamento_id, activo, dia_semana, dia_mes)
     VALUES (?,?,?,?,?,?,?)
-    """, (nombre, frecuencia, int(responsable_id),
+    """, (nombre, frecuencia, int(responsable_user_id),
         (int(departamento_id) if departamento_id else None), activo,
         dia_semana, dia_mes))
 
@@ -1238,12 +1230,14 @@ def tareas_edit(tid: int):
         if not tarea:
             abort(404)
 
-        responsables  = cur.execute("SELECT id, nombre FROM plan_responsables ORDER BY nombre").fetchall()
+        responsables  = cur.execute("""
+            SELECT id, COALESCE(NULLIF(LTRIM(RTRIM(nombre_completo)),''), username) AS nombre
+            FROM usuarios WHERE COALESCE(disabled,0)=0 ORDER BY nombre_completo, username
+        """).fetchall()
         departamentos = cur.execute("SELECT id, nombre FROM departamentos ORDER BY nombre").fetchall()
 
         dep_id = tarea["departamento_id"] if hasattr(tarea, "keys") else tarea[4]
 
-        # Usuarios del departamento (para renderizar opciones iniciales)
         dept_users = []
         if dep_id:
             dept_users = cur.execute("""
@@ -1253,24 +1247,8 @@ def tareas_edit(tid: int):
                 ORDER BY username
             """, (dep_id,)).fetchall()
 
-        # Resolver usuario seleccionado a partir del responsable actual
-        selected_user_id = None
-        try:
-            resp_id = tarea["responsable_id"]
-        except Exception:
-            resp_id = tarea[3]
-
-        if resp_id:
-            r = cur.execute("SELECT nombre FROM plan_responsables WHERE id=?", (resp_id,)).fetchone()
-            if r:
-                resp_name = r["nombre"] if hasattr(r, "keys") else r[0]
-                u = cur.execute("""
-                    SELECT TOP 1 id FROM usuarios
-                    WHERE LOWER(username)=LOWER(?) AND (? IS NULL OR departamento_id=?)
-                    ORDER BY id
-                """, (resp_name, dep_id, dep_id)).fetchone()
-                if u:
-                    selected_user_id = u["id"] if hasattr(u, "keys") else u[0]
+        # usuario_id ya está directo en la tarea
+        selected_user_id = tarea["usuario_id"] if hasattr(tarea, "keys") else None
 
         return render_template(
             "planilla/tarea_form.html",
@@ -1309,36 +1287,20 @@ def tareas_edit(tid: int):
     if not nombre or frecuencia not in FRECUENCIAS:
         return "Datos inválidos", 400
 
-    # Mapear usuario -> plan_responsables
+    # Usar usuario_id directamente
     if responsable_user_id:
-        row_u = cur.execute("SELECT username FROM usuarios WHERE id=?", (int(responsable_user_id),)).fetchone()
-        if not row_u:
-            return "Usuario responsable inválido", 400
-        uname = row_u["username"] if hasattr(row_u, "keys") else row_u[0]
-        row_r = cur.execute("SELECT TOP 1 id FROM plan_responsables WHERE nombre=?", (uname,)).fetchone()
-        if not row_r:
-            cur.execute("INSERT INTO plan_responsables(nombre) VALUES (?)", (uname,))
-            row_r = cur.execute("SELECT TOP 1 id FROM plan_responsables WHERE nombre=?", (uname,)).fetchone()
-        responsable_id = row_r["id"] if hasattr(row_r, "keys") else row_r[0]
-    elif nuevo_resp:
-        row_r = cur.execute("SELECT TOP 1 id FROM plan_responsables WHERE LOWER(nombre)=LOWER(?)", (nuevo_resp,)).fetchone()
-        if not row_r:
-            cur.execute("INSERT INTO plan_responsables(nombre) VALUES (?)", (nuevo_resp,))
-            row_r = cur.execute("SELECT TOP 1 id FROM plan_responsables WHERE LOWER(nombre)=LOWER(?)", (nuevo_resp,)).fetchone()
-        responsable_id = row_r["id"] if hasattr(row_r, "keys") else row_r[0]
+        uid = int(responsable_user_id)
     else:
-        # Mantener el existente
-        row_old = cur.execute("SELECT responsable_id FROM plan_tareas WHERE id=?", (tid,)).fetchone()
+        row_old = cur.execute("SELECT usuario_id FROM plan_tareas WHERE id=?", (tid,)).fetchone()
         if not row_old:
             return "Seleccione responsable.", 400
-        responsable_id = row_old["responsable_id"] if hasattr(row_old, "keys") else row_old[0]
+        uid = row_old["usuario_id"] if hasattr(row_old, "keys") else row_old[0]
 
-    
     cur.execute("""
     UPDATE plan_tareas
-       SET nombre=?, frecuencia=?, responsable_id=?, departamento_id=?, activo=?, dia_semana=?, dia_mes=?
+       SET nombre=?, frecuencia=?, usuario_id=?, departamento_id=?, activo=?, dia_semana=?, dia_mes=?
      WHERE id=?
-    """, (nombre, frecuencia, int(responsable_id),
+    """, (nombre, frecuencia, uid,
       (int(departamento_id) if departamento_id else None), activo,
       dia_semana, dia_mes, tid))
 

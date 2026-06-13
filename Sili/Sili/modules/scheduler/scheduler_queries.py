@@ -124,9 +124,9 @@ SQL_SELECT_PLAN_USERS_HOY = f"""
 
   SELECT DISTINCT u.id AS user_id, u.username
   FROM {TB_PLAN_TAREAS} t
-  JOIN {TB_PLAN_RESPONSABLES} r ON r.id = t.responsable_id
-  JOIN {TB_USUARIOS} u ON LOWER(u.username) = LOWER(r.nombre)
+  JOIN {TB_USUARIOS} u ON u.id = t.usuario_id
   WHERE t.activo = 1
+    AND COALESCE(u.disabled, 0) = 0
     AND (
          t.frecuencia = 'Diario'
       OR (t.frecuencia = 'Semanal' AND (t.dia_semana IS NULL OR t.dia_semana = @dow_monday_zero))
@@ -169,14 +169,13 @@ SQL_SELECT_TASKS_FOR_USER_BY_DATE = f"""
   SELECT
     t.id, t.nombre, t.frecuencia,
     d.nombre AS departamento,
-    r.nombre AS responsable,
+    COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''), u.username) AS responsable,
     CASE WHEN EXISTS (
       SELECT 1 FROM {TB_PLAN_CHECKS} c
       WHERE c.tarea_id = t.id AND c.fecha = ?
     ) THEN 1 ELSE 0 END AS hecha
   FROM {TB_PLAN_TAREAS} t
-  JOIN {TB_PLAN_RESPONSABLES} r ON r.id = t.responsable_id
-  JOIN {TB_USUARIOS} u ON LOWER(u.username) = LOWER(r.nombre)
+  JOIN {TB_USUARIOS} u ON u.id = t.usuario_id
   LEFT JOIN {TB_DEPARTAMENTOS} d ON d.id = t.departamento_id
   WHERE t.activo = 1
     AND (
