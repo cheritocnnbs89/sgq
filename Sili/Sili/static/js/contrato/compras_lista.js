@@ -34,32 +34,95 @@ async function openAdjuntos(url, pedido, proveedor) {
   }
 }
 
+function initContratoDetalleFragment(container) {
+  // Toggle visibilidad del monto según check penalización
+  var chk  = container.querySelector('#fin_con_penalizacion');
+  var wrap = container.querySelector('#fin_monto_wrap');
+  if (chk && wrap) {
+    function applyVis() { wrap.style.display = chk.checked ? '' : 'none'; }
+    chk.addEventListener('change', applyVis);
+    applyVis();
+  }
+
+  // Formulario Finanzas (AJAX POST)
+  var frm = container.querySelector('#frmFinanzasContrato');
+  if (frm) {
+    var btn  = container.querySelector('#fin_guardar_btn');
+    var msg  = container.querySelector('#fin_msg');
+    var csrf = frm.dataset.csrf || '';
+    var url  = frm.dataset.url  || '';
+
+    frm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var chkPen  = container.querySelector('#fin_con_penalizacion');
+      var inpMonto = container.querySelector('#fin_monto');
+      var chkLib  = container.querySelector('#fin_garantia_liberada');
+
+      var body = new URLSearchParams();
+      body.set('con_penalizacion',  chkPen  && chkPen.checked  ? '1' : '0');
+      body.set('monto_penalizacion', inpMonto ? (inpMonto.value || '') : '');
+      body.set('garantia_liberada', chkLib  && chkLib.checked  ? '1' : '0');
+
+      if (btn) btn.disabled = true;
+      if (msg) { msg.textContent = ''; msg.className = 'small mt-2'; }
+
+      try {
+        var resp = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrf,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          credentials: 'same-origin',
+          body: body.toString()
+        });
+        var data = await resp.json().catch(function () { return {}; });
+        if (resp.ok && data.ok) {
+          if (msg) { msg.textContent = 'Guardado correctamente.'; msg.className = 'small mt-2 text-success'; }
+        } else {
+          if (msg) { msg.textContent = data.message || ('Error ' + resp.status); msg.className = 'small mt-2 text-danger'; }
+        }
+      } catch (err) {
+        if (msg) { msg.textContent = 'Error de red: ' + err.message; msg.className = 'small mt-2 text-danger'; }
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+}
+
 async function openContratoDetalle(contratoId) {
-  const body = document.getElementById('modalContratoDetalleBody');
-  const modalEl = document.getElementById('modalContratoDetalle');
+  var body = document.getElementById('modalContratoDetalleBody');
+  var modalEl = document.getElementById('modalContratoDetalle');
 
   if (!body || !modalEl) return;
 
-  body.innerHTML = 'Cargando…';
+  var loadingDiv = document.createElement('div');
+  loadingDiv.textContent = 'Cargando…';
+  while (body.firstChild) body.removeChild(body.firstChild);
+  body.appendChild(loadingDiv);
 
-  const modal = new bootstrap.Modal(modalEl);
+  var modal = new bootstrap.Modal(modalEl);
   modal.show();
 
   try {
-    const resp = await fetch(`/contratos/ver/contrato/${encodeURIComponent(contratoId)}/fragment`, {
+    var resp = await fetch('/contratos/ver/contrato/' + encodeURIComponent(contratoId) + '/fragment', {
       headers: { 'X-Requested-With': 'XMLHttpRequest' },
       cache: 'no-store'
     });
 
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
 
-    body.innerHTML = await resp.text();
+    var html = await resp.text();
+    body.innerHTML = html;
+    initContratoDetalleFragment(body);
   } catch (error) {
-    body.innerHTML = `
-      <div class="alert alert-danger mb-0">
-        No se pudo cargar el detalle del contrato.
-      </div>
-    `;
+    while (body.firstChild) body.removeChild(body.firstChild);
+    var errDiv = document.createElement('div');
+    errDiv.className = 'alert alert-danger mb-0';
+    errDiv.textContent = 'No se pudo cargar el detalle del contrato.';
+    body.appendChild(errDiv);
   }
 }
 

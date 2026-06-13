@@ -650,13 +650,35 @@ def ver_contrato_fragment(contrato_id: int):
     vista, proveedor, archivos = services.build_contrato_vista(fila)
     can_exportar = _hp(session.get("rol"), "contratos_ingresar", "exportar")
 
+    # Datos de penalización / garantía liberada
+    finanzas = {
+        "con_penalizacion": int(fila["con_penalizacion"] or 0) if "con_penalizacion" in fila.keys() else 0,
+        "monto_penalizacion": fila["monto_penalizacion"] if "monto_penalizacion" in fila.keys() else None,
+        "garantia_liberada": int(fila["garantia_liberada"] or 0) if "garantia_liberada" in fila.keys() else 0,
+    }
+
     return render_template(
         "contrato_detalle_fragment.html",
         vista=vista,
         proveedor=proveedor,
         archivos=archivos,
         can_exportar=can_exportar,
+        contrato_id=contrato_id,
+        finanzas=finanzas,
+        es_finanzas_qp=services.is_finanzas_qp(),
+        url_finanzas=url_for("contratos.actualizar_finanzas_contrato", contrato_id=contrato_id),
     )
+
+
+@contratos_bp.route("/compras/<int:contrato_id>/finanzas", methods=["POST"])
+@require_login
+@require_permission("contratos_ingresar", "ver")
+def actualizar_finanzas_contrato(contrato_id: int):
+    from flask import jsonify
+    result = services.update_finanzas_contrato_from_request(contrato_id)
+    if not result["ok"]:
+        return jsonify(ok=False, message=result["message"]), 403
+    return jsonify(ok=True)
 
 
 @contratos_bp.route("/ver/contrato/<int:contrato_id>/full", methods=["GET"])
