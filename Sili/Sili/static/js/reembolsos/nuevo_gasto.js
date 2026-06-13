@@ -1597,29 +1597,86 @@ document.addEventListener('DOMContentLoaded', function () {
       if (ok) {
         inputEl.removeAttribute('title');
         inputEl.dataset.errmsg = '';
+        // ocultar mensaje de no-encontrado si existe
+        const warn = inputEl.closest('td')?.querySelector('.campo-no-encontrado');
+        if (warn) warn.style.display = 'none';
       } else {
         inputEl.setAttribute('title', msg || 'Campo inválido');
         inputEl.dataset.errmsg = msg || 'Campo inválido';
       }
     }
 
-    function validateInputAgainstDatalist(inputEl, datalistEl, hiddenName, message) {
+    /** Muestra un aviso inline debajo del campo cuando el código no existe en el servidor. */
+    function showFieldNotFound(inputEl, msg) {
+      const td = inputEl.closest('td');
+      if (!td) return;
+      let warn = td.querySelector('.campo-no-encontrado');
+      if (!warn) {
+        warn = document.createElement('div');
+        warn.className = 'campo-no-encontrado text-danger small mt-1';
+        td.appendChild(warn);
+      }
+      warn.textContent = msg;
+      warn.style.display = '';
+      clearTimeout(warn._hideTimer);
+      warn._hideTimer = setTimeout(function () { warn.style.display = 'none'; }, 5000);
+    }
+
+    /** Re-puebla un datalist haciendo fetch al API y devuelve la opción si coincide. */
+    async function refetchAndFind(datalistEl, apiUrl, val) {
+      if (!apiUrl || !val) return null;
+      try {
+        const url = new URL(apiUrl, location.origin);
+        url.searchParams.set('q', val);
+        url.searchParams.set('limit', '15');
+        const r = await fetch(url, { credentials: 'same-origin' });
+        const list = await r.json();
+        // repoblar datalist
+        while (datalistEl.firstChild) datalistEl.removeChild(datalistEl.firstChild);
+        (list || []).forEach(function (x) {
+          const opt = document.createElement('option');
+          opt.value = x.valor || '';
+          opt.label = x.nombre ? (x.nombre + ' (' + (x.valor || '') + ')') : (x.valor || '');
+          datalistEl.appendChild(opt);
+        });
+        return findExactOption(datalistEl, val);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    /**
+     * Valida un campo contra su datalist.
+     * Si no encuentra el valor (race condition), re-fetchea el API.
+     * Si el código definitivamente no existe, marca inválido y muestra aviso.
+     */
+    async function validateWithFallback(inputEl, datalistEl, hiddenName, apiUrl, invalidMsg, notFoundMsg) {
       const tr = inputEl.closest('tr');
-      if (!tr) return false;
+      if (!tr) return;
+      const hidden = tr.querySelector('input[name="' + hiddenName + '"]');
+      const val = (inputEl.value || '').trim();
 
-      const hidden = tr.querySelector(`input[name="${hiddenName}"]`);
-      if (!hidden) return false;
+      if (!val) {
+        if (hidden) hidden.value = '';
+        setFieldFeedback(inputEl, false, invalidMsg);
+        return;
+      }
 
-      const match = findExactOption(datalistEl, inputEl.value);
+      // 1. Buscar en datalist actual
+      let match = findExactOption(datalistEl, val);
+
+      // 2. Si no está (posible race condition), re-fetchear y buscar de nuevo
+      if (!match) {
+        match = await refetchAndFind(datalistEl, apiUrl, val);
+      }
 
       if (match) {
-        hidden.value = match.value || '';
-        setFieldFeedback(inputEl, true, message);
-        return true;
+        if (hidden) hidden.value = match.value || '';
+        setFieldFeedback(inputEl, true, '');
       } else {
-        hidden.value = '';
-        setFieldFeedback(inputEl, false, message);
-        return false;
+        if (hidden) hidden.value = '';
+        setFieldFeedback(inputEl, false, invalidMsg);
+        showFieldNotFound(inputEl, notFoundMsg + ': "' + val + '"');
       }
     }
 
@@ -1647,20 +1704,24 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!el) return;
 
       if (el.name === 'det_motivo') {
-        validateInputAgainstDatalist(
+        validateWithFallback(
           el,
           dlMotivos,
           'det_motivo_valido',
-          'Debe seleccionar un motivo válido de la lista.'
+          routes.apiParamMotivos,
+          'Debe seleccionar un motivo válido de la lista.',
+          'Motivo no encontrado'
         );
       }
 
       if (el.name === 'det_centro_costo') {
-        validateInputAgainstDatalist(
+        validateWithFallback(
           el,
           dlCentros,
           'det_centro_costo_valido',
-          'Debe seleccionar un centro de costo válido de la lista.'
+          routes.apiParamCentros,
+          'Debe seleccionar un centro de costo válido de la lista.',
+          'Centro de costo no encontrado'
         );
       }
     });
