@@ -874,30 +874,35 @@ def planilla():
     dias = month_days(y, m)
     inicio, fin = dias[0], dias[-1]
 
-    rows = cur.execute(
-        "SELECT tarea_id, fecha, checked FROM plan_checks WHERE fecha BETWEEN ? AND ?",
-        (inicio.isoformat(), fin.isoformat())
-    ).fetchall()
-    checks = {f"{r['tarea_id']}-{r['fecha']}": bool(r["checked"]) for r in rows}
+    task_ids = [t["id"] for t in tareas]
+    if not task_ids:
+        checks = {}
+        evidencias = {}
+    else:
+        ph_t = ",".join(["?"] * len(task_ids))
+        rows = cur.execute(
+            f"SELECT tarea_id, fecha, checked FROM plan_checks WHERE fecha BETWEEN ? AND ? AND tarea_id IN ({ph_t})",
+            [inicio.isoformat(), fin.isoformat()] + task_ids
+        ).fetchall()
+        checks = {f"{r['tarea_id']}-{r['fecha']}": bool(r["checked"]) for r in rows}
 
-    evrows = cur.execute(
-        "SELECT tarea_id, fecha, file_name, obs FROM plan_evidencias WHERE fecha BETWEEN ? AND ?",
-        (inicio.isoformat(), fin.isoformat())
-    ).fetchall()
-    evidencias = { f"{r['tarea_id']}-{r['fecha']}": {"file_name": r["file_name"], "obs": r["obs"]} for r in evrows }
+        evrows = cur.execute(
+            f"SELECT tarea_id, fecha, file_name, obs FROM plan_evidencias WHERE fecha BETWEEN ? AND ? AND tarea_id IN ({ph_t})",
+            [inicio.isoformat(), fin.isoformat()] + task_ids
+        ).fetchall()
+        evidencias = {f"{r['tarea_id']}-{r['fecha']}": {"file_name": r["file_name"], "obs": r["obs"]} for r in evrows}
 
     prev_y, prev_m, next_y, next_m = prev_next(y, m)
     session["active_page"] = "planilla_mensual"
 
-    # ── Tarjetas resumen ──────────────────────────────────────────
+    # ── Tarjetas resumen (solo tareas visibles según filtros) ─────
     today = date.today()
+    _tids_visible = {str(t["id"]) for t in tareas}
     total_act    = len(tareas)
-    cumplidas    = sum(1 for v in checks.values() if v)
-    # días hábiles ya pasados × tareas (aproximación: días con check posible)
+    cumplidas    = sum(1 for k, v in checks.items() if v and k.split("-")[0] in _tids_visible)
     dias_pasados = [d for d in dias if d <= today]
     total_esperadas = len(tareas) * len(dias_pasados)
     pendientes   = max(0, total_esperadas - cumplidas)
-    # vencidas: celdas de días pasados sin check y sin evidencia
     vencidas = 0
     for t in tareas:
         tid = str(t["id"])
