@@ -572,7 +572,11 @@ def soft_delete_garantia(garantia_id: int):
 
 
 def is_finanzas_qp() -> bool:
-    """Devuelve True si el usuario de la sesión pertenece al departamento FINANCIERO QP."""
+    """Devuelve True si el usuario es admin o pertenece al departamento FINANCIERO QP."""
+    # El rol admin siempre tiene acceso
+    rol = (session.get("rol") or "").strip().lower()
+    if rol == "admin" or bool(session.get("is_admin")):
+        return True
     uid = session_user_id()
     if not uid:
         return False
@@ -581,7 +585,7 @@ def is_finanzas_qp() -> bool:
 
 
 def update_finanzas_contrato_from_request(contrato_id: int) -> dict:
-    """Actualiza penalización y garantía liberada. Solo para Finanzas QP."""
+    """Actualiza penalización y garantía liberada. Solo para admin o Finanzas QP."""
     if not is_finanzas_qp():
         return {"ok": False, "message": "Solo el personal de Finanzas QP puede registrar estos campos."}
 
