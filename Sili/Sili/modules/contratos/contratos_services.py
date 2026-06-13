@@ -916,3 +916,222 @@ def encolar_notificaciones_garantias_por_vencer_15_dias():
 
     conn.commit()
     return total
+
+
+# ── Contratos: notificación 15 días antes de fecha_terminacion ────────────
+def encolar_notificaciones_contratos_por_vencer() -> int:
+    """
+    Busca contratos que terminan exactamente en 15 días y encola correos
+    para los jefes de COMPRAS E IMPORTACIONES QP y FINANCIERO QP.
+    """
+    from .contratos_constants import (
+        DEPT_COMPRAS, DEPT_FINANCIERO,
+        TPL_CONTRATO_VENCE_15,
+    )
+
+    conn = repository.get_conn()
+    repository.ensure_contrato_vencimiento_template(conn)
+
+    rows = repository.list_contratos_vencen_en_dias(15)
+    total = 0
+
+    try:
+        cta_url = url_for("contratos.compras_lista", _external=True)
+    except Exception:
+        cta_url = "http://bitacoraquimpac.com.ec:5000/contratos/compras"
+
+    for row in rows:
+        contrato_id = row["contrato_id"]
+        dias = int(row.get("dias_para_terminar") or 15)
+
+        # Header color según urgencia
+        if dias <= 5:
+            header_color, row_bg = "#dc2626", "#fef2f2"
+        elif dias <= 10:
+            header_color, row_bg = "#f97316", "#fff7ed"
+        else:
+            header_color, row_bg = "#eab308", "#fefce8"
+
+        payload_base = {
+            "contrato_id": contrato_id,
+            "pedido": row.get("pedido") or "",
+            "proveedor": row.get("proveedor") or "",
+            "objeto": row.get("objeto") or "",
+            "valor_contrato": f"{float(row.get('valor_contrato') or 0):.2f}",
+            "tipo_pp": row.get("tipo_pp") or "",
+            "fecha_terminacion": str(row.get("fecha_terminacion") or ""),
+            "dias_para_terminar": dias,
+            "header_color": header_color,
+            "row_bg": row_bg,
+            "header_title": f"Contrato próximo a terminar — Pedido {row.get('pedido', '')}",
+            "header_subtitle": f"Vence en {dias} día(s) el {row.get('fecha_terminacion', '')}",
+            "intro_text": (
+                "Se informa que el siguiente contrato está próximo a su fecha de terminación. "
+                "Por favor, coordinar las acciones necesarias antes del vencimiento."
+            ),
+            "cta_url": cta_url,
+            "footer_note": "Ingresa al módulo de Contratos para revisar y gestionar la acción correspondiente.",
+        }
+
+        # Destinatarios: jefes de ambos departamentos
+        destinatarios_ids = set()
+        for dept in (DEPT_COMPRAS, DEPT_FINANCIERO):
+            for jefe in repository.fetch_jefes_por_nombre_departamento(dept):
+                uid = jefe.get("user_id")
+                if uid:
+                    destinatarios_ids.add(int(uid))
+
+        for user_id in destinatarios_ids:
+            nombre = repository.fetch_usuario_nombre_por_id(user_id) or f"Usuario {user_id}"
+            payload = dict(payload_base)
+            payload["destinatario_nombre"] = nombre
+
+            ok = repository.enqueue_contrato_vence_15(
+                conn,
+                user_id=user_id,
+                contrato_id=contrato_id,
+                payload=payload,
+            )
+            if ok:
+                total += 1
+
+    conn.commit()
+    return total
+
+
+# ── Garantías: notificación a 20, 10, 5 y 0 días del vencimiento ──────────
+def encolar_notificaciones_garantias_multi_dia() -> int:
+    """
+    Busca garantías que vencen en exactamente 20, 10, 5 o 0 días
+    y encola correos para los jefes de COMPRAS e IMPORTACIONES QP y FINANCIERO QP.
+    """
+    from .contratos_constants import (
+        DIAS_AVISO_GARANTIA, DEPT_COMPRAS, DEPT_FINANCIERO,
+    )
+
+    conn = repository.get_conn()
+    repository.ensure_garantia_vencimiento_template(conn)
+
+    total = 0
+
+    try:
+        cta_url = url_for("contratos.contab_lista", _external=True)
+    except Exception:
+        cta_url = "http://bitacoraquimpac.com.ec:5000/contratos/contab"
+
+    for dias in DIAS_AVISO_GARANTIA:
+        # Reutilizamos SQL_GARANTIAS_VENCEN_EN_15_DIAS pero adaptado a N días
+        # usamos list_garantias_vencen_en_n_dias que filtra por DATEDIFF = dias
+        conn2 = repository.get_conn()
+        from .contratos_querys import SQL_GARANTIAS_VENCEN_EN_DIAS
+        cur = conn2.cursor()
+        # SQL_GARANTIAS_VENCEN_EN_DIAS no tiene filtro de días exacto; usamos DATEADD directo
+        rows = cur.execute(f"""
+            SELECT
+                g.id AS garantia_id,
+                g.contrato_id,
+                g.tipo AS garantia_tipo,
+                g.compania_emisora,
+                g.monto_poliza,
+                g.fecha_vencimiento AS garantia_fecha_vencimiento,
+                g.estado AS garantia_estado,
+                g.observaciones AS garantia_observaciones,
+                c.pedido, c.proveedor, c.objeto,
+                c.valor_contrato,
+                c.usuario_solicitante_id,
+                c.usuario_compras_id,
+                c.usuario_compras_nombre,
+                c.aprobado_jefe_por,
+                DATEDIFF(DAY, CAST(GETDATE() AS date), CAST(g.fecha_vencimiento AS date)) AS dias_para_vencer
+            FROM garantias g
+            JOIN contratos c ON c.id = g.contrato_id
+            WHERE COALESCE(g.disabled,0)=0
+              AND COALESCE(c.disabled,0)=0
+              AND g.fecha_vencimiento IS NOT NULL
+              AND CAST(g.fecha_vencimiento AS date) = DATEADD(DAY, ?, CAST(GETDATE() AS date))
+              AND COALESCE(g.estado,'') NOT IN ('Liberada','Anulada')
+            ORDER BY g.fecha_vencimiento ASC, g.id DESC
+        """, (dias,)).fetchall()
+
+        for row in rows:
+            def _v(k):
+                try:
+                    return row[k]
+                except Exception:
+                    return None
+
+            garantia_id = _v("garantia_id")
+
+            # Header color según días restantes
+            if dias == 0:
+                header_color, row_bg = "#dc2626", "#fef2f2"
+                label_dias = "HOY VENCE"
+            elif dias <= 5:
+                header_color, row_bg = "#f97316", "#fff7ed"
+                label_dias = f"{dias} días"
+            elif dias <= 10:
+                header_color, row_bg = "#eab308", "#fefce8"
+                label_dias = f"{dias} días"
+            else:
+                header_color, row_bg = "#16a34a", "#f0fdf4"
+                label_dias = f"{dias} días"
+
+            payload_base = {
+                "garantia_id": garantia_id,
+                "contrato_id": _v("contrato_id"),
+                "pedido": _v("pedido") or "",
+                "proveedor": _v("proveedor") or "",
+                "objeto": _v("objeto") or "",
+                "garantia_tipo": _v("garantia_tipo") or "",
+                "garantia_estado": _v("garantia_estado") or "",
+                "compania_emisora": _v("compania_emisora") or "",
+                "fecha_vencimiento": str(_v("garantia_fecha_vencimiento") or ""),
+                "dias_para_vencer": dias,
+                "header_color": header_color,
+                "row_bg": row_bg,
+                "header_title": (
+                    f"¡Garantía VENCE HOY! — Pedido {_v('pedido') or ''}"
+                    if dias == 0
+                    else f"Garantía por vencer en {dias} día(s) — Pedido {_v('pedido') or ''}"
+                ),
+                "header_subtitle": (
+                    f"Fecha de vencimiento: {_v('garantia_fecha_vencimiento') or ''}"
+                ),
+                "intro_text": (
+                    "La garantía del siguiente contrato vence HOY. Gestione su renovación o liberación de inmediato."
+                    if dias == 0
+                    else (
+                        f"La garantía del siguiente contrato vence en {dias} día(s). "
+                        "Por favor, revisar si corresponde gestionar la renovación, liberación o actualización del estado."
+                    )
+                ),
+                "cta_url": cta_url,
+                "cta_label": "Ver garantía / contrato",
+                "footer_note": "Ingresa al módulo de Contratos / Garantías para revisar la información.",
+            }
+
+            # Destinatarios: jefes de ambos departamentos
+            destinatarios_ids = set()
+            for dept in (DEPT_COMPRAS, DEPT_FINANCIERO):
+                for jefe in repository.fetch_jefes_por_nombre_departamento(dept):
+                    uid = jefe.get("user_id")
+                    if uid:
+                        destinatarios_ids.add(int(uid))
+
+            for user_id in destinatarios_ids:
+                nombre = repository.fetch_usuario_nombre_por_id(user_id) or f"Usuario {user_id}"
+                payload = dict(payload_base)
+                payload["destinatario_nombre"] = nombre
+
+                ok = repository.enqueue_garantia_vence_n(
+                    conn,
+                    user_id=user_id,
+                    garantia_id=garantia_id,
+                    dias=dias,
+                    payload=payload,
+                )
+                if ok:
+                    total += 1
+
+    conn.commit()
+    return total
