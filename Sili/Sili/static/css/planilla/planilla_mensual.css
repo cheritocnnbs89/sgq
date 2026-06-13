@@ -367,6 +367,18 @@ th.day-col:first-of-type {
   background: #f0fdf4;
 }
 
+/* ── Botón clip de evidencia ── */
+.day-cell { position: relative; }
+.ev-clip-btn {
+  position: absolute; bottom: 1px; right: 2px;
+  background: none; border: none; padding: 0; margin: 0;
+  cursor: pointer; line-height: 1;
+  color: #16a34a; font-size: 11px;
+  opacity: .75; transition: opacity .15s, transform .15s;
+}
+.ev-clip-btn:hover { opacity: 1; transform: scale(1.2); }
+.ev-clip-btn i { pointer-events: none; }
+
 /* ══════════════════════════════════════════════
    COLUMNA DE HOY
 ══════════════════════════════════════════════ */

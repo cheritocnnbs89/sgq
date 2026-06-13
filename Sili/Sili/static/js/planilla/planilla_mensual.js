@@ -299,7 +299,7 @@
   }
 
   function lockPastDays() {
-    const lookbackDays = 30;
+    const lookbackDays = 2;
 
     function formatDate(date) {
       const year = date.getFullYear();
@@ -397,6 +397,48 @@
       .forEach(inp => inp.closest('td')?.classList.add('is-today'));
   }
 
+  function initVerEvidencia() {
+    const modal   = document.getElementById('verEvidenciaModal');
+    if (!modal) return;
+    const bsModal = new bootstrap.Modal(modal);
+
+    document.addEventListener('click', function (e) {
+      const btn = e.target.closest('.ev-clip-btn');
+      if (!btn) return;
+      e.stopPropagation();
+
+      const tarea   = btn.dataset.tarea;
+      const fecha   = btn.dataset.fecha;
+      const obs     = btn.dataset.obs  || '';
+      const file    = btn.dataset.file || '';
+      const hasFile = btn.dataset.hasfile === '1';
+
+      // fecha legible
+      var d = new Date(fecha + 'T00:00:00');
+      document.getElementById('vev-fecha').textContent =
+        d.toLocaleDateString('es-EC', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+      // observación
+      document.getElementById('vev-obs').textContent = obs || '(sin observación)';
+
+      // archivo
+      const fileWrap = document.getElementById('vev-file-wrap');
+      const noFile   = document.getElementById('vev-nofile');
+      if (hasFile) {
+        fileWrap.style.display = '';
+        noFile.style.display   = 'none';
+        document.getElementById('vev-file-name').textContent = file;
+        document.getElementById('vev-file-link').href =
+          '/planilla-mensual/evidencia/' + tarea + '/' + fecha;
+      } else {
+        fileWrap.style.display = 'none';
+        noFile.style.display   = '';
+      }
+
+      bsModal.show();
+    });
+  }
+
   initEvidenceModeSwitch();
   initCheckToggles();
   initEvidenceDrop();
@@ -407,4 +449,5 @@
   markOverdue();
   initActDetalle();
   initSendWeeklyReport();
+  initVerEvidencia();
 })();

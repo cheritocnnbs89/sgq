@@ -224,6 +224,7 @@
           {% for d in dias %}
           {% set iso = d.isocalendar() %}
           {% set key = t['id']|string + '-' + d.isoformat() %}
+          {% set ev  = evidencias.get(key) %}
           <td class="text-center day-cell"
               data-week="{{ iso.week }}"
               data-dow="{{ iso.weekday }}"
@@ -231,6 +232,17 @@
             <input type="checkbox" class="tick"
                    data-date="{{ d.isoformat() }}"
                    {% if checks.get(key) %}checked{% endif %}>
+            {% if ev %}
+            <button type="button" class="ev-clip-btn"
+                    title="Ver evidencia"
+                    data-tarea="{{ t['id'] }}"
+                    data-fecha="{{ d.isoformat() }}"
+                    data-obs="{{ (ev.obs or '')|e }}"
+                    data-file="{{ (ev.file_name or '')|e }}"
+                    data-hasfile="{{ '1' if ev.file_name else '0' }}">
+              <i class="bi bi-paperclip"></i>
+            </button>
+            {% endif %}
           </td>
           {% endfor %}
         </tr>
@@ -280,6 +292,39 @@
                   id="evGuardarBtn">Guardar</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL VER EVIDENCIA ===== -->
+  <div class="modal fade" id="verEvidenciaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background:#f0fdf4;border-bottom:1px solid #bbf7d0;">
+          <h6 class="modal-title text-success">
+            <i class="bi bi-paperclip me-2"></i>Evidencia registrada
+          </h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-1" style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;">
+            <i class="bi bi-calendar3 me-1"></i><span id="vev-fecha"></span>
+          </p>
+          <div class="mb-3">
+            <div class="fw-semibold mb-1" style="font-size:13px;">Observación</div>
+            <div id="vev-obs" class="p-2 rounded" style="background:#f8fafc;border:1px solid #e2e8f0;font-size:13px;white-space:pre-wrap;min-height:40px;"></div>
+          </div>
+          <div id="vev-file-wrap">
+            <div class="fw-semibold mb-1" style="font-size:13px;">Archivo adjunto</div>
+            <a id="vev-file-link" href="#" target="_blank" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-file-earmark-arrow-down me-1"></i><span id="vev-file-name"></span>
+            </a>
+          </div>
+          <div id="vev-nofile" class="text-muted" style="font-size:12px;">Sin archivo adjunto.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
     </div>
   </div>
 
