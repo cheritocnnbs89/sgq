@@ -56,6 +56,8 @@ from .contratos_querys import (
     SQL_GARANTIAS_VENCEN_EN_15_DIAS,
     SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT,
     SQL_NOTIFY_QUEUE_INSERT_GARANTIA,
+    SQL_UPDATE_FINANZAS_CONTRATO,
+    SQL_USUARIO_DEPT_NOMBRE_POR_ID,
 )
 
 
@@ -249,6 +251,22 @@ def fetch_archivos_contrato_asc(contrato_id: int):
 def fetch_archivo_por_id(archivo_id: int):
     conn = get_conn()
     return conn.cursor().execute(SQL_ARCHIVO_POR_ID, (archivo_id,)).fetchone()
+
+
+def update_finanzas_contrato(contrato_id: int, con_penalizacion: int,
+                              monto_penalizacion, garantia_liberada: int) -> None:
+    conn = get_conn()
+    exec_retry(conn, SQL_UPDATE_FINANZAS_CONTRATO,
+               (con_penalizacion, monto_penalizacion, garantia_liberada, contrato_id))
+    conn.commit()
+
+
+def fetch_dept_nombre_por_usuario_id(usuario_id: int) -> str:
+    conn = get_conn()
+    row = conn.cursor().execute(SQL_USUARIO_DEPT_NOMBRE_POR_ID, (usuario_id,)).fetchone()
+    if not row:
+        return ""
+    return (row["dept_nombre"] if hasattr(row, "keys") else row[0]) or ""
 
 
 def list_contratos(

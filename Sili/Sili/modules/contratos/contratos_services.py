@@ -571,6 +571,35 @@ def soft_delete_garantia(garantia_id: int):
     repository.soft_delete_garantia(garantia_id)
 
 
+def is_finanzas_qp() -> bool:
+    """Devuelve True si el usuario de la sesión pertenece al departamento FINANCIERO QP."""
+    uid = session_user_id()
+    if not uid:
+        return False
+    dept = repository.fetch_dept_nombre_por_usuario_id(uid)
+    return "financiero qp" in (dept or "").lower().strip()
+
+
+def update_finanzas_contrato_from_request(contrato_id: int) -> dict:
+    """Actualiza penalización y garantía liberada. Solo para Finanzas QP."""
+    if not is_finanzas_qp():
+        return {"ok": False, "message": "Solo el personal de Finanzas QP puede registrar estos campos."}
+
+    con_pen = 1 if request.form.get("con_penalizacion") == "1" else 0
+    monto_raw = (request.form.get("monto_penalizacion") or "").strip().replace(",", "")
+    monto = None
+    if con_pen:
+        try:
+            monto = float(monto_raw) if monto_raw else None
+        except ValueError:
+            return {"ok": False, "message": "Monto de penalización inválido."}
+
+    glib = 1 if request.form.get("garantia_liberada") == "1" else 0
+
+    repository.update_finanzas_contrato(contrato_id, con_pen, monto, glib)
+    return {"ok": True}
+
+
 def get_requiere_renovacion_filter(raw: str):
     raw = (raw or "").strip().lower()
     if raw in ("si", "sí", "1", "true"):

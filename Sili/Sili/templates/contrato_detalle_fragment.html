@@ -193,6 +193,87 @@
     </div>
   </div>
 
+  <!-- Finanzas: Penalización / Garantía Liberada -->
+  <div class="col-12">
+    <div class="detail-card">
+      <div class="detail-head"><i class="bi bi-shield-exclamation"></i> Finanzas</div>
+      <div class="detail-body">
+
+        {# Modo visualización #}
+        <table class="kv-table">
+          <tr>
+            <td class="k">Con penalización</td>
+            <td class="v">
+              {% if finanzas and finanzas.con_penalizacion %}
+                <span class="badge badge-no">Sí</span>
+              {% else %}
+                <span class="badge badge-ok">No</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% if finanzas and finanzas.con_penalizacion and finanzas.monto_penalizacion %}
+          <tr>
+            <td class="k">Monto penalización</td>
+            <td class="v fw-semibold text-danger">${{ "%.2f"|format(finanzas.monto_penalizacion|float) }}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td class="k">Garantía liberada</td>
+            <td class="v">
+              {% if finanzas and finanzas.garantia_liberada %}
+                <span class="badge badge-ok">Sí</span>
+              {% else %}
+                <span class="badge badge-no">No</span>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+
+        {# Formulario solo para Finanzas QP #}
+        {% if es_finanzas_qp %}
+        <hr class="my-3">
+        <div class="text-muted small mb-2"><i class="bi bi-pencil-square me-1"></i>Editar (solo Finanzas QP)</div>
+        <form id="frmFinanzasContrato"
+              data-url="{{ url_finanzas }}"
+              data-csrf="{{ csrf_token() }}">
+          <div class="row g-2 align-items-end">
+            <div class="col-auto">
+              <div class="form-check form-switch mb-0">
+                <input class="form-check-input" type="checkbox" role="switch"
+                       id="fin_con_penalizacion" name="con_penalizacion" value="1"
+                       {% if finanzas and finanzas.con_penalizacion %}checked{% endif %}>
+                <label class="form-check-label small" for="fin_con_penalizacion">Con penalización</label>
+              </div>
+            </div>
+            <div class="col-auto" id="fin_monto_wrap">
+              <input type="number" step="0.01" min="0"
+                     class="form-control form-control-sm"
+                     id="fin_monto" name="monto_penalizacion"
+                     placeholder="Monto $"
+                     value="{{ finanzas.monto_penalizacion if finanzas and finanzas.monto_penalizacion else '' }}">
+            </div>
+            <div class="col-auto">
+              <div class="form-check form-switch mb-0">
+                <input class="form-check-input" type="checkbox" role="switch"
+                       id="fin_garantia_liberada" name="garantia_liberada" value="1"
+                       {% if finanzas and finanzas.garantia_liberada %}checked{% endif %}>
+                <label class="form-check-label small" for="fin_garantia_liberada">Garantía liberada</label>
+              </div>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-sm btn-primary" id="fin_guardar_btn">
+                <i class="bi bi-floppy me-1"></i>Guardar
+              </button>
+            </div>
+          </div>
+          <div id="fin_msg" class="small mt-2"></div>
+        </form>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
   <!-- Adjuntos -->
   <div class="col-12">
     <div class="detail-card">

@@ -248,6 +248,22 @@ SET disabled=1, actualizado_at=GETDATE()
 WHERE id=?
 """
 
+SQL_UPDATE_FINANZAS_CONTRATO = f"""
+UPDATE {TABLA_CONTRATOS}
+SET con_penalizacion   = ?,
+    monto_penalizacion = ?,
+    garantia_liberada  = ?,
+    actualizado_at     = GETDATE()
+WHERE id = ?
+"""
+
+SQL_USUARIO_DEPT_NOMBRE_POR_ID = f"""
+SELECT TOP 1 COALESCE(d.nombre, '') AS dept_nombre
+FROM {TABLA_USUARIOS} u
+LEFT JOIN {TABLA_DEPARTAMENTOS} d ON d.id = u.departamento_id
+WHERE u.id = ?
+"""
+
 SQL_INSERT_GARANTIA = f"""
 INSERT INTO {TABLA_GARANTIAS} (
     contrato_id, tipo, compania_emisora, monto_poliza,
