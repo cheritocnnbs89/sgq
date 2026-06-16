@@ -897,10 +897,22 @@ def planilla():
 
     # ── Tarjetas resumen (solo tareas visibles según filtros) ─────
     today = date.today()
+
+    # Feriados del mes para excluirlos del conteo
+    _feriados_rows = cur.execute(
+        "SELECT fecha FROM plan_feriados WHERE fecha BETWEEN ? AND ? AND (pais='EC' OR pais IS NULL)",
+        (dias[0].isoformat(), dias[-1].isoformat())
+    ).fetchall()
+    _feriados_set = {(r["fecha"] if hasattr(r, "keys") else r[0]) for r in _feriados_rows}
+
+    def _is_lab(d: date) -> bool:
+        """Retorna True si el día es laborable (lunes-viernes y no feriado)."""
+        return d.weekday() < 5 and d.isoformat() not in _feriados_set
+
     _tids_visible = {str(t["id"]) for t in tareas}
     total_act    = len(tareas)
     cumplidas    = sum(1 for k, v in checks.items() if v and k.split("-")[0] in _tids_visible)
-    dias_pasados = [d for d in dias if d <= today]
+    dias_pasados = [d for d in dias if d <= today and _is_lab(d)]
     total_esperadas = len(tareas) * len(dias_pasados)
     pendientes   = max(0, total_esperadas - cumplidas)
     vencidas = 0
