@@ -172,6 +172,14 @@
           <small class="text-muted">Obligatorio si tiene Caja Chica o es Vendedor.</small>
         </div>
 
+        <div class="col-md-4">
+          <label class="form-label">Telegram Chat ID</label>
+          <input type="text" name="telegram_chat_id" class="form-control"
+            value="{{ u['telegram_chat_id'] or '' }}"
+            placeholder="Ej: 7511385943">
+          <small class="text-muted">Requerido para notificaciones del módulo Mensajería.</small>
+        </div>
+
         <div class="col-md-3 d-flex align-items-end">
           <div class="form-check form-switch mb-2">
             <input class="form-check-input" type="checkbox" name="tiene_caja_chica" id="chkCajaChica" value="1"

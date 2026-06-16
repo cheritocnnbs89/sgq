@@ -239,6 +239,7 @@ def register_user_routes(app):
                 puesto_id = None
 
             codigo_sap = (request.form.get("codigo_sap") or "").strip()
+            telegram_chat_id = (request.form.get("telegram_chat_id") or "").strip() or None
 
             try:
                 tiene_caja_chica, tipo_caja_chica = get_caja_chica_values(request.form)
@@ -283,6 +284,7 @@ def register_user_routes(app):
                         tiene_caja_chica,
                         tipo_caja_chica,
                         codigo_sap,
+                        telegram_chat_id,
                         user_id
                     ))
 
@@ -311,6 +313,7 @@ def register_user_routes(app):
                         tiene_caja_chica,
                         tipo_caja_chica,
                         codigo_sap,
+                        telegram_chat_id,
                         user_id
                     ))
 
