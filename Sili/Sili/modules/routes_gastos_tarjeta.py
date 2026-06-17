@@ -4245,7 +4245,23 @@ def register_gastos_routes(app):
                     """)
                     conn.commit()
                 except Exception as _e:
-                    current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s: %s", _col, _e)
+                    current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s en detalle: %s", _col, _e)
+
+            # Columnas boletos_aereos / tarjeta_sin_soporte en gastos_tarjeta (cabecera)
+            for _col, _tipo in [('boletos_aereos',     'BIT'),
+                                 ('tarjeta_sin_soporte','BIT')]:
+                try:
+                    cur.execute(f"""
+                        IF NOT EXISTS (
+                            SELECT 1 FROM sys.columns
+                            WHERE object_id = OBJECT_ID(N'dbo.gastos_tarjeta')
+                              AND name = N'{_col}'
+                        )
+                        ALTER TABLE dbo.gastos_tarjeta ADD {_col} {_tipo} NULL
+                    """)
+                    conn.commit()
+                except Exception as _e:
+                    current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s en cabecera: %s", _col, _e)
 
             current_app.logger.warning(
                 "==================== [NUEVO_GASTO] FILAS PROCESADAS (pre-INSERT): %d fila(s) ====================",
@@ -4563,7 +4579,23 @@ def register_gastos_routes(app):
                 """)
                 conn.commit()
             except Exception as _e:
-                current_app.logger.warning("[EDITAR_GASTO] No se pudo asegurar columna %s: %s", _col, _e)
+                current_app.logger.warning("[EDITAR_GASTO] No se pudo asegurar columna %s en detalle: %s", _col, _e)
+
+        # Columnas boletos_aereos / tarjeta_sin_soporte en gastos_tarjeta (cabecera)
+        for _col, _tipo in [('boletos_aereos',     'BIT'),
+                             ('tarjeta_sin_soporte','BIT')]:
+            try:
+                cur.execute(f"""
+                    IF NOT EXISTS (
+                        SELECT 1 FROM sys.columns
+                        WHERE object_id = OBJECT_ID(N'dbo.gastos_tarjeta')
+                          AND name = N'{_col}'
+                    )
+                    ALTER TABLE dbo.gastos_tarjeta ADD {_col} {_tipo} NULL
+                """)
+                conn.commit()
+            except Exception as _e:
+                current_app.logger.warning("[EDITAR_GASTO] No se pudo asegurar columna %s en cabecera: %s", _col, _e)
 
         # --------------------------
         # Traer gasto
