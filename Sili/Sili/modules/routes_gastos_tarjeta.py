@@ -4058,6 +4058,11 @@ def register_gastos_routes(app):
             motivos = request.form.getlist('det_motivo')
             inds = request.form.getlist('det_indicador')
 
+            current_app.logger.warning(
+                "[NUEVO_GASTO][FORM_RAW] det_descripcion=%r | det_motivo=%r | det_centro_costo=%r | det_indicador=%r",
+                descs, motivos, centros, inds
+            )
+
             cs = nums('det_con_soporte')
             ss = nums('det_sin_soporte')
             sf = nums('det_subtotal_factura')
@@ -4237,6 +4242,13 @@ def register_gastos_routes(app):
                 except Exception as _e:
                     current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s: %s", _col, _e)
 
+            current_app.logger.warning(
+                "[NUEVO_GASTO][ROWS_PROCESADAS] n=%d rows=%r",
+                len(rows),
+                [{'motivo': r['motivo'], 'centro_costo': r['centro_costo'],
+                  'descripcion': r['descripcion'], 'indicador': r['indicador']} for r in rows]
+            )
+
             # ================== ESCRITURA SQL SERVER ==================
             gasto_id = None
 
@@ -4285,6 +4297,10 @@ def register_gastos_routes(app):
                     )
 
                 for r in rows:
+                    current_app.logger.warning(
+                        "[NUEVO_GASTO][DET_INSERT] gasto_id=%r motivo=%r centro_costo=%r descripcion=%r indicador=%r",
+                        gasto_id, r['motivo'], r['centro_costo'], r['descripcion'], r['indicador']
+                    )
                     cur.execute("""
                         INSERT INTO gastos_tarjeta_detalle(
                             gasto_id, descripcion, observacion, centro_costo, motivo, indicador,
