@@ -4059,9 +4059,14 @@ def register_gastos_routes(app):
             inds = request.form.getlist('det_indicador')
 
             current_app.logger.warning(
-                "[NUEVO_GASTO][FORM_RAW] det_descripcion=%r | det_motivo=%r | det_centro_costo=%r | det_indicador=%r",
-                descs, motivos, centros, inds
+                "==================== [NUEVO_GASTO] DATOS DEL FORMULARIO (DETALLE) ===================="
             )
+            current_app.logger.warning("[NUEVO_GASTO][FORM] archivo adjunto(s): %r", request.files.getlist('archivo') and [f.filename for f in request.files.getlist('archivo') if f and f.filename])
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_descripcion  : %r", descs)
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_observacion  : %r", obss)
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_motivo       : %r", motivos)
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_centro_costo : %r", centros)
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_indicador    : %r", inds)
 
             cs = nums('det_con_soporte')
             ss = nums('det_sin_soporte')
@@ -4243,11 +4248,15 @@ def register_gastos_routes(app):
                     current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s: %s", _col, _e)
 
             current_app.logger.warning(
-                "[NUEVO_GASTO][ROWS_PROCESADAS] n=%d rows=%r",
-                len(rows),
-                [{'motivo': r['motivo'], 'centro_costo': r['centro_costo'],
-                  'descripcion': r['descripcion'], 'indicador': r['indicador']} for r in rows]
+                "==================== [NUEVO_GASTO] FILAS PROCESADAS (pre-INSERT): %d fila(s) ====================",
+                len(rows)
             )
+            for _i, _r in enumerate(rows):
+                current_app.logger.warning(
+                    "[NUEVO_GASTO][FILA %d] descripcion='%s' | observacion='%s' | motivo='%s' | centro_costo='%s' | indicador='%s'",
+                    _i, _r.get('descripcion',''), _r.get('observacion',''),
+                    _r.get('motivo',''), _r.get('centro_costo',''), _r.get('indicador','')
+                )
 
             # ================== ESCRITURA SQL SERVER ==================
             gasto_id = None
@@ -4296,11 +4305,20 @@ def register_gastos_routes(app):
                         (gasto_id, fname)
                     )
 
+                current_app.logger.warning(
+                    "==================== [NUEVO_GASTO] ADJUNTOS GUARDADOS: %r ====================",
+                    saved_files
+                )
                 for r in rows:
                     current_app.logger.warning(
-                        "[NUEVO_GASTO][DET_INSERT] gasto_id=%r motivo=%r centro_costo=%r descripcion=%r indicador=%r",
-                        gasto_id, r['motivo'], r['centro_costo'], r['descripcion'], r['indicador']
+                        "==================== [NUEVO_GASTO] INSERT DETALLE (gasto_id=%r) ====================",
+                        gasto_id
                     )
+                    current_app.logger.warning("[NUEVO_GASTO][DET] descripcion  : '%s'", r.get('descripcion',''))
+                    current_app.logger.warning("[NUEVO_GASTO][DET] observacion  : '%s'", r.get('observacion',''))
+                    current_app.logger.warning("[NUEVO_GASTO][DET] motivo       : '%s'", r.get('motivo',''))
+                    current_app.logger.warning("[NUEVO_GASTO][DET] centro_costo : '%s'", r.get('centro_costo',''))
+                    current_app.logger.warning("[NUEVO_GASTO][DET] indicador    : '%s'", r.get('indicador',''))
                     cur.execute("""
                         INSERT INTO gastos_tarjeta_detalle(
                             gasto_id, descripcion, observacion, centro_costo, motivo, indicador,
