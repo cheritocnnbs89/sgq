@@ -142,6 +142,27 @@ def puede_aprobar_gerente(solicitud, usuario_id, ctx):
     return ctx.get("es_gerente", False)
 
 
+def puede_eliminar(solicitud, usuario_id, ctx):
+    """
+    Reglas:
+    - Admin: siempre puede.
+    - Coordinador: puede si estado NO es APROBADA ni COMPLETADA.
+    - Aprobador: puede si estado NO es COMPLETADA.
+    - Solicitante (usuario normal): solo si estado es PENDIENTE_COORDINACION y es su propia solicitud.
+    """
+    estado = solicitud["estado"]
+    if ctx["es_admin"]:
+        return True
+    if solicitud["tipo"] in ctx["tipos_coordinador"]:
+        return estado not in ("APROBADA", "COMPLETADA")
+    if solicitud["tipo"] in ctx["tipos_aprobador"]:
+        return estado != "COMPLETADA"
+    # Usuario normal: solo la propia solicitud en PENDIENTE_COORDINACION
+    if solicitud.get("solicitante_id") == usuario_id:
+        return estado == "PENDIENTE_COORDINACION"
+    return False
+
+
 def puede_reagendar(solicitud, usuario_id, ctx):
     """El coordinador asignado (o admin) puede reagendar cualquier solicitud activa."""
     if solicitud["estado"] in ("COMPLETADA", "RECHAZADA"):

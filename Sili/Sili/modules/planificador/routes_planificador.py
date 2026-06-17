@@ -69,6 +69,7 @@ def solicitudes():
         d["puede_aprobar_gerente"] = svc.puede_aprobar_gerente(s, u["id"], ctx)
         d["puede_completar"]       = svc.puede_completar(s, u["id"], ctx)
         d["puede_reagendar"]       = svc.puede_reagendar(s, u["id"], ctx)
+        d["puede_eliminar"]        = svc.puede_eliminar(s, u["id"], ctx)
         d["estado_label"]    = svc.estado_label(s["estado"])
         d["estado_class"]    = svc.estado_badge_class(s["estado"])
         d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
@@ -151,6 +152,7 @@ def detalle(sid):
     d["puede_aprobar_gerente"] = svc.puede_aprobar_gerente(s, u["id"], ctx)
     d["puede_completar"]       = svc.puede_completar(s, u["id"], ctx)
     d["puede_reagendar"]       = svc.puede_reagendar(s, u["id"], ctx)
+    d["puede_eliminar"]        = svc.puede_eliminar(s, u["id"], ctx)
     d["estado_label"]    = svc.estado_label(s["estado"])
     d["estado_class"]    = svc.estado_badge_class(s["estado"])
     d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
@@ -564,6 +566,43 @@ def reagendar(sid):
     except Exception:
         pass
     flash(f"Solicitud reagendada para el {nueva_fecha}. El solicitante fue notificado.", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# POST: Eliminar (soft-delete con notificación por email)
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/eliminar", methods=["POST"],
+                       endpoint="planificador_eliminar")
+@require_login
+def eliminar(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_eliminar(s, u["id"], ctx):
+        abort(403)
+
+    es_solicitante = (s["solicitante_id"] == u["id"] and
+                      not ctx["es_admin"] and
+                      not ctx["tipos_coordinador"] and
+                      not ctx["tipos_aprobador"])
+
+    repo.insert_solicitud_log(sid, "ELIMINADA", u["id"], u["nombre"],
+                              "Solicitud eliminada del sistema.")
+    repo.delete_solicitud(sid)
+
+    try:
+        notif.notif_eliminada(
+            sid, s["tipo"], s["area_solicitante"],
+            str(s["fecha"]) if s["fecha"] else "—",
+            u["nombre"], s["solicitante_id"],
+            eliminado_por_es_solicitante=es_solicitante,
+        )
+    except Exception:
+        pass
+
+    flash("Solicitud eliminada.", "info")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 

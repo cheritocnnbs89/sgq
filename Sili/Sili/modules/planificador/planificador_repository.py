@@ -861,6 +861,18 @@ def rechazar_por_gerente(solicitud_id: int, gerente_id: int,
                          f"Rechazada por gerente. Motivo: {observacion or '—'}")
 
 
+def delete_solicitud(solicitud_id: int) -> None:
+    """Soft-delete: marca la solicitud como inactiva."""
+    conn = get_db()
+    cur  = conn.cursor()
+    cur.execute(
+        "UPDATE planificador_solicitudes SET activo = 0 WHERE id = ?",
+        (solicitud_id,)
+    )
+    conn.commit()
+    conn.close()
+
+
 def insert_solicitud_log(solicitud_id: int, accion: str,
                          usuario_id, usuario_nombre: str, detalle: str = "") -> None:
     """Registra una acción en el historial de trazabilidad de la solicitud."""
