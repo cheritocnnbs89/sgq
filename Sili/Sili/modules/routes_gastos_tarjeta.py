@@ -4647,6 +4647,17 @@ def register_gastos_routes(app):
                 centros = request.form.getlist('det_centro_costo')
                 inds = request.form.getlist('det_indicador')
 
+                current_app.logger.warning(
+                    "==================== [EDITAR_GASTO %s] DATOS DEL FORMULARIO (DETALLE) ====================",
+                    gasto_id
+                )
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] archivo adjunto(s): %r", gasto_id, [f.filename for f in (request.files.getlist('archivo') or []) if f and f.filename])
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_descripcion  : %r", gasto_id, descs)
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_observacion  : %r", gasto_id, obs)
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_motivo       : %r", gasto_id, motivos)
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_centro_costo : %r", gasto_id, centros)
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_indicador    : %r", gasto_id, inds)
+
                 con_sup = nums('det_con_soporte')
                 sin_sup = nums('det_sin_soporte')
                 sub_fac = nums('det_subtotal_factura')
@@ -4710,9 +4721,15 @@ def register_gastos_routes(app):
                     total_con_iva_val = 0.0
 
                 current_app.logger.warning(
-                    "[EDITAR] detalle_rows=%s | centro_costo=%r | subtotal=%r | sin_soporte=%r | iva=%r | total=%r",
-                    len(new_rows), centro_costo, subtotal_factura_val, sin_soporte_val, iva_val, total_con_iva_val
+                    "==================== [EDITAR_GASTO %s] FILAS PROCESADAS (pre-INSERT): %d fila(s) ====================",
+                    gasto_id, len(new_rows)
                 )
+                for _i, _r in enumerate(new_rows):
+                    current_app.logger.warning(
+                        "[EDITAR_GASTO %s][FILA %d] descripcion='%s' | observacion='%s' | motivo='%s' | centro_costo='%s' | indicador='%s'",
+                        gasto_id, _i, _r.get('descripcion',''), _r.get('observacion',''),
+                        _r.get('motivo',''), _r.get('centro_costo',''), _r.get('indicador','')
+                    )
 
                 # 4) Manejo de archivos
                 UPLOAD_DIR = os.path.join(current_app.root_path, "static", "uploads")
@@ -4759,8 +4776,20 @@ def register_gastos_routes(app):
                         (gasto_id, fname)
                     )
 
+                current_app.logger.warning(
+                    "==================== [EDITAR_GASTO %s] ADJUNTOS GUARDADOS: %r ====================",
+                    gasto_id, saved_files
+                )
                 cur.execute("DELETE FROM gastos_tarjeta_detalle WHERE gasto_id = ?", (gasto_id,))
                 for r in new_rows:
+                    current_app.logger.warning(
+                        "==================== [EDITAR_GASTO %s] INSERT DETALLE ====================", gasto_id
+                    )
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] descripcion  : '%s'", gasto_id, r.get('descripcion',''))
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] observacion  : '%s'", gasto_id, r.get('observacion',''))
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] motivo       : '%s'", gasto_id, r.get('motivo',''))
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] centro_costo : '%s'", gasto_id, r.get('centro_costo',''))
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] indicador    : '%s'", gasto_id, r.get('indicador',''))
                     cur.execute("""
                         INSERT INTO gastos_tarjeta_detalle(
                             gasto_id, descripcion, observacion,
