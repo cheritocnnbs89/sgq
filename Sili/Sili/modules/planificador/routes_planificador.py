@@ -590,7 +590,8 @@ def eliminar(sid):
 
     repo.insert_solicitud_log(sid, "ELIMINADA", u["id"], u["nombre"],
                               "Solicitud eliminada del sistema.")
-    repo.delete_solicitud(sid)
+    repo.delete_solicitud(sid, eliminado_por_id=u["id"],
+                          eliminado_por_nombre=u["nombre"])
 
     try:
         notif.notif_eliminada(
