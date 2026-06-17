@@ -2,6 +2,19 @@
 # -*- coding: utf-8 -*-
 
 ACTIVE_KEY = "planificador"
+
+# ── Nombres de tablas ──────────────────────────────────────────
+TBL_SOLICITUDES  = "planificador_solicitudes"
+TBL_CONFIG       = "planificador_config"
+TBL_GRUPOS       = "planificador_grupos"
+TBL_LOGS         = "planificador_solicitud_logs"
+TBL_TIPO_FLAGS   = "planificador_tipo_flags"
+TBL_NOTIFY_INAPP = "notify_inapp"
+TBL_USUARIOS     = "usuarios"
+TBL_DEPARTAMENTOS = "departamentos"
+TBL_PUESTOS      = "puestos"
+TBL_PARAM_VALUES = "param_values"
+TBL_PARAM_GROUPS = "param_groups"
 PERM_SOLICITUDES = "planificador.solicitudes"
 PERM_CONFIG = "planificador.configuracion"
 
