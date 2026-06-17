@@ -524,57 +524,6 @@ def collect_gastos_pendientes_aprobacion_filters(request, session, privileged_ro
 
     return filtros, where, args, is_privileged
 
-def recalc_gasto_totales(conn, gasto_id):
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT
-            COALESCE(SUM(con_soporte), 0)        AS con_soporte,
-            COALESCE(SUM(sin_soporte), 0)        AS sin_soporte,
-            COALESCE(SUM(subtotal_factura), 0)   AS subtotal_factura,
-            COALESCE(SUM(servicios_10), 0)       AS servicios_10,
-            COALESCE(SUM(subtotal_sin_iva), 0)   AS subtotal_sin_iva,
-            COALESCE(SUM(iva), 0)                AS iva,
-            COALESCE(SUM(total_con_iva), 0)      AS total_con_iva
-        FROM gastos_tarjeta_detalle
-        WHERE gasto_id = ?
-    """, (gasto_id,))
-
-    row = cur.fetchone()
-
-    if not row:
-        cs = ss = sf = s10 = ssi = iv = tci = 0
-    else:
-        try:
-            cs  = row["con_soporte"] or 0
-            ss  = row["sin_soporte"] or 0
-            sf  = row["subtotal_factura"] or 0
-            s10 = row["servicios_10"] or 0
-            ssi = row["subtotal_sin_iva"] or 0
-            iv  = row["iva"] or 0
-            tci = row["total_con_iva"] or 0
-        except Exception:
-            cs  = row[0] or 0
-            ss  = row[1] or 0
-            sf  = row[2] or 0
-            s10 = row[3] or 0
-            ssi = row[4] or 0
-            iv  = row[5] or 0
-            tci = row[6] or 0
-
-    cur.execute("""
-        UPDATE gastos_tarjeta
-        SET
-            con_soporte = ?,
-            sin_soporte = ?,
-            subtotal_factura = ?,
-            servicios_10 = ?,
-            subtotal_sin_iva = ?,
-            iva = ?,
-            total_con_iva = ?
-        WHERE id = ?
-    """, (cs, ss, sf, s10, ssi, iv, tci, gasto_id))
-
 # ---------------- util ----------------
 def norm(txt: str) -> str:
     if not isinstance(txt, str):

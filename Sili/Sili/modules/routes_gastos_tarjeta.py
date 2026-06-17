@@ -3834,7 +3834,11 @@ def register_gastos_routes(app):
             factura_xml_id = int(factura_xml_id_raw) if factura_xml_id_raw.isdigit() else None
 
             motivo = (request.form.get('descripcion') or request.form.get('motivo') or '').strip()
+            # Fallback: si no hay campo cabecera, tomar el primer det_centro_costo (igual que en editar)
             centro_costo = (request.form.get('centro_costo') or '').strip()
+            if not centro_costo:
+                _cc_tmp = request.form.getlist('det_centro_costo')
+                centro_costo = (_cc_tmp[0] if _cc_tmp else '').strip()
             fecha_autorizacion = (request.form.get('fecha_autorizacion') or '').strip()
             numero_factura = (request.form.get('numero_factura') or '').strip()
             clave_autorizacion = (request.form.get('clave_autorizacion') or '').strip()
@@ -4197,6 +4201,42 @@ def register_gastos_routes(app):
                 tarjeta_sin_soporte = 0
                 boletos_aereos = 0
 
+            # ================== ASEGURAR COLUMNAS Y TABLAS EN SQL SERVER ==================
+            # gastos_tarjeta_archivos
+            try:
+                cur.execute("""
+                    IF OBJECT_ID(N'dbo.gastos_tarjeta_archivos', N'U') IS NULL
+                    BEGIN
+                        CREATE TABLE dbo.gastos_tarjeta_archivos(
+                            id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                            gasto_id INT NOT NULL,
+                            filename NVARCHAR(500) NOT NULL,
+                            uploaded_at DATETIME NOT NULL DEFAULT GETDATE()
+                        );
+                    END
+                """)
+                conn.commit()
+            except Exception as _e:
+                current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar gastos_tarjeta_archivos: %s", _e)
+
+            # Columnas centro_costo / motivo / indicador en gastos_tarjeta_detalle
+            # La migración SQLite no corre en SQL Server — se aseguran aquí
+            for _col, _tipo in [('centro_costo', 'NVARCHAR(200)'),
+                                 ('motivo',       'NVARCHAR(300)'),
+                                 ('indicador',    'NVARCHAR(10)')]:
+                try:
+                    cur.execute(f"""
+                        IF NOT EXISTS (
+                            SELECT 1 FROM sys.columns
+                            WHERE object_id = OBJECT_ID(N'dbo.gastos_tarjeta_detalle')
+                              AND name = N'{_col}'
+                        )
+                        ALTER TABLE dbo.gastos_tarjeta_detalle ADD {_col} {_tipo} NULL
+                    """)
+                    conn.commit()
+                except Exception as _e:
+                    current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s: %s", _col, _e)
+
             # ================== ESCRITURA SQL SERVER ==================
             gasto_id = None
 
@@ -4459,7 +4499,7 @@ def register_gastos_routes(app):
             return '', '', ''
 
         # --------------------------
-        # Asegurar tabla de adjuntos (SQL Server)
+        # Asegurar tabla de adjuntos y columnas de detalle (SQL Server)
         # --------------------------
         TABLE_GASTOS_ARCH = 'gastos_tarjeta_archivos'
         cur.execute(f"""
@@ -4474,6 +4514,22 @@ def register_gastos_routes(app):
             END
         """)
         conn.commit()
+
+        for _col, _tipo in [('centro_costo', 'NVARCHAR(200)'),
+                             ('motivo',       'NVARCHAR(300)'),
+                             ('indicador',    'NVARCHAR(10)')]:
+            try:
+                cur.execute(f"""
+                    IF NOT EXISTS (
+                        SELECT 1 FROM sys.columns
+                        WHERE object_id = OBJECT_ID(N'dbo.gastos_tarjeta_detalle')
+                          AND name = N'{_col}'
+                    )
+                    ALTER TABLE dbo.gastos_tarjeta_detalle ADD {_col} {_tipo} NULL
+                """)
+                conn.commit()
+            except Exception as _e:
+                current_app.logger.warning("[EDITAR_GASTO] No se pudo asegurar columna %s: %s", _col, _e)
 
         # --------------------------
         # Traer gasto

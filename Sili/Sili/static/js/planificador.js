@@ -145,7 +145,7 @@
     /* Resetear sección de agrupación */
     const grupoSection = document.getElementById('grupoSection');
     const grupoList    = document.getElementById('grupoCheckList');
-    if (grupoSection) grupoSection.style.display = 'none';
+    if (grupoSection) grupoSection.classList.add('grupo-section-hidden');
     if (grupoList)    grupoList.innerHTML = '';
 
     openModal('modalCoordinar');
@@ -159,7 +159,7 @@
       if (!grupoList) return;
       if (!otros || otros.length === 0) return;  // nada que agrupar
 
-      if (grupoSection) grupoSection.style.display = 'block';
+      if (grupoSection) grupoSection.classList.remove('grupo-section-hidden');
 
       var html = '';
       otros.forEach(function (o) {
@@ -480,6 +480,92 @@
     }
   });
 
+  /* ── Paginación de tablas por tab ── */
+  var PAGE_SIZE = 15;
+
+  function initPagination(container) {
+    var rows   = Array.from(container.querySelectorAll('tbody tr'));
+    var pg     = container.querySelector('.planner-pagination');
+    var info   = container.querySelector('.planner-page-info');
+    var nums   = container.querySelector('.planner-page-nums');
+    var prev   = container.querySelector('.planner-page-prev');
+    var next   = container.querySelector('.planner-page-next');
+
+    if (!pg || !info || !nums || !prev || !next) return;
+
+    // Si no hay suficientes filas (o solo el "empty" row) no mostrar paginación
+    var dataRows = rows.filter(function(r){ return r.cells.length > 1; });
+    if (dataRows.length <= PAGE_SIZE) {
+      pg.classList.add('planner-pagination--hidden');
+      return;
+    }
+
+    var totalPages = Math.ceil(dataRows.length / PAGE_SIZE);
+    var current = 1;
+
+    function render(page) {
+      current = page;
+      var start = (page - 1) * PAGE_SIZE;
+      var end   = start + PAGE_SIZE;
+      dataRows.forEach(function(r, i) {
+        if (i >= start && i < end) {
+          r.classList.remove('pg-hidden');
+        } else {
+          r.classList.add('pg-hidden');
+        }
+      });
+
+      info.textContent = 'Mostrando ' + (start + 1) + '–' + Math.min(end, dataRows.length) + ' de ' + dataRows.length;
+
+      // Botones numéricos (máx 5 visibles con elipsis implícita)
+      nums.innerHTML = '';
+      var pages = buildPageRange(current, totalPages);
+      pages.forEach(function(p) {
+        if (p === '…') {
+          var sp = document.createElement('span');
+          sp.className = 'btn btn-sm disabled px-2';
+          sp.textContent = '…';
+          nums.appendChild(sp);
+        } else {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn btn-sm ' + (p === current ? 'btn-secondary' : 'btn-outline-secondary');
+          btn.textContent = p;
+          btn.addEventListener('click', function(){ render(p); });
+          nums.appendChild(btn);
+        }
+      });
+
+      prev.disabled = current === 1;
+      next.disabled = current === totalPages;
+      pg.classList.remove('planner-pagination--hidden');
+    }
+
+    function buildPageRange(cur, total) {
+      if (total <= 7) return Array.from({length: total}, function(_, i){ return i+1; });
+      var pages = [];
+      if (cur <= 4) {
+        pages = [1,2,3,4,5,'…',total];
+      } else if (cur >= total - 3) {
+        pages = [1,'…',total-4,total-3,total-2,total-1,total];
+      } else {
+        pages = [1,'…',cur-1,cur,cur+1,'…',total];
+      }
+      return pages;
+    }
+
+    prev.addEventListener('click', function(){ if (current > 1) render(current - 1); });
+    next.addEventListener('click', function(){ if (current < totalPages) render(current + 1); });
+
+    render(1);
+  }
+
+  function initAllPaginations() {
+    document.querySelectorAll('[data-paginated-table]').forEach(function(container) {
+      initPagination(container);
+    });
+  }
+
   /* ── Tabs de secciones ── */
   document.addEventListener('click', function (e) {
     const tab = e.target.closest('[data-tab]');
@@ -499,13 +585,35 @@
     if (target) target.classList.add('active');
   });
 
+  /* ── Campo Presupuesto Base Cero (solo tipo Vuelo) ── */
+  var TIPO_VUELO = 'Vuelo';
+  function toggleCampoVuelo(tipoVal) {
+    var div   = document.getElementById('campoPptoBaseDiv');
+    var input = document.getElementById('campoPptoBase');
+    if (!div || !input) return;
+    var esVuelo = (tipoVal === TIPO_VUELO);
+    div.classList.toggle('visible', esVuelo);
+    input.required = esVuelo;
+    if (!esVuelo) input.value = '';
+  }
+
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', function () {
+    initAllPaginations();
     renderCalendar();
 
     /* Prellenar fecha de hoy en modal nueva */
     const nfecha = document.getElementById('nfecha');
     if (nfecha && !nfecha.value) nfecha.value = TODAY_STR;
+
+    /* Mostrar/ocultar campo Presupuesto Base Cero según tipo */
+    var selectTipo = document.querySelector('#modalNueva select[name="tipo"]');
+    if (selectTipo) {
+      selectTipo.addEventListener('change', function () {
+        toggleCampoVuelo(this.value);
+      });
+      toggleCampoVuelo(selectTipo.value);
+    }
 
     /* Ocultar spinner si la página se restauró desde caché (botón atrás) */
     var overlay = document.getElementById('plannerLoadingOverlay');

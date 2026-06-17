@@ -318,3 +318,18 @@
 .log-usuario  { font-weight:600; color:#0f172a; }
 .log-detalle  { flex:1; color:#475569; }
 .log-fecha    { font-size:.72rem; white-space:nowrap; }
+
+/* Paginación de tablas */
+.planner-pagination--hidden { display:none; }
+tr.pg-hidden { display:none; }
+
+/* Configuración Telegram */
+.telegram-chat-input { max-width:200px; }
+
+/* Campo condicional para tipo Vuelo */
+.campo-vuelo { display:none; }
+.campo-vuelo.visible { display:block; }
+
+/* Sección de agrupación en modal coordinar */
+.grupo-section-hidden { display:none; }
+.grupo-section-wrap   { margin-top:.85rem; }
