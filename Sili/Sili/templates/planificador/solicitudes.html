@@ -197,6 +197,16 @@
                     </button>
                   </form>
                   {% endif %}
+                  {% if r.puede_eliminar %}
+                  <form method="post"
+                        action="{{ url_for('planificador.planificador_eliminar', sid=r.id) }}"
+                        class="d-inline" data-confirm="¿Eliminar esta solicitud? Esta acción no se puede deshacer.">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-danger" title="Eliminar">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                  {% endif %}
                 </td>
               </tr>
               {% else %}

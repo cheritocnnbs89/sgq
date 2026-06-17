@@ -185,6 +185,16 @@
 </div>
 {% endif %}
 
+{% if s.puede_eliminar %}
+<div class="d-flex justify-content-end mt-2">
+  <form method="post" action="{{ url_for('planificador.planificador_eliminar', sid=s.id) }}"
+        data-confirm="¿Eliminar esta solicitud? Esta acción no se puede deshacer.">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Eliminar</button>
+  </form>
+</div>
+{% endif %}
+
 {% if logs %}
 <div class="mt-4">
   <h6 class="text-muted fw-semibold mb-2"><i class="bi bi-clock-history me-1"></i>Historial de acciones</h6>

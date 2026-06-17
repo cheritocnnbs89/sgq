@@ -304,6 +304,60 @@ def notif_reagendada(solicitud_id: int, tipo: str, area: str, fecha_anterior: st
 
 
 # ──────────────────────────────────────────────────────────
+# 6. Eliminada → notificar según quién elimina
+# ──────────────────────────────────────────────────────────
+
+def notif_eliminada(solicitud_id: int, tipo: str, area: str, fecha: str,
+                    eliminado_por_nombre: str,
+                    solicitante_id: int,
+                    eliminado_por_es_solicitante: bool) -> None:
+    """
+    Si el solicitante elimina → avisa a los coordinadores.
+    Si coordinador/aprobador/admin elimina → avisa al solicitante y a coordinadores.
+    """
+    coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo(tipo)
+    filas = [
+        ("N° solicitud",   str(solicitud_id)),
+        ("Tipo",           tipo),
+        ("Área",           area),
+        ("Fecha",          fecha),
+        ("Eliminado por",  eliminado_por_nombre),
+    ]
+
+    if eliminado_por_es_solicitante:
+        # Solicitante cancela → avisa a coordinadores
+        subject = f"[Planificador] Solicitud #{solicitud_id} cancelada por el solicitante"
+        titulo  = f"Solicitud #{solicitud_id} cancelada"
+        saludo  = "El solicitante ha cancelado la siguiente solicitud."
+        html    = _email_html("PLANIFICADOR · CANCELADA", titulo, saludo, filas)
+        emails  = []
+        for c in coordinadores:
+            _inapp(c["id"], subject,
+                   f"Solicitud #{solicitud_id} — {tipo} — {fecha} fue cancelada por {eliminado_por_nombre}")
+            if c.get("email"):
+                emails.append(c["email"])
+        _email(emails, subject, html)
+    else:
+        # Coordinador / aprobador / admin elimina → avisa al solicitante y coordinadores
+        subject = f"[Planificador] Solicitud #{solicitud_id} eliminada"
+        titulo  = f"Solicitud #{solicitud_id} eliminada"
+        saludo  = "La siguiente solicitud ha sido eliminada del sistema."
+        html    = _email_html("PLANIFICADOR · ELIMINADA", titulo, saludo, filas)
+        emails  = []
+        email_solic = repo.get_email_by_usuario_id(solicitante_id)
+        _inapp(solicitante_id, subject,
+               f"Tu solicitud #{solicitud_id} — {tipo} — {fecha} fue eliminada por {eliminado_por_nombre}")
+        if email_solic:
+            emails.append(email_solic)
+        for c in coordinadores:
+            _inapp(c["id"], subject,
+                   f"Solicitud #{solicitud_id} — {tipo} — {fecha} fue eliminada por {eliminado_por_nombre}")
+            if c.get("email"):
+                emails.append(c["email"])
+        _email(emails, subject, html)
+
+
+# ──────────────────────────────────────────────────────────
 # 6. Pendiente aprobación gerente → notificar al gerente
 # ──────────────────────────────────────────────────────────
 
