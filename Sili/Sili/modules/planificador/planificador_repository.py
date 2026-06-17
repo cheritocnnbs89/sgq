@@ -861,14 +861,23 @@ def rechazar_por_gerente(solicitud_id: int, gerente_id: int,
                          f"Rechazada por gerente. Motivo: {observacion or '—'}")
 
 
-def delete_solicitud(solicitud_id: int) -> None:
-    """Soft-delete: marca la solicitud como inactiva."""
+def delete_solicitud(solicitud_id: int,
+                     eliminado_por_id=None,
+                     eliminado_por_nombre: str = "") -> None:
+    """
+    Eliminación lógica: marca activo=0 y guarda quién/cuándo eliminó.
+    El registro permanece en la base para auditoría.
+    """
     conn = get_db()
     cur  = conn.cursor()
-    cur.execute(
-        "UPDATE planificador_solicitudes SET activo = 0 WHERE id = ?",
-        (solicitud_id,)
-    )
+    cur.execute("""
+        UPDATE planificador_solicitudes
+           SET activo               = 0,
+               eliminado_por_id     = ?,
+               eliminado_por_nombre = ?,
+               fecha_eliminacion    = GETDATE()
+         WHERE id = ?
+    """, (eliminado_por_id, eliminado_por_nombre or "", solicitud_id))
     conn.commit()
     conn.close()
 
