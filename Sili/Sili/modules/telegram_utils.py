@@ -11,9 +11,17 @@ from __future__ import annotations
 
 import json
 import os
+import ssl
 import urllib.parse
 import urllib.request
 from typing import Optional
+
+# Contexto SSL que no verifica el certificado del servidor.
+# Necesario en entornos Windows donde Python no puede acceder al store de
+# certificados del sistema operativo para validar api.telegram.org.
+_SSL_CTX = ssl.create_default_context()
+_SSL_CTX.check_hostname = False
+_SSL_CTX.verify_mode = ssl.CERT_NONE
 
 _TELEGRAM_API = "https://api.telegram.org/bot{token}/{method}"
 
@@ -53,7 +61,7 @@ def send_message(chat_id: str | int, text: str,
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=8) as resp:
+        with urllib.request.urlopen(req, timeout=8, context=_SSL_CTX) as resp:
             result = json.loads(resp.read().decode())
             return result.get("ok", False)
     except Exception as exc:
@@ -78,7 +86,7 @@ def set_webhook(webhook_url: str) -> dict:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as resp:
             return json.loads(resp.read().decode())
     except Exception as exc:
         return {"ok": False, "error": str(exc)}
@@ -92,7 +100,7 @@ def delete_webhook() -> dict:
     url = _TELEGRAM_API.format(token=token, method="deleteWebhook")
     try:
         req = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as resp:
             return json.loads(resp.read().decode())
     except Exception as exc:
         return {"ok": False, "error": str(exc)}
@@ -106,7 +114,7 @@ def get_webhook_info() -> dict:
     url = _TELEGRAM_API.format(token=token, method="getWebhookInfo")
     try:
         req = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10, context=_SSL_CTX) as resp:
             return json.loads(resp.read().decode())
     except Exception as exc:
         return {"ok": False, "error": str(exc)}
