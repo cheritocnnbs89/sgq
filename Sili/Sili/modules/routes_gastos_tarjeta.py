@@ -4800,8 +4800,6 @@ def register_gastos_routes(app):
                     filename_db = g.get('archivo') or None
 
                 # 5) TRANSACCIÓN ÚNICA DB
-                cur.execute("BEGIN TRANSACTION")
-
                 for fname in saved_files:
                     cur.execute(
                         "INSERT INTO gastos_tarjeta_archivos (gasto_id, filename) VALUES (?, ?)",
