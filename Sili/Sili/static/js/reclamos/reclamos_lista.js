@@ -5541,4 +5541,60 @@ if (first.codigo_om && first.estado_global) {
     textarea.addEventListener('input', function () {
         panel.classList.add('d-none');
     });
+
+    // ─── Editar proceso de OM (admin / coordinador) ───────────────────────────
+    (function () {
+        const btnEditar   = document.getElementById('btn-editar-proceso');
+        const formEditar  = document.getElementById('form-editar-proceso');
+        const btnGuardar  = document.getElementById('btn-guardar-proceso');
+        const btnCancelar = document.getElementById('btn-cancelar-proceso');
+        const selProceso  = document.getElementById('sel-proceso-edit');
+        const detProceso  = document.getElementById('det-proceso');
+        const detId       = document.getElementById('det-reclamo-id');
+
+        if (!btnEditar || !formEditar || !selProceso) return;
+
+        btnEditar.addEventListener('click', function () {
+            formEditar.classList.toggle('d-none');
+        });
+
+        btnCancelar.addEventListener('click', function () {
+            formEditar.classList.add('d-none');
+        });
+
+        btnGuardar.addEventListener('click', async function () {
+            const reclamoId = detId ? detId.value : '';
+            if (!reclamoId) { alert('No hay OM seleccionada'); return; }
+
+            const selectedIds = Array.from(selProceso.selectedOptions).map(o => o.value);
+            if (!selectedIds.length) { alert('Selecciona al menos un proceso'); return; }
+
+            const fd = new FormData();
+            selectedIds.forEach(id => fd.append('proceso_id', id));
+            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            if (csrfMeta) fd.append('csrf_token', csrfMeta.content);
+
+            btnGuardar.disabled = true;
+            try {
+                const resp = await fetch(`/reclamos/${reclamoId}/editar-proceso`, {
+                    method: 'POST', body: fd
+                });
+                const data = await resp.json();
+                if (data.ok) {
+                    if (detProceso) detProceso.textContent = data.proceso_text || '';
+                    formEditar.classList.add('d-none');
+
+                    // actualizar data-proceso en la fila activa
+                    const activeRow = document.querySelector('tr.table-active, tr.selected');
+                    if (activeRow) activeRow.dataset.proceso = data.proceso_text || '';
+                } else {
+                    alert('Error: ' + (data.msg || 'No se pudo actualizar'));
+                }
+            } catch (e) {
+                alert('Error de conexión');
+            } finally {
+                btnGuardar.disabled = false;
+            }
+        });
+    })();
 }());
