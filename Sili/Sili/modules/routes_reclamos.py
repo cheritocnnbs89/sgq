@@ -3401,10 +3401,11 @@ def register_reclamos_routes(app):
             rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_8, (reclamo_id,)).fetchall()
 
         # -------------------------
-        # Caso 2: CON imputación
+        # Caso 2: CON imputación — filtrar por imputacion_id para que cada
+        # sponsor solo vea los miembros que él agregó
         # -------------------------
         else:
-            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_9, (reclamo_id,)).fetchall()
+            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_9, (reclamo_id, imputacion_id)).fetchall()
         # -------------------------
         # Payload (para ambos casos)
         # -------------------------
