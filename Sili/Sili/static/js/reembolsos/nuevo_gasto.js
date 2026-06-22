@@ -2365,13 +2365,15 @@ document.addEventListener('DOMContentLoaded', function () {
       return { ok: true };
     };
 
-    form.addEventListener('submit', async (e) => {
+    async function handleSubmit(e) {
       if (e.defaultPrevented) return;
+
+      // Siempre prevenir primero — e.preventDefault() después de un await no funciona en todos los browsers
+      e.preventDefault();
+      e.stopPropagation();
 
       const det = document.getElementById('descripcion_input');
       if (det && !(det.value || '').trim()) {
-        e.preventDefault();
-        e.stopPropagation();
         det.setCustomValidity('La descripción es obligatoria.');
         det.reportValidity();
         det.setCustomValidity('');
@@ -2386,8 +2388,6 @@ document.addEventListener('DOMContentLoaded', function () {
         : { ok: true };
 
       if (!pr.ok) {
-        e.preventDefault();
-        e.stopPropagation();
         markInvalid(pr.el, true);
         focusErr(pr.el);
         return;
@@ -2395,8 +2395,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const nf = document.getElementById('numero_factura');
       if (nf && nf.hasAttribute('required') && !(nf.value || '').trim()) {
-        e.preventDefault();
-        e.stopPropagation();
         nf.setCustomValidity('El N° de factura es obligatorio.');
         nf.reportValidity();
         nf.setCustomValidity('');
@@ -2411,8 +2409,6 @@ document.addEventListener('DOMContentLoaded', function () {
         : { ok: true };
 
       if (!det2.ok) {
-        e.preventDefault();
-        e.stopPropagation();
         focusErr(det2.el);
         return;
       }
@@ -2422,8 +2418,6 @@ document.addEventListener('DOMContentLoaded', function () {
         : { ok: true };
 
       if (!tt.ok) {
-        e.preventDefault();
-        e.stopPropagation();
         focusErr(tt.el);
         return;
       }
@@ -2433,12 +2427,15 @@ document.addEventListener('DOMContentLoaded', function () {
         : { ok: true };
 
       if (!ad.ok) {
-        e.preventDefault();
-        e.stopPropagation();
         focusErr(ad.el);
         return;
       }
-    }, true);
+
+      // Todo válido — enviar el formulario sin el listener para evitar recursión
+      form.removeEventListener('submit', handleSubmit, true);
+      form.submit();
+    }
+    form.addEventListener('submit', handleSubmit, true);
   });
 
   function applyCentroCostoRequiredRule() {
