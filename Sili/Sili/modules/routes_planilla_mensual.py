@@ -259,10 +259,16 @@ def planilla_dashboard():
                u.username                                              AS responsable,
                COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''),
                         u.username)                                    AS responsable_display,
-               d.nombre                                                AS depto
+               d.nombre                                                AS depto,
+               t.okr_id,
+               o.nombre                                                AS okr_nombre,
+               t.resultado_clave_id,
+               rc.nombre                                               AS resultado_clave_nombre
         FROM plan_tareas t
         JOIN usuarios u ON u.id = t.usuario_id
         LEFT JOIN departamentos d ON d.id = t.departamento_id
+        LEFT JOIN plan_okrs o ON o.id = t.okr_id
+        LEFT JOIN plan_resultados_clave rc ON rc.id = t.resultado_clave_id
         WHERE t.activo = 1
           AND COALESCE(u.disabled, 0) = 0
     """
@@ -777,6 +783,70 @@ def planilla_dashboard():
 
     proj_rows.sort(key=lambda r: r["q_total_pct"])
 
+    # ── KPIs por OKR (solo tareas con OKR asignado) ──────────────────────────
+    by_okr = {}
+    for t in tareas:
+        okr_id   = t.get("okr_id")
+        if not okr_id:
+            continue
+        okr_nom  = t.get("okr_nombre") or "OKR sin nombre"
+        key      = (okr_id, okr_nom)
+        g = by_okr.setdefault(key, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "rcs": {}})
+        tid = t["id"]
+        g["plan"]   += planeadas_por_tarea.get(tid, 0)
+        g["real"]   += realizados_por_tarea.get(tid, 0)
+        g["plan_h"] += planeadas_hoy_por_tarea.get(tid, 0)
+        g["real_h"] += realizados_hoy_por_tarea.get(tid, 0)
+        # nivel resultado clave
+        rc_id  = t.get("resultado_clave_id")
+        rc_nom = t.get("resultado_clave_nombre") or "Sin Resultado Clave"
+        rck    = (rc_id, rc_nom)
+        rc = g["rcs"].setdefault(rck, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "tareas": []})
+        rc["plan"]   += planeadas_por_tarea.get(tid, 0)
+        rc["real"]   += realizados_por_tarea.get(tid, 0)
+        rc["plan_h"] += planeadas_hoy_por_tarea.get(tid, 0)
+        rc["real_h"] += realizados_hoy_por_tarea.get(tid, 0)
+        tp = planeadas_por_tarea.get(tid, 0)
+        tr = realizados_por_tarea.get(tid, 0)
+        tph = planeadas_hoy_por_tarea.get(tid, 0)
+        trh = realizados_hoy_por_tarea.get(tid, 0)
+        rc["tareas"].append({
+            "id": tid,
+            "nombre": t.get("nombre") or "",
+            "responsable": t.get("responsable") or "",
+            "plan": tp, "real": tr,
+            "esp_pct":  round(100.0 * tph / tp, 1) if tp else 0.0,
+            "real_pct": round(100.0 * trh / tp, 1) if tp else 0.0,
+        })
+
+    okr_rows = []
+    for (okr_id, okr_nom), g in sorted(by_okr.items(), key=lambda x: (x[0][0] is None, x[0][1])):
+        plan = g["plan"] or 0
+        real = g["real"] or 0
+        plan_h = g["plan_h"] or 0
+        real_h = g["real_h"] or 0
+        esp_pct  = round(100.0 * plan_h / plan, 1) if plan else 0.0
+        real_pct = round(100.0 * real_h / plan, 1) if plan else 0.0
+        rcs_list = []
+        for (rc_id, rc_nom), rv in sorted(g["rcs"].items(), key=lambda x: (x[0][0] is None, x[0][1])):
+            rp = rv["plan"] or 0
+            rr = rv["real"] or 0
+            rph = rv["plan_h"] or 0
+            rrh = rv["real_h"] or 0
+            rcs_list.append({
+                "id": rc_id, "nombre": rc_nom,
+                "plan": rp, "real": rr,
+                "esp_pct":  round(100.0 * rph / rp, 1) if rp else 0.0,
+                "real_pct": round(100.0 * rrh / rp, 1) if rp else 0.0,
+                "tareas": rv["tareas"],
+            })
+        okr_rows.append({
+            "id": okr_id, "nombre": okr_nom,
+            "plan": plan, "real": real,
+            "esp_pct": esp_pct, "real_pct": real_pct,
+            "resultados_clave": rcs_list,
+        })
+
     return render_template(
         "planilla/dashboard.html",
         y=y, m=m,
@@ -796,6 +866,7 @@ def planilla_dashboard():
         summary_rows=summary_rows,
         proj_rows=proj_rows,
         proj_cols=proj_cols,
+        okr_rows=okr_rows,
     )
 
 
@@ -1184,10 +1255,12 @@ def tareas_new():
             FROM usuarios WHERE COALESCE(disabled,0)=0 ORDER BY nombre_completo, username
         """).fetchall()
         departamentos = cur.execute("SELECT id, nombre FROM departamentos ORDER BY nombre").fetchall()
+        okrs = cur.execute("SELECT id, nombre FROM plan_okrs WHERE activo=1 ORDER BY nombre").fetchall()
         return render_template(
             "planilla/tarea_form.html",
             modo="nuevo", responsables=responsables,
-            departamentos=departamentos, frecuencias=FRECUENCIAS, tarea=None
+            departamentos=departamentos, frecuencias=FRECUENCIAS, tarea=None,
+            okrs=okrs, resultados_clave=[]
         )
 
     if not has_perm("Planilla Mensual", "crear"):
@@ -1225,12 +1298,17 @@ def tareas_new():
     if not row_u:
         return "Usuario responsable inválido", 400
 
+    okr_id            = request.form.get("okr_id")
+    resultado_clave_id = request.form.get("resultado_clave_id")
+    okr_id            = int(okr_id) if okr_id and str(okr_id).isdigit() else None
+    resultado_clave_id = int(resultado_clave_id) if resultado_clave_id and str(resultado_clave_id).isdigit() else None
+
     cur.execute("""
-    INSERT INTO plan_tareas(nombre, frecuencia, usuario_id, departamento_id, activo, dia_semana, dia_mes)
-    VALUES (?,?,?,?,?,?,?)
+    INSERT INTO plan_tareas(nombre, frecuencia, usuario_id, departamento_id, activo, dia_semana, dia_mes, okr_id, resultado_clave_id)
+    VALUES (?,?,?,?,?,?,?,?,?)
     """, (nombre, frecuencia, int(responsable_user_id),
         (int(departamento_id) if departamento_id else None), activo,
-        dia_semana, dia_mes))
+        dia_semana, dia_mes, okr_id, resultado_clave_id))
 
     conn.commit()
     return redirect(url_for("planilla_mensual.tareas_list"))
@@ -1267,6 +1345,15 @@ def tareas_edit(tid: int):
         # usuario_id ya está directo en la tarea
         selected_user_id = tarea["usuario_id"] if hasattr(tarea, "keys") else None
 
+        okrs = cur.execute("SELECT id, nombre FROM plan_okrs WHERE activo=1 ORDER BY nombre").fetchall()
+        tarea_okr_id = tarea["okr_id"] if hasattr(tarea, "keys") else None
+        resultados_clave = []
+        if tarea_okr_id:
+            resultados_clave = cur.execute(
+                "SELECT id, nombre FROM plan_resultados_clave WHERE okr_id=? AND activo=1 ORDER BY nombre",
+                (tarea_okr_id,)
+            ).fetchall()
+
         return render_template(
             "planilla/tarea_form.html",
             modo="editar",
@@ -1275,7 +1362,9 @@ def tareas_edit(tid: int):
             frecuencias=FRECUENCIAS,
             tarea=tarea,
             dept_users=dept_users,
-            selected_user_id=selected_user_id
+            selected_user_id=selected_user_id,
+            okrs=okrs,
+            resultados_clave=resultados_clave
         )
 
     if not has_perm("Planilla Mensual", "editar"):
@@ -1313,13 +1402,19 @@ def tareas_edit(tid: int):
             return "Seleccione responsable.", 400
         uid = row_old["usuario_id"] if hasattr(row_old, "keys") else row_old[0]
 
+    okr_id            = request.form.get("okr_id")
+    resultado_clave_id = request.form.get("resultado_clave_id")
+    okr_id            = int(okr_id) if okr_id and str(okr_id).isdigit() else None
+    resultado_clave_id = int(resultado_clave_id) if resultado_clave_id and str(resultado_clave_id).isdigit() else None
+
     cur.execute("""
     UPDATE plan_tareas
-       SET nombre=?, frecuencia=?, usuario_id=?, departamento_id=?, activo=?, dia_semana=?, dia_mes=?
+       SET nombre=?, frecuencia=?, usuario_id=?, departamento_id=?, activo=?, dia_semana=?, dia_mes=?,
+           okr_id=?, resultado_clave_id=?
      WHERE id=?
     """, (nombre, frecuencia, uid,
       (int(departamento_id) if departamento_id else None), activo,
-      dia_semana, dia_mes, tid))
+      dia_semana, dia_mes, okr_id, resultado_clave_id, tid))
 
     conn.commit()
     return redirect(url_for("planilla_mensual.tareas_list"))
@@ -1517,6 +1612,71 @@ def admin_send_weekly_report():
     except Exception as exc:
         current_app.logger.exception("[PLANILLA_WEEKLY] admin_send_weekly_report falló")
         return jsonify(ok=False, error=str(exc)), 500
+
+
+# =============== API OKR / RESULTADOS CLAVE ===============
+
+@planilla_bp.route("/api/okrs", methods=["GET"])
+def api_okrs_list():
+    if not has_perm("Planilla Mensual", "ver"):
+        abort(403)
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT id, nombre FROM plan_okrs WHERE activo=1 ORDER BY nombre"
+    ).fetchall()
+    return jsonify([dict(r) for r in rows])
+
+
+@planilla_bp.route("/api/okrs", methods=["POST"])
+def api_okrs_create():
+    if not has_perm("Planilla Mensual", "crear"):
+        abort(403)
+    nombre = (request.get_json(silent=True) or {}).get("nombre", "").strip()
+    if not nombre:
+        return jsonify(ok=False, msg="Nombre requerido"), 400
+    conn = get_db()
+    cur  = conn.cursor()
+    cur.execute(
+        "INSERT INTO plan_okrs(nombre, activo) OUTPUT inserted.id VALUES(?, 1)",
+        (nombre,)
+    )
+    row = cur.fetchone()
+    conn.commit()
+    new_id = row[0] if row else None
+    return jsonify(ok=True, id=new_id, nombre=nombre)
+
+
+@planilla_bp.route("/api/okrs/<int:okr_id>/resultados-clave", methods=["GET"])
+def api_resultados_clave_list(okr_id: int):
+    if not has_perm("Planilla Mensual", "ver"):
+        abort(403)
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT id, nombre FROM plan_resultados_clave WHERE okr_id=? AND activo=1 ORDER BY nombre",
+        (okr_id,)
+    ).fetchall()
+    return jsonify([dict(r) for r in rows])
+
+
+@planilla_bp.route("/api/resultados-clave", methods=["POST"])
+def api_resultados_clave_create():
+    if not has_perm("Planilla Mensual", "crear"):
+        abort(403)
+    data    = request.get_json(silent=True) or {}
+    nombre  = data.get("nombre", "").strip()
+    okr_id  = data.get("okr_id")
+    if not nombre or not okr_id:
+        return jsonify(ok=False, msg="nombre y okr_id requeridos"), 400
+    conn = get_db()
+    cur  = conn.cursor()
+    cur.execute(
+        "INSERT INTO plan_resultados_clave(okr_id, nombre, activo) OUTPUT inserted.id VALUES(?,?,1)",
+        (int(okr_id), nombre)
+    )
+    row = cur.fetchone()
+    conn.commit()
+    new_id = row[0] if row else None
+    return jsonify(ok=True, id=new_id, nombre=nombre, okr_id=okr_id)
 
 
 # =============== REGISTRO DEL BLUEPRINT ===============

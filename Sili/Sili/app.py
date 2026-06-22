@@ -12,7 +12,7 @@ from pathlib import Path
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
 from jinja2 import ChoiceLoader, FileSystemLoader
-
+  
 from modules.config import configure_app
 from modules.db import init_app as db_init_app
 from modules.security import init_security

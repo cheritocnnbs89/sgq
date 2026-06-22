@@ -106,4 +106,141 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!isEdit && depSel?.value) {
     loadUsers(depSel.value, false);
   }
+
+  // ─── OKR / Resultado Clave ────────────────────────────────────────────────
+  const okrSel      = document.getElementById('okr_id');
+  const rcSel       = document.getElementById('resultado_clave_id');
+  const btnNuevoOkr = document.getElementById('btn-nuevo-okr');
+  const nuevoOkrWrap= document.getElementById('nuevo-okr-wrap');
+  const nuevoOkrNom = document.getElementById('nuevo-okr-nombre');
+  const btnGuarOkr  = document.getElementById('btn-guardar-okr');
+  const btnCancOkr  = document.getElementById('btn-cancelar-okr');
+  const btnNuevoRc  = document.getElementById('btn-nuevo-rc');
+  const nuevoRcWrap = document.getElementById('nuevo-rc-wrap');
+  const nuevoRcNom  = document.getElementById('nuevo-rc-nombre');
+  const btnGuarRc   = document.getElementById('btn-guardar-rc');
+  const btnCancRc   = document.getElementById('btn-cancelar-rc');
+
+  function getCsrf() {
+    return document.querySelector('meta[name="csrf-token"]')?.content
+        || document.querySelector('input[name="csrf_token"]')?.value
+        || '';
+  }
+
+  async function loadResultadosClave(okrId, selectedId) {
+    if (!rcSel) return;
+    if (!okrId) {
+      rcSel.innerHTML = '<option value="">-- Seleccione primero un OKR --</option>';
+      if (btnNuevoRc) btnNuevoRc.disabled = true;
+      return;
+    }
+    rcSel.innerHTML = '<option value="">Cargando...</option>';
+    try {
+      const r = await fetch(`/planilla-mensual/api/okrs/${okrId}/resultados-clave`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      });
+      const list = await r.json();
+      rcSel.innerHTML = '<option value="">-- Seleccione Resultado Clave --</option>';
+      list.forEach(rc => {
+        const opt = document.createElement('option');
+        opt.value = rc.id;
+        opt.textContent = rc.nombre;
+        if (selectedId && rc.id == selectedId) opt.selected = true;
+        rcSel.appendChild(opt);
+      });
+      if (btnNuevoRc) btnNuevoRc.disabled = false;
+    } catch {
+      rcSel.innerHTML = '<option value="">(Error al cargar)</option>';
+    }
+  }
+
+  // Al cambiar OKR → recargar resultados clave
+  okrSel?.addEventListener('change', () => {
+    loadResultadosClave(okrSel.value, null);
+  });
+
+  // Botón "+" Nuevo OKR
+  btnNuevoOkr?.addEventListener('click', () => {
+    nuevoOkrWrap?.classList.toggle('d-none');
+    nuevoOkrNom?.focus();
+  });
+  btnCancOkr?.addEventListener('click', () => {
+    nuevoOkrWrap?.classList.add('d-none');
+    if (nuevoOkrNom) nuevoOkrNom.value = '';
+  });
+  btnGuarOkr?.addEventListener('click', async () => {
+    const nombre = nuevoOkrNom?.value.trim();
+    if (!nombre) { nuevoOkrNom?.focus(); return; }
+    btnGuarOkr.disabled = true;
+    try {
+      const r = await fetch('/planilla-mensual/api/okrs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrf(),
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ nombre })
+      });
+      const data = await r.json();
+      if (data.ok && data.id) {
+        const opt = document.createElement('option');
+        opt.value = data.id;
+        opt.textContent = data.nombre;
+        opt.selected = true;
+        okrSel?.appendChild(opt);
+        if (okrSel) okrSel.value = data.id;
+        nuevoOkrWrap?.classList.add('d-none');
+        if (nuevoOkrNom) nuevoOkrNom.value = '';
+        loadResultadosClave(data.id, null);
+      }
+    } catch { /* silent */ }
+    btnGuarOkr.disabled = false;
+  });
+
+  // Botón "+" Nuevo Resultado Clave
+  btnNuevoRc?.addEventListener('click', () => {
+    nuevoRcWrap?.classList.toggle('d-none');
+    nuevoRcNom?.focus();
+  });
+  btnCancRc?.addEventListener('click', () => {
+    nuevoRcWrap?.classList.add('d-none');
+    if (nuevoRcNom) nuevoRcNom.value = '';
+  });
+  btnGuarRc?.addEventListener('click', async () => {
+    const nombre = nuevoRcNom?.value.trim();
+    const okrId  = okrSel?.value;
+    if (!nombre || !okrId) { nuevoRcNom?.focus(); return; }
+    btnGuarRc.disabled = true;
+    try {
+      const r = await fetch('/planilla-mensual/api/resultados-clave', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrf(),
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ nombre, okr_id: okrId })
+      });
+      const data = await r.json();
+      if (data.ok && data.id) {
+        const opt = document.createElement('option');
+        opt.value = data.id;
+        opt.textContent = data.nombre;
+        opt.selected = true;
+        rcSel?.appendChild(opt);
+        if (rcSel) rcSel.value = data.id;
+        nuevoRcWrap?.classList.add('d-none');
+        if (nuevoRcNom) nuevoRcNom.value = '';
+      }
+    } catch { /* silent */ }
+    btnGuarRc.disabled = false;
+  });
+
+  // Al cargar en modo editar: si ya hay OKR seleccionado, cargar sus RCs
+  if (okrSel?.value) {
+    const selectedRcId = rcSel?.querySelector('option[selected]')?.value
+        || (rcSel?.options.length > 1 ? rcSel.value : null);
+    loadResultadosClave(okrSel.value, selectedRcId);
+  }
 });

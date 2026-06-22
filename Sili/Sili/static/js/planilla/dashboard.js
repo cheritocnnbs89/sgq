@@ -58,7 +58,7 @@
   let gDep = null;
   let gRep = null;
   let gTrend = null;
-  let gBurn = null;
+
 
   function setChartTheme() {
     if (!window.Chart) return;
@@ -70,7 +70,7 @@
     Chart.defaults.color = ink;
     Chart.defaults.borderColor = line;
 
-    [gDep, gRep, gTrend, gBurn].forEach(chart => {
+    [gDep, gRep, gTrend].forEach(chart => {
       if (!chart?.options?.scales) return;
       chart.options.scales.x.ticks.color = muted;
       chart.options.scales.y.ticks.color = muted;
@@ -269,29 +269,7 @@
       });
     }
 
-    const cBurn = document.getElementById('chartBurn');
-    if (cBurn) {
-      const labels = CHART.burnup?.labels || [];
-      gBurn = new Chart(cBurn, {
-        ...baseLineOpts,
-        data: {
-          labels,
-          datasets: [
-            { label: 'Planeado acumulado', data: CHART.burnup?.plan_acum || [], borderColor: '#8b5cf6', backgroundColor: rgba('#8b5cf6', .14), fill: true },
-            { label: 'Real acumulado', data: CHART.burnup?.real_acum || [], borderColor: '#10b981', backgroundColor: rgba('#10b981', .14), fill: true }
-          ]
-        },
-        options: {
-          ...baseLineOpts.options,
-          plugins: {
-            ...baseLineOpts.options.plugins,
-            todayLine: { index: getTodayIndex(labels) }
-          }
-        }
-      });
-    }
-
-    [cDep, cRep, cTrend, cBurn].forEach(canvas => canvas?.closest('.chart-box')?.classList.remove('loading'));
+    [cDep, cRep, cTrend].forEach(canvas => canvas?.closest('.chart-box')?.classList.remove('loading'));
 
     initChartToolbars();
     initSparklines();
@@ -302,7 +280,7 @@
   }
 
   function initChartToolbars() {
-    const charts = { chartDep: gDep, chartRep: gRep, chartTrend: gTrend, chartBurn: gBurn };
+    const charts = { chartDep: gDep, chartRep: gRep, chartTrend: gTrend };
 
     document.querySelectorAll('.chart-toolbar').forEach(toolbar => {
       const id = toolbar.dataset.for;
@@ -356,7 +334,7 @@
     });
 
     document.getElementById('btnExportAll')?.addEventListener('click', () => {
-      ['chartDep', 'chartRep', 'chartTrend', 'chartBurn'].forEach(id => {
+      ['chartDep', 'chartRep', 'chartTrend'].forEach(id => {
         const canvas = document.getElementById(id);
         if (canvas) download(`${id}_${ym}.png`, canvas.toDataURL('image/png'), 'image/png');
       });
@@ -421,7 +399,7 @@
       bootstrap.Modal.getOrCreateInstance(modal).show();
     };
 
-    [gDep, gRep, gTrend, gBurn].forEach(chart => {
+    [gDep, gRep, gTrend].forEach(chart => {
       if (!chart?.canvas) return;
       chart.canvas.addEventListener('click', event => {
         const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
@@ -439,8 +417,7 @@
     [
       [document.getElementById('chartDep'), gDep],
       [document.getElementById('chartRep'), gRep],
-      [document.getElementById('chartTrend'), gTrend],
-      [document.getElementById('chartBurn'), gBurn]
+      [document.getElementById('chartTrend'), gTrend]
     ].forEach(([canvas, chart]) => {
       if (!canvas || !chart) return;
       const total = chart.data.datasets.reduce((outer, dataset) => outer + dataset.data.reduce((inner, value) => inner + (+value || 0), 0), 0);
@@ -487,7 +464,6 @@
   }
 
   function initAnimations() {
-    animateTodayLine(gBurn, 300, true);
     animateTodayLine(gTrend, 300, true);
   }
 
@@ -686,8 +662,15 @@
         document.getElementById('btnExportAll')?.click();
       }
       if (event.altKey && event.key === '0') {
-        [gDep, gRep, gTrend, gBurn].forEach(chart => chart?.resetZoom?.());
+        [gDep, gRep, gTrend].forEach(chart => chart?.resetZoom?.());
       }
+    });
+  }
+
+  function initOkrBars() {
+    document.querySelectorAll('.okr-bar-fill[data-pct]').forEach(el => {
+      const pct = Math.min(parseFloat(el.dataset.pct) || 0, 100);
+      el.style.width = pct + '%';
     });
   }
 
@@ -699,5 +682,6 @@
     initTableExportAndSort();
     initFeriados();
     initShortcuts();
+    initOkrBars();
   });
 })();

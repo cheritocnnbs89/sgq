@@ -5180,6 +5180,7 @@ def register_reclamos_routes(app):
                     r.cliente_nombre,
                     r.observacion,
                     r.proceso_text AS proceso_text,
+                    COALESCE(pv_proc.valor, r.proceso_text) AS proceso_imputado_text,
                     r.material_desc AS material_desc,
                     r.procede AS procede,
                     c.nombre AS ciudad,
@@ -5241,7 +5242,42 @@ def register_reclamos_routes(app):
                         ).value('.', 'NVARCHAR(MAX)'), 1, 2, '')
                     ) AS equipo_resumen,
                 r.requiere_carta_cliente,
-                r.carta_cliente_notif_at
+                r.carta_cliente_notif_at,
+
+                    (
+                        SELECT COUNT(*)
+                        FROM reclamo_respuesta_equipo_acciones a
+                        WHERE a.reclamo_id = r.id
+                          AND a.imputacion_id = ri.id
+                          AND COALESCE(a.activo, 1) = 1
+                          AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                          AND COALESCE(a.cumplido, 0) = 0
+                          AND a.fecha_compromiso IS NOT NULL
+                          AND a.fecha_compromiso < CAST(GETDATE() AS DATE)
+                          AND NOT EXISTS (
+                              SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
+                              WHERE e.accion_id = a.id
+                                AND COALESCE(e.activo, 1) = 1
+                          )
+                    ) AS acciones_vencidas,
+
+                    (
+                        SELECT COUNT(*)
+                        FROM reclamo_respuesta_equipo_acciones a
+                        WHERE a.reclamo_id = r.id
+                          AND a.imputacion_id = ri.id
+                          AND COALESCE(a.activo, 1) = 1
+                          AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                          AND COALESCE(a.cumplido, 0) = 0
+                          AND a.fecha_compromiso IS NOT NULL
+                          AND a.fecha_compromiso >= CAST(GETDATE() AS DATE)
+                          AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                          AND NOT EXISTS (
+                              SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
+                              WHERE e.accion_id = a.id
+                                AND COALESCE(e.activo, 1) = 1
+                          )
+                    ) AS acciones_proximas
 
                 FROM reclamo_imputados ri
                 JOIN reclamos r ON r.id = ri.reclamo_id
@@ -5252,6 +5288,7 @@ def register_reclamos_routes(app):
                 LEFT JOIN param_values tr ON tr.group_id = gtr.id AND tr.nombre = r.tipo_reclamo
                 LEFT JOIN param_groups gtt ON gtt.nombre = 'RECL_TRAMITE'
                 LEFT JOIN param_values tt ON tt.group_id = gtt.id AND tt.nombre = r.tipo_tramite
+                LEFT JOIN param_values pv_proc ON pv_proc.id = ri.proceso_id
                 WHERE {where}
                 ORDER BY r.id DESC, ri.id DESC
             """
@@ -6235,6 +6272,8 @@ def register_reclamos_routes(app):
         # Esto evita crear dos líneas, pero permite notificar principal + backup.
         sponsor_notify_ids = []
 
+        collected_pid_map = {}  # imputado_user_id -> proceso_id
+
         if proceso_ids:
             seen_principals = set()
             seen_notify = set()
@@ -6246,6 +6285,7 @@ def register_reclamos_routes(app):
                 if sp and sp not in seen_principals:
                     seen_principals.add(sp)
                     collected_principals.append(str(sp))
+                    collected_pid_map[int(sp)] = pid
                 for nid in _get_sponsors_by_proceso(conn, pid):
                     if nid not in seen_notify:
                         seen_notify.add(nid)
@@ -6278,6 +6318,14 @@ def register_reclamos_routes(app):
                 'aprobado',
                 'sin_respuesta'
             ))
+
+            pid_for_imp = collected_pid_map.get(imputado_id)
+            if pid_for_imp:
+                cur.execute(
+                    "UPDATE reclamo_imputados SET proceso_id = ?"
+                    " WHERE reclamo_id = ? AND imputado_id = ? AND proceso_id IS NULL",
+                    (pid_for_imp, reclamo_id, imputado_id)
+                )
 
             imp_user = _get_user_basic(conn, imputado_id)
 
@@ -6964,6 +7012,56 @@ def register_reclamos_routes(app):
                 pass
             current_app.logger.exception("Error editando proceso OM %s: %s", reclamo_id, e)
             return jsonify(ok=False, msg=f'Error: {e}'), 500
+        finally:
+            conn.close()
+
+    # ----------------------------------------------
+    # ACCIONES PENDIENTES DE EVIDENCIA (para botón warning en Soy Sponsor)
+    # ----------------------------------------------
+    @app.route('/reclamos/<int:reclamo_id>/acciones-pendientes-evidencia', methods=['GET'], endpoint='reclamos_acciones_pendientes_evidencia')
+    @require_login
+    @require_permission('reclamos', 'ver')
+    def reclamos_acciones_pendientes_evidencia(reclamo_id):
+        imputacion_id = request.args.get('imputacion_id', type=int)
+        if not imputacion_id:
+            return jsonify(ok=False, msg='imputacion_id requerido'), 400
+        conn = get_db()
+        cur  = conn.cursor()
+        try:
+            cur.execute("""
+                SELECT
+                    a.id,
+                    a.tipo,
+                    a.descripcion,
+                    a.fecha_compromiso,
+                    CASE
+                        WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
+                        ELSE 'proxima'
+                    END AS estado_fecha,
+                    u_m.nombre_completo AS miembro_nombre
+                FROM reclamo_respuesta_equipo_acciones a
+                LEFT JOIN reclamo_respuestas_equipo re ON re.id = a.respuesta_equipo_id
+                LEFT JOIN usuarios u_m ON u_m.id = re.miembro_id
+                WHERE a.reclamo_id = ?
+                  AND a.imputacion_id = ?
+                  AND COALESCE(a.activo, 1) = 1
+                  AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                  AND COALESCE(a.cumplido, 0) = 0
+                  AND a.fecha_compromiso IS NOT NULL
+                  AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                  AND NOT EXISTS (
+                      SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
+                      WHERE e.accion_id = a.id
+                        AND COALESCE(e.activo, 1) = 1
+                  )
+                ORDER BY a.fecha_compromiso ASC
+            """, (reclamo_id, imputacion_id))
+            rows = cur.fetchall()
+            acciones = [dict(r) for r in rows]
+            return jsonify(ok=True, acciones=acciones)
+        except Exception as e:
+            current_app.logger.exception("Error acciones-pendientes-evidencia OM %s: %s", reclamo_id, e)
+            return jsonify(ok=False, msg=str(e)), 500
         finally:
             conn.close()
 

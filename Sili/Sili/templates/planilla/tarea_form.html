@@ -104,6 +104,63 @@
     <div class="form-text">Obligatorio si la frecuencia es Mensual.</div>
   </div>
 
+  <!-- ===== OKR (Nivel 1) ===== -->
+  <div class="col-12">
+    <hr class="my-1">
+    <p class="fw-semibold mb-2 small text-muted text-uppercase">Alineación OKR</p>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">OKR <span class="text-danger">*</span></label>
+    <div class="input-group">
+      <select name="okr_id" id="okr_id" class="form-select" required>
+        <option value="">-- Seleccione OKR --</option>
+        {% for o in (okrs or []) %}
+        <option value="{{ o.id }}"
+          {% if tarea and tarea.okr_id == o.id %}selected{% endif %}>
+          {{ o.nombre }}
+        </option>
+        {% endfor %}
+      </select>
+      <button type="button" class="btn btn-outline-secondary" id="btn-nuevo-okr" title="Crear nuevo OKR">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+    </div>
+    <div id="nuevo-okr-wrap" class="d-none mt-2">
+      <div class="input-group input-group-sm">
+        <input type="text" id="nuevo-okr-nombre" class="form-control" placeholder="Nombre del nuevo OKR">
+        <button type="button" class="btn btn-success" id="btn-guardar-okr">Guardar</button>
+        <button type="button" class="btn btn-outline-secondary" id="btn-cancelar-okr">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Resultado Clave (Nivel 2) ===== -->
+  <div class="col-md-6">
+    <label class="form-label">Resultado Clave <span class="text-danger">*</span></label>
+    <div class="input-group">
+      <select name="resultado_clave_id" id="resultado_clave_id" class="form-select" required>
+        <option value="">-- Seleccione primero un OKR --</option>
+        {% for rc in (resultados_clave or []) %}
+        <option value="{{ rc.id }}"
+          {% if tarea and tarea.resultado_clave_id == rc.id %}selected{% endif %}>
+          {{ rc.nombre }}
+        </option>
+        {% endfor %}
+      </select>
+      <button type="button" class="btn btn-outline-secondary" id="btn-nuevo-rc" title="Crear nuevo Resultado Clave" disabled>
+        <i class="bi bi-plus-lg"></i>
+      </button>
+    </div>
+    <div id="nuevo-rc-wrap" class="d-none mt-2">
+      <div class="input-group input-group-sm">
+        <input type="text" id="nuevo-rc-nombre" class="form-control" placeholder="Nombre del Resultado Clave">
+        <button type="button" class="btn btn-success" id="btn-guardar-rc">Guardar</button>
+        <button type="button" class="btn btn-outline-secondary" id="btn-cancelar-rc">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Nuevo responsable -->
   <div class="col-md-8">
     <label class="form-label">Nuevo responsable (opcional)</label>

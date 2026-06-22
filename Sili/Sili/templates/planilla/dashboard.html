@@ -168,24 +168,145 @@
 
 </div>
 
-{# ── Burn-up chart ── #}
-<div class="row g-3 mt-2">
+
+{# ── OKR Cumplimiento ── #}
+{% if okr_rows %}
+<div class="row g-3 mt-1">
   <div class="col-12">
-    <div class="section">
-      <div class="section-header d-flex align-items-center justify-content-between">
-        <span><i class="bi bi-lightning-charge"></i> Burn-up: Planeado (baseline) vs Real acumulado</span>
-        <div class="chart-toolbar" data-for="chartBurn">
-          <button class="btn btn-light btn-sm ct-full"  type="button"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-zoom"  type="button"><i class="bi bi-zoom-in"></i></button>
-          <button class="btn btn-light btn-sm ct-reset" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
-          <button class="btn btn-light btn-sm ct-png"   type="button"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv"   type="button"><i class="bi bi-filetype-csv"></i></button>
-        </div>
+    <div class="okr-section">
+      <div class="okr-section-header">
+        <p class="okr-section-title"><i class="bi bi-bullseye me-2"></i>Cumplimiento por OKR</p>
+        <span class="small text-muted">Esperado vs Real · a hoy</span>
       </div>
-      <div class="chart-box tall"><canvas id="chartBurn"></canvas></div>
+
+      {% for okr in okr_rows %}
+      {% set oi = loop.index %}
+      {% set gap = okr.real_pct - okr.esp_pct %}
+      {% set status_cls = 'ok' if gap >= 0 else ('warn' if gap >= -15 else 'danger') %}
+      {% set status_lbl = 'En curso' if gap >= 0 else ('En riesgo' if gap >= -15 else 'Crítico') %}
+      {% set bar_fill   = 'okr-bar-ok' if gap >= 0 else ('okr-bar-warn' if gap >= -15 else 'okr-bar-danger') %}
+      {% set pct_color  = 'text-success' if gap >= 0 else ('text-warning' if gap >= -15 else 'text-danger') %}
+
+      <div class="okr-card">
+        {# ── Cabecera OKR (click = colapsar/expandir RC) ── #}
+        <div class="okr-card-head okr-toggle"
+             data-bs-toggle="collapse"
+             data-bs-target="#okr-detail-{{ oi }}"
+             aria-expanded="false"
+             aria-controls="okr-detail-{{ oi }}"
+             role="button">
+          <div class="okr-card-left">
+            <p class="okr-card-name">{{ okr.nombre }}</p>
+            <div class="okr-card-badges">
+              <span class="okr-badge-plan">Plan · {{ okr.plan }} tareas</span>
+              <span class="okr-badge-{{ status_cls }}">{{ status_lbl }}</span>
+            </div>
+          </div>
+          <div class="okr-big-right">
+            <div class="okr-big-pct {{ pct_color }}">{{ okr.real_pct }}%</div>
+            <div class="okr-big-sub">real / esp. {{ okr.esp_pct }}%</div>
+            <div class="okr-chevron-icon"><i class="bi bi-chevron-down"></i></div>
+          </div>
+        </div>
+
+        <div class="okr-bar-wrap">
+          <div class="okr-bar-label"><span>Esperado</span><span>{{ okr.esp_pct }}%</span></div>
+          <div class="okr-bar-track">
+            <div class="okr-bar-fill okr-bar-esp" data-pct="{{ [okr.esp_pct, 100]|min }}">
+              <span>{{ okr.esp_pct }}%</span>
+            </div>
+          </div>
+        </div>
+        <div class="okr-bar-wrap">
+          <div class="okr-bar-label"><span>Real</span><span class="{{ pct_color }} fw-semibold">{{ okr.real_pct }}%</span></div>
+          <div class="okr-bar-track">
+            <div class="okr-bar-fill {{ bar_fill }}" data-pct="{{ [okr.real_pct, 100]|min }}">
+              <span>{{ okr.real_pct }}%</span>
+            </div>
+          </div>
+        </div>
+
+        {# ── Resultados Clave (colapsables) ── #}
+        {% if okr.resultados_clave %}
+        <div class="collapse" id="okr-detail-{{ oi }}">
+          <div class="okr-rc-divider"><hr><span>resultados clave</span><hr></div>
+          {% for rc in okr.resultados_clave %}
+          {% set rci = loop.index %}
+          {% set rc_gap  = rc.real_pct - rc.esp_pct %}
+          {% set rc_cls  = 'ok' if rc_gap >= 0 else ('warn' if rc_gap >= -15 else 'danger') %}
+          {% set rc_fill = 'okr-bar-ok' if rc_gap >= 0 else ('okr-bar-warn' if rc_gap >= -15 else 'okr-bar-danger') %}
+          {% set rc_color= 'text-success' if rc_gap >= 0 else ('text-warning' if rc_gap >= -15 else 'text-danger') %}
+
+          <div class="okr-rc-row okr-toggle"
+               data-bs-toggle="collapse"
+               data-bs-target="#okr-tasks-{{ oi }}-{{ rci }}"
+               aria-expanded="false"
+               role="button">
+            <span class="okr-rc-dot {{ rc_cls }}"></span>
+            <span class="okr-rc-name" title="{{ rc.nombre }}">{{ rc.nombre }}</span>
+            <div class="okr-rc-bars">
+              <div class="okr-bar-track thin okr-rc-bar-gap">
+                <div class="okr-bar-fill okr-bar-esp" data-pct="{{ [rc.esp_pct, 100]|min }}"></div>
+              </div>
+              <div class="okr-bar-track thin">
+                <div class="okr-bar-fill {{ rc_fill }}" data-pct="{{ [rc.real_pct, 100]|min }}"></div>
+              </div>
+            </div>
+            <span class="okr-rc-pct {{ rc_color }}">{{ rc.real_pct }}%</span>
+            <i class="bi bi-chevron-down okr-rc-chevron"></i>
+          </div>
+
+          {# ── Tareas de este RC ── #}
+          {% if rc.tareas %}
+          <div class="collapse okr-tasks-wrap" id="okr-tasks-{{ oi }}-{{ rci }}">
+            <table class="okr-task-table">
+              <thead>
+                <tr>
+                  <th class="okr-th-name">Tarea</th>
+                  <th class="okr-th-resp">Responsable</th>
+                  <th class="okr-th-bar">Esperado vs Real</th>
+                  <th class="okr-th-pct">%</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for tk in rc.tareas %}
+                {% set tk_gap   = tk.real_pct - tk.esp_pct %}
+                {% set tk_cls   = 'ok' if tk_gap >= 0 else ('warn' if tk_gap >= -15 else 'danger') %}
+                {% set tk_fill  = 'okr-bar-ok' if tk_gap >= 0 else ('okr-bar-warn' if tk_gap >= -15 else 'okr-bar-danger') %}
+                {% set tk_color = 'text-success' if tk_gap >= 0 else ('text-warning' if tk_gap >= -15 else 'text-danger') %}
+                <tr>
+                  <td class="okr-td-name">{{ tk.nombre }}</td>
+                  <td class="okr-td-resp">{{ tk.responsable or '—' }}</td>
+                  <td class="okr-td-bar">
+                    <div class="okr-bar-track thin okr-rc-bar-gap">
+                      <div class="okr-bar-fill okr-bar-esp" data-pct="{{ [tk.esp_pct, 100]|min }}"></div>
+                    </div>
+                    <div class="okr-bar-track thin">
+                      <div class="okr-bar-fill {{ tk_fill }}" data-pct="{{ [tk.real_pct, 100]|min }}"></div>
+                    </div>
+                  </td>
+                  <td class="okr-td-pct {{ tk_color }}">{{ tk.real_pct }}%</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <div class="okr-legend">
+        <span><span class="okr-legend-dot okr-legend-ok"></span>En curso (real ≥ esperado)</span>
+        <span><span class="okr-legend-dot okr-legend-warn"></span>En riesgo (brecha ≤ 15%)</span>
+        <span><span class="okr-legend-dot okr-legend-danger"></span>Crítico (brecha > 15%)</span>
+      </div>
     </div>
   </div>
 </div>
+{% endif %}
 
 {# Stubs mínimos para dashboard.js (sin chart-box, sin alto visible) #}
 <canvas id="chartDep"   class="d-none"></canvas>

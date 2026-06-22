@@ -5542,6 +5542,100 @@ if (first.codigo_om && first.estado_global) {
         panel.classList.add('d-none');
     });
 
+    // ─── Acciones pendientes de evidencia (botón warning Soy Sponsor) ────────
+    (function () {
+        const modal     = document.getElementById('modalAccionesPendientes');
+        const bodyEl    = document.getElementById('acciones-pendientes-body');
+        if (!modal || !bodyEl) return;
+
+        const bsModal = new bootstrap.Modal(modal);
+
+        document.addEventListener('click', async function (e) {
+            const btn = e.target.closest('.js-acciones-pendientes');
+            if (!btn) return;
+
+            const reclamoId     = btn.dataset.reclamoId;
+            const imputacionId  = btn.dataset.imputacionId;
+            if (!reclamoId || !imputacionId) return;
+
+            bodyEl.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary"></div></div>';
+            bsModal.show();
+
+            try {
+                const resp = await fetch(
+                    `/reclamos/${reclamoId}/acciones-pendientes-evidencia?imputacion_id=${imputacionId}`,
+                    { headers: { 'X-Requested-With': 'XMLHttpRequest' } }
+                );
+                const data = await resp.json();
+
+                if (!data.ok || !data.acciones || !data.acciones.length) {
+                    bodyEl.innerHTML = '<div class="text-center py-4 text-muted">'
+                        + '<i class="bi bi-check-circle fs-2 d-block mb-2"></i>'
+                        + 'No hay acciones pendientes de evidencia.'
+                        + '</div>';
+                    return;
+                }
+
+                const vencidas  = data.acciones.filter(function (a) { return a.estado_fecha === 'vencida'; });
+                const proximas  = data.acciones.filter(function (a) { return a.estado_fecha !== 'vencida'; });
+
+                function renderCard(a) {
+                    const vencida    = a.estado_fecha === 'vencida';
+                    const borderCls  = vencida ? 'border-danger' : 'border-warning';
+                    const iconCls    = vencida ? 'bi-alarm-fill text-danger' : 'bi-clock-fill text-warning';
+                    const badgeCls   = vencida ? 'bg-danger' : 'bg-warning text-dark';
+                    const badgeTxt   = vencida ? 'Vencida' : 'Próxima a vencer';
+                    const tipoCls    = a.tipo === 'CORRECTIVA' ? 'bg-danger bg-opacity-10 text-danger' : 'bg-primary bg-opacity-10 text-primary';
+                    const fecha      = (a.fecha_compromiso || '').substring(0, 10);
+                    const partes     = fecha.split('-');
+                    const fechaFmt   = partes.length === 3 ? partes[2] + '/' + partes[1] + '/' + partes[0] : fecha;
+                    const miembro    = '';
+                    return '<div class="card border-start border-3 ' + borderCls + ' mb-2 shadow-sm">'
+                        + '<div class="card-body py-2 px-3">'
+                        + '<div class="d-flex align-items-start justify-content-between gap-2">'
+                        + '<div class="flex-grow-1">'
+                        + '<div class="d-flex align-items-center gap-2 mb-1">'
+                        + '<span class="badge ' + badgeCls + ' d-flex align-items-center gap-1">'
+                        + '<i class="bi ' + iconCls.split(' ')[0] + '"></i>' + badgeTxt
+                        + '</span>'
+                        + '<span class="badge ' + tipoCls + ' fw-semibold">' + (a.tipo || '') + '</span>'
+                        + '</div>'
+                        + '<p class="mb-0 small">' + (a.descripcion || '') + '</p>'
+                        + miembro
+                        + '</div>'
+                        + '<div class="text-end text-nowrap ps-2">'
+                        + '<div class="small fw-semibold ' + (vencida ? 'text-danger' : 'text-warning') + '">'
+                        + '<i class="bi bi-calendar-event me-1"></i>' + fechaFmt
+                        + '</div>'
+                        + '</div>'
+                        + '</div>'
+                        + '</div>'
+                        + '</div>';
+                }
+
+                let html = '';
+                if (vencidas.length) {
+                    html += '<div class="d-flex align-items-center gap-2 mb-2 mt-1">'
+                        + '<i class="bi bi-x-circle-fill text-danger"></i>'
+                        + '<strong class="text-danger small">Vencidas (' + vencidas.length + ')</strong>'
+                        + '</div>'
+                        + vencidas.map(renderCard).join('');
+                }
+                if (proximas.length) {
+                    html += '<div class="d-flex align-items-center gap-2 mb-2 ' + (vencidas.length ? 'mt-3' : 'mt-1') + '">'
+                        + '<i class="bi bi-exclamation-circle-fill text-warning"></i>'
+                        + '<strong class="text-warning small">Próximas a vencer (' + proximas.length + ')</strong>'
+                        + '</div>'
+                        + proximas.map(renderCard).join('');
+                }
+
+                bodyEl.innerHTML = html;
+            } catch (err) {
+                bodyEl.innerHTML = '<p class="text-danger text-center py-3">Error al cargar acciones.</p>';
+            }
+        });
+    }());
+
     // ─── Editar proceso de OM (admin / coordinador) ───────────────────────────
     (function () {
         const btnEditar   = document.getElementById('btn-editar-proceso');
