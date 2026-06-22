@@ -9,6 +9,19 @@
 <div class="container mt-4">
   <h3><i class="bi bi-credit-card me-2"></i>{{ 'Nuevo' if modo=='nuevo' else 'Editar' }} reembolso de gasto</h3>
 
+  <!-- Banner: sugerencias históricas por proveedor (mostrado vía JS cuando aplica) -->
+  <div id="banner-sugerencias-xml" class="alert alert-info alert-dismissible d-none mb-3" role="alert">
+    <div class="d-flex align-items-start gap-2">
+      <i class="bi bi-lightbulb-fill fs-5 flex-shrink-0 mt-1"></i>
+      <div class="flex-grow-1">
+        <strong id="bsx-titulo">Ya ha registrado gastos con este proveedor.</strong>
+        <div class="mt-1 small" id="bsx-subtitulo">¿Desea utilizar los mismos datos que usó anteriormente?</div>
+        <div id="bsx-opciones" class="mt-2 d-flex flex-wrap gap-2"></div>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  </div>
+
   <form
     id="frmGasto"
     method="post"
@@ -23,6 +36,9 @@
     data-xml-index="{{ url_for('xml.index') }}"
     data-lista-gastos="{{ url_for('lista_gastos') }}"
     data-api-factura-xml-resumen-base="/reembolsos/api/factura_xml/"
+    data-api-sugerencias-proveedor="{{ url_for('api_sugerencias_proveedor') }}"
+    data-url-nuevo-gasto="{{ url_for('nuevo_gasto') }}"
+    data-from-xml="{{ 'true' if from_xml else 'false' }}"
     data-detalles="{{ (detalles or []) | tojson | forceescape }}"
     data-tipo-caja-chica="{{ tipo_cc }}"
   >
@@ -133,9 +149,14 @@
 
       <div class="col-md-6">
         <label class="form-label">Buscar factura XML (SRI)</label>
-        <input type="text" class="form-control" id="factura_xml_search" list="dl-facturas-xml" autocomplete="off"
-          value="{{ form.get('numero_factura','') if form else (g['numero_factura'] if g and g.get('numero_factura') else '') }}"
-          placeholder="Escriba parte del número de factura o clave de acceso…">
+        <div class="input-group">
+          <input type="text" class="form-control" id="factura_xml_search" list="dl-facturas-xml" autocomplete="off"
+            value="{{ form.get('numero_factura','') if form else (g['numero_factura'] if g and g.get('numero_factura') else '') }}"
+            placeholder="Escriba parte del número de factura o clave de acceso…">
+          <button type="button" class="btn btn-outline-primary" id="btnBuscarXml" title="Explorar facturas XML pendientes">
+            <i class="bi bi-card-list me-1"></i>Explorar
+          </button>
+        </div>
         <datalist id="dl-facturas-xml"></datalist>
 
         <input
@@ -171,6 +192,10 @@
           value="{% if form %}{{ form.get('proveedor') or '' }}{% elif g %}{{ g['proveedor'] or '' }}{% endif %}">
 
         <div class="invalid-feedback">Seleccione un proveedor válido de la lista.</div>
+        <div id="sugerencias-proveedor" class="mt-2 d-none">
+          <small class="text-muted">Sugerencias frecuentes para este proveedor:</small>
+          <div id="sugerencias-chips" class="d-flex flex-wrap gap-1 mt-1"></div>
+        </div>
       </div>
 
       <div class="col-md-3">
@@ -204,6 +229,75 @@
       {% block scripts_extra %}
       {{ super() }}
       {% endblock %}
+    </div>
+
+    <!-- Modal: Explorar facturas XML pendientes -->
+    <div class="modal fade" id="modalBuscarXml" tabindex="-1" aria-labelledby="modalBuscarXmlLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalBuscarXmlLabel">
+              <i class="bi bi-file-earmark-code me-2"></i>Facturas XML Pendientes
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-2 mb-3">
+              <div class="col-md-5">
+                <input type="text" class="form-control form-control-sm" id="xmlModalQ"
+                  placeholder="Buscar por N° factura, clave de acceso o emisor…">
+              </div>
+              <div class="col-md-3">
+                <input type="date" class="form-control form-control-sm" id="xmlModalDesde">
+              </div>
+              <div class="col-md-2">
+                <input type="date" class="form-control form-control-sm" id="xmlModalHasta">
+              </div>
+              <div class="col-md-1">
+                <select class="form-select form-select-sm" id="xmlModalLimit">
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="20" selected>20</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+              <div class="col-md-1">
+                <button type="button" class="btn btn-primary btn-sm w-100" id="btnXmlModalBuscar">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="text-nowrap">Fecha</th>
+                    <th class="text-nowrap">N° Factura</th>
+                    <th>Emisor</th>
+                    <th class="text-end text-nowrap">Total</th>
+                    <th class="text-center">Usar</th>
+                  </tr>
+                </thead>
+                <tbody id="xmlModalBody">
+                  <tr><td colspan="5" class="text-center text-muted py-3">Ingrese un término de búsqueda.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+              <div id="xmlModalInfo" class="text-muted small"></div>
+              <div class="d-flex gap-1">
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnXmlPrev" disabled>
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <span id="xmlModalPageLabel" class="small align-self-center px-1"></span>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnXmlNext" disabled>
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="section section-danger mb-4">

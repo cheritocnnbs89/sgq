@@ -3789,11 +3789,107 @@ def register_gastos_routes(app):
                 proveedores = []
 
             if request.method == 'GET':
+                form_preload = {}
+                from_xml_raw = (request.args.get('from_xml') or '').strip()
+                detalles_xml = []
+                if from_xml_raw.isdigit():
+                    try:
+                        _xml_cur = conn.cursor()
+                        _xml_cur.execute("""
+                            SELECT
+                                f.id,
+                                COALESCE(f.estab,'') + '-' + COALESCE(f.pto_emi,'') + '-' +
+                                RIGHT(REPLICATE('0',9) + CAST(CAST(COALESCE(f.secuencial,'0') AS INT) AS VARCHAR(9)), 9)
+                                    AS nro_factura,
+                                f.clave_acceso,
+                                f.fecha_emision,
+                                f.fecha_autorizacion,
+                                f.razon_social_emisor,
+                                f.ruc_emisor,
+                                f.total
+                            FROM facturas_xml f
+                            WHERE f.id = ?
+                        """, (int(from_xml_raw),))
+                        xml_row = _xml_cur.fetchone()
+                        if xml_row:
+                            cols = [c[0] for c in _xml_cur.description]
+                            xr = {cols[i]: xml_row[i] for i in range(len(cols))}
+                            # fecha_emision: puede ser string dd/mm/yyyy, yyyy-mm-dd, o date object
+                            fe_raw = xr.get('fecha_emision')
+                            anio_pre = mes_pre = dia_pre = ''
+                            if fe_raw:
+                                import datetime as _dt
+                                if isinstance(fe_raw, (_dt.date, _dt.datetime)):
+                                    anio_pre = str(fe_raw.year)
+                                    mes_pre  = f"{fe_raw.month:02d}"
+                                    dia_pre  = f"{fe_raw.day:02d}"
+                                else:
+                                    fe = str(fe_raw).strip()
+                                    if len(fe) == 10 and fe[2] == '/':  # dd/mm/yyyy
+                                        dia_pre, mes_pre, anio_pre = fe[:2], fe[3:5], fe[6:]
+                                    elif len(fe) == 10 and fe[4] == '-':  # yyyy-mm-dd
+                                        anio_pre, mes_pre, dia_pre = fe[:4], fe[5:7], fe[8:]
+                            form_preload = {
+                                'factura_xml_id': str(xr.get('id') or ''),
+                                'numero_factura': str(xr.get('nro_factura') or ''),
+                                'clave_autorizacion': str(xr.get('clave_acceso') or ''),
+                                'fecha_autorizacion': str(xr.get('fecha_autorizacion') or ''),
+                                'proveedor': str(xr.get('razon_social_emisor') or ''),
+                                'proveedor_identificacion': str(xr.get('ruc_emisor') or ''),
+                                'h_total_con_iva': str(xr.get('total') or ''),
+                                'anio': anio_pre,
+                                'mes': mes_pre,
+                                'dia': dia_pre,
+                            }
+                        # Cargar líneas de detalle desde facturas_xml_det
+                        _xml_cur.execute("""
+                            SELECT
+                                descripcion,
+                                cantidad,
+                                precio_unitario,
+                                COALESCE(descuento, 0)      AS descuento,
+                                COALESCE(base_imponible, 0) AS base_imponible,
+                                COALESCE(iva, 0)            AS iva,
+                                COALESCE(total_linea, 0)    AS total_linea
+                            FROM facturas_xml_det
+                            WHERE factura_id = ?
+                            ORDER BY id
+                        """, (int(from_xml_raw),))
+                        det_rows = _xml_cur.fetchall()
+                        det_cols = [c[0] for c in _xml_cur.description]
+                        detalles_xml = []
+                        for dr in det_rows:
+                            d = {det_cols[i]: dr[i] for i in range(len(det_cols))}
+                            base = float(d.get('base_imponible') or 0)
+                            iva  = float(d.get('iva') or 0)
+                            tot  = float(d.get('total_linea') or 0)
+                            if tot == 0:
+                                tot = base + iva
+                            detalles_xml.append({
+                                'observacion':      str(d.get('descripcion') or ''),
+                                'descripcion':      '',
+                                'motivo':           '',
+                                'centro_costo':     '',
+                                'indicador':        'CE' if iva > 0 else 'C0',
+                                'con_soporte':      round(base, 2),
+                                'sin_soporte':      0,
+                                'subtotal_factura': round(base, 2),
+                                'servicios_10':     0,
+                                'subtotal_sin_iva': round(base, 2),
+                                'iva':              round(iva, 2),
+                                'total_con_iva':    round(tot, 2),
+                            })
+                        _xml_cur.close()
+                    except Exception as _xml_err:
+                        current_app.logger.warning("from_xml preload error id=%s: %s", from_xml_raw, _xml_err)
+                        detalles_xml = []
                 return render_template(
                     'gastos_form.html',
                     modo='nuevo',
                     proveedores=proveedores,
-                    form={},
+                    form=form_preload,
+                    detalles=detalles_xml if detalles_xml else None,
+                    from_xml=bool(form_preload),
                     es_comercial_qp=es_comercial_qp,
                     usuario=session.get('usuario'),
                     tiene_caja_chica=tiene_caja_chica,
@@ -3860,6 +3956,47 @@ def register_gastos_routes(app):
                 dup_count = dup_row['n'] if dup_row else 0
                 if dup_count > 0:
                     return render_nuevo(dict(request.form), 'danger', 'El N° factura ya existe. Verifique.')
+
+            # ── Validación cruzada factura XML vs formulario ──────────────────
+            # Detecta el desacople entre factura_xml_id y numero_factura/total
+            # que ocurre cuando el usuario cambia de factura sin que el JS limpie
+            # los campos anteriores.
+            if factura_xml_id:
+                cur.execute("""
+                    SELECT
+                        COALESCE(estab,'') + '-' + COALESCE(pto_emi,'') + '-' +
+                        RIGHT(REPLICATE('0',9) + CAST(CAST(COALESCE(secuencial,'0') AS INT) AS VARCHAR(9)), 9)
+                            AS numero_factura,
+                        COALESCE(total, 0) AS total_con_iva
+                    FROM facturas_xml WHERE id = ?
+                """, (factura_xml_id,))
+                xml_row = cur.fetchone()
+                if xml_row:
+                    xml_numero = (xml_row['numero_factura'] or '').strip()
+                    xml_total  = float(xml_row['total_con_iva'] or 0)
+
+                    # Verificar que el número de factura del form coincida con el XML
+                    if numero_factura and xml_numero and numero_factura != xml_numero:
+                        return render_nuevo(
+                            dict(request.form), 'danger',
+                            f'El N° factura del formulario ({numero_factura}) no coincide '
+                            f'con la factura XML seleccionada ({xml_numero}). '
+                            'Seleccione la factura correcta.'
+                        )
+
+                    # Verificar que el total del form no difiera más de $0.10 del XML
+                    total_form = 0.0
+                    try:
+                        total_form = float(request.form.get('h_total_con_iva') or 0)
+                    except (ValueError, TypeError):
+                        total_form = 0.0
+                    if xml_total > 0 and total_form > 0 and abs(total_form - xml_total) > 0.10:
+                        return render_nuevo(
+                            dict(request.form), 'danger',
+                            f'El total del formulario (${total_form:,.2f}) no coincide '
+                            f'con el total de la factura XML seleccionada (${xml_total:,.2f}). '
+                            'Verifique que eligió la factura correcta.'
+                        )
 
             # ================== PROVEEDOR: ID / IDENTIFICACIÓN ==================
             proveedor_id_raw = (request.form.get('proveedor_id') or '').strip()
@@ -5165,6 +5302,65 @@ def register_gastos_routes(app):
 
         conn.close()
         return jsonify(data)
+
+    @app.route('/api/gastos/sugerencias-proveedor', methods=['GET'], endpoint='api_sugerencias_proveedor')
+    @require_login
+    def api_sugerencias_proveedor():
+        proveedor = (request.args.get('proveedor') or '').strip()
+        proveedor_id_raw = (request.args.get('proveedor_id') or '').strip()
+
+        if not proveedor and not proveedor_id_raw:
+            return jsonify([])
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        params = []
+        where_prov = ""
+        if proveedor_id_raw.isdigit():
+            where_prov = "AND g.proveedor_id = ?"
+            params.append(int(proveedor_id_raw))
+        elif proveedor:
+            where_prov = "AND LTRIM(RTRIM(LOWER(COALESCE(g.proveedor,'')))) = LTRIM(RTRIM(LOWER(?)))"
+            params.append(proveedor)
+
+        # Motivo se guarda en gastos_tarjeta_detalle.motivo (código contable: 6390001001)
+        # Hacer JOIN con param_values solo para obtener el nombre legible (label)
+        cur.execute(f"""
+            SELECT TOP 5
+                d.motivo                            AS motivo_cod,
+                COALESCE(pv.nombre, d.motivo)       AS motivo_label,
+                d.centro_costo,
+                COUNT(*)                            AS freq
+            FROM gastos_tarjeta_detalle d
+            JOIN {TABLE_GASTOS} g ON g.id = d.gasto_id
+            LEFT JOIN param_groups pg
+                ON LOWER(LTRIM(RTRIM(pg.nombre))) IN ('motivo gasto','motivos','motivo')
+            LEFT JOIN param_values pv
+                ON pv.group_id = pg.id
+                AND LTRIM(RTRIM(LOWER(COALESCE(pv.valor,'')))) = LTRIM(RTRIM(LOWER(COALESCE(d.motivo,''))))
+            WHERE d.motivo IS NOT NULL AND LTRIM(RTRIM(d.motivo)) != ''
+              AND d.centro_costo IS NOT NULL AND LTRIM(RTRIM(d.centro_costo)) != ''
+              {where_prov}
+            GROUP BY d.motivo, COALESCE(pv.nombre, d.motivo), d.centro_costo
+            ORDER BY freq DESC
+        """, params)
+
+        rows = cur.fetchall()
+        cols = [c[0] for c in cur.description]
+        conn.close()
+
+        result = []
+        for r in rows:
+            row = {cols[i]: r[i] for i in range(len(cols))}
+            result.append({
+                "motivo":       str(row.get("motivo_cod") or ""),
+                "motivo_label": str(row.get("motivo_label") or ""),
+                "centro_costo": str(row.get("centro_costo") or ""),
+                "freq":         int(row.get("freq") or 0),
+            })
+
+        return jsonify(result)
 
     import glob
     import shutil
