@@ -5029,7 +5029,38 @@ def register_reclamos_routes(app):
                     r.requiere_carta_cliente,
                     r.carta_cliente_notif_at,
                     r.creado_por,
-                    COALESCE(r.validacion_creador, '') AS validacion_creador
+                    COALESCE(r.validacion_creador, '') AS validacion_creador,
+
+                    (
+                        SELECT COUNT(*)
+                        FROM reclamo_respuesta_equipo_acciones a
+                        WHERE a.reclamo_id = r.id
+                          AND COALESCE(a.activo, 1) = 1
+                          AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                          AND COALESCE(a.cumplido, 0) = 0
+                          AND a.fecha_compromiso IS NOT NULL
+                          AND a.fecha_compromiso < CAST(GETDATE() AS DATE)
+                          AND NOT EXISTS (
+                              SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
+                              WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
+                          )
+                    ) AS acciones_vencidas,
+
+                    (
+                        SELECT COUNT(*)
+                        FROM reclamo_respuesta_equipo_acciones a
+                        WHERE a.reclamo_id = r.id
+                          AND COALESCE(a.activo, 1) = 1
+                          AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                          AND COALESCE(a.cumplido, 0) = 0
+                          AND a.fecha_compromiso IS NOT NULL
+                          AND a.fecha_compromiso >= CAST(GETDATE() AS DATE)
+                          AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                          AND NOT EXISTS (
+                              SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
+                              WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
+                          )
+                    ) AS acciones_proximas
 
                 FROM reclamos r
                 OUTER APPLY (
