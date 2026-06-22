@@ -524,6 +524,7 @@
                             <th>Motivo / Sub Motivo</th>
                             <th data-sort="text"><span class="th-sortable">Proceso <i
                                         class="bi bi-arrow-down-up ms-1"></i></span></th>
+                            <th>Sponsor</th>
                             <th>Plazo</th>
                             <th>Estado OM</th>
                             <th class="sticky-end text-end">Acciones</th>
@@ -557,7 +558,8 @@
                             data-deadline-estado="{{ i.deadline_estado or 'ok' }}"
                             data-equipo="{{ i.equipo_resumen or '' }}"
                             data-proceso="{{ (i.proceso_nombre or i.proceso_text or '')|e }}"
-                            data-imputados="{{ (i.imputados_resumen or '')|e }}"
+                            data-imputados="{{ (i.imputado_nombre or i.imputado_username or '')|e }}"
+                            data-creado-por="{{ (i.creador_nombre or i.creador_username or '')|e }}"
                             data-tipo-reclamo="{{ (i.motivo or i.tipo_reclamo or '')|e }}"
                             data-antecedente="{{ (i.submotivo or i.antecedente or '')|e }}"
                             data-estado-global="{{ i.estado_global or i.estado or i.estado_imputacion or '' }}"
@@ -585,7 +587,8 @@
                                     {{ i.submotivo or '' }}
                                 </div>
                             </td>
-                            <td data-th="Proceso">{{ i.proceso_text or i.proceso_nombre or '' }}</td>
+                            <td data-th="Proceso">{{ i.proceso_imputado_text or i.proceso_text or i.proceso_nombre or '' }}</td>
+                            <td data-th="Sponsor">{{ i.imputado_nombre or i.imputado_username or '' }}</td>
 
                             <td data-th="Plazo">
                                 <div class="deadline-wrap">
@@ -688,6 +691,22 @@
                                         data-bs-toggle="modal" data-bs-target="#modalEquipoRespuestas"
                                         title="Gestionar equipo de respuestas">
                                         <i class="bi bi-people"></i>
+                                    </button>
+                                    {% endif %}
+
+                                    {% if om_cerrada and (i.acciones_vencidas or 0) > 0 %}
+                                    <button class="btn btn-danger btn-sm js-acciones-pendientes" type="button"
+                                        title="Acciones con evidencia vencida"
+                                        data-reclamo-id="{{ i.id }}"
+                                        data-imputacion-id="{{ i.imputacion_id }}">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                    </button>
+                                    {% elif om_cerrada and (i.acciones_proximas or 0) > 0 %}
+                                    <button class="btn btn-warning btn-sm js-acciones-pendientes" type="button"
+                                        title="Acciones con evidencia próxima a vencer"
+                                        data-reclamo-id="{{ i.id }}"
+                                        data-imputacion-id="{{ i.imputacion_id }}">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
                                     </button>
                                     {% endif %}
                                 </div>
@@ -1921,6 +1940,28 @@
 {% if puede_crear_materiales %}
 
 {% endif %}
+
+<!-- ================= MODAL: ACCIONES PENDIENTES DE EVIDENCIA ================= -->
+<div class="modal fade" id="modalAccionesPendientes" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger bg-opacity-10 border-bottom border-danger border-opacity-25 py-3">
+                <div>
+                    <h5 class="modal-title mb-0 fw-semibold text-danger">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Acciones sin evidencia
+                    </h5>
+                    <p class="mb-0 small text-muted mt-1">Acciones correctivas y de control que requieren evidencia</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-3" id="acciones-pendientes-body">
+                <div class="text-center py-4">
+                    <div class="spinner-border spinner-border-sm text-secondary"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- ================= MODAL: EQUIPO DE RESPUESTAS ================= -->
 <div class="modal fade" id="modalEquipoRespuestas" tabindex="-1" aria-hidden="true">
