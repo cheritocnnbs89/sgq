@@ -3857,7 +3857,8 @@ def register_gastos_routes(app):
                         """, (int(from_xml_raw),))
                         det_rows = _xml_cur.fetchall()
                         det_cols = [c[0] for c in _xml_cur.description]
-                        detalles_xml = []
+                        # Agrupar líneas por indicador (CE/C0) igual que el ingreso manual
+                        _grupos = {}  # indicador -> {base, iva, tot}
                         for dr in det_rows:
                             d = {det_cols[i]: dr[i] for i in range(len(det_cols))}
                             base = float(d.get('base_imponible') or 0)
@@ -3865,19 +3866,30 @@ def register_gastos_routes(app):
                             tot  = float(d.get('total_linea') or 0)
                             if tot == 0:
                                 tot = base + iva
+                            ind = 'CE' if iva > 0 else 'C0'
+                            if ind not in _grupos:
+                                _grupos[ind] = {'base': 0.0, 'iva': 0.0, 'tot': 0.0}
+                            _grupos[ind]['base'] += base
+                            _grupos[ind]['iva']  += iva
+                            _grupos[ind]['tot']  += tot
+                        detalles_xml = []
+                        for ind, g in _grupos.items():
+                            base = round(g['base'], 2)
+                            iva  = round(g['iva'], 2)
+                            tot  = round(g['tot'], 2)
                             detalles_xml.append({
-                                'observacion':      str(d.get('descripcion') or ''),
+                                'observacion':      '',
                                 'descripcion':      '',
                                 'motivo':           '',
                                 'centro_costo':     '',
-                                'indicador':        'CE' if iva > 0 else 'C0',
-                                'con_soporte':      round(base, 2) if iva > 0 else 0,
+                                'indicador':        ind,
+                                'con_soporte':      base if ind != 'C0' else 0,
                                 'sin_soporte':      0,
-                                'subtotal_factura': round(base, 2),
+                                'subtotal_factura': base,
                                 'servicios_10':     0,
-                                'subtotal_sin_iva': 0 if iva > 0 else round(base, 2),
-                                'iva':              round(iva, 2),
-                                'total_con_iva':    round(tot, 2),
+                                'subtotal_sin_iva': 0 if ind != 'C0' else base,
+                                'iva':              iva,
+                                'total_con_iva':    tot,
                             })
                         _xml_cur.close()
                     except Exception as _xml_err:
