@@ -181,9 +181,9 @@ def detalle(sid):
 @require_permission(PERM_SOLICITUDES, "crear")
 def crear():
     u = _current_user()
-    tipo = request.form.get("tipo", "").strip()
-    area = request.form.get("area_solicitante", "").strip()
-    desc = request.form.get("descripcion", "").strip()
+    tipo  = request.form.get("tipo", "").strip()
+    area  = request.form.get("area_solicitante", "").strip()
+    desc  = request.form.get("descripcion", "").strip()
     lugar = request.form.get("lugar_destino", "").strip()
     fecha = request.form.get("fecha", "").strip()
 
@@ -194,24 +194,53 @@ def crear():
         flash("Tipo de solicitud no válido.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
+    ppto_raw = request.form.get("presupuesto_base_cero", "").strip()
+    ppto     = None
+    if tipo == "Vuelo":
+        if not ppto_raw:
+            flash("El Presupuesto Base Cero es obligatorio para solicitudes de tipo Vuelo.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+        try:
+            ppto = float(ppto_raw)
+            if ppto < 0:
+                raise ValueError
+        except ValueError:
+            flash("El Presupuesto Base Cero debe ser un número positivo.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+
     ciudad = repo.get_ciudad_usuario(u["id"])
     sid = repo.crear_solicitud({
-        "tipo":              tipo,
-        "area_solicitante":  area,
-        "descripcion":       desc,
-        "lugar_destino":     lugar,
-        "detalle_direccion": request.form.get("detalle_direccion", "").strip(),
-        "contacto":          request.form.get("contacto", "").strip(),
-        "prioridad":         request.form.get("prioridad", "Normal"),
-        "fecha":             fecha,
-        "solicitante_id":    u["id"],
-        "solicitante_nombre": u["nombre"],
-        "ciudad":            ciudad,
+        "tipo":                  tipo,
+        "area_solicitante":      area,
+        "descripcion":           desc,
+        "lugar_destino":         lugar,
+        "detalle_direccion":     request.form.get("detalle_direccion", "").strip(),
+        "contacto":              request.form.get("contacto", "").strip(),
+        "prioridad":             request.form.get("prioridad", "Normal"),
+        "fecha":                 fecha,
+        "solicitante_id":        u["id"],
+        "solicitante_nombre":    u["nombre"],
+        "ciudad":                ciudad,
+        "presupuesto_base_cero": ppto,
     })
     try:
         notif.notif_nueva_solicitud(sid, tipo, area, fecha, u["nombre"])
     except Exception:
         pass
+
+    # Notificar al gerente del solicitante cuando el tipo es Vuelo
+    if tipo == "Vuelo":
+        try:
+            gerente = repo.get_gerente_del_usuario(u["id"])
+            if gerente:
+                ppto_str = f"${ppto:,.2f}" if ppto is not None else "—"
+                notif.notif_vuelo_nueva_gerente(
+                    sid, area, fecha, desc, ppto_str,
+                    u["nombre"], gerente["id"], gerente["nombre"],
+                )
+        except Exception:
+            pass
+
     flash("Solicitud creada. Queda pendiente de coordinación.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 

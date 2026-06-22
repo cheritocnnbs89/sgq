@@ -149,9 +149,9 @@ SQL_INSERT_SOLICITUD = f"""
     INSERT INTO {TBL_SOLICITUDES}
         (tipo, area_solicitante, descripcion, lugar_destino, detalle_direccion,
          contacto, prioridad, fecha, estado, solicitante_id, solicitante_nombre,
-         ciudad)
+         ciudad, presupuesto_base_cero)
     OUTPUT INSERTED.id
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDIENTE_COORDINACION', ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDIENTE_COORDINACION', ?, ?, ?, ?)
 """
 
 SQL_UPDATE_REAGENDAR = f"""

@@ -1112,6 +1112,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_9 = """
                 ON rre.id = rrmax.id
 
                 WHERE er.reclamo_id = ?
+                AND er.imputacion_id = ?
                 AND er.activo = 1
 
                 ORDER BY nombre

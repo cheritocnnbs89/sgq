@@ -108,7 +108,7 @@
 
         {# Macro tabla interna #}
         {% macro tabla_tab(section_rows, empty_msg) %}
-        <div class="table-responsive">
+        <div class="table-responsive" data-paginated-table>
           <table class="table table-hover align-middle mb-0 table-sm">
             <thead class="table-light">
               <tr>
@@ -214,6 +214,18 @@
               {% endfor %}
             </tbody>
           </table>
+        </div>
+        <div class="planner-pagination planner-pagination--hidden d-flex align-items-center justify-content-between px-2 py-2">
+          <span class="planner-page-info text-muted small"></span>
+          <div class="d-flex gap-1">
+            <button type="button" class="btn btn-sm btn-outline-secondary planner-page-prev" disabled>
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <span class="planner-page-nums d-flex gap-1"></span>
+            <button type="button" class="btn btn-sm btn-outline-secondary planner-page-next">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
         </div>
         {% endmacro %}
 
@@ -374,6 +386,13 @@
             <textarea class="form-control textarea-desc" name="descripcion" required
                       placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
           </div>
+          <div class="full campo-vuelo" id="campoPptoBaseDiv">
+            <label class="form-label">Presupuesto Base Cero *</label>
+            <input class="form-control" type="number" name="presupuesto_base_cero"
+                   id="campoPptoBase" min="0" step="0.01"
+                   placeholder="Ej: 1500.00">
+            <div class="form-text">Requerido para solicitudes de tipo Vuelo.</div>
+          </div>
         </div>
         <div class="rec-notice">
           La solicitud quedará <strong>Pendiente de coordinación</strong> hasta que el coordinador asigne horario.<br>
@@ -464,7 +483,7 @@
         </div>
 
         {# ── Sección de agrupación (se muestra si hay otras pendientes del mismo tipo) ── #}
-        <div id="grupoSection" style="display:none; margin-top:.85rem;">
+        <div id="grupoSection" class="grupo-section-hidden grupo-section-wrap">
           <div class="grupo-section-header">
             <i class="bi bi-collection-fill"></i>
             Agrupar otras solicitudes del mismo tipo en este horario

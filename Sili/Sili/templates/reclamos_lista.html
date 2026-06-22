@@ -585,7 +585,7 @@
                                     {{ i.submotivo or '' }}
                                 </div>
                             </td>
-                            <td data-th="Proceso">{{ i.proceso_nombre or '' }}</td>
+                            <td data-th="Proceso">{{ i.proceso_text or i.proceso_nombre or '' }}</td>
 
                             <td data-th="Plazo">
                                 <div class="deadline-wrap">
@@ -1154,8 +1154,35 @@
                             <div class="detail-item-value" id="det-cliente"></div>
                         </div>
                         <div>
-                            <div class="detail-item-label">Proceso</div>
+                            <div class="detail-item-label d-flex align-items-center gap-2">
+                                Proceso
+                                {% if session.get('rol') in ('admin', 'coordinador') %}
+                                <button type="button" class="btn btn-link btn-sm p-0 lh-1"
+                                        id="btn-editar-proceso"
+                                        title="Editar proceso"
+                                        style="font-size:.8rem">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                {% endif %}
+                            </div>
                             <div class="detail-item-value" id="det-proceso"></div>
+                            {% if session.get('rol') in ('admin', 'coordinador') %}
+                            <div id="form-editar-proceso" class="d-none mt-2">
+                                <select class="form-select form-select-sm mb-1" id="sel-proceso-edit" multiple>
+                                    {% for p in procesos %}
+                                    <option value="{{ p.id }}">{{ p.valor }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-primary btn-sm" id="btn-guardar-proceso">
+                                        <i class="bi bi-save me-1"></i>Guardar
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-cancelar-proceso">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
 
                         <div>

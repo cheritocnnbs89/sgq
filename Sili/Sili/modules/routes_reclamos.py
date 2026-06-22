@@ -3401,10 +3401,11 @@ def register_reclamos_routes(app):
             rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_8, (reclamo_id,)).fetchall()
 
         # -------------------------
-        # Caso 2: CON imputación
+        # Caso 2: CON imputación — filtrar por imputacion_id para que cada
+        # sponsor solo vea los miembros que él agregó
         # -------------------------
         else:
-            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_9, (reclamo_id,)).fetchall()
+            rows = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_9, (reclamo_id, imputacion_id)).fetchall()
         # -------------------------
         # Payload (para ambos casos)
         # -------------------------
@@ -6908,6 +6909,64 @@ def register_reclamos_routes(app):
         return jsonify(ok=True, msg=f"OM {r['codigo']} eliminada correctamente.")
         
         
+    # ----------------------------------------------
+    # EDITAR PROCESO DE OM  (admin / coordinador)
+    # ----------------------------------------------
+    @app.route('/reclamos/<int:reclamo_id>/editar-proceso', methods=['POST'], endpoint='reclamos_editar_proceso')
+    @require_login
+    @require_permission('reclamos', 'editar')
+    def reclamos_editar_proceso(reclamo_id):
+        if not _is_admin_like():
+            return jsonify(ok=False, msg='No autorizado'), 403
+
+        conn = get_db()
+        cur  = conn.cursor()
+
+        try:
+            proceso_ids_raw = request.form.getlist('proceso_id') or []
+            proceso_ids = [int(v) for v in proceso_ids_raw if str(v).strip().isdigit()]
+            proceso_id  = proceso_ids[0] if proceso_ids else None
+
+            proceso_text = ''
+            if proceso_ids:
+                textos = []
+                for pid in proceso_ids:
+                    cur.execute("SELECT valor FROM param_values WHERE id = ?", (pid,))
+                    row_p = cur.fetchone()
+                    if row_p and row_p['valor']:
+                        textos.append(row_p['valor'].strip())
+                proceso_text = ', '.join(textos)
+
+            if not proceso_id:
+                return jsonify(ok=False, msg='Debe seleccionar al menos un proceso'), 400
+
+            cur.execute(
+                "SELECT id, codigo FROM reclamos WHERE id = ?", (reclamo_id,)
+            )
+            row = cur.fetchone()
+            if not row:
+                return jsonify(ok=False, msg='OM no encontrada'), 404
+
+            cur.execute(
+                "UPDATE reclamos SET proceso_id = ?, proceso_text = ? WHERE id = ?",
+                (proceso_id, proceso_text, reclamo_id)
+            )
+            conn.commit()
+            current_app.logger.warning(
+                "[EDITAR_PROCESO] OM %s → proceso_id=%s proceso_text=%r por uid=%s",
+                reclamo_id, proceso_id, proceso_text, _current_user_id()
+            )
+            return jsonify(ok=True, proceso_text=proceso_text, msg='Proceso actualizado correctamente')
+        except Exception as e:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+            current_app.logger.exception("Error editando proceso OM %s: %s", reclamo_id, e)
+            return jsonify(ok=False, msg=f'Error: {e}'), 500
+        finally:
+            conn.close()
+
     # ----------------------------------------------
     # VALIDAR RESPUESTA (JEFE)
     # ----------------------------------------------

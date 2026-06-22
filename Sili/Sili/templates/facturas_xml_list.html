@@ -188,6 +188,14 @@
                   <i class="bi bi-eye"></i>
                 </a>
 
+                {% if f.estado != 'PROCESADO' and f.proveedor_ok %}
+                <a href="{{ url_for('nuevo_gasto', from_xml=f.id) }}"
+                   class="btn btn-outline-success btn-sm"
+                   title="Registrar gasto con esta factura">
+                  <i class="bi bi-receipt"></i>
+                </a>
+                {% endif %}
+
                 {% if f.estado != 'PROCESADO' %}
                 <form
                   action="{{ url_for('factura_xml_eliminar', fid=f.id) }}"

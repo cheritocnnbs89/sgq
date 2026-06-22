@@ -387,3 +387,34 @@ def notif_pendiente_gerente(solicitud_id: int, tipo: str, area: str, fecha: str,
            f"Solicitud #{solicitud_id} — {tipo} — {fecha} requiere su aprobación gerencial")
     email_g = repo.get_email_by_usuario_id(gerente_id)
     _email([email_g] if email_g else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# 7. Nueva solicitud de Vuelo → notificar al gerente del solicitante
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_nueva_gerente(solicitud_id: int, area: str, fecha: str,
+                               descripcion: str, presupuesto: str,
+                               solicitante_nombre: str,
+                               gerente_id: int, gerente_nombre: str) -> None:
+
+    subject = f"[Planificador] Nueva solicitud de Vuelo #{solicitud_id} — {area}"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} — Informativo"
+    saludo  = (f"Estimado/a <strong>{gerente_nombre}</strong>, "
+               f"<strong>{solicitante_nombre}</strong> ha registrado una nueva "
+               f"solicitud de tipo <strong>Vuelo</strong> que requiere su conocimiento.")
+    filas   = [
+        ("N° solicitud",         str(solicitud_id)),
+        ("Área solicitante",     area),
+        ("Fecha solicitada",     fecha),
+        ("Descripción",          descripcion or "—"),
+        ("Presupuesto Base Cero", presupuesto or "—"),
+        ("Solicitante",          solicitante_nombre),
+    ]
+    nota = "La solicitud pasará por coordinación y aprobación. Será notificado cuando requiera su aprobación gerencial."
+    html = _email_html("PLANIFICADOR · SOLICITUD DE VUELO", titulo, saludo, filas, nota)
+
+    _inapp(gerente_id, subject,
+           f"Nueva solicitud de Vuelo #{solicitud_id} — {area} — {fecha} registrada por {solicitante_nombre}")
+    email_g = repo.get_email_by_usuario_id(gerente_id)
+    _email([email_g] if email_g else [], subject, html)

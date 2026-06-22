@@ -43,6 +43,9 @@
   <div class="detail-box"><span>Gerente asignado</span><strong>{{ s.gerente_nombre }}</strong></div>
   {% endif %}
   <div class="detail-box detail-full"><span>Descripción</span><strong>{{ s.descripcion }}</strong></div>
+  {% if s.presupuesto_base_cero is not none and s.presupuesto_base_cero != '' %}
+  <div class="detail-box"><span>Presupuesto Base Cero</span><strong>${{ "%.2f"|format(s.presupuesto_base_cero|float) }}</strong></div>
+  {% endif %}
   {% if s.detalle_direccion %}
   <div class="detail-box detail-full"><span>Detalle de dirección</span><strong>{{ s.detalle_direccion }}</strong></div>
   {% endif %}

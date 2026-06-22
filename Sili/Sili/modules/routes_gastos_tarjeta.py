@@ -3789,11 +3789,107 @@ def register_gastos_routes(app):
                 proveedores = []
 
             if request.method == 'GET':
+                form_preload = {}
+                from_xml_raw = (request.args.get('from_xml') or '').strip()
+                detalles_xml = []
+                if from_xml_raw.isdigit():
+                    try:
+                        _xml_cur = conn.cursor()
+                        _xml_cur.execute("""
+                            SELECT
+                                f.id,
+                                COALESCE(f.estab,'') + '-' + COALESCE(f.pto_emi,'') + '-' +
+                                RIGHT(REPLICATE('0',9) + CAST(CAST(COALESCE(f.secuencial,'0') AS INT) AS VARCHAR(9)), 9)
+                                    AS nro_factura,
+                                f.clave_acceso,
+                                f.fecha_emision,
+                                f.fecha_autorizacion,
+                                f.razon_social_emisor,
+                                f.ruc_emisor,
+                                f.total
+                            FROM facturas_xml f
+                            WHERE f.id = ?
+                        """, (int(from_xml_raw),))
+                        xml_row = _xml_cur.fetchone()
+                        if xml_row:
+                            cols = [c[0] for c in _xml_cur.description]
+                            xr = {cols[i]: xml_row[i] for i in range(len(cols))}
+                            # fecha_emision: puede ser string dd/mm/yyyy, yyyy-mm-dd, o date object
+                            fe_raw = xr.get('fecha_emision')
+                            anio_pre = mes_pre = dia_pre = ''
+                            if fe_raw:
+                                import datetime as _dt
+                                if isinstance(fe_raw, (_dt.date, _dt.datetime)):
+                                    anio_pre = str(fe_raw.year)
+                                    mes_pre  = f"{fe_raw.month:02d}"
+                                    dia_pre  = f"{fe_raw.day:02d}"
+                                else:
+                                    fe = str(fe_raw).strip()
+                                    if len(fe) == 10 and fe[2] == '/':  # dd/mm/yyyy
+                                        dia_pre, mes_pre, anio_pre = fe[:2], fe[3:5], fe[6:]
+                                    elif len(fe) == 10 and fe[4] == '-':  # yyyy-mm-dd
+                                        anio_pre, mes_pre, dia_pre = fe[:4], fe[5:7], fe[8:]
+                            form_preload = {
+                                'factura_xml_id': str(xr.get('id') or ''),
+                                'numero_factura': str(xr.get('nro_factura') or ''),
+                                'clave_autorizacion': str(xr.get('clave_acceso') or ''),
+                                'fecha_autorizacion': str(xr.get('fecha_autorizacion') or ''),
+                                'proveedor': str(xr.get('razon_social_emisor') or ''),
+                                'proveedor_identificacion': str(xr.get('ruc_emisor') or ''),
+                                'h_total_con_iva': str(xr.get('total') or ''),
+                                'anio': anio_pre,
+                                'mes': mes_pre,
+                                'dia': dia_pre,
+                            }
+                        # Cargar líneas de detalle desde facturas_xml_det
+                        _xml_cur.execute("""
+                            SELECT
+                                descripcion,
+                                cantidad,
+                                precio_unitario,
+                                COALESCE(descuento, 0)      AS descuento,
+                                COALESCE(base_imponible, 0) AS base_imponible,
+                                COALESCE(iva, 0)            AS iva,
+                                COALESCE(total_linea, 0)    AS total_linea
+                            FROM facturas_xml_det
+                            WHERE factura_id = ?
+                            ORDER BY id
+                        """, (int(from_xml_raw),))
+                        det_rows = _xml_cur.fetchall()
+                        det_cols = [c[0] for c in _xml_cur.description]
+                        detalles_xml = []
+                        for dr in det_rows:
+                            d = {det_cols[i]: dr[i] for i in range(len(det_cols))}
+                            base = float(d.get('base_imponible') or 0)
+                            iva  = float(d.get('iva') or 0)
+                            tot  = float(d.get('total_linea') or 0)
+                            if tot == 0:
+                                tot = base + iva
+                            detalles_xml.append({
+                                'observacion':      str(d.get('descripcion') or ''),
+                                'descripcion':      '',
+                                'motivo':           '',
+                                'centro_costo':     '',
+                                'indicador':        'CE' if iva > 0 else 'C0',
+                                'con_soporte':      round(base, 2),
+                                'sin_soporte':      0,
+                                'subtotal_factura': round(base, 2),
+                                'servicios_10':     0,
+                                'subtotal_sin_iva': round(base, 2),
+                                'iva':              round(iva, 2),
+                                'total_con_iva':    round(tot, 2),
+                            })
+                        _xml_cur.close()
+                    except Exception as _xml_err:
+                        current_app.logger.warning("from_xml preload error id=%s: %s", from_xml_raw, _xml_err)
+                        detalles_xml = []
                 return render_template(
                     'gastos_form.html',
                     modo='nuevo',
                     proveedores=proveedores,
-                    form={},
+                    form=form_preload,
+                    detalles=detalles_xml if detalles_xml else None,
+                    from_xml=bool(form_preload),
                     es_comercial_qp=es_comercial_qp,
                     usuario=session.get('usuario'),
                     tiene_caja_chica=tiene_caja_chica,
@@ -3834,7 +3930,11 @@ def register_gastos_routes(app):
             factura_xml_id = int(factura_xml_id_raw) if factura_xml_id_raw.isdigit() else None
 
             motivo = (request.form.get('descripcion') or request.form.get('motivo') or '').strip()
+            # Fallback: si no hay campo cabecera, tomar el primer det_centro_costo (igual que en editar)
             centro_costo = (request.form.get('centro_costo') or '').strip()
+            if not centro_costo:
+                _cc_tmp = request.form.getlist('det_centro_costo')
+                centro_costo = (_cc_tmp[0] if _cc_tmp else '').strip()
             fecha_autorizacion = (request.form.get('fecha_autorizacion') or '').strip()
             numero_factura = (request.form.get('numero_factura') or '').strip()
             clave_autorizacion = (request.form.get('clave_autorizacion') or '').strip()
@@ -3856,6 +3956,47 @@ def register_gastos_routes(app):
                 dup_count = dup_row['n'] if dup_row else 0
                 if dup_count > 0:
                     return render_nuevo(dict(request.form), 'danger', 'El N° factura ya existe. Verifique.')
+
+            # ── Validación cruzada factura XML vs formulario ──────────────────
+            # Detecta el desacople entre factura_xml_id y numero_factura/total
+            # que ocurre cuando el usuario cambia de factura sin que el JS limpie
+            # los campos anteriores.
+            if factura_xml_id:
+                cur.execute("""
+                    SELECT
+                        COALESCE(estab,'') + '-' + COALESCE(pto_emi,'') + '-' +
+                        RIGHT(REPLICATE('0',9) + CAST(CAST(COALESCE(secuencial,'0') AS INT) AS VARCHAR(9)), 9)
+                            AS numero_factura,
+                        COALESCE(total, 0) AS total_con_iva
+                    FROM facturas_xml WHERE id = ?
+                """, (factura_xml_id,))
+                xml_row = cur.fetchone()
+                if xml_row:
+                    xml_numero = (xml_row['numero_factura'] or '').strip()
+                    xml_total  = float(xml_row['total_con_iva'] or 0)
+
+                    # Verificar que el número de factura del form coincida con el XML
+                    if numero_factura and xml_numero and numero_factura != xml_numero:
+                        return render_nuevo(
+                            dict(request.form), 'danger',
+                            f'El N° factura del formulario ({numero_factura}) no coincide '
+                            f'con la factura XML seleccionada ({xml_numero}). '
+                            'Seleccione la factura correcta.'
+                        )
+
+                    # Verificar que el total del form no difiera más de $0.10 del XML
+                    total_form = 0.0
+                    try:
+                        total_form = float(request.form.get('h_total_con_iva') or 0)
+                    except (ValueError, TypeError):
+                        total_form = 0.0
+                    if xml_total > 0 and total_form > 0 and abs(total_form - xml_total) > 0.10:
+                        return render_nuevo(
+                            dict(request.form), 'danger',
+                            f'El total del formulario (${total_form:,.2f}) no coincide '
+                            f'con el total de la factura XML seleccionada (${xml_total:,.2f}). '
+                            'Verifique que eligió la factura correcta.'
+                        )
 
             # ================== PROVEEDOR: ID / IDENTIFICACIÓN ==================
             proveedor_id_raw = (request.form.get('proveedor_id') or '').strip()
@@ -4054,6 +4195,16 @@ def register_gastos_routes(app):
             motivos = request.form.getlist('det_motivo')
             inds = request.form.getlist('det_indicador')
 
+            current_app.logger.warning(
+                "==================== [NUEVO_GASTO] DATOS DEL FORMULARIO (DETALLE) ===================="
+            )
+            current_app.logger.warning("[NUEVO_GASTO][FORM] archivo adjunto(s): %r", request.files.getlist('archivo') and [f.filename for f in request.files.getlist('archivo') if f and f.filename])
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_descripcion  : %r", descs)
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_observacion  : %r", obss)
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_motivo       : %r", motivos)
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_centro_costo : %r", centros)
+            current_app.logger.warning("[NUEVO_GASTO][FORM] det_indicador    : %r", inds)
+
             cs = nums('det_con_soporte')
             ss = nums('det_sin_soporte')
             sf = nums('det_subtotal_factura')
@@ -4197,6 +4348,69 @@ def register_gastos_routes(app):
                 tarjeta_sin_soporte = 0
                 boletos_aereos = 0
 
+            # ================== ASEGURAR COLUMNAS Y TABLAS EN SQL SERVER ==================
+            # gastos_tarjeta_archivos
+            try:
+                cur.execute("""
+                    IF OBJECT_ID(N'dbo.gastos_tarjeta_archivos', N'U') IS NULL
+                    BEGIN
+                        CREATE TABLE dbo.gastos_tarjeta_archivos(
+                            id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                            gasto_id INT NOT NULL,
+                            filename NVARCHAR(500) NOT NULL,
+                            uploaded_at DATETIME NOT NULL DEFAULT GETDATE()
+                        );
+                    END
+                """)
+                conn.commit()
+            except Exception as _e:
+                current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar gastos_tarjeta_archivos: %s", _e)
+
+            # Columnas centro_costo / motivo / indicador en gastos_tarjeta_detalle
+            # La migración SQLite no corre en SQL Server — se aseguran aquí
+            for _col, _tipo in [('centro_costo', 'NVARCHAR(200)'),
+                                 ('motivo',       'NVARCHAR(300)'),
+                                 ('indicador',    'NVARCHAR(10)')]:
+                try:
+                    cur.execute(f"""
+                        IF NOT EXISTS (
+                            SELECT 1 FROM sys.columns
+                            WHERE object_id = OBJECT_ID(N'dbo.gastos_tarjeta_detalle')
+                              AND name = N'{_col}'
+                        )
+                        ALTER TABLE dbo.gastos_tarjeta_detalle ADD {_col} {_tipo} NULL
+                    """)
+                    conn.commit()
+                except Exception as _e:
+                    current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s en detalle: %s", _col, _e)
+
+            # Columnas boletos_aereos / tarjeta_sin_soporte en gastos_tarjeta (cabecera)
+            for _col, _tipo in [('boletos_aereos',     'BIT'),
+                                 ('tarjeta_sin_soporte','BIT')]:
+                try:
+                    cur.execute(f"""
+                        IF NOT EXISTS (
+                            SELECT 1 FROM sys.columns
+                            WHERE object_id = OBJECT_ID(N'dbo.gastos_tarjeta')
+                              AND name = N'{_col}'
+                        )
+                        ALTER TABLE dbo.gastos_tarjeta ADD {_col} {_tipo} NULL
+                    """)
+                    conn.commit()
+                except Exception as _e:
+                    current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s en cabecera: %s", _col, _e)
+
+            current_app.logger.warning(
+                "==================== [NUEVO_GASTO] FILAS PROCESADAS (pre-INSERT): %d fila(s) ====================",
+                len(rows)
+            )
+            for _i, _r in enumerate(rows):
+                current_app.logger.warning(
+                    "[NUEVO_GASTO][FILA %d] descripcion='%s' | observacion='%s' | motivo='%s' | centro_costo='%s' | indicador='%s'",
+                    _i, _r.get('descripcion',''), _r.get('observacion',''),
+                    _r.get('motivo',''), _r.get('centro_costo',''), _r.get('indicador','')
+                )
+
             # ================== ESCRITURA SQL SERVER ==================
             gasto_id = None
 
@@ -4244,7 +4458,20 @@ def register_gastos_routes(app):
                         (gasto_id, fname)
                     )
 
+                current_app.logger.warning(
+                    "==================== [NUEVO_GASTO] ADJUNTOS GUARDADOS: %r ====================",
+                    saved_files
+                )
                 for r in rows:
+                    current_app.logger.warning(
+                        "==================== [NUEVO_GASTO] INSERT DETALLE (gasto_id=%r) ====================",
+                        gasto_id
+                    )
+                    current_app.logger.warning("[NUEVO_GASTO][DET] descripcion  : '%s'", r.get('descripcion',''))
+                    current_app.logger.warning("[NUEVO_GASTO][DET] observacion  : '%s'", r.get('observacion',''))
+                    current_app.logger.warning("[NUEVO_GASTO][DET] motivo       : '%s'", r.get('motivo',''))
+                    current_app.logger.warning("[NUEVO_GASTO][DET] centro_costo : '%s'", r.get('centro_costo',''))
+                    current_app.logger.warning("[NUEVO_GASTO][DET] indicador    : '%s'", r.get('indicador',''))
                     cur.execute("""
                         INSERT INTO gastos_tarjeta_detalle(
                             gasto_id, descripcion, observacion, centro_costo, motivo, indicador,
@@ -4459,7 +4686,7 @@ def register_gastos_routes(app):
             return '', '', ''
 
         # --------------------------
-        # Asegurar tabla de adjuntos (SQL Server)
+        # Asegurar tabla de adjuntos y columnas de detalle (SQL Server)
         # --------------------------
         TABLE_GASTOS_ARCH = 'gastos_tarjeta_archivos'
         cur.execute(f"""
@@ -4474,6 +4701,38 @@ def register_gastos_routes(app):
             END
         """)
         conn.commit()
+
+        for _col, _tipo in [('centro_costo', 'NVARCHAR(200)'),
+                             ('motivo',       'NVARCHAR(300)'),
+                             ('indicador',    'NVARCHAR(10)')]:
+            try:
+                cur.execute(f"""
+                    IF NOT EXISTS (
+                        SELECT 1 FROM sys.columns
+                        WHERE object_id = OBJECT_ID(N'dbo.gastos_tarjeta_detalle')
+                          AND name = N'{_col}'
+                    )
+                    ALTER TABLE dbo.gastos_tarjeta_detalle ADD {_col} {_tipo} NULL
+                """)
+                conn.commit()
+            except Exception as _e:
+                current_app.logger.warning("[EDITAR_GASTO] No se pudo asegurar columna %s en detalle: %s", _col, _e)
+
+        # Columnas boletos_aereos / tarjeta_sin_soporte en gastos_tarjeta (cabecera)
+        for _col, _tipo in [('boletos_aereos',     'BIT'),
+                             ('tarjeta_sin_soporte','BIT')]:
+            try:
+                cur.execute(f"""
+                    IF NOT EXISTS (
+                        SELECT 1 FROM sys.columns
+                        WHERE object_id = OBJECT_ID(N'dbo.gastos_tarjeta')
+                          AND name = N'{_col}'
+                    )
+                    ALTER TABLE dbo.gastos_tarjeta ADD {_col} {_tipo} NULL
+                """)
+                conn.commit()
+            except Exception as _e:
+                current_app.logger.warning("[EDITAR_GASTO] No se pudo asegurar columna %s en cabecera: %s", _col, _e)
 
         # --------------------------
         # Traer gasto
@@ -4557,6 +4816,17 @@ def register_gastos_routes(app):
                 centros = request.form.getlist('det_centro_costo')
                 inds = request.form.getlist('det_indicador')
 
+                current_app.logger.warning(
+                    "==================== [EDITAR_GASTO %s] DATOS DEL FORMULARIO (DETALLE) ====================",
+                    gasto_id
+                )
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] archivo adjunto(s): %r", gasto_id, [f.filename for f in (request.files.getlist('archivo') or []) if f and f.filename])
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_descripcion  : %r", gasto_id, descs)
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_observacion  : %r", gasto_id, obs)
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_motivo       : %r", gasto_id, motivos)
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_centro_costo : %r", gasto_id, centros)
+                current_app.logger.warning("[EDITAR_GASTO %s][FORM] det_indicador    : %r", gasto_id, inds)
+
                 con_sup = nums('det_con_soporte')
                 sin_sup = nums('det_sin_soporte')
                 sub_fac = nums('det_subtotal_factura')
@@ -4620,9 +4890,15 @@ def register_gastos_routes(app):
                     total_con_iva_val = 0.0
 
                 current_app.logger.warning(
-                    "[EDITAR] detalle_rows=%s | centro_costo=%r | subtotal=%r | sin_soporte=%r | iva=%r | total=%r",
-                    len(new_rows), centro_costo, subtotal_factura_val, sin_soporte_val, iva_val, total_con_iva_val
+                    "==================== [EDITAR_GASTO %s] FILAS PROCESADAS (pre-INSERT): %d fila(s) ====================",
+                    gasto_id, len(new_rows)
                 )
+                for _i, _r in enumerate(new_rows):
+                    current_app.logger.warning(
+                        "[EDITAR_GASTO %s][FILA %d] descripcion='%s' | observacion='%s' | motivo='%s' | centro_costo='%s' | indicador='%s'",
+                        gasto_id, _i, _r.get('descripcion',''), _r.get('observacion',''),
+                        _r.get('motivo',''), _r.get('centro_costo',''), _r.get('indicador','')
+                    )
 
                 # 4) Manejo de archivos
                 UPLOAD_DIR = os.path.join(current_app.root_path, "static", "uploads")
@@ -4661,16 +4937,26 @@ def register_gastos_routes(app):
                     filename_db = g.get('archivo') or None
 
                 # 5) TRANSACCIÓN ÚNICA DB
-                cur.execute("BEGIN TRANSACTION")
-
                 for fname in saved_files:
                     cur.execute(
                         "INSERT INTO gastos_tarjeta_archivos (gasto_id, filename) VALUES (?, ?)",
                         (gasto_id, fname)
                     )
 
+                current_app.logger.warning(
+                    "==================== [EDITAR_GASTO %s] ADJUNTOS GUARDADOS: %r ====================",
+                    gasto_id, saved_files
+                )
                 cur.execute("DELETE FROM gastos_tarjeta_detalle WHERE gasto_id = ?", (gasto_id,))
                 for r in new_rows:
+                    current_app.logger.warning(
+                        "==================== [EDITAR_GASTO %s] INSERT DETALLE ====================", gasto_id
+                    )
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] descripcion  : '%s'", gasto_id, r.get('descripcion',''))
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] observacion  : '%s'", gasto_id, r.get('observacion',''))
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] motivo       : '%s'", gasto_id, r.get('motivo',''))
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] centro_costo : '%s'", gasto_id, r.get('centro_costo',''))
+                    current_app.logger.warning("[EDITAR_GASTO %s][DET] indicador    : '%s'", gasto_id, r.get('indicador',''))
                     cur.execute("""
                         INSERT INTO gastos_tarjeta_detalle(
                             gasto_id, descripcion, observacion,
@@ -5016,6 +5302,65 @@ def register_gastos_routes(app):
 
         conn.close()
         return jsonify(data)
+
+    @app.route('/api/gastos/sugerencias-proveedor', methods=['GET'], endpoint='api_sugerencias_proveedor')
+    @require_login
+    def api_sugerencias_proveedor():
+        proveedor = (request.args.get('proveedor') or '').strip()
+        proveedor_id_raw = (request.args.get('proveedor_id') or '').strip()
+
+        if not proveedor and not proveedor_id_raw:
+            return jsonify([])
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        params = []
+        where_prov = ""
+        if proveedor_id_raw.isdigit():
+            where_prov = "AND g.proveedor_id = ?"
+            params.append(int(proveedor_id_raw))
+        elif proveedor:
+            where_prov = "AND LTRIM(RTRIM(LOWER(COALESCE(g.proveedor,'')))) = LTRIM(RTRIM(LOWER(?)))"
+            params.append(proveedor)
+
+        # Motivo se guarda en gastos_tarjeta_detalle.motivo (código contable: 6390001001)
+        # Hacer JOIN con param_values solo para obtener el nombre legible (label)
+        cur.execute(f"""
+            SELECT TOP 5
+                d.motivo                            AS motivo_cod,
+                COALESCE(pv.nombre, d.motivo)       AS motivo_label,
+                d.centro_costo,
+                COUNT(*)                            AS freq
+            FROM gastos_tarjeta_detalle d
+            JOIN {TABLE_GASTOS} g ON g.id = d.gasto_id
+            LEFT JOIN param_groups pg
+                ON LOWER(LTRIM(RTRIM(pg.nombre))) IN ('motivo gasto','motivos','motivo')
+            LEFT JOIN param_values pv
+                ON pv.group_id = pg.id
+                AND LTRIM(RTRIM(LOWER(COALESCE(pv.valor,'')))) = LTRIM(RTRIM(LOWER(COALESCE(d.motivo,''))))
+            WHERE d.motivo IS NOT NULL AND LTRIM(RTRIM(d.motivo)) != ''
+              AND d.centro_costo IS NOT NULL AND LTRIM(RTRIM(d.centro_costo)) != ''
+              {where_prov}
+            GROUP BY d.motivo, COALESCE(pv.nombre, d.motivo), d.centro_costo
+            ORDER BY freq DESC
+        """, params)
+
+        rows = cur.fetchall()
+        cols = [c[0] for c in cur.description]
+        conn.close()
+
+        result = []
+        for r in rows:
+            row = {cols[i]: r[i] for i in range(len(cols))}
+            result.append({
+                "motivo":       str(row.get("motivo_cod") or ""),
+                "motivo_label": str(row.get("motivo_label") or ""),
+                "centro_costo": str(row.get("centro_costo") or ""),
+                "freq":         int(row.get("freq") or 0),
+            })
+
+        return jsonify(result)
 
     import glob
     import shutil

@@ -278,6 +278,7 @@ def crear_solicitud(data):
         data.get("prioridad", "Normal"), data["fecha"],
         data["solicitante_id"], data["solicitante_nombre"],
         data.get("ciudad", ""),
+        data.get("presupuesto_base_cero"),
     ))
     row = cur.fetchone()
     conn.commit()

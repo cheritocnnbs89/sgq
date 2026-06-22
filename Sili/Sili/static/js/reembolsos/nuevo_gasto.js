@@ -1032,7 +1032,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
       $idField.value = match.dataset.id || '';
 
-      if ($numero && !$numero.value) {
+      // Siempre sobreescribir al cambiar selección — evita desacople entre
+      // factura_xml_id y numero_factura cuando el usuario cambia de factura
+      if ($numero) {
         $numero.value = match.value || '';
       }
       if ($fechaAut && match.dataset.fecha_autorizacion) {
@@ -1526,8 +1528,15 @@ document.addEventListener('DOMContentLoaded', function () {
       $btnAdd.addEventListener('click', () => addRow());
     }
 
+    // Evitar que Enter en inputs del detalle envíe el formulario
+    $body.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+      }
+    });
+
     if (Array.isArray(PREDET) && PREDET.length) {
-      PREDET.forEach(r => addRow(r));
+      PREDET.forEach(r => addRow({ ...r, observacion: '' }));
     } else {
       addRow();
     }
@@ -2512,6 +2521,247 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+/* ── Modal: Explorar facturas XML pendientes ── */
+(function () {
+  const $btn = document.getElementById('btnBuscarXml');
+  if (!$btn) return;
+
+  const $form = document.getElementById('frmGasto');
+  const apiSearch     = ($form && $form.dataset.apiFacturasXmlSearch) || '/api/facturas-xml/search';
+  const urlNuevoGasto = ($form && $form.dataset.urlNuevoGasto) || '/reembolsos/gastos/nuevo';
+
+  const modalEl = document.getElementById('modalBuscarXml');
+  if (!modalEl) return;
+
+  let bsModal = null;
+
+  const $q         = document.getElementById('xmlModalQ');
+  const $desde     = document.getElementById('xmlModalDesde');
+  const $hasta     = document.getElementById('xmlModalHasta');
+  const $limitSel  = document.getElementById('xmlModalLimit');
+  const $body      = document.getElementById('xmlModalBody');
+  const $info      = document.getElementById('xmlModalInfo');
+  const $pageLabel = document.getElementById('xmlModalPageLabel');
+  const $buscar    = document.getElementById('btnXmlModalBuscar');
+  const $prev      = document.getElementById('btnXmlPrev');
+  const $next      = document.getElementById('btnXmlNext');
+
+  let allRows = [];
+  let currentPage = 1;
+
+  function pageSize() {
+    return parseInt(($limitSel && $limitSel.value) || '20', 10);
+  }
+
+  function renderPage() {
+    const ps    = pageSize();
+    const total = allRows.length;
+    const pages = Math.max(1, Math.ceil(total / ps));
+    currentPage = Math.min(currentPage, pages);
+
+    const start = (currentPage - 1) * ps;
+    const slice = allRows.slice(start, start + ps);
+
+    if (!total) {
+      $body.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Sin resultados.</td></tr>';
+    } else {
+      $body.innerHTML = slice.map(r => `
+        <tr>
+          <td class="text-nowrap">${r.fecha_emision || ''}</td>
+          <td class="text-nowrap fw-semibold">${r.numero || ''}</td>
+          <td class="xml-modal-emisor">${(r.razon_social_emisor || '').replace(/</g,'&lt;')}</td>
+          <td class="text-end text-nowrap">${r.total != null ? parseFloat(r.total).toFixed(2) : ''}</td>
+          <td class="text-center">
+            <a href="${urlNuevoGasto}?from_xml=${r.id}"
+               class="btn btn-sm btn-outline-success" title="Registrar gasto con esta factura">
+              <i class="bi bi-receipt"></i>
+            </a>
+          </td>
+        </tr>`).join('');
+    }
+
+    if ($info)      $info.textContent      = total ? `${total} resultado${total !== 1 ? 's' : ''}` : '';
+    if ($pageLabel) $pageLabel.textContent = total ? `Pág. ${currentPage} / ${pages}` : '';
+    if ($prev)      $prev.disabled         = currentPage <= 1;
+    if ($next)      $next.disabled         = currentPage >= pages;
+  }
+
+  function doSearch() {
+    const params = new URLSearchParams({ limit: 200 });
+    if ($q && $q.value.trim())    params.set('q',     $q.value.trim());
+    if ($desde && $desde.value)   params.set('desde', $desde.value);
+    if ($hasta && $hasta.value)   params.set('hasta', $hasta.value);
+
+    $body.innerHTML = '<tr><td colspan="5" class="text-center py-3"><span class="spinner-border spinner-border-sm"></span></td></tr>';
+    if ($info)      $info.textContent      = '';
+    if ($pageLabel) $pageLabel.textContent = '';
+    if ($prev)      $prev.disabled         = true;
+    if ($next)      $next.disabled         = true;
+
+    fetch(apiSearch + '?' + params.toString())
+      .then(r => r.json())
+      .then(rows => {
+        allRows = rows || [];
+        currentPage = 1;
+        renderPage();
+      })
+      .catch(() => {
+        $body.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-3">Error al cargar facturas.</td></tr>';
+      });
+  }
+
+  $btn.addEventListener('click', () => {
+    if (!bsModal) bsModal = new bootstrap.Modal(modalEl);
+    bsModal.show();
+    doSearch();
+  });
+
+  if ($buscar)   $buscar.addEventListener('click', doSearch);
+  if ($limitSel) $limitSel.addEventListener('change', () => { currentPage = 1; renderPage(); });
+  if ($prev)     $prev.addEventListener('click', () => { currentPage--; renderPage(); });
+  if ($next)     $next.addEventListener('click', () => { currentPage++; renderPage(); });
+  if ($q) $q.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
+})();
+
+/* ── Sugerencias de centro de costo / motivo por proveedor ── */
+(function () {
+  const $form = document.getElementById('frmGasto');
+  if (!$form || !$form.dataset.apiSugerenciasProveedor) return;
+
+  const apiUrl   = $form.dataset.apiSugerenciasProveedor;
+  const fromXml  = $form.dataset.fromXml === 'true';
+  const $prov    = document.getElementById('proveedor_nombre');
+  const $provId  = document.getElementById('proveedor_id');
+
+  // Banner elements
+  const $banner  = document.getElementById('banner-sugerencias-xml');
+  const $bTitulo = document.getElementById('bsx-titulo');
+  const $bOpts   = document.getElementById('bsx-opciones');
+
+  // Chips inline (fallback para cambio manual de proveedor)
+  const $wrap    = document.getElementById('sugerencias-proveedor');
+  const $chips   = document.getElementById('sugerencias-chips');
+
+  if (!$prov) return;
+
+  let lastProv = '';
+  let debounce = null;
+
+  function applyMotivoCentro(motivo, centro) {
+    const $tbody = document.getElementById('det-body');
+    if ($tbody) {
+      $tbody.querySelectorAll('tr').forEach(row => {
+        const $m  = row.querySelector('input[name="det_motivo"]');
+        const $mh = row.querySelector('input[name="det_motivo_valido"]');
+        const $c  = row.querySelector('input[name="det_centro_costo"]');
+        const $ch = row.querySelector('input[name="det_centro_costo_valido"]');
+        if ($m)  $m.value  = motivo;
+        if ($mh) $mh.value = motivo;
+        if ($c)  $c.value  = centro;
+        if ($ch) $ch.value = centro;
+      });
+    }
+  }
+
+  function itemLabel(item) {
+    const lbl = item.motivo_label || item.motivo || '';
+    const cod = item.motivo || '';
+    return lbl !== cod ? `${lbl} <small class="text-muted">(${cod})</small>` : cod;
+  }
+
+  function showBanner(provNombre, items) {
+    if (!$banner || !items.length) return;
+    if ($bTitulo) $bTitulo.textContent = `Ya ha registrado gastos con "${provNombre}".`;
+    if ($bOpts) {
+      $bOpts.innerHTML = items.slice(0, 3).map((item, i) => `
+        <button type="button"
+          class="btn btn-sm btn-outline-primary bsx-apply"
+          data-motivo="${(item.motivo || '').replace(/"/g,'&quot;')}"
+          data-centro="${(item.centro_costo || '').replace(/"/g,'&quot;')}">
+          <i class="bi bi-check2-circle me-1"></i>
+          ${i === 0 ? '<strong>' : ''}${itemLabel(item)} &nbsp;·&nbsp; ${item.centro_costo}${i === 0 ? '</strong>' : ''}
+          <span class="badge bg-secondary ms-1">${item.freq}x</span>
+        </button>`).join('');
+    }
+    $banner.classList.remove('d-none');
+  }
+
+  function showChips(items) {
+    if (!$wrap || !$chips || !items.length) return;
+    $chips.innerHTML = items.map(item => `
+      <button type="button"
+        class="btn btn-outline-secondary btn-sm sugerencia-chip"
+        data-motivo="${(item.motivo || '').replace(/"/g,'&quot;')}"
+        data-centro="${(item.centro_costo || '').replace(/"/g,'&quot;')}">
+        <i class="bi bi-lightning-charge me-1"></i>${itemLabel(item)} · ${item.centro_costo}
+        <span class="badge bg-secondary ms-1">${item.freq}x</span>
+      </button>`).join('');
+    $wrap.classList.remove('d-none');
+  }
+
+  function loadSugerencias(showAsBanner) {
+    const nombre = ($prov.value || '').trim();
+    const pid    = (($provId && $provId.value) || '').trim();
+    if (!nombre && !pid) {
+      if ($wrap) $wrap.classList.add('d-none');
+      if ($banner) $banner.classList.add('d-none');
+      return;
+    }
+    if (!showAsBanner && nombre === lastProv) return;
+    lastProv = nombre;
+
+    const params = new URLSearchParams();
+    if (pid) params.set('proveedor_id', pid);
+    else     params.set('proveedor', nombre);
+
+    fetch(apiUrl + '?' + params.toString())
+      .then(r => r.json())
+      .then(items => {
+        if (!items.length) {
+          if ($wrap) $wrap.classList.add('d-none');
+          return;
+        }
+        if (showAsBanner) {
+          showBanner(nombre, items);
+        } else {
+          showChips(items);
+        }
+      })
+      .catch(() => {
+        if ($wrap) $wrap.classList.add('d-none');
+      });
+  }
+
+  // Click en botón del banner → aplica el combo
+  if ($banner) {
+    $banner.addEventListener('click', e => {
+      const btn = e.target.closest('.bsx-apply');
+      if (!btn) return;
+      applyMotivoCentro(btn.dataset.motivo || '', btn.dataset.centro || '');
+      $banner.classList.add('d-none');
+    });
+  }
+
+  // Click en chips inline
+  if ($chips) {
+    $chips.addEventListener('click', e => {
+      const chip = e.target.closest('.sugerencia-chip');
+      if (!chip) return;
+      applyMotivoCentro(chip.dataset.motivo || '', chip.dataset.centro || '');
+    });
+  }
+
+  // Cambio manual de proveedor → chips inline (sin banner)
+  $prov.addEventListener('change', () => { clearTimeout(debounce); debounce = setTimeout(() => loadSugerencias(false), 300); });
+  $prov.addEventListener('blur',   () => { clearTimeout(debounce); debounce = setTimeout(() => loadSugerencias(false), 400); });
+
+  // Si venimos de XML con proveedor pre-cargado → banner prominente
+  document.addEventListener('DOMContentLoaded', () => {
+    if (fromXml && ($prov.value || '').trim()) {
+      setTimeout(() => loadSugerencias(true), 600);
+    }
+  });
+})();
 
 
 })();
