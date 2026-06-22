@@ -3871,11 +3871,11 @@ def register_gastos_routes(app):
                                 'motivo':           '',
                                 'centro_costo':     '',
                                 'indicador':        'CE' if iva > 0 else 'C0',
-                                'con_soporte':      round(base, 2),
+                                'con_soporte':      round(base, 2) if iva > 0 else 0,
                                 'sin_soporte':      0,
                                 'subtotal_factura': round(base, 2),
                                 'servicios_10':     0,
-                                'subtotal_sin_iva': round(base, 2),
+                                'subtotal_sin_iva': 0 if iva > 0 else round(base, 2),
                                 'iva':              round(iva, 2),
                                 'total_con_iva':    round(tot, 2),
                             })
