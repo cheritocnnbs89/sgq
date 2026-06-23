@@ -5285,30 +5285,23 @@ def register_reclamos_routes(app):
 
                     (
                         SELECT COUNT(*)
-                        FROM reclamo_respuesta_equipo_acciones a
-                        WHERE a.reclamo_id = r.id
-                          AND a.imputacion_id = ri.id
+                        FROM reclamo_imputado_acciones a
+                        WHERE a.imputacion_id = ri.id
                           AND COALESCE(a.activo, 1) = 1
                           AND a.tipo IN ('CONTROL', 'CORRECTIVA')
                           AND COALESCE(a.cumplido, 0) = 0
                           AND a.fecha_compromiso IS NOT NULL
                           AND a.fecha_compromiso < CAST(GETDATE() AS DATE)
                           AND NOT EXISTS (
-                              SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
-                              WHERE e.accion_id = a.id
-                                AND COALESCE(e.activo, 1) = 1
-                          )
-                          AND NOT EXISTS (
-                              SELECT 1 FROM reclamo_accion_evidencias e2
-                              WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
+                              SELECT 1 FROM reclamo_accion_evidencias e
+                              WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
                           )
                     ) AS acciones_vencidas,
 
                     (
                         SELECT COUNT(*)
-                        FROM reclamo_respuesta_equipo_acciones a
-                        WHERE a.reclamo_id = r.id
-                          AND a.imputacion_id = ri.id
+                        FROM reclamo_imputado_acciones a
+                        WHERE a.imputacion_id = ri.id
                           AND COALESCE(a.activo, 1) = 1
                           AND a.tipo IN ('CONTROL', 'CORRECTIVA')
                           AND COALESCE(a.cumplido, 0) = 0
@@ -5316,13 +5309,8 @@ def register_reclamos_routes(app):
                           AND a.fecha_compromiso >= CAST(GETDATE() AS DATE)
                           AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
                           AND NOT EXISTS (
-                              SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
-                              WHERE e.accion_id = a.id
-                                AND COALESCE(e.activo, 1) = 1
-                          )
-                          AND NOT EXISTS (
-                              SELECT 1 FROM reclamo_accion_evidencias e2
-                              WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
+                              SELECT 1 FROM reclamo_accion_evidencias e
+                              WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
                           )
                     ) AS acciones_proximas
 
