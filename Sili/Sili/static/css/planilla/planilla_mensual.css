@@ -410,6 +410,11 @@ th.day-col:first-of-type {
 .day-cell.is-locked .tick {
   cursor: not-allowed;
 }
+.day-cell.day-na {
+  background: var(--bs-gray-100, #f8f9fa);
+  opacity: .35;
+  pointer-events: none;
+}
 
 /* Sticky cols */
 .sticky-1, .sticky-2, .sticky-3 {
