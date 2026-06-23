@@ -810,9 +810,11 @@ def planilla_dashboard():
         tph = planeadas_hoy_por_tarea.get(tid, 0)
         trh = realizados_hoy_por_tarea.get(tid, 0)
 
-        ag = by_area.setdefault(area_nom, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "okrs": {}})
+        ag = by_area.setdefault(area_nom, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "okrs": {}, "deptos": set()})
         ag["plan"]   += tp;  ag["real"]   += tr
         ag["plan_h"] += tph; ag["real_h"] += trh
+        if t.get("depto"):
+            ag["deptos"].add(t["depto"])
 
         og = ag["okrs"].setdefault(okr_key, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "rcs": {}})
         og["plan"]   += tp;  og["real"]   += tr
@@ -866,6 +868,7 @@ def planilla_dashboard():
             "esp_pct":  round(100.0 * aph / ap, 1) if ap else 0.0,
             "real_pct": round(100.0 * arh / ap, 1) if ap else 0.0,
             "okrs":     _build_okr_rows(ag["okrs"]),
+            "deptos":   sorted(ag["deptos"]),
         })
 
     # Compatibilidad: okr_rows = lista plana de todos los OKRs (sin agrupación de área)
