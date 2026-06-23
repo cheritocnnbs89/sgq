@@ -5044,6 +5044,10 @@ def register_reclamos_routes(app):
                               SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
                               WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
                           )
+                          AND NOT EXISTS (
+                              SELECT 1 FROM reclamo_accion_evidencias e2
+                              WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
+                          )
                     ) AS acciones_vencidas,
 
                     (
@@ -5059,6 +5063,10 @@ def register_reclamos_routes(app):
                           AND NOT EXISTS (
                               SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
                               WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
+                          )
+                          AND NOT EXISTS (
+                              SELECT 1 FROM reclamo_accion_evidencias e2
+                              WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
                           )
                     ) AS acciones_proximas
 
@@ -5290,6 +5298,10 @@ def register_reclamos_routes(app):
                               WHERE e.accion_id = a.id
                                 AND COALESCE(e.activo, 1) = 1
                           )
+                          AND NOT EXISTS (
+                              SELECT 1 FROM reclamo_accion_evidencias e2
+                              WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
+                          )
                     ) AS acciones_vencidas,
 
                     (
@@ -5307,6 +5319,10 @@ def register_reclamos_routes(app):
                               SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
                               WHERE e.accion_id = a.id
                                 AND COALESCE(e.activo, 1) = 1
+                          )
+                          AND NOT EXISTS (
+                              SELECT 1 FROM reclamo_accion_evidencias e2
+                              WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
                           )
                     ) AS acciones_proximas
 
