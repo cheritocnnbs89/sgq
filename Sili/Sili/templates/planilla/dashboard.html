@@ -213,6 +213,9 @@
             <div class="okr-card-badges">
               <span class="okr-badge-plan">{{ area.okrs|length }} OKR{% if area.okrs|length != 1 %}s{% endif %} · {{ area.plan }} tareas</span>
               <span class="okr-badge-{{ a_cls }}">{{ a_lbl }}</span>
+              {% for d in (area.deptos or []) %}
+              <span class="okr-badge-plan okr-badge-depto">{{ d }}</span>
+              {% endfor %}
             </div>
           </div>
           <div class="okr-big-right">
