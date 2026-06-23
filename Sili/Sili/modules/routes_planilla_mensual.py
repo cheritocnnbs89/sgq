@@ -1061,7 +1061,7 @@ def planilla():
 
     tareas = [dict(t) for t in tareas]
     for t in tareas:
-        t["scheduled_dates"] = {d.isoformat() for d in dias if _occurs_planilla(t, d)}
+        t["scheduled_dates"] = [d.isoformat() for d in dias if _occurs_planilla(t, d)]
     # ─────────────────────────────────────────────────────────────
 
     is_admin = _is_admin()

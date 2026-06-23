@@ -186,7 +186,7 @@
           {% set iso = d.isocalendar() %}
           {% set key = t['id']|string + '-' + d.isoformat() %}
           {% set ev  = evidencias.get(key) %}
-          {% if d.isoformat() in t.get('scheduled_dates', set()) %}
+          {% if d.isoformat() in t.get('scheduled_dates', []) %}
           <td class="text-center day-cell"
               data-week="{{ iso.week }}"
               data-dow="{{ iso.weekday }}"
