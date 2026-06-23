@@ -162,7 +162,13 @@
       <div class="col-6">
         <label class="form-label">Nueva fecha *</label>
         <input class="form-control form-control-sm" type="date" name="nueva_fecha"
-               min="{{ today_iso }}" required>
+               id="inputNuevaFechaDetalle" required>
+        <script>
+        (function(){
+          var d=new Date(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
+          document.getElementById('inputNuevaFechaDetalle').min = d.getFullYear()+'-'+m+'-'+day;
+        })();
+        </script>
       </div>
       <div class="col-12">
         <label class="form-label">Motivo de la reagenda *</label>

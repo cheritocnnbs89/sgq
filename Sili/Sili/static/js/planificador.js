@@ -182,11 +182,21 @@
   }
 
   /* ── Reagendar ── */
+  function todayIso() {
+    const d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
   function openReagendar(sid, fecha, tipo) {
     const form = document.getElementById('formReagendarModal');
     if (form) form.action = '/planificador/solicitudes/' + sid + '/reagendar';
     const info = document.getElementById('reagendarInfo');
     if (info) info.textContent = '#' + sid + ' · ' + tipo + ' · Fecha actual: ' + fecha;
+    // Bloquear fechas anteriores a hoy
+    const inp = form && form.querySelector('input[name="nueva_fecha"]');
+    if (inp) { inp.min = todayIso(); inp.value = ''; }
     openModal('modalReagendar');
   }
 
