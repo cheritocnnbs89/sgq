@@ -360,21 +360,6 @@
                                     </button>
                                     {% endif %}
 
-                                    {% if om_cerrada and (r.acciones_vencidas or 0) > 0 %}
-                                    <button class="btn btn-danger btn-sm js-acciones-pendientes" type="button"
-                                        title="Acciones con evidencia vencida"
-                                        data-reclamo-id="{{ r.id }}"
-                                        data-imputacion-id="{{ r.imputacion_id or '' }}">
-                                        <i class="bi bi-exclamation-triangle-fill"></i>
-                                    </button>
-                                    {% elif om_cerrada and (r.acciones_proximas or 0) > 0 %}
-                                    <button class="btn btn-warning btn-sm js-acciones-pendientes" type="button"
-                                        title="Acciones con evidencia próxima a vencer"
-                                        data-reclamo-id="{{ r.id }}"
-                                        data-imputacion-id="{{ r.imputacion_id or '' }}">
-                                        <i class="bi bi-exclamation-triangle-fill"></i>
-                                    </button>
-                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
