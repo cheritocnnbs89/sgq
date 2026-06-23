@@ -5555,8 +5555,8 @@ if (first.codigo_om && first.estado_global) {
             if (!btn) return;
 
             const reclamoId     = btn.dataset.reclamoId;
-            const imputacionId  = btn.dataset.imputacionId;
-            if (!reclamoId || !imputacionId) return;
+            const imputacionId  = btn.dataset.imputacionId || '';
+            if (!reclamoId) return;
 
             bodyEl.innerHTML = '<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary"></div></div>';
             bsModal.show();
