@@ -537,14 +537,63 @@ html.theme-dark .okr-badge-danger { background: #3d1a1a; color: #fca5a5; }
 
 
 /* ── Tabla jerárquica Empresa → Área → Depto → OKR ── */
-.hier-table { font-size: 13px; border-color: var(--line); }
-.hier-table thead th { background: #1e293b; color: #f1f5f9; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
-.hier-table td { vertical-align: middle; color: var(--ink); border-color: var(--line); padding: 6px 10px; }
-.hier-empresa { background: #eff6ff; font-size: 14px; }
-.hier-area    { background: #f0fdf4; }
-.hier-dept    { background: var(--surface-2); color: var(--muted); }
-.hier-okr     { padding-left: 20px; }
-.hier-okr-pct { font-weight: 600; white-space: nowrap; }
-html.theme-dark .hier-empresa { background: #1e3a5f; }
-html.theme-dark .hier-area    { background: #14532d; }
-html.theme-dark .hier-dept    { background: #1e293b; }
+.hier-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 13px; border-radius: 10px; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.hier-table thead tr th {
+  background: #1e293b; color: #f1f5f9;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; padding: 10px 14px; white-space: nowrap;
+  border-bottom: 2px solid #334155;
+}
+.hier-th-pct  { text-align: right; width: 80px; }
+.hier-th-empresa { width: 160px; }
+.hier-th-area    { width: 110px; }
+.hier-th-dept    { width: 180px; }
+.hier-th-okr     { }
+
+/* Celdas base */
+.hier-table td {
+  padding: 9px 14px; vertical-align: middle;
+  border-bottom: 1px solid var(--line); color: var(--ink);
+}
+.hier-row:last-child td { border-bottom: none; }
+.hier-row:hover td { background: rgba(37,99,235,.04); }
+
+/* Columnas de nivel */
+.hier-td-empresa {
+  background: #eff6ff; font-weight: 700; font-size: 13px;
+  border-right: 3px solid #bfdbfe; white-space: nowrap;
+}
+.hier-td-area {
+  background: #f0fdf4; font-weight: 600; font-size: 12px;
+  border-right: 2px solid #bbf7d0;
+}
+.hier-td-dept {
+  background: #fafafa; font-size: 12px; color: var(--muted);
+  border-right: 1px solid var(--line);
+}
+.hier-td-okr  {
+  font-size: 12px; padding-left: 18px;
+  max-width: 340px; white-space: normal; line-height: 1.35;
+}
+.hier-td-pct  { text-align: right; white-space: nowrap; padding-right: 14px; }
+
+/* Badges de porcentaje */
+.hier-pct-badge {
+  display: inline-block; padding: 2px 9px; border-radius: 99px;
+  font-size: 12px; font-weight: 700; letter-spacing: .02em;
+}
+.hier-pct-badge.pct-ok     { background: #dcfce7; color: #166534; }
+.hier-pct-badge.pct-warn   { background: #fef9c3; color: #854d0e; }
+.hier-pct-badge.pct-danger { background: #fee2e2; color: #991b1b; }
+
+/* Dark mode */
+html.theme-dark .hier-td-empresa { background: #1e3a5f; border-right-color: #2563eb; }
+html.theme-dark .hier-td-area    { background: #14532d; border-right-color: #16a34a; }
+html.theme-dark .hier-td-dept    { background: #1e293b; }
+html.theme-dark .hier-pct-badge.pct-ok     { background: #14532d; color: #86efac; }
+html.theme-dark .hier-pct-badge.pct-warn   { background: #713f12; color: #fde047; }
+html.theme-dark .hier-pct-badge.pct-danger { background: #7f1d1d; color: #fca5a5; }

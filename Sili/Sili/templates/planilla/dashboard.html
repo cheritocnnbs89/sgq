@@ -301,43 +301,38 @@
         <span class="small text-muted">Real a hoy · Empresa → Área → Departamento → OKR</span>
       </div>
       <div class="table-responsive">
-        <table class="table table-sm table-bordered align-middle hier-table">
-          <thead class="table-dark">
+        <table class="hier-table">
+          <thead>
             <tr>
-              <th>Empresa</th>
-              <th class="text-end">% Global</th>
-              <th>Área</th>
-              <th class="text-end">% Área</th>
-              <th>Departamento</th>
-              <th>OKR</th>
-              <th class="text-end">% OKR</th>
+              <th class="hier-th-empresa">Empresa</th>
+              <th class="hier-th-pct">% Global</th>
+              <th class="hier-th-area">Área</th>
+              <th class="hier-th-pct">% Área</th>
+              <th class="hier-th-dept">Departamento</th>
+              <th class="hier-th-okr">OKR</th>
+              <th class="hier-th-pct">% OKR</th>
             </tr>
           </thead>
           <tbody>
           {% for emp in empresa_rows %}
-            {# Calcular total de filas para empresa (rowspan) #}
             {% set ns_e = namespace(total_okr_rows=0) %}
             {% for ar in emp.areas %}
               {% for dp in ar.deptos %}
                 {% set ns_e.total_okr_rows = ns_e.total_okr_rows + ([dp.okrs|length, 1]|max) %}
               {% endfor %}
-              {% if not ar.deptos %}
-                {% set ns_e.total_okr_rows = ns_e.total_okr_rows + 1 %}
-              {% endif %}
+              {% if not ar.deptos %}{% set ns_e.total_okr_rows = ns_e.total_okr_rows + 1 %}{% endif %}
             {% endfor %}
-
             {% set emp_span = ns_e.total_okr_rows if ns_e.total_okr_rows > 0 else 1 %}
-            {% set emp_cls = 'text-success' if emp.real_pct >= 80 else ('text-warning' if emp.real_pct >= 50 else 'text-danger') %}
+            {% set emp_cls = 'pct-ok' if emp.real_pct >= 80 else ('pct-warn' if emp.real_pct >= 50 else 'pct-danger') %}
             {% set emp_first = namespace(done=false) %}
 
             {% for ar in emp.areas %}
-              {# rowspan del área #}
               {% set ns_a = namespace(area_span=0) %}
               {% for dp in ar.deptos %}
                 {% set ns_a.area_span = ns_a.area_span + ([dp.okrs|length, 1]|max) %}
               {% endfor %}
               {% if not ar.deptos %}{% set ns_a.area_span = 1 %}{% endif %}
-              {% set ar_cls = 'text-success' if ar.real_pct >= 80 else ('text-warning' if ar.real_pct >= 50 else 'text-danger') %}
+              {% set ar_cls = 'pct-ok' if ar.real_pct >= 80 else ('pct-warn' if ar.real_pct >= 50 else 'pct-danger') %}
               {% set ar_first = namespace(done=false) %}
 
               {% for dp in ar.deptos %}
@@ -345,43 +340,54 @@
                 {% set dp_first = namespace(done=false) %}
 
                 {% for okr in dp.okrs %}
-                  {% set okr_cls = 'text-success' if okr.real_pct >= 80 else ('text-warning' if okr.real_pct >= 50 else 'text-danger') %}
-                  <tr>
+                  {% set okr_cls = 'pct-ok' if okr.real_pct >= 80 else ('pct-warn' if okr.real_pct >= 50 else 'pct-danger') %}
+                  <tr class="hier-row">
                     {% if not emp_first.done %}
-                    <td rowspan="{{ emp_span }}" class="fw-bold hier-empresa">{{ emp.nombre }}</td>
-                    <td rowspan="{{ emp_span }}" class="text-end fw-bold {{ emp_cls }} hier-empresa">{{ emp.real_pct }}%</td>
+                    <td rowspan="{{ emp_span }}" class="hier-td-empresa">
+                      <i class="bi bi-building me-1 opacity-50"></i>{{ emp.nombre }}
+                    </td>
+                    <td rowspan="{{ emp_span }}" class="hier-td-pct {{ emp_cls }}">
+                      <span class="hier-pct-badge {{ emp_cls }}">{{ emp.real_pct }}%</span>
+                    </td>
                     {% set emp_first.done = true %}
                     {% endif %}
 
                     {% if not ar_first.done %}
-                    <td rowspan="{{ ns_a.area_span }}" class="fw-semibold hier-area">{{ ar.nombre }}</td>
-                    <td rowspan="{{ ns_a.area_span }}" class="text-end fw-semibold {{ ar_cls }} hier-area">{{ ar.real_pct }}%</td>
+                    <td rowspan="{{ ns_a.area_span }}" class="hier-td-area">
+                      <i class="bi bi-layers me-1 opacity-50"></i>{{ ar.nombre }}
+                    </td>
+                    <td rowspan="{{ ns_a.area_span }}" class="hier-td-pct {{ ar_cls }}">
+                      <span class="hier-pct-badge {{ ar_cls }}">{{ ar.real_pct }}%</span>
+                    </td>
                     {% set ar_first.done = true %}
                     {% endif %}
 
                     {% if not dp_first.done %}
-                    <td rowspan="{{ dp_span }}" class="hier-dept">{{ dp.nombre }}</td>
+                    <td rowspan="{{ dp_span }}" class="hier-td-dept">
+                      <i class="bi bi-diagram-2 me-1 opacity-50"></i>{{ dp.nombre }}
+                    </td>
                     {% set dp_first.done = true %}
                     {% endif %}
 
-                    <td class="hier-okr">{{ okr.nombre }}</td>
-                    <td class="text-end {{ okr_cls }} hier-okr-pct">{{ okr.real_pct }}%</td>
+                    <td class="hier-td-okr">{{ okr.nombre }}</td>
+                    <td class="hier-td-pct {{ okr_cls }}">
+                      <span class="hier-pct-badge {{ okr_cls }}">{{ okr.real_pct }}%</span>
+                    </td>
                   </tr>
                 {% else %}
-                  {# Departamento sin OKRs #}
-                  <tr>
+                  <tr class="hier-row">
                     {% if not emp_first.done %}
-                    <td rowspan="{{ emp_span }}" class="fw-bold hier-empresa">{{ emp.nombre }}</td>
-                    <td rowspan="{{ emp_span }}" class="text-end fw-bold {{ emp_cls }} hier-empresa">{{ emp.real_pct }}%</td>
+                    <td rowspan="{{ emp_span }}" class="hier-td-empresa"><i class="bi bi-building me-1 opacity-50"></i>{{ emp.nombre }}</td>
+                    <td rowspan="{{ emp_span }}" class="hier-td-pct {{ emp_cls }}"><span class="hier-pct-badge {{ emp_cls }}">{{ emp.real_pct }}%</span></td>
                     {% set emp_first.done = true %}
                     {% endif %}
                     {% if not ar_first.done %}
-                    <td rowspan="{{ ns_a.area_span }}" class="fw-semibold hier-area">{{ ar.nombre }}</td>
-                    <td rowspan="{{ ns_a.area_span }}" class="text-end fw-semibold {{ ar_cls }} hier-area">{{ ar.real_pct }}%</td>
+                    <td rowspan="{{ ns_a.area_span }}" class="hier-td-area"><i class="bi bi-layers me-1 opacity-50"></i>{{ ar.nombre }}</td>
+                    <td rowspan="{{ ns_a.area_span }}" class="hier-td-pct {{ ar_cls }}"><span class="hier-pct-badge {{ ar_cls }}">{{ ar.real_pct }}%</span></td>
                     {% set ar_first.done = true %}
                     {% endif %}
-                    <td class="hier-dept">{{ dp.nombre }}</td>
-                    <td colspan="2" class="text-muted small">—</td>
+                    <td class="hier-td-dept"><i class="bi bi-diagram-2 me-1 opacity-50"></i>{{ dp.nombre }}</td>
+                    <td colspan="2" class="hier-td-okr text-muted">—</td>
                   </tr>
                 {% endfor %}
               {% endfor %}
