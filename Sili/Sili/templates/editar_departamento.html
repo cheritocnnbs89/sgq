@@ -22,6 +22,17 @@
       <label class="form-label">Nombre del departamento</label>
       <input type="text" name="nombre" class="form-control" value="{{ departamento['nombre'] }}" required>
     </div>
+    <div class="col-md-6">
+      <label class="form-label">Área</label>
+      <select name="area_id" class="form-select">
+        <option value="">-- Sin área --</option>
+        {% for a in (areas or []) %}
+        <option value="{{ a[0] }}" {% if departamento[2] and departamento[2]|string == a[0]|string %}selected{% endif %}>
+          {{ a[1] }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
 
   <div class="mt-3">

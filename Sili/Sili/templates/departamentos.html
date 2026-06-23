@@ -19,6 +19,9 @@
       <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-moon-stars me-1"></i>Tema
       </button>
+      <a href="{{ url_for('areas') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-diagram-3 me-1"></i>Áreas
+      </a>
       {% if can_create %}
       <a href="{{ url_for('nuevo_departamento') }}" class="btn btn-cta-blue btn-sm">
         <i class="bi bi-plus-lg"></i> <span>Nuevo</span>
@@ -69,6 +72,7 @@
             <tr>
               <th class="w-110px">ID</th>
               <th>Nombre</th>
+              <th>Área</th>
               <th class="text-end w-220px">Acciones</th>
             </tr>
           </thead>
@@ -77,6 +81,7 @@
             <tr data-row="1">
               <td data-th="ID" class="text-muted">{{ d['id'] }}</td>
               <td data-th="Nombre">{{ d['nombre'] }}</td>
+              <td data-th="Área" class="text-muted">{{ d['area_nombre'] or '—' }}</td>
               <td data-th="Acciones" class="text-end">
                 {% if can_edit %}
                 <a href="{{ url_for('editar_departamento', dep_id=d['id']) }}"

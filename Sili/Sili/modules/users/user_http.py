@@ -46,6 +46,9 @@ from modules.users.user_repository import (
     delete_departamento,
     insert_area,
     get_areas_list,
+    get_area_by_id,
+    update_area,
+    delete_area,
     get_organigrama_rows,
 )
 from modules.users.user_services import (
@@ -736,6 +739,103 @@ def register_user_routes(app):
         return redirect(url_for("usuarios"))
 
     # =========================
+    # ÁREAS
+    # =========================
+    @app.route("/areas", methods=["GET"])
+    @require_login
+    @require_permission("departamentos", "ver")
+    def areas():
+        conn = get_db()
+        lista = get_areas_list(conn)
+        conn.close()
+        return render_template(
+            "areas.html",
+            areas=lista,
+            usuario=session["usuario"],
+            rol=session["rol"],
+            active_page="departamentos"
+        )
+
+    @app.route("/areas/nueva", methods=["GET", "POST"], endpoint="nueva_area")
+    @require_login
+    @require_permission("departamentos", "crear")
+    def nueva_area():
+        if request.method == "POST":
+            nombre = (request.form.get("nombre") or "").strip()
+            if not nombre:
+                flash("El nombre del área es obligatorio.", "danger")
+                return redirect(url_for("nueva_area"))
+            conn = get_db()
+            try:
+                insert_area(conn, nombre)
+                conn.commit()
+                flash("Área creada correctamente.", "success")
+                return redirect(url_for("areas"))
+            except Exception as e:
+                current_app.logger.exception(e)
+                flash("El nombre de área ya existe.", "danger")
+            finally:
+                conn.close()
+        return render_template(
+            "nueva_area.html",
+            usuario=session.get("usuario"),
+            rol=session.get("rol"),
+            active_page="departamentos"
+        )
+
+    @app.route("/areas/<int:area_id>/editar", methods=["GET", "POST"])
+    @require_login
+    @require_permission("departamentos", "editar")
+    def editar_area(area_id):
+        conn = get_db()
+        a = get_area_by_id(conn, area_id)
+        if not a:
+            conn.close()
+            flash("Área no encontrada.", "warning")
+            return redirect(url_for("areas"))
+
+        if request.method == "POST":
+            nombre = (request.form.get("nombre") or "").strip()
+            if not nombre:
+                flash("El nombre del área es obligatorio.", "danger")
+                return redirect(url_for("editar_area", area_id=area_id))
+            try:
+                update_area(conn, area_id, nombre)
+                conn.commit()
+                flash("Área actualizada correctamente.", "success")
+            except Exception as e:
+                current_app.logger.exception(e)
+                flash("El nombre de área ya existe.", "danger")
+            finally:
+                conn.close()
+            return redirect(url_for("areas"))
+
+        conn.close()
+        return render_template(
+            "editar_area.html",
+            area=a,
+            usuario=session["usuario"],
+            rol=session["rol"],
+            active_page="departamentos"
+        )
+
+    @app.route("/areas/<int:area_id>/eliminar", methods=["POST"])
+    @require_login
+    @require_permission("departamentos", "eliminar")
+    def eliminar_area(area_id):
+        conn = get_db()
+        try:
+            delete_area(conn, area_id)
+            conn.commit()
+            flash("Área eliminada.", "success")
+        except Exception as e:
+            current_app.logger.exception(e)
+            flash("No se pudo eliminar el área (puede estar en uso).", "danger")
+        finally:
+            conn.close()
+        return redirect(url_for("areas"))
+
+    # =========================
     # DEPARTAMENTOS
     # =========================
     @app.route("/departamentos", methods=["GET", "POST"])
@@ -743,19 +843,6 @@ def register_user_routes(app):
     @require_permission("departamentos", "ver")
     def departamentos():
         conn = get_db()
-        if request.method == "POST":
-            nombre = (request.form.get("nombre") or "").strip()
-            if not nombre:
-                flash("El nombre del departamento es obligatorio.", "danger")
-                return redirect(url_for("departamentos"))
-            try:
-                insert_departamento(conn, nombre)
-                conn.commit()
-                flash("Departamento creado correctamente.", "success")
-            except Exception as e:
-                current_app.logger.exception(e)
-                flash("El nombre de departamento ya existe.", "danger")
-
         lista = get_departamentos_list(conn)
         conn.close()
         return render_template(
@@ -779,11 +866,13 @@ def register_user_routes(app):
 
         if request.method == "POST":
             nombre = (request.form.get("nombre") or "").strip()
+            area_id_raw = request.form.get("area_id")
+            area_id = int(area_id_raw) if area_id_raw and area_id_raw.isdigit() else None
             if not nombre:
                 flash("El nombre del departamento es obligatorio.", "danger")
                 return redirect(url_for("editar_departamento", dep_id=dep_id))
             try:
-                update_departamento(conn, dep_id, nombre)
+                update_departamento(conn, dep_id, nombre, area_id)
                 conn.commit()
                 flash("Departamento actualizado correctamente.", "success")
             except Exception as e:
@@ -794,9 +883,15 @@ def register_user_routes(app):
             return redirect(url_for("departamentos"))
 
         conn.close()
+        conn2 = get_db()
+        cur2 = conn2.cursor()
+        cur2.execute("SELECT id, nombre FROM areas ORDER BY nombre")
+        areas_list = cur2.fetchall()
+        conn2.close()
         return render_template(
             "editar_departamento.html",
             departamento=d,
+            areas=areas_list,
             usuario=session["usuario"],
             rol=session["rol"],
             active_page="departamentos"
@@ -824,13 +919,15 @@ def register_user_routes(app):
     def nuevo_departamento():
         if request.method == "POST":
             nombre = (request.form.get("nombre") or "").strip()
+            area_id_raw = request.form.get("area_id")
+            area_id = int(area_id_raw) if area_id_raw and area_id_raw.isdigit() else None
             if not nombre:
                 flash("El nombre del departamento es obligatorio.", "danger")
                 return redirect(url_for("nuevo_departamento"))
 
             conn = get_db()
             try:
-                insert_departamento(conn, nombre)
+                insert_departamento(conn, nombre, area_id)
                 conn.commit()
                 flash("Departamento creado correctamente.", "success")
                 return redirect(url_for("departamentos"))
@@ -840,8 +937,14 @@ def register_user_routes(app):
             finally:
                 conn.close()
 
+        conn_a = get_db()
+        cur_a = conn_a.cursor()
+        cur_a.execute("SELECT id, nombre FROM areas ORDER BY nombre")
+        areas_list = cur_a.fetchall()
+        conn_a.close()
         return render_template(
             "nuevo_departamento.html",
+            areas=areas_list,
             usuario=session.get("usuario"),
             rol=session.get("rol"),
             active_page="departamentos"

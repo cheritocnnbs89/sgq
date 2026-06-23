@@ -242,6 +242,7 @@ def planilla_dashboard():
     prev_y, prev_m, next_y, next_m = prev_next(y, m)
 
     # Filtros adicionales (por nombre)
+    area_sel  = (request.args.get("area")  or "").strip()
     depto_sel = (request.args.get("depto") or "").strip()
     resp_sel  = (request.args.get("resp")  or "").strip()
 
@@ -260,6 +261,7 @@ def planilla_dashboard():
                COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''),
                         u.username)                                    AS responsable_display,
                d.nombre                                                AS depto,
+               a.nombre                                                AS area_nombre,
                t.okr_id,
                o.nombre                                                AS okr_nombre,
                t.resultado_clave_id,
@@ -267,6 +269,7 @@ def planilla_dashboard():
         FROM plan_tareas t
         JOIN usuarios u ON u.id = t.usuario_id
         LEFT JOIN departamentos d ON d.id = t.departamento_id
+        LEFT JOIN areas a ON a.id = d.area_id
         LEFT JOIN plan_okrs o ON o.id = t.okr_id
         LEFT JOIN plan_resultados_clave rc ON rc.id = t.resultado_clave_id
         WHERE t.activo = 1
@@ -286,20 +289,25 @@ def planilla_dashboard():
         t["dia_mes"]    = None if t.get("dia_mes") is None else int(t["dia_mes"])
 
     # Listas para combos
+    areas_list       = sorted({t["area_nombre"] for t in tareas if t.get("area_nombre")})
     departamentos_list = sorted({t["depto"] for t in tareas if t.get("depto")})
 
-    # responsables_list filtrado por departamento seleccionado (si aplica)
-    # Usa username (responsable) como clave de filtro pero muestra nombre_completo (responsable_display)
-    tareas_para_resp = tareas if not depto_sel else [t for t in tareas if (t.get("depto") or "") == depto_sel]
-    # dict username → display para evitar duplicados (Jorge Chávez / jchavez = misma persona)
+    # responsables_list filtrado por departamento/área seleccionado (si aplica)
+    tareas_para_resp = tareas
+    if area_sel:
+        tareas_para_resp = [t for t in tareas_para_resp if (t.get("area_nombre") or "") == area_sel]
+    if depto_sel:
+        tareas_para_resp = [t for t in tareas_para_resp if (t.get("depto") or "") == depto_sel]
     _resp_map = {t["responsable"]: t.get("responsable_display") or t["responsable"]
                  for t in tareas_para_resp if t.get("responsable")}
-    responsables_list = sorted(_resp_map.keys())           # claves = usernames únicos
-    responsables_display = _resp_map                        # pasado al template
+    responsables_list = sorted(_resp_map.keys())
+    responsables_display = _resp_map
 
     # ===== Filtros de vista =====
     if freq != "todos":
         tareas = [t for t in tareas if t["frecuencia"].lower() == freq]
+    if area_sel:
+        tareas = [t for t in tareas if (t.get("area_nombre") or "") == area_sel]
     if depto_sel:
         tareas = [t for t in tareas if (t.get("depto") or "") == depto_sel]
     if resp_sel:
@@ -326,9 +334,9 @@ def planilla_dashboard():
             y=y, m=m, kpis=kpis, chart=chart,
             kpis_freq={"diario": _empty_kf, "semanal": _empty_kf, "mensual": _empty_kf},
             top_high=[], top_low=[], dept_rows=[],
-            freq=freq, departamentos_list=departamentos_list,
+            freq=freq, areas_list=areas_list, departamentos_list=departamentos_list,
             responsables_list=responsables_list, responsables_display=responsables_display,
-            depto_sel=depto_sel,
+            area_sel=area_sel, depto_sel=depto_sel,
             resp_sel=resp_sel, prev_y=prev_y, prev_m=prev_m,
             next_y=next_y, next_m=next_m, summary_rows=[],
             proj_rows=[], proj_cols=[],
@@ -783,69 +791,87 @@ def planilla_dashboard():
 
     proj_rows.sort(key=lambda r: r["q_total_pct"])
 
-    # ── KPIs por OKR (solo tareas con OKR asignado) ──────────────────────────
-    by_okr = {}
+    # ── KPIs por Área → OKR → RC → Tareas ───────────────────────────────────
+    # Estructura: by_area[area_nombre][okr_key]["rcs"][rc_key]["tareas"]
+    by_area = {}
     for t in tareas:
-        okr_id   = t.get("okr_id")
+        okr_id  = t.get("okr_id")
         if not okr_id:
             continue
+        area_nom = t.get("area_nombre") or "Sin área"
         okr_nom  = t.get("okr_nombre") or "OKR sin nombre"
-        key      = (okr_id, okr_nom)
-        g = by_okr.setdefault(key, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "rcs": {}})
+        okr_key  = (okr_id, okr_nom)
+        rc_id    = t.get("resultado_clave_id")
+        rc_nom   = t.get("resultado_clave_nombre") or "Sin Resultado Clave"
+        rc_key   = (rc_id, rc_nom)
         tid = t["id"]
-        g["plan"]   += planeadas_por_tarea.get(tid, 0)
-        g["real"]   += realizados_por_tarea.get(tid, 0)
-        g["plan_h"] += planeadas_hoy_por_tarea.get(tid, 0)
-        g["real_h"] += realizados_hoy_por_tarea.get(tid, 0)
-        # nivel resultado clave
-        rc_id  = t.get("resultado_clave_id")
-        rc_nom = t.get("resultado_clave_nombre") or "Sin Resultado Clave"
-        rck    = (rc_id, rc_nom)
-        rc = g["rcs"].setdefault(rck, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "tareas": []})
-        rc["plan"]   += planeadas_por_tarea.get(tid, 0)
-        rc["real"]   += realizados_por_tarea.get(tid, 0)
-        rc["plan_h"] += planeadas_hoy_por_tarea.get(tid, 0)
-        rc["real_h"] += realizados_hoy_por_tarea.get(tid, 0)
-        tp = planeadas_por_tarea.get(tid, 0)
-        tr = realizados_por_tarea.get(tid, 0)
+        tp  = planeadas_por_tarea.get(tid, 0)
+        tr  = realizados_por_tarea.get(tid, 0)
         tph = planeadas_hoy_por_tarea.get(tid, 0)
         trh = realizados_hoy_por_tarea.get(tid, 0)
-        rc["tareas"].append({
+
+        ag = by_area.setdefault(area_nom, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "okrs": {}})
+        ag["plan"]   += tp;  ag["real"]   += tr
+        ag["plan_h"] += tph; ag["real_h"] += trh
+
+        og = ag["okrs"].setdefault(okr_key, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "rcs": {}})
+        og["plan"]   += tp;  og["real"]   += tr
+        og["plan_h"] += tph; og["real_h"] += trh
+
+        rg = og["rcs"].setdefault(rc_key, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "tareas": []})
+        rg["plan"]   += tp;  rg["real"]   += tr
+        rg["plan_h"] += tph; rg["real_h"] += trh
+        rg["tareas"].append({
             "id": tid,
             "nombre": t.get("nombre") or "",
             "responsable": t.get("responsable") or "",
+            "depto": t.get("depto") or "",
             "plan": tp, "real": tr,
             "esp_pct":  round(100.0 * tph / tp, 1) if tp else 0.0,
             "real_pct": round(100.0 * trh / tp, 1) if tp else 0.0,
         })
 
-    okr_rows = []
-    for (okr_id, okr_nom), g in sorted(by_okr.items(), key=lambda x: (x[0][0] is None, x[0][1])):
-        plan = g["plan"] or 0
-        real = g["real"] or 0
-        plan_h = g["plan_h"] or 0
-        real_h = g["real_h"] or 0
-        esp_pct  = round(100.0 * plan_h / plan, 1) if plan else 0.0
-        real_pct = round(100.0 * real_h / plan, 1) if plan else 0.0
-        rcs_list = []
-        for (rc_id, rc_nom), rv in sorted(g["rcs"].items(), key=lambda x: (x[0][0] is None, x[0][1])):
-            rp = rv["plan"] or 0
-            rr = rv["real"] or 0
-            rph = rv["plan_h"] or 0
-            rrh = rv["real_h"] or 0
-            rcs_list.append({
-                "id": rc_id, "nombre": rc_nom,
-                "plan": rp, "real": rr,
-                "esp_pct":  round(100.0 * rph / rp, 1) if rp else 0.0,
-                "real_pct": round(100.0 * rrh / rp, 1) if rp else 0.0,
-                "tareas": rv["tareas"],
+    def _build_okr_rows(okrs_dict):
+        rows = []
+        for (oid, onom), og in sorted(okrs_dict.items(), key=lambda x: x[0][1]):
+            op = og["plan"] or 0; or_ = og["real"] or 0
+            oph = og["plan_h"] or 0; orh = og["real_h"] or 0
+            rcs_list = []
+            for (rid, rnom), rg in sorted(og["rcs"].items(), key=lambda x: x[0][1] or ""):
+                rp = rg["plan"] or 0; rr = rg["real"] or 0
+                rph = rg["plan_h"] or 0; rrh = rg["real_h"] or 0
+                rcs_list.append({
+                    "id": rid, "nombre": rnom,
+                    "plan": rp, "real": rr,
+                    "esp_pct":  round(100.0 * rph / rp, 1) if rp else 0.0,
+                    "real_pct": round(100.0 * rrh / rp, 1) if rp else 0.0,
+                    "tareas": rg["tareas"],
+                })
+            rows.append({
+                "id": oid, "nombre": onom,
+                "plan": op, "real": or_,
+                "esp_pct":  round(100.0 * oph / op, 1) if op else 0.0,
+                "real_pct": round(100.0 * orh / op, 1) if op else 0.0,
+                "resultados_clave": rcs_list,
             })
-        okr_rows.append({
-            "id": okr_id, "nombre": okr_nom,
-            "plan": plan, "real": real,
-            "esp_pct": esp_pct, "real_pct": real_pct,
-            "resultados_clave": rcs_list,
+        return rows
+
+    area_rows = []
+    for area_nom, ag in sorted(by_area.items(), key=lambda x: (x[0] == "Sin área", x[0])):
+        ap = ag["plan"] or 0; ar = ag["real"] or 0
+        aph = ag["plan_h"] or 0; arh = ag["real_h"] or 0
+        area_rows.append({
+            "nombre":   area_nom,
+            "plan":     ap, "real": ar,
+            "esp_pct":  round(100.0 * aph / ap, 1) if ap else 0.0,
+            "real_pct": round(100.0 * arh / ap, 1) if ap else 0.0,
+            "okrs":     _build_okr_rows(ag["okrs"]),
         })
+
+    # Compatibilidad: okr_rows = lista plana de todos los OKRs (sin agrupación de área)
+    okr_rows = []
+    for ar_row in area_rows:
+        okr_rows.extend(ar_row["okrs"])
 
     return render_template(
         "planilla/dashboard.html",
@@ -857,9 +883,11 @@ def planilla_dashboard():
         top_low=top_low,
         dept_rows=dept_rows,
         freq=freq,
+        areas_list=areas_list,
         departamentos_list=departamentos_list,
         responsables_list=responsables_list,
         responsables_display=responsables_display,
+        area_sel=area_sel,
         depto_sel=depto_sel,
         resp_sel=resp_sel,
         prev_y=prev_y, prev_m=prev_m, next_y=next_y, next_m=next_m,
@@ -867,6 +895,7 @@ def planilla_dashboard():
         proj_rows=proj_rows,
         proj_cols=proj_cols,
         okr_rows=okr_rows,
+        area_rows=area_rows,
     )
 
 
