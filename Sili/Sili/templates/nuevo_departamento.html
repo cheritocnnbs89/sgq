@@ -17,6 +17,15 @@
       <label class="form-label">Nombre del departamento</label>
       <input type="text" name="nombre" class="form-control" required>
     </div>
+    <div class="col-md-6">
+      <label class="form-label">Área</label>
+      <select name="area_id" class="form-select">
+        <option value="">-- Sin área --</option>
+        {% for a in (areas or []) %}
+        <option value="{{ a[0] }}">{{ a[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
 
   <div class="mt-3">

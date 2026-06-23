@@ -104,6 +104,7 @@
       const state = JSON.parse(localStorage.getItem(mmKey) || '{}');
       if (state.month) document.getElementById('month').value = state.month;
       if (state.freq) document.getElementById('freqFilter').value = state.freq;
+      if (state.area !== undefined) document.getElementById('areaFilter') && (document.getElementById('areaFilter').value = state.area);
       if (state.depto !== undefined) document.getElementById('deptoFilter').value = state.depto;
       if (state.resp !== undefined) document.getElementById('respFilter').value = state.resp;
     } catch (_) {}
@@ -113,6 +114,7 @@
     const state = {
       month: document.getElementById('month')?.value || '',
       freq: document.getElementById('freqFilter')?.value || '',
+      area: document.getElementById('areaFilter')?.value || '',
       depto: document.getElementById('deptoFilter')?.value || '',
       resp: document.getElementById('respFilter')?.value || ''
     };
@@ -137,6 +139,15 @@
       const url = new URL(window.location.href);
       setParam(url, 'year', year);
       setParam(url, 'month', parseInt(month, 10));
+      saveState();
+      window.location.href = url.toString();
+    });
+
+    document.getElementById('areaFilter')?.addEventListener('change', event => {
+      const url = new URL(window.location.href);
+      setParam(url, 'area', event.target.value);
+      url.searchParams.delete('depto');
+      url.searchParams.delete('resp');
       saveState();
       window.location.href = url.toString();
     });

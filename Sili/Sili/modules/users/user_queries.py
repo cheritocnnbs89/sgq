@@ -225,25 +225,27 @@ SQL_UPDATE_JEFE_MASIVO_BASE = f"""
 """
 
 SQL_INSERT_DEPARTAMENTO = f"""
-    INSERT INTO {TB_DEPARTAMENTOS} (nombre)
-    VALUES (?)
+    INSERT INTO {TB_DEPARTAMENTOS} (nombre, area_id)
+    VALUES (?, ?)
 """
 
 SQL_SELECT_DEPARTAMENTOS_LIST = f"""
-    SELECT id, nombre
-    FROM {TB_DEPARTAMENTOS}
-    ORDER BY nombre
+    SELECT d.id, d.nombre, d.area_id, a.nombre AS area_nombre
+    FROM {TB_DEPARTAMENTOS} d
+    LEFT JOIN {TB_AREAS} a ON a.id = d.area_id
+    ORDER BY d.nombre
 """
 
 SQL_SELECT_DEPARTAMENTO_BY_ID = f"""
-    SELECT id, nombre
-    FROM {TB_DEPARTAMENTOS}
-    WHERE id=?
+    SELECT d.id, d.nombre, d.area_id, a.nombre AS area_nombre
+    FROM {TB_DEPARTAMENTOS} d
+    LEFT JOIN {TB_AREAS} a ON a.id = d.area_id
+    WHERE d.id=?
 """
 
 SQL_UPDATE_DEPARTAMENTO = f"""
     UPDATE {TB_DEPARTAMENTOS}
-    SET nombre=?
+    SET nombre=?, area_id=?
     WHERE id=?
 """
 
@@ -258,9 +260,26 @@ SQL_INSERT_AREA = f"""
 """
 
 SQL_SELECT_AREAS_LIST = f"""
-    SELECT id,nombre,activo
+    SELECT id, nombre, activo
     FROM {TB_AREAS}
     ORDER BY nombre
+"""
+
+SQL_SELECT_AREA_BY_ID = f"""
+    SELECT id, nombre, activo
+    FROM {TB_AREAS}
+    WHERE id=?
+"""
+
+SQL_UPDATE_AREA = f"""
+    UPDATE {TB_AREAS}
+    SET nombre=?
+    WHERE id=?
+"""
+
+SQL_DELETE_AREA = f"""
+    DELETE FROM {TB_AREAS}
+    WHERE id=?
 """
 
 SQL_SELECT_ORGANIGRAMA = f"""

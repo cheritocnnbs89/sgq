@@ -350,6 +350,39 @@ html.theme-dark .chart-box.loading {
   letter-spacing: .06em;
   margin: 0;
 }
+/* ── Área (nivel superior) ── */
+.okr-area-card {
+  border: 2px solid var(--primary, #0d6efd);
+  border-radius: 12px;
+  padding: 1rem 1.1rem .75rem;
+  margin-bottom: 1rem;
+  background: var(--card);
+}
+.okr-area-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.okr-area-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary, #0d6efd);
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.okr-area-okrs {
+  padding-left: 1rem;
+  border-left: 3px solid var(--line);
+  margin-top: .75rem;
+}
+.okr-area-head[aria-expanded="true"] .okr-chevron-icon  { transform: rotate(180deg); }
+.okr-toggle:hover .okr-area-name { opacity: .8; }
+
+/* ── OKR (nivel secundario) ── */
 .okr-card {
   background: var(--card);
   border: 1px solid var(--line);

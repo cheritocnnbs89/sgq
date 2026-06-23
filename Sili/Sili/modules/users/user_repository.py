@@ -35,6 +35,9 @@ from .user_queries import (
     SQL_DELETE_DEPARTAMENTO,
     SQL_INSERT_AREA,
     SQL_SELECT_AREAS_LIST,
+    SQL_SELECT_AREA_BY_ID,
+    SQL_UPDATE_AREA,
+    SQL_DELETE_AREA,
     SQL_SELECT_ORGANIGRAMA,
     SQL_SELECT_IDENT_TO_ID,
     SQL_SELECT_EMAIL_TO_ID,
@@ -336,9 +339,9 @@ def update_jefe_masivo(conn, jefe_id: int, ids: list[int]):
     cur.execute(sql, params)
 
 
-def insert_departamento(conn, nombre: str):
+def insert_departamento(conn, nombre: str, area_id=None):
     cur = conn.cursor()
-    cur.execute(SQL_INSERT_DEPARTAMENTO, (nombre,))
+    cur.execute(SQL_INSERT_DEPARTAMENTO, (nombre, area_id))
 
 
 def get_departamentos_list(conn):
@@ -353,9 +356,9 @@ def get_departamento_by_id(conn, dep_id: int):
     return cur.fetchone()
 
 
-def update_departamento(conn, dep_id: int, nombre: str):
+def update_departamento(conn, dep_id: int, nombre: str, area_id=None):
     cur = conn.cursor()
-    cur.execute(SQL_UPDATE_DEPARTAMENTO, (nombre, dep_id))
+    cur.execute(SQL_UPDATE_DEPARTAMENTO, (nombre, area_id, dep_id))
 
 
 def delete_departamento(conn, dep_id: int):
@@ -372,6 +375,22 @@ def get_areas_list(conn):
     cur = conn.cursor()
     cur.execute(SQL_SELECT_AREAS_LIST)
     return cur.fetchall()
+
+
+def get_area_by_id(conn, area_id: int):
+    cur = conn.cursor()
+    cur.execute(SQL_SELECT_AREA_BY_ID, (area_id,))
+    return cur.fetchone()
+
+
+def update_area(conn, area_id: int, nombre: str):
+    cur = conn.cursor()
+    cur.execute(SQL_UPDATE_AREA, (nombre, area_id))
+
+
+def delete_area(conn, area_id: int):
+    cur = conn.cursor()
+    cur.execute(SQL_DELETE_AREA, (area_id,))
 
 
 def get_organigrama_rows(conn):
