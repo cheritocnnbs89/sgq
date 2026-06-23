@@ -894,36 +894,33 @@ def planilla_dashboard():
         okr_rows.extend(ar_row["okrs"])
 
     # ── Tabla jerárquica Empresa → Área → Depto → OKR ────────────────────────
-    # Agrupar tareas por (empresa, area, dept, okr)
-    # {emp_nom: {area_nom: {dept_nom: {(okr_id, okr_nom): {plan_h, real_h}}}}}
-    _eadokr = {}
+    # Lookups desde area_rows (mismos % que el card OKR para consistencia)
+    _area_pct  = {ar["nombre"]: ar["real_pct"] for ar in area_rows}
+    _okr_pct   = {o["id"]: o["real_pct"] for ar in area_rows for o in ar["okrs"]}
+
+    # Agrupar tareas por (empresa, area, dept) → set de okrs con su real_pct
+    # {emp_nom: {area_nom: {dept_nom: {okr_id: okr_nom}}}}
+    _eado = {}
     for t in tareas:
         if not t.get("okr_id"):
             continue
         _e = t.get("empresa_nombre") or "Sin empresa"
         _a = t.get("area_nombre") or "Sin área"
         _d = t.get("depto") or "Sin departamento"
-        _ok = (t.get("okr_id"), t.get("okr_nombre") or "OKR sin nombre")
-        tid = t["id"]
-        _eadokr.setdefault(_e, {}).setdefault(_a, {}).setdefault(_d, {}).setdefault(_ok, {"plan_h": 0, "real_h": 0})
-        _eadokr[_e][_a][_d][_ok]["plan_h"] += planeadas_hoy_por_tarea.get(tid, 0)
-        _eadokr[_e][_a][_d][_ok]["real_h"] += realizados_hoy_por_tarea.get(tid, 0)
-
-    # Construir area_real_pct lookup desde area_rows ya calculados
-    _area_pct = {ar["nombre"]: ar["real_pct"] for ar in area_rows}
+        oid = t.get("okr_id"); onom = t.get("okr_nombre") or "OKR sin nombre"
+        _eado.setdefault(_e, {}).setdefault(_a, {}).setdefault(_d, {})[oid] = onom
 
     empresa_rows = []
-    for emp_nom in sorted(_eadokr.keys()):
+    for emp_nom in sorted(_eado.keys()):
         emp_areas = []
-        for a_nom in sorted(_eadokr[emp_nom].keys()):
+        for a_nom in sorted(_eado[emp_nom].keys()):
             dept_rows_h = []
-            for d_nom in sorted(_eadokr[emp_nom][a_nom].keys()):
+            for d_nom in sorted(_eado[emp_nom][a_nom].keys()):
                 okr_rows_h = []
-                for (oid, onom), og in sorted(_eadokr[emp_nom][a_nom][d_nom].items(), key=lambda x: x[0][1]):
-                    ph = og["plan_h"]; rh = og["real_h"]
+                for oid, onom in sorted(_eado[emp_nom][a_nom][d_nom].items(), key=lambda x: x[1]):
                     okr_rows_h.append({
-                        "nombre": onom,
-                        "real_pct": round(100.0 * rh / ph, 1) if ph else 0.0,
+                        "nombre":   onom,
+                        "real_pct": _okr_pct.get(oid, 0.0),
                     })
                 dept_rows_h.append({"nombre": d_nom, "okrs": okr_rows_h})
             emp_areas.append({
