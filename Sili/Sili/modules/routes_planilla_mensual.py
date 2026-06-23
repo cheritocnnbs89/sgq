@@ -849,11 +849,13 @@ def planilla_dashboard():
                     "real_pct": round(100.0 * rrh / rp, 1) if rp else 0.0,
                     "tareas": rg["tareas"],
                 })
+            o_esp  = round(sum(rc["esp_pct"]  for rc in rcs_list) / len(rcs_list), 1) if rcs_list else 0.0
+            o_real = round(sum(rc["real_pct"] for rc in rcs_list) / len(rcs_list), 1) if rcs_list else 0.0
             rows.append({
                 "id": oid, "nombre": onom,
                 "plan": op, "real": or_,
-                "esp_pct":  round(100.0 * oph / op, 1) if op else 0.0,
-                "real_pct": round(100.0 * orh / op, 1) if op else 0.0,
+                "esp_pct":  o_esp,
+                "real_pct": o_real,
                 "resultados_clave": rcs_list,
             })
         return rows
@@ -861,13 +863,15 @@ def planilla_dashboard():
     area_rows = []
     for area_nom, ag in sorted(by_area.items(), key=lambda x: (x[0] == "Sin área", x[0])):
         ap = ag["plan"] or 0; ar = ag["real"] or 0
-        aph = ag["plan_h"] or 0; arh = ag["real_h"] or 0
+        okr_list = _build_okr_rows(ag["okrs"])
+        a_esp  = round(sum(o["esp_pct"]  for o in okr_list) / len(okr_list), 1) if okr_list else 0.0
+        a_real = round(sum(o["real_pct"] for o in okr_list) / len(okr_list), 1) if okr_list else 0.0
         area_rows.append({
             "nombre":   area_nom,
             "plan":     ap, "real": ar,
-            "esp_pct":  round(100.0 * aph / ap, 1) if ap else 0.0,
-            "real_pct": round(100.0 * arh / ap, 1) if ap else 0.0,
-            "okrs":     _build_okr_rows(ag["okrs"]),
+            "esp_pct":  a_esp,
+            "real_pct": a_real,
+            "okrs":     okr_list,
             "deptos":   sorted(ag["deptos"]),
         })
 
@@ -957,6 +961,7 @@ def planilla():
 
     sql = [
         "SELECT t.id, t.nombre, t.frecuencia, t.usuario_id, t.activo, t.departamento_id,",
+        "       t.dia_semana, t.dia_mes,",
         "       COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''), u.username) AS responsable_nombre",
         "FROM plan_tareas t JOIN usuarios u ON u.id = t.usuario_id",
         "WHERE t.activo = 1"
@@ -998,46 +1003,45 @@ def planilla():
     prev_y, prev_m, next_y, next_m = prev_next(y, m)
     session["active_page"] = "planilla_mensual"
 
-    # ── Tarjetas resumen (solo tareas visibles según filtros) ─────
-    today = date.today()
-
-    # Feriados del mes para excluirlos del conteo
+    # ── Días programados por tarea ────────────────────────────────
     _feriados_rows = cur.execute(
         "SELECT fecha FROM plan_feriados WHERE fecha BETWEEN ? AND ? AND (pais='EC' OR pais IS NULL)",
         (dias[0].isoformat(), dias[-1].isoformat())
     ).fetchall()
     _feriados_set = {(r["fecha"] if hasattr(r, "keys") else r[0]) for r in _feriados_rows}
 
-    def _is_lab(d: date) -> bool:
-        """Retorna True si el día es laborable (lunes-viernes y no feriado)."""
+    def _is_lab_planilla(d: date) -> bool:
         return d.weekday() < 5 and d.isoformat() not in _feriados_set
 
-    _tids_visible = {str(t["id"]) for t in tareas}
-    total_act    = len(tareas)
-    cumplidas    = sum(1 for k, v in checks.items() if v and k.split("-")[0] in _tids_visible)
-    dias_pasados = [d for d in dias if d <= today and _is_lab(d)]
-    total_esperadas = len(tareas) * len(dias_pasados)
-    pendientes   = max(0, total_esperadas - cumplidas)
-    vencidas = 0
+    def _last_day_of_month_p(y2, m2):
+        return calendar.monthrange(y2, m2)[1]
+
+    def _occurs_planilla(t, d: date) -> bool:
+        if not _is_lab_planilla(d):
+            return False
+        f = (t.get("frecuencia") or "").strip().lower()
+        if f == "diario":
+            return True
+        if f == "semanal":
+            ds = t.get("dia_semana")
+            if ds is None:
+                ds = 0
+            if 1 <= ds <= 7:
+                ds = ds - 1
+            if ds in (5, 6):
+                return False
+            return d.weekday() == ds
+        if f == "mensual":
+            dm = t.get("dia_mes")
+            if dm is None:
+                return d.day == 1
+            dm = min(int(dm), _last_day_of_month_p(d.year, d.month))
+            return d.day == dm
+        return False
+
+    tareas = [dict(t) for t in tareas]
     for t in tareas:
-        tid = str(t["id"])
-        for d in dias_pasados:
-            k = f"{tid}-{d.isoformat()}"
-            if not checks.get(k):
-                vencidas += 1
-    evi_pendientes = sum(
-        1 for t in tareas
-        for d in dias_pasados
-        if checks.get(f"{str(t['id'])}-{d.isoformat()}")
-        and not evidencias.get(f"{str(t['id'])}-{d.isoformat()}")
-    )
-    resumen = dict(
-        total_act=total_act,
-        cumplidas=cumplidas,
-        pendientes=pendientes,
-        vencidas=vencidas,
-        evi_pendientes=evi_pendientes,
-    )
+        t["scheduled_dates"] = {d.isoformat() for d in dias if _occurs_planilla(t, d)}
     # ─────────────────────────────────────────────────────────────
 
     is_admin = _is_admin()
@@ -1047,7 +1051,6 @@ def planilla():
         evidence_mode=evidence_mode,
         is_admin=is_admin,
         today_iso=date.today().isoformat(),
-        resumen=resumen,
         y=y, m=m, dias=dias, tareas=tareas, checks=checks, evidencias=evidencias,
         responsables=responsables, rid=str(rid or ""), freq=str(freq or ""),
         departamentos=departamentos, depid=str(depid or ""),

@@ -81,45 +81,6 @@
     </div>
   </div>
 
-  <!-- ===== TARJETAS RESUMEN ===== -->
-  <div class="pm-summary-row mb-3">
-    <div class="pm-summary-card pm-sum-total">
-      <div class="pm-sum-icon"><i class="bi bi-grid-3x2-gap-fill"></i></div>
-      <div class="pm-sum-body">
-        <div class="pm-sum-val">{{ resumen.total_act }}</div>
-        <div class="pm-sum-label">Actividades</div>
-      </div>
-    </div>
-    <div class="pm-summary-card pm-sum-done">
-      <div class="pm-sum-icon"><i class="bi bi-check-circle-fill"></i></div>
-      <div class="pm-sum-body">
-        <div class="pm-sum-val">{{ resumen.cumplidas }}</div>
-        <div class="pm-sum-label">Cumplidas</div>
-      </div>
-    </div>
-    <div class="pm-summary-card pm-sum-pending">
-      <div class="pm-sum-icon"><i class="bi bi-hourglass-split"></i></div>
-      <div class="pm-sum-body">
-        <div class="pm-sum-val">{{ resumen.pendientes }}</div>
-        <div class="pm-sum-label">Pendientes</div>
-      </div>
-    </div>
-    <div class="pm-summary-card pm-sum-overdue">
-      <div class="pm-sum-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
-      <div class="pm-sum-body">
-        <div class="pm-sum-val">{{ resumen.vencidas }}</div>
-        <div class="pm-sum-label">Vencidas</div>
-      </div>
-    </div>
-    <div class="pm-summary-card pm-sum-evi">
-      <div class="pm-sum-icon"><i class="bi bi-paperclip"></i></div>
-      <div class="pm-sum-body">
-        <div class="pm-sum-val">{{ resumen.evi_pendientes }}</div>
-        <div class="pm-sum-label">Sin evidencia</div>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== LEYENDA ===== -->
   <div class="pm-legend mb-2">
     <span class="pm-legend-item"><span class="pm-dot pm-dot-done"></span> Cumplido</span>
@@ -225,6 +186,7 @@
           {% set iso = d.isocalendar() %}
           {% set key = t['id']|string + '-' + d.isoformat() %}
           {% set ev  = evidencias.get(key) %}
+          {% if d.isoformat() in t.get('scheduled_dates', set()) %}
           <td class="text-center day-cell"
               data-week="{{ iso.week }}"
               data-dow="{{ iso.weekday }}"
@@ -244,6 +206,12 @@
             </button>
             {% endif %}
           </td>
+          {% else %}
+          <td class="day-cell day-na"
+              data-week="{{ iso.week }}"
+              data-dow="{{ iso.weekday }}"
+              data-col="{{ loop.index }}"></td>
+          {% endif %}
           {% endfor %}
         </tr>
         {% endfor %}
