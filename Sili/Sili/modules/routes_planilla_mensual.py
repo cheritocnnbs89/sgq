@@ -13,7 +13,7 @@ from .db import get_db
 planilla_bp = Blueprint("planilla_mensual", __name__, url_prefix="/planilla-mensual")
 
 # ---------- Config ----------
-FRECUENCIAS   = ("Diario", "Semanal", "Mensual")
+FRECUENCIAS   = ("Diario", "Semanal", "Mensual", "Anual")
 ALLOWED_EXT   = {"pdf", "png", "jpg", "jpeg", "webp"}
 MAX_UPLOAD_MB = 20  # límite del lado servidor
 
@@ -256,7 +256,7 @@ def planilla_dashboard():
 
     base_sql = """
         SELECT t.id, t.nombre, t.frecuencia, t.activo,
-               t.departamento_id, t.dia_semana, t.dia_mes,
+               t.departamento_id, t.dia_semana, t.dia_mes, t.mes_anual,
                u.username                                              AS responsable,
                COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''),
                         u.username)                                    AS responsable_display,
@@ -287,6 +287,7 @@ def planilla_dashboard():
         t["frecuencia"] = (t.get("frecuencia") or "").strip().lower()
         t["dia_semana"] = None if t.get("dia_semana") is None else int(t["dia_semana"])
         t["dia_mes"]    = None if t.get("dia_mes") is None else int(t["dia_mes"])
+        t["mes_anual"]  = None if t.get("mes_anual") is None else int(t["mes_anual"])
 
     # Listas para combos
     areas_list       = sorted({t["area_nombre"] for t in tareas if t.get("area_nombre")})
@@ -396,6 +397,16 @@ def planilla_dashboard():
             dm = t.get("dia_mes")
             if dm is None:
                 return d.day == 1
+            dm = min(int(dm), _last_day_of_month(d.year, d.month))
+            return d.day == dm
+
+        if f == "anual":
+            ma = t.get("mes_anual")
+            dm = t.get("dia_mes")
+            if ma is None or dm is None:
+                return False
+            if d.month != int(ma):
+                return False
             dm = min(int(dm), _last_day_of_month(d.year, d.month))
             return d.day == dm
 
@@ -961,7 +972,7 @@ def planilla():
 
     sql = [
         "SELECT t.id, t.nombre, t.frecuencia, t.usuario_id, t.activo, t.departamento_id,",
-        "       t.dia_semana, t.dia_mes,",
+        "       t.dia_semana, t.dia_mes, t.mes_anual,",
         "       COALESCE(NULLIF(LTRIM(RTRIM(u.nombre_completo)),''), u.username) AS responsable_nombre",
         "FROM plan_tareas t JOIN usuarios u ON u.id = t.usuario_id",
         "WHERE t.activo = 1"
@@ -1035,6 +1046,15 @@ def planilla():
             dm = t.get("dia_mes")
             if dm is None:
                 return d.day == 1
+            dm = min(int(dm), _last_day_of_month_p(d.year, d.month))
+            return d.day == dm
+        if f == "anual":
+            ma = t.get("mes_anual")
+            dm = t.get("dia_mes")
+            if ma is None or dm is None:
+                return False
+            if d.month != int(ma):
+                return False
             dm = min(int(dm), _last_day_of_month_p(d.year, d.month))
             return d.day == dm
         return False
@@ -1311,15 +1331,23 @@ def tareas_new():
     # NUEVO: días (según frecuencia)
     dia_semana = request.form.get("dia_semana")
     dia_mes    = request.form.get("dia_mes")
+    mes_anual  = request.form.get("mes_anual")
     if frecuencia == "Semanal":
         dia_semana = int(dia_semana) if dia_semana not in (None, "",) else None
         dia_mes = None
+        mes_anual = None
     elif frecuencia == "Mensual":
         dia_mes = int(dia_mes) if dia_mes not in (None, "",) else None
+        dia_semana = None
+        mes_anual = None
+    elif frecuencia == "Anual":
+        dia_mes = int(dia_mes) if dia_mes not in (None, "",) else None
+        mes_anual = int(mes_anual) if mes_anual not in (None, "",) else None
         dia_semana = None
     else:
         dia_semana = None
         dia_mes = None
+        mes_anual = None
 
 
     if not nombre or frecuencia not in FRECUENCIAS:
@@ -1339,11 +1367,11 @@ def tareas_new():
     resultado_clave_id = int(resultado_clave_id) if resultado_clave_id and str(resultado_clave_id).isdigit() else None
 
     cur.execute("""
-    INSERT INTO plan_tareas(nombre, frecuencia, usuario_id, departamento_id, activo, dia_semana, dia_mes, okr_id, resultado_clave_id)
-    VALUES (?,?,?,?,?,?,?,?,?)
+    INSERT INTO plan_tareas(nombre, frecuencia, usuario_id, departamento_id, activo, dia_semana, dia_mes, mes_anual, okr_id, resultado_clave_id)
+    VALUES (?,?,?,?,?,?,?,?,?,?)
     """, (nombre, frecuencia, int(responsable_user_id),
         (int(departamento_id) if departamento_id else None), activo,
-        dia_semana, dia_mes, okr_id, resultado_clave_id))
+        dia_semana, dia_mes, mes_anual, okr_id, resultado_clave_id))
 
     conn.commit()
     return redirect(url_for("planilla_mensual.tareas_list"))
@@ -1415,15 +1443,23 @@ def tareas_edit(tid: int):
 
     dia_semana = request.form.get("dia_semana")
     dia_mes    = request.form.get("dia_mes")
+    mes_anual  = request.form.get("mes_anual")
     if frecuencia == "Semanal":
         dia_semana = int(dia_semana) if dia_semana not in (None, "",) else None
         dia_mes = None
+        mes_anual = None
     elif frecuencia == "Mensual":
         dia_mes = int(dia_mes) if dia_mes not in (None, "",) else None
+        dia_semana = None
+        mes_anual = None
+    elif frecuencia == "Anual":
+        dia_mes = int(dia_mes) if dia_mes not in (None, "",) else None
+        mes_anual = int(mes_anual) if mes_anual not in (None, "",) else None
         dia_semana = None
     else:
         dia_semana = None
         dia_mes = None
+        mes_anual = None
 
     if not nombre or frecuencia not in FRECUENCIAS:
         return "Datos inválidos", 400
@@ -1444,12 +1480,12 @@ def tareas_edit(tid: int):
 
     cur.execute("""
     UPDATE plan_tareas
-       SET nombre=?, frecuencia=?, usuario_id=?, departamento_id=?, activo=?, dia_semana=?, dia_mes=?,
+       SET nombre=?, frecuencia=?, usuario_id=?, departamento_id=?, activo=?, dia_semana=?, dia_mes=?, mes_anual=?,
            okr_id=?, resultado_clave_id=?
      WHERE id=?
     """, (nombre, frecuencia, uid,
       (int(departamento_id) if departamento_id else None), activo,
-      dia_semana, dia_mes, okr_id, resultado_clave_id, tid))
+      dia_semana, dia_mes, mes_anual, okr_id, resultado_clave_id, tid))
 
     conn.commit()
     return redirect(url_for("planilla_mensual.tareas_list"))

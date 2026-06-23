@@ -6,9 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const userSel = document.getElementById('responsable_user_id');
   const nuevo = document.getElementById('nuevo_responsable');
   const hidResp = document.getElementById('responsable_id_hidden');
-  const freqSel = document.getElementById('frecuencia');
-  const boxSem = document.getElementById('box_dia_semana');
-  const boxMes = document.getElementById('box_dia_mes');
+  const freqSel    = document.getElementById('frecuencia');
+  const boxSem     = document.getElementById('box_dia_semana');
+  const boxMes     = document.getElementById('box_dia_mes');
+  const boxMesAnual = document.getElementById('box_mes_anual');
 
   const isEdit = form.dataset.isEdit === '1';
   const usersUrlPrefix = form.dataset.usersUrlPrefix || '/planilla-mensual/api/usuarios/by-dep/';
@@ -24,17 +25,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (frecuencia === 'semanal') {
       setHidden(boxSem, false);
       setHidden(boxMes, true);
+      setHidden(boxMesAnual, true);
       return;
     }
 
     if (frecuencia === 'mensual') {
       setHidden(boxSem, true);
       setHidden(boxMes, false);
+      setHidden(boxMesAnual, true);
+      return;
+    }
+
+    if (frecuencia === 'anual') {
+      setHidden(boxSem, true);
+      setHidden(boxMes, false);
+      setHidden(boxMesAnual, false);
       return;
     }
 
     setHidden(boxSem, true);
     setHidden(boxMes, true);
+    setHidden(boxMesAnual, true);
   }
 
   async function loadUsers(depid, keepSelection = false) {
