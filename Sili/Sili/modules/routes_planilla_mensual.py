@@ -891,6 +891,45 @@ def planilla_dashboard():
     for ar_row in area_rows:
         okr_rows.extend(ar_row["okrs"])
 
+    # ── Tabla jerárquica Empresa → Área → Depto → OKR ────────────────────────
+    # Agrupar tareas por (area, dept, okr)
+    _adokr = {}  # {area_nom: {dept_nom: {(okr_id, okr_nom): {plan_h, real_h, plan}}}}
+    for t in tareas:
+        if not t.get("okr_id"):
+            continue
+        _a = t.get("area_nombre") or "Sin área"
+        _d = t.get("depto") or "Sin departamento"
+        _ok = (t.get("okr_id"), t.get("okr_nombre") or "OKR sin nombre")
+        tid = t["id"]
+        _adokr.setdefault(_a, {}).setdefault(_d, {}).setdefault(_ok, {"plan_h": 0, "real_h": 0, "plan": 0})
+        _adokr[_a][_d][_ok]["plan_h"] += planeadas_hoy_por_tarea.get(tid, 0)
+        _adokr[_a][_d][_ok]["real_h"] += realizados_hoy_por_tarea.get(tid, 0)
+        _adokr[_a][_d][_ok]["plan"]   += planeadas_por_tarea.get(tid, 0)
+
+    empresa_nombre = cfg_get(conn, "empresa_nombre", "Mi Empresa")
+    empresa_areas = []
+    for ar_row in area_rows:
+        a_nom = ar_row["nombre"]
+        dept_rows_h = []
+        for d_nom in sorted(_adokr.get(a_nom, {}).keys()):
+            okr_rows_h = []
+            for (oid, onom), og in sorted(_adokr[a_nom][d_nom].items(), key=lambda x: x[0][1]):
+                ph = og["plan_h"]; rh = og["real_h"]
+                okr_rows_h.append({
+                    "nombre": onom,
+                    "real_pct": round(100.0 * rh / ph, 1) if ph else 0.0,
+                })
+            dept_rows_h.append({"nombre": d_nom, "okrs": okr_rows_h})
+        empresa_areas.append({
+            "nombre":   a_nom,
+            "real_pct": ar_row["real_pct"],
+            "deptos":   dept_rows_h,
+        })
+
+    empresa_pct = round(sum(a["real_pct"] for a in empresa_areas) / len(empresa_areas), 1) if empresa_areas else 0.0
+    empresa_rows = [{"nombre": empresa_nombre, "real_pct": empresa_pct, "areas": empresa_areas}]
+    # ──────────────────────────────────────────────────────────────────────────
+
     return render_template(
         "planilla/dashboard.html",
         y=y, m=m,
@@ -914,6 +953,7 @@ def planilla_dashboard():
         proj_cols=proj_cols,
         okr_rows=okr_rows,
         area_rows=area_rows,
+        empresa_rows=empresa_rows,
     )
 
 

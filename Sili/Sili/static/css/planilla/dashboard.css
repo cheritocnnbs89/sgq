@@ -535,3 +535,16 @@ html.theme-dark .okr-badge-danger { background: #3d1a1a; color: #fca5a5; }
   .okr-th-name, .okr-td-name { width: 50%; }
 }
 
+
+/* ── Tabla jerárquica Empresa → Área → Depto → OKR ── */
+.hier-table { font-size: 13px; border-color: var(--line); }
+.hier-table thead th { background: #1e293b; color: #f1f5f9; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+.hier-table td { vertical-align: middle; color: var(--ink); border-color: var(--line); padding: 6px 10px; }
+.hier-empresa { background: #eff6ff; font-size: 14px; }
+.hier-area    { background: #f0fdf4; }
+.hier-dept    { background: var(--surface-2); color: var(--muted); }
+.hier-okr     { padding-left: 20px; }
+.hier-okr-pct { font-weight: 600; white-space: nowrap; }
+html.theme-dark .hier-empresa { background: #1e3a5f; }
+html.theme-dark .hier-area    { background: #14532d; }
+html.theme-dark .hier-dept    { background: #1e293b; }
