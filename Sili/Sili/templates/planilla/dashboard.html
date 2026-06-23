@@ -87,99 +87,10 @@
 </div>
 
 {# ═══════════════════════════════════════════════
-   KPI – Fila única: Total + Diario + Semanal + Mensual
+   KPI – Solo Diario (se muestra al final)
 ═══════════════════════════════════════════════ #}
-{% set gap_total = (kpis.real_a_hoy_pct or 0) - (kpis.esperado_hoy_pct or 0) %}
-{% set kf_d = kpis_freq.get('diario',  {}) %}
-{% set kf_s = kpis_freq.get('semanal', {}) %}
-{% set kf_m = kpis_freq.get('mensual', {}) %}
+{% set kf_d = kpis_freq.get('diario', {}) %}
 {% set gap_d = (kf_d.real_pct or 0) - (kf_d.esp_pct or 0) %}
-{% set gap_s = (kf_s.real_pct or 0) - (kf_s.esp_pct or 0) %}
-{% set gap_m = (kf_m.real_pct or 0) - (kf_m.esp_pct or 0) %}
-
-<div class="kpi-row">
-
-  {# ── Total general ── #}
-  <div class="kpi-group kpi-group-total">
-    <div class="kpi-group-label"><i class="bi bi-grid-3x2-gap"></i> Total general</div>
-    <div class="kpi-pair">
-      <div class="kpi-tile kpi-tile-blue">
-        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
-        <div class="kpi-tile-val">{{ (kpis.esperado_hoy_pct or 0)|round(1) }}%</div>
-        <div class="kpi-tile-sub">Plan: {{ kpis.planeadas }}</div>
-      </div>
-      <div class="kpi-tile {% if gap_total >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
-        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
-        <div class="kpi-tile-val">{{ (kpis.real_a_hoy_pct or 0)|round(1) }}%</div>
-        <div class="kpi-tile-sub">
-          Real: {{ kpis.realizadas }}
-          <span class="kpi-gap {% if gap_total >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_total) }}%</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {# ── Diario ── #}
-  <div class="kpi-group kpi-group-diario">
-    <div class="kpi-group-label"><i class="bi bi-calendar-day"></i> Diario <span class="kpi-group-count">{{ kf_d.planeadas or 0 }} plan.</span></div>
-    <div class="kpi-pair">
-      <div class="kpi-tile kpi-tile-blue">
-        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
-        <div class="kpi-tile-val">{{ (kf_d.esp_pct or 0)|round(1) }}%</div>
-        <div class="kpi-tile-sub">A hoy: {{ kf_d.plan_h or 0 }}</div>
-      </div>
-      <div class="kpi-tile {% if gap_d >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
-        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
-        <div class="kpi-tile-val">{{ (kf_d.real_pct or 0)|round(1) }}%</div>
-        <div class="kpi-tile-sub">
-          Real: {{ kf_d.real_h or 0 }}
-          <span class="kpi-gap {% if gap_d >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_d) }}%</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {# ── Semanal ── #}
-  <div class="kpi-group kpi-group-semanal">
-    <div class="kpi-group-label"><i class="bi bi-calendar-week"></i> Semanal <span class="kpi-group-count">{{ kf_s.planeadas or 0 }} plan.</span></div>
-    <div class="kpi-pair">
-      <div class="kpi-tile kpi-tile-blue">
-        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
-        <div class="kpi-tile-val">{{ (kf_s.esp_pct or 0)|round(1) }}%</div>
-        <div class="kpi-tile-sub">A hoy: {{ kf_s.plan_h or 0 }}</div>
-      </div>
-      <div class="kpi-tile {% if gap_s >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
-        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
-        <div class="kpi-tile-val">{{ (kf_s.real_pct or 0)|round(1) }}%</div>
-        <div class="kpi-tile-sub">
-          Real: {{ kf_s.real_h or 0 }}
-          <span class="kpi-gap {% if gap_s >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_s) }}%</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {# ── Mensual ── #}
-  <div class="kpi-group kpi-group-mensual">
-    <div class="kpi-group-label"><i class="bi bi-calendar-month"></i> Mensual <span class="kpi-group-count">{{ kf_m.planeadas or 0 }} plan.</span></div>
-    <div class="kpi-pair">
-      <div class="kpi-tile kpi-tile-blue">
-        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
-        <div class="kpi-tile-val">{{ (kf_m.esp_pct or 0)|round(1) }}%</div>
-        <div class="kpi-tile-sub">A hoy: {{ kf_m.plan_h or 0 }}</div>
-      </div>
-      <div class="kpi-tile {% if gap_m >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
-        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
-        <div class="kpi-tile-val">{{ (kf_m.real_pct or 0)|round(1) }}%</div>
-        <div class="kpi-tile-sub">
-          Real: {{ kf_m.real_h or 0 }}
-          <span class="kpi-gap {% if gap_m >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_m) }}%</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
 
 
 {# ── OKR Cumplimiento agrupado por Área ── #}
@@ -372,6 +283,138 @@
         <span><span class="okr-legend-dot okr-legend-ok"></span>En curso (real ≥ esperado)</span>
         <span><span class="okr-legend-dot okr-legend-warn"></span>En riesgo (brecha ≤ 15%)</span>
         <span><span class="okr-legend-dot okr-legend-danger"></span>Crítico (brecha > 15%)</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{# ═══════════════════════════════════════════════
+   Tabla jerárquica Empresa → Área → Depto → OKR
+═══════════════════════════════════════════════ #}
+{% if empresa_rows %}
+<div class="row g-3 mt-2">
+  <div class="col-12">
+    <div class="okr-section">
+      <div class="okr-section-header">
+        <p class="okr-section-title"><i class="bi bi-diagram-3 me-2"></i>Resumen jerárquico por empresa</p>
+        <span class="small text-muted">Real a hoy · Empresa → Área → Departamento → OKR</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered align-middle hier-table">
+          <thead class="table-dark">
+            <tr>
+              <th>Empresa</th>
+              <th class="text-end">% Global</th>
+              <th>Área</th>
+              <th class="text-end">% Área</th>
+              <th>Departamento</th>
+              <th>OKR</th>
+              <th class="text-end">% OKR</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for emp in empresa_rows %}
+            {# Calcular total de filas para empresa (rowspan) #}
+            {% set ns_e = namespace(total_okr_rows=0) %}
+            {% for ar in emp.areas %}
+              {% for dp in ar.deptos %}
+                {% set ns_e.total_okr_rows = ns_e.total_okr_rows + ([dp.okrs|length, 1]|max) %}
+              {% endfor %}
+              {% if not ar.deptos %}
+                {% set ns_e.total_okr_rows = ns_e.total_okr_rows + 1 %}
+              {% endif %}
+            {% endfor %}
+
+            {% set emp_span = ns_e.total_okr_rows if ns_e.total_okr_rows > 0 else 1 %}
+            {% set emp_cls = 'text-success' if emp.real_pct >= 80 else ('text-warning' if emp.real_pct >= 50 else 'text-danger') %}
+            {% set emp_first = namespace(done=false) %}
+
+            {% for ar in emp.areas %}
+              {# rowspan del área #}
+              {% set ns_a = namespace(area_span=0) %}
+              {% for dp in ar.deptos %}
+                {% set ns_a.area_span = ns_a.area_span + ([dp.okrs|length, 1]|max) %}
+              {% endfor %}
+              {% if not ar.deptos %}{% set ns_a.area_span = 1 %}{% endif %}
+              {% set ar_cls = 'text-success' if ar.real_pct >= 80 else ('text-warning' if ar.real_pct >= 50 else 'text-danger') %}
+              {% set ar_first = namespace(done=false) %}
+
+              {% for dp in ar.deptos %}
+                {% set dp_span = [dp.okrs|length, 1]|max %}
+                {% set dp_first = namespace(done=false) %}
+
+                {% for okr in dp.okrs %}
+                  {% set okr_cls = 'text-success' if okr.real_pct >= 80 else ('text-warning' if okr.real_pct >= 50 else 'text-danger') %}
+                  <tr>
+                    {% if not emp_first.done %}
+                    <td rowspan="{{ emp_span }}" class="fw-bold hier-empresa">{{ emp.nombre }}</td>
+                    <td rowspan="{{ emp_span }}" class="text-end fw-bold {{ emp_cls }} hier-empresa">{{ emp.real_pct }}%</td>
+                    {% set emp_first.done = true %}
+                    {% endif %}
+
+                    {% if not ar_first.done %}
+                    <td rowspan="{{ ns_a.area_span }}" class="fw-semibold hier-area">{{ ar.nombre }}</td>
+                    <td rowspan="{{ ns_a.area_span }}" class="text-end fw-semibold {{ ar_cls }} hier-area">{{ ar.real_pct }}%</td>
+                    {% set ar_first.done = true %}
+                    {% endif %}
+
+                    {% if not dp_first.done %}
+                    <td rowspan="{{ dp_span }}" class="hier-dept">{{ dp.nombre }}</td>
+                    {% set dp_first.done = true %}
+                    {% endif %}
+
+                    <td class="hier-okr">{{ okr.nombre }}</td>
+                    <td class="text-end {{ okr_cls }} hier-okr-pct">{{ okr.real_pct }}%</td>
+                  </tr>
+                {% else %}
+                  {# Departamento sin OKRs #}
+                  <tr>
+                    {% if not emp_first.done %}
+                    <td rowspan="{{ emp_span }}" class="fw-bold hier-empresa">{{ emp.nombre }}</td>
+                    <td rowspan="{{ emp_span }}" class="text-end fw-bold {{ emp_cls }} hier-empresa">{{ emp.real_pct }}%</td>
+                    {% set emp_first.done = true %}
+                    {% endif %}
+                    {% if not ar_first.done %}
+                    <td rowspan="{{ ns_a.area_span }}" class="fw-semibold hier-area">{{ ar.nombre }}</td>
+                    <td rowspan="{{ ns_a.area_span }}" class="text-end fw-semibold {{ ar_cls }} hier-area">{{ ar.real_pct }}%</td>
+                    {% set ar_first.done = true %}
+                    {% endif %}
+                    <td class="hier-dept">{{ dp.nombre }}</td>
+                    <td colspan="2" class="text-muted small">—</td>
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{# ═══════════════════════════════════════════════
+   Tarjeta Diario — al final
+═══════════════════════════════════════════════ #}
+{% if kf_d %}
+<div class="kpi-row mt-3">
+  <div class="kpi-group kpi-group-diario">
+    <div class="kpi-group-label"><i class="bi bi-calendar-day"></i> Diario <span class="kpi-group-count">{{ kf_d.planeadas or 0 }} plan.</span></div>
+    <div class="kpi-pair">
+      <div class="kpi-tile kpi-tile-blue">
+        <div class="kpi-tile-title"><i class="bi bi-flag"></i> Esperado</div>
+        <div class="kpi-tile-val">{{ (kf_d.esp_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">A hoy: {{ kf_d.plan_h or 0 }}</div>
+      </div>
+      <div class="kpi-tile {% if gap_d >= 0 %}kpi-tile-green{% else %}kpi-tile-red{% endif %}">
+        <div class="kpi-tile-title"><i class="bi bi-graph-up-arrow"></i> Real</div>
+        <div class="kpi-tile-val">{{ (kf_d.real_pct or 0)|round(1) }}%</div>
+        <div class="kpi-tile-sub">
+          Real: {{ kf_d.real_h or 0 }}
+          <span class="kpi-gap {% if gap_d >= 0 %}text-success{% else %}text-danger{% endif %}">{{ '%+.1f'|format(gap_d) }}%</span>
+        </div>
       </div>
     </div>
   </div>
