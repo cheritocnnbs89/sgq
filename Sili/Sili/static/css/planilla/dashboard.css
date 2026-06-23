@@ -444,6 +444,7 @@ html.theme-dark .okr-badge-danger { background: #3d1a1a; color: #fca5a5; }
 .okr-bar-track.thin { height: 6px; }
 .okr-bar-fill {
   height: 100%;
+  width: var(--bar-pct, 0%);
   border-radius: 5px;
   display: flex;
   align-items: center;

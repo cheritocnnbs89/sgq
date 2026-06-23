@@ -681,7 +681,7 @@
   function initOkrBars() {
     document.querySelectorAll('.okr-bar-fill[data-pct]').forEach(el => {
       const pct = Math.min(parseFloat(el.dataset.pct) || 0, 100);
-      el.style.width = pct + '%';
+      el.style.setProperty('--bar-pct', pct + '%');
     });
   }
 
