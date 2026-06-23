@@ -44,7 +44,7 @@
         <i class="bi bi-calendar2-range pm-filter-icon"></i>
         <select id="f_freq" name="frecuencia" class="pm-select">
           <option value="" {{ ''==freq and 'selected' or '' }}>Todas</option>
-          {% for f in ['Diario','Semanal','Mensual'] %}
+          {% for f in ['Diario','Semanal','Mensual','Anual'] %}
           <option value="{{f}}" {{ (freq|string)==f and 'selected' or '' }}>{{f}}</option>
           {% endfor %}
         </select>

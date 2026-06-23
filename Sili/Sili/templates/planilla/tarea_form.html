@@ -101,7 +101,21 @@
       <option value="{{ d }}" {{ 'selected' if dm is not none and dm==d }}>{{ d }}</option>
       {% endfor %}
     </select>
-    <div class="form-text">Obligatorio si la frecuencia es Mensual.</div>
+    <div class="form-text">Obligatorio si la frecuencia es Mensual o Anual.</div>
+  </div>
+
+  <!-- Mes del año (solo Anual) -->
+  <div class="col-md-6" id="box_mes_anual">
+    <label class="form-label">Mes del año</label>
+    <select name="mes_anual" class="form-select">
+      {% set ma = tarea.mes_anual if tarea else None %}
+      <option value="">-- Seleccione --</option>
+      {% set meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
+      {% for i in range(1,13) %}
+      <option value="{{ i }}" {{ 'selected' if ma is not none and ma==i }}>{{ meses[i-1] }}</option>
+      {% endfor %}
+    </select>
+    <div class="form-text">Obligatorio si la frecuencia es Anual.</div>
   </div>
 
   <!-- ===== OKR (Nivel 1) ===== -->
