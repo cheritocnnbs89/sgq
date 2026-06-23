@@ -856,15 +856,19 @@ def planilla_dashboard():
                 rcs_list.append({
                     "id": rid, "nombre": rnom,
                     "plan": rp, "real": rr,
+                    "plan_h": rph,
                     "esp_pct":  round(100.0 * rph / rp, 1) if rp else 0.0,
                     "real_pct": round(100.0 * rrh / rp, 1) if rp else 0.0,
                     "tareas": rg["tareas"],
                 })
-            o_esp  = round(sum(rc["esp_pct"]  for rc in rcs_list) / len(rcs_list), 1) if rcs_list else 0.0
-            o_real = round(sum(rc["real_pct"] for rc in rcs_list) / len(rcs_list), 1) if rcs_list else 0.0
+            # Solo promediar RCs que ya tienen trabajo programado a hoy
+            rcs_activas = [rc for rc in rcs_list if rc["plan_h"] > 0]
+            o_esp  = round(sum(rc["esp_pct"]  for rc in rcs_activas) / len(rcs_activas), 1) if rcs_activas else 0.0
+            o_real = round(sum(rc["real_pct"] for rc in rcs_activas) / len(rcs_activas), 1) if rcs_activas else 0.0
             rows.append({
                 "id": oid, "nombre": onom,
                 "plan": op, "real": or_,
+                "plan_h": oph,
                 "esp_pct":  o_esp,
                 "real_pct": o_real,
                 "resultados_clave": rcs_list,
@@ -875,8 +879,10 @@ def planilla_dashboard():
     for area_nom, ag in sorted(by_area.items(), key=lambda x: (x[0] == "Sin área", x[0])):
         ap = ag["plan"] or 0; ar = ag["real"] or 0
         okr_list = _build_okr_rows(ag["okrs"])
-        a_esp  = round(sum(o["esp_pct"]  for o in okr_list) / len(okr_list), 1) if okr_list else 0.0
-        a_real = round(sum(o["real_pct"] for o in okr_list) / len(okr_list), 1) if okr_list else 0.0
+        # Solo promediar OKRs que ya tienen trabajo programado a hoy
+        okrs_activos = [o for o in okr_list if o["plan_h"] > 0]
+        a_esp  = round(sum(o["esp_pct"]  for o in okrs_activos) / len(okrs_activos), 1) if okrs_activos else 0.0
+        a_real = round(sum(o["real_pct"] for o in okrs_activos) / len(okrs_activos), 1) if okrs_activos else 0.0
         area_rows.append({
             "nombre":   area_nom,
             "plan":     ap, "real": ar,
