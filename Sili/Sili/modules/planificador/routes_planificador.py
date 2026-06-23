@@ -169,6 +169,7 @@ def detalle(sid):
         logs=logs,
         grupo_solicitudes=grupo_solicitudes,
         active_page=ACTIVE_KEY,
+        today_iso=date.today().isoformat(),
     )
 
 
@@ -580,6 +581,14 @@ def reagendar(sid):
 
     if not nueva_fecha:
         flash("Debe indicar la nueva fecha.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    try:
+        if date.fromisoformat(nueva_fecha) < date.today():
+            flash("La nueva fecha no puede ser anterior al día de hoy.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+    except ValueError:
+        flash("Fecha inválida.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
     # Guardar fecha anterior para la notificación
