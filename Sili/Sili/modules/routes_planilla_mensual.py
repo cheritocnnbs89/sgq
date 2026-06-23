@@ -389,8 +389,6 @@ def planilla_dashboard():
             ds = t.get("dia_semana")
             if ds is None:
                 ds = 0
-            if 1 <= ds <= 7:
-                ds = (ds - 1)
             if ds in (5, 6):
                 return False
             return d.weekday() == ds
@@ -1079,8 +1077,6 @@ def planilla():
             ds = t.get("dia_semana")
             if ds is None:
                 ds = 0
-            if 1 <= ds <= 7:
-                ds = ds - 1
             if ds in (5, 6):
                 return False
             return d.weekday() == ds
