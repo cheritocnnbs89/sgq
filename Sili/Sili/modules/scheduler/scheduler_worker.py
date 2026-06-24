@@ -40,6 +40,17 @@ from .scheduler_planilla_weekly import send_planilla_weekly_report
 
 from .seedbilling_xml_job import process_seedbilling_facturas_recibidas
 
+# ── AWS Sync (DynamoDB) ───────────────────────────────────────
+try:
+    from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws
+    _AWS_SYNC_ENABLED = True
+except Exception as _aws_err:
+    _AWS_SYNC_ENABLED = False
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "[aws_sync] No se pudo importar aws_sync: %s", _aws_err
+    )
+
 # ── Email-to-Task (Graph API) ──────────────────────────────────────
 try:
     from modules.email_to_task.email_inbox_service import (
@@ -218,6 +229,7 @@ def start_scheduler(app=None):
             last_weekly_report_date = None   # ← control reporte semanal planilla
             last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
             last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
+            last_aws_sync          = 0.0     # ← control sync AWS DynamoDB (cada 5 min)
 
             # Crear tabla email_tickets_inbox si no existe
             if _EMAIL_TO_TASK_ENABLED:
@@ -342,6 +354,21 @@ def start_scheduler(app=None):
                             _log("debug", "Worker: sin tickets con +3h sin asignar")
                     except Exception:
                         target_app.logger.exception("Worker: notify_unassigned_tickets falló")
+
+                # ==================================================
+                # AWS Sync DynamoDB — push + pull cada 5 min
+                # ==================================================
+                now_ts4 = time.time()
+                if _AWS_SYNC_ENABLED and (now_ts4 - last_aws_sync >= 300):
+                    try:
+                        _log("info", "Worker: AWS sync — push gastos nuevos...")
+                        push_gastos_a_aws(target_app)
+                        _log("info", "Worker: AWS sync — pull aprobaciones...")
+                        pull_aprobaciones_de_aws(target_app)
+                        last_aws_sync = now_ts4
+                        _log("info", "Worker: AWS sync OK")
+                    except Exception:
+                        target_app.logger.exception("Worker: aws_sync falló")
 
                 elapsed = time.time() - cycle_start
                 sleep_s = max(5, 300 - elapsed)
