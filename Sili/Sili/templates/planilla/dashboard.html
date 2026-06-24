@@ -123,7 +123,8 @@
           <div class="okr-card-left">
             <p class="okr-area-name"><i class="bi bi-layers me-2 opacity-75"></i>{{ area.nombre }}</p>
             <div class="okr-card-badges">
-              <span class="okr-badge-plan">{{ area.okrs|length }} OKR{% if area.okrs|length != 1 %}s{% endif %} · {{ area.plan }} tareas</span>
+              {% set area_tareas = area.okrs | sum(attribute='num_tareas') %}
+              <span class="okr-badge-plan">{{ area.okrs|length }} OKR{% if area.okrs|length != 1 %}s{% endif %} · {{ area_tareas }} tarea{% if area_tareas != 1 %}s{% endif %}</span>
               <span class="okr-badge-{{ a_cls }}">{{ a_lbl }}</span>
               {% for d in (area.deptos or []) %}
               <span class="okr-badge-plan okr-badge-depto">{{ d }}</span>
