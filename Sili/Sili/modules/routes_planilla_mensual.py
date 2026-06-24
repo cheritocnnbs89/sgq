@@ -840,6 +840,7 @@ def planilla_dashboard():
             "responsable": t.get("responsable") or "",
             "depto": t.get("depto") or "",
             "plan": tp, "real": tr,
+            "plan_h": tph,
             "esp_pct":  round(100.0 * tph / tp, 1) if tp else 0.0,
             "real_pct": round(100.0 * trh / tp, 1) if tp else 0.0,
         })
@@ -853,24 +854,36 @@ def planilla_dashboard():
             for (rid, rnom), rg in sorted(og["rcs"].items(), key=lambda x: x[0][1] or ""):
                 rp = rg["plan"] or 0; rr = rg["real"] or 0
                 rph = rg["plan_h"] or 0; rrh = rg["real_h"] or 0
+                tareas_rc = rg["tareas"]
+                # RC %: promedio de tareas con plan_h > 0 (tareas sin trabajo a hoy no distorsionan)
+                tareas_activas = [t for t in tareas_rc if t.get("plan_h", 0) > 0]
+                if tareas_activas:
+                    rc_esp  = round(sum(t["esp_pct"]  for t in tareas_activas) / len(tareas_activas), 1)
+                    rc_real = round(sum(t["real_pct"] for t in tareas_activas) / len(tareas_activas), 1)
+                else:
+                    rc_esp  = round(100.0 * rph / rp, 1) if rp else 0.0
+                    rc_real = round(100.0 * rrh / rp, 1) if rp else 0.0
                 rcs_list.append({
                     "id": rid, "nombre": rnom,
                     "plan": rp, "real": rr,
                     "plan_h": rph,
-                    "esp_pct":  round(100.0 * rph / rp, 1) if rp else 0.0,
-                    "real_pct": round(100.0 * rrh / rp, 1) if rp else 0.0,
-                    "tareas": rg["tareas"],
+                    "esp_pct":  rc_esp,
+                    "real_pct": rc_real,
+                    "tareas": tareas_rc,
                 })
             # Solo promediar RCs que ya tienen trabajo programado a hoy
             rcs_activas = [rc for rc in rcs_list if rc["plan_h"] > 0]
             o_esp  = round(sum(rc["esp_pct"]  for rc in rcs_activas) / len(rcs_activas), 1) if rcs_activas else 0.0
             o_real = round(sum(rc["real_pct"] for rc in rcs_activas) / len(rcs_activas), 1) if rcs_activas else 0.0
+            num_tareas_okr = sum(len(rc["tareas"]) for rc in rcs_list)
             rows.append({
                 "id": oid, "nombre": onom,
                 "plan": op, "real": or_,
                 "plan_h": oph,
                 "esp_pct":  o_esp,
                 "real_pct": o_real,
+                "num_rcs": len(rcs_list),
+                "num_tareas": num_tareas_okr,
                 "resultados_clave": rcs_list,
             })
         return rows
