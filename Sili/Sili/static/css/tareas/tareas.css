@@ -961,3 +961,12 @@ html.theme-dark .td-det-card { background: #0F172A; border-color: #1F2A44; }
 html.theme-dark .td-det-card-title { color: #94A3B8; }
 html.theme-dark .table-light { background: #0B1629 !important; }
 html.theme-dark .table-light th { background: #0B1629 !important; color: #94A3B8; }
+
+/* clases para reemplazar style= inline en JS (CSP) */
+.td-badge-sm    { font-size: 10px; }
+.td-fecha-val   { font-size: 12px; }
+.td-det-pretext { white-space: pre-wrap; }
+.td-col-fecha   { width: 100px; }
+.td-col-reg     { width: 110px; }
+.td-col-asig    { width: 150px; }
+.td-col-fintent { width: 90px; }
