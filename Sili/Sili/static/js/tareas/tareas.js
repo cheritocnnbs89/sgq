@@ -1032,3 +1032,234 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+// ── Modal detalle completo — historial + agregar acción ──────────────
+(function initDetalleModal() {
+  const backdrop = document.getElementById('tdDetalleBackdrop');
+  if (!backdrop) return;
+
+  let currentTaskId = null;
+  let respPopulated = false;
+
+  const loading    = document.getElementById('tdDetLoading');
+  const content    = document.getElementById('tdDetContent');
+  const infoDiv    = document.getElementById('tdDetInfo');
+  const histDiv    = document.getElementById('tdDetHistorial');
+  const formCard   = document.getElementById('tdDetFormCard');
+  const form       = document.getElementById('tdDetForm');
+  const formMsg    = document.getElementById('tdDetFormMsg');
+  const respSearch = document.getElementById('tdDetRespSearch');
+  const respSelect = document.getElementById('tdDetRespSelect');
+  const fzWarning  = document.getElementById('tdDetFinalizadoWarning');
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function fmtDt(v) {
+    if (!v) return '-';
+    const s = String(v).replace('T',' ');
+    if (s.length < 10) return s;
+    return s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4)+(s.length>10 ? ' '+s.slice(11,16) : '');
+  }
+
+  function estadoBadge(e) {
+    const map = { 'Terminado':'bg-success','Cerrado por sistema':'bg-secondary',
+                  'En desarrollo':'bg-warning text-dark','Atrasada':'bg-danger','Por iniciar':'bg-info text-dark' };
+    return `<span class="badge ${map[e]||'bg-secondary'}">${esc(e)}</span>`;
+  }
+
+  function accionBadge(e) {
+    const map = { 'Finalizado':'bg-success','Bloqueado':'bg-danger','Pendiente':'bg-secondary' };
+    return `<span class="badge ${map[e]||'bg-info text-dark'}" style="font-size:10px">${esc(e||'En proceso')}</span>`;
+  }
+
+  function renderInfo(t) {
+    infoDiv.innerHTML = `
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+        <div class="small text-muted">
+          Responsable: <strong class="text-body">${esc(t.propietario||'-')}</strong>
+          &nbsp;·&nbsp; Creada por: <strong class="text-body">${esc(t.creador_nombre||t.creador_username||'-')}</strong>
+        </div>
+        ${estadoBadge(t.estado)}
+      </div>
+      ${t.descripcion ? `<div class="td-modal-desc mb-3">${esc(t.descripcion)}</div>` : ''}
+      <div class="td-detalle-fechas">
+        ${[['Creación',t.fecha_creacion],['Inicio',t.fecha_inicio],['Compromiso',t.fecha_compromiso],['Fin Real',t.fecha_fin]]
+          .map(([l,v])=>`<div><div class="td-modal-label">${l}</div><div class="td-modal-value" style="font-size:12px">${fmtDt(v)}</div></div>`).join('')}
+      </div>`;
+  }
+
+  function renderHistorial(acciones) {
+    if (!acciones || acciones.length === 0) {
+      histDiv.innerHTML = '<p class="text-muted small mb-0">Aún no se han registrado acciones para esta tarea.</p>';
+      return;
+    }
+    const rows = acciones.map(a => {
+      const csrf = document.getElementById('td-csrf-token')?.dataset.token || '';
+      const btnTerminar = a.estado_accion !== 'Finalizado'
+        ? `<button class="btn btn-outline-success btn-sm p-0 px-1 js-det-fin-accion"
+             data-accion-id="${a.id}" data-csrf="${esc(csrf)}" style="font-size:10px">
+             <i class="bi bi-check2-all"></i> Terminar
+           </button>` : '';
+      return `<tr>
+        <td class="small">${fmtDt(a.fecha_accion)}</td>
+        <td class="small">${esc(a.nombre_completo||a.username||'-')}</td>
+        <td>
+          <div class="fw-bold small">${esc(a.nombre_asignado||'Sin asignar')}</div>
+          <div class="d-flex gap-1 flex-wrap mt-1">${accionBadge(a.estado_accion)} ${btnTerminar}</div>
+        </td>
+        <td>
+          <div class="fw-semibold small">${esc(a.observacion||'')}</div>
+          <div class="text-muted small" style="white-space:pre-wrap">${esc(a.detalles||'')}</div>
+        </td>
+        <td class="small text-primary">${fmtDt(a.fecha_fin_tentativa)}</td>
+      </tr>`;
+    }).join('');
+
+    histDiv.innerHTML = `
+      <div class="table-responsive">
+        <table class="table table-sm align-middle table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:100px">Fecha</th>
+              <th style="width:110px">Registrado por</th>
+              <th style="width:150px">Asignado / Estado</th>
+              <th>Actividad</th>
+              <th style="width:90px">Fin Tent.</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+
+    histDiv.querySelectorAll('.js-det-fin-accion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const fd = new FormData();
+        fd.append('csrf_token', btn.dataset.csrf);
+        btn.disabled = true;
+        fetch(`/tareas/accion/${btn.dataset.accionId}/finalizar`, { method:'POST', body:fd })
+          .then(() => recargarHistorial(currentTaskId))
+          .catch(() => { btn.disabled = false; });
+      });
+    });
+  }
+
+  function recargarHistorial(taskId) {
+    fetch(`/tareas/${taskId}/detalle-json`)
+      .then(r => r.json())
+      .then(data => { if (data.ok) renderHistorial(data.acciones); });
+  }
+
+  function populateResp(responsables) {
+    if (respPopulated || !respSelect) return;
+    (responsables || []).forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r.id;
+      opt.textContent = r.label || r.username;
+      opt.dataset.search = ((r.label||'') + ' ' + r.username).toLowerCase();
+      respSelect.appendChild(opt);
+    });
+    respPopulated = true;
+  }
+
+  function openModal(taskId) {
+    currentTaskId = taskId;
+    loading.classList.remove('d-none');
+    content.classList.add('d-none');
+    formMsg.classList.add('d-none');
+    backdrop.classList.add('visible');
+    backdrop.setAttribute('aria-hidden','false');
+    document.body.classList.add('bs-modal-open');
+
+    fetch(`/tareas/${taskId}/detalle-json`)
+      .then(r => r.json())
+      .then(data => {
+        loading.classList.add('d-none');
+        if (!data.ok) {
+          content.innerHTML = `<div class="alert alert-danger m-3">${esc(data.error||'Error al cargar')}</div>`;
+          content.classList.remove('d-none');
+          return;
+        }
+        const t = data.tarea;
+        document.getElementById('tdDetCodigo').textContent = String(t.id||'').padStart(8,'0');
+        document.getElementById('tdDetTitulo').textContent = t.titulo||'';
+        renderInfo(t);
+        renderHistorial(data.acciones);
+        populateResp(data.responsables);
+
+        if (data.puede_anotar) {
+          formCard.classList.remove('d-none');
+          document.getElementById('tdDetCsrf').value =
+            document.getElementById('td-csrf-token')?.dataset.token || '';
+        } else {
+          formCard.classList.add('d-none');
+        }
+        content.classList.remove('d-none');
+      })
+      .catch(() => {
+        loading.classList.add('d-none');
+        content.innerHTML = '<div class="alert alert-danger m-3">Error de red al cargar la tarea.</div>';
+        content.classList.remove('d-none');
+      });
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('visible');
+    backdrop.setAttribute('aria-hidden','true');
+    document.body.classList.remove('bs-modal-open');
+    currentTaskId = null;
+  }
+
+  document.querySelectorAll('.js-abrir-detalle-modal').forEach(btn => {
+    btn.addEventListener('click', () => openModal(parseInt(btn.dataset.taskId, 10)));
+  });
+
+  form?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!currentTaskId) return;
+    const detalles = document.getElementById('tdDetDetalles')?.value.trim();
+    if (!detalles) {
+      formMsg.className = 'alert alert-warning mt-2 py-2';
+      formMsg.textContent = 'Escribe al menos una observación.';
+      formMsg.classList.remove('d-none');
+      return;
+    }
+
+    const btn = document.getElementById('tdDetBtnGuardar');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Guardando...'; }
+    formMsg.classList.add('d-none');
+
+    fetch(`/tareas/${currentTaskId}/accion-ajax`, { method:'POST', body: new FormData(form) })
+      .then(r => r.json())
+      .then(data => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar avance'; }
+        formMsg.className = `alert alert-${data.ok ? 'success' : 'danger'} mt-2 py-2`;
+        formMsg.textContent = data.message || (data.ok ? 'Acción registrada.' : 'Error al guardar.');
+        formMsg.classList.remove('d-none');
+        if (data.ok) {
+          form.reset();
+          if (data.task_closed) {
+            setTimeout(() => { closeModal(); window.location.reload(); }, 1800);
+          } else {
+            recargarHistorial(currentTaskId);
+            setTimeout(() => formMsg.classList.add('d-none'), 3000);
+          }
+        }
+      })
+      .catch(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar avance'; }
+        formMsg.className = 'alert alert-danger mt-2 py-2';
+        formMsg.textContent = 'Error de red al guardar.';
+        formMsg.classList.remove('d-none');
+      });
+  });
+
+  document.getElementById('tdDetClose')?.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && backdrop.classList.contains('visible')) closeModal();
+  });
+
+  window.tdDetalleModal = { open: openModal, close: closeModal };
+})();
