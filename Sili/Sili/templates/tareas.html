@@ -3,28 +3,12 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/tareas.css') }}">
-<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=5" defer></script>
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=9" defer></script>
 
 <div class="container tasks-page mt-3" data-vista="{{ vista }}">
   <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-      <h4 class="mb-1">
-        {% if vista == 'mis' %}
-        Tareas asignadas por mí
-        {% else %}
-        Tareas a realizar
-        {% endif %}
-      </h4>
-      <div class="btn-group btn-group-sm no-print" role="group" aria-label="Vista de tareas">
-        <a href="{{ url_for('listar_tareas', vista='realizar') }}"
-          class="btn btn-outline-secondary {% if vista != 'mis' %}active{% endif %}">
-          Tareas a realizar
-        </a>
-        <a href="{{ url_for('listar_tareas', vista='mis') }}"
-          class="btn btn-outline-secondary {% if vista == 'mis' %}active{% endif %}">
-          Tareas asignadas por mí
-        </a>
-      </div>
+      <h4 class="mb-1">Tareas</h4>
     </div>
     <div class="d-flex align-items-center gap-2 no-print">
       <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
@@ -53,6 +37,9 @@
       {% endif %}
     </div>
   </div>
+
+  <!-- Token CSRF para peticiones AJAX del modal -->
+  <span id="td-csrf-token" class="d-none" data-token="{{ csrf_token() }}"></span>
 
   <!-- Botón para mostrar / ocultar búsqueda avanzada -->
   <button id="btnAdv" class="btn btn-outline-secondary btn-sm mb-2 no-print">
@@ -117,7 +104,6 @@
   <!-- Toggle de densidad + Quitar filtros -->
   <div class="d-flex align-items-center gap-2 mb-2 no-print">
     <div class="btn-group btn-group-sm" aria-label="Densidad de filas">
-      <button class="btn btn-outline-secondary" id="densityNormal" type="button">Cómoda</button>
       <button class="btn btn-outline-secondary" id="densityCompact" type="button">Compacta</button>
       <button class="btn btn-outline-primary" id="btnGerencial" type="button">Vista Gerencial</button>
     </div>
@@ -204,7 +190,7 @@
                 </span>
               </th>
               <!-- Inicio -->
-              <th class="th-filter">
+              <th class="th-filter d-none">
                 <span class="hdr">
                   <span class="label">Inicio Real</span>
                   <span class="col-sort">
@@ -229,7 +215,7 @@
               </th>
 
               <!-- Fin -->
-              <th class="th-filter">
+              <th class="th-filter d-none">
                 <span class="hdr">
                   <span class="label">Fin Real</span>
                   <span class="col-sort">
@@ -281,6 +267,7 @@
                 <div class="tk-actions-secondary">
                   <button type="button" class="btn-ver-detalle js-tarea-detalle"
                     data-tarea-id="{{ '%08d'|format(t['id']) }}"
+                    data-tarea-num-id="{{ t['id'] }}"
                     data-tarea-titulo="{{ t['titulo']|e }}"
                     data-tarea-desc="{{ (t['descripcion'] or '')|e }}"
                     data-tarea-estado="{{ (t['estado'] or '')|e }}"
@@ -361,7 +348,7 @@
                 <span class="dt-time">{{ fi[11:16] }}</span>
                 {% endif %}
               </td>
-              <td data-th="Inicio Real">
+              <td data-th="Inicio Real" class="d-none">
                 {% set fi = t['fecha_compromiso'] %}
                 {% if fi %}
                 <span class="dt-date">{{ fi[:10] }}</span>
@@ -375,7 +362,7 @@
                 <span class="dt-time">{{ ff[11:16] }}</span>
                 {% endif %}
               </td>
-              <td data-th="Fin Real">
+              <td data-th="Fin Real" class="d-none">
                 {% set ff = t['fecha_cierre_real'] %}
                 {% if ff %}
                 <span class="dt-date">{{ ff[:10] }}</span>
@@ -434,25 +421,12 @@
               <td data-th="Departamento">{{ t['departamento_nombre'] or 'N/A' }}</td>
 
               <td data-th="Acciones">
-                <!-- Ver detalle / avances -->
-                <a href="{{ url_for('ver_tarea', task_id=t['id']) }}" class="btn btn-sm btn-info me-1"
+                <!-- Ver detalle / avances — abre popup -->
+                <button type="button" class="btn btn-sm btn-info me-1 js-abrir-detalle-modal"
+                  data-task-id="{{ t['id'] }}"
                   title="Ver detalle y avances">
                   <i class="bi bi-eye"></i>
-                </a>
-
-                {% if permissions.get('tareas', {}).get('editar') %}
-                {% if rol == 'admin' or t['editable'] %}
-                <a href="{{ url_for('editar_tarea', task_id=t['id']) }}" class="btn btn-sm btn-warning me-1"
-                  title="Editar tarea">
-                  <i class="bi bi-pencil-square"></i>
-                </a>
-                {% else %}
-                <button type="button" class="btn btn-sm btn-warning me-1" title="No se puede editar esta tarea"
-                  data-alert="No tienes permiso para editar esta tarea.">
-                  <i class="bi bi-pencil-square"></i>
                 </button>
-                {% endif %}
-                {% endif %}
 
 
                 {% if (permissions|default({})).get('tareas', {}).get('eliminar') %}
@@ -487,7 +461,7 @@
   </div>
 </div>
 
-<!-- ── Modal detalle tarea (mismo patrón que bandeja soporte) ── -->
+<!-- ── Modal detalle tarea (unifica vista y edición inline) ── -->
 <div class="bs-modal-backdrop" id="tdModalBackdrop" aria-hidden="true">
   <div class="bs-modal" role="dialog" aria-modal="true" aria-labelledby="tdModalTitulo">
 
@@ -503,28 +477,142 @@
 
     <div class="bs-modal-body">
 
-      <div class="bs-modal-section-label">
-        <i class="bi bi-card-text"></i> Descripción
-      </div>
-      <div class="td-modal-desc" id="tdModalDesc"></div>
+      <!-- ── Panel de visualización ── -->
+      <div id="tdViewPanel">
+        <div class="bs-modal-section-label">
+          <i class="bi bi-card-text"></i> Descripción
+        </div>
+        <div class="td-modal-desc" id="tdModalDesc"></div>
 
-      <div class="bs-modal-section-label">
-        <i class="bi bi-people"></i> Personas
-      </div>
-      <div class="td-modal-grid" id="tdModalPersonas"></div>
+        <div class="bs-modal-section-label">
+          <i class="bi bi-people"></i> Personas
+        </div>
+        <div class="td-modal-grid" id="tdModalPersonas"></div>
 
-      <div class="bs-modal-section-label">
-        <i class="bi bi-calendar3"></i> Fechas
-      </div>
-      <div class="td-modal-grid" id="tdModalFechas"></div>
+        <div class="bs-modal-section-label">
+          <i class="bi bi-calendar3"></i> Fechas
+        </div>
+        <div class="td-modal-grid" id="tdModalFechas"></div>
 
-      <div class="td-modal-footer-btns">
-        <a href="#" id="tdBtnVer" class="btn-ver-detalle">
-          <i class="bi bi-eye"></i> Ver detalle completo
-        </a>
-        <a href="#" id="tdBtnEditar" class="btn-ver-detalle td-btn-edit d-none">
-          <i class="bi bi-pencil-square"></i> Editar
-        </a>
+        <div class="td-modal-footer-btns">
+          <button type="button" id="tdBtnVer" class="btn-ver-detalle" data-num-id="">
+            <i class="bi bi-eye"></i> Ver detalle completo
+          </button>
+          <button type="button" id="tdBtnEditar" class="btn-ver-detalle td-btn-edit d-none">
+            <i class="bi bi-pencil-square"></i> Editar
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Panel de edición inline ── -->
+      <div id="tdEditPanel" class="d-none">
+        <div id="tdEditLoading" class="text-center py-4 text-muted">
+          <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+          Cargando datos de la tarea...
+        </div>
+        <form id="tdEditForm" class="d-none">
+          <input type="hidden" name="csrf_token" id="tdEditCsrf">
+          <div class="row g-2 mt-0">
+            <div class="col-12">
+              <label class="td-edit-label">Título</label>
+              <input type="text" name="titulo" id="tdFTitulo" class="form-control form-control-sm" required>
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Estado</label>
+              <select name="estado" id="tdFEstado" class="form-select form-select-sm"></select>
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label text-success">Avance (%)</label>
+              <input type="number" name="porcentaje_avance" id="tdFAvance" class="form-control form-control-sm" min="0" max="100" step="1">
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Fecha inicio</label>
+              <input type="datetime-local" name="fecha_inicio" id="tdFFechaInicio" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Fecha compromiso</label>
+              <input type="datetime-local" name="fecha_compromiso" id="tdFFechaCompromiso" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Fecha fin</label>
+              <input type="datetime-local" name="fecha_fin" id="tdFFechaFin" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Fecha fin real</label>
+              <input type="datetime-local" name="fecha_cierre_real" id="tdFFechaReal" class="form-control form-control-sm">
+            </div>
+            <div class="col-12">
+              <label class="td-edit-label">Descripción</label>
+              <textarea name="descripcion" id="tdFDesc" class="form-control form-control-sm" rows="3"></textarea>
+            </div>
+          </div>
+          <div id="tdEditError" class="alert alert-danger d-none mt-2 py-2" style="font-size:12px"></div>
+          <div id="tdEditSuccess" class="alert alert-success d-none mt-2 py-2" style="font-size:12px"></div>
+          <div class="td-modal-footer-btns mt-3">
+            <button type="submit" class="btn btn-sm btn-primary" id="tdBtnGuardar">
+              <i class="bi bi-check-circle me-1"></i>Guardar cambios
+            </button>
+            <button type="button" id="tdBtnCancelarEdit" class="btn-ver-detalle">
+              <i class="bi bi-arrow-left me-1"></i>Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal detalle completo con historial y agregar acción ── -->
+<div class="td-detalle-backdrop" id="tdDetalleBackdrop" aria-hidden="true">
+  <div class="td-detalle-modal" role="dialog" aria-modal="true" aria-labelledby="tdDetTitulo">
+
+    <div class="bs-modal-header">
+      <div class="bs-modal-ticket" id="tdDetCodigo"></div>
+      <h5 class="bs-modal-title" id="tdDetTitulo"></h5>
+      <button type="button" class="bs-modal-close" id="tdDetClose" aria-label="Cerrar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div id="tdDetLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <div class="mt-2 text-muted small">Cargando tarea...</div>
+    </div>
+
+    <div id="tdDetContent" class="td-detalle-body d-none">
+
+      <div id="tdDetInfo" class="td-det-card mb-3"></div>
+
+      <div class="td-det-card mb-3">
+        <div class="td-det-card-title">
+          <i class="bi bi-clock-history"></i> Historial de acciones / pasos
+        </div>
+        <div id="tdDetHistorial"></div>
+      </div>
+
+      <div id="tdDetFormCard" class="td-det-card td-det-card-primary d-none">
+        <div class="td-det-card-title text-primary">
+          <i class="bi bi-plus-circle"></i> Agregar avance / acción
+        </div>
+        <form id="tdDetForm" novalidate>
+          <input type="hidden" name="csrf_token" id="tdDetCsrf">
+          <input type="hidden" name="estado_accion" value="En proceso">
+          <div class="mb-2">
+            <label class="td-edit-label">Detalle de Actividad <span class="text-danger">*</span></label>
+            <textarea name="detalles" id="tdDetDetalles" class="form-control form-control-sm" rows="4" required></textarea>
+          </div>
+          <div id="tdDetIaMejoraPanel" class="d-none mb-2 p-2 border rounded bg-light" style="font-size:12px"></div>
+          <div id="tdDetFormMsg" class="d-none mt-2 alert py-2" style="font-size:12px"></div>
+          <div class="mt-2 d-flex align-items-center gap-2 flex-wrap">
+            <button type="submit" class="btn btn-primary btn-sm" id="tdDetBtnGuardar">
+              <i class="bi bi-check-circle me-1"></i>Guardar avance
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="tdDetBtnMejorarIA">
+              <i class="bi bi-stars me-1"></i>Mejorar texto
+            </button>
+          </div>
+        </form>
       </div>
 
     </div>

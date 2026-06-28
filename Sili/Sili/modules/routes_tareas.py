@@ -104,6 +104,116 @@ def register_task_routes(app):
 
         return render_template('editar_tarea.html', **resultado)
 
+    @app.route('/tareas/<int:task_id>/json')
+    @require_login
+    @require_permission('tareas', 'ver')
+    def tarea_json(task_id):
+        user = get_user()
+        resultado = svc_obtener_tarea_para_editar(user, task_id)
+        if not resultado['ok']:
+            return jsonify({'ok': False, 'error': resultado['message']}), 403
+
+        tarea_raw = resultado['tarea']
+        tarea = {}
+        for k in tarea_raw.keys():
+            v = tarea_raw[k]
+            if hasattr(v, 'strftime'):
+                tarea[k] = v.strftime('%Y-%m-%dT%H:%M')
+            elif v is None or isinstance(v, (str, int, float, bool)):
+                tarea[k] = v
+            else:
+                tarea[k] = str(v)
+
+        for date_field in ('fecha_inicio', 'fecha_compromiso', 'fecha_fin', 'fecha_cierre_real'):
+            raw = tarea.get(date_field) or ''
+            if raw and ' ' in str(raw):
+                tarea[date_field] = str(raw)[:16].replace(' ', 'T')
+
+        empresas = []
+        for e in resultado['empresas']:
+            try:
+                empresas.append({'id': e.id, 'nombre': e.razon_social})
+            except AttributeError:
+                empresas.append({'id': e['id'], 'nombre': e['razon_social']})
+
+        return jsonify({
+            'ok': True,
+            'tarea': tarea,
+            'estados': resultado['estados'],
+            'tipos_tarea': [{'id': tp['id'], 'nombre': tp['nombre']} for tp in resultado['tipos_tarea']],
+            'empresas': empresas,
+            'solicitantes': [
+                {'id': s['id'], 'label': (s.get('nombre_completo') or '') + ' (' + (s.get('username') or '') + ')'}
+                for s in resultado['solicitantes']
+            ],
+        })
+
+    @app.route('/tareas/<int:task_id>/editar-ajax', methods=['POST'])
+    @require_login
+    @require_permission('tareas', 'editar')
+    def editar_tarea_ajax(task_id):
+        user = get_user()
+        resultado = svc_guardar_edicion_tarea(user, task_id, request.form)
+        return jsonify({'ok': resultado.get('ok', False), 'message': resultado.get('message', '')})
+
+    @app.route('/tareas/<int:task_id>/detalle-json')
+    @require_login
+    @require_permission('tareas', 'ver')
+    def tarea_detalle_json(task_id):
+        user = get_user()
+        resultado = svc_obtener_tarea_para_ver(user, task_id)
+        if not resultado['ok']:
+            return jsonify({'ok': False, 'error': resultado['message']}), 403
+
+        def s(v):
+            if v is None: return None
+            if hasattr(v, 'strftime'): return v.strftime('%Y-%m-%d %H:%M:%S')
+            return v if isinstance(v, (str, int, float, bool)) else str(v)
+
+        tarea = {k: s(resultado['tarea'][k]) for k in resultado['tarea'].keys()}
+        acciones = [{k: s(a[k]) for k in a.keys()} for a in resultado['acciones']]
+        responsables = [
+            {'id': r['id'], 'label': r.get('nombre_completo') or r['username'], 'username': r['username']}
+            for r in resultado['responsables']
+        ]
+        return jsonify({
+            'ok': True,
+            'tarea': tarea,
+            'acciones': acciones,
+            'puede_anotar': resultado['puede_anotar'],
+            'responsables': responsables,
+        })
+
+    @app.route('/tareas/<int:task_id>/accion-ajax', methods=['POST'])
+    @require_login
+    @require_permission('tareas', 'ver')
+    def accion_tarea_ajax(task_id):
+        user = get_user()
+        resultado = svc_registrar_accion_tarea(user, task_id, request.form)
+
+        task_closed = False
+        if resultado.get('ok') and (request.form.get('estado_accion') or '').strip() == 'Finalizado':
+            try:
+                from modules.db import get_db as _get_db
+                _conn = _get_db()
+                _conn.cursor().execute(
+                    "UPDATE tareas SET estado = 'Terminado', fecha_cierre_real = GETDATE() WHERE id = ? AND COALESCE(estado,'') <> 'Terminado'",
+                    (task_id,)
+                )
+                _conn.commit()
+                svc_crear_y_enviar_encuesta(task_id)
+                task_closed = True
+                resultado['message'] = 'Acción registrada. La tarea ha sido marcada como Terminada.'
+            except Exception as _e:
+                import logging as _logging
+                _logging.getLogger(__name__).warning('accion_tarea_ajax: error al cerrar tarea %s: %s', task_id, _e)
+
+        return jsonify({
+            'ok': resultado.get('ok', False),
+            'message': resultado.get('message', ''),
+            'task_closed': task_closed,
+        })
+
     @app.route('/tareas/<int:task_id>/eliminar', methods=['POST'])
     @require_login
     @require_permission('tareas', 'eliminar')
