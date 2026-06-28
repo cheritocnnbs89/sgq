@@ -434,26 +434,12 @@
               <td data-th="Departamento">{{ t['departamento_nombre'] or 'N/A' }}</td>
 
               <td data-th="Acciones">
-                <!-- Ver detalle / avances -->
-                <a href="{{ url_for('ver_tarea', task_id=t['id']) }}" class="btn btn-sm btn-info me-1"
+                <!-- Ver detalle / avances — abre popup -->
+                <button type="button" class="btn btn-sm btn-info me-1 js-abrir-detalle-modal"
+                  data-task-id="{{ t['id'] }}"
                   title="Ver detalle y avances">
                   <i class="bi bi-eye"></i>
-                </a>
-
-                {% if permissions.get('tareas', {}).get('editar') %}
-                {% if rol == 'admin' or t['editable'] %}
-                <a href="{{ url_for('editar_tarea', task_id=t['id']) }}" class="btn btn-sm btn-warning me-1"
-                  title="Editar tarea">
-                  <i class="bi bi-pencil-square"></i>
-                </a>
-                {% else %}
-                <button type="button" class="btn btn-sm btn-warning me-1" title="No se puede editar esta tarea"
-                  data-alert="No tienes permiso para editar esta tarea.">
-                  <i class="bi bi-pencil-square"></i>
                 </button>
-                {% endif %}
-                {% endif %}
-
 
                 {% if (permissions|default({})).get('tareas', {}).get('eliminar') %}
                 <form method="post" action="{{ url_for('eliminar_tarea', task_id=t['id']) }}"
