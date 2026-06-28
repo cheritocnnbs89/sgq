@@ -572,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function accionBadge(e) {
     const map = { 'Finalizado':'bg-success','Bloqueado':'bg-danger','Pendiente':'bg-secondary' };
-    return `<span class="badge ${map[e]||'bg-info text-dark'}" style="font-size:10px">${esc(e||'En proceso')}</span>`;
+    return `<span class="badge td-badge-sm ${map[e]||'bg-info text-dark'}">${esc(e||'En proceso')}</span>`;
   }
 
   // ── renderizar info de la tarea ──────────────────────
@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ${t.descripcion ? `<div class="td-modal-desc mb-3">${esc(t.descripcion)}</div>` : ''}
       <div class="td-detalle-fechas">
         ${[['Creación',t.fecha_creacion],['Inicio',t.fecha_inicio],['Compromiso',t.fecha_compromiso],['Fin Real',t.fecha_fin]]
-          .map(([l,v])=>`<div><div class="td-modal-label">${l}</div><div class="td-modal-value" style="font-size:12px">${fmtDt(v)}</div></div>`).join('')}
+          .map(([l,v])=>`<div><div class="td-modal-label">${l}</div><div class="td-modal-value td-fecha-val">${fmtDt(v)}</div></div>`).join('')}
       </div>`;
   }
 
@@ -601,8 +601,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const rows = acciones.map(a => {
       const csrf = document.getElementById('td-csrf-token')?.dataset.token || '';
       const btnTerminar = a.estado_accion !== 'Finalizado'
-        ? `<button class="btn btn-outline-success btn-sm p-0 px-1 js-det-fin-accion"
-             data-accion-id="${a.id}" data-csrf="${esc(csrf)}" style="font-size:10px">
+        ? `<button class="btn btn-outline-success btn-sm p-0 px-1 td-badge-sm js-det-fin-accion"
+             data-accion-id="${a.id}" data-csrf="${esc(csrf)}">
              <i class="bi bi-check2-all"></i> Terminar
            </button>` : '';
       return `<tr>
@@ -614,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td>
           <div class="fw-semibold small">${esc(a.observacion||'')}</div>
-          <div class="text-muted small" style="white-space:pre-wrap">${esc(a.detalles||'')}</div>
+          <div class="text-muted small td-det-pretext">${esc(a.detalles||'')}</div>
         </td>
         <td class="small text-primary">${fmtDt(a.fecha_fin_tentativa)}</td>
       </tr>`;
@@ -625,11 +625,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <table class="table table-sm align-middle table-hover mb-0">
           <thead class="table-light">
             <tr>
-              <th style="width:100px">Fecha</th>
-              <th style="width:110px">Registrado por</th>
-              <th style="width:150px">Asignado / Estado</th>
+              <th class="td-col-fecha">Fecha</th>
+              <th class="td-col-reg">Registrado por</th>
+              <th class="td-col-asig">Asignado / Estado</th>
               <th>Actividad</th>
-              <th style="width:90px">Fin Tent.</th>
+              <th class="td-col-fintent">Fin Tent.</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
