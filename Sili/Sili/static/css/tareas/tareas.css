@@ -948,26 +948,12 @@ body.bs-modal-open { overflow: hidden; }
   gap: 12px 24px;
 }
 
-<<<<<<< HEAD
-.td-edit-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #6c757d;
-  margin-bottom: 4px;
-}
-=======
 .td-det-resp-select { max-height: 160px; }
->>>>>>> claude/strange-vaughan-fe4f4b
 
 html.theme-dark .td-detalle-modal,
 html.theme-dark .td-det-card { background: #0F172A; border-color: #1F2A44; }
 html.theme-dark .td-det-card-title { color: #94A3B8; }
 html.theme-dark .table-light { background: #0B1629 !important; }
-<<<<<<< HEAD
-html.theme-dark .table-light th { background: #0B1629 !important; color: #94A3B8; }
-=======
 html.theme-dark .table-light th { background: #0B1629 !important; color: #94A3B8; }
 
 /* clases para reemplazar style= inline en JS (CSP) */
@@ -1012,4 +998,3 @@ html.theme-dark .td-modal-desc { background: #0B1629; border-color: #1F2A44; col
 html.theme-dark .td-modal-value { color: #E5E7EB; }
 html.theme-dark .form-control,
 html.theme-dark .form-select { background: #0D1324; border-color: #334155; color: #E5E7EB; }
->>>>>>> claude/strange-vaughan-fe4f4b
