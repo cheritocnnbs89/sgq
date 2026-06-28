@@ -185,11 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   const ccb = document.getElementById('ccb');
-  if (ccb) {
-    ccb.addEventListener('change', function () {
-      submitClosestForm(ccb);
-    });
-  }
+  // CCB en gastos_form es solo un flag — no auto-enviar (causaba submit sin validación)
 
   const usuarioId = document.getElementById('usuario_id');
   if (usuarioId) {
@@ -2328,6 +2324,11 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       if (($idField?.value || '').trim()) return { ok: true };
+
+      // Si tiene nombre + RUC, el backend lo crea automáticamente (allow_free_provider)
+      const rucFree = ($identField?.value || '').trim();
+      if (rucFree) return { ok: true };
+
       return { ok: false, el: $input, msg: 'Debe seleccionar un proveedor válido de la lista.' };
     };
 
@@ -2431,7 +2432,12 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      // Todo válido — enviar el formulario sin el listener para evitar recursión
+      // Todo válido — mostrar busy y enviar
+      const _fileInput = document.getElementById('archivo');
+      const _tieneArchivo = _fileInput && _fileInput.files && _fileInput.files.length > 0;
+      Busy.show(_tieneArchivo ? 'Subiendo archivo y guardando…' : 'Guardando gasto…');
+      const _btnSubmit = form.querySelector('button[type="submit"]');
+      if (_btnSubmit) _btnSubmit.disabled = true;
       form.removeEventListener('submit', handleSubmit, true);
       form.submit();
     }

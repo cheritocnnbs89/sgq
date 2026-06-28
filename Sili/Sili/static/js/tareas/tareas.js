@@ -521,3 +521,123 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+// ======================================================
+// MEJORAR DESCRIPCIÓN CON IA
+// ======================================================
+document.addEventListener('DOMContentLoaded', () => {
+  const btnMejorar = document.getElementById('btnMejorarDescripcion');
+  const textarea   = document.getElementById('descripcionTarea');
+  const panel      = document.getElementById('mejora-descripcion-panel');
+
+  if (!btnMejorar || !textarea || !panel) return;
+
+  const csrfToken = document.querySelector('input[name="csrf_token"]')?.value || '';
+
+  btnMejorar.addEventListener('click', async () => {
+    const texto = textarea.value.trim();
+    if (!texto) {
+      alert('Escribe una descripción antes de mejorarla con IA.');
+      return;
+    }
+
+    btnMejorar.disabled = true;
+    btnMejorar.textContent = 'Mejorando…';
+    panel.className = 'om-ia-mejora mt-2';
+    panel.innerHTML = '';
+
+    const loadMsg = document.createElement('span');
+    loadMsg.className = 'ia-msg-info';
+    loadMsg.textContent = '✨ Generando versión mejorada…';
+    panel.appendChild(loadMsg);
+
+    try {
+      const resp = await fetch('/api/om/mejorar-descripcion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify({ texto }),
+      });
+      const data = await resp.json();
+
+      panel.innerHTML = '';
+
+      if (!data.ok) {
+        const errEl = document.createElement('span');
+        errEl.className = 'ia-msg-error';
+        errEl.textContent = data.error || 'Error al mejorar.';
+        panel.appendChild(errEl);
+        return;
+      }
+
+      const descMejorada = data.descripcion_mejorada || '';
+      const cambios      = data.cambios || [];
+
+      const lbl = document.createElement('div');
+      lbl.className = 'ia-mejora-label';
+      const icon = document.createElement('i');
+      icon.className = 'bi bi-stars';
+      lbl.appendChild(icon);
+      lbl.appendChild(document.createTextNode(' Versión mejorada'));
+      panel.appendChild(lbl);
+
+      const txEl = document.createElement('div');
+      txEl.className = 'ia-mejora-texto';
+      txEl.textContent = descMejorada;
+      panel.appendChild(txEl);
+
+      if (cambios.length) {
+        const camDiv = document.createElement('div');
+        camDiv.className = 'ia-cambios';
+        cambios.forEach(c => {
+          const ci = document.createElement('div');
+          ci.className = 'ia-cambio-item';
+          ci.textContent = '• ' + c;
+          camDiv.appendChild(ci);
+        });
+        panel.appendChild(camDiv);
+      }
+
+      const mbtns = document.createElement('div');
+      mbtns.className = 'ia-mejora-btns';
+
+      const btnUsar = document.createElement('button');
+      btnUsar.type = 'button';
+      btnUsar.className = 'btn-om-ia-usar btn-om-ia-usar-si';
+      btnUsar.textContent = '✅ Usar esta descripción';
+      btnUsar.addEventListener('click', () => {
+        textarea.value = descMejorada;
+        panel.className = 'om-ia-mejora d-none';
+      });
+
+      const btnDesc = document.createElement('button');
+      btnDesc.type = 'button';
+      btnDesc.className = 'btn-om-ia-usar btn-om-ia-usar-no';
+      btnDesc.textContent = '✖ Descartar';
+      btnDesc.addEventListener('click', () => {
+        panel.className = 'om-ia-mejora d-none';
+      });
+
+      mbtns.appendChild(btnUsar);
+      mbtns.appendChild(btnDesc);
+      panel.appendChild(mbtns);
+
+    } catch {
+      panel.innerHTML = '';
+      const errEl = document.createElement('span');
+      errEl.className = 'ia-msg-error';
+      errEl.textContent = 'Error de conexión al mejorar.';
+      panel.appendChild(errEl);
+    } finally {
+      btnMejorar.disabled = false;
+      btnMejorar.innerHTML = '';
+      const icon2 = document.createElement('i');
+      icon2.className = 'bi bi-stars me-1';
+      btnMejorar.appendChild(icon2);
+      btnMejorar.appendChild(document.createTextNode('Mejorar con IA'));
+    }
+  });
+});

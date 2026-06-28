@@ -90,8 +90,14 @@
         </div>
 
         <div class="col-12">
-          <label class="form-label">Descripción</label>
-          <textarea name="descripcion" class="form-control" rows="3"></textarea>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="form-label mb-0">Descripción</label>
+            <button type="button" id="btnMejorarDescripcion" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-stars me-1"></i>Mejorar con IA
+            </button>
+          </div>
+          <textarea name="descripcion" id="descripcionTarea" class="form-control" rows="3"></textarea>
+          <div id="mejora-descripcion-panel" class="om-ia-mejora d-none mt-2"></div>
         </div>
 
         <div class="col-md-4">

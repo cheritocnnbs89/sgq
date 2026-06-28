@@ -3958,6 +3958,33 @@ def register_gastos_routes(app):
             # según tu lógica actual
             allow_free_provider = True
 
+            # ── Validación campos requeridos para tipo=tarjeta con CCB ────────
+            tipo_registro_raw = (request.form.get('tipo_registro') or '').strip()
+            es_tarjeta_ccb = (
+                not tipo_registro_raw or tipo_registro_raw == 'tarjeta'
+            ) and ccb == 1
+
+            if es_tarjeta_ccb:
+                errores_ccb = []
+                if not motivo:
+                    errores_ccb.append('Detalle / descripción')
+                if not numero_factura:
+                    errores_ccb.append('N° de factura')
+                total_form_ccb = 0.0
+                try:
+                    total_form_ccb = float(request.form.get('total_con_iva') or 0)
+                except (ValueError, TypeError):
+                    total_form_ccb = 0.0
+                if total_form_ccb <= 0:
+                    errores_ccb.append('Total con IVA (debe ser mayor a cero)')
+                if errores_ccb:
+                    return render_nuevo(
+                        dict(request.form),
+                        'danger',
+                        'Para gastos con cargo a bono (CCB) son obligatorios: '
+                        + ', '.join(errores_ccb) + '.'
+                    )
+
             # Duplicado de N° factura
             if numero_factura:
                 cur.execute(
@@ -4359,6 +4386,26 @@ def register_gastos_routes(app):
             if es_caja_chica or es_reembolso_vendedor:
                 tarjeta_sin_soporte = 0
                 boletos_aereos = 0
+
+            # ── Validación campos requeridos para reembolso y caja chica ─────
+            if es_reembolso_vendedor or es_caja_chica:
+                tipo_label = 'Reembolso de vendedor' if es_reembolso_vendedor else 'Caja chica'
+                errores_tipo = []
+                if not motivo:
+                    errores_tipo.append('Detalle / descripción')
+                try:
+                    total_tipo = float(request.form.get('total_con_iva') or 0)
+                except (ValueError, TypeError):
+                    total_tipo = 0.0
+                if total_tipo <= 0:
+                    errores_tipo.append('Total con IVA (debe ser mayor a cero)')
+                if errores_tipo:
+                    return render_nuevo(
+                        dict(request.form),
+                        'danger',
+                        f'Para {tipo_label} son obligatorios: '
+                        + ', '.join(errores_tipo) + '.'
+                    )
 
             # ================== ASEGURAR COLUMNAS Y TABLAS EN SQL SERVER ==================
             # gastos_tarjeta_archivos
@@ -4812,6 +4859,48 @@ def register_gastos_routes(app):
                     and not v_es_caja_chica
                     and not v_es_reembolso
                 ) else 0
+
+                # ── Validación campos requeridos para tipo=tarjeta con CCB ────
+                if ccb == 1 and not v_es_caja_chica and not v_es_reembolso:
+                    numero_factura_ed = (request.form.get('numero_factura') or '').strip()
+                    errores_ccb = []
+                    if not motivo:
+                        errores_ccb.append('Detalle / descripción')
+                    if not numero_factura_ed:
+                        errores_ccb.append('N° de factura')
+                    try:
+                        total_form_ccb = float(request.form.get('total_con_iva') or 0)
+                    except (ValueError, TypeError):
+                        total_form_ccb = 0.0
+                    if total_form_ccb <= 0:
+                        errores_ccb.append('Total con IVA (debe ser mayor a cero)')
+                    if errores_ccb:
+                        flash(
+                            'Para gastos con cargo a bono (CCB) son obligatorios: '
+                            + ', '.join(errores_ccb) + '.',
+                            'danger'
+                        )
+                        return redirect(request.url)
+
+                # ── Validación campos requeridos para reembolso y caja chica ─
+                if v_es_reembolso or v_es_caja_chica:
+                    tipo_label = 'Reembolso de vendedor' if v_es_reembolso else 'Caja chica'
+                    errores_tipo = []
+                    if not motivo:
+                        errores_tipo.append('Detalle / descripción')
+                    try:
+                        total_tipo = float(request.form.get('total_con_iva') or 0)
+                    except (ValueError, TypeError):
+                        total_tipo = 0.0
+                    if total_tipo <= 0:
+                        errores_tipo.append('Total con IVA (debe ser mayor a cero)')
+                    if errores_tipo:
+                        flash(
+                            f'Para {tipo_label} son obligatorios: '
+                            + ', '.join(errores_tipo) + '.',
+                            'danger'
+                        )
+                        return redirect(request.url)
 
                 # 2) Resolución de Proveedor
                 proveedor_id_raw = (request.form.get('proveedor_id') or '').strip()
@@ -5327,6 +5416,8 @@ def register_gastos_routes(app):
         conn = get_db()
         cur = conn.cursor()
 
+        uid = session.get('usuario_id') or session.get('user_id')
+
         params = []
         where_prov = ""
         if proveedor_id_raw.isdigit():
@@ -5335,6 +5426,11 @@ def register_gastos_routes(app):
         elif proveedor:
             where_prov = "AND LTRIM(RTRIM(LOWER(COALESCE(g.proveedor,'')))) = LTRIM(RTRIM(LOWER(?)))"
             params.append(proveedor)
+
+        where_user = ""
+        if uid:
+            where_user = "AND g.usuario_id = ?"
+            params.append(int(uid))
 
         # Motivo se guarda en gastos_tarjeta_detalle.motivo (código contable: 6390001001)
         # Hacer JOIN con param_values solo para obtener el nombre legible (label)
@@ -5354,6 +5450,7 @@ def register_gastos_routes(app):
             WHERE d.motivo IS NOT NULL AND LTRIM(RTRIM(d.motivo)) != ''
               AND d.centro_costo IS NOT NULL AND LTRIM(RTRIM(d.centro_costo)) != ''
               {where_prov}
+              {where_user}
             GROUP BY d.motivo, COALESCE(pv.nombre, d.motivo), d.centro_costo
             ORDER BY freq DESC
         """, params)
