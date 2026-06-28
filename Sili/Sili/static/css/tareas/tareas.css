@@ -914,6 +914,7 @@ body.bs-modal-open { overflow: hidden; }
   display: flex;
   flex-direction: column;
   box-shadow: 0 12px 40px rgba(0,0,0,.28);
+  animation: bs-modal-in .18s ease;
 }
 
 .td-detalle-body {
@@ -947,6 +948,7 @@ body.bs-modal-open { overflow: hidden; }
   gap: 12px 24px;
 }
 
+<<<<<<< HEAD
 .td-edit-label {
   display: block;
   font-size: 11px;
@@ -955,9 +957,59 @@ body.bs-modal-open { overflow: hidden; }
   color: #6c757d;
   margin-bottom: 4px;
 }
+=======
+.td-det-resp-select { max-height: 160px; }
+>>>>>>> claude/strange-vaughan-fe4f4b
 
 html.theme-dark .td-detalle-modal,
 html.theme-dark .td-det-card { background: #0F172A; border-color: #1F2A44; }
 html.theme-dark .td-det-card-title { color: #94A3B8; }
 html.theme-dark .table-light { background: #0B1629 !important; }
+<<<<<<< HEAD
 html.theme-dark .table-light th { background: #0B1629 !important; color: #94A3B8; }
+=======
+html.theme-dark .table-light th { background: #0B1629 !important; color: #94A3B8; }
+
+/* clases para reemplazar style= inline en JS (CSP) */
+.td-badge-sm    { font-size: 10px; }
+.td-fecha-val   { font-size: 12px; }
+.td-det-pretext { white-space: pre-wrap; }
+.td-col-fecha   { width: 100px; }
+.td-col-reg     { width: 110px; }
+.td-col-asig    { width: 150px; }
+.td-col-fintent { width: 90px; }
+
+/* ── Tabs de estado ── */
+#statusTabs .tab-status {
+  border-radius: 6px;
+  font-size: .8rem;
+  padding: .25rem .75rem;
+  transition: background .12s, color .12s, border-color .12s;
+}
+
+/* ── Etiquetas del formulario inline del modal ── */
+.td-edit-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  color: #6c757d;
+  margin-bottom: 3px;
+}
+
+/* Ajustar alto máximo del modal cuando está en modo edición */
+#tdEditPanel .row { max-height: 60vh; overflow-y: auto; }
+
+html.theme-dark .bs-modal { background: #0F172A; color: #E5E7EB; }
+html.theme-dark .bs-modal-header,
+html.theme-dark .bs-modal-meta { border-color: #1F2A44; }
+html.theme-dark .bs-modal-meta { background: #0B1629; color: #94A3B8; }
+html.theme-dark .bs-modal-title { color: #E5E7EB; }
+html.theme-dark .bs-modal-close { color: #94A3B8; }
+html.theme-dark .bs-modal-close:hover { background: #1F2A44; color: #E5E7EB; }
+html.theme-dark .td-modal-desc { background: #0B1629; border-color: #1F2A44; color: #D1D5DB; }
+html.theme-dark .td-modal-value { color: #E5E7EB; }
+html.theme-dark .form-control,
+html.theme-dark .form-select { background: #0D1324; border-color: #334155; color: #E5E7EB; }
+>>>>>>> claude/strange-vaughan-fe4f4b
