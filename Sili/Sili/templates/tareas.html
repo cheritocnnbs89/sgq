@@ -3,7 +3,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/tareas.css') }}">
-<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=10" defer></script>
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=11" defer></script>
 
 <div class="container tasks-page mt-3" data-vista="{{ vista }}">
   <div class="d-flex justify-content-between align-items-center mb-2">
@@ -53,6 +53,9 @@
       {% endif %}
     </div>
   </div>
+
+  <!-- Token CSRF para peticiones AJAX del modal -->
+  <span id="td-csrf-token" class="d-none" data-token="{{ csrf_token() }}"></span>
 
   <!-- Botón para mostrar / ocultar búsqueda avanzada -->
   <button id="btnAdv" class="btn btn-outline-secondary btn-sm mb-2 no-print">
@@ -511,6 +514,62 @@
         <a href="#" id="tdBtnEditar" class="btn-ver-detalle td-btn-edit d-none">
           <i class="bi bi-pencil-square"></i> Editar
         </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal detalle completo con historial y agregar acción ── -->
+<div class="td-detalle-backdrop" id="tdDetalleBackdrop" aria-hidden="true">
+  <div class="td-detalle-modal" role="dialog" aria-modal="true" aria-labelledby="tdDetTitulo">
+
+    <div class="bs-modal-header">
+      <div class="bs-modal-ticket" id="tdDetCodigo"></div>
+      <h5 class="bs-modal-title" id="tdDetTitulo"></h5>
+      <button type="button" class="bs-modal-close" id="tdDetClose" aria-label="Cerrar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div id="tdDetLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <div class="mt-2 text-muted small">Cargando tarea...</div>
+    </div>
+
+    <div id="tdDetContent" class="td-detalle-body d-none">
+
+      <div id="tdDetInfo" class="td-det-card mb-3"></div>
+
+      <div class="td-det-card mb-3">
+        <div class="td-det-card-title">
+          <i class="bi bi-clock-history"></i> Historial de acciones / pasos
+        </div>
+        <div id="tdDetHistorial"></div>
+      </div>
+
+      <div id="tdDetFormCard" class="td-det-card td-det-card-primary d-none">
+        <div class="td-det-card-title text-primary">
+          <i class="bi bi-plus-circle"></i> Agregar avance / acción
+        </div>
+        <form id="tdDetForm" novalidate>
+          <input type="hidden" name="csrf_token" id="tdDetCsrf">
+          <input type="hidden" name="estado_accion" value="En proceso">
+          <div class="mb-2">
+            <label class="td-edit-label">Detalle de Actividad <span class="text-danger">*</span></label>
+            <textarea name="detalles" id="tdDetDetalles" class="form-control form-control-sm" rows="4" required></textarea>
+          </div>
+          <div id="tdDetIaMejoraPanel" class="d-none mb-2 p-2 border rounded bg-light" style="font-size:12px"></div>
+          <div id="tdDetFormMsg" class="d-none mt-2 alert py-2" style="font-size:12px"></div>
+          <div class="mt-2 d-flex align-items-center gap-2 flex-wrap">
+            <button type="submit" class="btn btn-primary btn-sm" id="tdDetBtnGuardar">
+              <i class="bi bi-check-circle me-1"></i>Guardar avance
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="tdDetBtnMejorarIA">
+              <i class="bi bi-stars me-1"></i>Mejorar texto
+            </button>
+          </div>
+        </form>
       </div>
 
     </div>
