@@ -196,8 +196,14 @@ def register_task_routes(app):
             try:
                 from modules.db import get_db as _get_db
                 _conn = _get_db()
-                _conn.cursor().execute(
+                _cur = _conn.cursor()
+                _cur.execute(
                     "UPDATE tareas SET estado = 'Terminado', fecha_cierre_real = GETDATE() WHERE id = ? AND COALESCE(estado,'') <> 'Terminado'",
+                    (task_id,)
+                )
+                # Marcar el ticket de bandeja vinculado como TERMINADA
+                _cur.execute(
+                    "UPDATE email_tickets_inbox SET estado = 'TERMINADA' WHERE tarea_id = ? AND estado = 'ASIGNADA'",
                     (task_id,)
                 )
                 _conn.commit()

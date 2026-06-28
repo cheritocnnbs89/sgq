@@ -42,6 +42,13 @@
        href="{{ url_for('bandeja_soporte', estado='DESCARTADA') }}">
       <i class="bi bi-x-circle"></i> Descartadas
     </a>
+    <a class="bs-tab {% if estado_activo == 'TERMINADA' %}active{% endif %}"
+       href="{{ url_for('bandeja_soporte', estado='TERMINADA') }}">
+      <i class="bi bi-check-circle-fill"></i> Terminados
+      {% if conteos.TERMINADA > 0 %}
+      <span class="bs-tab-badge verde">{{ conteos.TERMINADA }}</span>
+      {% endif %}
+    </a>
   </div>
 
   <!-- ── TABLA ───────────────────────────────────────────── -->
@@ -156,8 +163,8 @@
               </form>
             </div>
             {% else %}
-            <span class="tk-estado {% if c.estado == 'ASIGNADA' %}asignada{% else %}descartada{% endif %}">
-              {{ c.estado | replace('_', ' ') }}
+            <span class="tk-estado {% if c.estado == 'ASIGNADA' %}asignada{% elif c.estado == 'TERMINADA' %}terminada{% else %}descartada{% endif %}">
+              {{ c.estado | replace('_', ' ') | title }}
             </span>
             {% endif %}
           </td>

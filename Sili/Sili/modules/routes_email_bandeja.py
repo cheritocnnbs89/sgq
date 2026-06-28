@@ -233,7 +233,7 @@ def register_bandeja_routes(app):
             return redirect(url_for("listar_tareas"))
 
         estado = request.args.get("estado", "POR_ASIGNAR")
-        if estado not in ("POR_ASIGNAR", "ASIGNADA", "DESCARTADA"):
+        if estado not in ("POR_ASIGNAR", "ASIGNADA", "DESCARTADA", "TERMINADA"):
             estado = "POR_ASIGNAR"
 
         try:
@@ -253,7 +253,7 @@ def register_bandeja_routes(app):
         # Contar para los badges del tab (totales, no de la página)
         conn = get_db()
         conteos = {}
-        for st in ("POR_ASIGNAR", "ASIGNADA", "DESCARTADA"):
+        for st in ("POR_ASIGNAR", "ASIGNADA", "DESCARTADA", "TERMINADA"):
             row = conn.execute(
                 "SELECT COUNT(*) AS c FROM email_tickets_inbox WHERE estado = ?", (st,)
             ).fetchone()
