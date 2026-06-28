@@ -19,16 +19,26 @@
   });
 })();
 
-// ── Modal detalle tarea — independiente de la tabla ──────────────────
+// ── Modal detalle tarea — vista + edición inline ─────────────────────
 (function initTareaModal() {
   const tdBackdrop = document.getElementById('tdModalBackdrop');
   const tdClose    = document.getElementById('tdModalClose');
   if (!tdBackdrop) return;
 
+  let currentTaskId = null;
+
+  const tdViewPanel   = document.getElementById('tdViewPanel');
+  const tdEditPanel   = document.getElementById('tdEditPanel');
+  const tdEditForm    = document.getElementById('tdEditForm');
+  const tdEditLoading = document.getElementById('tdEditLoading');
+  const tdEditError   = document.getElementById('tdEditError');
+  const tdEditSuccess = document.getElementById('tdEditSuccess');
+
   function tdOpenModal(btn) {
     const d = btn.dataset;
-    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+    currentTaskId = parseInt(d.tareaNumId || d.tareaId, 10);
 
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
     setText('tdModalCodigo', d.tareaId);
     setText('tdModalTitulo', d.tareaTitulo);
     setText('tdModalDesc',   d.tareaDesc || '(Sin descripción)');
@@ -69,11 +79,15 @@
 
     const btnVer    = document.getElementById('tdBtnVer');
     const btnEditar = document.getElementById('tdBtnEditar');
-    if (btnVer) btnVer.href = d.tareaUrlVer || '#';
+    if (btnVer) btnVer.dataset.numId = d.tareaNumId || '';
     if (btnEditar) {
-      if (d.tareaUrlEditar) { btnEditar.href = d.tareaUrlEditar; btnEditar.classList.remove('d-none'); }
-      else { btnEditar.classList.add('d-none'); }
+      if (d.tareaUrlEditar) btnEditar.classList.remove('d-none');
+      else btnEditar.classList.add('d-none');
     }
+
+    // Siempre mostrar panel de vista al abrir
+    tdViewPanel?.classList.remove('d-none');
+    tdEditPanel?.classList.add('d-none');
 
     tdBackdrop.classList.add('visible');
     tdBackdrop.setAttribute('aria-hidden', 'false');
@@ -84,12 +98,96 @@
     tdBackdrop.classList.remove('visible');
     tdBackdrop.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('bs-modal-open');
+    currentTaskId = null;
   }
+
+  function tdOpenEditMode() {
+    if (!currentTaskId) return;
+    tdViewPanel?.classList.add('d-none');
+    tdEditPanel?.classList.remove('d-none');
+    tdEditForm?.classList.add('d-none');
+    tdEditLoading?.classList.remove('d-none');
+    if (tdEditError)   { tdEditError.classList.add('d-none');   tdEditError.textContent = ''; }
+    if (tdEditSuccess) { tdEditSuccess.classList.add('d-none'); tdEditSuccess.textContent = ''; }
+
+    fetch('/tareas/' + currentTaskId + '/json')
+      .then(r => r.json())
+      .then(data => {
+        tdEditLoading?.classList.add('d-none');
+        if (!data.ok) {
+          if (tdEditError) { tdEditError.textContent = data.error || 'Error al cargar datos.'; tdEditError.classList.remove('d-none'); }
+          tdEditPanel?.classList.remove('d-none');
+          return;
+        }
+        const t = data.tarea;
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
+        set('tdFTitulo',          t.titulo);
+        set('tdFAvance',          t.porcentaje_avance ?? 0);
+        set('tdFFechaInicio',     t.fecha_inicio     || '');
+        set('tdFFechaCompromiso', t.fecha_compromiso || '');
+        set('tdFFechaFin',        t.fecha_fin        || '');
+        set('tdFFechaReal',       t.fecha_cierre_real || '');
+        set('tdFDesc',            t.descripcion      || '');
+
+        const fEstado = document.getElementById('tdFEstado');
+        if (fEstado) {
+          fEstado.innerHTML = '';
+          (data.estados || []).forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s; opt.textContent = s;
+            if (s === t.estado) opt.selected = true;
+            fEstado.appendChild(opt);
+          });
+        }
+
+        const csrf = document.getElementById('td-csrf-token')?.dataset.token || '';
+        const csrfInput = document.getElementById('tdEditCsrf');
+        if (csrfInput) csrfInput.value = csrf;
+
+        tdEditForm?.classList.remove('d-none');
+      })
+      .catch(() => {
+        tdEditLoading?.classList.add('d-none');
+        if (tdEditError) { tdEditError.textContent = 'Error de red al cargar los datos.'; tdEditError.classList.remove('d-none'); }
+      });
+  }
+
+  function tdCancelEdit() {
+    tdViewPanel?.classList.remove('d-none');
+    tdEditPanel?.classList.add('d-none');
+  }
+
+  tdEditForm?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!currentTaskId) return;
+    const btn = document.getElementById('tdBtnGuardar');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Guardando...'; }
+    if (tdEditError)   tdEditError.classList.add('d-none');
+    if (tdEditSuccess) tdEditSuccess.classList.add('d-none');
+
+    fetch('/tareas/' + currentTaskId + '/editar-ajax', { method: 'POST', body: new FormData(tdEditForm) })
+      .then(r => r.json())
+      .then(data => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar cambios'; }
+        if (data.ok) {
+          if (tdEditSuccess) { tdEditSuccess.textContent = data.message || 'Guardado correctamente.'; tdEditSuccess.classList.remove('d-none'); }
+          setTimeout(() => { tdCloseModal(); window.location.reload(); }, 1200);
+        } else {
+          if (tdEditError) { tdEditError.textContent = data.message || 'Error al guardar.'; tdEditError.classList.remove('d-none'); }
+        }
+      })
+      .catch(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar cambios'; }
+        if (tdEditError) { tdEditError.textContent = 'Error de red al guardar.'; tdEditError.classList.remove('d-none'); }
+      });
+  });
 
   document.querySelectorAll('.js-tarea-detalle').forEach(function(btn) {
     btn.addEventListener('click', function(e) { e.preventDefault(); tdOpenModal(btn); });
   });
 
+  document.getElementById('tdBtnEditar')?.addEventListener('click', tdOpenEditMode);
+  document.getElementById('tdBtnCancelarEdit')?.addEventListener('click', tdCancelEdit);
   tdClose?.addEventListener('click', tdCloseModal);
   tdBackdrop.addEventListener('click', function(e) { if (e.target === tdBackdrop) tdCloseModal(); });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && tdBackdrop.classList.contains('visible')) tdCloseModal(); });
@@ -118,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentPage = 1;
   let currentSortCol = null;
   let currentSortDir = null;
+  let currentTabFilter = 'todas';
 
   rows.forEach(row => { row.dataset.match = '1'; });
 
@@ -200,8 +299,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const okTipo   = !tipoVal  || tipo          === tipoVal;
       const okProp   = !propVal  || responsable.includes(propVal);
       const okDepto  = !deptoVal || departamento  === deptoVal;
+      const okTab    = currentTabFilter === 'todas'
+                     || (currentTabFilter === 'en_curso'   && ESTADOS_EN_CURSO.has(estado))
+                     || (currentTabFilter === 'terminadas' && ESTADOS_TERMINADAS.has(estado));
 
-      row.dataset.match = (okQ && okEstado && okTipo && okProp && okDepto) ? '1' : '0';
+      row.dataset.match = (okQ && okEstado && okTipo && okProp && okDepto && okTab) ? '1' : '0';
     });
 
     currentPage = 1;
@@ -305,6 +407,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Limpiar todo ─────────────────────────────────────────────
 
+  function setActiveTab(tab) {
+    currentTabFilter = tab;
+    document.querySelectorAll('.tab-status').forEach(btn => {
+      const active = btn.dataset.tab === tab;
+      btn.classList.toggle('btn-primary', active);
+      btn.classList.toggle('btn-outline-secondary', !active);
+      btn.classList.toggle('active', active);
+    });
+  }
+
   function limpiarTodo() {
     if (window.location.search.includes('due=')) {
       window.location.href = '/tareas';
@@ -317,6 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fDepto)  fDepto.value = '';
     document.querySelector('input[name="fecha_desde"]')?.setAttribute('value', '');
     document.querySelector('input[name="fecha_hasta"]')?.setAttribute('value', '');
+    setActiveTab('todas');
     applyFilters();
   }
 
@@ -338,6 +451,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('btnLimpiarTodo')?.addEventListener('click', limpiarTodo);
+
+  document.querySelectorAll('.tab-status').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setActiveTab(btn.dataset.tab);
+      currentPage = 1;
+      applyFilters();
+    });
+  });
 
   document.getElementById('btnAdv')?.addEventListener('click', () => {
     document.getElementById('advBox')?.classList.toggle('show');
@@ -407,6 +528,273 @@ document.addEventListener('DOMContentLoaded', () => {
   applyFilters();
   updateSortButtons();
 });
+
+// ── Modal detalle completo — historial + agregar acción ──────────────
+(function initDetalleModal() {
+  const backdrop = document.getElementById('tdDetalleBackdrop');
+  if (!backdrop) return;
+
+  let currentTaskId = null;
+  let respPopulated = false;
+
+  const loading    = document.getElementById('tdDetLoading');
+  const content    = document.getElementById('tdDetContent');
+  const infoDiv    = document.getElementById('tdDetInfo');
+  const histDiv    = document.getElementById('tdDetHistorial');
+  const formCard   = document.getElementById('tdDetFormCard');
+  const form       = document.getElementById('tdDetForm');
+  const formMsg    = document.getElementById('tdDetFormMsg');
+  const respSearch = document.getElementById('tdDetRespSearch');
+  const respSelect = document.getElementById('tdDetRespSelect');
+  const fzWarning  = document.getElementById('tdDetFinalizadoWarning');
+
+  // ── helpers ──────────────────────────────────────────
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function fmtDt(v) {
+    if (!v) return '-';
+    const s = String(v).replace('T',' ');
+    if (s.length < 10) return s;
+    return s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4)+(s.length>10 ? ' '+s.slice(11,16) : '');
+  }
+
+  function estadoBadge(e) {
+    const map = { 'Terminado':'bg-success','Cerrado por sistema':'bg-secondary',
+                  'En desarrollo':'bg-warning text-dark','Atrasada':'bg-danger','Por iniciar':'bg-info text-dark' };
+    return `<span class="badge ${map[e]||'bg-secondary'}">${esc(e)}</span>`;
+  }
+
+  function accionBadge(e) {
+    const map = { 'Finalizado':'bg-success','Bloqueado':'bg-danger','Pendiente':'bg-secondary' };
+    return `<span class="badge ${map[e]||'bg-info text-dark'}" style="font-size:10px">${esc(e||'En proceso')}</span>`;
+  }
+
+  // ── renderizar info de la tarea ──────────────────────
+  function renderInfo(t) {
+    infoDiv.innerHTML = `
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+        <div class="small text-muted">
+          Responsable: <strong class="text-body">${esc(t.propietario||'-')}</strong>
+          &nbsp;·&nbsp; Creada por: <strong class="text-body">${esc(t.creador_nombre||t.creador_username||'-')}</strong>
+        </div>
+        ${estadoBadge(t.estado)}
+      </div>
+      ${t.descripcion ? `<div class="td-modal-desc mb-3">${esc(t.descripcion)}</div>` : ''}
+      <div class="td-detalle-fechas">
+        ${[['Creación',t.fecha_creacion],['Inicio',t.fecha_inicio],['Compromiso',t.fecha_compromiso],['Fin Real',t.fecha_fin]]
+          .map(([l,v])=>`<div><div class="td-modal-label">${l}</div><div class="td-modal-value" style="font-size:12px">${fmtDt(v)}</div></div>`).join('')}
+      </div>`;
+  }
+
+  // ── renderizar historial ─────────────────────────────
+  function renderHistorial(acciones) {
+    if (!acciones || acciones.length === 0) {
+      histDiv.innerHTML = '<p class="text-muted small mb-0">Aún no se han registrado acciones para esta tarea.</p>';
+      return;
+    }
+    const rows = acciones.map(a => {
+      const csrf = document.getElementById('td-csrf-token')?.dataset.token || '';
+      const btnTerminar = a.estado_accion !== 'Finalizado'
+        ? `<button class="btn btn-outline-success btn-sm p-0 px-1 js-det-fin-accion"
+             data-accion-id="${a.id}" data-csrf="${esc(csrf)}" style="font-size:10px">
+             <i class="bi bi-check2-all"></i> Terminar
+           </button>` : '';
+      return `<tr>
+        <td class="small">${fmtDt(a.fecha_accion)}</td>
+        <td class="small">${esc(a.nombre_completo||a.username||'-')}</td>
+        <td>
+          <div class="fw-bold small">${esc(a.nombre_asignado||'Sin asignar')}</div>
+          <div class="d-flex gap-1 flex-wrap mt-1">${accionBadge(a.estado_accion)} ${btnTerminar}</div>
+        </td>
+        <td>
+          <div class="fw-semibold small">${esc(a.observacion||'')}</div>
+          <div class="text-muted small" style="white-space:pre-wrap">${esc(a.detalles||'')}</div>
+        </td>
+        <td class="small text-primary">${fmtDt(a.fecha_fin_tentativa)}</td>
+      </tr>`;
+    }).join('');
+
+    histDiv.innerHTML = `
+      <div class="table-responsive">
+        <table class="table table-sm align-middle table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:100px">Fecha</th>
+              <th style="width:110px">Registrado por</th>
+              <th style="width:150px">Asignado / Estado</th>
+              <th>Actividad</th>
+              <th style="width:90px">Fin Tent.</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+
+    histDiv.querySelectorAll('.js-det-fin-accion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const fd = new FormData();
+        fd.append('csrf_token', btn.dataset.csrf);
+        btn.disabled = true;
+        fetch(`/tareas/accion/${btn.dataset.accionId}/finalizar`, { method:'POST', body:fd })
+          .then(() => recargarHistorial(currentTaskId))
+          .catch(() => { btn.disabled = false; });
+      });
+    });
+  }
+
+  // ── recargar solo el historial ───────────────────────
+  function recargarHistorial(taskId) {
+    fetch(`/tareas/${taskId}/detalle-json`)
+      .then(r => r.json())
+      .then(data => { if (data.ok) renderHistorial(data.acciones); });
+  }
+
+  // ── poblar select de responsables (solo una vez) ─────
+  function populateResp(responsables) {
+    if (respPopulated || !respSelect) return;
+    (responsables || []).forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r.id;
+      opt.textContent = r.label || r.username;
+      opt.dataset.search = ((r.label||'') + ' ' + r.username).toLowerCase();
+      respSelect.appendChild(opt);
+    });
+    respPopulated = true;
+  }
+
+  // ── abrir modal ──────────────────────────────────────
+  function openModal(taskId) {
+    currentTaskId = taskId;
+    loading.classList.remove('d-none');
+    content.classList.add('d-none');
+    formMsg.classList.add('d-none');
+    backdrop.classList.add('visible');
+    backdrop.setAttribute('aria-hidden','false');
+    document.body.classList.add('bs-modal-open');
+
+    fetch(`/tareas/${taskId}/detalle-json`)
+      .then(r => r.json())
+      .then(data => {
+        loading.classList.add('d-none');
+        if (!data.ok) {
+          content.innerHTML = `<div class="alert alert-danger m-3">${esc(data.error||'Error al cargar')}</div>`;
+          content.classList.remove('d-none');
+          return;
+        }
+        const t = data.tarea;
+        document.getElementById('tdDetCodigo').textContent = String(t.id||'').padStart(8,'0');
+        document.getElementById('tdDetTitulo').textContent = t.titulo||'';
+        renderInfo(t);
+        renderHistorial(data.acciones);
+        populateResp(data.responsables);
+
+        if (data.puede_anotar) {
+          formCard.classList.remove('d-none');
+          document.getElementById('tdDetCsrf').value =
+            document.getElementById('td-csrf-token')?.dataset.token || '';
+        } else {
+          formCard.classList.add('d-none');
+        }
+        content.classList.remove('d-none');
+      })
+      .catch(() => {
+        loading.classList.add('d-none');
+        content.innerHTML = '<div class="alert alert-danger m-3">Error de red al cargar la tarea.</div>';
+        content.classList.remove('d-none');
+      });
+  }
+
+  // ── cerrar modal ─────────────────────────────────────
+  function closeModal() {
+    backdrop.classList.remove('visible');
+    backdrop.setAttribute('aria-hidden','true');
+    document.body.classList.remove('bs-modal-open');
+    currentTaskId = null;
+  }
+
+  // ── botones de apertura en la tabla ─────────────────
+  document.querySelectorAll('.js-abrir-detalle-modal').forEach(btn => {
+    btn.addEventListener('click', () => openModal(parseInt(btn.dataset.taskId, 10)));
+  });
+
+  // ── "Ver detalle completo" del modal rápido ──────────
+  document.getElementById('tdBtnVer')?.addEventListener('click', function() {
+    const numId = parseInt(this.dataset.numId, 10);
+    if (!numId) return;
+    // Cierra el modal rápido antes de abrir el de detalle
+    document.getElementById('tdModalBackdrop')?.classList.remove('visible');
+    document.getElementById('tdModalBackdrop')?.setAttribute('aria-hidden','true');
+    openModal(numId);
+  });
+
+  // ── filtro de responsables ────────────────────────────
+  respSearch?.addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    [...respSelect.options].forEach(opt => {
+      const src = opt.dataset.search || opt.textContent.toLowerCase();
+      opt.style.display = (!q || src.includes(q)) ? '' : 'none';
+    });
+  });
+
+  // ── aviso cuando estado = Finalizado ─────────────────
+  document.getElementById('tdDetEstadoAccion')?.addEventListener('change', function() {
+    fzWarning?.classList.toggle('d-none', this.value !== 'Finalizado');
+  });
+
+  // ── envío del formulario ──────────────────────────────
+  form?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!currentTaskId) return;
+    const obs = document.getElementById('tdDetObservacion')?.value.trim();
+    if (!obs) {
+      formMsg.className = 'alert alert-warning mt-2 py-2';
+      formMsg.textContent = 'Escribe al menos una observación.';
+      formMsg.classList.remove('d-none');
+      return;
+    }
+
+    const btn = document.getElementById('tdDetBtnGuardar');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Guardando...'; }
+    formMsg.classList.add('d-none');
+
+    fetch(`/tareas/${currentTaskId}/accion-ajax`, { method:'POST', body: new FormData(form) })
+      .then(r => r.json())
+      .then(data => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar acción'; }
+        formMsg.className = `alert alert-${data.ok ? 'success' : 'danger'} mt-2 py-2`;
+        formMsg.textContent = data.message || (data.ok ? 'Acción registrada.' : 'Error al guardar.');
+        formMsg.classList.remove('d-none');
+        if (data.ok) {
+          form.reset();
+          fzWarning?.classList.add('d-none');
+          if (data.task_closed) {
+            setTimeout(() => { closeModal(); window.location.reload(); }, 1800);
+          } else {
+            recargarHistorial(currentTaskId);
+            setTimeout(() => formMsg.classList.add('d-none'), 3000);
+          }
+        }
+      })
+      .catch(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar acción'; }
+        formMsg.className = 'alert alert-danger mt-2 py-2';
+        formMsg.textContent = 'Error de red al guardar.';
+        formMsg.classList.remove('d-none');
+      });
+  });
+
+  // ── close handlers ────────────────────────────────────
+  document.getElementById('tdDetClose')?.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && backdrop.classList.contains('visible')) closeModal();
+  });
+
+  window.tdDetalleModal = { open: openModal, close: closeModal };
+})();
 
 // ======================================================
 // NUEVA TAREA - compatible con CSP, sin scripts inline
@@ -519,5 +907,127 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+});
+
+// ======================================================
+// MEJORAR DESCRIPCIÓN CON IA
+// ======================================================
+document.addEventListener('DOMContentLoaded', () => {
+  const btnMejorar = document.getElementById('btnMejorarDescripcion');
+  const textarea   = document.getElementById('descripcionTarea');
+  const panel      = document.getElementById('mejora-descripcion-panel');
+
+  if (!btnMejorar || !textarea || !panel) return;
+
+  const csrfToken = document.querySelector('input[name="csrf_token"]')?.value || '';
+
+  btnMejorar.addEventListener('click', async () => {
+    const texto = textarea.value.trim();
+    if (!texto) {
+      alert('Escribe una descripción antes de mejorarla con IA.');
+      return;
+    }
+
+    btnMejorar.disabled = true;
+    btnMejorar.textContent = 'Mejorando…';
+    panel.className = 'om-ia-mejora mt-2';
+    panel.innerHTML = '';
+
+    const loadMsg = document.createElement('span');
+    loadMsg.className = 'ia-msg-info';
+    loadMsg.textContent = '✨ Generando versión mejorada…';
+    panel.appendChild(loadMsg);
+
+    try {
+      const resp = await fetch('/api/om/mejorar-descripcion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify({ texto }),
+      });
+      const data = await resp.json();
+
+      panel.innerHTML = '';
+
+      if (!data.ok) {
+        const errEl = document.createElement('span');
+        errEl.className = 'ia-msg-error';
+        errEl.textContent = data.error || 'Error al mejorar.';
+        panel.appendChild(errEl);
+        return;
+      }
+
+      const descMejorada = data.descripcion_mejorada || '';
+      const cambios      = data.cambios || [];
+
+      const lbl = document.createElement('div');
+      lbl.className = 'ia-mejora-label';
+      const icon = document.createElement('i');
+      icon.className = 'bi bi-stars';
+      lbl.appendChild(icon);
+      lbl.appendChild(document.createTextNode(' Versión mejorada'));
+      panel.appendChild(lbl);
+
+      const txEl = document.createElement('div');
+      txEl.className = 'ia-mejora-texto';
+      txEl.textContent = descMejorada;
+      panel.appendChild(txEl);
+
+      if (cambios.length) {
+        const camDiv = document.createElement('div');
+        camDiv.className = 'ia-cambios';
+        cambios.forEach(c => {
+          const ci = document.createElement('div');
+          ci.className = 'ia-cambio-item';
+          ci.textContent = '• ' + c;
+          camDiv.appendChild(ci);
+        });
+        panel.appendChild(camDiv);
+      }
+
+      const mbtns = document.createElement('div');
+      mbtns.className = 'ia-mejora-btns';
+
+      const btnUsar = document.createElement('button');
+      btnUsar.type = 'button';
+      btnUsar.className = 'btn-om-ia-usar btn-om-ia-usar-si';
+      btnUsar.textContent = '✅ Usar esta descripción';
+      btnUsar.addEventListener('click', () => {
+        textarea.value = descMejorada;
+        panel.className = 'om-ia-mejora d-none';
+      });
+
+      const btnDesc = document.createElement('button');
+      btnDesc.type = 'button';
+      btnDesc.className = 'btn-om-ia-usar btn-om-ia-usar-no';
+      btnDesc.textContent = '✖ Descartar';
+      btnDesc.addEventListener('click', () => {
+        panel.className = 'om-ia-mejora d-none';
+      });
+
+      mbtns.appendChild(btnUsar);
+      mbtns.appendChild(btnDesc);
+      panel.appendChild(mbtns);
+
+    } catch {
+      panel.innerHTML = '';
+      const errEl = document.createElement('span');
+      errEl.className = 'ia-msg-error';
+      errEl.textContent = 'Error de conexión al mejorar.';
+      panel.appendChild(errEl);
+    } finally {
+      btnMejorar.disabled = false;
+      btnMejorar.innerHTML = '';
+      const icon2 = document.createElement('i');
+      icon2.className = 'bi bi-stars me-1';
+      btnMejorar.appendChild(icon2);
+      btnMejorar.appendChild(document.createTextNode('Mejorar con IA'));
+    }
+  });
+});
 
 });
