@@ -1726,6 +1726,14 @@ def svc_guardar_edicion_tarea(user, task_id: int, form):
     )
     conn.commit()
     if estado_anterior != "Terminado" and estado == "Terminado":
+        try:
+            conn.execute(
+                "UPDATE email_tickets_inbox SET estado = 'TERMINADA' WHERE tarea_id = ? AND estado = 'ASIGNADA'",
+                (task_id,)
+            )
+            conn.commit()
+        except Exception:
+            pass
         svc_crear_y_enviar_encuesta(task_id)
 
     return {

@@ -404,6 +404,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Vista compacta por defecto
+  document.getElementById('densityCompact')?.click();
+
   applyFilters();
   updateSortButtons();
 });
