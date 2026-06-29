@@ -1040,10 +1040,13 @@ function desbloquearBtn(btn) {
 
         return '#';
     }
+    let _activeReclamoTr = null;   // referencia a la fila actualmente en el modal
+
     document.querySelectorAll('.js-ver-detalle').forEach(btn => {
         btn.addEventListener('click', async () => {
             const tr = btn.closest('tr');
             if (!tr) return;
+            _activeReclamoTr = tr;   // guardar para el handler del lápiz
 
             const tipoRow = tr.dataset.row || '';
             const reclamoId = tr.dataset.reclamoId || tr.dataset.reclamoid || '';
@@ -1076,6 +1079,13 @@ function desbloquearBtn(btn) {
 
             document.getElementById('det-cliente').textContent = tr.dataset.cliente || '';
             document.getElementById('det-proceso').textContent = tr.dataset.proceso || '';
+
+            const btnEditarProceso = document.getElementById('btn-editar-proceso');
+            if (btnEditarProceso) {
+                const estadoOm = (tr.dataset.estado || '').toLowerCase();
+                btnEditarProceso.classList.toggle('d-none', estadoOm.includes('cerrad'));
+            }
+
             document.getElementById('det-tipo-reclamo').textContent =
                 tr.dataset.tipoReclamo || tr.dataset.tipoReclamoTxt || '';
 
@@ -5649,6 +5659,21 @@ if (first.codigo_om && first.estado_global) {
         if (!btnEditar || !formEditar || !selProceso) return;
 
         btnEditar.addEventListener('click', function () {
+            const procesoTextoActual = (detProceso ? detProceso.textContent : '').trim();
+
+            // Filtrar el select para mostrar SOLO los procesos ya asignados
+            const nombresAsignados = procesoTextoActual
+                .split(',')
+                .map(s => s.trim().toUpperCase())
+                .filter(Boolean);
+
+            Array.from(selProceso.options).forEach(opt => {
+                const nombre = opt.textContent.trim().toUpperCase();
+                const asignado = nombresAsignados.some(n => nombre.includes(n) || n.includes(nombre));
+                opt.hidden   = !asignado;
+                opt.selected = asignado;
+            });
+
             formEditar.classList.toggle('d-none');
         });
 
@@ -5675,17 +5700,16 @@ if (first.codigo_om && first.estado_global) {
                 });
                 const data = await resp.json();
                 if (data.ok) {
-                    if (detProceso) detProceso.textContent = data.proceso_text || '';
                     formEditar.classList.add('d-none');
-
-                    // actualizar data-proceso en la fila activa
-                    const activeRow = document.querySelector('tr.table-active, tr.selected');
-                    if (activeRow) activeRow.dataset.proceso = data.proceso_text || '';
+                    btnGuardar.disabled = true;
+                    btnGuardar.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Actualizando...';
+                    setTimeout(() => window.location.reload(), 800);
                 } else {
                     alert('Error: ' + (data.msg || 'No se pudo actualizar'));
                 }
             } catch (e) {
-                alert('Error de conexión');
+                console.error('[editar-proceso] error:', e);
+                alert('Error al guardar: ' + (e && e.message ? e.message : 'intenta de nuevo'));
             } finally {
                 btnGuardar.disabled = false;
             }

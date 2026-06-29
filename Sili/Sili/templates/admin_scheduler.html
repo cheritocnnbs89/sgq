@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Scheduler — Panel de Jobs{% endblock %}
+
+{% block head_extra %}
+<style>
+.sch-card { border-radius: 10px; border: 1px solid #dee2e6; margin-bottom: 1.5rem; }
+.sch-card-header { background: #f8f9fa; padding: .75rem 1rem; border-bottom: 1px solid #dee2e6;
+                   border-radius: 10px 10px 0 0; display: flex; align-items: center; gap: .5rem; }
+.sch-card-header h6 { margin: 0; font-weight: 600; font-size: .95rem; }
+.sch-table th { font-size: .78rem; color: #6c757d; font-weight: 600; text-transform: uppercase;
+                background: #f8f9fa; border-bottom: 2px solid #dee2e6; }
+.sch-table td { vertical-align: middle; font-size: .85rem; }
+.sch-badge-intervalo { background: #e8f4fd; color: #0d6efd; border-radius: 6px;
+                       padding: 2px 8px; font-size: .75rem; font-weight: 600; }
+.sch-badge-hora { background: #fff3cd; color: #856404; border-radius: 6px;
+                  padding: 2px 8px; font-size: .75rem; font-weight: 600; }
+.sch-resultado { font-size: .78rem; color: #6c757d; max-width: 220px;
+                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sch-btn-run { font-size: .75rem; padding: 2px 10px; }
+.toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+                 background: #ccc; border-radius: 22px; transition: .3s; }
+.toggle-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px;
+                         bottom: 3px; background: white; border-radius: 50%; transition: .3s; }
+input:checked + .toggle-slider { background: #198754; }
+input:checked + .toggle-slider:before { transform: translateX(18px); }
+.sch-edit-inline { display: none; gap: 6px; align-items: center; flex-wrap: wrap; }
+.sch-edit-inline.visible { display: flex; }
+.sch-edit-inline input { width: 70px; font-size: .8rem; padding: 2px 6px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3 py-3">
+
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <i class="bi bi-clock-history fs-4 text-primary"></i>
+    <div>
+      <h4 class="mb-0">Panel de Jobs Programados</h4>
+      <p class="text-muted mb-0" style="font-size:.83rem">
+        Activa, desactiva y ajusta el horario de cada notificación automática.
+      </p>
+    </div>
+  </div>
+
+  {% for mod_key, jobs in modulos.items() %}
+  {% set label = modulo_labels.get(mod_key, mod_key|title) %}
+  {% set icon  = modulo_icons.get(mod_key, 'bi-gear') %}
+
+  <div class="sch-card">
+    <div class="sch-card-header">
+      <i class="bi {{ icon }} text-primary"></i>
+      <h6>{{ label }}</h6>
+      <span class="badge bg-secondary ms-auto">{{ jobs|length }} job{{ 's' if jobs|length != 1 else '' }}</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table sch-table mb-0">
+        <thead>
+          <tr>
+            <th style="width:40px">Activo</th>
+            <th>Job</th>
+            <th>Descripción</th>
+            <th>Tipo / Horario</th>
+            <th>Última ejecución</th>
+            <th>Último resultado</th>
+            <th style="width:90px">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for j in jobs %}
+          <tr data-job-key="{{ j.job_key }}">
+            <td class="text-center">
+              <label class="toggle-switch">
+                <input type="checkbox" class="sch-toggle-activo"
+                       {% if j.activo %}checked{% endif %}>
+                <span class="toggle-slider"></span>
+              </label>
+            </td>
+            <td>
+              <code style="font-size:.78rem">{{ j.job_key }}</code>
+            </td>
+            <td>{{ j.descripcion or '—' }}</td>
+            <td>
+              {% if j.tipo == 'intervalo' %}
+                <span class="sch-badge-intervalo">
+                  <i class="bi bi-arrow-repeat me-1"></i>cada {{ j.intervalo_min }} min
+                </span>
+                <div class="sch-edit-inline mt-1" id="edit-{{ j.job_key }}">
+                  <input type="number" min="1" class="form-control form-control-sm sch-input-intervalo"
+                         value="{{ j.intervalo_min or '' }}" placeholder="min">
+                  <button class="btn btn-success btn-sm sch-btn-run sch-btn-save-config" style="font-size:.75rem">
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm sch-btn-cancel-edit" style="font-size:.75rem">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              {% elif j.tipo == 'hora_fija' %}
+                <span class="sch-badge-hora">
+                  <i class="bi bi-clock me-1"></i>{{ j.hora_inicio or '—' }}
+                </span>
+                <div class="sch-edit-inline mt-1" id="edit-{{ j.job_key }}">
+                  <input type="time" class="form-control form-control-sm sch-input-hora"
+                         value="{{ j.hora_inicio or '' }}">
+                  <button class="btn btn-success btn-sm sch-btn-run sch-btn-save-config" style="font-size:.75rem">
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm sch-btn-cancel-edit" style="font-size:.75rem">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if j.ultima_ejecucion %}
+                <span class="text-muted" style="font-size:.78rem">
+                  {{ j.ultima_ejecucion | string | truncate(16, False, '') if j.ultima_ejecucion else '—' }}
+                </span>
+              {% else %}
+                <span class="text-muted">Sin registro</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="sch-resultado" title="{{ j.ultimo_resultado or '' }}">
+                {{ j.ultimo_resultado or '—' }}
+              </span>
+            </td>
+            <td>
+              <div class="d-flex gap-1">
+                <button class="btn btn-outline-secondary btn-sm sch-btn-edit"
+                        title="Editar horario" style="font-size:.75rem;padding:2px 7px">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                {% if session.get('rol') == 'admin' %}
+                <button class="btn btn-outline-primary btn-sm sch-btn-run-now"
+                        title="Ejecutar ahora" style="font-size:.75rem;padding:2px 7px">
+                  <i class="bi bi-play-fill"></i>
+                </button>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+<div class="modal fade" id="modalRunResult" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h6 class="modal-title"><i class="bi bi-play-circle me-1"></i>Resultado</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="modalRunResultBody">—</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin/scheduler.js') }}?v=1"></script>
+{% endblock %}

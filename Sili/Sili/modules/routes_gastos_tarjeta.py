@@ -3814,21 +3814,10 @@ def register_gastos_routes(app):
                         if xml_row:
                             cols = [c[0] for c in _xml_cur.description]
                             xr = {cols[i]: xml_row[i] for i in range(len(cols))}
-                            # fecha_emision: puede ser string dd/mm/yyyy, yyyy-mm-dd, o date object
-                            fe_raw = xr.get('fecha_emision')
-                            anio_pre = mes_pre = dia_pre = ''
-                            if fe_raw:
-                                import datetime as _dt
-                                if isinstance(fe_raw, (_dt.date, _dt.datetime)):
-                                    anio_pre = str(fe_raw.year)
-                                    mes_pre  = f"{fe_raw.month:02d}"
-                                    dia_pre  = f"{fe_raw.day:02d}"
-                                else:
-                                    fe = str(fe_raw).strip()
-                                    if len(fe) == 10 and fe[2] == '/':  # dd/mm/yyyy
-                                        dia_pre, mes_pre, anio_pre = fe[:2], fe[3:5], fe[6:]
-                                    elif len(fe) == 10 and fe[4] == '-':  # yyyy-mm-dd
-                                        anio_pre, mes_pre, dia_pre = fe[:4], fe[5:7], fe[8:]
+                            # fecha_emision: solo para referencia de la factura
+                            # anio/mes/dia = fecha de REGISTRO (hoy), no de la factura
+                            import datetime as _dt
+                            _hoy = _dt.date.today()
                             form_preload = {
                                 'factura_xml_id': str(xr.get('id') or ''),
                                 'numero_factura': str(xr.get('nro_factura') or ''),
@@ -3837,9 +3826,9 @@ def register_gastos_routes(app):
                                 'proveedor': str(xr.get('razon_social_emisor') or ''),
                                 'proveedor_identificacion': str(xr.get('ruc_emisor') or ''),
                                 'h_total_con_iva': str(xr.get('total') or ''),
-                                'anio': anio_pre,
-                                'mes': mes_pre,
-                                'dia': dia_pre,
+                                'anio': str(_hoy.year),
+                                'mes': f"{_hoy.month:02d}",
+                                'dia': f"{_hoy.day:02d}",
                             }
                         # Cargar líneas de detalle desde facturas_xml_det
                         _xml_cur.execute("""

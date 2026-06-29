@@ -4989,6 +4989,7 @@ def register_reclamos_routes(app):
                             FROM reclamo_imputados ri2
                             LEFT JOIN usuarios ui2 ON ui2.id = ri2.imputado_id
                             WHERE ri2.reclamo_id = r.id
+                              AND COALESCE(ri2.activo, 1) = 1
                             FOR XML PATH(''), TYPE
                         ).value('.', 'NVARCHAR(MAX)'), 1, 2, '')
                     ) AS imputados_resumen,
@@ -7034,12 +7035,98 @@ def register_reclamos_routes(app):
                 "UPDATE reclamos SET proceso_id = ?, proceso_text = ? WHERE id = ?",
                 (proceso_id, proceso_text, reclamo_id)
             )
+
+            # Recalcular sponsors usando cursor separado para evitar conflictos
+            cur2 = conn.cursor()
+
+            # Sponsors de los procesos que QUEDAN
+            sponsors_restantes = set()
+            for pid in proceso_ids:
+                cur2.execute(
+                    """SELECT u.id AS usuario_id
+                       FROM param_values pv
+                       JOIN param_groups pg ON pg.id = pv.group_id
+                       JOIN usuarios u ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
+                       WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
+                         AND COALESCE(pv.activo, 1) = 1
+                         AND pv.parent_id = ?
+                         AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
+                         AND COALESCE(u.disabled, 0) = 0""",
+                    (pid,)
+                )
+                for row_s in cur2.fetchall():
+                    sponsors_restantes.add(int(row_s['usuario_id']))
+
+            # TODOS los sponsors configurados en cualquier proceso
+            cur2.execute(
+                """SELECT DISTINCT u.id AS usuario_id
+                   FROM param_values pv
+                   JOIN param_groups pg ON pg.id = pv.group_id
+                   JOIN usuarios u ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
+                   WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
+                     AND COALESCE(pv.activo, 1) = 1
+                     AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
+                     AND COALESCE(u.disabled, 0) = 0"""
+            )
+            todos_los_sponsors = {int(r['usuario_id']) for r in cur2.fetchall()}
+
+            # Imputados actuales de esta OM que son sponsors de algún proceso
+            cur2.execute(
+                "SELECT imputado_id FROM reclamo_imputados WHERE reclamo_id = ? AND COALESCE(activo, 1) = 1",
+                (reclamo_id,)
+            )
+            imputados_actuales = {int(r['imputado_id']) for r in cur2.fetchall() if r['imputado_id']}
+
+            # Sponsors a eliminar: están en la OM, son sponsors de algún proceso, pero NO de los procesos restantes
+            sponsors_a_eliminar = imputados_actuales & todos_los_sponsors - sponsors_restantes
+
+            current_app.logger.warning(
+                "[EDITAR_PROCESO] OM %s proceso_ids=%s sponsors_restantes=%s todos_sponsors=%s imputados_actuales=%s a_eliminar=%s",
+                reclamo_id, proceso_ids, sponsors_restantes, todos_los_sponsors, imputados_actuales, sponsors_a_eliminar
+            )
+
+            if sponsors_a_eliminar:
+                placeholders = ','.join('?' * len(sponsors_a_eliminar))
+                cur2.execute(
+                    f"""UPDATE reclamo_imputados
+                        SET activo = 0
+                        WHERE reclamo_id = ?
+                          AND imputado_id IN ({placeholders})
+                          AND COALESCE(activo, 1) = 1""",
+                    [reclamo_id] + list(sponsors_a_eliminar)
+                )
+                current_app.logger.warning(
+                    "[EDITAR_PROCESO] OM %s → desactivó sponsors %s, filas=%s",
+                    reclamo_id, sponsors_a_eliminar, cur2.rowcount
+                )
+
             conn.commit()
+
+            # Obtener el resumen actualizado de imputados para devolver al frontend
+            cur.execute(
+                """SELECT STUFF((
+                       SELECT DISTINCT ', ' + COALESCE(u.username, '')
+                       FROM reclamo_imputados ri
+                       LEFT JOIN usuarios u ON u.id = ri.imputado_id
+                       WHERE ri.reclamo_id = ?
+                         AND COALESCE(ri.activo, 1) = 1
+                       FOR XML PATH(''), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS imputados_resumen""",
+                (reclamo_id,)
+            )
+            row_imp = cur.fetchone()
+            imputados_resumen = (row_imp['imputados_resumen'] or '') if row_imp else ''
+
             current_app.logger.warning(
                 "[EDITAR_PROCESO] OM %s → proceso_id=%s proceso_text=%r por uid=%s",
                 reclamo_id, proceso_id, proceso_text, _current_user_id()
             )
-            return jsonify(ok=True, proceso_text=proceso_text, msg='Proceso actualizado correctamente')
+            return jsonify(
+                ok=True,
+                proceso_text=proceso_text,
+                imputados_resumen=imputados_resumen,
+                msg='Proceso actualizado correctamente'
+            )
         except Exception as e:
             try:
                 conn.rollback()

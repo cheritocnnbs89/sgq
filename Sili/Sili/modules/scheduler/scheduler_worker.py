@@ -21,6 +21,7 @@ from .scheduler_repository import (
     ensure_gastos_expiry_schema,
     ensure_om_notification_schema,
 )
+from .scheduler_config_repo import ensure_scheduler_table
 from .scheduler_notifications import (
     ensure_core_templates,
     ensure_gasto_templates,
@@ -203,6 +204,9 @@ def start_scheduler(app=None):
 
                     ensure_om_notification_schema(c0)
                     _log("info", "Worker: ensure_om_notification_schema OK")
+
+                    ensure_scheduler_table(c0)
+                    _log("info", "Worker: ensure_scheduler_table OK (jobs auto-seed)")
 
                     #ensure_om_templates(c0)
                     _log("info", "Worker: ensure_om_templates OK")
