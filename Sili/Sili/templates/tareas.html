@@ -3,28 +3,12 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/tareas.css') }}">
-<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=11" defer></script>
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=14" defer></script>
 
 <div class="container tasks-page mt-3" data-vista="{{ vista }}">
   <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
-      <h4 class="mb-1">
-        {% if vista == 'mis' %}
-        Tareas asignadas por mí
-        {% else %}
-        Tareas a realizar
-        {% endif %}
-      </h4>
-      <div class="btn-group btn-group-sm no-print" role="group" aria-label="Vista de tareas">
-        <a href="{{ url_for('listar_tareas', vista='realizar') }}"
-          class="btn btn-outline-secondary {% if vista != 'mis' %}active{% endif %}">
-          Tareas a realizar
-        </a>
-        <a href="{{ url_for('listar_tareas', vista='mis') }}"
-          class="btn btn-outline-secondary {% if vista == 'mis' %}active{% endif %}">
-          Tareas asignadas por mí
-        </a>
-      </div>
+      <h4 class="mb-1">Tareas a realizar</h4>
     </div>
     <div class="d-flex align-items-center gap-2 no-print">
       <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
@@ -57,6 +41,24 @@
   <!-- Token CSRF para peticiones AJAX del modal -->
   <span id="td-csrf-token" class="d-none" data-token="{{ csrf_token() }}"></span>
 
+  <!-- Pestañas activas / terminadas -->
+  <div class="td-status-tabs mb-2 no-print">
+    <a class="td-status-tab {% if tab == 'activas' %}active{% endif %}"
+       href="{{ url_for('listar_tareas', vista=vista, tab='activas') }}">
+      <i class="bi bi-list-task"></i> Activas
+      {% if conteo_activas > 0 %}
+      <span class="td-tab-badge">{{ conteo_activas }}</span>
+      {% endif %}
+    </a>
+    <a class="td-status-tab {% if tab == 'terminadas' %}active{% endif %}"
+       href="{{ url_for('listar_tareas', vista=vista, tab='terminadas') }}">
+      <i class="bi bi-check-circle-fill"></i> Terminadas
+      {% if conteo_terminadas > 0 %}
+      <span class="td-tab-badge verde">{{ conteo_terminadas }}</span>
+      {% endif %}
+    </a>
+  </div>
+
   <!-- Botón para mostrar / ocultar búsqueda avanzada -->
   <button id="btnAdv" class="btn btn-outline-secondary btn-sm mb-2 no-print">
     🔍 Búsqueda avanzada
@@ -67,6 +69,7 @@
   <div id="advBox" class="toolbar-box advanced-box no-print mb-2">
     <form method="get" action="{{ url_for('listar_tareas') }}" class="d-flex flex-wrap align-items-end gap-2">
       <input type="hidden" name="vista" value="{{ vista }}">
+      <input type="hidden" name="tab" value="{{ tab }}">
 
       <div class="input-group input-group-sm tareas-maxw-280">
         <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -120,7 +123,6 @@
   <!-- Toggle de densidad + Quitar filtros -->
   <div class="d-flex align-items-center gap-2 mb-2 no-print">
     <div class="btn-group btn-group-sm" aria-label="Densidad de filas">
-      <button class="btn btn-outline-secondary" id="densityNormal" type="button">Cómoda</button>
       <button class="btn btn-outline-secondary" id="densityCompact" type="button">Compacta</button>
       <button class="btn btn-outline-primary" id="btnGerencial" type="button">Vista Gerencial</button>
     </div>
@@ -276,7 +278,15 @@
             {% for t in tareas %}
             <tr data-row="1">
 
-              <td data-th="Código">{{ "%08d"|format(t['id']) }}</td>
+              <td data-th="Código">
+                {{ "%08d"|format(t['id']) }}
+                {% if t.get('inbox_id') %}
+                <div class="small text-muted mt-1">
+                  <i class="bi bi-envelope-fill" title="Ticket bandeja soporte"></i>
+                  #{{ t['inbox_id'] }}
+                </div>
+                {% endif %}
+              </td>
               <td data-th="Título">{{ t['titulo'] }}</td>
               <td data-th="Descripción">
                 <div class="tk-body">{{ t['descripcion'] or '' }}</div>
@@ -559,14 +569,17 @@
             <label class="td-edit-label">Detalle de Actividad <span class="text-danger">*</span></label>
             <textarea name="detalles" id="tdDetDetalles" class="form-control form-control-sm" rows="4" required></textarea>
           </div>
-          <div id="tdDetIaMejoraPanel" class="d-none mb-2 p-2 border rounded bg-light" style="font-size:12px"></div>
-          <div id="tdDetFormMsg" class="d-none mt-2 alert py-2" style="font-size:12px"></div>
+          <div id="tdDetIaMejoraPanel" class="d-none mb-2 p-2 border rounded bg-light td-fecha-val"></div>
+          <div id="tdDetFormMsg" class="d-none mt-2 alert py-2 td-fecha-val"></div>
           <div class="mt-2 d-flex align-items-center gap-2 flex-wrap">
             <button type="submit" class="btn btn-primary btn-sm" id="tdDetBtnGuardar">
               <i class="bi bi-check-circle me-1"></i>Guardar avance
             </button>
             <button type="button" class="btn btn-outline-secondary btn-sm" id="tdDetBtnMejorarIA">
               <i class="bi bi-stars me-1"></i>Mejorar texto
+            </button>
+            <button type="button" class="btn btn-success btn-sm ms-auto" id="tdDetBtnCerrar">
+              <i class="bi bi-flag-fill me-1"></i>Cerrar tarea
             </button>
           </div>
         </form>

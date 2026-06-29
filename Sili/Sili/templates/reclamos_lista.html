@@ -233,6 +233,7 @@
                             data-fecha-creacion="{{ (r.fecha_creacion or '')|e }}"
                             data-cliente="{{ (r.cliente_nombre or '')|e }}"
                             data-proceso="{{ (r.proceso_nombre or r.proceso_text or '')|e }}"
+                            data-proceso-id="{{ r.proceso_id or '' }}"
                             data-material="{{ (r.material_desc or '')|e }}"
                             data-imputados="{{ (r.imputados_resumen or '')|e }}"
                             data-equipo="{{ (r.equipo_resumen or '')|e }}"
@@ -267,7 +268,7 @@
                                 </div>
                             </td>
 
-                            <td>{{ r.proceso_nombre or '' }}</td>
+                            <td class="td-proceso-text">{{ r.proceso_nombre or r.proceso_text or '' }}</td>
 
                             <td>
                                 {% set est = (r.estado or '').upper() %}
@@ -1187,7 +1188,11 @@
                             <div class="detail-item-value" id="det-proceso"></div>
                             {% if session.get('rol') in ('admin', 'coordinador') %}
                             <div id="form-editar-proceso" class="d-none mt-2">
-                                <select class="form-select form-select-sm mb-1" id="sel-proceso-edit" multiple>
+                                <p class="text-muted small mb-1">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Deselecciona los procesos que deseas eliminar y guarda.
+                                </p>
+                                <select class="form-select form-select-sm mb-1" id="sel-proceso-edit" multiple size="4">
                                     {% for p in procesos %}
                                     <option value="{{ p.id }}">{{ p.valor }}</option>
                                     {% endfor %}

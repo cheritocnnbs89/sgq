@@ -868,6 +868,126 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
+  // ── Mejorar texto con IA ─────────────────────────────
+  document.getElementById('tdDetBtnMejorarIA')?.addEventListener('click', async function () {
+    const textarea = document.getElementById('tdDetDetalles');
+    const panel    = document.getElementById('tdDetIaMejoraPanel');
+    const btn      = this;
+    if (!textarea || !panel) return;
+
+    const texto = textarea.value.trim();
+    if (!texto) {
+      alert('Escribe el detalle de actividad antes de mejorar.');
+      return;
+    }
+
+    btn.disabled = true;
+    const spinEl = document.createElement('span');
+    spinEl.className = 'spinner-border spinner-border-sm me-1';
+    btn.textContent = 'Mejorando…';
+    btn.prepend(spinEl);
+
+    panel.classList.remove('d-none');
+    panel.textContent = '';
+
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content
+              || document.querySelector('input[name="csrf_token"]')?.value || '';
+
+    try {
+      const resp = await fetch('/api/tareas/mejorar-comentario', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+        body: JSON.stringify({ texto }),
+      });
+      const data = await resp.json();
+
+      panel.textContent = '';
+
+      if (!data.ok) {
+        const errEl = document.createElement('span');
+        errEl.className = 'text-danger';
+        errEl.textContent = data.error || 'Error al mejorar.';
+        panel.appendChild(errEl);
+        return;
+      }
+
+      const lbl = document.createElement('div');
+      lbl.className = 'mb-1 fw-semibold td-fecha-val';
+      const icoLbl = document.createElement('i');
+      icoLbl.className = 'bi bi-stars text-warning me-1';
+      lbl.appendChild(icoLbl);
+      lbl.appendChild(document.createTextNode('Texto mejorado:'));
+      panel.appendChild(lbl);
+
+      const txt = document.createElement('div');
+      txt.className = 'mb-2 td-fecha-val';
+      txt.style.whiteSpace = 'pre-wrap';
+      txt.textContent = data.texto_mejorado;
+      panel.appendChild(txt);
+
+      const btnUsar = document.createElement('button');
+      btnUsar.type = 'button';
+      btnUsar.className = 'btn btn-sm btn-outline-primary';
+      const icoUsar = document.createElement('i');
+      icoUsar.className = 'bi bi-clipboard-check me-1';
+      btnUsar.appendChild(icoUsar);
+      btnUsar.appendChild(document.createTextNode('Usar este texto'));
+      btnUsar.addEventListener('click', () => {
+        textarea.value = data.texto_mejorado;
+        panel.classList.add('d-none');
+        panel.textContent = '';
+      });
+      panel.appendChild(btnUsar);
+
+    } catch (e) {
+      panel.textContent = '';
+      const errEl = document.createElement('span');
+      errEl.className = 'text-danger';
+      errEl.textContent = 'Error de conexión al mejorar.';
+      panel.appendChild(errEl);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '';
+      const icoBtn = document.createElement('i');
+      icoBtn.className = 'bi bi-stars me-1';
+      btn.appendChild(icoBtn);
+      btn.appendChild(document.createTextNode('Mejorar texto'));
+    }
+  });
+
+  document.getElementById('tdDetBtnCerrar')?.addEventListener('click', () => {
+    if (!currentTaskId) return;
+    if (!confirm('¿Confirmas que deseas cerrar esta tarea? Esta acción actualizará el estado a Terminado.')) return;
+
+    const btn = document.getElementById('tdDetBtnCerrar');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Cerrando...'; }
+
+    const csrfToken = document.getElementById('td-csrf-token')?.dataset.token || '';
+    const fd = new FormData();
+    fd.append('csrf_token', csrfToken);
+    fd.append('estado_accion', 'Finalizado');
+    fd.append('detalles', 'Tarea cerrada.');
+    fd.append('cerrar_tarea', '1');
+
+    fetch(`/tareas/${currentTaskId}/accion-ajax`, { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-flag-fill me-1"></i>Cerrar tarea'; }
+        formMsg.className = `alert alert-${data.ok ? 'success' : 'danger'} mt-2 py-2`;
+        formMsg.textContent = data.message || (data.ok ? 'Tarea cerrada correctamente.' : 'Error al cerrar.');
+        formMsg.classList.remove('d-none');
+        if (data.ok) {
+          setTimeout(() => { closeModal(); window.location.reload(); }, 1500);
+        }
+      })
+      .catch(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-flag-fill me-1"></i>Cerrar tarea'; }
+        formMsg.className = 'alert alert-danger mt-2 py-2';
+        formMsg.textContent = 'Error de red al cerrar tarea.';
+        formMsg.classList.remove('d-none');
+      });
+  });
+
   document.getElementById('tdDetClose')?.addEventListener('click', closeModal);
   backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
   document.addEventListener('keydown', e => {

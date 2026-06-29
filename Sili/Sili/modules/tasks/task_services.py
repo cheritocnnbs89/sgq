@@ -1048,6 +1048,12 @@ def svc_build_listar_tareas_context(user, request_args):
     if vista not in ("realizar", "mis"):
         vista = "realizar"
 
+    tab = (request_args.get("tab") or "activas").lower()
+    if tab not in ("activas", "terminadas"):
+        tab = "activas"
+
+    ESTADOS_CERRADOS = {"Terminado", "Cerrado por sistema"}
+
     tareas_filtradas = []
 
     for t in tareas_raw:
@@ -1083,6 +1089,16 @@ def svc_build_listar_tareas_context(user, request_args):
                 continue
 
         tareas_filtradas.append(t)
+
+    # Conteos por tab antes de filtrar
+    conteo_activas = sum(1 for t in tareas_filtradas if t.get("estado") not in ESTADOS_CERRADOS)
+    conteo_terminadas = sum(1 for t in tareas_filtradas if t.get("estado") in ESTADOS_CERRADOS)
+
+    # Filtrar según tab activo
+    if tab == "terminadas":
+        tareas_filtradas = [t for t in tareas_filtradas if t.get("estado") in ESTADOS_CERRADOS]
+    else:
+        tareas_filtradas = [t for t in tareas_filtradas if t.get("estado") not in ESTADOS_CERRADOS]
 
     try:
         edit_minutes_conf = float(get_config_value("edit_minutes", "5"))
@@ -1147,6 +1163,9 @@ def svc_build_listar_tareas_context(user, request_args):
         "active_page": "tareas",
         "edit_minutes": edit_minutes_conf,
         "vista": vista,
+        "tab": tab,
+        "conteo_activas": conteo_activas,
+        "conteo_terminadas": conteo_terminadas,
         "fecha_desde": fecha_desde_raw,
         "fecha_hasta": fecha_hasta_raw,
         "es_sistemas_qp": es_sistemas_qp,

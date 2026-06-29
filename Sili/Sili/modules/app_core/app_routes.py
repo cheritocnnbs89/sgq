@@ -274,6 +274,12 @@ def register_all_routes(app):
         except Exception as e:
             app.logger.exception("Fallo register_telegram_routes: %s", e)
 
+    try:
+        from modules.routes_admin_scheduler import register_scheduler_admin_routes
+        register_scheduler_admin_routes(app)
+    except Exception as e:
+        app.logger.exception("Fallo register_scheduler_admin_routes: %s", e)
+
     # ------------------------------------------------------
     # Ruta HOME de respaldo cuando no exista una explícita.
     # ------------------------------------------------------

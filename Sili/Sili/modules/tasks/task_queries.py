@@ -117,7 +117,8 @@ SQL_LISTAR_TAREAS_BASE = f"""
            t.notificado,
            t.porcentaje_avance,
 
-           e.razon_social AS empresa_nombre
+           e.razon_social AS empresa_nombre,
+           ei.id          AS inbox_id
 
     FROM {TABLA_TAREAS} t
     LEFT JOIN {TABLA_EMPRESAS} e ON t.empresa_id = e.id
@@ -127,6 +128,9 @@ SQL_LISTAR_TAREAS_BASE = f"""
     -- JOIN SOLICITANTE
     LEFT JOIN {TABLA_USUARIOS} usol ON usol.id = t.solicitante_id
     LEFT JOIN {TABLA_DEPARTAMENTOS} dsol ON dsol.id = usol.departamento_id
+
+    -- TICKET BANDEJA
+    LEFT JOIN email_tickets_inbox ei ON ei.tarea_id = t.id
 
     ORDER BY t.id DESC
 """

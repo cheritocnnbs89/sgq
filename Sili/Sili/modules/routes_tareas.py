@@ -120,6 +120,19 @@ def register_task_routes(app):
                 _conn.commit()
                 task_closed = True
                 resultado['message'] = 'Acción registrada. La tarea ha sido marcada como Terminada.'
+
+                # Enviar encuesta de satisfacción al solicitante
+                try:
+                    import logging as _logging
+                    _log_enc = _logging.getLogger(__name__)
+                    _log_enc.info('[encuesta] Iniciando envío encuesta para tarea %s', task_id)
+                    _ok_enc = svc_crear_y_enviar_encuesta(task_id)
+                    _log_enc.info('[encuesta] svc_crear_y_enviar_encuesta tarea %s -> ok=%s', task_id, _ok_enc)
+                except Exception as _enc_e:
+                    import logging as _logging
+                    _logging.getLogger(__name__).exception(
+                        'accion_tarea_ajax: encuesta no enviada para tarea %s', task_id
+                    )
             except Exception as _e:
                 import logging as _logging
                 _logging.getLogger(__name__).warning('accion_tarea_ajax: error al cerrar tarea %s: %s', task_id, _e)
@@ -129,6 +142,56 @@ def register_task_routes(app):
             'message': resultado.get('message', ''),
             'task_closed': task_closed,
         })
+
+    @app.route('/api/tareas/mejorar-comentario', methods=['POST'])
+    @require_login
+    def api_tareas_mejorar_comentario():
+        data  = request.get_json(silent=True) or {}
+        texto = (data.get('texto') or '').strip()
+
+        if not texto or len(texto) < 5:
+            return jsonify(ok=False, error='Escribe el detalle antes de mejorar.'), 400
+
+        try:
+            import os
+            from openai import OpenAI
+            client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+            prompt = f"""Eres un técnico de soporte TI profesional. Reescribe el siguiente comentario de avance de tarea como un técnico experto: claro, conciso, en tercera persona, sin jerga informal, sin errores ortográficos, enfocado en qué se hizo o qué se identificó.
+
+Comentario original:
+\"\"\"{texto}\"\"\"
+
+Reglas:
+- Máximo 3 oraciones
+- Usa lenguaje técnico y objetivo: "Se verificó...", "Se identificó...", "Se realizó..."
+- NO menciones nombres propios ni uses primera persona
+- Mantén los hechos concretos del texto original
+
+Responde SOLO con JSON: {{"texto_mejorado": "..."}}"""
+
+            resp = client.chat.completions.create(
+                model=os.getenv('OPENAI_MODEL', 'gpt-4o-mini'),
+                messages=[
+                    {'role': 'system', 'content': 'Responde únicamente con JSON válido.'},
+                    {'role': 'user',   'content': prompt},
+                ],
+                max_tokens=300,
+                temperature=0.3,
+            )
+            import json as _json
+            raw = resp.choices[0].message.content.strip()
+            if raw.startswith('```'):
+                raw = raw.split('```')[1]
+                if raw.startswith('json'):
+                    raw = raw[4:]
+            parsed = _json.loads(raw)
+            return jsonify(ok=True, texto_mejorado=parsed.get('texto_mejorado', ''))
+
+        except Exception as e:
+            import logging as _log
+            _log.getLogger(__name__).warning('mejorar_comentario error: %s', e)
+            return jsonify(ok=False, error='No se pudo mejorar el texto. Intenta de nuevo.'), 500
 
     @app.route('/tareas/reenviar-accion/<int:accion_id>', methods=['POST'])
     @require_login
