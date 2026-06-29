@@ -1080,6 +1080,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('tdDetBtnCerrar')?.addEventListener('click', () => {
     if (!currentTaskId) return;
+
+    const textoDetalle = document.getElementById('tdDetDetalles')?.value.trim() || '';
+    if (!textoDetalle) {
+      const msg = document.getElementById('tdDetFormMsg');
+      if (msg) {
+        msg.className = 'alert alert-warning mt-2 py-2';
+        msg.textContent = 'Escribe el detalle de la atención antes de cerrar la tarea.';
+        msg.classList.remove('d-none');
+      }
+      return;
+    }
+
     if (!confirm('¿Confirmas que deseas cerrar esta tarea? Esta acción actualizará el estado a Terminado.')) return;
 
     const btn = document.getElementById('tdDetBtnCerrar');
@@ -1089,8 +1101,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const fd = new FormData();
     fd.append('csrf_token', csrfToken);
     fd.append('estado_accion', 'Finalizado');
-    fd.append('detalles', 'Tarea cerrada.');
-    fd.append('observacion', 'Tarea cerrada.');
+    fd.append('detalles', textoDetalle);
+    fd.append('observacion', textoDetalle);
     fd.append('cerrar_tarea', '1');
 
     fetch(`/tareas/${currentTaskId}/accion-ajax`, { method: 'POST', body: fd })
