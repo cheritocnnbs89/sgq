@@ -959,6 +959,8 @@ document.addEventListener('DOMContentLoaded', () => {
       formMsg.classList.remove('d-none');
       return;
     }
+    const obsHidden = document.getElementById('tdDetObservacion');
+    if (obsHidden) obsHidden.value = detalles;
 
     const btn = document.getElementById('tdDetBtnGuardar');
     if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Guardando...'; }
@@ -1088,6 +1090,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fd.append('csrf_token', csrfToken);
     fd.append('estado_accion', 'Finalizado');
     fd.append('detalles', 'Tarea cerrada.');
+    fd.append('observacion', 'Tarea cerrada.');
     fd.append('cerrar_tarea', '1');
 
     fetch(`/tareas/${currentTaskId}/accion-ajax`, { method: 'POST', body: fd })

@@ -3,7 +3,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/tareas.css') }}">
-<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=16" defer></script>
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=17" defer></script>
 
 <div class="container tasks-page mt-3" data-vista="{{ vista }}">
   <div class="d-flex justify-content-between align-items-center mb-2">
@@ -570,6 +570,7 @@
           <div class="mb-2">
             <label class="td-edit-label">Detalle de Actividad <span class="text-danger">*</span></label>
             <textarea name="detalles" id="tdDetDetalles" class="form-control form-control-sm" rows="4" required></textarea>
+            <input type="hidden" name="observacion" id="tdDetObservacion">
           </div>
           <div id="tdDetIaMejoraPanel" class="d-none mb-2 p-2 border rounded bg-light td-fecha-val"></div>
           <div id="tdDetFormMsg" class="d-none mt-2 alert py-2 td-fecha-val"></div>
