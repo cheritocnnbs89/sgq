@@ -587,7 +587,8 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       ${t.descripcion ? `<div class="td-modal-desc mb-3">${esc(t.descripcion)}</div>` : ''}
       <div class="td-detalle-fechas">
-        ${[['Creación',t.fecha_creacion],['Inicio',t.fecha_inicio],['Compromiso',t.fecha_compromiso],['Fin Real',t.fecha_fin]]
+        ${[['Creación',t.fecha_creacion],['Inicio',t.fecha_inicio],['Compromiso',t.fecha_compromiso],['Fin Planif.',t.fecha_fin],
+           ...(t.fecha_cierre_real ? [['Cierre Real',t.fecha_cierre_real]] : [])]
           .map(([l,v])=>`<div><div class="td-modal-label">${l}</div><div class="td-modal-value td-fecha-val">${fmtDt(v)}</div></div>`).join('')}
       </div>`;
   }
@@ -1085,7 +1086,8 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       ${t.descripcion ? `<div class="td-modal-desc mb-3">${esc(t.descripcion)}</div>` : ''}
       <div class="td-detalle-fechas">
-        ${[['Creación',t.fecha_creacion],['Inicio',t.fecha_inicio],['Compromiso',t.fecha_compromiso],['Fin Real',t.fecha_fin]]
+        ${[['Creación',t.fecha_creacion],['Inicio',t.fecha_inicio],['Compromiso',t.fecha_compromiso],['Fin Planif.',t.fecha_fin],
+           ...(t.fecha_cierre_real ? [['Cierre Real',t.fecha_cierre_real]] : [])]
           .map(([l,v])=>`<div><div class="td-modal-label">${l}</div><div class="td-modal-value td-fecha-val">${fmtDt(v)}</div></div>`).join('')}
       </div>`;
   }
