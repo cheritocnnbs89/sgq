@@ -129,8 +129,12 @@ SQL_LISTAR_TAREAS_BASE = f"""
     LEFT JOIN {TABLA_USUARIOS} usol ON usol.id = t.solicitante_id
     LEFT JOIN {TABLA_DEPARTAMENTOS} dsol ON dsol.id = usol.departamento_id
 
-    -- TICKET BANDEJA
-    LEFT JOIN email_tickets_inbox ei ON ei.tarea_id = t.id
+    -- TICKET BANDEJA (el más reciente si hay varios)
+    LEFT JOIN email_tickets_inbox ei ON ei.id = (
+        SELECT TOP 1 id FROM email_tickets_inbox
+        WHERE tarea_id = t.id
+        ORDER BY id DESC
+    )
 
     ORDER BY t.id DESC
 """
