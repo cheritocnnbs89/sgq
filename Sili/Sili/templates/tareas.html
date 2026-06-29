@@ -182,9 +182,9 @@
               <!-- Estado -->
               <th>Estado</th>
 
+              {% if tab != 'terminadas' %}
               <th class="th-filter">
                 <span class="hdr">
-
                   <span class="label">Avance</span>
                   <span class="col-sort">
                     <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="avance"
@@ -194,6 +194,7 @@
                   </span>
                 </span>
               </th>
+              {% endif %}
 
 
               <!-- Inicio -->
@@ -341,6 +342,7 @@
 
 
 
+              {% if tab != 'terminadas' %}
               <td data-th="Avance">
                 <div class="d-flex flex-column avance-cell">
                   {% set avance = t['porcentaje_avance'] %}
@@ -365,7 +367,7 @@
                   {% endif %}
                 </div>
               </td>
-
+              {% endif %}
 
               <td data-th="Inicio">
                 {% set fi = t['fecha_inicio'] %}
@@ -454,7 +456,7 @@
                   <i class="bi bi-eye"></i>
                 </button>
 
-                {% if (permissions|default({})).get('tareas', {}).get('eliminar') %}
+                {% if (permissions|default({})).get('tareas', {}).get('eliminar') and tab != 'terminadas' %}
                 <form method="post" action="{{ url_for('eliminar_tarea', task_id=t['id']) }}"
                   class="form-inline-delete js-delete-tarea-form">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

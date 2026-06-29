@@ -1118,9 +1118,9 @@ def svc_build_listar_tareas_context(user, request_args):
 
         t["editable"] = editable
 
-        # Horas de atención = fecha_fin - fecha_inicio
-        _fi = parse_dt(str(t.get("fecha_inicio") or "").strip())
-        _ff = parse_dt(str(t.get("fecha_fin") or "").strip())
+        # Horas de atención = fecha_cierre_real - fecha_inicio_real (o fecha_inicio)
+        _fi = parse_dt(str(t.get("fecha_inicio_real") or t.get("fecha_inicio") or "").strip())
+        _ff = parse_dt(str(t.get("fecha_cierre_real") or "").strip())
         if _fi and _ff:
             _h = round((_ff - _fi).total_seconds() / 3600, 2)
             t["horas_atencion"] = _h if _h >= 0 else None
