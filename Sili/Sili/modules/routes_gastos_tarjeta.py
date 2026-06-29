@@ -2142,10 +2142,10 @@ def register_gastos_routes(app):
         filtros["hasta"] = hasta
 
         if desde:
-            where.append("date(g.fecha) >= date(?)")
+            where.append("CAST(g.fecha AS DATE) >= ?")
             args.append(desde)
         if hasta:
-            where.append("date(g.fecha) <= date(?)")
+            where.append("CAST(g.fecha AS DATE) <= ?")
             args.append(hasta)
 
         # ---- proveedor_id (hidden) ----
@@ -2260,15 +2260,15 @@ def register_gastos_routes(app):
             COALESCE(g.boletos_aereos,0) AS boletos_aereos,
 
             (
-                SELECT STRING_AGG(x, ', ')
+                SELECT STRING_AGG(m.x, ', ')
                 FROM (
-                    SELECT DISTINCT COALESCE(pv.nombre, CAST(d.motivo AS TEXT)) AS x
+                    SELECT DISTINCT COALESCE(pv.nombre, CAST(d.motivo AS NVARCHAR(MAX))) AS x
                     FROM gastos_tarjeta_detalle d
                     LEFT JOIN param_values pv
                     ON pv.group_id = 1
-                    AND CAST(pv.valor AS TEXT) = CAST(d.motivo AS TEXT)
+                    AND CAST(pv.valor AS NVARCHAR(MAX)) = CAST(d.motivo AS NVARCHAR(MAX))
                     WHERE d.gasto_id = g.id
-                )
+                ) AS m
             ) AS motivos_detalle,
 
             u.username AS usuario_username,
