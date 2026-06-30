@@ -4,6 +4,11 @@ import os
 def start_email_poller_if_enabled(app):
     """Inicia el hilo de lectura de correos soporteti@quimpac.com.ec (cada 2 min)."""
     try:
+        from modules.scheduler_jobs import SCHEDULER_JOBS_ENABLED
+        if not SCHEDULER_JOBS_ENABLED:
+            print(">>> EmailPoller no arranca: SCHEDULER_JOBS_ENABLED=False")
+            return
+
         # Solo arrancar en el proceso principal (no en el reloader de Flask)
         if app.debug and os.environ.get("WERKZEUG_RUN_MAIN") != "true":
             print(">>> EmailPoller no arranca: modo debug sin reloader principal")
