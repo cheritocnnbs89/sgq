@@ -4789,7 +4789,7 @@ def register_reclamos_routes(app):
         }
 
         def _build_where_filtros(alias_r: str = "r"):
-            w = ""
+            w = f" AND COALESCE({alias_r}.activo, 1) = 1"
             p = []
 
             if f_codigo:
@@ -6961,36 +6961,13 @@ def register_reclamos_routes(app):
             conn.close()
             return jsonify(ok=False, msg='No se puede eliminar una OM con estado global Cerrado'), 400
 
-        # Adjuntos físicos (si existen)
-        cur.execute("SELECT filename FROM reclamo_adjuntos WHERE reclamo_id = ?", (reclamo_id,))
-        files = [row["filename"] for row in cur.fetchall() if row and row["filename"]]
-
-        # Borrado en cascada (manual)
-        try:
-            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_DEL_73, (reclamo_id,))
-        except sqlite3.OperationalError:
-            pass
-
-        cur.execute("DELETE FROM reclamo_respuestas_equipo WHERE reclamo_id = ?", (reclamo_id,))
-        cur.execute("DELETE FROM reclamo_equipo_respuestas WHERE reclamo_id = ?", (reclamo_id,))
-        cur.execute("DELETE FROM reclamo_imputados WHERE reclamo_id = ?", (reclamo_id,))
-        cur.execute("DELETE FROM reclamo_adjuntos WHERE reclamo_id = ?", (reclamo_id,))
-        cur.execute("DELETE FROM reclamos WHERE id = ?", (reclamo_id,))
+        # Inactivar la OM (soft delete)
+        cur.execute("UPDATE reclamos SET activo = 0 WHERE id = ?", (reclamo_id,))
 
         conn.commit()
         conn.close()
 
-        # Borrar archivos físicos
-        upload_folder = _get_reclamos_upload_folder()
-        for fn in files:
-            try:
-                path = os.path.join(upload_folder, fn)
-                if os.path.exists(path):
-                    os.remove(path)
-            except Exception:
-                current_app.logger.exception("No se pudo eliminar adjunto físico: %s", fn)
-
-        return jsonify(ok=True, msg=f"OM {r['codigo']} eliminada correctamente.")
+        return jsonify(ok=True, msg=f"OM {r['codigo']} inactivada correctamente.")
         
         
     # ----------------------------------------------
