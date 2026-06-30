@@ -1,16 +1,16 @@
 # modules/email_to_task/graph_fetcher.py
 # -*- coding: utf-8 -*-
 """
-Lee correos no procesados del buzón jchavez@quimpac.com.ec
-filtrando los dirigidos a soporteti@quimpac.com.ec,
+Lee correos del buzón configurado en bo.configuracion (graph_mailbox)
+filtrando los dirigidos a graph_soporte_addr,
 usando Microsoft Graph API con client_credentials (app-only).
 
-Variables de entorno requeridas (en .env):
-    GRAPH_TENANT_ID      = ccb2af09-03ab-488a-8e9c-51e7c133dfe5
-    GRAPH_CLIENT_ID      = 13185b2c-7164-4f81-a98b-d4f5f729034d
-    GRAPH_CLIENT_SECRET  = WG8Q~4J7NxQs-ZTO5kLh_D6ztcaM_In_vjKVdiC
-    GRAPH_MAILBOX        = jchavez@quimpac.com.ec
-    GRAPH_SOPORTE_ADDR   = soporteti@quimpac.com.ec
+Claves en bo.configuracion:
+    graph_tenant_id      — ID de tenant Azure
+    graph_client_id      — ID de aplicación registrada en Azure
+    graph_client_secret  — Clave de aplicación (app password)
+    graph_mailbox        — Buzón a leer
+    graph_soporte_addr   — Dirección de soporte a filtrar
 """
 
 from __future__ import annotations
@@ -23,6 +23,17 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import requests
+
+def _cfg(clave: str, default: str = "") -> str:
+    """Lee un valor de bo.configuracion; fallback a variable de entorno."""
+    try:
+        from modules.db import get_config_value
+        val = get_config_value(clave)
+        if val:
+            return str(val).strip()
+    except Exception:
+        pass
+    return os.getenv(clave.upper(), default).strip()
 
 log = logging.getLogger(__name__)
 
@@ -38,12 +49,12 @@ def _get_access_token() -> Optional[str]:
     if _token_cache["access_token"] and now < _token_cache["expires_at"] - 60:
         return _token_cache["access_token"]
 
-    tenant_id     = os.getenv("GRAPH_TENANT_ID", "").strip()
-    client_id     = os.getenv("GRAPH_CLIENT_ID", "").strip()
-    client_secret = os.getenv("GRAPH_CLIENT_SECRET", "").strip()
+    tenant_id     = _cfg("graph_tenant_id")
+    client_id     = _cfg("graph_client_id")
+    client_secret = _cfg("graph_client_secret")
 
     if not all([tenant_id, client_id, client_secret]):
-        log.warning("[graph_fetcher] Variables GRAPH_TENANT_ID / GRAPH_CLIENT_ID / GRAPH_CLIENT_SECRET no configuradas")
+        log.warning("[graph_fetcher] Claves graph_tenant_id / graph_client_id / graph_client_secret no configuradas en bo.configuracion")
         return None
 
     # Diagnóstico (muestra primeros 4 chars del secreto para verificar que cargó bien)
@@ -147,7 +158,7 @@ def fetch_attachment_content(message_id: str, attachment_id: str) -> Optional[di
     token = _get_access_token()
     if not token:
         return None
-    mailbox = os.getenv("GRAPH_MAILBOX", "jchavez@quimpac.com.ec").strip()
+    mailbox = _cfg("graph_mailbox", "notificacionesssg@quimpac.com.ec")
     url = (
         f"https://graph.microsoft.com/v1.0/users/{mailbox}"
         f"/messages/{message_id}/attachments/{attachment_id}"
@@ -175,7 +186,7 @@ def fetch_attachments_list(message_id: str) -> list[dict]:
     token = _get_access_token()
     if not token:
         return []
-    mailbox = os.getenv("GRAPH_MAILBOX", "jchavez@quimpac.com.ec").strip()
+    mailbox = _cfg("graph_mailbox", "notificacionesssg@quimpac.com.ec")
     url = (
         f"https://graph.microsoft.com/v1.0/users/{mailbox}"
         f"/messages/{message_id}/attachments"
@@ -237,8 +248,8 @@ def fetch_soporte_emails() -> list[dict]:
     if not token:
         return []
 
-    mailbox     = os.getenv("GRAPH_MAILBOX",      "jchavez@quimpac.com.ec").strip()
-    soporte_addr = os.getenv("GRAPH_SOPORTE_ADDR", "soporteti@quimpac.com.ec").strip().lower()
+    mailbox      = _cfg("graph_mailbox",      "notificacionesssg@quimpac.com.ec")
+    soporte_addr = _cfg("graph_soporte_addr", "soporteti@quimpac.com.ec").lower()
 
     headers = {
         "Authorization": f"Bearer {token}",
@@ -344,7 +355,7 @@ def mark_as_read(message_id: str) -> bool:
     if not token:
         return False
 
-    mailbox = os.getenv("GRAPH_MAILBOX", "jchavez@quimpac.com.ec").strip()
+    mailbox = _cfg("graph_mailbox", "notificacionesssg@quimpac.com.ec")
     url = f"https://graph.microsoft.com/v1.0/users/{mailbox}/messages/{message_id}"
     headers = {
         "Authorization": f"Bearer {token}",
