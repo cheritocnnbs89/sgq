@@ -596,7 +596,7 @@ def _build_resultado_encuesta_email(row):
               </div>
 
               <p style="margin:18px 0 0;font-size:12px;color:#6b7280;">
-                Este correo fue generado automáticamente por el sistema de Sili.
+                Este correo fue generado automáticamente por el sistema de SGQ.
               </p>
             </td>
           </tr>
@@ -626,7 +626,7 @@ Puntuaciones: P1={p1}, P2={p2}, P3={p3}, P4={p4}, P5={p5}
 Comentario: {row.get("comentario") or "Sin comentario adicional."}
 Fecha respuesta: {_fmt_fecha_correo(row.get("fecha_respuesta"))}
 
-Este correo fue generado automáticamente por el sistema de Sili.
+Este correo fue generado automáticamente por el sistema de SGQ.
 """
 
     return subject, text, html

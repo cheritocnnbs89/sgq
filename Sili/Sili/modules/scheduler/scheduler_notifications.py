@@ -422,7 +422,7 @@ def ensure_gasto_templates(conn):
                 </div>
 
                 <div style="font-size:12px;color:#6b7280;margin-top:12px;">
-                  Este correo fue generado automáticamente por el sistema de Sili.
+                  Este correo fue generado automáticamente por el sistema de SGQ.
                 </div>
               </td>
             </tr>
@@ -517,7 +517,7 @@ def ensure_gasto_templates(conn):
                 </div>
 
                 <div style="font-size:12px;color:#6b7280;margin-top:12px;">
-                  Este correo fue generado automáticamente por el sistema de Sili.
+                  Este correo fue generado automáticamente por el sistema de SGQ.
                 </div>
               </td>
             </tr>
@@ -619,7 +619,7 @@ def ensure_gasto_templates(conn):
                 </div>
 
                 <div style="font-size:12px;color:#6b7280;margin-top:12px;">
-                  Este correo fue generado automáticamente por el sistema de Sili.
+                  Este correo fue generado automáticamente por el sistema de SGQ.
                 </div>
               </td>
             </tr>
@@ -762,7 +762,7 @@ def ensure_om_templates(conn):
                 </div>
 
                 <div style="font-size:12px;color:#6b7280;margin-top:12px;">
-                  Este correo fue generado automáticamente por el sistema de Sili.
+                  Este correo fue generado automáticamente por el sistema de SGQ.
                 </div>
               </td>
             </tr>
