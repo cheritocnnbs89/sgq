@@ -218,6 +218,7 @@ def save_menu_item(conn, form_payload, item_id=None):
             data["is_collaps"],
         )
         flash_option_updated()
+        sync_permissions_from_menu(conn)
         return {"mode": "edit", "item_id": item_id, "slug": None, "table": None}
 
     new_id = insert_menu_item(
@@ -234,6 +235,7 @@ def save_menu_item(conn, form_payload, item_id=None):
         data["is_collaps"],
     )
     flash_option_created()
+    sync_permissions_from_menu(conn)
 
     created_slug = None
     created_table = None

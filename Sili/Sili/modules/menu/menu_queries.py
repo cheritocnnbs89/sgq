@@ -151,6 +151,7 @@ def q_menu_distinct_permissions():
     SELECT DISTINCT LTRIM(RTRIM(permission)) AS k
     FROM {SCHEMA_NAME}.{MENU_TABLE}
     WHERE LTRIM(RTRIM(ISNULL(permission, ''))) <> ''
+      AND LOWER(LTRIM(RTRIM(permission))) <> 'none'
     """
 
 
