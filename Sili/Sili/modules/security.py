@@ -166,7 +166,14 @@ def require_admin(func):
 
 
 
+# Set global que se llena automáticamente al importar cada módulo de rutas.
+# Cada @require_permission registra aquí su opcion — sin listas manuales.
+_OPCIONES_REGISTRY: set = set()
+
+
 def require_permission(opcion, accion):
+    _OPCIONES_REGISTRY.add(opcion)   # registro automático en import time
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):

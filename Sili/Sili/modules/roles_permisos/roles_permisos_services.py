@@ -12,8 +12,14 @@ def seed_default_roles(conn):
 
 
 def seed_default_opciones(conn):
+    from modules.security import _OPCIONES_REGISTRY
+
+    # Auto-descubierto de todos los @require_permission del sistema
+    # + DEFAULT_OPCIONES como fallback para primer despliegue
+    todas = _OPCIONES_REGISTRY | set(DEFAULT_OPCIONES)
+
     existing_opciones = {row["nombre"] for row in repo.get_opciones_nombre(conn)}
-    for opcion_name in DEFAULT_OPCIONES:
+    for opcion_name in sorted(todas):
         if opcion_name not in existing_opciones:
             repo.get_or_create_opcion(conn, opcion_name)
 
