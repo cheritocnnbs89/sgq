@@ -988,26 +988,28 @@ def presupuesto():
     cur.execute("SELECT id, razon_social FROM empresas WHERE activo=1 ORDER BY razon_social")
     empresas = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
 
-    # Centros de costo: param_group "Centro de Costo" (id=7 en producción)
+    # Centros de costo: param_group "Centro de Costo"
     # No se filtra por activo porque la mayoría están marcados como inactivos en param_values
     cur.execute("""
-        SELECT pv.id, pv.nombre
+        SELECT pv.id, pv.nombre, COALESCE(pv.valor, '') AS codigo
         FROM param_values pv
         JOIN param_groups pg ON pg.id = pv.group_id
         WHERE pg.nombre = 'Centro de Costo'
-        ORDER BY pv.nombre
+        ORDER BY pv.valor, pv.nombre
     """)
-    centros_disponibles = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
+    centros_disponibles = [{"id": r[0], "nombre": r[1], "codigo": r[2]}
+                           for r in cur.fetchall()]
 
     def _build_cc_rows(empresa_id, tipo, anio, cur):
         cur.execute("""
-            SELECT DISTINCT p.centro_costo_id, pv.nombre AS cc_nombre
+            SELECT DISTINCT p.centro_costo_id, pv.nombre AS cc_nombre,
+                   COALESCE(pv.valor, '') AS cc_codigo
             FROM planificador_presupuesto p
             JOIN param_values pv ON pv.id = p.centro_costo_id
             WHERE p.empresa_id = ? AND p.anio = ? AND p.tipo_gasto = ?
-            ORDER BY cc_nombre
+            ORDER BY cc_codigo, cc_nombre
         """, (empresa_id, anio, tipo))
-        centros = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
+        centros = [{"id": r[0], "nombre": r[1], "codigo": r[2]} for r in cur.fetchall()]
         rows = []
         for cc in centros:
             cur.execute("""
@@ -1026,7 +1028,7 @@ def presupuesto():
             pct = round(total_ejec / total_presup * 100, 1) if total_presup > 0 else 0
             semaforo = "rojo" if pct >= 100 else ("amarillo" if pct >= 50 else "verde")
             rows.append({
-                "cc_id": cc["id"], "cc_nombre": cc["nombre"],
+                "cc_id": cc["id"], "cc_nombre": cc["nombre"], "cc_codigo": cc["codigo"],
                 "meses": meses_data, "total_presup": total_presup,
                 "total_ejec": total_ejec, "pct": pct, "semaforo": semaforo,
             })

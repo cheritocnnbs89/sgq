@@ -84,7 +84,7 @@
         <select class="form-select form-select-sm sel-cc-width" id="sel-nuevo-cc">
           <option value="">+ Seleccione CC para agregar...</option>
           {% for cc in centros_disponibles %}
-          <option value="{{ cc.id }}">{{ cc.nombre }}</option>
+          <option value="{{ cc.id }}">{% if cc.codigo %}{{ cc.codigo }} — {% endif %}{{ cc.nombre }}</option>
           {% endfor %}
         </select>
         <button type="button" class="btn btn-success btn-sm" id="btn-agregar-cc">
@@ -116,7 +116,7 @@
             <table class="table table-sm table-hover mb-0 align-middle presup-summary-table">
               <thead class="table-light">
                 <tr>
-                  <th style="width:28px"></th>
+                  <th class="col-semaforo"></th>
                   <th>Centro de Costo</th>
                   {% for mn in meses_nombres %}
                   <th class="text-end">{{ mn }}</th>
@@ -137,7 +137,10 @@
                     {% elif row.semaforo == 'amarillo' %}🟡
                     {% else %}🟢{% endif %}
                   </td>
-                  <td class="fw-semibold small">{{ row.cc_nombre }}</td>
+                  <td class="small">
+                    {% if row.cc_codigo %}<span class="text-muted me-1">{{ row.cc_codigo }}</span>{% endif %}
+                    <span class="fw-semibold">{{ row.cc_nombre }}</span>
+                  </td>
                   {% for m in row.meses %}
                   <td class="text-end small">${{ "%.0f"|format(m.monto_presupuestado) }}</td>
                   {% endfor %}
