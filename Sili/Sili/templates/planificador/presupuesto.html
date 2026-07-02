@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Planificador – Presupuesto{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador_presupuesto.css') }}?v=1">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <div>
+      <h4 class="mb-0"><i class="bi bi-wallet2 me-1"></i>Presupuesto por Centro de Costo</h4>
+      <p class="text-muted mb-0 small">
+        Distribución mensual por empresa, centro de costo y tipo de gasto.
+      </p>
+    </div>
+    <a href="{{ url_for('planificador.planificador_solicitudes') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Volver a Solicitudes
+    </a>
+  </div>
+
+  {# ── Filtros ── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <form method="get" action="{{ url_for('planificador.planificador_presupuesto') }}" class="row g-2 align-items-end">
+        <div class="col-sm-3">
+          <label class="form-label form-label-sm fw-semibold">Empresa</label>
+          <select class="form-select form-select-sm" name="empresa_id">
+            <option value="">Seleccione...</option>
+            {% for e in empresas %}
+            <option value="{{ e.id }}" {% if empresa_id == e.id %}selected{% endif %}>{{ e.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <label class="form-label form-label-sm fw-semibold">Tipo de gasto</label>
+          <select class="form-select form-select-sm" name="tipo_gasto">
+            <option value="">Seleccione...</option>
+            {% for t in tipos_gasto %}
+            <option value="{{ t }}" {% if tipo_gasto == t %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <label class="form-label form-label-sm fw-semibold">Año</label>
+          <select class="form-select form-select-sm" name="anio">
+            {% for y in range(anio_actual - 1, anio_actual + 3) %}
+            <option value="{{ y }}" {% if anio == y %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <button type="submit" class="btn btn-primary btn-sm w-100">
+            <i class="bi bi-search me-1"></i>Consultar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {# ── Leyenda semáforo ── #}
+  <div class="d-flex gap-3 mb-3 small">
+    <span class="badge-semaforo verde">🟢 &lt; 50% usado</span>
+    <span class="badge-semaforo amarillo">🟡 50–99% usado</span>
+    <span class="badge-semaforo rojo">🔴 ≥ 100% — requiere aprobación GG</span>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="alert alert-{{ cat }} alert-dismissible fade show" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+
+  {# ── Grilla de presupuesto ── #}
+  {% if empresa_id and tipo_gasto %}
+    {% if presupuesto_grid %}
+      {% for row in presupuesto_grid %}
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <span class="fw-bold">
+            {% if row.semaforo == 'rojo' %}🔴
+            {% elif row.semaforo == 'amarillo' %}🟡
+            {% else %}🟢{% endif %}
+            {{ row.cc_nombre }}
+          </span>
+          <span class="small text-muted">
+            Presupuestado: <strong>${{ "%.2f"|format(row.total_presup) }}</strong> &nbsp;|&nbsp;
+            Ejecutado: <strong>${{ "%.2f"|format(row.total_ejec) }}</strong> &nbsp;|&nbsp;
+            <span class="text-{{ 'danger' if row.semaforo == 'rojo' else ('warning' if row.semaforo == 'amarillo' else 'success') }}">
+              {{ row.pct }}%
+            </span>
+          </span>
+        </div>
+        <div class="card-body p-0">
+          {% if has_permission('planificador.presupuesto', 'editar') %}
+          <form method="post" action="{{ url_for('planificador.planificador_presupuesto_guardar') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="empresa_id" value="{{ empresa_id }}">
+            <input type="hidden" name="cc_id" value="{{ row.cc_id }}">
+            <input type="hidden" name="tipo_gasto" value="{{ tipo_gasto }}">
+            <input type="hidden" name="anio" value="{{ anio }}">
+          {% endif %}
+
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered mb-0 presupuesto-table">
+              <thead class="table-light">
+                <tr>
+                  {% for mn in meses_nombres %}
+                  <th class="text-center">{{ mn }}</th>
+                  {% endfor %}
+                  <th class="text-center">Total</th>
+                  {% if has_permission('planificador.presupuesto', 'editar') %}
+                  <th></th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-presupuestado">
+                  {% for m in row.meses %}
+                  <td class="text-end">
+                    {% if has_permission('planificador.presupuesto', 'editar') %}
+                    <input type="number" class="form-control form-control-sm text-end presup-input"
+                           name="mes_{{ loop.index }}"
+                           value="{{ "%.2f"|format(m.monto_presupuestado) }}"
+                           min="0" step="0.01">
+                    {% else %}
+                    ${{ "%.2f"|format(m.monto_presupuestado) }}
+                    {% endif %}
+                  </td>
+                  {% endfor %}
+                  <td class="text-end fw-bold presup-total">${{ "%.2f"|format(row.total_presup) }}</td>
+                  {% if has_permission('planificador.presupuesto', 'editar') %}
+                  <td class="text-center" rowspan="2">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                      <i class="bi bi-save"></i>
+                    </button>
+                  </td>
+                  {% endif %}
+                </tr>
+                <tr class="row-ejecutado table-secondary small">
+                  {% for m in row.meses %}
+                  <td class="text-end text-muted">${{ "%.2f"|format(m.monto_ejecutado) }}</td>
+                  {% endfor %}
+                  <td class="text-end fw-bold text-muted">${{ "%.2f"|format(row.total_ejec) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {% if has_permission('planificador.presupuesto', 'editar') %}
+          </form>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-info">
+        No hay centros de costo asociados a esta empresa.
+        Los CCs se toman de los usuarios activos de la empresa seleccionada.
+      </div>
+    {% endif %}
+  {% elif empresa_id or tipo_gasto %}
+    <div class="alert alert-warning">Seleccione empresa y tipo de gasto para ver el presupuesto.</div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/planificador/presupuesto.js') }}?v=1"></script>
+{% endblock %}

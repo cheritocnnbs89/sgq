@@ -10,6 +10,7 @@ from modules.db import get_db
 from .planificador_constants import (
     PARAM_GROUP_TIPOS, TIPOS_SOLICITUD_DEFAULT,
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROLES_GERENTE,
+    PARAM_GROUP_TIPOS_GASTO, TIPOS_GASTO_DEFAULT, SEMAFORO_AMARILLO_PCT,
 )
 from .planificador_querys import (
     SQL_GET_ALL_SOLICITUDES,
@@ -59,6 +60,12 @@ from .planificador_querys import (
     SQL_INSERT_SOLICITUD_LOG,
     SQL_GET_SOLICITUD_LOGS,
     SQL_INSERT_NOTIFY_INAPP,
+    SQL_CREATE_PRESUPUESTO_TABLE,
+    SQL_GET_TIPOS_GASTO,
+    SQL_GET_PRESUPUESTO_CC,
+    SQL_UPSERT_PRESUPUESTO,
+    SQL_GET_SALDO_PRESUPUESTO,
+    SQL_ADD_EJECUTADO,
 )
 
 
@@ -739,3 +746,100 @@ def insert_notify_inapp(user_id: int, title: str, body: str) -> None:
                  datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")))
     conn.commit()
     conn.close()
+
+
+# ──────────────────────────────────────────────
+# Presupuesto
+# ──────────────────────────────────────────────
+
+def ensure_presupuesto_schema():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_CREATE_PRESUPUESTO_TABLE)
+    conn.commit()
+    conn.close()
+
+
+def get_tipos_gasto() -> list[str]:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_TIPOS_GASTO, (PARAM_GROUP_TIPOS_GASTO,))
+    rows = [r[0] for r in cur.fetchall()]
+    conn.close()
+    return rows if rows else TIPOS_GASTO_DEFAULT
+
+
+def get_presupuesto_cc(empresa_id: int, cc_id: int, tipo_gasto: str, anio: int) -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_PRESUPUESTO_CC, (empresa_id, cc_id, tipo_gasto, anio))
+    cols = [c[0] for c in cur.description]
+    rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+    conn.close()
+    by_mes = {r["mes"]: r for r in rows}
+    return [
+        by_mes.get(m, {"mes": m, "monto_presupuestado": 0, "monto_ejecutado": 0})
+        for m in range(1, 13)
+    ]
+
+
+def upsert_presupuesto(empresa_id: int, cc_id: int, tipo_gasto: str,
+                       anio: int, mes: int, monto: float) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_UPSERT_PRESUPUESTO, (
+        empresa_id, cc_id, tipo_gasto, anio, mes,
+        monto,
+        empresa_id, cc_id, tipo_gasto, anio, mes,
+        empresa_id, cc_id, tipo_gasto, anio, mes, monto,
+    ))
+    conn.commit()
+    conn.close()
+
+
+def get_saldo_presupuesto(empresa_id: int, cc_id: int, tipo_gasto: str,
+                          anio: int, mes: int) -> dict:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_SALDO_PRESUPUESTO, (empresa_id, cc_id, tipo_gasto, anio, mes))
+    row = cur.fetchone()
+    conn.close()
+    if not row:
+        return {"presupuestado": 0, "ejecutado": 0, "pct": 0, "semaforo": "verde"}
+    presupuestado = float(row[0])
+    ejecutado = float(row[1])
+    pct = (ejecutado / presupuestado * 100) if presupuestado > 0 else 0
+    if pct >= 100:
+        semaforo = "rojo"
+    elif pct >= SEMAFORO_AMARILLO_PCT:
+        semaforo = "amarillo"
+    else:
+        semaforo = "verde"
+    return {"presupuestado": presupuestado, "ejecutado": ejecutado,
+            "pct": round(pct, 1), "semaforo": semaforo}
+
+
+def add_ejecutado(empresa_id: int, cc_id: int, tipo_gasto: str,
+                  anio: int, mes: int, monto: float) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_ADD_EJECUTADO, (monto, empresa_id, cc_id, tipo_gasto, anio, mes))
+    conn.commit()
+    conn.close()
+
+
+def get_centros_costo_con_presupuesto(empresa_id: int, anio: int) -> list[dict]:
+    """Retorna CCs distintos que tienen presupuesto registrado para la empresa+año."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(f"""
+        SELECT DISTINCT p.centro_costo_id, pv.nombre AS centro_costo_nombre
+        FROM planificador_presupuesto p
+        JOIN param_values pv ON pv.id = p.centro_costo_id
+        WHERE p.empresa_id = ? AND p.anio = ?
+        ORDER BY pv.nombre
+    """, (empresa_id, anio))
+    cols = [c[0] for c in cur.description]
+    rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+    conn.close()
+    return rows

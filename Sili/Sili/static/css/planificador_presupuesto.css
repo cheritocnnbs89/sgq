@@ -1,0 +1,29 @@
+.presupuesto-table th,
+.presupuesto-table td {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.presupuesto-table .presup-input {
+    min-width: 80px;
+    max-width: 110px;
+    padding: 2px 4px;
+    font-size: 0.82rem;
+}
+
+.row-ejecutado td {
+    font-size: 0.8rem;
+}
+
+.badge-semaforo {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+}
+
+.badge-semaforo.verde   { background: #d1e7dd; color: #0a3622; }
+.badge-semaforo.amarillo { background: #fff3cd; color: #664d03; }
+.badge-semaforo.rojo    { background: #f8d7da; color: #58151c; }

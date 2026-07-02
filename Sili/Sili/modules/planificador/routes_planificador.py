@@ -18,7 +18,7 @@ from . import planificador_repository as repo
 from . import planificador_services as svc
 from . import planificador_notifications as notif
 from .planificador_constants import (
-    ACTIVE_KEY, PERM_SOLICITUDES, PERM_CONFIG,
+    ACTIVE_KEY, PERM_SOLICITUDES, PERM_CONFIG, PERM_PRESUPUESTO,
     ESTADOS, PRIORIDADES,
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO,
     ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_ATENDIDAS,
@@ -964,6 +964,110 @@ def _build_planificador_excel(filters: dict) -> BytesIO:
 def _check_perm(rol, opcion, accion):
     from modules.security import has_permission
     return has_permission(rol, opcion, accion)
+
+
+# ─────────────────────────────────────────────────────────────
+# Presupuesto
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/presupuesto", methods=["GET"], endpoint="planificador_presupuesto")
+@require_login
+@require_permission(PERM_PRESUPUESTO, "ver")
+def presupuesto():
+    repo.ensure_presupuesto_schema()
+    from datetime import date as _date
+    anio_actual = _date.today().year
+    anio = int(request.args.get("anio", anio_actual))
+    empresa_id = request.args.get("empresa_id", type=int)
+    tipo_gasto = request.args.get("tipo_gasto", "")
+
+    tipos_gasto = repo.get_tipos_gasto()
+
+    from modules.db import get_db
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT id, razon_social FROM empresas WHERE activo=1 ORDER BY razon_social")
+    empresas = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
+
+    presupuesto_grid = []
+    if empresa_id and tipo_gasto:
+        cur.execute("""
+            SELECT DISTINCT p.centro_costo_id, pv.nombre AS cc_nombre
+            FROM planificador_presupuesto p
+            JOIN param_values pv ON pv.id = p.centro_costo_id
+            WHERE p.empresa_id = ? AND p.anio = ? AND p.tipo_gasto = ?
+            UNION
+            SELECT DISTINCT u.cuenta_contable_id, pv.nombre
+            FROM usuarios u
+            JOIN param_values pv ON pv.id = u.cuenta_contable_id
+            WHERE u.empresa_id = ? AND u.disabled = 0 AND u.cuenta_contable_id IS NOT NULL
+            ORDER BY cc_nombre
+        """, (empresa_id, anio, tipo_gasto, empresa_id))
+        centros = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
+
+        for cc in centros:
+            meses_data = repo.get_presupuesto_cc(empresa_id, cc["id"], tipo_gasto, anio)
+            total_presup = sum(m["monto_presupuestado"] for m in meses_data)
+            total_ejec = sum(m["monto_ejecutado"] for m in meses_data)
+            pct = round(total_ejec / total_presup * 100, 1) if total_presup > 0 else 0
+            if pct >= 100:
+                semaforo = "rojo"
+            elif pct >= 50:
+                semaforo = "amarillo"
+            else:
+                semaforo = "verde"
+            presupuesto_grid.append({
+                "cc_id": cc["id"],
+                "cc_nombre": cc["nombre"],
+                "meses": meses_data,
+                "total_presup": total_presup,
+                "total_ejec": total_ejec,
+                "pct": pct,
+                "semaforo": semaforo,
+            })
+    conn.close()
+
+    return render_template(
+        "planificador/presupuesto.html",
+        anio=anio,
+        anio_actual=anio_actual,
+        empresas=empresas,
+        empresa_id=empresa_id,
+        tipos_gasto=tipos_gasto,
+        tipo_gasto=tipo_gasto,
+        presupuesto_grid=presupuesto_grid,
+        meses_nombres=["Ene","Feb","Mar","Abr","May","Jun",
+                        "Jul","Ago","Sep","Oct","Nov","Dic"],
+    )
+
+
+@planificador_bp.route("/presupuesto/guardar", methods=["POST"],
+                       endpoint="planificador_presupuesto_guardar")
+@require_login
+@require_permission(PERM_PRESUPUESTO, "editar")
+def presupuesto_guardar():
+    empresa_id = request.form.get("empresa_id", type=int)
+    cc_id = request.form.get("cc_id", type=int)
+    tipo_gasto = request.form.get("tipo_gasto", "")
+    anio = request.form.get("anio", type=int)
+
+    if not (empresa_id and cc_id and tipo_gasto and anio):
+        flash("Datos incompletos.", "danger")
+        return redirect(url_for("planificador.planificador_presupuesto"))
+
+    for mes in range(1, 13):
+        raw = request.form.get(f"mes_{mes}", "0").replace(",", ".")
+        try:
+            monto = float(raw)
+        except ValueError:
+            monto = 0.0
+        repo.upsert_presupuesto(empresa_id, cc_id, tipo_gasto, anio, mes, monto)
+
+    flash("Presupuesto guardado correctamente.", "success")
+    return redirect(url_for(
+        "planificador.planificador_presupuesto",
+        anio=anio, empresa_id=empresa_id, tipo_gasto=tipo_gasto,
+    ))
 
 
 # ─────────────────────────────────────────────────────────────
