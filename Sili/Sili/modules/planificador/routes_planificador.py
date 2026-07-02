@@ -1012,7 +1012,17 @@ def presupuesto():
         centros = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
 
         for cc in centros:
-            meses_data = repo.get_presupuesto_cc(empresa_id, cc["id"], tipo_gasto, anio)
+            cur.execute("""
+                SELECT mes, monto_presupuestado, monto_ejecutado
+                FROM planificador_presupuesto
+                WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=?
+            """, (empresa_id, cc["id"], tipo_gasto, anio))
+            by_mes = {r[0]: {"mes": r[0], "monto_presupuestado": float(r[1]),
+                              "monto_ejecutado": float(r[2])}
+                      for r in cur.fetchall()}
+            meses_data = [by_mes.get(m, {"mes": m, "monto_presupuestado": 0.0,
+                                          "monto_ejecutado": 0.0})
+                          for m in range(1, 13)]
             total_presup = sum(m["monto_presupuestado"] for m in meses_data)
             total_ejec = sum(m["monto_ejecutado"] for m in meses_data)
             pct = round(total_ejec / total_presup * 100, 1) if total_presup > 0 else 0
@@ -1031,7 +1041,6 @@ def presupuesto():
                 "pct": pct,
                 "semaforo": semaforo,
             })
-    conn.close()
 
     return render_template(
         "planificador/presupuesto.html",
