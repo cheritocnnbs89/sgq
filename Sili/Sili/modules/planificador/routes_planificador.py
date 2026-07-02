@@ -988,14 +988,12 @@ def presupuesto():
     cur.execute("SELECT id, razon_social FROM empresas WHERE activo=1 ORDER BY razon_social")
     empresas = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
 
-    # Centros de costo disponibles para el selector "Agregar CC"
-    # Se toma el param_group cuyo nombre contenga 'costo' (case-insensitive).
-    # Si no existe ese grupo, se listan todos los param_values activos como fallback.
+    # Centros de costo: param_group "Centro de Costo" (id=7 en producción)
     cur.execute("""
         SELECT pv.id, pv.nombre
         FROM param_values pv
         JOIN param_groups pg ON pg.id = pv.group_id
-        WHERE LOWER(pg.nombre) LIKE '%costo%'
+        WHERE pg.nombre = 'Centro de Costo'
           AND COALESCE(pv.activo, 1) = 1
         ORDER BY pv.nombre
     """)
