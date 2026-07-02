@@ -9,10 +9,4 @@ def run_startup_tasks(app):
         conn.execute("SELECT 1")
         conn.commit()
 
-        try:
-            from modules.planificador.planificador_repository import ensure_presupuesto_schema
-            ensure_presupuesto_schema()
-        except Exception:
-            pass
-
         g.pop("db", None)
