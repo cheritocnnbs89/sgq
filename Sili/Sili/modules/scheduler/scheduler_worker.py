@@ -71,8 +71,10 @@ _worker_started = False
 
 
 def _is_horario_laboral(dt: datetime) -> bool:
-    """Lunes-viernes, 08:00–18:00."""
-    return dt.weekday() < 5 and 8 <= dt.hour < 18
+    """Retorna True si la fecha/hora está dentro del horario laboral."""
+    es_dia_habil = dt.weekday() < 5   # weekday(): 0=lunes … 4=viernes, 5=sábado, 6=domingo
+    es_hora_habil = 8 <= dt.hour < 18  # franja horaria: 08:00 (inclusive) hasta 18:00 (exclusive)
+    return es_dia_habil and es_hora_habil
 
 
 def start_scheduler(app=None):
