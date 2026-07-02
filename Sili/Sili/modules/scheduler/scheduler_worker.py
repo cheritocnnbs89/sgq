@@ -70,6 +70,11 @@ except Exception as _e2t_err:
 _worker_started = False
 
 
+def _is_horario_laboral(dt: datetime) -> bool:
+    """Lunes-viernes, 08:00–18:00."""
+    return dt.weekday() < 5 and 8 <= dt.hour < 18
+
+
 def start_scheduler(app=None):
     global _worker_started
 
@@ -111,11 +116,11 @@ def start_scheduler(app=None):
             except Exception:
                 target_app.logger.exception("Worker: process_gastos_expiry falló")
 
-            if True:
+            if run_om:
                 try:
                     com = get_db_standalone()
                     try:
-                        _log("info", "Worker: Ejecutando notificaciones OM (job diario 08:00)...")
+                        _log("info", "Worker: Ejecutando notificaciones OM (horario laboral)...")
                         process_om_notifications(com)
                         _log("info", "Worker: process_om_notifications OK")
                     finally:
@@ -126,7 +131,7 @@ def start_scheduler(app=None):
                 except Exception:
                     target_app.logger.exception("Worker: process_om_notifications falló")
             else:
-                _log("debug", "Worker: process_om_notifications omitido en este ciclo")
+                _log("debug", "Worker: process_om_notifications omitido (fuera de horario laboral)")
 
             try:
                 _log("info", "Worker: Ejecutando plan_notifications...")
@@ -142,19 +147,22 @@ def start_scheduler(app=None):
             except Exception:
                 target_app.logger.exception("Worker: dispatch_notifications falló")
 
-            try:
-                cacc = get_db_standalone()
+            if run_om:
                 try:
-                    _log("info", "Worker: Ejecutando seguimiento de acciones OM...")
-                    process_om_acciones_seguimiento(cacc)
-                    _log("info", "Worker: process_om_acciones_seguimiento OK")
-                finally:
+                    cacc = get_db_standalone()
                     try:
-                        cacc.close()
-                    except Exception:
-                        pass
-            except Exception:
-                target_app.logger.exception("Worker: process_om_acciones_seguimiento falló")
+                        _log("info", "Worker: Ejecutando seguimiento de acciones OM...")
+                        process_om_acciones_seguimiento(cacc)
+                        _log("info", "Worker: process_om_acciones_seguimiento OK")
+                    finally:
+                        try:
+                            cacc.close()
+                        except Exception:
+                            pass
+                except Exception:
+                    target_app.logger.exception("Worker: process_om_acciones_seguimiento falló")
+            else:
+                _log("debug", "Worker: process_om_acciones_seguimiento omitido (fuera de horario laboral)")
 
             try:
                 _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
@@ -247,8 +255,14 @@ def start_scheduler(app=None):
                 now = datetime.now()
                 tick_id = now.strftime("%Y-%m-%d %H:%M:%S")
 
-                run_om_now = False
-                _log("info", "Worker: OM programado para ejecución diaria de las 08:00")
+                # ==================================================
+                # Jobs OM — solo en horario laboral (lun-vie 08:00-18:00)
+                # ==================================================
+                run_om_now = _is_horario_laboral(now)
+                if run_om_now:
+                    _log("info", "Worker: horario laboral — OM jobs activos")
+                else:
+                    _log("debug", "Worker: fuera de horario laboral — OM jobs omitidos")
 
                 _run_tick(target_app, f"TICK {tick_id}", run_om=run_om_now)
 
