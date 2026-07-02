@@ -989,12 +989,12 @@ def presupuesto():
     empresas = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
 
     # Centros de costo: param_group "Centro de Costo" (id=7 en producción)
+    # No se filtra por activo porque la mayoría están marcados como inactivos en param_values
     cur.execute("""
         SELECT pv.id, pv.nombre
         FROM param_values pv
         JOIN param_groups pg ON pg.id = pv.group_id
         WHERE pg.nombre = 'Centro de Costo'
-          AND COALESCE(pv.activo, 1) = 1
         ORDER BY pv.nombre
     """)
     centros_disponibles = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
