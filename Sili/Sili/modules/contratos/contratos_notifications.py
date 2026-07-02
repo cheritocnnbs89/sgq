@@ -86,9 +86,9 @@ def notify_contrato_registrado(
         p_email = pgallegos_email()
         link = link_contrato(contrato_id)
 
-        subject_user = f"[SILI] Contrato registrado: Pedido {pedido} – {proveedor}"
-        subject_compra = f"[SILI] Nuevo contrato registrado: Pedido {pedido} – {proveedor}"
-        subject_pg = f"[SILI] Revisión requerida: Pedido {pedido} – {proveedor}"
+        subject_user = f"[SGQ] Contrato registrado: Pedido {pedido} – {proveedor}"
+        subject_compra = f"[SGQ] Nuevo contrato registrado: Pedido {pedido} – {proveedor}"
+        subject_pg = f"[SGQ] Revisión requerida: Pedido {pedido} – {proveedor}"
 
         body_user_txt = (
             f"Hola {solicitante_nombre},\n\n"
@@ -99,7 +99,7 @@ def notify_contrato_registrado(
             f"Valor: {valor_contrato:,.2f}\n"
             f"Fecha de suscripción: {fecha_suscripcion}\n\n"
             f"Ver detalle: {link}\n\n"
-            f"— SILI"
+            f"— SGQ"
         )
         body_compra_txt = (
             "Estimado/a Compras,\n\n"
@@ -110,7 +110,7 @@ def notify_contrato_registrado(
             f"Valor: {valor_contrato:,.2f}\n"
             f"Fecha de suscripción: {fecha_suscripcion}\n\n"
             f"Ver contrato: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
         body_pg_txt = (
             "Estimado/a,\n\n"
@@ -121,7 +121,7 @@ def notify_contrato_registrado(
             f"Valor: {valor_contrato:,.2f}\n"
             f"Fecha de suscripción: {fecha_suscripcion}\n\n"
             f"Ver contrato: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
 
         if solicitante_email:
@@ -157,7 +157,7 @@ def notify_toggle_aprobacion_jefe_contrato(
         link = link_contrato(contrato_id)
 
         if aprobado_jefe == 1:
-            subj_jefe = f"[SILI] Aprobación registrada: Pedido {pedido}"
+            subj_jefe = f"[SGQ] Aprobación registrada: Pedido {pedido}"
             body_jefe = (
                 "Estimado/a,\n\n"
                 "Se registró su aprobación del contrato.\n\n"
@@ -166,25 +166,25 @@ def notify_toggle_aprobacion_jefe_contrato(
                 f"Objeto: {objeto}\n"
                 f"Valor: {valor_contrato:,.2f}\n"
                 f"Ver contrato: {link}\n\n"
-                "— SILI"
+                "— SGQ"
             )
-            subj_info = f"[SILI] Contrato aprobado por Compras: Pedido {pedido}"
+            subj_info = f"[SGQ] Contrato aprobado por Compras: Pedido {pedido}"
             body_info = (
                 "Notificación:\n\n"
                 "El contrato fue aprobado por el área de Compras.\n\n"
                 f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
                 f"Valor: {valor_contrato:,.2f}\n"
                 f"Ver contrato: {link}\n\n"
-                "— SILI"
+                "— SGQ"
             )
-            subj_savera = f"[SILI] Contrato aprobado: Gestionar Garantía (Pedido {pedido})"
+            subj_savera = f"[SGQ] Contrato aprobado: Gestionar Garantía (Pedido {pedido})"
             body_savera = (
                 "Hola Savera,\n\n"
                 "El contrato indicado fue ingresado y aprobado por Compras.\n"
                 "Por favor, proceder con la gestión e ingreso de la GARANTÍA asociada para su aprobación.\n\n"
                 f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
                 f"Ver contrato: {link}\n\n"
-                "— SILI"
+                "— SGQ"
             )
             if jefe_email:
                 send_mail(jefe_email, subj_jefe, body_jefe)
@@ -195,13 +195,13 @@ def notify_toggle_aprobacion_jefe_contrato(
             if savera_mail:
                 send_mail(savera_mail, subj_savera, body_savera)
         else:
-            subj_rev = f"[SILI] Aprobación revertida: Pedido {pedido}"
+            subj_rev = f"[SGQ] Aprobación revertida: Pedido {pedido}"
             body_rev = (
                 "Notificación:\n\n"
                 "La aprobación del contrato fue revertida.\n\n"
                 f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
                 f"Ver contrato: {link}\n\n"
-                "— SILI"
+                "— SGQ"
             )
             if jefe_email:
                 send_mail(jefe_email, subj_rev, body_rev)
@@ -234,21 +234,21 @@ def notify_garantia_ingresada(
         savera_mail = savera_email()
         link = link_garantia(garantia_id) if garantia_id else link_contrato(contrato_id)
 
-        subj_sv = f"[SILI] Garantía ingresada para Pedido {pedido}"
+        subj_sv = f"[SGQ] Garantía ingresada para Pedido {pedido}"
         body_sv = (
             "Hola Savera,\n\n"
             "Se registró correctamente la GARANTÍA asociada a su contrato.\n\n"
             f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
             f"Ver garantía: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
-        subj_inf = f"[SILI] Garantía ingresada: Pedido {pedido}"
+        subj_inf = f"[SGQ] Garantía ingresada: Pedido {pedido}"
         body_inf = (
             "Notificación:\n\n"
             "Se ha ingresado una GARANTÍA para el contrato indicado.\n\n"
             f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
             f"Detalle: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
         if savera_mail:
             send_mail(savera_mail, subj_sv, body_sv)
@@ -283,21 +283,21 @@ def notify_aprobacion_final_gf(
         gerente_fin_mail = gerente_financiero_email()
         link = link_contrato(contrato_id)
 
-        subj_gf_ok = f"[SILI] Aprobación FINAL (Gerencia Financiera): Pedido {pedido}"
+        subj_gf_ok = f"[SGQ] Aprobación FINAL (Gerencia Financiera): Pedido {pedido}"
         body_gf_ok = (
             "Estimado Gerente Financiero,\n\n"
             "Se registró su APROBACIÓN FINAL del contrato con su garantía asociada.\n\n"
             f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
             f"Ver contrato: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
-        subj_info = f"[SILI] Contrato + Garantía APROBADOS por Gerencia Financiera: Pedido {pedido}"
+        subj_info = f"[SGQ] Contrato + Garantía APROBADOS por Gerencia Financiera: Pedido {pedido}"
         body_info = (
             "Notificación:\n\n"
             "El contrato y su garantía recibieron APROBACIÓN FINAL por parte de Gerencia Financiera.\n\n"
             f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
             f"Detalle: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
 
         if gerente_fin_mail:
@@ -335,23 +335,23 @@ def notify_pendiente_gf(
         gerente_fin_mail = gerente_financiero_email()
         link = link_contrato(contrato_id)
 
-        subj_gf = f"[SILI] Pendiente aprobación FINAL GF: Contrato {pedido} con garantía aprobada"
+        subj_gf = f"[SGQ] Pendiente aprobación FINAL GF: Contrato {pedido} con garantía aprobada"
         body_gf = (
             "Estimado Gerente Financiero,\n\n"
             "El contrato y su garantía ya fueron aprobados en instancias previas.\n"
             "Se encuentra PENDIENTE su APROBACIÓN FINAL por parte de Gerencia Financiera.\n\n"
             f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
             f"Ver contrato: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
-        subj_info = f"[SILI] Contrato aprobado (falta GF): Pedido {pedido}"
+        subj_info = f"[SGQ] Contrato aprobado (falta GF): Pedido {pedido}"
         body_info = (
             "Notificación:\n\n"
             "El contrato quedó aprobado y existe garantía aprobada.\n"
             "Resta la aprobación FINAL por parte de Gerencia Financiera.\n\n"
             f"Pedido: {pedido}\nProveedor: {proveedor}\nObjeto: {objeto}\n"
             f"Detalle: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
 
         if gerente_fin_mail:
@@ -397,7 +397,7 @@ def notify_garantia_por_vencer_15_dias(
 
         link = link_garantia(garantia_id)
 
-        subject = f"[SILI] Garantía por vencer en {dias_para_vencer or 15} días: Pedido {pedido}"
+        subject = f"[SGQ] Garantía por vencer en {dias_para_vencer or 15} días: Pedido {pedido}"
 
         body_plain = (
             "Estimado/a,\n\n"
@@ -410,7 +410,7 @@ def notify_garantia_por_vencer_15_dias(
             f"Días para vencer: {dias_para_vencer or 15}\n\n"
             "Por favor, revisar si corresponde gestionar la renovación, liberación o actualización del estado de la garantía.\n\n"
             f"Ver garantía: {link}\n\n"
-            "— SILI"
+            "— SGQ"
         )
 
         enviados = set()

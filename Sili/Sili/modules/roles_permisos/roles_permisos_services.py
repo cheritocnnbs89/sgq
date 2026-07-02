@@ -12,8 +12,17 @@ def seed_default_roles(conn):
 
 
 def seed_default_opciones(conn):
+    from modules.security import _OPCIONES_REGISTRY
+    from modules.menu.menu_services import sync_permissions_from_menu
+
+    # Sincroniza primero desde menu_items.permiso → dbo.opciones
+    sync_permissions_from_menu(conn)
+
+    # Luego completa con @require_permission auto-descubierto + DEFAULT_OPCIONES (bootstrap)
+    todas = _OPCIONES_REGISTRY | set(DEFAULT_OPCIONES)
+
     existing_opciones = {row["nombre"] for row in repo.get_opciones_nombre(conn)}
-    for opcion_name in DEFAULT_OPCIONES:
+    for opcion_name in sorted(todas):
         if opcion_name not in existing_opciones:
             repo.get_or_create_opcion(conn, opcion_name)
 
