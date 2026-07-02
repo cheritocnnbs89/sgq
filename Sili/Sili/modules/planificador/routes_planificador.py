@@ -974,7 +974,6 @@ def _check_perm(rol, opcion, accion):
 @require_login
 @require_permission(PERM_PRESUPUESTO, "ver")
 def presupuesto():
-    repo.ensure_presupuesto_schema()
     from datetime import date as _date
     anio_actual = _date.today().year
     anio = int(request.args.get("anio", anio_actual))
@@ -989,20 +988,29 @@ def presupuesto():
     cur.execute("SELECT id, razon_social FROM empresas WHERE activo=1 ORDER BY razon_social")
     empresas = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
 
+    # Centros de costo disponibles para el selector "Agregar CC"
+    # Se toma el param_group cuyo nombre contenga 'costo' (case-insensitive).
+    # Si no existe ese grupo, se listan todos los param_values activos como fallback.
+    cur.execute("""
+        SELECT pv.id, pv.nombre
+        FROM param_values pv
+        JOIN param_groups pg ON pg.id = pv.group_id
+        WHERE LOWER(pg.nombre) LIKE '%costo%'
+          AND COALESCE(pv.activo, 1) = 1
+        ORDER BY pv.nombre
+    """)
+    centros_disponibles = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
+
     presupuesto_grid = []
     if empresa_id and tipo_gasto:
+        # Solo CCs que ya tienen presupuesto registrado para empresa+año+tipo
         cur.execute("""
             SELECT DISTINCT p.centro_costo_id, pv.nombre AS cc_nombre
             FROM planificador_presupuesto p
             JOIN param_values pv ON pv.id = p.centro_costo_id
             WHERE p.empresa_id = ? AND p.anio = ? AND p.tipo_gasto = ?
-            UNION
-            SELECT DISTINCT u.cuenta_contable_id, pv.nombre
-            FROM usuarios u
-            JOIN param_values pv ON pv.id = u.cuenta_contable_id
-            WHERE u.empresa_id = ? AND u.disabled = 0 AND u.cuenta_contable_id IS NOT NULL
             ORDER BY cc_nombre
-        """, (empresa_id, anio, tipo_gasto, empresa_id))
+        """, (empresa_id, anio, tipo_gasto))
         centros = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
 
         for cc in centros:
@@ -1036,6 +1044,7 @@ def presupuesto():
         tipos_gasto=tipos_gasto,
         tipo_gasto=tipo_gasto,
         presupuesto_grid=presupuesto_grid,
+        centros_disponibles=centros_disponibles,
         meses_nombres=["Ene","Feb","Mar","Abr","May","Jun",
                         "Jul","Ago","Sep","Oct","Nov","Dic"],
     )

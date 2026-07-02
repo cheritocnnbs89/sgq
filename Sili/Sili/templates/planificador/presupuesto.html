@@ -3,7 +3,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/planificador.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador_presupuesto.css') }}?v=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador_presupuesto.css') }}?v=2">
 {% endblock %}
 
 {% block content %}
@@ -12,9 +12,7 @@
   <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
     <div>
       <h4 class="mb-0"><i class="bi bi-wallet2 me-1"></i>Presupuesto por Centro de Costo</h4>
-      <p class="text-muted mb-0 small">
-        Distribución mensual por empresa, centro de costo y tipo de gasto.
-      </p>
+      <p class="text-muted mb-0 small">Distribución mensual por empresa, centro de costo y tipo de gasto.</p>
     </div>
     <a href="{{ url_for('planificador.planificador_solicitudes') }}" class="btn btn-outline-secondary btn-sm">
       <i class="bi bi-arrow-left"></i> Volver a Solicitudes
@@ -22,7 +20,7 @@
   </div>
 
   {# ── Filtros ── #}
-  <div class="card border-0 shadow-sm mb-4">
+  <div class="card border-0 shadow-sm mb-3">
     <div class="card-body">
       <form method="get" action="{{ url_for('planificador.planificador_presupuesto') }}" class="row g-2 align-items-end">
         <div class="col-sm-3">
@@ -60,13 +58,6 @@
     </div>
   </div>
 
-  {# ── Leyenda semáforo ── #}
-  <div class="d-flex gap-3 mb-3 small">
-    <span class="badge-semaforo verde">🟢 &lt; 50% usado</span>
-    <span class="badge-semaforo amarillo">🟡 50–99% usado</span>
-    <span class="badge-semaforo rojo">🔴 ≥ 100% — requiere aprobación GG</span>
-  </div>
-
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% for cat, msg in messages %}
       <div class="alert alert-{{ cat }} alert-dismissible fade show" role="alert">
@@ -76,8 +67,52 @@
     {% endfor %}
   {% endwith %}
 
-  {# ── Grilla de presupuesto ── #}
   {% if empresa_id and tipo_gasto %}
+
+    {# ── Agregar nuevo CC ── #}
+    {% if has_permission('planificador.presupuesto', 'editar') %}
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-header bg-light fw-semibold small">
+        <i class="bi bi-plus-circle me-1"></i>Agregar centro de costo
+      </div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('planificador.planificador_presupuesto_guardar') }}"
+              class="row g-2 align-items-end">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="empresa_id" value="{{ empresa_id }}">
+          <input type="hidden" name="tipo_gasto" value="{{ tipo_gasto }}">
+          <input type="hidden" name="anio" value="{{ anio }}">
+          {# 12 meses en 0 — el usuario los editará en la grilla después de guardar #}
+          {% for m in range(1, 13) %}
+          <input type="hidden" name="mes_{{ m }}" value="0">
+          {% endfor %}
+          <div class="col-sm-4">
+            <label class="form-label form-label-sm fw-semibold">Centro de costo</label>
+            <select class="form-select form-select-sm" name="cc_id" required>
+              <option value="">Seleccione...</option>
+              {% for cc in centros_disponibles %}
+              <option value="{{ cc.id }}">{{ cc.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-success btn-sm">
+              <i class="bi bi-plus-lg me-1"></i>Agregar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+    {# ── Leyenda semáforo ── #}
+    <div class="d-flex gap-3 mb-3 small">
+      <span class="badge-semaforo verde">🟢 &lt; 50% usado</span>
+      <span class="badge-semaforo amarillo">🟡 50–99% usado</span>
+      <span class="badge-semaforo rojo">🔴 ≥ 100% — requiere aprobación GG</span>
+    </div>
+
+    {# ── Grilla ── #}
     {% if presupuesto_grid %}
       {% for row in presupuesto_grid %}
       <div class="card border-0 shadow-sm mb-4">
@@ -136,7 +171,7 @@
                   <td class="text-end fw-bold presup-total">${{ "%.2f"|format(row.total_presup) }}</td>
                   {% if has_permission('planificador.presupuesto', 'editar') %}
                   <td class="text-center" rowspan="2">
-                    <button type="submit" class="btn btn-primary btn-sm">
+                    <button type="submit" class="btn btn-primary btn-sm" title="Guardar">
                       <i class="bi bi-save"></i>
                     </button>
                   </td>
@@ -160,12 +195,13 @@
       {% endfor %}
     {% else %}
       <div class="alert alert-info">
-        No hay centros de costo asociados a esta empresa.
-        Los CCs se toman de los usuarios activos de la empresa seleccionada.
+        No hay presupuesto registrado aún para esta combinación.
+        Usa el panel de arriba para agregar el primer centro de costo.
       </div>
     {% endif %}
-  {% elif empresa_id or tipo_gasto %}
-    <div class="alert alert-warning">Seleccione empresa y tipo de gasto para ver el presupuesto.</div>
+
+  {% else %}
+    <div class="alert alert-secondary">Seleccione empresa y tipo de gasto para ver el presupuesto.</div>
   {% endif %}
 
 </div>
