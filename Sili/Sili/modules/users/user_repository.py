@@ -339,6 +339,13 @@ def update_jefe_masivo(conn, jefe_id: int, ids: list[int]):
     cur.execute(sql, params)
 
 
+def deshabilitar_usuarios_masivo(conn, ids: list[int]):
+    cur = conn.cursor()
+    placeholders = ",".join("?" for _ in ids)
+    sql = f"UPDATE usuarios SET disabled = 1 WHERE id IN ({placeholders})"
+    cur.execute(sql, [int(x) for x in ids])
+
+
 def insert_departamento(conn, nombre: str, area_id=None):
     cur = conn.cursor()
     cur.execute(SQL_INSERT_DEPARTAMENTO, (nombre, area_id))
