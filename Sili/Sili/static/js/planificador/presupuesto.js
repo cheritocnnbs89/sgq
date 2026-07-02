@@ -1,3 +1,18 @@
+// Lee los datos de presupuesto embebidos en el DOM (CSP-safe)
+var presupSecciones = (function () {
+  var el = document.getElementById('presup-secciones-data');
+  if (!el) return [];
+  try { return JSON.parse(el.textContent); } catch (e) { return []; }
+})();
+
+// Índice plano cc_id+tipo → meses para búsqueda rápida
+var presupIdx = {};
+presupSecciones.forEach(function (sec) {
+  (sec.rows || []).forEach(function (row) {
+    presupIdx[sec.tipo + '|' + row.cc_id] = row;
+  });
+});
+
 // ── Agregar CC ────────────────────────────────────────────────
 document.addEventListener('click', function (e) {
   if (!e.target.closest('#btn-agregar-cc')) return;
@@ -17,21 +32,26 @@ document.addEventListener('click', function (e) {
 
   var ccId     = btn.dataset.ccId;
   var ccNombre = btn.dataset.ccNombre;
-  var meses    = JSON.parse(btn.dataset.meses);
+  var tipo     = btn.dataset.tipo;
+  var row      = presupIdx[tipo + '|' + ccId];
 
-  document.getElementById('modal-cc-id').value    = ccId;
+  document.getElementById('modal-cc-id').value         = ccId;
+  document.getElementById('modal-tipo-gasto').value    = tipo;
   document.getElementById('modal-cc-nombre').textContent = ccNombre;
+  document.getElementById('modal-tipo-label').textContent = tipo;
 
   var total = 0;
-  meses.forEach(function (m) {
-    var input = document.getElementById('modal-mes-' + m.mes);
-    if (input) {
-      input.value = parseFloat(m.monto_presupuestado).toFixed(2);
-      total += parseFloat(m.monto_presupuestado) || 0;
-    }
-  });
+  if (row && row.meses) {
+    row.meses.forEach(function (m) {
+      var input = document.getElementById('modal-mes-' + m.mes);
+      if (input) {
+        input.value = parseFloat(m.monto_presupuestado).toFixed(2);
+        total += parseFloat(m.monto_presupuestado) || 0;
+      }
+    });
+  }
 
-  var totalCell = document.querySelector('.presup-total');
+  var totalCell = document.querySelector('#modalEditarCC .presup-total');
   if (totalCell) totalCell.textContent = '$' + total.toFixed(2);
 
   var modal = new bootstrap.Modal(document.getElementById('modalEditarCC'));
@@ -43,9 +63,8 @@ document.addEventListener('input', function (e) {
   if (!e.target.classList.contains('presup-input')) return;
   var modal = document.getElementById('modalEditarCC');
   if (!modal) return;
-  var inputs = modal.querySelectorAll('.presup-input');
   var total = 0;
-  inputs.forEach(function (inp) {
+  modal.querySelectorAll('.presup-input').forEach(function (inp) {
     total += parseFloat(inp.value.replace(',', '.')) || 0;
   });
   var totalCell = modal.querySelector('.presup-total');

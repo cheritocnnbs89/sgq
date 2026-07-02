@@ -999,24 +999,22 @@ def presupuesto():
     """)
     centros_disponibles = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
 
-    presupuesto_grid = []
-    if empresa_id and tipo_gasto:
-        # Solo CCs que ya tienen presupuesto registrado para empresa+año+tipo
+    def _build_cc_rows(empresa_id, tipo, anio, cur):
         cur.execute("""
             SELECT DISTINCT p.centro_costo_id, pv.nombre AS cc_nombre
             FROM planificador_presupuesto p
             JOIN param_values pv ON pv.id = p.centro_costo_id
             WHERE p.empresa_id = ? AND p.anio = ? AND p.tipo_gasto = ?
             ORDER BY cc_nombre
-        """, (empresa_id, anio, tipo_gasto))
+        """, (empresa_id, anio, tipo))
         centros = [{"id": r[0], "nombre": r[1]} for r in cur.fetchall()]
-
+        rows = []
         for cc in centros:
             cur.execute("""
                 SELECT mes, monto_presupuestado, monto_ejecutado
                 FROM planificador_presupuesto
                 WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=?
-            """, (empresa_id, cc["id"], tipo_gasto, anio))
+            """, (empresa_id, cc["id"], tipo, anio))
             by_mes = {r[0]: {"mes": r[0], "monto_presupuestado": float(r[1]),
                               "monto_ejecutado": float(r[2])}
                       for r in cur.fetchall()}
@@ -1024,33 +1022,34 @@ def presupuesto():
                                           "monto_ejecutado": 0.0})
                           for m in range(1, 13)]
             total_presup = sum(m["monto_presupuestado"] for m in meses_data)
-            total_ejec = sum(m["monto_ejecutado"] for m in meses_data)
+            total_ejec   = sum(m["monto_ejecutado"]     for m in meses_data)
             pct = round(total_ejec / total_presup * 100, 1) if total_presup > 0 else 0
-            if pct >= 100:
-                semaforo = "rojo"
-            elif pct >= 50:
-                semaforo = "amarillo"
-            else:
-                semaforo = "verde"
-            presupuesto_grid.append({
-                "cc_id": cc["id"],
-                "cc_nombre": cc["nombre"],
-                "meses": meses_data,
-                "total_presup": total_presup,
-                "total_ejec": total_ejec,
-                "pct": pct,
-                "semaforo": semaforo,
+            semaforo = "rojo" if pct >= 100 else ("amarillo" if pct >= 50 else "verde")
+            rows.append({
+                "cc_id": cc["id"], "cc_nombre": cc["nombre"],
+                "meses": meses_data, "total_presup": total_presup,
+                "total_ejec": total_ejec, "pct": pct, "semaforo": semaforo,
             })
+        return rows
+
+    # presupuesto_secciones: lista de {tipo_gasto, rows}
+    presupuesto_secciones = []
+    if empresa_id:
+        tipos_a_mostrar = tipos_gasto if not tipo_gasto else [tipo_gasto]
+        for t in tipos_a_mostrar:
+            rows = _build_cc_rows(empresa_id, t, anio, cur)
+            if rows or tipo_gasto:  # si es "Todos" omite secciones vacías
+                presupuesto_secciones.append({"tipo": t, "rows": rows})
 
     return render_template(
         "planificador/presupuesto.html",
         anio=anio,
+        presupuesto_secciones=presupuesto_secciones,
         anio_actual=anio_actual,
         empresas=empresas,
         empresa_id=empresa_id,
         tipos_gasto=tipos_gasto,
         tipo_gasto=tipo_gasto,
-        presupuesto_grid=presupuesto_grid,
         centros_disponibles=centros_disponibles,
         meses_nombres=["Ene","Feb","Mar","Abr","May","Jun",
                         "Jul","Ago","Sep","Oct","Nov","Dic"],
