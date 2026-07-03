@@ -718,35 +718,21 @@ def get_ciudad_usuario(usuario_id: int) -> str:
 
 
 def get_gerente_del_usuario(usuario_id: int):
+    """Devuelve el jefe directo (jefe_id) del usuario, sin importar su rol."""
     if not usuario_id:
         return None
     conn = get_db()
     cur = conn.cursor()
     cur.execute(SQL_GET_JEFE_USUARIO, (usuario_id,))
     row = cur.fetchone()
-    if not row:
-        conn.close()
+    if not row or not row[0]:
         return None
-
     jefe_id = row[0]
-    seen = set()
-
-    while jefe_id and jefe_id not in seen:
-        seen.add(jefe_id)
-        cur.execute(SQL_GET_USUARIO_JERARQUIA, (jefe_id,))
-        j = cur.fetchone()
-        if not j:
-            break
-        jrol    = (j[4] or "").lower()
-        next_id = j[3]
-        result  = {"id": j[0], "nombre": j[1], "email": j[2]}
-        if jrol in ROLES_GERENTE:
-            conn.close()
-            return result
-        jefe_id = next_id
-
-    conn.close()
-    return None
+    cur.execute(SQL_GET_USUARIO_JERARQUIA, (jefe_id,))
+    j = cur.fetchone()
+    if not j:
+        return None
+    return {"id": j[0], "nombre": j[1], "email": j[2]}
 
 
 def get_motorizados_ids_and_emails():

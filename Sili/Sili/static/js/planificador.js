@@ -715,7 +715,10 @@
     var nfecha = document.getElementById('nfecha');
     if (nfecha && !nfecha.value) nfecha.value = TODAY_STR;
     var nfechaVuelo = document.getElementById('nfechaVuelo');
-    if (nfechaVuelo && !nfechaVuelo.value) nfechaVuelo.value = TODAY_STR;
+    if (nfechaVuelo) {
+      nfechaVuelo.min = TODAY_STR;
+      if (!nfechaVuelo.value) nfechaVuelo.value = TODAY_STR;
+    }
 
     /* Mostrar/ocultar campos Vuelo según tipo */
     var selectTipo = document.querySelector('#modalNueva select[name="tipo"]');
@@ -729,6 +732,7 @@
     /* Validación de fechas Vuelo */
     var inpSalida  = document.getElementById('nfechaVuelo');
     var inpRegreso = document.getElementById('campoFechaRetorno');
+    if (inpRegreso) inpRegreso.min = TODAY_STR;
     if (inpSalida) {
       inpSalida.addEventListener('change', function () {
         if (inpRegreso && inpRegreso.value && this.value > inpRegreso.value) {
