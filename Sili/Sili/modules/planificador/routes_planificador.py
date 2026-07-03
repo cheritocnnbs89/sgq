@@ -267,7 +267,7 @@ def crear():
         try:
             gerente = repo.get_gerente_del_usuario(u["id"])
             if gerente:
-                ppto_str = f"${ppto:,.2f}" if ppto is not None else "—"
+                ppto_str = f"{ppto:,}" if ppto is not None else "—"
                 notif.notif_vuelo_nueva_gerente(
                     sid, area, fecha, desc, ppto_str,
                     u["nombre"], gerente["id"], gerente["nombre"],
