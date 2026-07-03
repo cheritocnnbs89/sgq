@@ -49,6 +49,10 @@ from .scheduler_constants import (
     TIPO_OM_NUEVA_ASIGNADO,
     TIPO_OM_RECHAZO_CREADOR,
     TIPO_OM_NUEVA_REGISTRO,
+    TPL_PLAN_NUEVA_COORD,
+    TPL_PLAN_NUEVA_USER,
+    TIPO_PLAN_NUEVA_COORD,
+    TIPO_PLAN_NUEVA_USER,
 )
 from modules.routes_planilla_mensual import send_mail as send_mail_planilla
 
@@ -1468,3 +1472,121 @@ def enqueue_om_nueva_registro(conn, *, user_id: int, reclamo_id: int, payload: d
         fecha_obj=date.today().isoformat(),
         payload=payload,
     )
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Planificador — templates y encolar
+# ──────────────────────────────────────────────────────────────────────────────
+
+_PLAN_HTML_BASE = """<!DOCTYPE html>
+<html lang="es"><body style="margin:0;padding:0;background:#f8fafc;font-family:Arial,sans-serif">
+<div style="max-width:580px;margin:24px auto">
+  <div style="background:#1e3a8a;padding:16px 20px;border-radius:10px 10px 0 0">
+    <span style="color:#bfdbfe;font-size:.75rem;font-weight:700;text-transform:uppercase;
+                 letter-spacing:.08em">PLANIFICADOR</span>
+    <h1 style="margin:4px 0 0;color:#fff;font-size:1.1rem;font-weight:700">{{ titulo }}</h1>
+  </div>
+  <div style="background:#fff;padding:20px;border:1px solid #e2e8f0;border-top:none">
+    <p style="margin:0 0 14px;font-size:.9rem;color:#0f172a">{{ saludo }}</p>
+    <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+      <tr>
+        <td style="padding:8px 12px;background:#f1f5f9;font-size:.82rem;font-weight:600;color:#334155;
+                   white-space:nowrap;border-bottom:1px solid #e2e8f0">N° solicitud</td>
+        <td style="padding:8px 12px;font-size:.82rem;color:#0f172a;border-bottom:1px solid #e2e8f0">
+          #{{ solicitud_id }}</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 12px;background:#f1f5f9;font-size:.82rem;font-weight:600;color:#334155;
+                   white-space:nowrap;border-bottom:1px solid #e2e8f0">Tipo</td>
+        <td style="padding:8px 12px;font-size:.82rem;color:#0f172a;border-bottom:1px solid #e2e8f0">
+          {{ tipo }}</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 12px;background:#f1f5f9;font-size:.82rem;font-weight:600;color:#334155;
+                   white-space:nowrap;border-bottom:1px solid #e2e8f0">Área solicitante</td>
+        <td style="padding:8px 12px;font-size:.82rem;color:#0f172a;border-bottom:1px solid #e2e8f0">
+          {{ area }}</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 12px;background:#f1f5f9;font-size:.82rem;font-weight:600;color:#334155;
+                   white-space:nowrap;border-bottom:1px solid #e2e8f0">Fecha</td>
+        <td style="padding:8px 12px;font-size:.82rem;color:#0f172a;border-bottom:1px solid #e2e8f0">
+          {{ fecha }}</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 12px;background:#f1f5f9;font-size:.82rem;font-weight:600;color:#334155;
+                   white-space:nowrap">Solicitante</td>
+        <td style="padding:8px 12px;font-size:.82rem;color:#0f172a">{{ solicitante }}</td>
+      </tr>
+    </table>
+    {% if nota %}
+    <p style="margin:14px 0 0;font-size:.8rem;color:#64748b">{{ nota }}</p>
+    {% endif %}
+  </div>
+  <div style="background:#f1f5f9;padding:10px 20px;border:1px solid #e2e8f0;
+              border-top:none;border-radius:0 0 10px 10px">
+    <p style="margin:0;font-size:.75rem;color:#64748b">
+      Mensaje automático generado por SGQ Quimpac. No responda este correo.
+    </p>
+  </div>
+</div>
+</body></html>"""
+
+_PLAN_HTML_COORD_SUBJECT = "[Planificador] Nueva solicitud #{{ solicitud_id }} · {{ tipo }} — requiere coordinación"
+_PLAN_HTML_USER_SUBJECT  = "[Planificador] Tu solicitud #{{ solicitud_id }} · {{ tipo }} fue registrada"
+
+
+def ensure_planificador_templates(conn):
+    """Inserta/actualiza los templates de Planificador en notify_templates."""
+    cur = conn.cursor()
+    templates = [
+        (
+            TPL_PLAN_NUEVA_COORD,
+            TIPO_PLAN_NUEVA_COORD,
+            _PLAN_HTML_COORD_SUBJECT,
+            _PLAN_HTML_BASE,
+            "Nueva solicitud #{{ solicitud_id }} - {{ tipo }} - {{ area }} - {{ fecha }} - {{ solicitante }}",
+        ),
+        (
+            TPL_PLAN_NUEVA_USER,
+            TIPO_PLAN_NUEVA_USER,
+            _PLAN_HTML_USER_SUBJECT,
+            _PLAN_HTML_BASE,
+            "Solicitud #{{ solicitud_id }} - {{ tipo }} registrada para {{ fecha }}",
+        ),
+    ]
+    for key, tipo, subject, html, text in templates:
+        cur.execute("""
+            UPDATE notify_templates
+               SET tipo=?, subject=?, html=?, text=?
+             WHERE [key]=?
+        """, (tipo, subject, html, text, key))
+        if cur.rowcount == 0:
+            cur.execute("""
+                INSERT INTO notify_templates ([key], tipo, subject, html, text)
+                VALUES (?, ?, ?, ?, ?)
+            """, (key, tipo, subject, html, text))
+    conn.commit()
+
+
+def enqueue_planificador_notify(conn, user_id: int, template_key: str,
+                                 tipo: str, payload: dict, event_key: str) -> None:
+    """Inserta en notify_queue para que el job envíe el correo."""
+    import json as _json
+    from datetime import date as _date
+    payload_str = _json.dumps(payload, ensure_ascii=False)
+    cur = conn.cursor()
+    cur.execute("""
+        IF NOT EXISTS (SELECT 1 FROM notify_queue WHERE event_key = ?)
+        BEGIN
+            INSERT INTO notify_queue
+                (user_id, tipo, fecha_obj, canal, template_key, payload_json,
+                 estado, scheduled_at, area, event_key)
+            VALUES (?, ?, ?, 'email', ?, ?, 'pending', GETDATE(), ?, ?)
+        END
+    """, (
+        event_key,
+        user_id, tipo, _date.today(), template_key, payload_str,
+        payload.get("area", ""), event_key,
+    ))
+    conn.commit()

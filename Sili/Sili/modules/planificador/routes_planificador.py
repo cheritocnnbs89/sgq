@@ -258,7 +258,7 @@ def crear():
         "requiere_aprobacion_presupuesto": requiere_aprov,
     })
     try:
-        notif.notif_nueva_solicitud(sid, tipo, area, fecha, u["nombre"])
+        notif.notif_nueva_solicitud(sid, tipo, area, fecha, u["nombre"], solicitante_id=u["id"])
     except Exception:
         pass
 

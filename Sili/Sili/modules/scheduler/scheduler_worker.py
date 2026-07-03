@@ -26,6 +26,7 @@ from .scheduler_notifications import (
     ensure_core_templates,
     ensure_gasto_templates,
     ensure_om_templates,
+    ensure_planificador_templates,
 )
 from .scheduler_services import (
     auto_close_expired_tasks,
@@ -108,7 +109,7 @@ def start_scheduler(app=None):
                 cexp = get_db_standalone()
                 try:
                     _log("info", "Worker: Ejecutando expiración de gastos tarjeta...")
-                    process_gastos_expiry(cexp)
+                    #process_gastos_expiry(cexp)
                     _log("info", "Worker: process_gastos_expiry OK")
                 finally:
                     try:
@@ -220,6 +221,9 @@ def start_scheduler(app=None):
 
                     #ensure_om_templates(c0)
                     _log("info", "Worker: ensure_om_templates OK")
+
+                    ensure_planificador_templates(c0)
+                    _log("info", "Worker: ensure_planificador_templates OK")
 
                     _log("info", "Worker: bootstrap inicial completado correctamente.")
                 finally:

@@ -11,7 +11,15 @@ from flask import current_app
 
 from modules.email_utils import send_email_async as _send_async
 from modules import telegram_utils as _tg
+from modules.db import get_db
 from . import planificador_repository as repo
+from modules.scheduler.scheduler_constants import (
+    TPL_PLAN_NUEVA_COORD,
+    TPL_PLAN_NUEVA_USER,
+    TIPO_PLAN_NUEVA_COORD,
+    TIPO_PLAN_NUEVA_USER,
+)
+from modules.scheduler.scheduler_notifications import enqueue_planificador_notify
 
 
 # ──────────────────────────────────────────────────────────
@@ -120,32 +128,58 @@ def _maps_link(lugar: str) -> str:
 # ──────────────────────────────────────────────────────────
 
 def notif_nueva_solicitud(solicitud_id: int, tipo: str, area: str,
-                          fecha: str, solicitante_nombre: str) -> None:
+                          fecha: str, solicitante_nombre: str,
+                          solicitante_id: int | None = None) -> None:
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo(tipo)
-    if not coordinadores:
-        return
 
-    subject = f"[Planificador] Nueva solicitud #{solicitud_id} · {tipo}"
-    titulo  = f"Nueva solicitud pendiente de coordinación #{solicitud_id}"
-    saludo  = "Se registró una nueva solicitud que requiere asignación de horario."
-    filas   = [
-        ("N° solicitud",   str(solicitud_id)),
-        ("Tipo",           tipo),
-        ("Área solicitante", area),
-        ("Fecha",          fecha),
-        ("Solicitante",    solicitante_nombre),
-    ]
-    nota = "Ingresa al SGQ para asignar el horario y enviar a aprobación."
-    html = _email_html("PLANIFICADOR · COORDINACIÓN", titulo, saludo, filas, nota)
+    payload = {
+        "solicitud_id": solicitud_id,
+        "tipo":         tipo,
+        "area":         area,
+        "fecha":        fecha,
+        "solicitante":  solicitante_nombre,
+    }
 
-    emails = []
+    conn = get_db()
+
+    # Notificar a cada coordinador del tipo específico (no de otros tipos)
     for c in coordinadores:
-        _inapp(c["id"], subject,
-               f"Solicitud #{solicitud_id} de {solicitante_nombre} — {tipo} — {fecha}")
-        if c.get("email"):
-            emails.append(c["email"])
+        coord_id = c.get("id")
+        inapp_body = f"Solicitud #{solicitud_id} de {solicitante_nombre} — {tipo} — {fecha}"
+        _inapp(coord_id, f"[Planificador] Nueva solicitud #{solicitud_id} · {tipo}", inapp_body)
+        if coord_id:
+            payload_coord = dict(payload, titulo=f"Nueva solicitud #{solicitud_id} · {tipo}",
+                                  saludo="Se registró una nueva solicitud que requiere asignación de horario.",
+                                  nota="Ingresa al SGQ para asignar el horario y enviar a aprobación.")
+            event_key = f"plan:nueva:coord:{solicitud_id}:{coord_id}"
+            try:
+                enqueue_planificador_notify(conn, coord_id, TPL_PLAN_NUEVA_COORD,
+                                            TIPO_PLAN_NUEVA_COORD, payload_coord, event_key)
+            except Exception as exc:
+                try:
+                    current_app.logger.warning("plan notif coord error sid=%s uid=%s: %s",
+                                               solicitud_id, coord_id, exc)
+                except Exception:
+                    pass
 
-    _email(emails, subject, html)
+    # Confirmar al solicitante
+    if solicitante_id:
+        _inapp(solicitante_id,
+               f"[Planificador] Solicitud #{solicitud_id} registrada",
+               f"Tu solicitud #{solicitud_id} — {tipo} — {fecha} quedó pendiente de coordinación.")
+        payload_user = dict(payload, titulo=f"Solicitud #{solicitud_id} registrada",
+                             saludo="Tu solicitud fue registrada exitosamente.",
+                             nota="Recibirás una notificación cuando sea coordinada y aprobada.")
+        event_key_u = f"plan:nueva:user:{solicitud_id}:{solicitante_id}"
+        try:
+            enqueue_planificador_notify(conn, solicitante_id, TPL_PLAN_NUEVA_USER,
+                                        TIPO_PLAN_NUEVA_USER, payload_user, event_key_u)
+        except Exception as exc:
+            try:
+                current_app.logger.warning("plan notif user error sid=%s uid=%s: %s",
+                                           solicitud_id, solicitante_id, exc)
+            except Exception:
+                pass
 
 
 # ──────────────────────────────────────────────────────────
