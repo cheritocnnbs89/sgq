@@ -662,6 +662,12 @@
     });
 
     if (esVuelo) fetchSaldoPresupuesto();
+
+    // Mensaje informativo según tipo
+    var noticeNormal = document.getElementById('recNoticeTxt');
+    var noticeVuelo  = document.getElementById('recNoticeVuelo');
+    if (noticeNormal) noticeNormal.classList.toggle('d-none', esVuelo);
+    if (noticeVuelo)  noticeVuelo.classList.toggle('d-none', !esVuelo);
   }
 
   function validarFechasVuelo() {

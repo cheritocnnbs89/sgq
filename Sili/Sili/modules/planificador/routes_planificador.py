@@ -175,14 +175,17 @@ def detalle(sid):
         grupo_solicitudes = [dict(g) for g in todas if g["id"] != sid]
 
     adjuntos = repo.get_adjuntos(sid)
+    _es_solicitante = s["solicitante_id"] == u["id"]
+    _estado_bloqueado_general = s["estado"] in ("COMPLETADA", "RECHAZADA",
+                                                "PENDIENTE_APROBACION_JEFE",
+                                                "PENDIENTE_APROBACION_GG_VUELO")
     puede_subir_adjunto = (
-        s["estado"] not in ("COMPLETADA", "RECHAZADA",
-                            "PENDIENTE_APROBACION_JEFE", "PENDIENTE_APROBACION_GG_VUELO")
-        and (
-            ctx["es_admin"] or ctx["es_gerente"]
-            or ctx["tipos_coordinador"] or ctx["tipos_aprobador"]
-            or s["solicitante_id"] == u["id"]
+        ctx["es_admin"]
+        or (
+            not _estado_bloqueado_general
+            and (ctx["es_gerente"] or ctx["tipos_coordinador"] or ctx["tipos_aprobador"])
         )
+        or (_es_solicitante and s["estado"] not in ("COMPLETADA", "RECHAZADA"))
     )
     puede_eliminar_adjunto = ctx["es_admin"] or s["estado"] not in ("APROBADA", "COMPLETADA")
 

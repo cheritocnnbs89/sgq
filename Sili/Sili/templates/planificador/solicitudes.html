@@ -460,10 +460,17 @@
             </div>
           </div>
         </div>
-        <div class="rec-notice">
-          La solicitud quedará <strong>Pendiente de coordinación</strong> hasta que el coordinador asigne horario.<br>
-          <i class="bi bi-clock"></i> El coordinador solo puede asignar horarios de <strong>08:00 a 17:00</strong>.
-          Solicitudes para el día actual no pueden coordinarse pasadas las 17:00.
+        <div class="rec-notice" id="recNoticeInfo">
+          <span id="recNoticeTxt">
+            La solicitud quedará <strong>Pendiente de coordinación</strong> hasta que el coordinador asigne horario.<br>
+            <i class="bi bi-clock"></i> El coordinador solo puede asignar horarios de <strong>08:00 a 17:00</strong>.
+            Solicitudes para el día actual no pueden coordinarse pasadas las 17:00.
+          </span>
+          <span id="recNoticeVuelo" class="d-none">
+            La solicitud de vuelo pasará primero a <strong>aprobación de su jefe directo</strong>.<br>
+            Si no hay presupuesto disponible, requerirá además aprobación del <strong>Gerente General de Vuelos</strong>.
+            Una vez aprobada, el coordinador gestionará los pasajes y cargará los documentos correspondientes.
+          </span>
         </div>
       </div>
       <div class="sgq-modal-footer">
