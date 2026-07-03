@@ -108,8 +108,12 @@
             {% endif %}
           </button>
           {% endif %}
+          <button class="planner-tab" data-tab="tab-por-completar">
+            <i class="bi bi-flag-fill me-1"></i>Por completar
+            <span class="badge bg-success ms-1">{{ por_completar|length }}</span>
+          </button>
           <button class="planner-tab" data-tab="tab-atendidas">
-            <i class="bi bi-calendar2-check me-1"></i>Atendidas
+            <i class="bi bi-calendar2-check me-1"></i>Completadas
             <span class="badge bg-secondary ms-1">{{ atendidas|length }}</span>
           </button>
         </div>
@@ -249,8 +253,11 @@
           {{ tabla_tab(por_aprobar, "Sin solicitudes pendientes de su aprobación gerencial") }}
         </div>
         {% endif %}
+        <div class="planner-tab-content" id="tab-por-completar">
+          {{ tabla_tab(por_completar, "Sin solicitudes aprobadas por completar") }}
+        </div>
         <div class="planner-tab-content" id="tab-atendidas">
-          {{ tabla_tab(atendidas, "Sin solicitudes atendidas con los filtros aplicados") }}
+          {{ tabla_tab(atendidas, "Sin solicitudes completadas con los filtros aplicados") }}
         </div>
 
       </div>{# /rec-card tabs #}

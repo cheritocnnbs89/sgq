@@ -21,7 +21,7 @@ from .planificador_constants import (
     ACTIVE_KEY, PERM_SOLICITUDES, PERM_CONFIG, PERM_PRESUPUESTO,
     ESTADOS, PRIORIDADES,
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
-    ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_ATENDIDAS,
+    ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR, ESTADOS_ATENDIDAS,
 )
 from flask import Response
 
@@ -79,7 +79,7 @@ def solicitudes():
         rows.append(d)
 
     # Dividir en secciones
-    reservadas, coordinadas, atendidas = svc.agrupar_por_seccion(rows)
+    reservadas, coordinadas, por_completar, atendidas = svc.agrupar_por_seccion(rows)
     por_aprobar = [r for r in rows if r.get("puede_aprobar_gerente")
                    or r.get("puede_aprobar_jefe_vuelo")
                    or r.get("puede_aprobar_gg_vuelo")]
@@ -121,6 +121,7 @@ def solicitudes():
         rows=rows,
         reservadas=reservadas,
         coordinadas=coordinadas,
+        por_completar=por_completar,
         atendidas=atendidas,
         por_aprobar=por_aprobar,
         filters=filters,
@@ -781,7 +782,7 @@ def vuelo_aprobar_jefe(sid):
     if not s or not svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx):
         abort(403)
     obs = request.form.get("observacion", "").strip()
-    requiere_gg = bool(s.get("requiere_aprobacion_presupuesto"))
+    requiere_gg = not bool(s.get("centro_costo_id")) or bool(s.get("requiere_aprobacion_presupuesto"))
     repo.aprobar_jefe_vuelo(sid, u["id"], u["nombre"], obs, requiere_gg)
     if requiere_gg:
         # Notificar al GG de Vuelos configurado

@@ -7,7 +7,7 @@ from . import planificador_repository as repo
 from .planificador_constants import (
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
     ROLES_ADMIN, ROLES_GERENTE, ESTADOS,
-    ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_ATENDIDAS,
+    ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR, ESTADOS_ATENDIDAS,
 )
 
 
@@ -211,11 +211,12 @@ def puede_reagendar(solicitud, usuario_id, ctx):
 
 
 def agrupar_por_seccion(rows):
-    """Divide las filas en tres secciones para mostrar en la tabla."""
-    reservadas  = [r for r in rows if r.get("estado") in ESTADOS_RESERVADAS]
-    coordinadas = [r for r in rows if r.get("estado") in ESTADOS_COORDINADAS]
-    atendidas   = [r for r in rows if r.get("estado") in ESTADOS_ATENDIDAS]
-    return reservadas, coordinadas, atendidas
+    """Divide las filas en cuatro secciones para mostrar en la tabla."""
+    reservadas     = [r for r in rows if r.get("estado") in ESTADOS_RESERVADAS]
+    coordinadas    = [r for r in rows if r.get("estado") in ESTADOS_COORDINADAS]
+    por_completar  = [r for r in rows if r.get("estado") in ESTADOS_POR_COMPLETAR]
+    atendidas      = [r for r in rows if r.get("estado") in ESTADOS_ATENDIDAS]
+    return reservadas, coordinadas, por_completar, atendidas
 
 
 def puede_ver_detalle_completo(ctx):
