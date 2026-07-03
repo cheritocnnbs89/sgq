@@ -380,9 +380,14 @@
     if (mu) { useMapAddress(); return; }
   });
 
-  /* Cierre al clic en backdrop */
+  /* Cierre al clic en backdrop — solo si el mousedown también fue en el backdrop
+     (evita cerrar cuando el usuario arrastra texto desde dentro del modal) */
+  var _backdropMouseDownEl = null;
+  document.addEventListener('mousedown', function (e) {
+    _backdropMouseDownEl = e.target.classList.contains('sgq-modal-backdrop') ? e.target : null;
+  });
   document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('sgq-modal-backdrop')) {
+    if (e.target.classList.contains('sgq-modal-backdrop') && _backdropMouseDownEl === e.target) {
       e.target.classList.remove('show');
     }
   });
@@ -647,6 +652,21 @@
     if (esVuelo) fetchSaldoPresupuesto();
   }
 
+  function validarFechasVuelo() {
+    var salida  = document.getElementById('nfechaVuelo');
+    var regreso = document.getElementById('campoFechaRetorno');
+    var err     = document.getElementById('errorFechaVuelo');
+    if (!salida || !regreso || !err) return true;
+    if (salida.value && regreso.value && regreso.value < salida.value) {
+      err.classList.remove('d-none');
+      regreso.setCustomValidity('La fecha de regreso no puede ser anterior a la de salida.');
+      return false;
+    }
+    err.classList.add('d-none');
+    regreso.setCustomValidity('');
+    return true;
+  }
+
   function fetchSaldoPresupuesto() {
     var ind = document.getElementById('indicadorPresup');
     if (!ind) return;
@@ -692,6 +712,30 @@
         toggleCampoVuelo(this.value);
       });
       toggleCampoVuelo(selectTipo.value);
+    }
+
+    /* Validación de fechas Vuelo */
+    var inpSalida  = document.getElementById('nfechaVuelo');
+    var inpRegreso = document.getElementById('campoFechaRetorno');
+    if (inpSalida) {
+      inpSalida.addEventListener('change', function () {
+        if (inpRegreso && inpRegreso.value && this.value > inpRegreso.value) {
+          inpRegreso.value = this.value;
+        }
+        inpRegreso && (inpRegreso.min = this.value);
+        validarFechasVuelo();
+      });
+    }
+    if (inpRegreso) {
+      inpRegreso.addEventListener('change', validarFechasVuelo);
+    }
+
+    /* Validar antes de enviar */
+    var formNueva = document.querySelector('#modalNueva form');
+    if (formNueva) {
+      formNueva.addEventListener('submit', function (e) {
+        if (!validarFechasVuelo()) e.preventDefault();
+      });
     }
 
     /* Ocultar spinner si la página se restauró desde caché (botón atrás) */

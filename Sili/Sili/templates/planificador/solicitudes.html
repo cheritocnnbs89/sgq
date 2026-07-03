@@ -372,22 +372,8 @@
               Usa el botón del mapa para buscar y confirmar la dirección exacta
             </div>
           </div>
-          <div>
-            <label class="form-label">Persona de contacto</label>
-            <input class="form-control" name="contacto" placeholder="Nombre y teléfono">
-          </div>
-          <div class="full">
-            <label class="form-label">Detalle de dirección <span class="text-muted">(opcional)</span></label>
-            <input class="form-control" name="detalle_direccion"
-                   placeholder="Ej: Piso 3, oficina 301, junto al banco...">
-          </div>
-          <div class="full">
-            <label class="form-label">Descripción de la actividad *</label>
-            <textarea class="form-control textarea-desc" name="descripcion" required
-                      placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
-          </div>
           {# ── Campos exclusivos para Vuelo ── #}
-          {# Selector de fechas estilo aerolínea #}
+          {# Selector de fechas estilo aerolínea (reemplaza el campo Fecha regular) #}
           <div class="full campo-vuelo" id="campoFechasVueloDiv">
             <label class="form-label">Fechas del vuelo *</label>
             <div class="vuelo-fecha-picker">
@@ -408,6 +394,9 @@
                 </div>
               </div>
             </div>
+            <div class="form-text text-danger d-none" id="errorFechaVuelo">
+              La fecha de regreso no puede ser anterior a la de salida.
+            </div>
           </div>
           <div class="campo-vuelo" id="campoPuntoSalidaDiv">
             <label class="form-label">Punto de salida *</label>
@@ -418,6 +407,11 @@
             <label class="form-label">Punto de destino *</label>
             <input class="form-control" name="punto_destino" id="campoPuntoDestino"
                    placeholder="Ej: Guayaquil (GYE)">
+          </div>
+          <div class="full">
+            <label class="form-label">Descripción de la actividad *</label>
+            <textarea class="form-control textarea-desc" name="descripcion" required
+                      placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
           </div>
           <div class="campo-vuelo" id="campoOrdenServicioDiv">
             <label class="form-label">Orden de servicio <span class="text-muted">(CO - Opcional)</span></label>
