@@ -272,12 +272,18 @@ def crear():
     jefe_nombre_vuelo = None
     if tipo == "Vuelo":
         jefe = repo.get_gerente_del_usuario(u["id"])
+        current_app.logger.info(
+            "[VUELO] usuario_id=%s nombre=%s → jefe=%s",
+            u["id"], u.get("nombre"), jefe
+        )
         if jefe:
             jefe_id_vuelo     = jefe["id"]
             jefe_nombre_vuelo = jefe["nombre"]
             estado_inicial    = "PENDIENTE_APROBACION_JEFE"
         else:
-            # Sin jefe configurado: va directo a coordinación
+            current_app.logger.warning(
+                "[VUELO] Sin jefe_id para usuario %s → cae a PENDIENTE_COORDINACION", u["id"]
+            )
             estado_inicial = "PENDIENTE_COORDINACION"
 
     sid = repo.crear_solicitud({
