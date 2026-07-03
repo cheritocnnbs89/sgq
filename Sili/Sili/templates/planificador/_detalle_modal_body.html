@@ -44,7 +44,7 @@
   {% endif %}
   <div class="detail-box detail-full"><span>Descripción</span><strong>{{ s.descripcion }}</strong></div>
   {% if s.presupuesto_base_cero is not none and s.presupuesto_base_cero != '' %}
-  <div class="detail-box"><span>Presupuesto Base Cero</span><strong>${{ "%.2f"|format(s.presupuesto_base_cero|float) }}</strong></div>
+  <div class="detail-box"><span>Presupuesto Base Cero</span><strong>{{ s.presupuesto_base_cero }}</strong></div>
   {% endif %}
   {% if s.detalle_direccion %}
   <div class="detail-box detail-full"><span>Detalle de dirección</span><strong>{{ s.detalle_direccion }}</strong></div>
@@ -204,6 +204,53 @@
   </form>
 </div>
 {% endif %}
+
+{# ── Adjuntos ── #}
+<div class="mt-4">
+  <h6 class="text-muted fw-semibold mb-2"><i class="bi bi-paperclip me-1"></i>Archivos adjuntos</h6>
+  {% if adjuntos %}
+  <ul class="adjuntos-list">
+    {% for a in adjuntos %}
+    <li class="adjunto-item">
+      <a class="adjunto-item-name"
+         href="{{ url_for('planificador.planificador_adjunto_descargar', sid=s.id, nombre=a.nombre_guardado) }}">
+        <i class="bi bi-file-earmark me-1"></i>{{ a.nombre_original }}
+      </a>
+      <span class="adjunto-item-meta">
+        {{ (a.tamano / 1024)|round(1) }} KB · {{ a.subido_por_nombre }}
+      </span>
+      {% if puede_eliminar_adjunto %}
+      <form method="post"
+            action="{{ url_for('planificador.planificador_adjunto_eliminar', aid=a.id) }}"
+            data-confirm="¿Eliminar este archivo?">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar archivo">
+          <i class="bi bi-trash"></i>
+        </button>
+      </form>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="text-muted small mb-2">Sin archivos adjuntos.</p>
+  {% endif %}
+  {% if puede_subir_adjunto %}
+  <form method="post"
+        action="{{ url_for('planificador.planificador_adjunto_subir', sid=s.id) }}"
+        enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="d-flex gap-2 align-items-center">
+      <input type="file" name="adjunto" class="form-control form-control-sm"
+             accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.zip" required>
+      <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
+        <i class="bi bi-upload me-1"></i>Adjuntar
+      </button>
+    </div>
+    <div class="form-text">Máximo 5 MB. Formatos: PDF, Word, Excel, imágenes, ZIP.</div>
+  </form>
+  {% endif %}
+</div>
 
 {% if logs %}
 <div class="mt-4">

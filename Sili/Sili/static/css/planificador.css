@@ -214,8 +214,22 @@
 }
 .planner-tab:hover  { color: #1e3a8a; background: #eff6ff; }
 .planner-tab.active { color: #1e3a8a; border-bottom-color: #1e3a8a; background: #fff; }
+.planner-tab-alert  { color: #1d4ed8; }
+.planner-tab-alert:hover { color: #1e3a8a; background: #dbeafe; }
+.planner-tab-alert.active { border-bottom-color: #1d4ed8; }
 .planner-tab-content         { display: none; }
 .planner-tab-content.active  { display: block; }
+
+/* ── Adjuntos ── */
+.adjuntos-list { list-style: none; padding: 0; margin: 0 0 .75rem; }
+.adjunto-item { display: flex; align-items: center; gap: .5rem; padding: .4rem .5rem;
+  border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: .35rem; font-size: .82rem; }
+.adjunto-item-name { flex: 1; font-weight: 500; color: #1e3a8a; text-decoration: none; }
+.adjunto-item-name:hover { text-decoration: underline; }
+.adjunto-item-meta { color: #64748b; font-size: .75rem; white-space: nowrap; }
+.adjunto-upload-zone { border: 2px dashed #cbd5e1; border-radius: 8px; padding: .75rem 1rem;
+  text-align: center; color: #64748b; font-size: .82rem; cursor: pointer; transition: border-color .15s; }
+.adjunto-upload-zone:hover { border-color: #3b82f6; color: #1e3a8a; }
 
 /* ── Modal coordinar (más ancho para mostrar la sección de agrupación) ── */
 .sgq-modal.modal-coordinar { max-width: 640px; }

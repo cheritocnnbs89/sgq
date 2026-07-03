@@ -201,6 +201,7 @@ def get_menu_form_data(conn, item_id=None):
 def save_menu_item(conn, form_payload, item_id=None):
     initialize_menu_module(conn)
     data = parse_menu_form_payload(form_payload)
+    print(f"[save_menu_item] item_id={item_id} permission={data.get('permission')!r}", flush=True)
 
     if item_id:
         update_menu_item(
@@ -218,6 +219,7 @@ def save_menu_item(conn, form_payload, item_id=None):
             data["is_collaps"],
         )
         flash_option_updated()
+        print(f"[save_menu_item] update OK, llamando sync_permissions_from_menu", flush=True)
         sync_permissions_from_menu(conn)
         return {"mode": "edit", "item_id": item_id, "slug": None, "table": None}
 
@@ -235,6 +237,7 @@ def save_menu_item(conn, form_payload, item_id=None):
         data["is_collaps"],
     )
     flash_option_created()
+    print(f"[save_menu_item] insert OK new_id={new_id}, llamando sync_permissions_from_menu", flush=True)
     sync_permissions_from_menu(conn)
 
     created_slug = None
@@ -260,16 +263,32 @@ def remove_menu_item(conn, item_id):
 
 
 def sync_permissions_from_menu(conn):
+    print("[sync_permissions_from_menu] iniciando...", flush=True)
     ensure_opciones_table(conn)
     permission_rows = get_distinct_menu_permissions(conn)
+    print(f"[sync_permissions_from_menu] permisos en menu_items: {[r['k'] for r in permission_rows]}", flush=True)
+
+    # Leer opciones existentes ANTES para comparar después del commit
+    cur_check = conn.cursor()
+    cur_check.execute("SELECT nombre FROM dbo.opciones")
+    existentes = {r[0] for r in cur_check.fetchall()}
+    print(f"[sync_permissions_from_menu] opciones en BD antes: {sorted(existentes)}", flush=True)
 
     for row in permission_rows:
         key_name = (row["k"] or "").strip()
         if not key_name:
             continue
+        if key_name not in existentes:
+            print(f"[sync_permissions_from_menu] NUEVA → insertando {key_name!r}", flush=True)
         insert_opcion_if_not_exists(conn, key_name)
 
     conn.commit()
+
+    cur_check2 = conn.cursor()
+    cur_check2.execute("SELECT nombre FROM dbo.opciones")
+    despues = {r[0] for r in cur_check2.fetchall()}
+    nuevas = despues - existentes
+    print(f"[sync_permissions_from_menu] commit OK — nuevas: {sorted(nuevas) or 'ninguna'}", flush=True)
 
 
 def ensure_admin_full_perms(conn):

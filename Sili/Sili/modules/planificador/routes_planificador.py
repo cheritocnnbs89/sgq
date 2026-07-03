@@ -10,7 +10,7 @@ from io import BytesIO
 
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
-    flash, session, abort, jsonify,
+    flash, session, abort, jsonify, current_app,
 )
 
 from modules.auth.routes_auth import require_login, require_permission
@@ -77,6 +77,7 @@ def solicitudes():
 
     # Dividir en secciones
     reservadas, coordinadas, atendidas = svc.agrupar_por_seccion(rows)
+    por_aprobar = [r for r in rows if r.get("puede_aprobar_gerente")]
 
     # Datos de calendario: semana actual ±2 semanas
     today = date.today()
@@ -116,6 +117,7 @@ def solicitudes():
         reservadas=reservadas,
         coordinadas=coordinadas,
         atendidas=atendidas,
+        por_aprobar=por_aprobar,
         filters=filters,
         tipos=tipos_solicitud,
         estados=ESTADOS,
@@ -163,6 +165,17 @@ def detalle(sid):
         todas = repo.get_solicitudes_del_grupo(d["grupo_id"])
         grupo_solicitudes = [dict(g) for g in todas if g["id"] != sid]
 
+    adjuntos = repo.get_adjuntos(sid)
+    puede_subir_adjunto = (
+        s["estado"] != "PENDIENTE_COORDINACION"
+        and (
+            ctx["es_admin"] or ctx["es_gerente"]
+            or ctx["tipos_coordinador"] or ctx["tipos_aprobador"]
+            or s["solicitante_id"] == u["id"]
+        )
+    )
+    puede_eliminar_adjunto = ctx["es_admin"] or s["estado"] not in ("APROBADA", "COMPLETADA")
+
     return render_template(
         "planificador/_detalle_modal_body.html",
         s=d,
@@ -170,6 +183,9 @@ def detalle(sid):
         grupo_solicitudes=grupo_solicitudes,
         active_page=ACTIVE_KEY,
         today_iso=date.today().isoformat(),
+        adjuntos=adjuntos,
+        puede_subir_adjunto=puede_subir_adjunto,
+        puede_eliminar_adjunto=puede_eliminar_adjunto,
     )
 
 
@@ -267,9 +283,8 @@ def crear():
         try:
             gerente = repo.get_gerente_del_usuario(u["id"])
             if gerente:
-                ppto_str = f"{ppto:,}" if ppto is not None else "—"
                 notif.notif_vuelo_nueva_gerente(
-                    sid, area, fecha, desc, ppto_str,
+                    sid, area, fecha, desc, ppto_raw or "—",
                     u["nombre"], gerente["id"], gerente["nombre"],
                 )
         except Exception:
@@ -702,6 +717,121 @@ def eliminar(sid):
 
     flash("Solicitud eliminada.", "info")
     return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Adjuntos de solicitudes
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/adjuntos/subir", methods=["POST"],
+                       endpoint="planificador_adjunto_subir")
+@require_login
+def adjunto_subir(sid):
+    import os, uuid
+    from werkzeug.utils import secure_filename
+
+    u = _current_user()
+    s = repo.get_solicitud_by_id(sid)
+    if not s:
+        abort(404)
+
+    # Solo se puede subir archivos si la solicitud ya fue coordinada (no PENDIENTE_COORDINACION)
+    if s["estado"] == "PENDIENTE_COORDINACION":
+        flash("Solo se pueden adjuntar archivos a solicitudes ya coordinadas.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    # Solo el solicitante, coordinadores, aprobadores, gerentes y admin
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    es_involucrado = (
+        ctx["es_admin"]
+        or ctx["es_gerente"]
+        or ctx["tipos_coordinador"]
+        or ctx["tipos_aprobador"]
+        or s["solicitante_id"] == u["id"]
+    )
+    if not es_involucrado:
+        abort(403)
+
+    archivo = request.files.get("adjunto")
+    if not archivo or not archivo.filename:
+        flash("No se seleccionó ningún archivo.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    archivo.seek(0, 2)
+    tamano = archivo.tell()
+    archivo.seek(0)
+    if tamano > 5 * 1024 * 1024:
+        flash("El archivo supera el límite de 5 MB.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    nombre_original = secure_filename(archivo.filename)
+    ext = os.path.splitext(nombre_original)[1]
+    nombre_guardado = f"{uuid.uuid4().hex}{ext}"
+
+    carpeta = os.path.join(current_app.config["UPLOAD_FOLDER"], "planificador", str(sid))
+    os.makedirs(carpeta, exist_ok=True)
+    archivo.save(os.path.join(carpeta, nombre_guardado))
+
+    repo.insert_adjunto(sid, nombre_original, nombre_guardado, tamano, u["id"], u["nombre"])
+    flash("Archivo adjuntado correctamente.", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+@planificador_bp.route("/adjuntos/<int:aid>/eliminar", methods=["POST"],
+                       endpoint="planificador_adjunto_eliminar")
+@require_login
+def adjunto_eliminar(aid):
+    import os
+
+    u = _current_user()
+    adj = repo.get_adjunto_by_id(aid)
+    if not adj:
+        abort(404)
+
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    estado = adj["estado"]
+    puede = ctx["es_admin"] or estado not in ("APROBADA", "COMPLETADA")
+    if not puede:
+        flash("No se puede eliminar archivos de solicitudes aprobadas o completadas.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    ruta = os.path.join(
+        current_app.config["UPLOAD_FOLDER"], "planificador",
+        str(adj["solicitud_id"]), adj["nombre_guardado"]
+    )
+    try:
+        os.remove(ruta)
+    except OSError:
+        pass
+
+    repo.delete_adjunto(aid)
+    flash("Archivo eliminado.", "info")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+@planificador_bp.route("/solicitudes/<int:sid>/adjuntos/<nombre>",
+                       endpoint="planificador_adjunto_descargar")
+@require_login
+def adjunto_descargar(sid, nombre):
+    import os
+    from flask import send_from_directory
+
+    u = _current_user()
+    s = repo.get_solicitud_by_id(sid)
+    if not s:
+        abort(404)
+
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    es_involucrado = (
+        ctx["es_admin"] or ctx["es_gerente"]
+        or ctx["tipos_coordinador"] or ctx["tipos_aprobador"]
+        or s["solicitante_id"] == u["id"]
+    )
+    if not es_involucrado:
+        abort(403)
+
+    carpeta = os.path.join(current_app.config["UPLOAD_FOLDER"], "planificador", str(sid))
+    return send_from_directory(carpeta, nombre, as_attachment=True)
 
 
 # ─────────────────────────────────────────────────────────────

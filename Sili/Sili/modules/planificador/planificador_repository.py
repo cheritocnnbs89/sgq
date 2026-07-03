@@ -895,3 +895,63 @@ def get_cc_usuario(usuario_id: int) -> dict | None:
         "cc_nombre":  row[2],
         "empresa_id": row[3],
     }
+
+
+# ──────────────────────────────────────────────
+# Adjuntos de solicitudes
+# ──────────────────────────────────────────────
+
+def get_adjuntos(solicitud_id: int) -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT id, nombre_original, nombre_guardado, tamano, subido_por_nombre, fecha_subida
+        FROM planificador_adjuntos
+        WHERE solicitud_id = ?
+        ORDER BY fecha_subida
+    """, (solicitud_id,))
+    cols = [c[0] for c in cur.description]
+    return [dict(zip(cols, r)) for r in cur.fetchall()]
+
+
+def insert_adjunto(solicitud_id: int, nombre_original: str, nombre_guardado: str,
+                   tamano: int, subido_por_id: int, subido_por_nombre: str) -> int:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO planificador_adjuntos
+            (solicitud_id, nombre_original, nombre_guardado, tamano,
+             subido_por_id, subido_por_nombre, fecha_subida)
+        OUTPUT INSERTED.id
+        VALUES (?, ?, ?, ?, ?, ?, GETDATE())
+    """, (solicitud_id, nombre_original, nombre_guardado, tamano,
+          subido_por_id, subido_por_nombre))
+    row = cur.fetchone()
+    conn.commit()
+    return row[0] if row else None
+
+
+def get_adjunto_by_id(adjunto_id: int) -> dict | None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT a.id, a.solicitud_id, a.nombre_original, a.nombre_guardado,
+               a.tamano, a.subido_por_id, a.subido_por_nombre, a.fecha_subida,
+               s.estado
+        FROM planificador_adjuntos a
+        JOIN planificador_solicitudes s ON s.id = a.solicitud_id
+        WHERE a.id = ?
+    """, (adjunto_id,))
+    row = cur.fetchone()
+    if not row:
+        return None
+    cols = ["id", "solicitud_id", "nombre_original", "nombre_guardado",
+            "tamano", "subido_por_id", "subido_por_nombre", "fecha_subida", "estado"]
+    return dict(zip(cols, row))
+
+
+def delete_adjunto(adjunto_id: int) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM planificador_adjuntos WHERE id = ?", (adjunto_id,))
+    conn.commit()

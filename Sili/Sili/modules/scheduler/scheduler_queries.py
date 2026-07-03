@@ -237,9 +237,7 @@ SQL_SELECT_OM_CANDIDATOS = f"""
         COALESCE(r.proceso_text, '') AS proceso,
         COALESCE(r.observacion, '') AS observacion,
         CONVERT(date, r.fecha_creacion) AS fecha_base,
-
         DATEDIFF(day, CONVERT(date, r.fecha_creacion), CONVERT(date, GETDATE())) AS dias
-
     FROM {TB_RECLAMO_IMPUTADOS} ri
     JOIN {TB_RECLAMOS} r ON r.id = ri.reclamo_id
     WHERE ri.estado_asignacion = 'aprobado'

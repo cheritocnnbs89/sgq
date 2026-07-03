@@ -100,6 +100,14 @@
             <i class="bi bi-calendar-check me-1"></i>Coordinadas
             <span class="badge bg-info text-dark ms-1">{{ coordinadas|length }}</span>
           </button>
+          {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
+          <button class="planner-tab {% if por_aprobar %}planner-tab-alert{% endif %}" data-tab="tab-por-aprobar">
+            <i class="bi bi-person-check me-1"></i>Por aprobar
+            {% if por_aprobar %}
+            <span class="badge bg-primary ms-1">{{ por_aprobar|length }}</span>
+            {% endif %}
+          </button>
+          {% endif %}
           <button class="planner-tab" data-tab="tab-atendidas">
             <i class="bi bi-calendar2-check me-1"></i>Atendidas
             <span class="badge bg-secondary ms-1">{{ atendidas|length }}</span>
@@ -236,6 +244,11 @@
         <div class="planner-tab-content" id="tab-coordinadas">
           {{ tabla_tab(coordinadas, "Sin solicitudes en proceso") }}
         </div>
+        {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
+        <div class="planner-tab-content" id="tab-por-aprobar">
+          {{ tabla_tab(por_aprobar, "Sin solicitudes pendientes de su aprobación gerencial") }}
+        </div>
+        {% endif %}
         <div class="planner-tab-content" id="tab-atendidas">
           {{ tabla_tab(atendidas, "Sin solicitudes atendidas con los filtros aplicados") }}
         </div>
