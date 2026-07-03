@@ -982,14 +982,17 @@ def get_cc_usuario(usuario_id: int) -> dict | None:
 def get_adjuntos(solicitud_id: int) -> list[dict]:
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("""
-        SELECT id, nombre_original, nombre_guardado, tamano, subido_por_nombre, fecha_subida
-        FROM planificador_adjuntos
-        WHERE solicitud_id = ?
-        ORDER BY fecha_subida
-    """, (solicitud_id,))
-    cols = [c[0] for c in cur.description]
-    return [dict(zip(cols, r)) for r in cur.fetchall()]
+    try:
+        cur.execute("""
+            SELECT id, nombre_original, nombre_guardado, tamano, subido_por_nombre, fecha_subida
+            FROM planificador_adjuntos
+            WHERE solicitud_id = ?
+            ORDER BY fecha_subida
+        """, (solicitud_id,))
+        cols = [c[0] for c in cur.description]
+        return [dict(zip(cols, r)) for r in cur.fetchall()]
+    except Exception:
+        return []
 
 
 def insert_adjunto(solicitud_id: int, nombre_original: str, nombre_guardado: str,

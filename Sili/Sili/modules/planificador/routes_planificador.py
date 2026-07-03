@@ -176,7 +176,8 @@ def detalle(sid):
 
     adjuntos = repo.get_adjuntos(sid)
     puede_subir_adjunto = (
-        s["estado"] != "PENDIENTE_COORDINACION"
+        s["estado"] not in ("COMPLETADA", "RECHAZADA",
+                            "PENDIENTE_APROBACION_JEFE", "PENDIENTE_APROBACION_GG_VUELO")
         and (
             ctx["es_admin"] or ctx["es_gerente"]
             or ctx["tipos_coordinador"] or ctx["tipos_aprobador"]
