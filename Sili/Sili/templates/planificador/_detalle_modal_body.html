@@ -74,6 +74,99 @@
 </div>
 {% endif %}
 
+{# ── Vuelo: aprobación jefe directo ── #}
+{% if s.puede_aprobar_jefe_vuelo %}
+<div class="action-zone action-zone-orange mt-3">
+  <h3><i class="bi bi-person-check me-1"></i>Aprobación — Jefe directo</h3>
+  <p class="small text-muted mb-2">
+    Solicitud de Vuelo de <strong>{{ s.solicitante_nombre }}</strong> pendiente de su aprobación.
+    {% if s.requiere_aprobacion_presupuesto %}
+    <span class="badge bg-danger ms-1">Sin presupuesto disponible</span>
+    {% endif %}
+  </p>
+  <label class="form-label">Observación</label>
+  <textarea class="form-control form-control-sm textarea-obs" id="obsJefeVuelo{{ s.id }}"
+            placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
+  <div class="d-flex gap-2 justify-content-end mt-2">
+    <form method="post"
+          action="{{ url_for('planificador.planificador_vuelo_rechazar_jefe', sid=s.id) }}"
+          data-confirm="¿Rechazar esta solicitud de vuelo?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsJefeRechVuelo{{ s.id }}">
+      <button type="submit" class="btn btn-danger btn-sm"
+              data-sync-obs="obsJefeVuelo{{ s.id }}" data-target-obs="obsJefeRechVuelo{{ s.id }}">
+        <i class="bi bi-x-lg"></i> Rechazar
+      </button>
+    </form>
+    <form method="post"
+          action="{{ url_for('planificador.planificador_vuelo_aprobar_jefe', sid=s.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsJefeAprobVuelo{{ s.id }}">
+      <button type="submit" class="btn btn-success btn-sm"
+              data-sync-obs="obsJefeVuelo{{ s.id }}" data-target-obs="obsJefeAprobVuelo{{ s.id }}">
+        <i class="bi bi-check2"></i> Aprobar
+      </button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{# ── Vuelo: aprobación Gerente General ── #}
+{% if s.puede_aprobar_gg_vuelo %}
+<div class="action-zone action-zone-blue mt-3">
+  <h3><i class="bi bi-building me-1"></i>Aprobación — Gerente General</h3>
+  <p class="small text-muted mb-2">
+    Esta solicitud de vuelo no tiene presupuesto disponible y requiere su autorización para continuar.
+  </p>
+  <label class="form-label">Observación</label>
+  <textarea class="form-control form-control-sm textarea-obs" id="obsGGVuelo{{ s.id }}"
+            placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
+  <div class="d-flex gap-2 justify-content-end mt-2">
+    <form method="post"
+          action="{{ url_for('planificador.planificador_vuelo_rechazar_gg', sid=s.id) }}"
+          data-confirm="¿Rechazar esta solicitud?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsGGRechVuelo{{ s.id }}">
+      <button type="submit" class="btn btn-danger btn-sm"
+              data-sync-obs="obsGGVuelo{{ s.id }}" data-target-obs="obsGGRechVuelo{{ s.id }}">
+        <i class="bi bi-x-lg"></i> Rechazar
+      </button>
+    </form>
+    <form method="post"
+          action="{{ url_for('planificador.planificador_vuelo_aprobar_gg', sid=s.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsGGAprobVuelo{{ s.id }}">
+      <button type="submit" class="btn btn-success btn-sm"
+              data-sync-obs="obsGGVuelo{{ s.id }}" data-target-obs="obsGGAprobVuelo{{ s.id }}">
+        <i class="bi bi-check2"></i> Aprobar
+      </button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{# ── Vuelo: coordinador registra gestión ── #}
+{% if s.puede_completar_vuelo %}
+<div class="action-zone action-zone-green mt-3">
+  <h3><i class="bi bi-airplane me-1"></i>Registrar gestión del vuelo</h3>
+  <p class="small text-muted mb-2">
+    Ingresa la información de reservación (pasaje, hotel, etc.) y adjunta los documentos de soporte.
+    Al guardar, el solicitante será notificado.
+  </p>
+  <form method="post" action="{{ url_for('planificador.planificador_vuelo_completar', sid=s.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="form-label">Información de reservación *</label>
+    <textarea class="form-control form-control-sm textarea-obs" name="observacion_coordinador"
+              placeholder="N° de reserva, aerolínea, horarios de vuelo, hotel, etc." required></textarea>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="submit" class="btn btn-success btn-sm">
+        <i class="bi bi-check2-circle me-1"></i>Registrar y notificar al solicitante
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
 {% if s.puede_coordinar %}
 <div class="action-zone mt-3">
   <h3><i class="bi bi-clock me-1"></i>Coordinar solicitud</h3>

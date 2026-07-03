@@ -327,6 +327,18 @@
   /* ──────────────────────────────────────────
      Event delegation global
   ────────────────────────────────────────── */
+  /* ── data-sync-obs: copia textarea → hidden input antes de submit ── */
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-sync-obs]');
+    if (btn) {
+      const srcId  = btn.dataset.syncObs;
+      const destId = btn.dataset.targetObs;
+      const src    = document.getElementById(srcId);
+      const dest   = document.getElementById(destId);
+      if (src && dest) dest.value = src.value;
+    }
+  });
+
   document.addEventListener('click', function (e) {
     const el = e.target.closest('[data-open-modal]');
     if (el) { openModal(el.dataset.openModal); return; }

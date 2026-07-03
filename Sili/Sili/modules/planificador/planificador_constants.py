@@ -29,16 +29,22 @@ TIPOS_SOLICITUD_DEFAULT = [
 ]
 
 ESTADOS = {
-    "PENDIENTE_COORDINACION":       "Pendiente coordinación",
-    "PENDIENTE_APROBACION":         "Pendiente aprobación",
-    "PENDIENTE_APROBACION_GERENTE": "Pendiente aprobación gerente",
-    "APROBADA":                     "Aprobada",
-    "RECHAZADA":                    "Rechazada",
-    "COMPLETADA":                   "Completada",
+    "PENDIENTE_APROBACION_JEFE":     "Pend. aprobación jefe",
+    "PENDIENTE_APROBACION_GG_VUELO": "Pend. aprobación GG",
+    "PENDIENTE_COORDINACION":        "Pendiente coordinación",
+    "PENDIENTE_APROBACION":          "Pendiente aprobación",
+    "PENDIENTE_APROBACION_GERENTE":  "Pendiente aprobación gerente",
+    "APROBADA":                      "Aprobada",
+    "RECHAZADA":                     "Rechazada",
+    "COMPLETADA":                    "Completada",
 }
 
 # Estados que agrupan cada sección de la tabla
-ESTADOS_RESERVADAS  = ("PENDIENTE_COORDINACION",)
+ESTADOS_RESERVADAS  = (
+    "PENDIENTE_APROBACION_JEFE",
+    "PENDIENTE_APROBACION_GG_VUELO",
+    "PENDIENTE_COORDINACION",
+)
 ESTADOS_COORDINADAS = ("PENDIENTE_APROBACION", "PENDIENTE_APROBACION_GERENTE", "APROBADA")
 ESTADOS_ATENDIDAS   = ("COMPLETADA", "RECHAZADA")
 

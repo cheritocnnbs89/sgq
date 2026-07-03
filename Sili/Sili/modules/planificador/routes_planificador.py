@@ -64,12 +64,15 @@ def solicitudes():
     rows = []
     for s in solicitudes_list:
         d = dict(s)
-        d["puede_coordinar"]       = svc.puede_coordinar(s, u["id"], ctx)
-        d["puede_aprobar"]         = svc.puede_aprobar(s, u["id"], ctx)
-        d["puede_aprobar_gerente"] = svc.puede_aprobar_gerente(s, u["id"], ctx)
-        d["puede_completar"]       = svc.puede_completar(s, u["id"], ctx)
-        d["puede_reagendar"]       = svc.puede_reagendar(s, u["id"], ctx)
-        d["puede_eliminar"]        = svc.puede_eliminar(s, u["id"], ctx)
+        d["puede_coordinar"]          = svc.puede_coordinar(s, u["id"], ctx)
+        d["puede_aprobar"]            = svc.puede_aprobar(s, u["id"], ctx)
+        d["puede_aprobar_gerente"]    = svc.puede_aprobar_gerente(s, u["id"], ctx)
+        d["puede_completar"]          = svc.puede_completar(s, u["id"], ctx)
+        d["puede_reagendar"]          = svc.puede_reagendar(s, u["id"], ctx)
+        d["puede_eliminar"]           = svc.puede_eliminar(s, u["id"], ctx)
+        d["puede_aprobar_jefe_vuelo"] = svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx)
+        d["puede_aprobar_gg_vuelo"]   = svc.puede_aprobar_gg_vuelo(s, u["id"], ctx)
+        d["puede_completar_vuelo"]    = svc.puede_completar_vuelo(s, u["id"], ctx)
         d["estado_label"]    = svc.estado_label(s["estado"])
         d["estado_class"]    = svc.estado_badge_class(s["estado"])
         d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
@@ -77,7 +80,9 @@ def solicitudes():
 
     # Dividir en secciones
     reservadas, coordinadas, atendidas = svc.agrupar_por_seccion(rows)
-    por_aprobar = [r for r in rows if r.get("puede_aprobar_gerente")]
+    por_aprobar = [r for r in rows if r.get("puede_aprobar_gerente")
+                   or r.get("puede_aprobar_jefe_vuelo")
+                   or r.get("puede_aprobar_gg_vuelo")]
 
     # Datos de calendario: semana actual ±2 semanas
     today = date.today()
@@ -149,12 +154,15 @@ def detalle(sid):
         abort(403)
 
     d = dict(s)
-    d["puede_coordinar"]       = svc.puede_coordinar(s, u["id"], ctx)
-    d["puede_aprobar"]         = svc.puede_aprobar(s, u["id"], ctx)
-    d["puede_aprobar_gerente"] = svc.puede_aprobar_gerente(s, u["id"], ctx)
-    d["puede_completar"]       = svc.puede_completar(s, u["id"], ctx)
-    d["puede_reagendar"]       = svc.puede_reagendar(s, u["id"], ctx)
-    d["puede_eliminar"]        = svc.puede_eliminar(s, u["id"], ctx)
+    d["puede_coordinar"]         = svc.puede_coordinar(s, u["id"], ctx)
+    d["puede_aprobar"]           = svc.puede_aprobar(s, u["id"], ctx)
+    d["puede_aprobar_gerente"]   = svc.puede_aprobar_gerente(s, u["id"], ctx)
+    d["puede_completar"]         = svc.puede_completar(s, u["id"], ctx)
+    d["puede_reagendar"]         = svc.puede_reagendar(s, u["id"], ctx)
+    d["puede_eliminar"]          = svc.puede_eliminar(s, u["id"], ctx)
+    d["puede_aprobar_jefe_vuelo"] = svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx)
+    d["puede_aprobar_gg_vuelo"]   = svc.puede_aprobar_gg_vuelo(s, u["id"], ctx)
+    d["puede_completar_vuelo"]    = svc.puede_completar_vuelo(s, u["id"], ctx)
     d["estado_label"]    = svc.estado_label(s["estado"])
     d["estado_class"]    = svc.estado_badge_class(s["estado"])
     d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
@@ -252,6 +260,21 @@ def crear():
                 requiere_aprov = 1
 
     ciudad = repo.get_ciudad_usuario(u["id"])
+
+    # Para Vuelo: el flujo empieza con aprobación del jefe directo
+    estado_inicial = "PENDIENTE_COORDINACION"
+    jefe_id_vuelo   = None
+    jefe_nombre_vuelo = None
+    if tipo == "Vuelo":
+        jefe = repo.get_gerente_del_usuario(u["id"])
+        if jefe:
+            jefe_id_vuelo     = jefe["id"]
+            jefe_nombre_vuelo = jefe["nombre"]
+            estado_inicial    = "PENDIENTE_APROBACION_JEFE"
+        else:
+            # Sin jefe configurado: va directo a coordinación
+            estado_inicial = "PENDIENTE_COORDINACION"
+
     sid = repo.crear_solicitud({
         "tipo":                           tipo,
         "area_solicitante":               area,
@@ -261,6 +284,7 @@ def crear():
         "contacto":                       request.form.get("contacto", "").strip(),
         "prioridad":                      request.form.get("prioridad", "Normal"),
         "fecha":                          fecha,
+        "estado":                         estado_inicial,
         "solicitante_id":                 u["id"],
         "solicitante_nombre":             u["nombre"],
         "ciudad":                         ciudad,
@@ -272,25 +296,30 @@ def crear():
         "orden_servicio":                 orden_servicio,
         "centro_costo_id":                cc_id,
         "requiere_aprobacion_presupuesto": requiere_aprov,
+        "gerente_id":                     jefe_id_vuelo,
+        "gerente_nombre":                 jefe_nombre_vuelo,
     })
-    try:
-        notif.notif_nueva_solicitud(sid, tipo, area, fecha, u["nombre"], solicitante_id=u["id"])
-    except Exception:
-        pass
 
-    # Notificar al gerente del solicitante cuando el tipo es Vuelo
     if tipo == "Vuelo":
+        # Notificar al jefe directo para que apruebe
         try:
-            gerente = repo.get_gerente_del_usuario(u["id"])
-            if gerente:
-                notif.notif_vuelo_nueva_gerente(
-                    sid, area, fecha, desc, ppto_raw or "—",
-                    u["nombre"], gerente["id"], gerente["nombre"],
-                )
+            notif.notif_vuelo_pendiente_jefe(
+                sid, area, fecha, desc, ppto_raw or "—",
+                u["nombre"], jefe_id_vuelo, jefe_nombre_vuelo or "—",
+            )
         except Exception:
             pass
+        msg = "Solicitud de Vuelo creada. Pendiente de aprobación de su jefe directo."
+        if not jefe_id_vuelo:
+            msg = "Solicitud de Vuelo creada. No tiene jefe configurado; pasó a coordinación."
+    else:
+        try:
+            notif.notif_nueva_solicitud(sid, tipo, area, fecha, u["nombre"], solicitante_id=u["id"])
+        except Exception:
+            pass
+        msg = "Solicitud creada. Queda pendiente de coordinación."
 
-    flash("Solicitud creada. Queda pendiente de coordinación.", "success")
+    flash(msg, "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -668,16 +697,35 @@ def reagendar(sid):
     # Guardar fecha anterior para la notificación
     fecha_anterior = str(s["fecha"]) if s["fecha"] else "—"
 
-    repo.reagendar_solicitud(sid, nueva_fecha, u["id"], u["nombre"], motivo)
-    try:
-        notif.notif_reagendada(
-            sid, s["tipo"], s["area_solicitante"],
-            fecha_anterior, nueva_fecha, motivo,
-            u["nombre"], s["solicitante_id"],
-        )
-    except Exception:
-        pass
-    flash(f"Solicitud reagendada para el {nueva_fecha}. El solicitante fue notificado.", "success")
+    es_vuelo = s["tipo"] == "Vuelo"
+    nuevo_estado = "PENDIENTE_APROBACION_JEFE" if es_vuelo else "PENDIENTE_COORDINACION"
+    repo.reagendar_solicitud(sid, nueva_fecha, u["id"], u["nombre"], motivo, nuevo_estado)
+
+    if es_vuelo:
+        # Renotificar al jefe para que vuelva a aprobar con la nueva fecha
+        try:
+            jefe_id   = s.get("gerente_id")
+            jefe_nom  = s.get("gerente_nombre", "—")
+            notif.notif_vuelo_pendiente_jefe(
+                sid, s["area_solicitante"], nueva_fecha,
+                s.get("descripcion", ""),
+                str(s.get("presupuesto_base_cero") or "—"),
+                s["solicitante_nombre"], jefe_id, jefe_nom,
+                es_reagenda=True,
+            )
+        except Exception:
+            pass
+        flash(f"Vuelo reagendado para el {nueva_fecha}. Vuelve a aprobación del jefe.", "success")
+    else:
+        try:
+            notif.notif_reagendada(
+                sid, s["tipo"], s["area_solicitante"],
+                fecha_anterior, nueva_fecha, motivo,
+                u["nombre"], s["solicitante_id"],
+            )
+        except Exception:
+            pass
+        flash(f"Solicitud reagendada para el {nueva_fecha}. El solicitante fue notificado.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -716,6 +764,157 @@ def eliminar(sid):
         pass
 
     flash("Solicitud eliminada.", "info")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Vuelo: aprobación jefe directo
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/vuelo/aprobar-jefe", methods=["POST"],
+                       endpoint="planificador_vuelo_aprobar_jefe")
+@require_login
+def vuelo_aprobar_jefe(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx):
+        abort(403)
+    obs = request.form.get("observacion", "").strip()
+    requiere_gg = bool(s.get("requiere_aprobacion_presupuesto"))
+    repo.aprobar_jefe_vuelo(sid, u["id"], u["nombre"], obs, requiere_gg)
+    if requiere_gg:
+        # Notificar al GG de Vuelos configurado
+        try:
+            gg_lista = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
+            for gg in gg_lista[1]:  # aprobadores del tipo Vuelo = GG
+                notif.notif_vuelo_pendiente_gg(
+                    sid, s["area_solicitante"], str(s["fecha"]),
+                    s.get("descripcion", ""), str(s.get("presupuesto_base_cero") or "—"),
+                    s["solicitante_nombre"], u["nombre"],
+                    gg.get("id"), gg.get("nombre", "—"),
+                )
+        except Exception:
+            pass
+        flash("Vuelo aprobado. Sin presupuesto — pasa a aprobación del Gerente General.", "info")
+    else:
+        try:
+            notif.notif_vuelo_aprobada_coordinacion(
+                sid, s["area_solicitante"], str(s["fecha"]),
+                s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+            )
+        except Exception:
+            pass
+        flash("Vuelo aprobado. Pasa a coordinación.", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+@planificador_bp.route("/solicitudes/<int:sid>/vuelo/rechazar-jefe", methods=["POST"],
+                       endpoint="planificador_vuelo_rechazar_jefe")
+@require_login
+def vuelo_rechazar_jefe(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx):
+        abort(403)
+    obs = request.form.get("observacion", "").strip()
+    if not obs:
+        flash("Debe indicar el motivo del rechazo.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+    repo.rechazar_vuelo(sid, u["id"], u["nombre"], obs)
+    try:
+        notif.notif_vuelo_rechazada(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            obs, s["solicitante_nombre"], s["solicitante_id"], u["nombre"],
+        )
+    except Exception:
+        pass
+    flash("Solicitud de Vuelo rechazada.", "warning")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Vuelo: aprobación Gerente General (sin presupuesto)
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/vuelo/aprobar-gg", methods=["POST"],
+                       endpoint="planificador_vuelo_aprobar_gg")
+@require_login
+def vuelo_aprobar_gg(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_aprobar_gg_vuelo(s, u["id"], ctx):
+        abort(403)
+    obs = request.form.get("observacion", "").strip()
+    repo.aprobar_gg_vuelo(sid, u["id"], u["nombre"], obs)
+    try:
+        notif.notif_vuelo_aprobada_coordinacion(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+        )
+    except Exception:
+        pass
+    flash("Vuelo aprobado por GG. Pasa a coordinación.", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+@planificador_bp.route("/solicitudes/<int:sid>/vuelo/rechazar-gg", methods=["POST"],
+                       endpoint="planificador_vuelo_rechazar_gg")
+@require_login
+def vuelo_rechazar_gg(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_aprobar_gg_vuelo(s, u["id"], ctx):
+        abort(403)
+    obs = request.form.get("observacion", "").strip()
+    if not obs:
+        flash("Debe indicar el motivo del rechazo.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+    repo.rechazar_vuelo(sid, u["id"], u["nombre"], obs)
+    try:
+        notif.notif_vuelo_rechazada(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            obs, s["solicitante_nombre"], s["solicitante_id"], u["nombre"],
+        )
+    except Exception:
+        pass
+    flash("Solicitud de Vuelo rechazada por GG.", "warning")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Vuelo: coordinador registra gestión y completa
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/vuelo/completar", methods=["POST"],
+                       endpoint="planificador_vuelo_completar")
+@require_login
+def vuelo_completar(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_completar_vuelo(s, u["id"], ctx):
+        abort(403)
+    obs = request.form.get("observacion_coordinador", "").strip()
+    if not obs:
+        flash("Debe ingresar la información de la reservación.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+    repo.completar_vuelo(sid, u["id"], u["nombre"], obs)
+    # Notificar al solicitante con detalles y archivos
+    try:
+        adjuntos = repo.get_adjuntos(sid)
+        notif.notif_vuelo_completada(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            s.get("descripcion", ""), obs,
+            s["solicitante_nombre"], s["solicitante_id"],
+            u["nombre"], adjuntos,
+        )
+    except Exception:
+        pass
+    flash("Gestión de vuelo registrada. El solicitante fue notificado.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 

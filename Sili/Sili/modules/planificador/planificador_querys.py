@@ -153,16 +153,18 @@ SQL_INSERT_SOLICITUD = f"""
          ciudad, presupuesto_base_cero,
          fecha_retorno, punto_salida, punto_destino,
          requiere_hospedaje, orden_servicio, centro_costo_id,
-         requiere_aprobacion_presupuesto)
+         requiere_aprobacion_presupuesto,
+         gerente_id, gerente_nombre)
     OUTPUT INSERTED.id
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDIENTE_COORDINACION', ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?,
+            ?, ?)
 """
 
 SQL_UPDATE_REAGENDAR = f"""
     UPDATE {TBL_SOLICITUDES} SET
         fecha                   = ?,
-        estado                  = 'PENDIENTE_COORDINACION',
+        estado                  = ?,
         hora_inicio             = NULL,
         hora_fin                = NULL,
         coordinador_id          = NULL,
@@ -170,6 +172,69 @@ SQL_UPDATE_REAGENDAR = f"""
         observacion_coordinador = NULL,
         fecha_actualizacion     = GETDATE()
     WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: aprobación jefe → sin problema presupuestal → coordinación
+SQL_VUELO_APROBAR_JEFE_OK = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado                = 'PENDIENTE_COORDINACION',
+        aprobador_id          = ?,
+        aprobador_nombre      = ?,
+        observacion_aprobador = ?,
+        fecha_actualizacion   = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: aprobación jefe → sin presupuesto → requiere GG
+SQL_VUELO_APROBAR_JEFE_GG = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado                = 'PENDIENTE_APROBACION_GG_VUELO',
+        aprobador_id          = ?,
+        aprobador_nombre      = ?,
+        observacion_aprobador = ?,
+        fecha_actualizacion   = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: GG aprueba → coordinación
+SQL_VUELO_APROBAR_GG = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado              = 'PENDIENTE_COORDINACION',
+        fecha_actualizacion = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: coordinador registra gestión y completa
+SQL_VUELO_COMPLETAR = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado                  = 'COMPLETADA',
+        coordinador_id          = ?,
+        coordinador_nombre      = ?,
+        observacion_coordinador = ?,
+        fecha_actualizacion     = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Solicitudes en PENDIENTE_APROBACION_JEFE para un gerente_id
+SQL_GET_SOLICITUDES_PENDIENTE_JEFE = f"""
+    SELECT s.*
+    FROM {TBL_SOLICITUDES} s
+    WHERE s.activo = 1
+      AND s.estado = 'PENDIENTE_APROBACION_JEFE'
+      AND s.gerente_id = ?
+      {{where_extra}}
+    ORDER BY s.fecha DESC
+"""
+
+# ── Solicitudes en PENDIENTE_APROBACION_GG_VUELO para tipos del GG
+SQL_GET_SOLICITUDES_PENDIENTE_GG_VUELO = f"""
+    SELECT s.*
+    FROM {TBL_SOLICITUDES} s
+    WHERE s.activo = 1
+      AND s.estado = 'PENDIENTE_APROBACION_GG_VUELO'
+      AND s.tipo IN ({{placeholders}})
+      {{where_extra}}
+    ORDER BY s.fecha DESC
 """
 
 SQL_UPDATE_COORDINAR = f"""

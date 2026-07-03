@@ -5,7 +5,7 @@
 from flask import session
 from . import planificador_repository as repo
 from .planificador_constants import (
-    ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO,
+    ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
     ROLES_ADMIN, ROLES_GERENTE, ESTADOS,
     ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_ATENDIDAS,
 )
@@ -19,12 +19,14 @@ def get_user_context(usuario_id, rol):
     tipos_coordinador = [r["tipo"] for r in config_rows if r["rol_config"] == ROL_COORDINADOR]
     tipos_aprobador   = [r["tipo"] for r in config_rows if r["rol_config"] == ROL_APROBADOR]
     tipos_motorizado  = [r["tipo"] for r in config_rows if r["rol_config"] == ROL_MOTORIZADO]
+    tipos_gg_vuelo    = [r["tipo"] for r in config_rows if r["rol_config"] == ROL_GERENTE_PRESUPUESTO]
     es_admin          = rol in ROLES_ADMIN
     es_gerente        = rol.lower() in ROLES_GERENTE if rol else False
     return {
         "tipos_coordinador": tipos_coordinador,
         "tipos_aprobador":   tipos_aprobador,
         "tipos_motorizado":  tipos_motorizado,
+        "tipos_gg_vuelo":    tipos_gg_vuelo,
         "es_admin":          es_admin,
         "es_gerente":        es_gerente,
         "user_id":           usuario_id,
@@ -64,13 +66,20 @@ def get_solicitudes_for_user(usuario_id, rol, filters=None):
             ["APROBADA"],
             filters
         )
-    # Gerentes ven solicitudes pendientes de su aprobación
+    # Gerentes ven solicitudes PENDIENTE_APROBACION_GERENTE (flujo general)
     if ctx.get("es_gerente"):
         todos_tipos = repo.get_tipos_solicitud()
         if todos_tipos:
             extra += repo.get_solicitudes_pendiente_gerente_para_usuario(
                 ctx["user_id"], todos_tipos, filters
             )
+
+    # Jefe directo: ve Vuelo en PENDIENTE_APROBACION_JEFE donde gerente_id = este usuario
+    extra += repo.get_solicitudes_pendiente_jefe(ctx["user_id"], filters)
+
+    # GG de Vuelos: ve PENDIENTE_APROBACION_GG_VUELO para los tipos que tiene configurado
+    if ctx.get("tipos_gg_vuelo"):
+        extra += repo.get_solicitudes_pendiente_gg_vuelo(ctx["tipos_gg_vuelo"], filters)
 
     # Merge sin duplicados
     seen = set(ids_propias)
@@ -104,8 +113,10 @@ def _fecha_es_pasada(fecha_val) -> bool:
 def puede_coordinar(solicitud, usuario_id, ctx):
     if solicitud["estado"] != "PENDIENTE_COORDINACION":
         return False
+    if solicitud.get("tipo") == "Vuelo":
+        return False  # Vuelo usa puede_completar_vuelo, no coordinar normal
     if _fecha_es_pasada(solicitud.get("fecha")):
-        return False          # fecha pasada → solo se puede reagendar
+        return False
     return ctx["es_admin"] or solicitud["tipo"] in ctx["tipos_coordinador"]
 
 
@@ -117,12 +128,41 @@ def puede_aprobar(solicitud, usuario_id, ctx):
 
 
 def puede_completar(solicitud, usuario_id, ctx):
+    if solicitud.get("tipo") == "Vuelo":
+        return False  # Vuelo usa puede_completar_vuelo
     return (
         ctx["es_admin"]
         or solicitud["tipo"] in ctx["tipos_coordinador"]
         or solicitud["tipo"] in ctx["tipos_aprobador"]
         or solicitud["tipo"] in ctx.get("tipos_motorizado", [])
     ) and solicitud["estado"] == "APROBADA"
+
+
+def puede_aprobar_jefe_vuelo(solicitud, usuario_id, ctx):
+    """Jefe directo aprueba/rechaza solicitud de Vuelo recién creada."""
+    if solicitud.get("estado") != "PENDIENTE_APROBACION_JEFE":
+        return False
+    if ctx["es_admin"]:
+        return True
+    return solicitud.get("gerente_id") == usuario_id
+
+
+def puede_aprobar_gg_vuelo(solicitud, usuario_id, ctx):
+    """GG de Vuelos aprueba cuando no hay presupuesto."""
+    if solicitud.get("estado") != "PENDIENTE_APROBACION_GG_VUELO":
+        return False
+    if ctx["es_admin"]:
+        return True
+    return solicitud.get("tipo") in ctx.get("tipos_gg_vuelo", [])
+
+
+def puede_completar_vuelo(solicitud, usuario_id, ctx):
+    """Coordinador registra gestión de Vuelo y completa."""
+    if solicitud.get("tipo") != "Vuelo":
+        return False
+    if solicitud.get("estado") != "PENDIENTE_COORDINACION":
+        return False
+    return ctx["es_admin"] or solicitud.get("tipo") in ctx["tipos_coordinador"]
 
 
 def puede_aprobar_gerente(solicitud, usuario_id, ctx):
@@ -189,10 +229,12 @@ def estado_label(estado):
 
 def estado_badge_class(estado):
     return {
-        "PENDIENTE_COORDINACION":       "bg-warning text-dark",
-        "PENDIENTE_APROBACION":         "bg-info text-dark",
-        "PENDIENTE_APROBACION_GERENTE": "bg-primary",
-        "APROBADA":                     "bg-success",
-        "RECHAZADA":                    "bg-danger",
-        "COMPLETADA":                   "bg-dark",
+        "PENDIENTE_APROBACION_JEFE":     "bg-warning text-dark",
+        "PENDIENTE_APROBACION_GG_VUELO": "bg-orange text-dark",
+        "PENDIENTE_COORDINACION":        "bg-warning text-dark",
+        "PENDIENTE_APROBACION":          "bg-info text-dark",
+        "PENDIENTE_APROBACION_GERENTE":  "bg-primary",
+        "APROBADA":                      "bg-success",
+        "RECHAZADA":                     "bg-danger",
+        "COMPLETADA":                    "bg-dark",
     }.get(estado, "bg-secondary")

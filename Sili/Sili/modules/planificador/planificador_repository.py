@@ -60,6 +60,12 @@ from .planificador_querys import (
     SQL_INSERT_SOLICITUD_LOG,
     SQL_GET_SOLICITUD_LOGS,
     SQL_INSERT_NOTIFY_INAPP,
+    SQL_VUELO_APROBAR_JEFE_OK,
+    SQL_VUELO_APROBAR_JEFE_GG,
+    SQL_VUELO_APROBAR_GG,
+    SQL_VUELO_COMPLETAR,
+    SQL_GET_SOLICITUDES_PENDIENTE_JEFE,
+    SQL_GET_SOLICITUDES_PENDIENTE_GG_VUELO,
     SQL_CREATE_PRESUPUESTO_TABLE,
     SQL_GET_TIPOS_GASTO,
     SQL_GET_PRESUPUESTO_CC,
@@ -284,6 +290,7 @@ def crear_solicitud(data):
         data["lugar_destino"], data.get("detalle_direccion", ""),
         data.get("contacto", ""),
         data.get("prioridad", "Normal"), data["fecha"],
+        data.get("estado", "PENDIENTE_COORDINACION"),
         data["solicitante_id"], data["solicitante_nombre"],
         data.get("ciudad", ""),
         data.get("presupuesto_base_cero"),
@@ -294,6 +301,8 @@ def crear_solicitud(data):
         data.get("orden_servicio"),
         data.get("centro_costo_id"),
         data.get("requiere_aprobacion_presupuesto", 0),
+        data.get("gerente_id"),
+        data.get("gerente_nombre"),
     ))
     row = cur.fetchone()
     conn.commit()
@@ -306,19 +315,102 @@ def crear_solicitud(data):
 
 
 def reagendar_solicitud(solicitud_id: int, nueva_fecha: str,
-                        coordinador_id: int, coordinador_nombre: str, motivo: str):
+                        coordinador_id: int, coordinador_nombre: str, motivo: str,
+                        nuevo_estado: str = "PENDIENTE_COORDINACION"):
     conn = get_db()
     cur = conn.cursor()
     cur.execute(SQL_GET_FECHA_SOLICITUD, (solicitud_id,))
     row_prev = cur.fetchone()
     fecha_anterior = str(row_prev[0]) if row_prev else "—"
-    cur.execute(SQL_UPDATE_REAGENDAR, (nueva_fecha, solicitud_id))
+    cur.execute(SQL_UPDATE_REAGENDAR, (nueva_fecha, nuevo_estado, solicitud_id))
     conn.commit()
     conn.close()
     insert_solicitud_log(
         solicitud_id, "REAGENDADA", coordinador_id, coordinador_nombre,
         f"Fecha anterior: {fecha_anterior} → Nueva fecha: {nueva_fecha}. Motivo: {motivo or '—'}"
     )
+
+
+def aprobar_jefe_vuelo(solicitud_id: int, jefe_id: int, jefe_nombre: str,
+                       obs: str, requiere_gg: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    sql = SQL_VUELO_APROBAR_JEFE_GG if requiere_gg else SQL_VUELO_APROBAR_JEFE_OK
+    cur.execute(sql, (jefe_id, jefe_nombre, obs or "", solicitud_id))
+    conn.commit()
+    accion = "APROBADA_JEFE_GG" if requiere_gg else "APROBADA_JEFE"
+    insert_solicitud_log(solicitud_id, accion, jefe_id, jefe_nombre,
+                         f"Jefe aprueba vuelo. {'Requiere GG: sin presupuesto.' if requiere_gg else 'Sin requiere GG.'}")
+
+
+def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_UPDATE_RECHAZAR, (usuario_id, usuario_nombre, obs or "", solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "RECHAZADA", usuario_id, usuario_nombre,
+                         f"Solicitud rechazada. Motivo: {obs or '—'}")
+
+
+def aprobar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VUELO_APROBAR_GG, (solicitud_id,))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "APROBADA_GG", gg_id, gg_nombre,
+                         f"GG aprueba vuelo sin presupuesto. {obs or ''}")
+
+
+def completar_vuelo(solicitud_id: int, coordinador_id: int,
+                    coordinador_nombre: str, obs: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VUELO_COMPLETAR,
+                (coordinador_id, coordinador_nombre, obs or "", solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COMPLETADA", coordinador_id, coordinador_nombre,
+                         f"Coordinador registra gestión. Obs: {obs or '—'}")
+
+
+def get_solicitudes_pendiente_jefe(jefe_id: int, filters: dict | None = None) -> list:
+    filters = filters or {}
+    where_extra = ""
+    params_extra = []
+    if filters.get("fecha_desde"):
+        where_extra += " AND s.fecha >= ?"
+        params_extra.append(filters["fecha_desde"])
+    if filters.get("fecha_hasta"):
+        where_extra += " AND s.fecha <= ?"
+        params_extra.append(filters["fecha_hasta"])
+    sql = SQL_GET_SOLICITUDES_PENDIENTE_JEFE.format(where_extra=where_extra)
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(sql, [jefe_id] + params_extra)
+    cols = [c[0] for c in cur.description]
+    return [dict(zip(cols, r)) for r in cur.fetchall()]
+
+
+def get_solicitudes_pendiente_gg_vuelo(tipos: list, filters: dict | None = None) -> list:
+    if not tipos:
+        return []
+    filters = filters or {}
+    where_extra = ""
+    params_extra = []
+    if filters.get("fecha_desde"):
+        where_extra += " AND s.fecha >= ?"
+        params_extra.append(filters["fecha_desde"])
+    if filters.get("fecha_hasta"):
+        where_extra += " AND s.fecha <= ?"
+        params_extra.append(filters["fecha_hasta"])
+    placeholders = ",".join(["?"] * len(tipos))
+    sql = SQL_GET_SOLICITUDES_PENDIENTE_GG_VUELO.format(
+        placeholders=placeholders, where_extra=where_extra
+    )
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(sql, tipos + params_extra)
+    cols = [c[0] for c in cur.description]
+    return [dict(zip(cols, r)) for r in cur.fetchall()]
 
 
 def coordinar_solicitud(solicitud_id, coordinador_id, coordinador_nombre,
