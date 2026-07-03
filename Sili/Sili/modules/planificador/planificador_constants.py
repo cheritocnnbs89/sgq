@@ -47,9 +47,25 @@ ROLES_GERENTE = ("gerente", "gerente financiero", "gerente general")
 
 PRIORIDADES = ["Normal", "Alta", "Urgente"]
 
-ROL_COORDINADOR = "COORDINADOR"
-ROL_APROBADOR   = "APROBADOR"
-ROL_MOTORIZADO  = "MOTORIZADO"
+ROL_COORDINADOR        = "COORDINADOR"
+ROL_APROBADOR          = "APROBADOR"
+ROL_MOTORIZADO         = "MOTORIZADO"
+ROL_GERENTE_PRESUPUESTO = "GERENTE_PRESUPUESTO"
 
 # roles de sistema que tienen acceso total al planificador
 ROLES_ADMIN = ("admin", "jefe")
+
+# Tabla de presupuesto por CC/empresa/tipo de gasto
+TBL_PRESUPUESTO = "planificador_presupuesto"
+
+# param_group para tipos de gasto (parametrizables desde Parámetros generales)
+PARAM_GROUP_TIPOS_GASTO = "PLANIFICADOR_TIPOS_GASTO"
+
+# Fallback si no hay datos en param_values todavía
+TIPOS_GASTO_DEFAULT = ["Alimentación", "Hospedaje", "Ticket aéreo"]
+
+# Semáforo: % ejecutado a partir del cual cambia de verde a amarillo
+SEMAFORO_AMARILLO_PCT = 50  # >= 50% usado → amarillo
+# >= 100% usado → rojo (sin presupuesto, requiere aprobación GG)
+
+PERM_PRESUPUESTO = "planificador.presupuesto"

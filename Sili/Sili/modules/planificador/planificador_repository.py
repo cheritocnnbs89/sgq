@@ -65,6 +65,7 @@ from .planificador_querys import (
     SQL_GET_PRESUPUESTO_CC,
     SQL_UPSERT_PRESUPUESTO,
     SQL_GET_SALDO_PRESUPUESTO,
+    SQL_GET_SALDO_ANUAL_PRESUPUESTO,
     SQL_ADD_EJECUTADO,
 )
 
@@ -286,11 +287,17 @@ def crear_solicitud(data):
         data["solicitante_id"], data["solicitante_nombre"],
         data.get("ciudad", ""),
         data.get("presupuesto_base_cero"),
+        data.get("fecha_retorno"),
+        data.get("punto_salida"),
+        data.get("punto_destino"),
+        data.get("requiere_hospedaje", 0),
+        data.get("orden_servicio"),
+        data.get("centro_costo_id"),
+        data.get("requiere_aprobacion_presupuesto", 0),
     ))
     row = cur.fetchone()
     conn.commit()
     sid = row[0] if row else None
-    conn.close()
     if sid:
         insert_solicitud_log(sid, "CREADA", data["solicitante_id"],
                              data["solicitante_nombre"],
@@ -765,7 +772,6 @@ def get_tipos_gasto() -> list[str]:
     cur = conn.cursor()
     cur.execute(SQL_GET_TIPOS_GASTO, (PARAM_GROUP_TIPOS_GASTO,))
     rows = [r[0] for r in cur.fetchall()]
-    conn.close()
     return rows if rows else TIPOS_GASTO_DEFAULT
 
 
@@ -803,7 +809,28 @@ def get_saldo_presupuesto(empresa_id: int, cc_id: int, tipo_gasto: str,
     cur = conn.cursor()
     cur.execute(SQL_GET_SALDO_PRESUPUESTO, (empresa_id, cc_id, tipo_gasto, anio, mes))
     row = cur.fetchone()
-    conn.close()
+    if not row:
+        return {"presupuestado": 0, "ejecutado": 0, "pct": 0, "semaforo": "verde"}
+    presupuestado = float(row[0])
+    ejecutado = float(row[1])
+    pct = (ejecutado / presupuestado * 100) if presupuestado > 0 else 0
+    if pct >= 100:
+        semaforo = "rojo"
+    elif pct >= SEMAFORO_AMARILLO_PCT:
+        semaforo = "amarillo"
+    else:
+        semaforo = "verde"
+    return {"presupuestado": presupuestado, "ejecutado": ejecutado,
+            "pct": round(pct, 1), "semaforo": semaforo}
+
+
+def get_saldo_anual_presupuesto(empresa_id: int, cc_id: int, tipo_gasto: str,
+                                anio: int) -> dict:
+    """Saldo acumulado del año entero (para indicador de vuelos)."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_SALDO_ANUAL_PRESUPUESTO, (empresa_id, cc_id, tipo_gasto, anio))
+    row = cur.fetchone()
     if not row:
         return {"presupuestado": 0, "ejecutado": 0, "pct": 0, "semaforo": "verde"}
     presupuestado = float(row[0])
@@ -825,7 +852,6 @@ def add_ejecutado(empresa_id: int, cc_id: int, tipo_gasto: str,
     cur = conn.cursor()
     cur.execute(SQL_ADD_EJECUTADO, (monto, empresa_id, cc_id, tipo_gasto, anio, mes))
     conn.commit()
-    conn.close()
 
 
 def get_centros_costo_con_presupuesto(empresa_id: int, anio: int) -> list[dict]:
@@ -841,5 +867,31 @@ def get_centros_costo_con_presupuesto(empresa_id: int, anio: int) -> list[dict]:
     """, (empresa_id, anio))
     cols = [c[0] for c in cur.description]
     rows = [dict(zip(cols, r)) for r in cur.fetchall()]
-    conn.close()
     return rows
+
+
+def get_cc_usuario(usuario_id: int) -> dict | None:
+    """Retorna el centro de costo principal del usuario (mayor porcentaje en usuarios_cc)."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT TOP 1
+            uc.centro_costo_id,
+            pv.valor    AS cc_codigo,
+            pv.nombre   AS cc_nombre,
+            u.empresa_id
+        FROM usuarios_cc uc
+        JOIN usuarios u   ON u.id  = uc.usuario_id
+        JOIN param_values pv ON pv.id = uc.centro_costo_id
+        WHERE uc.usuario_id = ?
+        ORDER BY uc.porcentaje DESC
+    """, (usuario_id,))
+    row = cur.fetchone()
+    if not row:
+        return None
+    return {
+        "cc_id":      row[0],
+        "cc_codigo":  row[1] or "",
+        "cc_nombre":  row[2],
+        "empresa_id": row[3],
+    }

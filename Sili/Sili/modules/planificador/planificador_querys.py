@@ -18,6 +18,7 @@ from .planificador_constants import (
     TBL_PUESTOS,
     TBL_PARAM_VALUES,
     TBL_PARAM_GROUPS,
+    TBL_PRESUPUESTO,
 )
 
 # ──────────────────────────────────────────────
@@ -149,9 +150,13 @@ SQL_INSERT_SOLICITUD = f"""
     INSERT INTO {TBL_SOLICITUDES}
         (tipo, area_solicitante, descripcion, lugar_destino, detalle_direccion,
          contacto, prioridad, fecha, estado, solicitante_id, solicitante_nombre,
-         ciudad, presupuesto_base_cero)
+         ciudad, presupuesto_base_cero,
+         fecha_retorno, punto_salida, punto_destino,
+         requiere_hospedaje, orden_servicio, centro_costo_id,
+         requiere_aprobacion_presupuesto)
     OUTPUT INSERTED.id
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDIENTE_COORDINACION', ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDIENTE_COORDINACION', ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?)
 """
 
 SQL_UPDATE_REAGENDAR = f"""
@@ -474,4 +479,109 @@ SQL_GET_SOLICITUD_LOGS = f"""
 SQL_INSERT_NOTIFY_INAPP = f"""
     INSERT INTO {TBL_NOTIFY_INAPP} (user_id, title, body, created_at, is_read)
     VALUES (?, ?, ?, ?, 0)
+"""
+
+# ──────────────────────────────────────────────
+# Presupuesto por CC / empresa / tipo de gasto
+# ──────────────────────────────────────────────
+
+SQL_CREATE_PRESUPUESTO_TABLE = f"""
+    IF OBJECT_ID('{TBL_PRESUPUESTO}', 'U') IS NULL
+    BEGIN
+        CREATE TABLE {TBL_PRESUPUESTO} (
+            id                  INT IDENTITY(1,1) PRIMARY KEY,
+            empresa_id          INT          NOT NULL,
+            centro_costo_id     INT          NOT NULL,
+            tipo_gasto          NVARCHAR(100) NOT NULL,
+            anio                INT          NOT NULL,
+            mes                 TINYINT      NOT NULL CHECK (mes BETWEEN 1 AND 12),
+            monto_presupuestado DECIMAL(18,2) NOT NULL DEFAULT 0,
+            monto_ejecutado     DECIMAL(18,2) NOT NULL DEFAULT 0,
+            CONSTRAINT UQ_plan_presup UNIQUE (empresa_id, centro_costo_id, tipo_gasto, anio, mes)
+        );
+    END
+"""
+
+SQL_GET_TIPOS_GASTO = f"""
+    SELECT pv.nombre
+    FROM {TBL_PARAM_VALUES} pv
+    JOIN {TBL_PARAM_GROUPS} pg ON pg.id = pv.group_id
+    WHERE pg.nombre = ?
+      AND pv.activo = 1
+    ORDER BY pv.orden, pv.nombre
+"""
+
+SQL_GET_PRESUPUESTO_GRID = f"""
+    SELECT
+        e.id   AS empresa_id,
+        e.razon_social AS empresa_nombre,
+        pv.id  AS centro_costo_id,
+        pv.nombre AS centro_costo_nombre,
+        p.tipo_gasto,
+        p.mes,
+        p.monto_presupuestado,
+        p.monto_ejecutado
+    FROM empresas e
+    JOIN {TBL_USUARIOS} u ON u.empresa_id = e.id
+    JOIN param_values pv  ON pv.id = u.cuenta_contable_id
+    LEFT JOIN {TBL_PRESUPUESTO} p
+           ON p.empresa_id      = e.id
+          AND p.centro_costo_id = pv.id
+          AND p.tipo_gasto      = ?
+          AND p.anio            = ?
+    WHERE e.activo = 1
+      AND u.disabled = 0
+      AND (? IS NULL OR e.id = ?)
+    GROUP BY e.id, e.razon_social, pv.id, pv.nombre,
+             p.tipo_gasto, p.mes, p.monto_presupuestado, p.monto_ejecutado
+    ORDER BY e.razon_social, pv.nombre, p.mes
+"""
+
+SQL_GET_PRESUPUESTO_CC = f"""
+    SELECT mes, monto_presupuestado, monto_ejecutado
+    FROM {TBL_PRESUPUESTO}
+    WHERE empresa_id = ? AND centro_costo_id = ? AND tipo_gasto = ? AND anio = ?
+"""
+
+SQL_UPSERT_PRESUPUESTO = f"""
+    IF EXISTS (
+        SELECT 1 FROM {TBL_PRESUPUESTO}
+        WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+    )
+        UPDATE {TBL_PRESUPUESTO}
+           SET monto_presupuestado = ?
+         WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+    ELSE
+        INSERT INTO {TBL_PRESUPUESTO}
+            (empresa_id, centro_costo_id, tipo_gasto, anio, mes, monto_presupuestado, monto_ejecutado)
+        VALUES (?, ?, ?, ?, ?, ?, 0)
+"""
+
+SQL_GET_SALDO_PRESUPUESTO = f"""
+    SELECT
+        COALESCE(SUM(monto_presupuestado), 0) AS presupuestado,
+        COALESCE(SUM(monto_ejecutado), 0)     AS ejecutado
+    FROM {TBL_PRESUPUESTO}
+    WHERE empresa_id      = ?
+      AND centro_costo_id = ?
+      AND tipo_gasto      = ?
+      AND anio            = ?
+      AND mes             = ?
+"""
+
+SQL_GET_SALDO_ANUAL_PRESUPUESTO = f"""
+    SELECT
+        COALESCE(SUM(monto_presupuestado), 0) AS presupuestado,
+        COALESCE(SUM(monto_ejecutado), 0)     AS ejecutado
+    FROM {TBL_PRESUPUESTO}
+    WHERE empresa_id      = ?
+      AND centro_costo_id = ?
+      AND tipo_gasto      = ?
+      AND anio            = ?
+"""
+
+SQL_ADD_EJECUTADO = f"""
+    UPDATE {TBL_PRESUPUESTO}
+       SET monto_ejecutado = monto_ejecutado + ?
+     WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
 """

@@ -342,7 +342,7 @@
                    value="{{ usuario_dept.dept_nombre }}" readonly>
             {% endif %}
           </div>
-          <div>
+          <div id="campoFechaRegularDiv">
             <label class="form-label">Fecha *</label>
             <input class="form-control" type="date" name="fecha" id="nfecha" required>
           </div>
@@ -386,12 +386,64 @@
             <textarea class="form-control textarea-desc" name="descripcion" required
                       placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
           </div>
+          {# ── Campos exclusivos para Vuelo ── #}
+          {# Selector de fechas estilo aerolínea #}
+          <div class="full campo-vuelo" id="campoFechasVueloDiv">
+            <label class="form-label">Fechas del vuelo *</label>
+            <div class="vuelo-fecha-picker">
+              <div class="vuelo-fecha-slot">
+                <span class="vuelo-fecha-icono">✈</span>
+                <div class="vuelo-fecha-content">
+                  <span class="vuelo-fecha-lbl">Salida</span>
+                  <input type="date" name="fecha" id="nfechaVuelo" class="vuelo-fecha-input" disabled>
+                </div>
+              </div>
+              <div class="vuelo-fecha-sep">⇄</div>
+              <div class="vuelo-fecha-slot">
+                <span class="vuelo-fecha-icono">🛬</span>
+                <div class="vuelo-fecha-content">
+                  <span class="vuelo-fecha-lbl">Regreso</span>
+                  <input type="date" name="fecha_retorno" id="campoFechaRetorno"
+                         class="vuelo-fecha-input">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="campo-vuelo" id="campoPuntoSalidaDiv">
+            <label class="form-label">Punto de salida *</label>
+            <input class="form-control" name="punto_salida" id="campoPuntoSalida"
+                   placeholder="Ej: Quito (UIO)">
+          </div>
+          <div class="campo-vuelo" id="campoPuntoDestinoDiv">
+            <label class="form-label">Punto de destino *</label>
+            <input class="form-control" name="punto_destino" id="campoPuntoDestino"
+                   placeholder="Ej: Guayaquil (GYE)">
+          </div>
+          <div class="campo-vuelo" id="campoOrdenServicioDiv">
+            <label class="form-label">Orden de servicio <span class="text-muted">(CO - Opcional)</span></label>
+            <input class="form-control" name="orden_servicio" id="campoOrdenServicio"
+                   placeholder="Ej: CO-2025-001">
+          </div>
+          <div class="full campo-vuelo" id="campoHospedajeDiv">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="requiere_hospedaje"
+                     id="campoRequiereHospedaje" value="1">
+              <label class="form-check-label" for="campoRequiereHospedaje">
+                Requiere hospedaje
+              </label>
+            </div>
+          </div>
           <div class="full campo-vuelo" id="campoPptoBaseDiv">
             <label class="form-label">Presupuesto Base Cero *</label>
             <input class="form-control" type="number" name="presupuesto_base_cero"
                    id="campoPptoBase" min="0" step="0.01"
                    placeholder="Ej: 1500.00">
-            <div class="form-text">Requerido para solicitudes de tipo Vuelo.</div>
+          </div>
+          <div class="full campo-vuelo" id="campoSaldoPresupDiv">
+            <div class="vuelo-presup-ind" id="indicadorPresup">
+              <span class="vuelo-presup-dot"></span>
+              <span class="vuelo-presup-label"></span>
+            </div>
           </div>
         </div>
         <div class="rec-notice">

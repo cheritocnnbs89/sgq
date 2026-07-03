@@ -595,16 +595,83 @@
     if (target) target.classList.add('active');
   });
 
-  /* ── Campo Presupuesto Base Cero (solo tipo Vuelo) ── */
+  /* ── Campos exclusivos de tipo Vuelo ── */
   var TIPO_VUELO = 'Vuelo';
+
+  var VUELO_CAMPOS = [
+    { divId: 'campoFechasVueloDiv',   inputId: null,                    required: false },
+    { divId: 'campoPuntoSalidaDiv',   inputId: 'campoPuntoSalida',      required: true  },
+    { divId: 'campoPuntoDestinoDiv',  inputId: 'campoPuntoDestino',     required: true  },
+    { divId: 'campoOrdenServicioDiv', inputId: 'campoOrdenServicio',    required: false },
+    { divId: 'campoHospedajeDiv',     inputId: 'campoRequiereHospedaje',required: false },
+    { divId: 'campoPptoBaseDiv',      inputId: 'campoPptoBase',         required: true  },
+    { divId: 'campoSaldoPresupDiv',   inputId: null,                    required: false },
+  ];
+
   function toggleCampoVuelo(tipoVal) {
-    var div   = document.getElementById('campoPptoBaseDiv');
-    var input = document.getElementById('campoPptoBase');
-    if (!div || !input) return;
     var esVuelo = (tipoVal === TIPO_VUELO);
-    div.classList.toggle('visible', esVuelo);
-    input.required = esVuelo;
-    if (!esVuelo) input.value = '';
+
+    // Intercambiar campo fecha normal ↔ date picker Vuelo
+    var divFechaReg  = document.getElementById('campoFechaRegularDiv');
+    var inpFechaReg  = document.getElementById('nfecha');
+    var inpFechaVuelo = document.getElementById('nfechaVuelo');
+    if (divFechaReg)  divFechaReg.style.display = esVuelo ? 'none' : '';
+    if (inpFechaReg) {
+      inpFechaReg.required = !esVuelo;
+      inpFechaReg.disabled = esVuelo;
+      if (esVuelo) inpFechaReg.value = '';
+    }
+    if (inpFechaVuelo) {
+      inpFechaVuelo.required = esVuelo;
+      inpFechaVuelo.disabled = !esVuelo;
+      if (!esVuelo) inpFechaVuelo.value = '';
+    }
+
+    // Mostrar / ocultar resto de campos Vuelo
+    VUELO_CAMPOS.forEach(function (c) {
+      var div = document.getElementById(c.divId);
+      if (!div) return;
+      div.classList.toggle('visible', esVuelo);
+      if (c.inputId) {
+        var inp = document.getElementById(c.inputId);
+        if (inp) {
+          inp.required = esVuelo && c.required;
+          if (!esVuelo) {
+            if (inp.type === 'checkbox') inp.checked = false;
+            else inp.value = '';
+          }
+        }
+      }
+    });
+
+    if (esVuelo) fetchSaldoPresupuesto();
+  }
+
+  function fetchSaldoPresupuesto() {
+    var ind = document.getElementById('indicadorPresup');
+    if (!ind) return;
+    ind.className = 'vuelo-presup-ind vuelo-presup-cargando';
+    ind.querySelector('.vuelo-presup-label').textContent = 'Verificando presupuesto...';
+    fetch('/planificador/presupuesto/saldo-usuario', { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) {
+          ind.className = 'vuelo-presup-ind vuelo-presup-sin-cc';
+          ind.querySelector('.vuelo-presup-label').textContent = 'Sin centro de costo asignado';
+          return;
+        }
+        var msgs = {
+          verde:    'Presupuesto disponible',
+          amarillo: 'Presupuesto bajo — verifique con su supervisor',
+          rojo:     'Sin presupuesto disponible — requiere aprobación Gerencia General',
+        };
+        ind.className = 'vuelo-presup-ind vuelo-presup-' + d.semaforo;
+        ind.querySelector('.vuelo-presup-label').textContent = msgs[d.semaforo] || '';
+      })
+      .catch(function () {
+        ind.className = 'vuelo-presup-ind vuelo-presup-sin-cc';
+        ind.querySelector('.vuelo-presup-label').textContent = 'No se pudo verificar presupuesto';
+      });
   }
 
   /* ── Init ── */
@@ -612,11 +679,13 @@
     initAllPaginations();
     renderCalendar();
 
-    /* Prellenar fecha de hoy en modal nueva */
-    const nfecha = document.getElementById('nfecha');
+    /* Prellenar fecha de hoy en campo fecha regular */
+    var nfecha = document.getElementById('nfecha');
     if (nfecha && !nfecha.value) nfecha.value = TODAY_STR;
+    var nfechaVuelo = document.getElementById('nfechaVuelo');
+    if (nfechaVuelo && !nfechaVuelo.value) nfechaVuelo.value = TODAY_STR;
 
-    /* Mostrar/ocultar campo Presupuesto Base Cero según tipo */
+    /* Mostrar/ocultar campos Vuelo según tipo */
     var selectTipo = document.querySelector('#modalNueva select[name="tipo"]');
     if (selectTipo) {
       selectTipo.addEventListener('change', function () {

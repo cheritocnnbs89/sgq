@@ -20,7 +20,7 @@ from . import planificador_notifications as notif
 from .planificador_constants import (
     ACTIVE_KEY, PERM_SOLICITUDES, PERM_CONFIG, PERM_PRESUPUESTO,
     ESTADOS, PRIORIDADES,
-    ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO,
+    ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
     ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_ATENDIDAS,
 )
 from flask import Response
@@ -197,6 +197,14 @@ def crear():
 
     ppto_raw = request.form.get("presupuesto_base_cero", "").strip()
     ppto     = None
+    fecha_retorno   = None
+    punto_salida    = None
+    punto_destino   = None
+    requiere_hosp   = 0
+    orden_servicio  = None
+    cc_id           = None
+    requiere_aprov  = 0
+
     if tipo == "Vuelo":
         if not ppto_raw:
             flash("El Presupuesto Base Cero es obligatorio para solicitudes de tipo Vuelo.", "warning")
@@ -209,20 +217,45 @@ def crear():
             flash("El Presupuesto Base Cero debe ser un número positivo.", "warning")
             return redirect(url_for("planificador.planificador_solicitudes"))
 
+        fecha_retorno  = request.form.get("fecha_retorno", "").strip() or None
+        punto_salida   = request.form.get("punto_salida", "").strip() or None
+        punto_destino  = request.form.get("punto_destino", "").strip() or None
+        requiere_hosp  = 1 if request.form.get("requiere_hospedaje") else 0
+        orden_servicio = request.form.get("orden_servicio", "").strip() or None
+
+        # Detectar CC del usuario y validar saldo anual de presupuesto (Ticket aéreo)
+        import datetime
+        cc_info = repo.get_cc_usuario(u["id"])
+        if cc_info:
+            cc_id = cc_info["cc_id"]
+            anio_actual = datetime.date.today().year
+            saldo = repo.get_saldo_anual_presupuesto(
+                cc_info["empresa_id"], cc_id, "Ticket aéreo", anio_actual
+            )
+            if saldo["semaforo"] == "rojo":
+                requiere_aprov = 1
+
     ciudad = repo.get_ciudad_usuario(u["id"])
     sid = repo.crear_solicitud({
-        "tipo":                  tipo,
-        "area_solicitante":      area,
-        "descripcion":           desc,
-        "lugar_destino":         lugar,
-        "detalle_direccion":     request.form.get("detalle_direccion", "").strip(),
-        "contacto":              request.form.get("contacto", "").strip(),
-        "prioridad":             request.form.get("prioridad", "Normal"),
-        "fecha":                 fecha,
-        "solicitante_id":        u["id"],
-        "solicitante_nombre":    u["nombre"],
-        "ciudad":                ciudad,
-        "presupuesto_base_cero": ppto,
+        "tipo":                           tipo,
+        "area_solicitante":               area,
+        "descripcion":                    desc,
+        "lugar_destino":                  lugar,
+        "detalle_direccion":              request.form.get("detalle_direccion", "").strip(),
+        "contacto":                       request.form.get("contacto", "").strip(),
+        "prioridad":                      request.form.get("prioridad", "Normal"),
+        "fecha":                          fecha,
+        "solicitante_id":                 u["id"],
+        "solicitante_nombre":             u["nombre"],
+        "ciudad":                         ciudad,
+        "presupuesto_base_cero":          ppto,
+        "fecha_retorno":                  fecha_retorno,
+        "punto_salida":                   punto_salida,
+        "punto_destino":                  punto_destino,
+        "requiere_hospedaje":             requiere_hosp,
+        "orden_servicio":                 orden_servicio,
+        "centro_costo_id":                cc_id,
+        "requiere_aprobacion_presupuesto": requiere_aprov,
     })
     try:
         notif.notif_nueva_solicitud(sid, tipo, area, fecha, u["nombre"])
@@ -244,6 +277,32 @@ def crear():
 
     flash("Solicitud creada. Queda pendiente de coordinación.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# AJAX: Saldo de presupuesto del usuario (para tipo Vuelo)
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/presupuesto/saldo-usuario", methods=["GET"],
+                       endpoint="planificador_saldo_usuario")
+@require_login
+def presupuesto_saldo_usuario():
+    from datetime import date as _date
+    u = _current_user()
+    cc_info = repo.get_cc_usuario(u["id"])
+    if not cc_info:
+        return jsonify({"ok": False, "msg": "Sin centro de costo asignado al usuario."})
+    hoy = _date.today()
+    tipo_gasto = "Ticket aéreo"
+    saldo_data = repo.get_saldo_anual_presupuesto(
+        cc_info["empresa_id"], cc_info["cc_id"], tipo_gasto, hoy.year
+    )
+    return jsonify({
+        "ok":       True,
+        "semaforo": saldo_data["semaforo"],
+        "pct":      saldo_data["pct"],
+        "anio":     hoy.year,
+    })
 
 
 # ─────────────────────────────────────────────────────────────
@@ -669,7 +728,7 @@ def configuracion():
             flash("Todos los campos son requeridos.", "warning")
         elif tipo not in tipos_validos:
             flash("Tipo de solicitud no válido.", "warning")
-        elif rol_config not in (ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO):
+        elif rol_config not in (ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO):
             flash("Rol de configuración no válido.", "warning")
         else:
             try:
@@ -692,7 +751,7 @@ def configuracion():
         config_rows=config_rows,
         usuarios=usuarios,
         tipos=tipos_solicitud,
-        roles_config=[ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO],
+        roles_config=[ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO],
         tipo_flags=tipo_flags,
         motorizados_tg=motorizados_tg,
     )
