@@ -493,7 +493,7 @@
           <td>
             <div class="col-md-2">
               <div class="text-muted small">CCB</div>
-              {% if is_coord %}
+              {% if is_coord or role_lower == 'admin' %}
               <button type="button"
                 class="btn btn-sm btn-ccb-toggle {{ 'btn-warning' if (g['ccb']|default(0))|int == 1 else 'btn-outline-secondary' }}"
                 data-gasto-id="{{ g['id'] }}"
