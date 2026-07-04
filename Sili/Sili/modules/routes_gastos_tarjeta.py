@@ -4678,14 +4678,14 @@ def register_gastos_routes(app):
         cur = conn.cursor()
 
         # Verificar que el gasto existe
-        cur.execute("SELECT id, ccb FROM gastos WHERE id = ?", (gasto_id,))
+        cur.execute("SELECT id, ccb FROM gastos_tarjeta WHERE id = ?", (gasto_id,))
         row = cur.fetchone()
         if not row:
             return jsonify(ok=False, error='Gasto no encontrado'), 404
 
         nuevo_ccb = 1 if str(request.form.get('ccb', '0')) == '1' else 0
         cur.execute(
-            "UPDATE gastos SET ccb = ? WHERE id = ?",
+            "UPDATE gastos_tarjeta SET ccb = ? WHERE id = ?",
             (nuevo_ccb, gasto_id)
         )
         conn.commit()
