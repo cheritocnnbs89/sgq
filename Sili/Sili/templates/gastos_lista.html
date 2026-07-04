@@ -493,9 +493,21 @@
           <td>
             <div class="col-md-2">
               <div class="text-muted small">CCB</div>
+              {% if is_coord %}
+              <button type="button"
+                class="btn btn-sm btn-ccb-toggle {{ 'btn-warning' if (g['ccb']|default(0))|int == 1 else 'btn-outline-secondary' }}"
+                data-gasto-id="{{ g['id'] }}"
+                data-ccb-actual="{{ (g['ccb']|default(0))|int }}"
+                data-url="{{ url_for('editar_ccb_gasto', gasto_id=g['id']) }}"
+                title="Click para cambiar CCB">
+                <i class="bi bi-star{{ '-fill' if (g['ccb']|default(0))|int == 1 else '' }}"></i>
+                {{ 'SI' if (g['ccb']|default(0))|int == 1 else 'NO' }}
+              </button>
+              {% else %}
               <div class="fw-semibold">
                 {% if (g['ccb']|default(0))|int == 1 %}SI{% else %}NO{% endif %}
               </div>
+              {% endif %}
             </div>
           </td>
 

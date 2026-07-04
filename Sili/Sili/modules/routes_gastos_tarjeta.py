@@ -4664,6 +4664,33 @@ def register_gastos_routes(app):
     
         
 
+    # ── Editar solo campo CCB (coordinador) ──────────────────────────────────
+    @app.route('/reembolsos/gastos/<int:gasto_id>/editar-ccb', methods=['POST'],
+               endpoint='editar_ccb_gasto')
+    @require_login
+    def editar_ccb_gasto(gasto_id):
+        from flask import jsonify
+        rol = (session.get('rol') or '').lower()
+        if rol not in ('coordinador', 'admin'):
+            return jsonify(ok=False, error='Sin permiso'), 403
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        # Verificar que el gasto existe
+        cur.execute("SELECT id, ccb FROM gastos WHERE id = ?", (gasto_id,))
+        row = cur.fetchone()
+        if not row:
+            return jsonify(ok=False, error='Gasto no encontrado'), 404
+
+        nuevo_ccb = 1 if str(request.form.get('ccb', '0')) == '1' else 0
+        cur.execute(
+            "UPDATE gastos SET ccb = ? WHERE id = ?",
+            (nuevo_ccb, gasto_id)
+        )
+        conn.commit()
+        return jsonify(ok=True, ccb=nuevo_ccb)
+
      # EDITAR
     @app.route('/reembolsos/gastos/<int:gasto_id>/editar', methods=['GET', 'POST'], endpoint='editar_gasto')
     @require_login

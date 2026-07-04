@@ -679,4 +679,44 @@ document.addEventListener('DOMContentLoaded', function () {
   exportAll('btnExcelVisible');
   exportAll('btnExcelFiltrado');
   exportAll('btnReporteExcel');
+
+  /* ── Toggle CCB (solo coordinador) ─────────────────────────────── */
+  document.addEventListener('click', async function (ev) {
+    const btn = ev.target.closest('.btn-ccb-toggle');
+    if (!btn) return;
+    ev.preventDefault();
+
+    const url     = btn.dataset.url;
+    const actual  = parseInt(btn.dataset.ccbActual || '0', 10);
+    const nuevo   = actual === 1 ? 0 : 1;
+    const label   = nuevo === 1 ? 'SI' : 'NO';
+
+    if (!confirm('¿Cambiar CCB a ' + label + ' para este gasto?')) return;
+
+    btn.disabled = true;
+    try {
+      const fd = new FormData();
+      fd.append('ccb', String(nuevo));
+      fd.append('csrf_token', csrfToken);
+      const resp = await fetch(url, { method: 'POST', body: fd });
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) {
+        showToast(data.error || 'Error al actualizar CCB');
+        return;
+      }
+      btn.dataset.ccbActual = String(nuevo);
+      btn.classList.toggle('btn-warning', nuevo === 1);
+      btn.classList.toggle('btn-outline-secondary', nuevo === 0);
+      const ico = btn.querySelector('i');
+      if (ico) {
+        ico.className = nuevo === 1 ? 'bi bi-star-fill' : 'bi bi-star';
+      }
+      btn.childNodes[btn.childNodes.length - 1].textContent = ' ' + label;
+      showToast('CCB actualizado a ' + label);
+    } catch (e) {
+      showToast('Error de red al actualizar CCB');
+    } finally {
+      btn.disabled = false;
+    }
+  });
 });
