@@ -53,6 +53,17 @@ except Exception as _aws_err:
         "[aws_sync] No se pudo importar aws_sync: %s", _aws_err
     )
 
+# ── AWS Tickets WhatsApp (Twilio → Bedrock → Flask) ───────────
+try:
+    from modules.aws_tickets_sync import process_whatsapp_tickets
+    _AWS_TICKETS_ENABLED = True
+except Exception as _awt_err:
+    _AWS_TICKETS_ENABLED = False
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "[aws_tickets_sync] No se pudo importar: %s", _awt_err
+    )
+
 # ── Email-to-Task (Graph API) ──────────────────────────────────────
 try:
     from modules.email_to_task.email_inbox_service import (
@@ -248,6 +259,7 @@ def start_scheduler(app=None):
             last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
             last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
             last_aws_sync          = 0.0     # ← control sync AWS DynamoDB (cada 5 min)
+            last_aws_tickets       = 0.0     # ← control tickets WhatsApp (cada 2 min)
 
             # Crear tabla email_tickets_inbox si no existe
             if _EMAIL_TO_TASK_ENABLED:
@@ -378,6 +390,21 @@ def start_scheduler(app=None):
                             _log("debug", "Worker: sin tickets con +3h sin asignar")
                     except Exception:
                         target_app.logger.exception("Worker: notify_unassigned_tickets falló")
+
+                # ==================================================
+                # AWS Tickets WhatsApp — cada 2 min
+                # ==================================================
+                now_ts5 = time.time()
+                if _AWS_TICKETS_ENABLED and (now_ts5 - last_aws_tickets >= 120):
+                    try:
+                        count = process_whatsapp_tickets(target_app)
+                        last_aws_tickets = now_ts5
+                        if count:
+                            _log("info", "Worker: aws_tickets procesó %d ticket(s)", count)
+                        else:
+                            _log("debug", "Worker: aws_tickets — sin tickets pendientes")
+                    except Exception:
+                        target_app.logger.exception("Worker: process_whatsapp_tickets falló")
 
                 # ==================================================
                 # AWS Sync DynamoDB — push + pull cada 5 min

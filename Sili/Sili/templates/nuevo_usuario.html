@@ -197,6 +197,13 @@
             value="{{ (form.codigo_sap or '') if form is defined else '' }}">
         </div>
 
+        <div class="col-md-3">
+          <label class="form-label">Teléfono / WhatsApp</label>
+          <input type="text" name="telefono" class="form-control" placeholder="Ej: +593992212320"
+            value="{{ (form.telefono or '') if form is defined else '' }}">
+          <small class="text-muted">Con código de país.</small>
+        </div>
+
         <div class="col-md-3 d-flex align-items-end">
           <div class="form-check form-switch mb-2">
             <input class="form-check-input" type="checkbox" name="tiene_caja_chica" id="chkCajaChica" value="1" {% if

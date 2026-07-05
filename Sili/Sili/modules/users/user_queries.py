@@ -96,7 +96,8 @@ SQL_SELECT_USUARIO_EDIT = f"""
         tarjeta_alias, tarjeta_last4,
         fecha_registro,
         jefe_id, tiene_caja_chica, tipo_caja_chica, codigo_sap,
-        telegram_chat_id
+        telegram_chat_id,
+        COALESCE(telefono, '') AS telefono
     FROM {TB_USUARIOS}
     WHERE id=?
 """
@@ -178,9 +179,10 @@ SQL_INSERT_USUARIO = f"""
         empresa_id, area_id, puesto_id,
         tarjeta_alias, tarjeta_last4,
         fecha_registro,
-        jefe_id, tiene_caja_chica, tipo_caja_chica
+        jefe_id, tiene_caja_chica, tipo_caja_chica,
+        telefono
     )
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 """
 
 SQL_SELECT_USERS_REPORT = f"""
@@ -359,7 +361,7 @@ SQL_UPDATE_USUARIO_CON_PASSWORD = f"""
         empresa_id=?, area_id=?, puesto_id=?,
         tarjeta_alias=?, tarjeta_last4=?,
         jefe_id=?, tiene_caja_chica=?, tipo_caja_chica=?, codigo_sap=?,
-        telegram_chat_id=?
+        telegram_chat_id=?, telefono=?
     WHERE id=?
 """
 
@@ -373,7 +375,7 @@ SQL_UPDATE_USUARIO_SIN_PASSWORD = f"""
         empresa_id=?, area_id=?, puesto_id=?,
         tarjeta_alias=?, tarjeta_last4=?,
         jefe_id=?, tiene_caja_chica=?, tipo_caja_chica=?, codigo_sap=?,
-        telegram_chat_id=?
+        telegram_chat_id=?, telefono=?
     WHERE id=?
 """
 

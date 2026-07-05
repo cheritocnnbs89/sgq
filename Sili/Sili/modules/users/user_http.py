@@ -244,6 +244,7 @@ def register_user_routes(app):
 
             codigo_sap = (request.form.get("codigo_sap") or "").strip()
             telegram_chat_id = (request.form.get("telegram_chat_id") or "").strip() or None
+            telefono = (request.form.get("telefono") or "").strip() or None
 
             try:
                 tiene_caja_chica, tipo_caja_chica = get_caja_chica_values(request.form)
@@ -289,6 +290,7 @@ def register_user_routes(app):
                         tipo_caja_chica,
                         codigo_sap,
                         telegram_chat_id,
+                        telefono,
                         user_id
                     ))
 
@@ -318,6 +320,7 @@ def register_user_routes(app):
                         tipo_caja_chica,
                         codigo_sap,
                         telegram_chat_id,
+                        telefono,
                         user_id
                     ))
 
@@ -488,6 +491,7 @@ def register_user_routes(app):
 
         tarj_alias = (form.get("tarjeta_alias") or "").strip()
         tarj_last4 = (form.get("tarjeta_last4") or "").strip()
+        telefono_nuevo = (form.get("telefono") or "").strip() or None
 
         jefe_id_raw = form.get("jefe_id")
         try:
@@ -614,7 +618,8 @@ def register_user_routes(app):
                         ts_now,
                         jefe_id,
                         tiene_caja_chica,
-                        tipo_caja_chica
+                        tipo_caja_chica,
+                        telefono_nuevo
                     ))
 
                     ok_cc, msg_cc = save_cc_distribution_or_error(conn, new_id, request.form)
