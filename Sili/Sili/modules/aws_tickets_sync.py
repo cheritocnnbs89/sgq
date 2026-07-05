@@ -195,6 +195,72 @@ def _get_usuario_info(conn, usuario_id: int) -> dict:
 
 
 # ─────────────────────────────────────────────────────────────
+# Fallback: insertar en bandeja de soporte para asignación manual
+# ─────────────────────────────────────────────────────────────
+
+def _enviar_a_bandeja(conn, ticket: dict, motivo: str, candidatos: list = None) -> int | None:
+    """
+    Inserta el ticket en email_tickets_inbox con estado POR_ASIGNAR.
+    Así aparece en la bandeja de soporte para que un coordinador lo asigne.
+    Retorna el inbox_id creado, o None si falla.
+    """
+    tj          = ticket.get("ticket_json") or {}
+    ticket_id   = ticket.get("ticket_id", "")
+    titulo      = (tj.get("asunto") or "Sin asunto").strip()
+    descripcion = (tj.get("descripcion") or "").strip()
+    nombre_sol  = (tj.get("usuario_solicitante_texto") or tj.get("usuario_alias") or "Desconocido").strip()
+    tecnico_tel = (ticket.get("telefono_tecnico") or "").strip()
+    nombre_tec  = (ticket.get("nombre_tecnico") or "").strip()
+
+    # Armamos el body con toda la info relevante para que el coordinador tenga contexto
+    candidatos_txt = ""
+    if candidatos:
+        lineas = [f"  - {c['nombre']} (id={c['usuario_id']})" for c in candidatos]
+        candidatos_txt = "\n\nCANDIDATOS POSIBLES:\n" + "\n".join(lineas)
+
+    body = (
+        f"Ticket WhatsApp recibido desde AWS (ticket_id: {ticket_id})\n"
+        f"Técnico: {nombre_tec} ({tecnico_tel})\n"
+        f"Solicitante indicado: {nombre_sol}\n"
+        f"Motivo de no creación automática: {motivo}"
+        f"{candidatos_txt}\n\n"
+        f"Descripción original:\n{descripcion}"
+    )
+
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # message_id único para evitar duplicados
+    message_id = f"whatsapp:{ticket_id}"
+
+    try:
+        row = conn.execute(
+            """
+            INSERT INTO email_tickets_inbox
+                (message_id, internet_id, from_email, from_name,
+                 subject, body_text, received_at, estado, usuario_id_match)
+            OUTPUT INSERTED.id
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'POR_ASIGNAR', NULL)
+            """,
+            (
+                message_id,
+                ticket_id,
+                "whatsapp@aws",
+                nombre_sol,
+                titulo[:500],
+                body,
+                now_str,
+            )
+        ).fetchone()
+        conn.commit()
+        inbox_id = row[0] if row else None
+        logger.info("[AWS_TICKETS] Ticket %s → bandeja inbox_id=%s (%s)", ticket_id, inbox_id, motivo)
+        return inbox_id
+    except Exception as exc:
+        conn.rollback()
+        logger.exception("[AWS_TICKETS] No se pudo insertar ticket %s en bandeja: %s", ticket_id, exc)
+        return None
+
+
+# ─────────────────────────────────────────────────────────────
 # Reporte a AWS
 # ─────────────────────────────────────────────────────────────
 
@@ -234,13 +300,14 @@ def _procesar_ticket(conn, ticket: dict):
     # ── 1. Resolver creador (técnico que grabó el audio) ──────
     creador_id = _resolver_por_telefono(conn, telefono_tec)
     if not creador_id:
-        logger.warning("[AWS_TICKETS] Ticket %s: no se encontró técnico con teléfono '%s'",
-                       ticket_id, telefono_tec)
+        motivo = f"No se encontró técnico con teléfono '{telefono_tec}'. Registre el número en la ficha del usuario."
+        logger.warning("[AWS_TICKETS] Ticket %s: %s", ticket_id, motivo)
+        inbox_id = _enviar_a_bandeja(conn, ticket, motivo)
         _reportar_resultado({
             "ticket_id": ticket_id,
             "estado":    "ERROR_FLASK",
-            "error":     f"No se encontró técnico con teléfono '{telefono_tec}'. "
-                         "Registre el número en la ficha del usuario.",
+            "error":     motivo,
+            "bandeja_inbox_id": inbox_id,
         })
         return
 
@@ -261,10 +328,13 @@ def _procesar_ticket(conn, ticket: dict):
         solicitante_id, candidatos = _resolver_por_nombre(conn, nombre_texto)
 
     if not solicitante_id and candidatos:
+        motivo = f"Se encontraron {len(candidatos)} usuarios posibles para '{nombre_texto}'. Asignación manual requerida."
+        inbox_id = _enviar_a_bandeja(conn, ticket, motivo, candidatos)
         _reportar_resultado({
-            "ticket_id":  ticket_id,
-            "estado":     "PENDIENTE_CONFIRMACION_USUARIO",
-            "mensaje":    f"Se encontraron {len(candidatos)} usuarios posibles para '{nombre_texto}'",
+            "ticket_id":        ticket_id,
+            "estado":           "PENDIENTE_CONFIRMACION_USUARIO",
+            "mensaje":          motivo,
+            "bandeja_inbox_id": inbox_id,
             "candidatos": [
                 {"usuario_id": c["usuario_id"], "nombre": c["nombre"]}
                 for c in candidatos
@@ -325,10 +395,13 @@ def _procesar_ticket(conn, ticket: dict):
     except Exception as exc:
         conn.rollback()
         logger.exception("[AWS_TICKETS] Error al crear tarea para ticket %s", ticket_id)
+        motivo = f"Error interno al crear tarea: {exc}"
+        inbox_id = _enviar_a_bandeja(conn, ticket, motivo)
         _reportar_resultado({
-            "ticket_id": ticket_id,
-            "estado":    "ERROR_FLASK",
-            "error":     f"Error interno al crear tarea: {exc}",
+            "ticket_id":        ticket_id,
+            "estado":           "ERROR_FLASK",
+            "error":            motivo,
+            "bandeja_inbox_id": inbox_id,
         })
         return
 
