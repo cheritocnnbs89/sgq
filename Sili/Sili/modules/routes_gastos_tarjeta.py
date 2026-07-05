@@ -6529,6 +6529,17 @@ def register_gastos_routes(app):
                     )
                 ), 400
 
+            # Validar cédula del usuario antes de armar payload
+            if not (g.get("usuario_cedula") or "").strip():
+                return jsonify(
+                    ok=False,
+                    msg=(
+                        f"El usuario '{g.get('usuario_username', '')}' no tiene número de "
+                        "identificación registrado (Id_Fiscal requerido por SAP). "
+                        "Actualícelo en Gestión de Usuarios."
+                    )
+                ), 400
+
             es_caja_chica = int(g.get('es_caja_chica') or 0) == 1
             es_reembolso = int(g.get('reembolso_vendedor') or 0) == 1
             es_tarjeta_online = int(g.get('tarjeta_sin_soporte') or 0) == 1
@@ -7290,6 +7301,16 @@ def register_gastos_routes(app):
 
                 # Validar sociedad desde empresa del usuario
                 _sociedad_from_gasto(g)
+
+                # Validar cédula/RUC del usuario (Id_Fiscal en payload SAP)
+                cedula = (g.get("usuario_cedula") or "").strip()
+                if not cedula:
+                    usuario = g.get("username") or str(g.get("usuario_id", ""))
+                    return jsonify(
+                        ok=False,
+                        msg=f"Gasto {gid}: el usuario '{usuario}' no tiene número de identificación "
+                            "registrado. Actualícelo en Gestión de Usuarios antes de enviar a SAP."
+                    ), 400
 
                 ga_ok = int(g.get("ga_aprobado") or 0) == 1
                 gg_ok = int(g.get("gg_aprobado") or 0) == 1
