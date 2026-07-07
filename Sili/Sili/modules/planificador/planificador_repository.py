@@ -51,6 +51,7 @@ from .planificador_querys import (
     SQL_GET_EMAIL_BY_USUARIO_ID,
     SQL_GET_CIUDAD_USUARIO,
     SQL_GET_JEFE_USUARIO,
+    SQL_GET_JEFE_NOMBRE_BATCH,
     SQL_GET_USUARIO_JERARQUIA,
     SQL_UPDATE_TELEGRAM_CHAT_ID,
     SQL_GET_MOTORIZADOS_IDS_EMAILS,
@@ -66,6 +67,8 @@ from .planificador_querys import (
     SQL_VUELO_COMPLETAR,
     SQL_GET_SOLICITUDES_PENDIENTE_JEFE,
     SQL_GET_SOLICITUDES_PENDIENTE_GG_VUELO,
+    SQL_UPDATE_COORDINAR_VUELO,
+    SQL_REAGENDAR_VUELO_A_JEFE,
     SQL_CREATE_PRESUPUESTO_TABLE,
     SQL_GET_TIPOS_GASTO,
     SQL_GET_PRESUPUESTO_CC,
@@ -73,6 +76,11 @@ from .planificador_querys import (
     SQL_GET_SALDO_PRESUPUESTO,
     SQL_GET_SALDO_ANUAL_PRESUPUESTO,
     SQL_ADD_EJECUTADO,
+    SQL_VUELO_MARCAR_REALIZADO,
+    SQL_VUELO_LIQUIDAR,
+    SQL_EJECUTAR_PRESUPUESTO_VUELO,
+    SQL_GET_EMPRESA_BY_USUARIO,
+    SQL_GET_VUELOS_COORDINADAS_SIN_LIQUIDAR,
 )
 
 
@@ -340,7 +348,7 @@ def aprobar_jefe_vuelo(solicitud_id: int, jefe_id: int, jefe_nombre: str,
     conn.commit()
     accion = "APROBADA_JEFE_GG" if requiere_gg else "APROBADA_JEFE"
     insert_solicitud_log(solicitud_id, accion, jefe_id, jefe_nombre,
-                         f"Jefe aprueba vuelo. {'Requiere GG: sin presupuesto.' if requiere_gg else 'Sin requiere GG.'}")
+                         f"Jefe aprueba vuelo.{' Requiere aprobación GG (sin presupuesto).' if requiere_gg else ''}")
 
 
 def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs: str) -> None:
@@ -361,15 +369,75 @@ def aprobar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) ->
                          f"GG aprueba vuelo sin presupuesto. {obs or ''}")
 
 
-def completar_vuelo(solicitud_id: int, coordinador_id: int,
-                    coordinador_nombre: str, obs: str) -> None:
+def completar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
+                    obs: str, hora_inicio: str = None, hora_fin: str = None) -> None:
     conn = get_db()
     cur = conn.cursor()
     cur.execute(SQL_VUELO_COMPLETAR,
-                (coordinador_id, coordinador_nombre, obs or "", solicitud_id))
+                (coordinador_id, coordinador_nombre,
+                 hora_inicio or None, hora_fin or None,
+                 obs or "", solicitud_id))
     conn.commit()
     insert_solicitud_log(solicitud_id, "COMPLETADA", coordinador_id, coordinador_nombre,
                          f"Coordinador registra gestión. Obs: {obs or '—'}")
+
+
+def get_cc_nombre(cc_id: int) -> str | None:
+    if not cc_id:
+        return None
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT nombre, valor FROM param_values WHERE id = ?", (cc_id,))
+    row = cur.fetchone()
+    if not row:
+        return None
+    return f"{row[1] or ''} — {row[0]}" if row[1] else row[0]
+
+
+def get_empresa_by_usuario(usuario_id: int) -> int | None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_EMPRESA_BY_USUARIO, (usuario_id,))
+    row = cur.fetchone()
+    return row[0] if row else None
+
+
+def marcar_realizado_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VUELO_MARCAR_REALIZADO, (solicitud_id,))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "PENDIENTE_LIQUIDACION", usuario_id, usuario_nombre,
+                         "Solicitante confirmó realización del vuelo. Pendiente de liquidación de costos.")
+
+
+def liquidar_vuelo(solicitud_id: int, liquidador_id: int, liquidador_nombre: str,
+                   costo_real: float, notas: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VUELO_LIQUIDAR, (costo_real, notas or "", solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COMPLETADA", liquidador_id, liquidador_nombre,
+                         f"Liquidación de vuelo. Costo: ${costo_real:.2f}. {notas or ''}")
+
+
+def deducir_presupuesto_vuelo(empresa_id: int, cc_id: int, tipo_gasto: str,
+                               anio: int, mes: int, costo: float) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_EJECUTAR_PRESUPUESTO_VUELO,
+                (empresa_id, cc_id, tipo_gasto, anio, mes,
+                 costo,
+                 empresa_id, cc_id, tipo_gasto, anio, mes,
+                 empresa_id, cc_id, tipo_gasto, anio, mes, costo))
+    conn.commit()
+
+
+def get_vuelos_coordinadas_sin_liquidar() -> list:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_VUELOS_COORDINADAS_SIN_LIQUIDAR)
+    return cur.fetchall()
 
 
 def get_solicitudes_pendiente_jefe(jefe_id: int, filters: dict | None = None) -> list:
@@ -386,8 +454,7 @@ def get_solicitudes_pendiente_jefe(jefe_id: int, filters: dict | None = None) ->
     conn = get_db()
     cur = conn.cursor()
     cur.execute(sql, [jefe_id] + params_extra)
-    cols = [c[0] for c in cur.description]
-    return [dict(zip(cols, r)) for r in cur.fetchall()]
+    return cur.fetchall()
 
 
 def get_solicitudes_pendiente_gg_vuelo(tipos: list, filters: dict | None = None) -> list:
@@ -409,8 +476,7 @@ def get_solicitudes_pendiente_gg_vuelo(tipos: list, filters: dict | None = None)
     conn = get_db()
     cur = conn.cursor()
     cur.execute(sql, tipos + params_extra)
-    cols = [c[0] for c in cur.description]
-    return [dict(zip(cols, r)) for r in cur.fetchall()]
+    return cur.fetchall()
 
 
 def coordinar_solicitud(solicitud_id, coordinador_id, coordinador_nombre,
@@ -424,6 +490,36 @@ def coordinar_solicitud(solicitud_id, coordinador_id, coordinador_nombre,
     conn.close()
     insert_solicitud_log(solicitud_id, "COORDINADA", coordinador_id, coordinador_nombre,
                          f"Horario asignado: {hora_inicio} – {hora_fin}. Obs: {observacion or '—'}")
+
+
+def coordinar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
+                    hora_inicio: str, hora_fin: str,
+                    datos_ticket: str, datos_hotel: str, observacion: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_UPDATE_COORDINAR_VUELO,
+                (hora_inicio, hora_fin,
+                 datos_ticket or None, datos_hotel or None, observacion or None,
+                 coordinador_id, coordinador_nombre, solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COORDINADA_VUELO", coordinador_id, coordinador_nombre,
+                         f"Horario: {hora_inicio}–{hora_fin}. "
+                         f"Ticket: {datos_ticket[:80] if datos_ticket else '—'}. "
+                         f"Hotel: {'Sí' if datos_hotel else 'No'}.")
+
+
+def reagendar_vuelo_a_jefe(solicitud_id: int, nueva_fecha: str,
+                            coordinador_id: int, coordinador_nombre: str, motivo: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_FECHA_SOLICITUD, (solicitud_id,))
+    row_prev = cur.fetchone()
+    fecha_anterior = str(row_prev[0]) if row_prev else "—"
+    cur.execute(SQL_REAGENDAR_VUELO_A_JEFE, (nueva_fecha, solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "REPROGRAMADA_VUELO", coordinador_id, coordinador_nombre,
+                         f"Fecha anterior: {fecha_anterior} → Nueva: {nueva_fecha}. "
+                         f"Motivo: {motivo or '—'}. Vuelve a aprobación del jefe.")
 
 
 def crear_grupo_coordinacion(tipo: str, fecha: str, hora_inicio: str,
@@ -857,8 +953,7 @@ def get_presupuesto_cc(empresa_id: int, cc_id: int, tipo_gasto: str, anio: int) 
     conn = get_db()
     cur = conn.cursor()
     cur.execute(SQL_GET_PRESUPUESTO_CC, (empresa_id, cc_id, tipo_gasto, anio))
-    cols = [c[0] for c in cur.description]
-    rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+    rows = [dict(r) for r in cur.fetchall()]
     conn.close()
     by_mes = {r["mes"]: r for r in rows}
     return [
@@ -943,9 +1038,7 @@ def get_centros_costo_con_presupuesto(empresa_id: int, anio: int) -> list[dict]:
         WHERE p.empresa_id = ? AND p.anio = ?
         ORDER BY pv.nombre
     """, (empresa_id, anio))
-    cols = [c[0] for c in cur.description]
-    rows = [dict(zip(cols, r)) for r in cur.fetchall()]
-    return rows
+    return [dict(r) for r in cur.fetchall()]
 
 
 def get_cc_usuario(usuario_id: int) -> dict | None:
@@ -989,8 +1082,7 @@ def get_adjuntos(solicitud_id: int) -> list[dict]:
             WHERE solicitud_id = ?
             ORDER BY fecha_subida
         """, (solicitud_id,))
-        cols = [c[0] for c in cur.description]
-        return [dict(zip(cols, r)) for r in cur.fetchall()]
+        return [dict(r) for r in cur.fetchall()]
     except Exception:
         return []
 
@@ -1024,11 +1116,7 @@ def get_adjunto_by_id(adjunto_id: int) -> dict | None:
         WHERE a.id = ?
     """, (adjunto_id,))
     row = cur.fetchone()
-    if not row:
-        return None
-    cols = ["id", "solicitud_id", "nombre_original", "nombre_guardado",
-            "tamano", "subido_por_id", "subido_por_nombre", "fecha_subida", "estado"]
-    return dict(zip(cols, row))
+    return dict(row) if row else None
 
 
 def delete_adjunto(adjunto_id: int) -> None:
@@ -1036,3 +1124,21 @@ def delete_adjunto(adjunto_id: int) -> None:
     cur = conn.cursor()
     cur.execute("DELETE FROM planificador_adjuntos WHERE id = ?", (adjunto_id,))
     conn.commit()
+
+
+def get_jefe_nombre_batch(solicitante_ids: list) -> dict:
+    """Retorna {solicitante_id: jefe_nombre} para una lista de IDs."""
+    if not solicitante_ids:
+        return {}
+    conn = get_db()
+    cur = conn.cursor()
+    placeholders = ",".join(["?" for _ in solicitante_ids])
+    sql = SQL_GET_JEFE_NOMBRE_BATCH.format(placeholders=placeholders)
+    cur.execute(sql, solicitante_ids)
+    result = {}
+    for r in cur.fetchall():
+        try:
+            result[r["solicitante_id"]] = r["jefe_nombre"] or ""
+        except Exception:
+            result[r[0]] = r[1] or ""
+    return result

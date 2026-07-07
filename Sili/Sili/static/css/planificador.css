@@ -49,9 +49,11 @@
 .cal-event { border-left:4px solid; border-radius:.5rem; padding:.4rem .45rem; margin-bottom:.3rem; font-size:.72rem; line-height:1.2; cursor:pointer; }
 .cal-event strong { display:block; margin-bottom:.15rem; font-size:.74rem; }
 .cal-event small  { display:block; opacity:.8; }
-.cal-event.APROBADA             { background:#ecfdf5; border-color:#16a34a; color:#14532d; }
-.cal-event.PENDIENTE_APROBACION { background:#eff6ff; border-color:#2563eb; color:#1e3a8a; }
-.cal-event.COMPLETADA           { background:#f3f4f6; border-color:#6b7280; color:#374151; }
+.cal-event.APROBADA              { background:#ecfdf5; border-color:#16a34a; color:#14532d; }
+.cal-event.COORDINADA            { background:#e0f2fe; border-color:#0284c7; color:#0c4a6e; }
+.cal-event.PENDIENTE_LIQUIDACION { background:#fef9c3; border-color:#ca8a04; color:#713f12; }
+.cal-event.PENDIENTE_APROBACION  { background:#eff6ff; border-color:#2563eb; color:#1e3a8a; }
+.cal-event.COMPLETADA            { background:#f3f4f6; border-color:#6b7280; color:#374151; }
 
 /* Week nav */
 .week-controls { display:flex; align-items:center; gap:.3rem; }
@@ -67,11 +69,13 @@
 .legend-list { padding:.75rem; display:grid; gap:.55rem; }
 .legend-item { display:flex; align-items:center; gap:.45rem; font-size:.83rem; color:#374151; }
 .dot { width:.65rem; height:.65rem; border-radius:50%; flex:0 0 auto; }
-.dot.PENDIENTE_COORDINACION { background:#f97316; }
-.dot.PENDIENTE_APROBACION   { background:#2563eb; }
-.dot.APROBADA               { background:#16a34a; }
-.dot.RECHAZADA              { background:#dc2626; }
-.dot.COMPLETADA             { background:#6b7280; }
+.dot.PENDIENTE_COORDINACION  { background:#f97316; }
+.dot.PENDIENTE_APROBACION    { background:#2563eb; }
+.dot.APROBADA                { background:#16a34a; }
+.dot.COORDINADA              { background:#0284c7; }
+.dot.PENDIENTE_LIQUIDACION   { background:#ca8a04; }
+.dot.RECHAZADA               { background:#dc2626; }
+.dot.COMPLETADA              { background:#6b7280; }
 
 /* Rol panel */
 .rol-panel { padding:.75rem; font-size:.82rem; display:grid; gap:.4rem; }

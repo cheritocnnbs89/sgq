@@ -45,12 +45,12 @@ ESTADOS_RESERVADAS  = (
     "PENDIENTE_APROBACION_GG_VUELO",
     "PENDIENTE_COORDINACION",
 )
-ESTADOS_COORDINADAS  = ("PENDIENTE_APROBACION", "PENDIENTE_APROBACION_GERENTE")
-ESTADOS_POR_COMPLETAR = ("APROBADA",)
-ESTADOS_ATENDIDAS    = ("COMPLETADA", "RECHAZADA")
+ESTADOS_COORDINADAS   = ("PENDIENTE_APROBACION", "PENDIENTE_APROBACION_GERENTE", "APROBADA")
+ESTADOS_POR_COMPLETAR = ("COORDINADA", "PENDIENTE_LIQUIDACION")
+ESTADOS_ATENDIDAS     = ("COMPLETADA", "RECHAZADA")
 
 # Roles de sistema considerados gerentes (para aprobación gerencial)
-ROLES_GERENTE = ("gerente", "gerente financiero", "gerente general")
+ROLES_GERENTE = ("gerente", "gerente financiero", "gerente general", "jefe")
 
 PRIORIDADES = ["Normal", "Alta", "Urgente"]
 
@@ -60,7 +60,7 @@ ROL_MOTORIZADO         = "MOTORIZADO"
 ROL_GERENTE_PRESUPUESTO = "GERENTE_PRESUPUESTO"
 
 # roles de sistema que tienen acceso total al planificador
-ROLES_ADMIN = ("admin", "jefe")
+ROLES_ADMIN = ("admin",)
 
 # Tabla de presupuesto por CC/empresa/tipo de gasto
 TBL_PRESUPUESTO = "planificador_presupuesto"

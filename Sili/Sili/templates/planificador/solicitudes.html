@@ -23,7 +23,18 @@
       <h1><i class="bi bi-calendar-check me-1"></i>Planificador de Solicitudes</h1>
       <p>Gestione recorridos, vouchers y vuelos · Lunes a viernes, 08:00 – 17:00</p>
     </div>
-    <div class="d-flex gap-2 flex-wrap">
+    <div class="d-flex flex-column align-items-end gap-2">
+      <div class="d-flex align-items-center gap-2 text-muted small">
+        <span class="badge bg-light text-dark border">
+          <i class="bi bi-person-circle me-1"></i>
+          {{ session.get('usuario') or '—' }}
+        </span>
+        <span class="badge bg-light text-dark border">
+          <i class="bi bi-shield-lock me-1"></i>
+          {{ session.get('rol') or '—' }}
+        </span>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
       {% if ctx.es_admin or ctx.tipos_coordinador or ctx.tipos_aprobador %}
       <a href="{{ url_for('planificador.planificador_reporte') }}"
          class="btn btn-outline-secondary btn-sm">
@@ -39,6 +50,7 @@
         <i class="bi bi-plus-lg"></i> Nueva solicitud
       </button>
       {% endif %}
+      </div>
     </div>
   </div>
 
@@ -119,14 +131,14 @@
         </div>
 
         {# Macro tabla interna #}
-        {% macro tabla_tab(section_rows, empty_msg) %}
+        {% macro tabla_tab(section_rows, empty_msg, show_ciudad=true) %}
         <div class="table-responsive" data-paginated-table>
           <table class="table table-hover align-middle mb-0 table-sm">
             <thead class="table-light">
               <tr>
-                <th>#</th><th>Tipo</th><th>Área</th><th>Ciudad</th>
+                <th>#</th><th>Tipo</th><th>Área</th>{% if show_ciudad %}<th>Ciudad</th>{% endif %}
                 <th>Fecha</th><th>Horario</th><th>Prioridad</th>
-                <th>Estado</th><th>Solicitante</th>
+                <th>Estado</th><th>Solicitante</th><th>Jefe</th>
                 <th class="text-end">Acciones</th>
               </tr>
             </thead>
@@ -141,7 +153,7 @@
                 </td>
                 <td>{{ r.tipo }}</td>
                 <td>{{ r.area_solicitante }}</td>
-                <td class="text-muted small">{{ r.ciudad or '—' }}</td>
+                {% if show_ciudad %}<td class="text-muted small">{{ r.ciudad or '—' }}</td>{% endif %}
                 <td class="text-nowrap">{{ r.fecha_str }}</td>
                 <td class="text-nowrap">
                   {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
@@ -154,6 +166,9 @@
                 </td>
                 <td><span class="badge {{ r.estado_class }}">{{ r.estado_label }}</span></td>
                 <td class="small">{{ r.solicitante_nombre }}</td>
+                <td class="small text-muted">
+                  {% if r.tipo == 'Vuelo' %}{{ r.get('jefe_nombre') or '—' }}{% else %}—{% endif %}
+                </td>
                 <td class="text-end text-nowrap">
                   <button type="button" class="btn btn-sm btn-outline-secondary"
                           data-open-detalle="{{ r.id }}" title="Ver detalle">
@@ -246,11 +261,173 @@
           {{ tabla_tab(reservadas, "Sin solicitudes pendientes de coordinación") }}
         </div>
         <div class="planner-tab-content" id="tab-coordinadas">
-          {{ tabla_tab(coordinadas, "Sin solicitudes en proceso") }}
+          {{ tabla_tab(coordinadas, "Sin solicitudes en proceso", show_ciudad=false) }}
         </div>
         {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
         <div class="planner-tab-content" id="tab-por-aprobar">
-          {{ tabla_tab(por_aprobar, "Sin solicitudes pendientes de su aprobación gerencial") }}
+          {% set vuelo_aprobables_jefe = por_aprobar | selectattr('puede_aprobar_jefe_vuelo') | list %}
+          {% set vuelo_aprobables_gg   = por_aprobar | selectattr('puede_aprobar_gg_vuelo')   | list %}
+          {% set tiene_checks = vuelo_aprobables_jefe or vuelo_aprobables_gg %}
+          {# Formularios de aprobación masiva #}
+          {% if vuelo_aprobables_jefe %}
+          <form id="form-aprobar-masivo-jefe" method="post"
+                action="{{ url_for('planificador.planificador_vuelo_aprobar_jefe_masivo') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div id="aprobar-masivo-jefe-ids"></div>
+          </form>
+          {% endif %}
+          {% if vuelo_aprobables_gg %}
+          <form id="form-aprobar-masivo-gg" method="post"
+                action="{{ url_for('planificador.planificador_vuelo_aprobar_gg_masivo') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div id="aprobar-masivo-gg-ids"></div>
+          </form>
+          {% endif %}
+          {% if tiene_checks %}
+          <div class="d-flex align-items-center gap-2 px-2 pt-2 pb-1 flex-wrap">
+            {% if vuelo_aprobables_jefe %}
+            <button type="submit" form="form-aprobar-masivo-jefe"
+                    class="btn btn-success btn-sm" id="btn-aprobar-masivo-jefe" disabled>
+              <i class="bi bi-check2-all me-1"></i>Aprobar selec. (jefe) <span id="cnt-jefe">0</span>
+            </button>
+            {% endif %}
+            {% if vuelo_aprobables_gg %}
+            <button type="submit" form="form-aprobar-masivo-gg"
+                    class="btn btn-primary btn-sm" id="btn-aprobar-masivo-gg" disabled>
+              <i class="bi bi-check2-all me-1"></i>Aprobar selec. (GG) <span id="cnt-gg">0</span>
+            </button>
+            {% endif %}
+          </div>
+          {% endif %}
+          <div class="table-responsive" data-paginated-table>
+            <table class="table table-hover align-middle mb-0 table-sm">
+              <thead class="table-light">
+                <tr>
+                  {% if tiene_checks %}<th><input type="checkbox" id="check-all-aprobar" title="Seleccionar todas"></th>{% endif %}
+                  <th>#</th><th>Tipo</th><th>Área</th><th>Ciudad</th>
+                  <th>Fecha</th><th>Horario</th><th>Prioridad</th>
+                  <th>Estado</th><th>Solicitante</th>
+                  <th class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for r in por_aprobar %}
+                <tr>
+                  {% if tiene_checks %}
+                  <td>
+                    {% if r.puede_aprobar_jefe_vuelo %}
+                    <input type="checkbox" class="check-aprobar check-jefe" value="{{ r.id }}">
+                    {% elif r.puede_aprobar_gg_vuelo %}
+                    <input type="checkbox" class="check-aprobar check-gg" value="{{ r.id }}">
+                    {% endif %}
+                  </td>
+                  {% endif %}
+                  <td class="text-muted small">
+                    {{ r.id }}
+                    {% if r.grupo_id %}
+                    <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ r.tipo }}</td>
+                  <td>{{ r.area_solicitante }}</td>
+                  <td class="text-muted small">{{ r.ciudad or '—' }}</td>
+                  <td class="text-nowrap">{{ r.fecha_str }}</td>
+                  <td class="text-nowrap">
+                    {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
+                    {% else %}<span class="text-muted">Sin asignar</span>{% endif %}
+                  </td>
+                  <td>
+                    <span class="badge {% if r.prioridad=='Urgente' %}bg-danger{% elif r.prioridad=='Alta' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                      {{ r.prioridad }}
+                    </span>
+                  </td>
+                  <td><span class="badge {{ r.estado_class }}">{{ r.estado_label }}</span></td>
+                  <td class="small">{{ r.solicitante_nombre }}</td>
+                  <td class="text-end text-nowrap">
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            data-open-detalle="{{ r.id }}" title="Ver detalle">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    {% if r.puede_coordinar %}
+                    <button type="button" class="btn btn-sm btn-outline-warning"
+                            data-open-coordinar="1" data-sid="{{ r.id }}"
+                            data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}">
+                      <i class="bi bi-clock"></i> Coordinar
+                    </button>
+                    {% elif r.estado == 'PENDIENTE_COORDINACION' and r.fecha_str < today and r.puede_reagendar %}
+                    <span class="badge bg-warning text-dark" title="Fecha pasada — use Reagendar">
+                      <i class="bi bi-exclamation-triangle"></i> Fecha pasada
+                    </span>
+                    {% endif %}
+                    {% if r.puede_reagendar %}
+                    <button type="button" class="btn btn-sm btn-outline-warning"
+                            data-open-reagendar="1" data-sid="{{ r.id }}"
+                            data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}"
+                            title="Reagendar">
+                      <i class="bi bi-calendar-event"></i>
+                    </button>
+                    {% endif %}
+                    {% if r.puede_aprobar %}
+                    <button type="button" class="btn btn-sm btn-outline-success"
+                            data-open-aprobar="1" data-sid="{{ r.id }}" data-tipo="{{ r.tipo }}">
+                      <i class="bi bi-check2-circle"></i> Aprobar
+                    </button>
+                    {% if r.grupo_id %}
+                    <button type="button" class="btn btn-sm btn-success"
+                            data-open-aprobar-grupo="1"
+                            data-grupo-id="{{ r.grupo_id }}"
+                            data-tipo="{{ r.tipo }}"
+                            title="Aprobar todas las solicitudes de este grupo juntas">
+                      <i class="bi bi-collection"></i> Aprobar grupo
+                    </button>
+                    {% endif %}
+                    {% endif %}
+                    {% if r.puede_aprobar_gerente %}
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                            data-open-detalle="{{ r.id }}" title="Aprobación gerencial">
+                      <i class="bi bi-person-check"></i>
+                    </button>
+                    {% endif %}
+                    {% if r.puede_completar %}
+                    <form method="post"
+                          action="{{ url_for('planificador.planificador_completar', sid=r.id) }}"
+                          class="d-inline" data-confirm="¿Marcar como completada?">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="btn btn-sm btn-dark">
+                        <i class="bi bi-flag-fill"></i> Completar
+                      </button>
+                    </form>
+                    {% endif %}
+                    {% if r.puede_eliminar %}
+                    <form method="post"
+                          action="{{ url_for('planificador.planificador_eliminar', sid=r.id) }}"
+                          class="d-inline" data-confirm="¿Eliminar esta solicitud? Esta acción no se puede deshacer.">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="btn btn-sm btn-outline-danger" title="Eliminar">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="{{ 11 if tiene_checks else 10 }}" class="text-center text-muted py-4">Sin solicitudes pendientes de su aprobación gerencial</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="planner-pagination planner-pagination--hidden d-flex align-items-center justify-content-between px-2 py-2">
+            <span class="planner-page-info text-muted small"></span>
+            <div class="d-flex gap-1">
+              <button type="button" class="btn btn-sm btn-outline-secondary planner-page-prev" disabled>
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <span class="planner-page-nums d-flex gap-1"></span>
+              <button type="button" class="btn btn-sm btn-outline-secondary planner-page-next">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
         </div>
         {% endif %}
         <div class="planner-tab-content" id="tab-por-completar">
@@ -293,15 +470,6 @@
             <div class="stat-number">{{ rows|length }}</div>
             <div class="stat-label">Total visibles</div>
           </div>
-        </div>
-      </div>
-
-      <div class="rec-card">
-        <div class="rec-card-header"><h3>Estados</h3></div>
-        <div class="legend-list">
-          {% for k,v in estados.items() %}
-          <div class="legend-item"><span class="dot {{ k }}"></span>{{ v }}</div>
-          {% endfor %}
         </div>
       </div>
 
@@ -391,6 +559,15 @@
               <i class="bi bi-info-circle"></i>
               Usa el botón del mapa para buscar y confirmar la dirección exacta
             </div>
+          </div>
+          <div id="campoContactoDiv">
+            <label class="form-label">Persona de contacto</label>
+            <input class="form-control" name="contacto" id="campoContacto" placeholder="Nombre y teléfono">
+          </div>
+          <div class="full" id="campoDetalleDirDiv">
+            <label class="form-label">Detalle de dirección <span class="text-muted">(opcional)</span></label>
+            <input class="form-control" name="detalle_direccion" id="campoDetalleDir"
+                   placeholder="Ej: Piso 3, oficina 301, junto al banco...">
           </div>
           {# ── Campos exclusivos para Vuelo ── #}
           {# Selector de fechas estilo aerolínea (reemplaza el campo Fecha regular) #}
@@ -569,6 +746,114 @@
       <div class="sgq-modal-footer">
         <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalCoordinar">Cancelar</button>
         <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-send"></i> Enviar a aprobación</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{# ══════════════════════════════════════════
+   MODAL – Coordinar Vuelo (registro de reserva)
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalCoordinarVuelo">
+  <div class="sgq-modal modal-vuelo-coordinar">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-airplane me-1"></i>Coordinar solicitud de Vuelo</h2>
+      <button class="close-btn" data-close-modal="modalCoordinarVuelo">&#215;</button>
+    </div>
+
+    {# ── Pestaña: Registrar reserva ── #}
+    <form method="post" id="formCoordinarVuelo" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="action" value="coordinar">
+      <div class="sgq-modal-body">
+        <p id="vuelo-coordinar-info" class="modal-info-text"></p>
+
+        <div class="form-grid mb-2">
+          <div>
+            <label class="form-label">Hora salida *</label>
+            <input class="form-control" type="time" name="hora_inicio" required>
+          </div>
+          <div>
+            <label class="form-label">Hora regreso *</label>
+            <input class="form-control" type="time" name="hora_fin" required>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Datos de la reservación del ticket aéreo *</label>
+          <textarea class="form-control textarea-obs-sm" name="datos_ticket" rows="3"
+                    placeholder="Nro. de reserva, aerolínea, vuelo, asiento, terminal…" required></textarea>
+        </div>
+
+        <div class="mb-2">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <input type="checkbox" id="chkHotel" class="form-check-input m-0">
+            <label class="form-label m-0" for="chkHotel">Incluye reserva de hotel</label>
+          </div>
+          <textarea class="form-control textarea-obs-sm" name="datos_hotel" id="txtHotel"
+                    rows="2" placeholder="Nombre del hotel, nro. de reserva, fechas…"
+                    style="display:none"></textarea>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Observación</label>
+          <textarea class="form-control textarea-obs-sm" name="observacion_coordinador" rows="2"
+                    placeholder="Instrucciones adicionales para el viajero…"></textarea>
+        </div>
+
+        <div class="mb-1">
+          <label class="form-label">Adjuntar documento de reserva / boleto</label>
+          <input type="file" class="form-control form-control-sm" name="adjunto_vuelo"
+                 accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+          <div class="form-text text-muted small">El archivo se enviará por correo al solicitante. Máx 10 MB.</div>
+        </div>
+      </div>
+      <div class="sgq-modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalCoordinarVuelo">Cancelar</button>
+        <button type="button" class="btn btn-outline-warning btn-sm" id="btnAbrirReprogramar">
+          <i class="bi bi-calendar-x me-1"></i>Reprogramar fecha
+        </button>
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="bi bi-send me-1"></i>Registrar reserva
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════
+   MODAL – Reprogramar Vuelo (vuelta a aprobación jefe)
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalReprogramarVuelo">
+  <div class="sgq-modal modal-sm">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-calendar-x me-1"></i>Reprogramar vuelo</h2>
+      <button class="close-btn" data-close-modal="modalReprogramarVuelo">&#215;</button>
+    </div>
+    <form method="post" id="formReprogramarVuelo">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="action" value="reprogramar">
+      <div class="sgq-modal-body">
+        <div class="alert alert-warning small py-2">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          Al cambiar la fecha, la solicitud vuelve al inicio del proceso de aprobación (jefe directo).
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Nueva fecha *</label>
+          <input class="form-control" type="date" name="nueva_fecha" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Motivo de la reprogramación *</label>
+          <textarea class="form-control textarea-obs-sm" name="motivo_reprogramacion" rows="2"
+                    placeholder="Explica por qué se cambia la fecha del vuelo…" required></textarea>
+        </div>
+      </div>
+      <div class="sgq-modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalReprogramarVuelo">Cancelar</button>
+        <button type="submit" class="btn btn-warning btn-sm">
+          <i class="bi bi-calendar-check me-1"></i>Confirmar reprogramación
+        </button>
       </div>
     </form>
   </div>

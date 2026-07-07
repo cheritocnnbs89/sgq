@@ -137,6 +137,23 @@
 
   /* ── Coordinar ── */
   function openCoordinar(sid, fecha, tipo) {
+    /* Para Vuelo: modal especializado */
+    if (tipo === 'Vuelo') {
+      var fv = document.getElementById('formCoordinarVuelo');
+      if (fv) fv.action = '/planificador/solicitudes/' + sid + '/vuelo/coordinar';
+      var fr = document.getElementById('formReprogramarVuelo');
+      if (fr) fr.action = '/planificador/solicitudes/' + sid + '/vuelo/coordinar';
+      var iv = document.getElementById('vuelo-coordinar-info');
+      if (iv) iv.textContent = '✈ #' + sid + ' · Vuelo · Fecha: ' + fecha;
+      /* Reset hotel toggle */
+      var chkH = document.getElementById('chkHotel');
+      var txtH = document.getElementById('txtHotel');
+      if (chkH) chkH.checked = false;
+      if (txtH) { txtH.style.display = 'none'; txtH.value = ''; txtH.required = false; }
+      openModal('modalCoordinarVuelo');
+      return;
+    }
+
     const form = document.getElementById('formCoordinar');
     if (form) form.action = '/planificador/solicitudes/' + sid + '/coordinar';
     const info = document.getElementById('coordTipo');
@@ -231,8 +248,68 @@
       headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
     .then(function (r) { return r.text(); })
-    .then(function (html) { if (body) body.innerHTML = html; })
+    .then(function (html) {
+      if (body) {
+        body.innerHTML = html;
+        _setupDetalleBody(body);
+      }
+    })
     .catch(function () { if (body) body.innerHTML = '<div class="text-danger p-3">Error al cargar el detalle.</div>'; });
+  }
+
+  function _setupDetalleBody(container) {
+    /* min=hoy en inputs con data-min-today (evita inline script) */
+    container.querySelectorAll('[data-min-today]').forEach(function (el) {
+      el.min = el.dataset.minToday;
+    });
+    /* Toggle hotel en sección de completar vuelo */
+    var chkH = container.querySelector('#chkHotelDetalle');
+    var txtH = container.querySelector('#txtHotelDetalle');
+    if (chkH && txtH) {
+      chkH.addEventListener('change', function () {
+        txtH.classList.toggle('d-none', !chkH.checked);
+        txtH.required = chkH.checked;
+        if (!chkH.checked) txtH.value = '';
+      });
+    }
+    /* Preview hora salida / regreso */
+    var inpHI  = container.querySelector('#vueloHoraInicioDetalle');
+    var inpHF  = container.querySelector('#vueloHoraFinDetalle');
+    var preBox = container.querySelector('#vueloHoraPreviewDetalle');
+    var preTxt = container.querySelector('#vueloHoraPreviewTextoDetalle');
+    /* Leer fecha de solicitud desde el campo oculto si existe, o del texto visible */
+    function _fmtFecha(isoStr) {
+      if (!isoStr) return '';
+      var p = isoStr.split('-');
+      if (p.length < 3) return isoStr;
+      return p[2] + '/' + p[1] + '/' + p[0];
+    }
+    function _actualizarPreviewHora() {
+      if (!inpHI || !preBox || !preTxt) return;
+      var hi = inpHI.value;
+      if (!hi) { preBox.classList.add('d-none'); return; }
+      var hf   = inpHF ? inpHF.value : '';
+      var fech = preBox.dataset.fecha ? _fmtFecha(preBox.dataset.fecha) : '';
+      var texto = fech ? fech + '  ·  Salida: ' + hi : 'Salida: ' + hi;
+      if (hf) texto += '  —  Regreso: ' + hf;
+      preTxt.textContent = texto;
+      preBox.classList.remove('d-none');
+    }
+    if (inpHI) inpHI.addEventListener('change', _actualizarPreviewHora);
+    if (inpHF) inpHF.addEventListener('change', _actualizarPreviewHora);
+    /* Total acumulado en formulario de liquidación */
+    var totalEl = container.querySelector('#vueloTotalLiquidacion');
+    if (totalEl) {
+      container.querySelectorAll('.tipo-costo-input').forEach(function (inp) {
+        inp.addEventListener('input', function () {
+          var sum = 0;
+          container.querySelectorAll('.tipo-costo-input').forEach(function (i) {
+            sum += parseFloat(i.value) || 0;
+          });
+          totalEl.textContent = '$' + sum.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        });
+      });
+    }
   }
 
   /* ── Mapa picker ── */
@@ -661,6 +738,12 @@
       }
     });
 
+    // Ocultar campos no relevantes para Vuelo
+    var campoContactoDiv   = document.getElementById('campoContactoDiv');
+    var campoDetalleDirDiv = document.getElementById('campoDetalleDirDiv');
+    if (campoContactoDiv)   campoContactoDiv.style.display   = esVuelo ? 'none' : '';
+    if (campoDetalleDirDiv) campoDetalleDirDiv.style.display = esVuelo ? 'none' : '';
+
     if (esVuelo) fetchSaldoPresupuesto();
 
     // Mensaje informativo según tipo
@@ -769,6 +852,75 @@
   window.addEventListener('pageshow', function () {
     var overlay = document.getElementById('plannerLoadingOverlay');
     if (overlay) overlay.classList.remove('show');
+  });
+
+  /* Modal Vuelo: toggle hotel y botón reprogramar */
+  document.addEventListener('DOMContentLoaded', function () {
+    var chkHotel = document.getElementById('chkHotel');
+    var txtHotel = document.getElementById('txtHotel');
+    if (chkHotel && txtHotel) {
+      chkHotel.addEventListener('change', function () {
+        txtHotel.style.display = chkHotel.checked ? '' : 'none';
+        txtHotel.required = chkHotel.checked;
+        if (!chkHotel.checked) txtHotel.value = '';
+      });
+    }
+    var btnRep = document.getElementById('btnAbrirReprogramar');
+    if (btnRep) {
+      btnRep.addEventListener('click', function () {
+        closeModal('modalCoordinarVuelo');
+        openModal('modalReprogramarVuelo');
+      });
+    }
+  });
+
+  /* Aprobación masiva: jefe vuelo y GG */
+  document.addEventListener('DOMContentLoaded', function () {
+    var checkAll = document.getElementById('check-all-aprobar');
+    if (!checkAll) return;
+
+    function syncIds(selector, divId) {
+      var div = document.getElementById(divId);
+      if (!div) return;
+      div.innerHTML = '';
+      document.querySelectorAll(selector + ':checked').forEach(function (cb) {
+        var inp = document.createElement('input');
+        inp.type = 'hidden';
+        inp.name = 'ids[]';
+        inp.value = cb.value;
+        div.appendChild(inp);
+      });
+    }
+
+    function actualizarBotones() {
+      var nJefe = document.querySelectorAll('.check-jefe:checked').length;
+      var nGG   = document.querySelectorAll('.check-gg:checked').length;
+      var btnJ  = document.getElementById('btn-aprobar-masivo-jefe');
+      var btnG  = document.getElementById('btn-aprobar-masivo-gg');
+      var cntJ  = document.getElementById('cnt-jefe');
+      var cntG  = document.getElementById('cnt-gg');
+      if (btnJ) { btnJ.disabled = nJefe === 0; if (cntJ) cntJ.textContent = nJefe; }
+      if (btnG) { btnG.disabled = nGG   === 0; if (cntG) cntG.textContent = nGG;   }
+      syncIds('.check-jefe', 'aprobar-masivo-jefe-ids');
+      syncIds('.check-gg',   'aprobar-masivo-gg-ids');
+    }
+
+    checkAll.addEventListener('change', function () {
+      document.querySelectorAll('.check-aprobar').forEach(function (cb) {
+        cb.checked = checkAll.checked;
+      });
+      actualizarBotones();
+    });
+
+    document.querySelectorAll('.check-aprobar').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        var total  = document.querySelectorAll('.check-aprobar').length;
+        var marked = document.querySelectorAll('.check-aprobar:checked').length;
+        checkAll.indeterminate = marked > 0 && marked < total;
+        checkAll.checked = marked === total;
+        actualizarBotones();
+      });
+    });
   });
 
 })();

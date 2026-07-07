@@ -157,12 +157,32 @@ def puede_aprobar_gg_vuelo(solicitud, usuario_id, ctx):
 
 
 def puede_completar_vuelo(solicitud, usuario_id, ctx):
-    """Coordinador registra gestión de Vuelo y completa."""
+    """Coordinador registra gestión de Vuelo (pasa a COORDINADA)."""
     if solicitud.get("tipo") != "Vuelo":
         return False
     if solicitud.get("estado") != "PENDIENTE_COORDINACION":
         return False
     return ctx["es_admin"] or solicitud.get("tipo") in ctx["tipos_coordinador"]
+
+
+def puede_marcar_realizado_vuelo(solicitud, usuario_id, ctx):
+    """Solicitante confirma que realizó el vuelo (pasa a PENDIENTE_LIQUIDACION)."""
+    if solicitud.get("tipo") != "Vuelo":
+        return False
+    if solicitud.get("estado") != "COORDINADA":
+        return False
+    es_solicitante = solicitud.get("solicitante_id") == usuario_id
+    return ctx["es_admin"] or es_solicitante
+
+
+def puede_liquidar_vuelo(solicitud, usuario_id, ctx):
+    """Coordinador ingresa costos reales por tipo de gasto (pasa a COMPLETADA)."""
+    if solicitud.get("tipo") != "Vuelo":
+        return False
+    if solicitud.get("estado") != "PENDIENTE_LIQUIDACION":
+        return False
+    es_coordinador = solicitud.get("tipo") in ctx["tipos_coordinador"]
+    return ctx["es_admin"] or es_coordinador
 
 
 def puede_aprobar_gerente(solicitud, usuario_id, ctx):
@@ -185,12 +205,18 @@ def puede_aprobar_gerente(solicitud, usuario_id, ctx):
 def puede_eliminar(solicitud, usuario_id, ctx):
     """
     Reglas:
-    - Admin: siempre puede.
+    - COMPLETADA: nadie puede eliminar.
+    - COORDINADA / PENDIENTE_LIQUIDACION: solo admin.
+    - Admin: puede en cualquier otro estado.
     - Coordinador: puede si estado NO es APROBADA ni COMPLETADA.
     - Aprobador: puede si estado NO es COMPLETADA.
     - Solicitante (usuario normal): solo si estado es PENDIENTE_COORDINACION y es su propia solicitud.
     """
     estado = solicitud["estado"]
+    if estado == "COMPLETADA":
+        return False
+    if estado in ("COORDINADA", "PENDIENTE_LIQUIDACION"):
+        return ctx["es_admin"]
     if ctx["es_admin"]:
         return True
     if solicitud["tipo"] in ctx["tipos_coordinador"]:
@@ -204,8 +230,8 @@ def puede_eliminar(solicitud, usuario_id, ctx):
 
 
 def puede_reagendar(solicitud, usuario_id, ctx):
-    """El coordinador asignado (o admin) puede reagendar cualquier solicitud activa."""
-    if solicitud["estado"] in ("COMPLETADA", "RECHAZADA"):
+    """El coordinador asignado (o admin) puede reagendar solicitudes activas no iniciadas."""
+    if solicitud["estado"] in ("COMPLETADA", "RECHAZADA", "COORDINADA", "PENDIENTE_LIQUIDACION"):
         return False
     return ctx["es_admin"] or solicitud["tipo"] in ctx["tipos_coordinador"]
 

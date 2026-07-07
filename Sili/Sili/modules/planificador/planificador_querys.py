@@ -61,7 +61,7 @@ SQL_GET_CALENDAR_SOLICITUDES = f"""
            solicitante_nombre
     FROM {TBL_SOLICITUDES}
     WHERE activo = 1
-      AND estado IN ('APROBADA', 'PENDIENTE_APROBACION', 'COMPLETADA')
+      AND estado IN ('APROBADA', 'COORDINADA', 'PENDIENTE_LIQUIDACION', 'PENDIENTE_APROBACION', 'COMPLETADA')
       AND fecha BETWEEN ? AND ?
     ORDER BY fecha, hora_inicio
 """
@@ -207,12 +207,59 @@ SQL_VUELO_APROBAR_GG = f"""
 # ── Vuelo: coordinador registra gestión y completa
 SQL_VUELO_COMPLETAR = f"""
     UPDATE {TBL_SOLICITUDES} SET
-        estado                  = 'COMPLETADA',
+        estado                  = 'COORDINADA',
         coordinador_id          = ?,
         coordinador_nombre      = ?,
+        hora_inicio             = ?,
+        hora_fin                = ?,
         observacion_coordinador = ?,
         fecha_actualizacion     = GETDATE()
     WHERE id = ? AND activo = 1
+"""
+
+SQL_VUELO_MARCAR_REALIZADO = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado              = 'PENDIENTE_LIQUIDACION',
+        fecha_actualizacion = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_VUELO_LIQUIDAR = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado               = 'COMPLETADA',
+        costo_real           = ?,
+        notas_liquidacion    = ?,
+        fecha_actualizacion  = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_EJECUTAR_PRESUPUESTO_VUELO = f"""
+    IF EXISTS (
+        SELECT 1 FROM {TBL_PRESUPUESTO}
+        WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+    )
+        UPDATE {TBL_PRESUPUESTO}
+           SET monto_ejecutado = monto_ejecutado + ?
+         WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+    ELSE
+        INSERT INTO {TBL_PRESUPUESTO}
+            (empresa_id, centro_costo_id, tipo_gasto, anio, mes, monto_presupuestado, monto_ejecutado)
+        VALUES (?, ?, ?, ?, ?, 0, ?)
+"""
+
+SQL_GET_EMPRESA_BY_USUARIO = f"""
+    SELECT empresa_id FROM {TBL_USUARIOS} WHERE id = ?
+"""
+
+SQL_GET_VUELOS_COORDINADAS_SIN_LIQUIDAR = f"""
+    SELECT s.id, s.area_solicitante, s.fecha, s.coordinador_id, s.coordinador_nombre,
+           u.email AS coordinador_email
+    FROM {TBL_SOLICITUDES} s
+    LEFT JOIN {TBL_USUARIOS} u ON u.id = s.coordinador_id
+    WHERE s.activo = 1
+      AND s.tipo   = 'Vuelo'
+      AND s.estado = 'COORDINADA'
+      AND s.fecha_actualizacion < DATEADD(day, -3, GETDATE())
 """
 
 # ── Solicitudes en PENDIENTE_APROBACION_JEFE para un gerente_id
@@ -259,6 +306,34 @@ SQL_UPDATE_COORDINAR_GRUPO = f"""
         grupo_id                = ?,
         estado                  = 'PENDIENTE_APROBACION',
         fecha_actualizacion     = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_UPDATE_COORDINAR_VUELO = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        hora_inicio             = ?,
+        hora_fin                = ?,
+        datos_ticket            = ?,
+        datos_hotel             = ?,
+        observacion_coordinador = ?,
+        coordinador_id          = ?,
+        coordinador_nombre      = ?,
+        estado                  = 'COORDINADA',
+        fecha_actualizacion     = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_REAGENDAR_VUELO_A_JEFE = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        fecha               = ?,
+        hora_inicio         = NULL,
+        hora_fin            = NULL,
+        datos_ticket        = NULL,
+        datos_hotel         = NULL,
+        aprobador_id        = NULL,
+        aprobador_nombre    = NULL,
+        estado              = 'PENDIENTE_APROBACION_JEFE',
+        fecha_actualizacion = GETDATE()
     WHERE id = ? AND activo = 1
 """
 
@@ -455,6 +530,14 @@ SQL_GET_CIUDAD_USUARIO = f"""
 
 SQL_GET_JEFE_USUARIO = f"""
     SELECT jefe_id FROM {TBL_USUARIOS} WHERE id = ? AND COALESCE(disabled,0) = 0
+"""
+
+SQL_GET_JEFE_NOMBRE_BATCH = f"""
+    SELECT u.id AS solicitante_id,
+           COALESCE(j.nombre_completo, j.username, '') AS jefe_nombre
+    FROM {TBL_USUARIOS} u
+    LEFT JOIN {TBL_USUARIOS} j ON j.id = u.jefe_id AND COALESCE(j.disabled,0) = 0
+    WHERE u.id IN ({{placeholders}})
 """
 
 SQL_GET_USUARIO_JERARQUIA = f"""
