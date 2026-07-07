@@ -39,6 +39,7 @@ from modules.users.user_repository import (
     insert_usuario,
     get_users_report_rows,
     update_jefe_masivo,
+    deshabilitar_usuarios_masivo,
     insert_departamento,
     get_departamentos_list,
     get_departamento_by_id,
@@ -243,6 +244,7 @@ def register_user_routes(app):
 
             codigo_sap = (request.form.get("codigo_sap") or "").strip()
             telegram_chat_id = (request.form.get("telegram_chat_id") or "").strip() or None
+            telefono = (request.form.get("telefono") or "").strip() or None
 
             try:
                 tiene_caja_chica, tipo_caja_chica = get_caja_chica_values(request.form)
@@ -288,6 +290,7 @@ def register_user_routes(app):
                         tipo_caja_chica,
                         codigo_sap,
                         telegram_chat_id,
+                        telefono,
                         user_id
                     ))
 
@@ -317,6 +320,7 @@ def register_user_routes(app):
                         tipo_caja_chica,
                         codigo_sap,
                         telegram_chat_id,
+                        telefono,
                         user_id
                     ))
 
@@ -487,6 +491,7 @@ def register_user_routes(app):
 
         tarj_alias = (form.get("tarjeta_alias") or "").strip()
         tarj_last4 = (form.get("tarjeta_last4") or "").strip()
+        telefono_nuevo = (form.get("telefono") or "").strip() or None
 
         jefe_id_raw = form.get("jefe_id")
         try:
@@ -613,7 +618,8 @@ def register_user_routes(app):
                         ts_now,
                         jefe_id,
                         tiene_caja_chica,
-                        tipo_caja_chica
+                        tipo_caja_chica,
+                        telefono_nuevo
                     ))
 
                     ok_cc, msg_cc = save_cc_distribution_or_error(conn, new_id, request.form)
@@ -701,6 +707,41 @@ def register_user_routes(app):
             conn.rollback()
             current_app.logger.exception(e)
             flash("No se pudo asignar el jefe masivamente.", "danger")
+        finally:
+            conn.close()
+
+        return redirect(url_for("usuarios"))
+
+    @app.route("/usuarios/deshabilitar-masivo", methods=["POST"], endpoint="usuarios_deshabilitar_masivo")
+    @require_login
+    @require_permission("usuarios", "editar")
+    def usuarios_deshabilitar_masivo():
+        ids = request.form.getlist("user_ids")
+
+        if not ids:
+            flash("Debe seleccionar al menos un usuario.", "warning")
+            return redirect(url_for("usuarios"))
+
+        try:
+            my_id = int(session.get("usuario_id") or 0)
+        except Exception:
+            my_id = 0
+
+        ids_int = [int(x) for x in ids if int(x) != my_id]
+
+        if not ids_int:
+            flash("No puedes deshabilitarte a ti mismo.", "warning")
+            return redirect(url_for("usuarios"))
+
+        conn = get_db()
+        try:
+            deshabilitar_usuarios_masivo(conn, ids_int)
+            conn.commit()
+            flash(f"{len(ids_int)} usuario(s) deshabilitado(s).", "success")
+        except Exception as e:
+            conn.rollback()
+            current_app.logger.exception(e)
+            flash("No se pudo deshabilitar los usuarios.", "danger")
         finally:
             conn.close()
 

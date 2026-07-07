@@ -26,6 +26,7 @@ from .scheduler_notifications import (
     ensure_core_templates,
     ensure_gasto_templates,
     ensure_om_templates,
+    ensure_planificador_templates,
 )
 from .scheduler_services import (
     auto_close_expired_tasks,
@@ -50,6 +51,17 @@ except Exception as _aws_err:
     import logging as _logging
     _logging.getLogger(__name__).warning(
         "[aws_sync] No se pudo importar aws_sync: %s", _aws_err
+    )
+
+# ── AWS Tickets WhatsApp (Twilio → Bedrock → Flask) ───────────
+try:
+    from modules.aws_tickets_sync import process_whatsapp_tickets
+    _AWS_TICKETS_ENABLED = True
+except Exception as _awt_err:
+    _AWS_TICKETS_ENABLED = False
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "[aws_tickets_sync] No se pudo importar: %s", _awt_err
     )
 
 # ── Email-to-Task (Graph API) ──────────────────────────────────────
@@ -108,7 +120,7 @@ def start_scheduler(app=None):
                 cexp = get_db_standalone()
                 try:
                     _log("info", "Worker: Ejecutando expiración de gastos tarjeta...")
-                    process_gastos_expiry(cexp)
+                    #process_gastos_expiry(cexp)
                     _log("info", "Worker: process_gastos_expiry OK")
                 finally:
                     try:
@@ -221,6 +233,9 @@ def start_scheduler(app=None):
                     #ensure_om_templates(c0)
                     _log("info", "Worker: ensure_om_templates OK")
 
+                    ensure_planificador_templates(c0)
+                    _log("info", "Worker: ensure_planificador_templates OK")
+
                     _log("info", "Worker: bootstrap inicial completado correctamente.")
                 finally:
                     try:
@@ -244,6 +259,7 @@ def start_scheduler(app=None):
             last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
             last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
             last_aws_sync          = 0.0     # ← control sync AWS DynamoDB (cada 5 min)
+            last_aws_tickets       = 0.0     # ← control tickets WhatsApp (cada 2 min)
 
             # Crear tabla email_tickets_inbox si no existe
             if _EMAIL_TO_TASK_ENABLED:
@@ -376,6 +392,21 @@ def start_scheduler(app=None):
                         target_app.logger.exception("Worker: notify_unassigned_tickets falló")
 
                 # ==================================================
+                # AWS Tickets WhatsApp — cada 2 min
+                # ==================================================
+                now_ts5 = time.time()
+                if _AWS_TICKETS_ENABLED and (now_ts5 - last_aws_tickets >= 120):
+                    try:
+                        count = process_whatsapp_tickets(target_app)
+                        last_aws_tickets = now_ts5
+                        if count:
+                            _log("info", "Worker: aws_tickets procesó %d ticket(s)", count)
+                        else:
+                            _log("debug", "Worker: aws_tickets — sin tickets pendientes")
+                    except Exception:
+                        target_app.logger.exception("Worker: process_whatsapp_tickets falló")
+
+                # ==================================================
                 # AWS Sync DynamoDB — push + pull cada 5 min
                 # ==================================================
                 now_ts4 = time.time()
@@ -389,6 +420,30 @@ def start_scheduler(app=None):
                         _log("info", "Worker: AWS sync OK")
                     except Exception:
                         target_app.logger.exception("Worker: aws_sync falló")
+
+                # ==================================================
+                # Recordatorio vuelos coordinados sin liquidar - diario a las 08:00
+                # ==================================================
+                today_str = now.strftime("%Y-%m-%d")
+                if now.hour == 8 and globals().get("_last_vuelo_recorda") != today_str:
+                    try:
+                        from modules.planificador import planificador_repository as _pr
+                        from modules.planificador import planificador_notifications as _pn
+                        vuelos = _pr.get_vuelos_coordinadas_sin_liquidar()
+                        for v in vuelos:
+                            try:
+                                _pn.notif_vuelo_recordatorio_coordinador(
+                                    v["id"], v["area_solicitante"], str(v["fecha"]),
+                                    v["coordinador_id"], v["coordinador_nombre"],
+                                    v["coordinador_email"] or "",
+                                )
+                            except Exception:
+                                pass
+                        globals()["_last_vuelo_recorda"] = today_str
+                        if vuelos:
+                            _log("info", "Worker: recordatorio vuelos sin liquidar enviado a %d coordinador(es)", len(vuelos))
+                    except Exception:
+                        target_app.logger.exception("Worker: recordatorio_vuelos_sin_liquidar falló")
 
                 elapsed = time.time() - cycle_start
                 sleep_s = max(5, 300 - elapsed)

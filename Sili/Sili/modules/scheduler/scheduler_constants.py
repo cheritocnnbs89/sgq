@@ -70,6 +70,15 @@ TPL_OM_RECHAZO_CREADOR = "om_rechazo_creador"
 TPL_OM_NUEVA_REGISTRO = "om_nueva_registro"
 
 # -------------------------
+# Template keys Planificador
+# -------------------------
+TPL_PLAN_NUEVA_COORD = "planificador_nueva_coord"
+TPL_PLAN_NUEVA_USER  = "planificador_nueva_user"
+
+TIPO_PLAN_NUEVA_COORD = "plan_nueva_coord"
+TIPO_PLAN_NUEVA_USER  = "plan_nueva_user"
+
+# -------------------------
 # Tipos cola OM eventos
 # -------------------------
 TIPO_OM_NUEVA_ASIGNADO = "om_nueva_asignado"

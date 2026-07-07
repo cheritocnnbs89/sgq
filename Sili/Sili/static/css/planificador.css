@@ -49,9 +49,11 @@
 .cal-event { border-left:4px solid; border-radius:.5rem; padding:.4rem .45rem; margin-bottom:.3rem; font-size:.72rem; line-height:1.2; cursor:pointer; }
 .cal-event strong { display:block; margin-bottom:.15rem; font-size:.74rem; }
 .cal-event small  { display:block; opacity:.8; }
-.cal-event.APROBADA             { background:#ecfdf5; border-color:#16a34a; color:#14532d; }
-.cal-event.PENDIENTE_APROBACION { background:#eff6ff; border-color:#2563eb; color:#1e3a8a; }
-.cal-event.COMPLETADA           { background:#f3f4f6; border-color:#6b7280; color:#374151; }
+.cal-event.APROBADA              { background:#ecfdf5; border-color:#16a34a; color:#14532d; }
+.cal-event.COORDINADA            { background:#e0f2fe; border-color:#0284c7; color:#0c4a6e; }
+.cal-event.PENDIENTE_LIQUIDACION { background:#fef9c3; border-color:#ca8a04; color:#713f12; }
+.cal-event.PENDIENTE_APROBACION  { background:#eff6ff; border-color:#2563eb; color:#1e3a8a; }
+.cal-event.COMPLETADA            { background:#f3f4f6; border-color:#6b7280; color:#374151; }
 
 /* Week nav */
 .week-controls { display:flex; align-items:center; gap:.3rem; }
@@ -67,11 +69,13 @@
 .legend-list { padding:.75rem; display:grid; gap:.55rem; }
 .legend-item { display:flex; align-items:center; gap:.45rem; font-size:.83rem; color:#374151; }
 .dot { width:.65rem; height:.65rem; border-radius:50%; flex:0 0 auto; }
-.dot.PENDIENTE_COORDINACION { background:#f97316; }
-.dot.PENDIENTE_APROBACION   { background:#2563eb; }
-.dot.APROBADA               { background:#16a34a; }
-.dot.RECHAZADA              { background:#dc2626; }
-.dot.COMPLETADA             { background:#6b7280; }
+.dot.PENDIENTE_COORDINACION  { background:#f97316; }
+.dot.PENDIENTE_APROBACION    { background:#2563eb; }
+.dot.APROBADA                { background:#16a34a; }
+.dot.COORDINADA              { background:#0284c7; }
+.dot.PENDIENTE_LIQUIDACION   { background:#ca8a04; }
+.dot.RECHAZADA               { background:#dc2626; }
+.dot.COMPLETADA              { background:#6b7280; }
 
 /* Rol panel */
 .rol-panel { padding:.75rem; font-size:.82rem; display:grid; gap:.4rem; }
@@ -214,8 +218,22 @@
 }
 .planner-tab:hover  { color: #1e3a8a; background: #eff6ff; }
 .planner-tab.active { color: #1e3a8a; border-bottom-color: #1e3a8a; background: #fff; }
+.planner-tab-alert  { color: #1d4ed8; }
+.planner-tab-alert:hover { color: #1e3a8a; background: #dbeafe; }
+.planner-tab-alert.active { border-bottom-color: #1d4ed8; }
 .planner-tab-content         { display: none; }
 .planner-tab-content.active  { display: block; }
+
+/* ── Adjuntos ── */
+.adjuntos-list { list-style: none; padding: 0; margin: 0 0 .75rem; }
+.adjunto-item { display: flex; align-items: center; gap: .5rem; padding: .4rem .5rem;
+  border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: .35rem; font-size: .82rem; }
+.adjunto-item-name { flex: 1; font-weight: 500; color: #1e3a8a; text-decoration: none; }
+.adjunto-item-name:hover { text-decoration: underline; }
+.adjunto-item-meta { color: #64748b; font-size: .75rem; white-space: nowrap; }
+.adjunto-upload-zone { border: 2px dashed #cbd5e1; border-radius: 8px; padding: .75rem 1rem;
+  text-align: center; color: #64748b; font-size: .82rem; cursor: pointer; transition: border-color .15s; }
+.adjunto-upload-zone:hover { border-color: #3b82f6; color: #1e3a8a; }
 
 /* ── Modal coordinar (más ancho para mostrar la sección de agrupación) ── */
 .sgq-modal.modal-coordinar { max-width: 640px; }
@@ -329,6 +347,90 @@ tr.pg-hidden { display:none; }
 /* Campo condicional para tipo Vuelo */
 .campo-vuelo { display:none; }
 .campo-vuelo.visible { display:block; }
+
+/* ── Date picker estilo aerolínea ── */
+.vuelo-fecha-picker {
+  display: flex;
+  align-items: stretch;
+  border: 1.5px solid #cbd5e1;
+  border-radius: .75rem;
+  overflow: hidden;
+  background: #fff;
+}
+.vuelo-fecha-slot {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex: 1;
+  padding: .55rem .85rem;
+  cursor: pointer;
+  transition: background .15s;
+}
+.vuelo-fecha-slot:hover { background: #f8fafc; }
+.vuelo-fecha-slot:first-child { border-right: 1.5px solid #e2e8f0; }
+.vuelo-fecha-icono {
+  font-size: 1.15rem;
+  opacity: .65;
+  flex-shrink: 0;
+}
+.vuelo-fecha-content {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  flex: 1;
+}
+.vuelo-fecha-lbl {
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #64748b;
+}
+.vuelo-fecha-input {
+  border: none;
+  outline: none;
+  padding: 0;
+  font-size: .9rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+}
+.vuelo-fecha-sep {
+  display: flex;
+  align-items: center;
+  padding: 0 .5rem;
+  font-size: 1rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+/* ── Indicador semáforo presupuesto ── */
+.vuelo-presup-ind {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .45rem .85rem;
+  border-radius: .6rem;
+  font-size: .82rem;
+  font-weight: 500;
+}
+.vuelo-presup-ind .vuelo-presup-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.vuelo-presup-cargando  { background: #f1f5f9; color: #64748b; }
+.vuelo-presup-cargando  .vuelo-presup-dot { background: #94a3b8; }
+.vuelo-presup-verde     { background: #dcfce7; color: #166534; }
+.vuelo-presup-verde     .vuelo-presup-dot { background: #16a34a; }
+.vuelo-presup-amarillo  { background: #fef9c3; color: #713f12; }
+.vuelo-presup-amarillo  .vuelo-presup-dot { background: #ca8a04; }
+.vuelo-presup-rojo      { background: #fee2e2; color: #991b1b; }
+.vuelo-presup-rojo      .vuelo-presup-dot { background: #dc2626; }
+.vuelo-presup-sin-cc    { background: #f1f5f9; color: #475569; }
+.vuelo-presup-sin-cc    .vuelo-presup-dot { background: #94a3b8; }
 
 /* Sección de agrupación en modal coordinar */
 .grupo-section-hidden { display:none; }

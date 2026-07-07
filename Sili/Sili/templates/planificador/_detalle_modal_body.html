@@ -9,9 +9,11 @@
       </span>
     </strong>
   </div>
+  {% if not s.puede_completar_vuelo %}
   <div class="detail-box"><span>Estado</span>
     <strong><span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span></strong>
   </div>
+  {% endif %}
   <div class="detail-box"><span>Fecha</span><strong>{{ s.fecha_str }}</strong></div>
   <div class="detail-box"><span>Horario asignado</span>
     <strong>
@@ -31,7 +33,6 @@
   {% if s.ciudad %}
   <div class="detail-box"><span>Ciudad</span><strong>{{ s.ciudad }}</strong></div>
   {% endif %}
-  <div class="detail-box"><span>Contacto</span><strong>{{ s.contacto or '—' }}</strong></div>
   <div class="detail-box"><span>Solicitante</span><strong>{{ s.solicitante_nombre }}</strong></div>
   {% if s.coordinador_nombre %}
   <div class="detail-box"><span>Coordinado por</span><strong>{{ s.coordinador_nombre }}</strong></div>
@@ -39,12 +40,15 @@
   {% if s.aprobador_nombre %}
   <div class="detail-box"><span>Aprobado/Rechazado por</span><strong>{{ s.aprobador_nombre }}</strong></div>
   {% endif %}
-  {% if s.gerente_nombre %}
-  <div class="detail-box"><span>Gerente asignado</span><strong>{{ s.gerente_nombre }}</strong></div>
-  {% endif %}
   <div class="detail-box detail-full"><span>Descripción</span><strong>{{ s.descripcion }}</strong></div>
   {% if s.presupuesto_base_cero is not none and s.presupuesto_base_cero != '' %}
-  <div class="detail-box"><span>Presupuesto Base Cero</span><strong>${{ "%.2f"|format(s.presupuesto_base_cero|float) }}</strong></div>
+  <div class="detail-box">
+    <span>Presupuesto Base Cero</span>
+    <strong>
+      {{ s.presupuesto_base_cero | int }}
+      {% if cc_nombre %}<span class="text-muted ms-1 fw-normal">— {{ cc_nombre }}</span>{% endif %}
+    </strong>
+  </div>
   {% endif %}
   {% if s.detalle_direccion %}
   <div class="detail-box detail-full"><span>Detalle de dirección</span><strong>{{ s.detalle_direccion }}</strong></div>
@@ -71,6 +75,270 @@
     </span>
     {% endfor %}
   </div>
+</div>
+{% endif %}
+
+{# ── Vuelo: aprobación jefe directo ── #}
+{% if s.puede_aprobar_jefe_vuelo %}
+<div class="action-zone action-zone-orange mt-3">
+  <h3><i class="bi bi-person-check me-1"></i>Aprobación — Jefe directo</h3>
+  <p class="small text-muted mb-2">
+    Solicitud de Vuelo de <strong>{{ s.solicitante_nombre }}</strong> pendiente de su aprobación.
+    {% if s.requiere_aprobacion_presupuesto %}
+    <span class="badge bg-danger ms-1">Sin presupuesto disponible</span>
+    {% endif %}
+  </p>
+  <label class="form-label">Observación</label>
+  <textarea class="form-control form-control-sm textarea-obs" id="obsJefeVuelo{{ s.id }}"
+            placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
+  <div class="d-flex gap-2 justify-content-end mt-2">
+    <form method="post"
+          action="{{ url_for('planificador.planificador_vuelo_rechazar_jefe', sid=s.id) }}"
+          data-confirm="¿Rechazar esta solicitud de vuelo?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsJefeRechVuelo{{ s.id }}">
+      <button type="submit" class="btn btn-danger btn-sm"
+              data-sync-obs="obsJefeVuelo{{ s.id }}" data-target-obs="obsJefeRechVuelo{{ s.id }}">
+        <i class="bi bi-x-lg"></i> Rechazar
+      </button>
+    </form>
+    <form method="post"
+          action="{{ url_for('planificador.planificador_vuelo_aprobar_jefe', sid=s.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsJefeAprobVuelo{{ s.id }}">
+      <button type="submit" class="btn btn-success btn-sm"
+              data-sync-obs="obsJefeVuelo{{ s.id }}" data-target-obs="obsJefeAprobVuelo{{ s.id }}">
+        <i class="bi bi-check2"></i> Aprobar
+      </button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{# ── Vuelo: aprobación Gerente General ── #}
+{% if s.puede_aprobar_gg_vuelo %}
+<div class="action-zone action-zone-blue mt-3">
+  <h3><i class="bi bi-building me-1"></i>Aprobación — Gerente General</h3>
+  <p class="small text-muted mb-2">
+    {% if not s.get('centro_costo_id') %}
+      Esta solicitud llega a tu aprobación porque <strong>no tiene un centro de costo asignado</strong> (sin presupuesto configurado). Tu autorización es necesaria para continuar.
+    {% elif s.get('requiere_aprobacion_presupuesto') %}
+      Esta solicitud llega a tu aprobación porque <strong>el presupuesto disponible es insuficiente</strong> para cubrir el monto solicitado. Tu autorización es necesaria para continuar.
+    {% else %}
+      Esta solicitud requiere tu autorización como Gerente General para continuar.
+    {% endif %}
+  </p>
+  <label class="form-label">Observación</label>
+  <textarea class="form-control form-control-sm textarea-obs" id="obsGGVuelo{{ s.id }}"
+            placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
+  <div class="d-flex gap-2 justify-content-end mt-2">
+    <form method="post"
+          action="{{ url_for('planificador.planificador_vuelo_rechazar_gg', sid=s.id) }}"
+          data-confirm="¿Rechazar esta solicitud?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsGGRechVuelo{{ s.id }}">
+      <button type="submit" class="btn btn-danger btn-sm"
+              data-sync-obs="obsGGVuelo{{ s.id }}" data-target-obs="obsGGRechVuelo{{ s.id }}">
+        <i class="bi bi-x-lg"></i> Rechazar
+      </button>
+    </form>
+    <form method="post"
+          action="{{ url_for('planificador.planificador_vuelo_aprobar_gg', sid=s.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsGGAprobVuelo{{ s.id }}">
+      <button type="submit" class="btn btn-success btn-sm"
+              data-sync-obs="obsGGVuelo{{ s.id }}" data-target-obs="obsGGAprobVuelo{{ s.id }}">
+        <i class="bi bi-check2"></i> Aprobar
+      </button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{# ── Vuelo: coordinador registra gestión ── #}
+{% if s.puede_completar_vuelo %}
+<div class="action-zone action-zone-green mt-3">
+  <h3><i class="bi bi-airplane me-1"></i>Registrar gestión del vuelo</h3>
+  <p class="small text-muted mb-2">
+    Ingresa la información de reservación y adjunta los documentos. Al guardar, el solicitante será notificado.
+  </p>
+  <form method="post" action="{{ url_for('planificador.planificador_vuelo_completar', sid=s.id) }}"
+        enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-2 mb-2">
+      <div class="col-12">
+        <label class="form-label">Aeropuerto de destino</label>
+        <select class="form-select form-select-sm" name="aeropuerto">
+          <option value="">— Selecciona un aeropuerto —</option>
+          <optgroup label="Ecuador">
+            <option value="UIO">UIO — Mariscal Sucre (Quito)</option>
+            <option value="GYE">GYE — José J. de Olmedo (Guayaquil)</option>
+            <option value="CUE">CUE — Mariscal Lamar (Cuenca)</option>
+            <option value="MEC">MEC — Eloy Alfaro (Manta)</option>
+            <option value="LTX">LTX — Cotopaxi (Latacunga)</option>
+            <option value="GPS">GPS — Seymour (Galápagos)</option>
+          </optgroup>
+          <optgroup label="Sudamérica">
+            <option value="BOG">BOG — El Dorado (Bogotá)</option>
+            <option value="LIM">LIM — Jorge Chávez (Lima)</option>
+            <option value="GRU">GRU — Guarulhos (São Paulo)</option>
+            <option value="GIG">GIG — Galeão (Río de Janeiro)</option>
+            <option value="EZE">EZE — Ministro Pistarini (Buenos Aires)</option>
+            <option value="SCL">SCL — A. Merino Benítez (Santiago)</option>
+            <option value="MVD">MVD — Carrasco (Montevideo)</option>
+            <option value="ASU">ASU — Silvio Pettirossi (Asunción)</option>
+            <option value="LPB">LPB — El Alto (La Paz)</option>
+            <option value="VVI">VVI — Viru Viru (Santa Cruz)</option>
+            <option value="CCS">CCS — Simón Bolívar (Caracas)</option>
+            <option value="CUZ">CUZ — Alejandro Velasco (Cusco)</option>
+          </optgroup>
+          <optgroup label="América Central y Norte">
+            <option value="PTY">PTY — Tocumen (Panamá)</option>
+            <option value="MEX">MEX — Benito Juárez (Ciudad de México)</option>
+            <option value="MIA">MIA — Miami International</option>
+            <option value="JFK">JFK — J. F. Kennedy (Nueva York)</option>
+            <option value="LAX">LAX — Los Angeles International</option>
+            <option value="ORD">ORD — O'Hare (Chicago)</option>
+          </optgroup>
+          <optgroup label="Europa">
+            <option value="MAD">MAD — Adolfo Suárez (Madrid)</option>
+            <option value="CDG">CDG — Charles de Gaulle (París)</option>
+            <option value="LHR">LHR — Heathrow (Londres)</option>
+            <option value="FRA">FRA — Frankfurt</option>
+            <option value="AMS">AMS — Schiphol (Ámsterdam)</option>
+            <option value="FCO">FCO — Fiumicino (Roma)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="form-label">
+          Hora de salida *
+          {% if s.fecha_str %}
+          <span class="badge bg-secondary ms-1 fw-normal" title="Fecha de salida solicitada">
+            <i class="bi bi-calendar2 me-1"></i>{{ s.fecha_str }}
+          </span>
+          {% endif %}
+        </label>
+        <input class="form-control form-control-sm" type="time" name="hora_inicio"
+               id="vueloHoraInicioDetalle"
+               {% if s.hora_inicio %}value="{{ s.hora_inicio }}"{% endif %} required>
+      </div>
+      <div class="col-6">
+        <label class="form-label">
+          Hora de regreso
+          {% if s.get('fecha_retorno') %}
+          <span class="badge bg-secondary ms-1 fw-normal" title="Fecha de retorno solicitada">
+            <i class="bi bi-calendar2 me-1"></i>{{ s.fecha_retorno }}
+          </span>
+          {% endif %}
+        </label>
+        <input class="form-control form-control-sm" type="time" name="hora_fin"
+               id="vueloHoraFinDetalle"
+               {% if s.hora_fin %}value="{{ s.hora_fin }}"{% endif %}>
+      </div>
+      <div class="col-12">
+        <div class="alert alert-info py-1 px-2 small d-none" id="vueloHoraPreviewDetalle"
+             data-fecha="{{ s.fecha_str }}">
+          <i class="bi bi-calendar2-event me-1"></i>
+          <span id="vueloHoraPreviewTextoDetalle"></span>
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Datos de la reservación del ticket aéreo *</label>
+        <textarea class="form-control form-control-sm textarea-obs" name="observacion_coordinador"
+                  placeholder="N° de reserva, aerolínea, vuelo, etc." required></textarea>
+      </div>
+      <div class="col-12">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="chkHotelDetalle">
+          <label class="form-check-label" for="chkHotelDetalle">Incluye reservación de hotel</label>
+        </div>
+        <textarea class="form-control form-control-sm mt-1 d-none" id="txtHotelDetalle"
+                  name="datos_hotel" placeholder="Nombre del hotel, N° reserva, fechas..."></textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Adjuntar documento (pasaje/boleto)</label>
+        <input class="form-control form-control-sm" type="file" name="adjunto_vuelo"
+               accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
+        <div class="form-text">El archivo se enviará al solicitante por correo. Máx. 5 MB.</div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="submit" class="btn btn-success btn-sm">
+        <i class="bi bi-check2-circle me-1"></i>Registrar y notificar al solicitante
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{# ── Vuelo: solicitante confirma que realizó el vuelo ── #}
+{% if s.puede_marcar_realizado_vuelo %}
+<div class="action-zone action-zone-green mt-3">
+  <h3><i class="bi bi-airplane-fill me-1"></i>Confirmar vuelo realizado</h3>
+  <p class="small text-muted mb-2">
+    El vuelo está coordinado. Cuando hayas realizado el viaje, confirma aquí para que
+    el coordinador pueda registrar los costos y completar la solicitud.
+  </p>
+  <form method="post" action="{{ url_for('planificador.planificador_vuelo_marcar_realizado', sid=s.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-success btn-sm">
+        <i class="bi bi-check2-circle me-1"></i>Realicé el vuelo
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{# ── Vuelo: liquidar costos reales ── #}
+{% if s.puede_liquidar_vuelo %}
+<div class="action-zone action-zone-blue mt-3">
+  <h3><i class="bi bi-receipt me-1"></i>Completar vuelo — Registrar costos reales</h3>
+  <p class="small text-muted mb-2">
+    El vuelo fue coordinado. Ahora registra los costos reales del viaje para que sean
+    deducidos del presupuesto del centro de costo correspondiente.
+    {% if cc_nombre %}
+    <span class="badge bg-secondary ms-1">CC: {{ cc_nombre }}</span>
+    {% endif %}
+  </p>
+  <form method="post" action="{{ url_for('planificador.planificador_vuelo_liquidar', sid=s.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-2 mb-2">
+      {% for tipo in tipos_gasto %}
+      <div class="col-sm-4">
+        <label class="form-label">{{ tipo }}</label>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">$</span>
+          <input class="form-control tipo-costo-input" type="number"
+                 name="tipo_costo_{{ tipo }}" min="0" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+      {% endfor %}
+      <div class="col-12 mt-1">
+        <div class="d-flex align-items-center gap-2 text-muted small">
+          <i class="bi bi-calculator"></i>
+          <span>Total: <strong id="vueloTotalLiquidacion">$0.00</strong></span>
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Notas adicionales <span class="text-muted">(opcional)</span></label>
+        <textarea class="form-control form-control-sm textarea-obs-sm" name="notas_liquidacion"
+                  placeholder="Observaciones del viaje..."></textarea>
+      </div>
+    </div>
+    {% if not s.centro_costo_id %}
+    <div class="alert alert-warning py-1 px-2 small mb-2">
+      <i class="bi bi-exclamation-triangle me-1"></i>
+      Esta solicitud no tiene centro de costo asignado. Se creará un registro de gasto negativo automáticamente.
+    </div>
+    {% endif %}
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary btn-sm">
+        <i class="bi bi-check2-circle me-1"></i>Registrar costos y completar vuelo
+      </button>
+    </div>
+  </form>
 </div>
 {% endif %}
 
@@ -162,13 +430,7 @@
       <div class="col-6">
         <label class="form-label">Nueva fecha *</label>
         <input class="form-control form-control-sm" type="date" name="nueva_fecha"
-               id="inputNuevaFechaDetalle" required>
-        <script>
-        (function(){
-          var d=new Date(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
-          document.getElementById('inputNuevaFechaDetalle').min = d.getFullYear()+'-'+m+'-'+day;
-        })();
-        </script>
+               id="inputNuevaFechaDetalle" data-min-today="{{ today_iso }}" required>
       </div>
       <div class="col-12">
         <label class="form-label">Motivo de la reagenda *</label>
@@ -204,6 +466,53 @@
   </form>
 </div>
 {% endif %}
+
+{# ── Adjuntos ── #}
+<div class="mt-4">
+  <h6 class="text-muted fw-semibold mb-2"><i class="bi bi-paperclip me-1"></i>Archivos adjuntos</h6>
+  {% if adjuntos %}
+  <ul class="adjuntos-list">
+    {% for a in adjuntos %}
+    <li class="adjunto-item">
+      <a class="adjunto-item-name"
+         href="{{ url_for('planificador.planificador_adjunto_descargar', sid=s.id, nombre=a.nombre_guardado) }}">
+        <i class="bi bi-file-earmark me-1"></i>{{ a.nombre_original }}
+      </a>
+      <span class="adjunto-item-meta">
+        {{ (a.tamano|int / 1024)|round(1) }} KB · {{ a.subido_por_nombre }}
+      </span>
+      {% if puede_eliminar_adjunto %}
+      <form method="post"
+            action="{{ url_for('planificador.planificador_adjunto_eliminar', aid=a.id) }}"
+            data-confirm="¿Eliminar este archivo?">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar archivo">
+          <i class="bi bi-trash"></i>
+        </button>
+      </form>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="text-muted small mb-2">Sin archivos adjuntos.</p>
+  {% endif %}
+  {% if puede_subir_adjunto %}
+  <form method="post"
+        action="{{ url_for('planificador.planificador_adjunto_subir', sid=s.id) }}"
+        enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="d-flex gap-2 align-items-center">
+      <input type="file" name="adjunto" class="form-control form-control-sm"
+             accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.zip" required>
+      <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
+        <i class="bi bi-upload me-1"></i>Adjuntar
+      </button>
+    </div>
+    <div class="form-text">Máximo 5 MB. Formatos: PDF, Word, Excel, imágenes, ZIP.</div>
+  </form>
+  {% endif %}
+</div>
 
 {% if logs %}
 <div class="mt-4">

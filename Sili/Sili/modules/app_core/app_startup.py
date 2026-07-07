@@ -8,4 +8,5 @@ def run_startup_tasks(app):
         conn = get_db()
         conn.execute("SELECT 1")
         conn.commit()
+
         g.pop("db", None)

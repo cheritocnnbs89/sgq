@@ -29,27 +29,50 @@ TIPOS_SOLICITUD_DEFAULT = [
 ]
 
 ESTADOS = {
-    "PENDIENTE_COORDINACION":       "Pendiente coordinación",
-    "PENDIENTE_APROBACION":         "Pendiente aprobación",
-    "PENDIENTE_APROBACION_GERENTE": "Pendiente aprobación gerente",
-    "APROBADA":                     "Aprobada",
-    "RECHAZADA":                    "Rechazada",
-    "COMPLETADA":                   "Completada",
+    "PENDIENTE_APROBACION_JEFE":     "Pend. aprobación jefe",
+    "PENDIENTE_APROBACION_GG_VUELO": "Pend. aprobación GG",
+    "PENDIENTE_COORDINACION":        "Pendiente coordinación",
+    "PENDIENTE_APROBACION":          "Pendiente aprobación",
+    "PENDIENTE_APROBACION_GERENTE":  "Pendiente aprobación gerente",
+    "APROBADA":                      "Aprobada",
+    "RECHAZADA":                     "Rechazada",
+    "COMPLETADA":                    "Completada",
 }
 
 # Estados que agrupan cada sección de la tabla
-ESTADOS_RESERVADAS  = ("PENDIENTE_COORDINACION",)
-ESTADOS_COORDINADAS = ("PENDIENTE_APROBACION", "PENDIENTE_APROBACION_GERENTE", "APROBADA")
-ESTADOS_ATENDIDAS   = ("COMPLETADA", "RECHAZADA")
+ESTADOS_RESERVADAS  = (
+    "PENDIENTE_APROBACION_JEFE",
+    "PENDIENTE_APROBACION_GG_VUELO",
+    "PENDIENTE_COORDINACION",
+)
+ESTADOS_COORDINADAS   = ("PENDIENTE_APROBACION", "PENDIENTE_APROBACION_GERENTE", "APROBADA")
+ESTADOS_POR_COMPLETAR = ("COORDINADA", "PENDIENTE_LIQUIDACION")
+ESTADOS_ATENDIDAS     = ("COMPLETADA", "RECHAZADA")
 
 # Roles de sistema considerados gerentes (para aprobación gerencial)
-ROLES_GERENTE = ("gerente", "gerente financiero", "gerente general")
+ROLES_GERENTE = ("gerente", "gerente financiero", "gerente general", "jefe")
 
 PRIORIDADES = ["Normal", "Alta", "Urgente"]
 
-ROL_COORDINADOR = "COORDINADOR"
-ROL_APROBADOR   = "APROBADOR"
-ROL_MOTORIZADO  = "MOTORIZADO"
+ROL_COORDINADOR        = "COORDINADOR"
+ROL_APROBADOR          = "APROBADOR"
+ROL_MOTORIZADO         = "MOTORIZADO"
+ROL_GERENTE_PRESUPUESTO = "GERENTE_PRESUPUESTO"
 
 # roles de sistema que tienen acceso total al planificador
-ROLES_ADMIN = ("admin", "jefe")
+ROLES_ADMIN = ("admin",)
+
+# Tabla de presupuesto por CC/empresa/tipo de gasto
+TBL_PRESUPUESTO = "planificador_presupuesto"
+
+# param_group para tipos de gasto (parametrizables desde Parámetros generales)
+PARAM_GROUP_TIPOS_GASTO = "PLANIFICADOR_TIPOS_GASTO"
+
+# Fallback si no hay datos en param_values todavía
+TIPOS_GASTO_DEFAULT = ["Alimentación", "Hospedaje", "Ticket aéreo"]
+
+# Semáforo: % ejecutado a partir del cual cambia de verde a amarillo
+SEMAFORO_AMARILLO_PCT = 50  # >= 50% usado → amarillo
+# >= 100% usado → rojo (sin presupuesto, requiere aprobación GG)
+
+PERM_PRESUPUESTO = "planificador.presupuesto"

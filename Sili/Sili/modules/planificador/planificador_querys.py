@@ -18,6 +18,7 @@ from .planificador_constants import (
     TBL_PUESTOS,
     TBL_PARAM_VALUES,
     TBL_PARAM_GROUPS,
+    TBL_PRESUPUESTO,
 )
 
 # ──────────────────────────────────────────────
@@ -60,7 +61,7 @@ SQL_GET_CALENDAR_SOLICITUDES = f"""
            solicitante_nombre
     FROM {TBL_SOLICITUDES}
     WHERE activo = 1
-      AND estado IN ('APROBADA', 'PENDIENTE_APROBACION', 'COMPLETADA')
+      AND estado IN ('APROBADA', 'COORDINADA', 'PENDIENTE_LIQUIDACION', 'PENDIENTE_APROBACION', 'COMPLETADA')
       AND fecha BETWEEN ? AND ?
     ORDER BY fecha, hora_inicio
 """
@@ -149,15 +150,21 @@ SQL_INSERT_SOLICITUD = f"""
     INSERT INTO {TBL_SOLICITUDES}
         (tipo, area_solicitante, descripcion, lugar_destino, detalle_direccion,
          contacto, prioridad, fecha, estado, solicitante_id, solicitante_nombre,
-         ciudad, presupuesto_base_cero)
+         ciudad, presupuesto_base_cero,
+         fecha_retorno, punto_salida, punto_destino,
+         requiere_hospedaje, orden_servicio, centro_costo_id,
+         requiere_aprobacion_presupuesto,
+         gerente_id, gerente_nombre)
     OUTPUT INSERTED.id
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDIENTE_COORDINACION', ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?,
+            ?, ?)
 """
 
 SQL_UPDATE_REAGENDAR = f"""
     UPDATE {TBL_SOLICITUDES} SET
         fecha                   = ?,
-        estado                  = 'PENDIENTE_COORDINACION',
+        estado                  = ?,
         hora_inicio             = NULL,
         hora_fin                = NULL,
         coordinador_id          = NULL,
@@ -165,6 +172,116 @@ SQL_UPDATE_REAGENDAR = f"""
         observacion_coordinador = NULL,
         fecha_actualizacion     = GETDATE()
     WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: aprobación jefe → sin problema presupuestal → coordinación
+SQL_VUELO_APROBAR_JEFE_OK = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado                = 'PENDIENTE_COORDINACION',
+        aprobador_id          = ?,
+        aprobador_nombre      = ?,
+        observacion_aprobador = ?,
+        fecha_actualizacion   = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: aprobación jefe → sin presupuesto → requiere GG
+SQL_VUELO_APROBAR_JEFE_GG = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado                = 'PENDIENTE_APROBACION_GG_VUELO',
+        aprobador_id          = ?,
+        aprobador_nombre      = ?,
+        observacion_aprobador = ?,
+        fecha_actualizacion   = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: GG aprueba → coordinación
+SQL_VUELO_APROBAR_GG = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado              = 'PENDIENTE_COORDINACION',
+        fecha_actualizacion = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: coordinador registra gestión y completa
+SQL_VUELO_COMPLETAR = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado                  = 'COORDINADA',
+        coordinador_id          = ?,
+        coordinador_nombre      = ?,
+        hora_inicio             = ?,
+        hora_fin                = ?,
+        observacion_coordinador = ?,
+        fecha_actualizacion     = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_VUELO_MARCAR_REALIZADO = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado              = 'PENDIENTE_LIQUIDACION',
+        fecha_actualizacion = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_VUELO_LIQUIDAR = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado               = 'COMPLETADA',
+        costo_real           = ?,
+        notas_liquidacion    = ?,
+        fecha_actualizacion  = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_EJECUTAR_PRESUPUESTO_VUELO = f"""
+    IF EXISTS (
+        SELECT 1 FROM {TBL_PRESUPUESTO}
+        WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+    )
+        UPDATE {TBL_PRESUPUESTO}
+           SET monto_ejecutado = monto_ejecutado + ?
+         WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+    ELSE
+        INSERT INTO {TBL_PRESUPUESTO}
+            (empresa_id, centro_costo_id, tipo_gasto, anio, mes, monto_presupuestado, monto_ejecutado)
+        VALUES (?, ?, ?, ?, ?, 0, ?)
+"""
+
+SQL_GET_EMPRESA_BY_USUARIO = f"""
+    SELECT empresa_id FROM {TBL_USUARIOS} WHERE id = ?
+"""
+
+SQL_GET_VUELOS_COORDINADAS_SIN_LIQUIDAR = f"""
+    SELECT s.id, s.area_solicitante, s.fecha, s.coordinador_id, s.coordinador_nombre,
+           u.email AS coordinador_email
+    FROM {TBL_SOLICITUDES} s
+    LEFT JOIN {TBL_USUARIOS} u ON u.id = s.coordinador_id
+    WHERE s.activo = 1
+      AND s.tipo   = 'Vuelo'
+      AND s.estado = 'COORDINADA'
+      AND s.fecha_actualizacion < DATEADD(day, -3, GETDATE())
+"""
+
+# ── Solicitudes en PENDIENTE_APROBACION_JEFE para un gerente_id
+SQL_GET_SOLICITUDES_PENDIENTE_JEFE = f"""
+    SELECT s.*
+    FROM {TBL_SOLICITUDES} s
+    WHERE s.activo = 1
+      AND s.estado = 'PENDIENTE_APROBACION_JEFE'
+      AND s.gerente_id = ?
+      {{where_extra}}
+    ORDER BY s.fecha DESC
+"""
+
+# ── Solicitudes en PENDIENTE_APROBACION_GG_VUELO para tipos del GG
+SQL_GET_SOLICITUDES_PENDIENTE_GG_VUELO = f"""
+    SELECT s.*
+    FROM {TBL_SOLICITUDES} s
+    WHERE s.activo = 1
+      AND s.estado = 'PENDIENTE_APROBACION_GG_VUELO'
+      AND s.tipo IN ({{placeholders}})
+      {{where_extra}}
+    ORDER BY s.fecha DESC
 """
 
 SQL_UPDATE_COORDINAR = f"""
@@ -189,6 +306,34 @@ SQL_UPDATE_COORDINAR_GRUPO = f"""
         grupo_id                = ?,
         estado                  = 'PENDIENTE_APROBACION',
         fecha_actualizacion     = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_UPDATE_COORDINAR_VUELO = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        hora_inicio             = ?,
+        hora_fin                = ?,
+        datos_ticket            = ?,
+        datos_hotel             = ?,
+        observacion_coordinador = ?,
+        coordinador_id          = ?,
+        coordinador_nombre      = ?,
+        estado                  = 'COORDINADA',
+        fecha_actualizacion     = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_REAGENDAR_VUELO_A_JEFE = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        fecha               = ?,
+        hora_inicio         = NULL,
+        hora_fin            = NULL,
+        datos_ticket        = NULL,
+        datos_hotel         = NULL,
+        aprobador_id        = NULL,
+        aprobador_nombre    = NULL,
+        estado              = 'PENDIENTE_APROBACION_JEFE',
+        fecha_actualizacion = GETDATE()
     WHERE id = ? AND activo = 1
 """
 
@@ -387,6 +532,14 @@ SQL_GET_JEFE_USUARIO = f"""
     SELECT jefe_id FROM {TBL_USUARIOS} WHERE id = ? AND COALESCE(disabled,0) = 0
 """
 
+SQL_GET_JEFE_NOMBRE_BATCH = f"""
+    SELECT u.id AS solicitante_id,
+           COALESCE(j.nombre_completo, j.username, '') AS jefe_nombre
+    FROM {TBL_USUARIOS} u
+    LEFT JOIN {TBL_USUARIOS} j ON j.id = u.jefe_id AND COALESCE(j.disabled,0) = 0
+    WHERE u.id IN ({{placeholders}})
+"""
+
 SQL_GET_USUARIO_JERARQUIA = f"""
     SELECT id, COALESCE(nombre_completo, username) AS nombre,
            email, jefe_id, LOWER(COALESCE(rol,'')) AS rol
@@ -474,4 +627,109 @@ SQL_GET_SOLICITUD_LOGS = f"""
 SQL_INSERT_NOTIFY_INAPP = f"""
     INSERT INTO {TBL_NOTIFY_INAPP} (user_id, title, body, created_at, is_read)
     VALUES (?, ?, ?, ?, 0)
+"""
+
+# ──────────────────────────────────────────────
+# Presupuesto por CC / empresa / tipo de gasto
+# ──────────────────────────────────────────────
+
+SQL_CREATE_PRESUPUESTO_TABLE = f"""
+    IF OBJECT_ID('{TBL_PRESUPUESTO}', 'U') IS NULL
+    BEGIN
+        CREATE TABLE {TBL_PRESUPUESTO} (
+            id                  INT IDENTITY(1,1) PRIMARY KEY,
+            empresa_id          INT          NOT NULL,
+            centro_costo_id     INT          NOT NULL,
+            tipo_gasto          NVARCHAR(100) NOT NULL,
+            anio                INT          NOT NULL,
+            mes                 TINYINT      NOT NULL CHECK (mes BETWEEN 1 AND 12),
+            monto_presupuestado DECIMAL(18,2) NOT NULL DEFAULT 0,
+            monto_ejecutado     DECIMAL(18,2) NOT NULL DEFAULT 0,
+            CONSTRAINT UQ_plan_presup UNIQUE (empresa_id, centro_costo_id, tipo_gasto, anio, mes)
+        );
+    END
+"""
+
+SQL_GET_TIPOS_GASTO = f"""
+    SELECT pv.nombre
+    FROM {TBL_PARAM_VALUES} pv
+    JOIN {TBL_PARAM_GROUPS} pg ON pg.id = pv.group_id
+    WHERE pg.nombre = ?
+      AND pv.activo = 1
+    ORDER BY pv.orden, pv.nombre
+"""
+
+SQL_GET_PRESUPUESTO_GRID = f"""
+    SELECT
+        e.id   AS empresa_id,
+        e.razon_social AS empresa_nombre,
+        pv.id  AS centro_costo_id,
+        pv.nombre AS centro_costo_nombre,
+        p.tipo_gasto,
+        p.mes,
+        p.monto_presupuestado,
+        p.monto_ejecutado
+    FROM empresas e
+    JOIN {TBL_USUARIOS} u ON u.empresa_id = e.id
+    JOIN param_values pv  ON pv.id = u.cuenta_contable_id
+    LEFT JOIN {TBL_PRESUPUESTO} p
+           ON p.empresa_id      = e.id
+          AND p.centro_costo_id = pv.id
+          AND p.tipo_gasto      = ?
+          AND p.anio            = ?
+    WHERE e.activo = 1
+      AND u.disabled = 0
+      AND (? IS NULL OR e.id = ?)
+    GROUP BY e.id, e.razon_social, pv.id, pv.nombre,
+             p.tipo_gasto, p.mes, p.monto_presupuestado, p.monto_ejecutado
+    ORDER BY e.razon_social, pv.nombre, p.mes
+"""
+
+SQL_GET_PRESUPUESTO_CC = f"""
+    SELECT mes, monto_presupuestado, monto_ejecutado
+    FROM {TBL_PRESUPUESTO}
+    WHERE empresa_id = ? AND centro_costo_id = ? AND tipo_gasto = ? AND anio = ?
+"""
+
+SQL_UPSERT_PRESUPUESTO = f"""
+    IF EXISTS (
+        SELECT 1 FROM {TBL_PRESUPUESTO}
+        WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+    )
+        UPDATE {TBL_PRESUPUESTO}
+           SET monto_presupuestado = ?
+         WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+    ELSE
+        INSERT INTO {TBL_PRESUPUESTO}
+            (empresa_id, centro_costo_id, tipo_gasto, anio, mes, monto_presupuestado, monto_ejecutado)
+        VALUES (?, ?, ?, ?, ?, ?, 0)
+"""
+
+SQL_GET_SALDO_PRESUPUESTO = f"""
+    SELECT
+        COALESCE(SUM(monto_presupuestado), 0) AS presupuestado,
+        COALESCE(SUM(monto_ejecutado), 0)     AS ejecutado
+    FROM {TBL_PRESUPUESTO}
+    WHERE empresa_id      = ?
+      AND centro_costo_id = ?
+      AND tipo_gasto      = ?
+      AND anio            = ?
+      AND mes             = ?
+"""
+
+SQL_GET_SALDO_ANUAL_PRESUPUESTO = f"""
+    SELECT
+        COALESCE(SUM(monto_presupuestado), 0) AS presupuestado,
+        COALESCE(SUM(monto_ejecutado), 0)     AS ejecutado
+    FROM {TBL_PRESUPUESTO}
+    WHERE empresa_id      = ?
+      AND centro_costo_id = ?
+      AND tipo_gasto      = ?
+      AND anio            = ?
+"""
+
+SQL_ADD_EJECUTADO = f"""
+    UPDATE {TBL_PRESUPUESTO}
+       SET monto_ejecutado = monto_ejecutado + ?
+     WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
 """

@@ -6694,16 +6694,24 @@ def register_reclamos_routes(app):
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_65, (adj_id,))
         row = cur.fetchone()
         conn.close()
+  
 
         if not row:
             abort(404)
+
+
+
+
 
         upload_folder = _get_reclamos_upload_folder()
         path = os.path.join(upload_folder, row["filename"])
 
         if not os.path.exists(path):
             abort(404)
-
+            
+        current_app.logger.warning("UPLOAD_FOLDER_RECLAMOS=%s", upload_folder)
+        current_app.logger.warning("PATH_ADJUNTO=%s", path)
+        current_app.logger.warning("EXISTE_ARCHIVO=%s", os.path.exists(path))
         return send_file(
             path,
             as_attachment=True,

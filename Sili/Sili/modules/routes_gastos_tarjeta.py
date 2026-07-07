@@ -4664,6 +4664,33 @@ def register_gastos_routes(app):
     
         
 
+    # ── Editar solo campo CCB (coordinador) ──────────────────────────────────
+    @app.route('/reembolsos/gastos/<int:gasto_id>/editar-ccb', methods=['POST'],
+               endpoint='editar_ccb_gasto')
+    @require_login
+    def editar_ccb_gasto(gasto_id):
+        from flask import jsonify
+        rol = (session.get('rol') or '').lower()
+        if rol not in ('coordinador', 'admin'):
+            return jsonify(ok=False, error='Sin permiso'), 403
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        # Verificar que el gasto existe
+        cur.execute("SELECT id, ccb FROM gastos_tarjeta WHERE id = ?", (gasto_id,))
+        row = cur.fetchone()
+        if not row:
+            return jsonify(ok=False, error='Gasto no encontrado'), 404
+
+        nuevo_ccb = 1 if str(request.form.get('ccb', '0')) == '1' else 0
+        cur.execute(
+            "UPDATE gastos_tarjeta SET ccb = ? WHERE id = ?",
+            (nuevo_ccb, gasto_id)
+        )
+        conn.commit()
+        return jsonify(ok=True, ccb=nuevo_ccb)
+
      # EDITAR
     @app.route('/reembolsos/gastos/<int:gasto_id>/editar', methods=['GET', 'POST'], endpoint='editar_gasto')
     @require_login
@@ -6505,6 +6532,17 @@ def register_gastos_routes(app):
             es_caja_chica = int(g.get('es_caja_chica') or 0) == 1
             es_reembolso = int(g.get('reembolso_vendedor') or 0) == 1
             es_tarjeta_online = int(g.get('tarjeta_sin_soporte') or 0) == 1
+
+            # Para tarjeta_online el Id_Fiscal usa cédula del gerente, no del usuario
+            if not es_tarjeta_online and not (g.get("usuario_cedula") or "").strip():
+                return jsonify(
+                    ok=False,
+                    msg=(
+                        f"El usuario '{g.get('usuario_username', '')}' no tiene número de "
+                        "identificación registrado (Id_Fiscal requerido por SAP). "
+                        "Actualícelo en Gestión de Usuarios."
+                    )
+                ), 400
             es_boletos_aereos = int(g.get('boletos_aereos') or 0) == 1
 
             tipo_caja_chica = (g.get("tipo_caja_chica") or "NINGUNA").strip().upper()
@@ -6523,12 +6561,13 @@ def register_gastos_routes(app):
 
             acreedor_tipo3 = (g.get('usuario_codigo_sap') or "").strip()
 
+            cedula_gerente_tarjeta = ""
             if es_tarjeta_online:
                 gerente_id = _get_ultimo_jefe_id(conn, g.get('usuario_id'))
 
                 if gerente_id:
                     cur.execute(
-                        "SELECT COALESCE(codigo_sap,'') AS codigo_sap FROM usuarios WHERE id = ?",
+                        "SELECT COALESCE(codigo_sap,'') AS codigo_sap, COALESCE(identificacion,'') AS identificacion FROM usuarios WHERE id = ?",
                         (gerente_id,)
                     )
                     r = cur.fetchone()
@@ -6537,8 +6576,10 @@ def register_gastos_routes(app):
                     if r:
                         try:
                             codigo_gerente = (r["codigo_sap"] or "").strip()
+                            cedula_gerente_tarjeta = (r["identificacion"] or "").strip()
                         except Exception:
                             codigo_gerente = (r[0] or "").strip()
+                            cedula_gerente_tarjeta = (r[1] or "").strip()
 
                     if codigo_gerente:
                         acreedor_tipo3 = codigo_gerente
@@ -6592,6 +6633,10 @@ def register_gastos_routes(app):
                 cedula_creador = (u_creador['identificacion'] if u_creador else "") or ""
             except Exception:
                 cedula_creador = (u_creador[0] if u_creador else "") or ""
+
+            # Para tarjeta_online el Id_Fiscal debe ser la cédula del gerente, no del empleado
+            if es_tarjeta_online and cedula_gerente_tarjeta:
+                cedula_creador = cedula_gerente_tarjeta
 
             # -----------------------------
             # Detalle
@@ -7129,11 +7174,12 @@ def register_gastos_routes(app):
                 except Exception:
                     return ""
 
-            def _make_liq_documento(g0, numero_doc_liq, fecha_doc, cod="001", serie="002"):
+            def _make_liq_documento(g0, numero_doc_liq, fecha_doc, cod="001", serie="002", id_fiscal_override=None):
+                id_fiscal = id_fiscal_override if id_fiscal_override else g0["usuario_cedula"]
                 return {
                     "Fecha_Documento": fecha_doc,
                     "Tipo_Id": "51",
-                    "Id_Fiscal": g0["usuario_cedula"],
+                    "Id_Fiscal": id_fiscal,
                     "Moneda": "USD",
                     "Tipo_Doc_Liquidacion": "01",
                     "Cod_Doc_Liquidacion": cod,
@@ -7273,6 +7319,17 @@ def register_gastos_routes(app):
                 es_boletos_aereos = int(g.get("boletos_aereos") or 0) == 1
                 es_tarjeta_online = int(g.get("tarjeta_sin_soporte") or 0) == 1
 
+                # Validar cédula/RUC para Id_Fiscal (para tarjeta_online se usa la del gerente)
+                if not es_tarjeta_online:
+                    cedula = (g.get("usuario_cedula") or "").strip()
+                    if not cedula:
+                        usuario = g.get("username") or str(g.get("usuario_id", ""))
+                        return jsonify(
+                            ok=False,
+                            msg=f"Gasto {gid}: el usuario '{usuario}' no tiene número de identificación "
+                                "registrado. Actualícelo en Gestión de Usuarios antes de enviar a SAP."
+                        ), 400
+
                 es_restringido = es_caja_chica or es_reembolso
                 ga_eff_ok = _ga_effective_ok(g, ga_ok, gg_ok, gf_ok, es_restringido)
 
@@ -7353,6 +7410,8 @@ def register_gastos_routes(app):
                 sociedad_sap, usuario_sap, owner_id, tipo = group_key
                 g0 = gastos_by_id[gids[0]]
 
+                cedula_gerente_batch = ""
+
                 if tipo == "boletos_aereos":
                     prov_sap = (g0.get("proveedor_codigo_sap") or "").strip()
 
@@ -7367,6 +7426,21 @@ def register_gastos_routes(app):
 
                     if cod_gerente:
                         acreedor = cod_gerente
+
+                    # Obtener cédula del gerente para Id_Fiscal
+                    cedula_gerente_batch = ""
+                    jefe_id_batch = _get_ultimo_jefe_id(conn, owner_id)
+                    if jefe_id_batch:
+                        cur.execute(
+                            "SELECT COALESCE(identificacion,'') AS identificacion FROM usuarios WHERE id = ?",
+                            (jefe_id_batch,)
+                        )
+                        r_ger = cur.fetchone()
+                        if r_ger:
+                            try:
+                                cedula_gerente_batch = (r_ger["identificacion"] or "").strip()
+                            except Exception:
+                                cedula_gerente_batch = (r_ger[0] or "").strip()
 
                 else:
                     acreedor = (g0.get("usuario_codigo_sap") or "").strip()
@@ -7442,7 +7516,8 @@ def register_gastos_routes(app):
                             if not cc:
                                 raise Exception(f"Gasto {gid}: requiere Centro de Costo en el detalle.")
 
-                            liq_doc = _make_liq_documento(g0, numero_doc_liq, fecha_doc)
+                            liq_doc = _make_liq_documento(g0, numero_doc_liq, fecha_doc,
+                                                          id_fiscal_override=cedula_gerente_batch or None)
 
                             liq_doc["Liquidacion_Detalle"].append({
                                 "Cuenta_Gasto": cuenta_gasto,

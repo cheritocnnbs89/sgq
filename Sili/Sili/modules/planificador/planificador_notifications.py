@@ -11,7 +11,15 @@ from flask import current_app
 
 from modules.email_utils import send_email_async as _send_async
 from modules import telegram_utils as _tg
+from modules.db import get_db
 from . import planificador_repository as repo
+from modules.scheduler.scheduler_constants import (
+    TPL_PLAN_NUEVA_COORD,
+    TPL_PLAN_NUEVA_USER,
+    TIPO_PLAN_NUEVA_COORD,
+    TIPO_PLAN_NUEVA_USER,
+)
+from modules.scheduler.scheduler_notifications import enqueue_planificador_notify
 
 
 # ──────────────────────────────────────────────────────────
@@ -31,13 +39,13 @@ def _inapp(user_id: int, title: str, body: str) -> None:
             pass
 
 
-def _email(to_list: list[str], subject: str, html: str) -> None:
+def _email(to_list: list[str], subject: str, html: str, attachments=None) -> None:
     """Envía email ignorando errores (nunca bloquea la respuesta HTTP)."""
     to_list = [e for e in (to_list or []) if e]
     if not to_list:
         return
     try:
-        _send_async(to_list, subject, html)
+        _send_async(to_list, subject, html, attachments=attachments)
     except Exception as exc:
         try:
             current_app.logger.warning("Planificador email error: %s", exc)
@@ -120,32 +128,58 @@ def _maps_link(lugar: str) -> str:
 # ──────────────────────────────────────────────────────────
 
 def notif_nueva_solicitud(solicitud_id: int, tipo: str, area: str,
-                          fecha: str, solicitante_nombre: str) -> None:
+                          fecha: str, solicitante_nombre: str,
+                          solicitante_id: int | None = None) -> None:
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo(tipo)
-    if not coordinadores:
-        return
 
-    subject = f"[Planificador] Nueva solicitud #{solicitud_id} · {tipo}"
-    titulo  = f"Nueva solicitud pendiente de coordinación #{solicitud_id}"
-    saludo  = "Se registró una nueva solicitud que requiere asignación de horario."
-    filas   = [
-        ("N° solicitud",   str(solicitud_id)),
-        ("Tipo",           tipo),
-        ("Área solicitante", area),
-        ("Fecha",          fecha),
-        ("Solicitante",    solicitante_nombre),
-    ]
-    nota = "Ingresa al SGQ para asignar el horario y enviar a aprobación."
-    html = _email_html("PLANIFICADOR · COORDINACIÓN", titulo, saludo, filas, nota)
+    payload = {
+        "solicitud_id": solicitud_id,
+        "tipo":         tipo,
+        "area":         area,
+        "fecha":        fecha,
+        "solicitante":  solicitante_nombre,
+    }
 
-    emails = []
+    conn = get_db()
+
+    # Notificar a cada coordinador del tipo específico (no de otros tipos)
     for c in coordinadores:
-        _inapp(c["id"], subject,
-               f"Solicitud #{solicitud_id} de {solicitante_nombre} — {tipo} — {fecha}")
-        if c.get("email"):
-            emails.append(c["email"])
+        coord_id = c.get("id")
+        inapp_body = f"Solicitud #{solicitud_id} de {solicitante_nombre} — {tipo} — {fecha}"
+        _inapp(coord_id, f"[Planificador] Nueva solicitud #{solicitud_id} · {tipo}", inapp_body)
+        if coord_id:
+            payload_coord = dict(payload, titulo=f"Nueva solicitud #{solicitud_id} · {tipo}",
+                                  saludo="Se registró una nueva solicitud que requiere asignación de horario.",
+                                  nota="Ingresa al SGQ para asignar el horario y enviar a aprobación.")
+            event_key = f"plan:nueva:coord:{solicitud_id}:{coord_id}"
+            try:
+                enqueue_planificador_notify(conn, coord_id, TPL_PLAN_NUEVA_COORD,
+                                            TIPO_PLAN_NUEVA_COORD, payload_coord, event_key)
+            except Exception as exc:
+                try:
+                    current_app.logger.warning("plan notif coord error sid=%s uid=%s: %s",
+                                               solicitud_id, coord_id, exc)
+                except Exception:
+                    pass
 
-    _email(emails, subject, html)
+    # Confirmar al solicitante
+    if solicitante_id:
+        _inapp(solicitante_id,
+               f"[Planificador] Solicitud #{solicitud_id} registrada",
+               f"Tu solicitud #{solicitud_id} — {tipo} — {fecha} quedó pendiente de coordinación.")
+        payload_user = dict(payload, titulo=f"Solicitud #{solicitud_id} registrada",
+                             saludo="Tu solicitud fue registrada exitosamente.",
+                             nota="Recibirás una notificación cuando sea coordinada y aprobada.")
+        event_key_u = f"plan:nueva:user:{solicitud_id}:{solicitante_id}"
+        try:
+            enqueue_planificador_notify(conn, solicitante_id, TPL_PLAN_NUEVA_USER,
+                                        TIPO_PLAN_NUEVA_USER, payload_user, event_key_u)
+        except Exception as exc:
+            try:
+                current_app.logger.warning("plan notif user error sid=%s uid=%s: %s",
+                                           solicitud_id, solicitante_id, exc)
+            except Exception:
+                pass
 
 
 # ──────────────────────────────────────────────────────────
@@ -390,7 +424,271 @@ def notif_pendiente_gerente(solicitud_id: int, tipo: str, area: str, fecha: str,
 
 
 # ──────────────────────────────────────────────────────────
-# 7. Nueva solicitud de Vuelo → notificar al gerente del solicitante
+# 7. Vuelo: notificar al jefe directo para que apruebe
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
+                                descripcion: str, presupuesto: str,
+                                solicitante_nombre: str,
+                                jefe_id: int | None, jefe_nombre: str,
+                                es_reagenda: bool = False) -> None:
+    if not jefe_id:
+        return
+    accion = "reagendada — nuevo ciclo de aprobación" if es_reagenda else "registrada"
+    subject = f"[Planificador] Solicitud de Vuelo #{solicitud_id} pendiente de su aprobación"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} — Requiere su aprobación"
+    saludo  = (f"Estimado/a <strong>{jefe_nombre}</strong>, "
+               f"<strong>{solicitante_nombre}</strong> ha {accion} una solicitud de "
+               f"tipo <strong>Vuelo</strong> que requiere su aprobación.")
+    filas   = [
+        ("N° solicitud",      str(solicitud_id)),
+        ("Área solicitante",  area),
+        ("Fecha solicitada",  fecha),
+        ("Descripción",       descripcion or "—"),
+        ("Presupuesto B.C.",  presupuesto or "—"),
+        ("Solicitante",       solicitante_nombre),
+    ]
+    nota = "Ingresa al SGQ para aprobar o rechazar esta solicitud."
+    html = _email_html("PLANIFICADOR · VUELO — APROBACIÓN JEFE", titulo, saludo, filas, nota)
+    _inapp(jefe_id, subject,
+           f"Solicitud de Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} requiere su aprobación")
+    email_j = repo.get_email_by_usuario_id(jefe_id)
+    _email([email_j] if email_j else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# 8. Vuelo: notificar al GG cuando no hay presupuesto
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_pendiente_gg(solicitud_id: int, area: str, fecha: str,
+                              descripcion: str, presupuesto: str,
+                              solicitante_nombre: str, jefe_nombre: str,
+                              gg_id: int | None, gg_nombre: str) -> None:
+    if not gg_id:
+        return
+    subject = f"[Planificador] Vuelo #{solicitud_id} sin presupuesto — requiere su aprobación"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} — Aprobación Gerente General"
+    saludo  = (f"Estimado/a <strong>{gg_nombre}</strong>, el jefe <strong>{jefe_nombre}</strong> "
+               f"aprobó una solicitud de Vuelo de <strong>{solicitante_nombre}</strong>, "
+               f"pero no existe presupuesto disponible. Requiere su autorización.")
+    filas   = [
+        ("N° solicitud",     str(solicitud_id)),
+        ("Área solicitante", area),
+        ("Fecha solicitada", fecha),
+        ("Descripción",      descripcion or "—"),
+        ("Presupuesto B.C.", presupuesto or "—"),
+        ("Solicitante",      solicitante_nombre),
+        ("Aprobado por jefe", jefe_nombre),
+    ]
+    nota = "Ingresa al SGQ para aprobar o rechazar esta solicitud."
+    html = _email_html("PLANIFICADOR · VUELO — APROBACIÓN GG", titulo, saludo, filas, nota)
+    _inapp(gg_id, subject,
+           f"Vuelo #{solicitud_id} de {solicitante_nombre} sin presupuesto — requiere aprobación GG")
+    email_g = repo.get_email_by_usuario_id(gg_id)
+    _email([email_g] if email_g else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# 9. Vuelo: aprobado → notificar al coordinador
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
+                                       descripcion: str, solicitante_nombre: str,
+                                       aprobador_nombre: str) -> None:
+    coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
+    subject = f"[Planificador] Vuelo #{solicitud_id} aprobado — pendiente de coordinación"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} aprobada"
+    saludo  = (f"La solicitud de Vuelo de <strong>{solicitante_nombre}</strong> fue aprobada "
+               f"por <strong>{aprobador_nombre}</strong> y requiere que gestione los pasajes.")
+    filas   = [
+        ("N° solicitud",    str(solicitud_id)),
+        ("Área solicitante", area),
+        ("Fecha",           fecha),
+        ("Descripción",     descripcion or "—"),
+        ("Aprobado por",    aprobador_nombre),
+    ]
+    nota = "Ingresa al SGQ, gestiona los pasajes y carga los archivos de soporte."
+    html = _email_html("PLANIFICADOR · VUELO — COORDINACIÓN", titulo, saludo, filas, nota)
+    emails = []
+    for c in coordinadores:
+        _inapp(c["id"], subject,
+               f"Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} listo para coordinación")
+        if c.get("email"):
+            emails.append(c["email"])
+    _email(emails, subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# 10. Vuelo: rechazado → notificar al solicitante
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_rechazada(solicitud_id: int, area: str, fecha: str,
+                           motivo: str, solicitante_nombre: str,
+                           solicitante_id: int, rechazado_por: str) -> None:
+    subject = f"[Planificador] Solicitud de Vuelo #{solicitud_id} rechazada"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} rechazada"
+    saludo  = "Tu solicitud de Vuelo no fue aprobada."
+    filas   = [
+        ("N° solicitud",  str(solicitud_id)),
+        ("Área",          area),
+        ("Fecha",         fecha),
+        ("Rechazado por", rechazado_por),
+        ("Motivo",        motivo or "—"),
+    ]
+    html = _email_html("PLANIFICADOR · VUELO — RECHAZADO", titulo, saludo, filas)
+    _inapp(solicitante_id, subject,
+           f"Tu solicitud de Vuelo #{solicitud_id} fue rechazada. Motivo: {motivo or '—'}")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# 11. Vuelo: coordinador completa → notificar al solicitante con archivos
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_completada(solicitud_id: int, area: str, fecha: str,
+                            descripcion: str, observacion: str,
+                            solicitante_nombre: str, solicitante_id: int,
+                            coordinador_nombre: str,
+                            adjuntos: list | None = None) -> None:
+    """adjuntos: lista de tuplas (ruta_absoluta, nombre_archivo) para adjuntar al correo."""
+    subject = f"[Planificador] Tu vuelo #{solicitud_id} está listo"
+    titulo  = f"Vuelo #{solicitud_id} — Pasajes y reservas disponibles"
+    saludo  = (f"Hola <strong>{solicitante_nombre}</strong>, el coordinador "
+               f"<strong>{coordinador_nombre}</strong> ha gestionado tu solicitud de vuelo.")
+    filas   = [
+        ("N° solicitud",        str(solicitud_id)),
+        ("Área",                area),
+        ("Fecha del vuelo",     fecha),
+        ("Descripción",         descripcion or "—"),
+        ("Info. de reservación", observacion or "—"),
+    ]
+    archivos_html = ""
+    if adjuntos:
+        items = "".join(f"<li>{nombre}</li>" for _, nombre in adjuntos)
+        archivos_html = (f'<p style="margin:12px 0 4px;font-size:.85rem;font-weight:600">'
+                         f'Documentos adjuntos en este correo:</p>'
+                         f'<ul style="margin:0;padding-left:1.2rem;font-size:.82rem">{items}</ul>')
+    nota = f"Ingresa al SGQ para ver los detalles completos.{archivos_html}"
+    html = _email_html("PLANIFICADOR · VUELO — COMPLETADO", titulo, saludo, filas, nota)
+    _inapp(solicitante_id, subject,
+           f"Tu vuelo #{solicitud_id} está listo. El coordinador registró los pasajes y reservas.")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html, attachments=adjuntos or None)
+
+
+# ──────────────────────────────────────────────────────────
+# Vuelo coordinado: notificar al solicitante con datos de reserva y adjunto
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_coordinada_solicitante(solicitud_id: int, area: str, fecha: str,
+                                        descripcion: str, hora_inicio: str, hora_fin: str,
+                                        datos_ticket: str, datos_hotel: str,
+                                        solicitante_nombre: str, solicitante_id: int,
+                                        coordinador_nombre: str,
+                                        attachment_paths: list | None = None) -> None:
+    subject = f"[Planificador] Tu vuelo #{solicitud_id} está coordinado — datos de reserva"
+    titulo  = f"Vuelo #{solicitud_id} — Reserva confirmada"
+    saludo  = (f"Hola <strong>{solicitante_nombre}</strong>, el coordinador "
+               f"<strong>{coordinador_nombre}</strong> ha gestionado los pasajes de tu solicitud.")
+    filas = [
+        ("N° solicitud",        str(solicitud_id)),
+        ("Área",                area),
+        ("Fecha del vuelo",     fecha),
+        ("Horario asignado",    f"{hora_inicio} – {hora_fin}" if hora_inicio else "—"),
+        ("Descripción",         descripcion or "—"),
+        ("Datos ticket aéreo",  datos_ticket or "—"),
+        ("Datos hotel",         datos_hotel or "Sin reserva de hotel"),
+    ]
+    nota = "Se adjuntan los documentos de la reserva. Guárdalos para presentarlos en el viaje."
+    html = _email_html("PLANIFICADOR · VUELO — COORDINADO", titulo, saludo, filas, nota)
+    _inapp(solicitante_id, subject,
+           f"Tu vuelo #{solicitud_id} está coordinado. El coordinador registró los datos de reserva.")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html, attachments=attachment_paths)
+
+
+# ──────────────────────────────────────────────────────────
+# Vuelo marcado como realizado: avisar al coordinador para que liquide costos
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_pendiente_liquidacion(solicitud_id: int, area: str, fecha: str,
+                                       solicitante_nombre: str,
+                                       coordinador_id: int,
+                                       coordinador_nombre: str) -> None:
+    """Avisa al coordinador que el solicitante confirmó haber realizado el vuelo."""
+    subject = f"[Planificador] Vuelo #{solicitud_id} realizado — pendiente ingresar costos"
+    titulo  = f"Vuelo #{solicitud_id} — Registrar costos"
+    saludo  = (f"Hola <strong>{coordinador_nombre}</strong>, "
+               f"<strong>{solicitante_nombre}</strong> ha confirmado que realizó el vuelo. "
+               f"Por favor ingresa los costos reales para completar la solicitud.")
+    filas   = [
+        ("N° solicitud",   str(solicitud_id)),
+        ("Área",           area),
+        ("Fecha del vuelo", fecha),
+        ("Confirmado por", solicitante_nombre),
+    ]
+    nota = ("Ingresa al SGQ → Planificador → Por completar, abre la solicitud y "
+            "registra los costos por tipo de gasto.")
+    html = _email_html("PLANIFICADOR · VUELO — PENDIENTE LIQUIDACIÓN", titulo, saludo, filas, nota)
+    _inapp(coordinador_id, subject,
+           f"El solicitante confirmó el vuelo #{solicitud_id}. Debes ingresar los costos para completarlo.")
+    email_c = repo.get_email_by_usuario_id(coordinador_id)
+    _email([email_c] if email_c else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Vuelo liquidado: notificar al solicitante que el viaje está completo
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_liquidada(solicitud_id: int, area: str, fecha: str,
+                           solicitante_nombre: str, solicitante_id: int,
+                           liquidador_nombre: str, costo_real: float,
+                           notas: str) -> None:
+    subject = f"[Planificador] Vuelo #{solicitud_id} completado y registrado"
+    titulo  = f"Vuelo #{solicitud_id} — Liquidación registrada"
+    saludo  = (f"Hola <strong>{solicitante_nombre}</strong>, tu solicitud de vuelo "
+               f"ha sido completada y los costos han sido registrados.")
+    filas   = [
+        ("N° solicitud",  str(solicitud_id)),
+        ("Área",          area),
+        ("Fecha del vuelo", fecha),
+        ("Costo registrado", f"${costo_real:,.2f}"),
+        ("Registrado por", liquidador_nombre),
+    ]
+    if notas:
+        filas.append(("Notas", notas))
+    nota = "El costo ha sido deducido del presupuesto del centro de costo correspondiente."
+    html = _email_html("PLANIFICADOR · VUELO — COMPLETADO", titulo, saludo, filas, nota)
+    _inapp(solicitante_id, subject, f"Tu vuelo #{solicitud_id} fue completado. Costo: ${costo_real:,.2f}")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html)
+
+
+def notif_vuelo_recordatorio_coordinador(solicitud_id: int, area: str, fecha: str,
+                                          coordinador_id: int, coordinador_nombre: str,
+                                          coordinador_email: str) -> None:
+    """Recordatorio al coordinador: el vuelo está coordinado pero no liquidado."""
+    subject = f"[Planificador] Recordatorio: Vuelo #{solicitud_id} pendiente de liquidación"
+    titulo  = f"Vuelo #{solicitud_id} — Pendiente de costos"
+    saludo  = (f"Hola <strong>{coordinador_nombre}</strong>, el siguiente vuelo fue coordinado "
+               f"pero aún no se han registrado los costos reales del viaje.")
+    filas   = [
+        ("N° solicitud", str(solicitud_id)),
+        ("Área",         area),
+        ("Fecha vuelo",  fecha),
+    ]
+    nota = ("Por favor ingresa al SGQ → Planificador, abre esta solicitud y completa "
+            "los datos de costo para que el presupuesto sea actualizado.")
+    html = _email_html("PLANIFICADOR · VUELO — RECORDATORIO", titulo, saludo, filas, nota)
+    _inapp(coordinador_id, subject,
+           f"Vuelo #{solicitud_id} coordinado pero sin liquidar costos. Ingresa al SGQ para completarlo.")
+    if coordinador_email:
+        _email([coordinador_email], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# (legacy) Nueva solicitud de Vuelo → notificar al gerente del solicitante
 # ──────────────────────────────────────────────────────────
 
 def notif_vuelo_nueva_gerente(solicitud_id: int, area: str, fecha: str,
