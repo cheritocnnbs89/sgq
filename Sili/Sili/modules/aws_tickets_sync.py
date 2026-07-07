@@ -1,4 +1,4 @@
-# modules/aws_tickets_sync.py
+﻿# modules/aws_tickets_sync.py
 # -*- coding: utf-8 -*-
 """
 Polling de tickets generados desde WhatsApp (Twilio → Bedrock → AWS API Gateway).
@@ -21,6 +21,17 @@ from datetime import datetime
 import requests
 
 logger = logging.getLogger(__name__)
+
+
+def _log(level: str, msg: str, *args):
+    """Usa current_app.logger cuando hay contexto Flask, sino logging estándar."""
+    try:
+        from flask import current_app
+        fn = getattr(current_app.logger, level, current_app.logger.info)
+        fn(msg, *args)
+    except Exception:
+        fn = getattr(logger, level, logger.info)
+        fn(msg, *args)
 
 _AWS_BASE   = None
 _AWS_TOKEN  = None
@@ -107,34 +118,12 @@ def _resolver_por_username(conn, alias: str):
         return row[0]
 
 
-def _resolver_por_nombre(conn, nombre_texto: str):
-    """
-    Búsqueda fuzzy por nombre completo:
-    - Normaliza tildes y mayúsculas tanto en el texto buscado como en la BD
-    - Filtra por cada palabra ≥ 3 chars usando LIKE
-    - Si hay 1 resultado exacto → retorna (id, [])
-    - Si hay varios → retorna (None, [candidatos])
-    - Si no hay → retorna (None, [])
-    """
-    if not nombre_texto:
-        return None, []
-
-    palabras = [p for p in _normalizar(nombre_texto).split() if len(p) >= 3]
-    if not palabras:
-        return None, []
-
-    # SQL Server no tiene función nativa de quitar tildes fácilmente,
-    # por eso buscamos con LIKE sobre nombre normalizado usando COLLATE
-    # que en la mayoría de instancias ya es case/accent-insensitive.
-    # Como fallback también construimos condiciones para cada palabra.
-    conds  = " AND ".join(
+def _buscar_por_palabras(cur, palabras: list, operador: str = "AND") -> list:
+    """Ejecuta búsqueda LIKE en nombre_completo con AND u OR entre palabras."""
+    conds  = f" {operador} ".join(
         ["nombre_completo LIKE ? COLLATE Latin1_General_CI_AI" for _ in palabras]
     )
     params = [f"%{p}%" for p in palabras]
-    params_q = params + params  # se usa dos veces en la query
-
-    cur = conn.cursor()
-    # Traemos todos los que coinciden con las palabras clave
     cur.execute(
         f"""
         SELECT id, nombre_completo, username, COALESCE(email,'') AS email
@@ -144,13 +133,8 @@ def _resolver_por_nombre(conn, nombre_texto: str):
         """,
         params
     )
-    rows = cur.fetchall()
-
-    if not rows:
-        return None, []
-
     candidatos = []
-    for r in rows:
+    for r in cur.fetchall():
         try:
             candidatos.append({
                 "usuario_id": r["id"],
@@ -165,17 +149,59 @@ def _resolver_por_nombre(conn, nombre_texto: str):
                 "username":   r[2],
                 "email":      r[3],
             })
+    return candidatos
 
-    if len(candidatos) == 1:
-        return candidatos[0]["usuario_id"], []
 
-    # Intento de desambiguar: si algún candidato tiene el username dentro del texto buscado
+def _resolver_por_nombre(conn, nombre_texto: str):
+    """
+    Búsqueda fuzzy por nombre completo con degradación progresiva:
+    1. Todas las palabras (AND)  → match exacto
+    2. Palabras largas ≥4 chars con AND → si transcrip tiene apellido erróneo
+    3. Cada palabra individualmente (OR) → al menos el nombre coincide
+    En cada paso: 1 resultado → devuelve id; varios → desambigua por username;
+    ninguno → siguiente paso.
+    """
+    if not nombre_texto:
+        return None, []
+
+    palabras_all  = [p for p in _normalizar(nombre_texto).split() if len(p) >= 3]
+    palabras_long = [p for p in palabras_all if len(p) >= 4]
+    if not palabras_all:
+        return None, []
+
     texto_norm = _normalizar(nombre_texto)
-    for c in candidatos:
-        if _normalizar(c["username"]) in texto_norm:
-            return c["usuario_id"], []
+    cur = conn.cursor()
 
-    return None, candidatos
+    def _desambiguar(candidatos):
+        if len(candidatos) == 1:
+            return candidatos[0]["usuario_id"], []
+        for c in candidatos:
+            if _normalizar(c["username"]) in texto_norm:
+                return c["usuario_id"], []
+        return None, candidatos
+
+    # Paso 1: todas las palabras AND
+    candidatos = _buscar_por_palabras(cur, palabras_all, "AND")
+    if candidatos:
+        uid, ambig = _desambiguar(candidatos)
+        if uid:
+            return uid, []
+        if ambig:
+            return None, ambig
+
+    # Paso 2: solo palabras largas AND (descarta posibles errores de transcripción en apellidos cortos)
+    if palabras_long and palabras_long != palabras_all:
+        candidatos = _buscar_por_palabras(cur, palabras_long, "AND")
+        if candidatos:
+            uid, ambig = _desambiguar(candidatos)
+            if uid:
+                _log("info", "[AWS_TICKETS] nombre resuelto por palabras largas: '%s' → %s",
+                     nombre_texto, candidatos[0]["nombre"] if len(candidatos) == 1 else "ambiguo")
+                return uid, []
+            if ambig:
+                return None, ambig
+
+    return None, []
 
 
 def _get_usuario_info(conn, usuario_id: int) -> dict:
@@ -252,11 +278,11 @@ def _enviar_a_bandeja(conn, ticket: dict, motivo: str, candidatos: list = None) 
         ).fetchone()
         conn.commit()
         inbox_id = row[0] if row else None
-        logger.info("[AWS_TICKETS] Ticket %s → bandeja inbox_id=%s (%s)", ticket_id, inbox_id, motivo)
+        _log("info", "[AWS_TICKETS] Ticket %s → bandeja inbox_id=%s (%s)", ticket_id, inbox_id, motivo)
         return inbox_id
     except Exception as exc:
         conn.rollback()
-        logger.exception("[AWS_TICKETS] No se pudo insertar ticket %s en bandeja: %s", ticket_id, exc)
+        _log("error", "[AWS_TICKETS] No se pudo insertar ticket %s en bandeja: %s", ticket_id, exc)
         return None
 
 
@@ -273,9 +299,9 @@ def _reportar_resultado(payload: dict):
             timeout=15,
         )
         if res.status_code not in (200, 201):
-            logger.warning("[AWS_TICKETS] resultado-flask HTTP %s: %s", res.status_code, res.text[:200])
+            _log("warning", "[AWS_TICKETS] resultado-flask HTTP %s: %s", res.status_code, res.text[:200])
     except Exception as exc:
-        logger.exception("[AWS_TICKETS] Error al reportar resultado ticket %s: %s",
+        _log("error", "[AWS_TICKETS] Error al reportar resultado ticket %s: %s",
                          payload.get("ticket_id"), exc)
 
 
@@ -301,7 +327,7 @@ def _procesar_ticket(conn, ticket: dict):
     creador_id = _resolver_por_telefono(conn, telefono_tec)
     if not creador_id:
         motivo = f"No se encontró técnico con teléfono '{telefono_tec}'. Registre el número en la ficha del usuario."
-        logger.warning("[AWS_TICKETS] Ticket %s: %s", ticket_id, motivo)
+        _log("warning", "[AWS_TICKETS] Ticket %s: %s", ticket_id, motivo)
         inbox_id = _enviar_a_bandeja(conn, ticket, motivo)
         _reportar_resultado({
             "ticket_id": ticket_id,
@@ -345,7 +371,7 @@ def _procesar_ticket(conn, ticket: dict):
     if not solicitante_id:
         # No se resolvió el solicitante: asignar al mismo técnico y continuar
         solicitante_id = creador_id
-        logger.info("[AWS_TICKETS] Ticket %s: solicitante '%s' no resuelto, se asigna al técnico (id=%s)",
+        _log("info", "[AWS_TICKETS] Ticket %s: solicitante '%s' no resuelto, se asigna al técnico (id=%s)",
                     ticket_id, nombre_texto or alias, creador_id)
 
     # ── 3. Armar fechas ───────────────────────────────────────
@@ -390,11 +416,11 @@ def _procesar_ticket(conn, ticket: dict):
         })
         repo_insertar_tarea_responsable_si_no_existe(conn, tarea_id, creador_id)
         conn.commit()
-        logger.info("[AWS_TICKETS] Ticket %s → tarea %07d creada OK (técnico=%s solicitante=%s)",
+        _log("info", "[AWS_TICKETS] Ticket %s → tarea %07d creada OK (técnico=%s solicitante=%s)",
                     ticket_id, tarea_id, creador_id, solicitante_id)
     except Exception as exc:
         conn.rollback()
-        logger.exception("[AWS_TICKETS] Error al crear tarea para ticket %s", ticket_id)
+        _log("error", "[AWS_TICKETS] Error al crear tarea para ticket %s", ticket_id)
         motivo = f"Error interno al crear tarea: {exc}"
         inbox_id = _enviar_a_bandeja(conn, ticket, motivo)
         _reportar_resultado({
@@ -421,7 +447,7 @@ def _procesar_ticket(conn, ticket: dict):
             tecnico_nombre=tec_info["nombre"] or "",
         )
     except Exception as notif_exc:
-        logger.warning("[AWS_TICKETS] No se pudo enviar correo de notificación tarea %07d: %s",
+        _log("warning", "[AWS_TICKETS] No se pudo enviar correo de notificación tarea %07d: %s",
                        tarea_id, notif_exc)
 
     # ── 6. Reportar éxito a AWS ───────────────────────────────
@@ -445,11 +471,11 @@ def process_whatsapp_tickets(app=None):
     _load_config()
 
     if not _ENABLED:
-        logger.debug("[AWS_TICKETS] Deshabilitado (AWS_TICKETS_ENABLED != 1)")
+        _log("debug", "[AWS_TICKETS] Deshabilitado (AWS_TICKETS_ENABLED != 1)")
         return 0
 
     if not _AWS_BASE or not _AWS_TOKEN:
-        logger.warning("[AWS_TICKETS] AWS_TICKETS_API_URL o AWS_TICKETS_API_TOKEN no configurados")
+        _log("warning", "[AWS_TICKETS] AWS_TICKETS_API_URL o AWS_TICKETS_API_TOKEN no configurados")
         return 0
 
     ctx = app.app_context() if app else None
@@ -464,32 +490,41 @@ def process_whatsapp_tickets(app=None):
         )
 
         if res.status_code != 200:
-            logger.error("[AWS_TICKETS] GET pendientes HTTP %s: %s", res.status_code, res.text[:200])
+            _log("error", "[AWS_TICKETS] GET pendientes HTTP %s: %s", res.status_code, res.text[:200])
             return 0
 
         data    = res.json()
         tickets = data.get("tickets") or []
 
         if not tickets:
-            logger.debug("[AWS_TICKETS] Sin tickets pendientes")
+            _log("debug", "[AWS_TICKETS] Sin tickets pendientes")
             return 0
 
-        logger.info("[AWS_TICKETS] %d ticket(s) pendientes", len(tickets))
+        _log("info", "[AWS_TICKETS] %d ticket(s) pendientes", len(tickets))
         conn = _get_db()
 
         for ticket in tickets:
             try:
                 _procesar_ticket(conn, ticket)
-            except Exception:
-                logger.exception("[AWS_TICKETS] Fallo inesperado procesando ticket %s",
-                                 ticket.get("ticket_id"))
+            except Exception as _tex:
+                tid = ticket.get("ticket_id", "?")
+                _log("error", "[AWS_TICKETS] Fallo inesperado procesando ticket %s: %s", tid, _tex)
+                try:
+                    _reportar_resultado({
+                        "ticket_id": tid,
+                        "estado":    "ERROR_FLASK",
+                        "error":     f"Excepción inesperada: {_tex}",
+                    })
+                except Exception:
+                    pass
 
         return len(tickets)
 
     except Exception as exc:
-        logger.exception("[AWS_TICKETS] Error general: %s", exc)
+        _log("error", "[AWS_TICKETS] Error general: %s", exc)
         return 0
 
     finally:
         if ctx:
             ctx.pop()
+
