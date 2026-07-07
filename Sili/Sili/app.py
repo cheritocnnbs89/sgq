@@ -214,6 +214,9 @@ app.add_url_rule(
     build_only=True
 )
 
+
+ 
+
 app.add_url_rule(
     "/reembolsos/gastos/<int:gasto_id>/editar",
     endpoint="editar_gasto",
