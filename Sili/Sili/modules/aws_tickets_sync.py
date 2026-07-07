@@ -74,17 +74,22 @@ def _get_db():
 
 def _normalizar(texto: str) -> str:
     """
-    Convierte a minúsculas, elimina tildes/diacríticos y la 'h' muda
-    al inicio de palabra (ej. "Hernandez"/"Ernandez", "Hegas"/"Egas").
-    La transcripción de audio (AWS Transcribe) agrega u omite esa H de
-    forma inconsistente porque es muda en español. No se toca la 'h' en
-    medio de palabra (dígrafo "ch", o nombres como "Ashley"/"Jonathan"
-    donde sí se pronuncia).
+    Convierte a minúsculas, elimina tildes/diacríticos y neutraliza
+    rasgos fonéticos del español latino que la transcripción de audio
+    (AWS Transcribe) confunde de forma consistente:
+    - 'h' muda al inicio de palabra (Hernandez/Ernandez, Hegas/Egas).
+      No se toca en medio de palabra (dígrafo "ch", o nombres como
+      "Ashley"/"Jonathan" donde sí se pronuncia).
+    - Yeísmo: 'll' y 'y' suenan igual (Llanes/Yanes).
+    - Seseo: 'z' y 's' suenan igual (Yanez/Yanes).
     """
     nfkd = unicodedata.normalize("NFKD", texto or "")
     sin_tildes = "".join(c for c in nfkd if not unicodedata.combining(c))
-    sin_h_inicial = re.sub(r"\bh", "", sin_tildes.lower())
-    return sin_h_inicial.strip()
+    texto_norm = sin_tildes.lower()
+    texto_norm = re.sub(r"\bh", "", texto_norm)
+    texto_norm = texto_norm.replace("ll", "y")
+    texto_norm = texto_norm.replace("z", "s")
+    return texto_norm.strip()
 
 
 # ─────────────────────────────────────────────────────────────
@@ -128,35 +133,35 @@ def _resolver_por_username(conn, alias: str):
 
 
 def _buscar_por_palabras(cur, palabras: list, operador: str = "AND") -> list:
-    """Ejecuta búsqueda LIKE en nombre_completo con AND u OR entre palabras."""
-    conds  = f" {operador} ".join(
-        ["nombre_completo LIKE ? COLLATE Latin1_General_CI_AI" for _ in palabras]
-    )
-    params = [f"%{p}%" for p in palabras]
+    """
+    Busca usuarios activos cuyo nombre_completo contenga las palabras dadas
+    (ya normalizadas fonéticamente: sin tildes, h muda inicial, yeísmo,
+    seseo). La comparación se hace en Python (no con LIKE en SQL) porque
+    la normalización fonética cambia caracteres (z->s, ll->y) y ya no
+    sería un substring literal del texto original en la BD.
+    """
     cur.execute(
-        f"""
+        """
         SELECT id, nombre_completo, username, COALESCE(email,'') AS email
         FROM usuarios
-        WHERE {conds}
-          AND COALESCE(disabled, 0) = 0
-        """,
-        params
+        WHERE COALESCE(disabled, 0) = 0
+        """
     )
+    combinador = all if operador == "AND" else any
     candidatos = []
     for r in cur.fetchall():
         try:
-            candidatos.append({
-                "usuario_id": r["id"],
-                "nombre":     r["nombre_completo"],
-                "username":   r["username"],
-                "email":      r["email"],
-            })
+            usuario_id, nombre, username, email = r["id"], r["nombre_completo"], r["username"], r["email"]
         except Exception:
+            usuario_id, nombre, username, email = r[0], r[1], r[2], r[3]
+
+        nombre_norm = _normalizar(nombre)
+        if combinador(p in nombre_norm for p in palabras):
             candidatos.append({
-                "usuario_id": r[0],
-                "nombre":     r[1],
-                "username":   r[2],
-                "email":      r[3],
+                "usuario_id": usuario_id,
+                "nombre":     nombre,
+                "username":   username,
+                "email":      email,
             })
     return candidatos
 
