@@ -15,6 +15,7 @@ Flujo:
 
 import logging
 import os
+import re
 import unicodedata
 from datetime import datetime
 
@@ -73,14 +74,17 @@ def _get_db():
 
 def _normalizar(texto: str) -> str:
     """
-    Convierte a minúsculas, elimina tildes/diacríticos y la 'h' muda.
-    La 'h' es muda en español y la transcripción de audio (AWS Transcribe)
-    la agrega u omite de forma inconsistente (ej. "Egas" -> "Hegas"),
-    por lo que se descarta para que la comparación no falle por eso.
+    Convierte a minúsculas, elimina tildes/diacríticos y la 'h' muda
+    al inicio de palabra (ej. "Hernandez"/"Ernandez", "Hegas"/"Egas").
+    La transcripción de audio (AWS Transcribe) agrega u omite esa H de
+    forma inconsistente porque es muda en español. No se toca la 'h' en
+    medio de palabra (dígrafo "ch", o nombres como "Ashley"/"Jonathan"
+    donde sí se pronuncia).
     """
     nfkd = unicodedata.normalize("NFKD", texto or "")
     sin_tildes = "".join(c for c in nfkd if not unicodedata.combining(c))
-    return sin_tildes.lower().replace("h", "").strip()
+    sin_h_inicial = re.sub(r"\bh", "", sin_tildes.lower())
+    return sin_h_inicial.strip()
 
 
 # ─────────────────────────────────────────────────────────────
