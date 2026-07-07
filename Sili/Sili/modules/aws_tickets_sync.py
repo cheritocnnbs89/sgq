@@ -72,10 +72,15 @@ def _get_db():
 # ─────────────────────────────────────────────────────────────
 
 def _normalizar(texto: str) -> str:
-    """Convierte a minúsculas y elimina tildes/diacríticos."""
+    """
+    Convierte a minúsculas, elimina tildes/diacríticos y la 'h' muda.
+    La 'h' es muda en español y la transcripción de audio (AWS Transcribe)
+    la agrega u omite de forma inconsistente (ej. "Egas" -> "Hegas"),
+    por lo que se descarta para que la comparación no falle por eso.
+    """
     nfkd = unicodedata.normalize("NFKD", texto or "")
     sin_tildes = "".join(c for c in nfkd if not unicodedata.combining(c))
-    return sin_tildes.lower().strip()
+    return sin_tildes.lower().replace("h", "").strip()
 
 
 # ─────────────────────────────────────────────────────────────
