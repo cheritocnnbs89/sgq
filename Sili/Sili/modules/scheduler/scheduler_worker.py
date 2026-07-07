@@ -421,6 +421,30 @@ def start_scheduler(app=None):
                     except Exception:
                         target_app.logger.exception("Worker: aws_sync falló")
 
+                # ==================================================
+                # Recordatorio vuelos coordinados sin liquidar - diario a las 08:00
+                # ==================================================
+                today_str = now.strftime("%Y-%m-%d")
+                if now.hour == 8 and globals().get("_last_vuelo_recorda") != today_str:
+                    try:
+                        from modules.planificador import planificador_repository as _pr
+                        from modules.planificador import planificador_notifications as _pn
+                        vuelos = _pr.get_vuelos_coordinadas_sin_liquidar()
+                        for v in vuelos:
+                            try:
+                                _pn.notif_vuelo_recordatorio_coordinador(
+                                    v["id"], v["area_solicitante"], str(v["fecha"]),
+                                    v["coordinador_id"], v["coordinador_nombre"],
+                                    v["coordinador_email"] or "",
+                                )
+                            except Exception:
+                                pass
+                        globals()["_last_vuelo_recorda"] = today_str
+                        if vuelos:
+                            _log("info", "Worker: recordatorio vuelos sin liquidar enviado a %d coordinador(es)", len(vuelos))
+                    except Exception:
+                        target_app.logger.exception("Worker: recordatorio_vuelos_sin_liquidar falló")
+
                 elapsed = time.time() - cycle_start
                 sleep_s = max(5, 300 - elapsed)
                 _log("info", "Worker: próximo ciclo en %.1fs", sleep_s)
