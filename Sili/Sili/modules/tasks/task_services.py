@@ -1315,6 +1315,17 @@ def svc_obtener_tarea_para_ver(user, task_id: int):
                 "redirect_kwargs": {},
             }
 
+    es_de_soporte = bool(tarea.get("inbox_id"))
+    if user["rol"] == "admin":
+        editable = True
+    elif es_de_soporte:
+        editable = False
+    else:
+        editable = (
+            repo_es_responsable_tarea(task_id, user["id"])
+            and tarea["estado"] not in ESTADOS_NO_EDITABLES
+        )
+
     return {
         "ok": True,
         "tarea": tarea,
@@ -1324,6 +1335,10 @@ def svc_obtener_tarea_para_ver(user, task_id: int):
             or tarea["usuario_id"] == user["id"]
             or tarea["creador_id"] == user["id"]
         ),
+        "editable": editable,
+        "estados": ESTADOS,
+        "is_admin": (user["rol"] == "admin"),
+        "solicitantes": repo_obtener_solicitantes() if user["rol"] == "admin" else [],
         "responsables": repo_obtener_usuarios_activos(),
         "usuario": user["username"],
         "rol": user["rol"],
@@ -1678,10 +1693,14 @@ def svc_guardar_edicion_tarea(user, task_id: int, form):
     avance = form.get("porcentaje_avance", 0)
     empresa_id = form.get("empresa_id")
 
-    solicitante_raw = (form.get("solicitante_id") or "").strip()
-    try:
-        solicitante_id = int(solicitante_raw) if solicitante_raw else tarea.get("solicitante_id")
-    except ValueError:
+    # El solicitante solo lo puede cambiar un admin, aunque el campo venga en el form.
+    if user["rol"] == "admin":
+        solicitante_raw = (form.get("solicitante_id") or "").strip()
+        try:
+            solicitante_id = int(solicitante_raw) if solicitante_raw else tarea.get("solicitante_id")
+        except ValueError:
+            solicitante_id = tarea.get("solicitante_id")
+    else:
         solicitante_id = tarea.get("solicitante_id")
 
     tipo_tarea_raw = (form.get("tipo_tarea_id") or "").strip()

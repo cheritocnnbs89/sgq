@@ -88,11 +88,19 @@ def register_task_routes(app):
             {'id': r['id'], 'label': r.get('nombre_completo') or r['username'], 'username': r['username']}
             for r in resultado['responsables']
         ]
+        solicitantes = [
+            {'id': sol['id'], 'label': (sol.get('nombre_completo') or '') + ' (' + (sol.get('username') or '') + ')'}
+            for sol in resultado.get('solicitantes', [])
+        ]
         return jsonify({
             'ok': True,
             'tarea': tarea,
             'acciones': acciones,
             'puede_anotar': resultado['puede_anotar'],
+            'editable': resultado.get('editable', False),
+            'estados': resultado.get('estados', []),
+            'is_admin': resultado.get('is_admin', False),
+            'solicitantes': solicitantes,
             'responsables': responsables,
         })
 

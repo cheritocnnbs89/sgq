@@ -208,6 +208,8 @@ SQL_OBTENER_DETALLE_TAREA = f"""
            t.titulo,
            t.descripcion,
            t.estado,
+           t.porcentaje_avance,
+           ei.id AS inbox_id,
            t.fecha_creacion,
            t.fecha_inicio,
            t.fecha_compromiso,
@@ -226,6 +228,7 @@ SQL_OBTENER_DETALLE_TAREA = f"""
     JOIN {TABLA_USUARIOS} u ON t.usuario_id = u.id
     LEFT JOIN {TABLA_USUARIOS} c ON t.creador_id = c.id
     LEFT JOIN {TABLA_USUARIOS} s ON t.solicitante_id = s.id
+    LEFT JOIN email_tickets_inbox ei ON ei.tarea_id = t.id
     WHERE t.id = ?
 """
 
@@ -319,11 +322,14 @@ SQL_OBTENER_TAREA_EDICION = f"""
            t.tipo_tarea_id,
            t.porcentaje_avance,
            t.empresa_id,
+           s.username        AS solicitante_username,
+           s.nombre_completo AS solicitante_nombre,
            ei.id          AS inbox_id,
            ei.from_name   AS inbox_from_name,
            ei.from_email  AS inbox_from_email,
            ei.subject     AS inbox_subject
     FROM {TABLA_TAREAS} t
+    LEFT JOIN {TABLA_USUARIOS} s ON t.solicitante_id = s.id
     LEFT JOIN email_tickets_inbox ei ON ei.tarea_id = t.id
     WHERE t.id = ?
 """
