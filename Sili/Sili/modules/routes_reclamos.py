@@ -4580,6 +4580,12 @@ def register_reclamos_routes(app):
         db = get_db()
         cur = db.cursor()
 
+        tipo_row = cur.execute(
+            "SELECT tipo FROM reclamo_respuesta_equipo_acciones WHERE id = ?", (accion_id,)
+        ).fetchone()
+        if tipo_row and str(tipo_row["tipo"] or "").strip().upper() == "CONTROL":
+            return jsonify(ok=False, error="Las acciones de control ya no requieren marcarse como cumplidas"), 400
+
         data = request.json or {}
         cumplido = 1 if data.get("cumplido") else 0
         fecha = data.get("fecha_cumplimiento")
@@ -4702,6 +4708,12 @@ def register_reclamos_routes(app):
 
         db = get_db()
         cur = db.cursor()
+
+        tipo_row = cur.execute(
+            "SELECT tipo FROM reclamo_respuesta_equipo_acciones WHERE id = ?", (accion_id,)
+        ).fetchone()
+        if tipo_row and str(tipo_row["tipo"] or "").strip().upper() == "CONTROL":
+            return jsonify({"ok": False, "error": "Las acciones de control ya no requieren evidencia"}), 400
 
         file = request.files.get("file")
         if not file:
@@ -5053,7 +5065,7 @@ def register_reclamos_routes(app):
                         FROM reclamo_respuesta_equipo_acciones a
                         WHERE a.reclamo_id = r.id
                           AND COALESCE(a.activo, 1) = 1
-                          AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                          AND a.tipo = 'CORRECTIVA'
                           AND COALESCE(a.cumplido, 0) = 0
                           AND a.fecha_compromiso IS NOT NULL
                           AND a.fecha_compromiso < CAST(GETDATE() AS DATE)
@@ -5072,7 +5084,7 @@ def register_reclamos_routes(app):
                         FROM reclamo_respuesta_equipo_acciones a
                         WHERE a.reclamo_id = r.id
                           AND COALESCE(a.activo, 1) = 1
-                          AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                          AND a.tipo = 'CORRECTIVA'
                           AND COALESCE(a.cumplido, 0) = 0
                           AND a.fecha_compromiso IS NOT NULL
                           AND a.fecha_compromiso >= CAST(GETDATE() AS DATE)
@@ -5305,7 +5317,7 @@ def register_reclamos_routes(app):
                         FROM reclamo_imputado_acciones a
                         WHERE a.imputacion_id = ri.id
                           AND COALESCE(a.activo, 1) = 1
-                          AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                          AND a.tipo = 'CORRECTIVA'
                           AND COALESCE(a.cumplido, 0) = 0
                           AND a.fecha_compromiso IS NOT NULL
                           AND a.fecha_compromiso < CAST(GETDATE() AS DATE)
@@ -5320,7 +5332,7 @@ def register_reclamos_routes(app):
                         FROM reclamo_imputado_acciones a
                         WHERE a.imputacion_id = ri.id
                           AND COALESCE(a.activo, 1) = 1
-                          AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                          AND a.tipo = 'CORRECTIVA'
                           AND COALESCE(a.cumplido, 0) = 0
                           AND a.fecha_compromiso IS NOT NULL
                           AND a.fecha_compromiso >= CAST(GETDATE() AS DATE)
@@ -7194,7 +7206,7 @@ def register_reclamos_routes(app):
                     FROM reclamo_imputado_acciones a
                     WHERE a.imputacion_id = ?
                       AND COALESCE(a.activo, 1) = 1
-                      AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                      AND a.tipo = 'CORRECTIVA'
                       AND COALESCE(a.cumplido, 0) = 0
                       AND a.fecha_compromiso IS NOT NULL
                       AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
@@ -7222,7 +7234,7 @@ def register_reclamos_routes(app):
                     LEFT JOIN usuarios u_m ON u_m.id = re.miembro_id
                     WHERE a.reclamo_id = ?
                       AND COALESCE(a.activo, 1) = 1
-                      AND a.tipo IN ('CONTROL', 'CORRECTIVA')
+                      AND a.tipo = 'CORRECTIVA'
                       AND COALESCE(a.cumplido, 0) = 0
                       AND a.fecha_compromiso IS NOT NULL
                       AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
@@ -9056,6 +9068,9 @@ def register_reclamos_routes(app):
         if int(row["cumplido"] or 0) == 1:
             return jsonify(ok=False, error="La acción ya está cumplida"), 400
 
+        if str(row["tipo"] or "").strip().upper() == "CONTROL":
+            return jsonify(ok=False, error="Las acciones de control ya no requieren marcarse como cumplidas"), 400
+
         data = request.get_json(silent=True) or {}
         cumplido = data.get("cumplido", True)
         fecha_cumplimiento = (data.get("fecha_cumplimiento") or "").strip()
@@ -9093,6 +9108,9 @@ def register_reclamos_routes(app):
 
         if int(row["cumplido"] or 0) == 1:
             return jsonify(ok=False, error="No se puede cargar evidencia en una acción ya cumplida"), 400
+
+        if str(row["tipo"] or "").strip().upper() == "CONTROL":
+            return jsonify(ok=False, error="Las acciones de control ya no requieren evidencia"), 400
 
         f = request.files.get("file")
         if not f:

@@ -152,6 +152,7 @@ SQL__PUEDE_GESTIONAR_IMPUTADO_ACCION_SEL_1 = """
                 a.id,
                 a.imputacion_id,
                 a.reclamo_id,
+                a.tipo,
                 COALESCE(a.activo, 1) AS accion_activa,
                 COALESCE(a.cumplido, 0) AS cumplido,
                 ri.imputado_id,

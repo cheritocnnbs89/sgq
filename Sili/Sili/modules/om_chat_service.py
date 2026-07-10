@@ -112,17 +112,23 @@ Equipo de respuestas:
 - Promedio de días de respuesta por miembro de equipo.
 - OM con equipo asignado pero sin respuesta.
 
-Acciones de control y correctivas:
-- Qué acciones de control están por vencer.
+Acciones correctivas (seguimiento, vencimiento y evidencia):
+Nota: las acciones de tipo CONTROL ya no requieren cumplimiento ni evidencia
+— solo se crean como parte de la respuesta de la OM, pero no se les hace
+seguimiento de vencimiento/cumplimiento/evidencia. Todas las preguntas de
+"vencidas", "por vencer", "sin evidencia" o "no han cumplido" abajo aplican
+solo a acciones CORRECTIVA, salvo que se pregunte por el detalle de una OM
+específica (ahí sí se listan también las acciones de control, de solo
+información).
 - Qué acciones correctivas están por vencer.
 - Qué acciones vencen en los próximos 5 días.
 - Qué acciones están vencidas.
 - Cuáles OM tienen acciones vencidas o por vencer.
-- Qué usuarios no han cumplido sus acciones de control/correctivas.
+- Qué usuarios no han cumplido sus acciones correctivas.
 - Qué sponsor tiene acciones vencidas o por vencer.
 - Qué acciones vencieron esta semana / vencen esta semana / vencen este mes.
-- OM con acciones de control/correctivas sin evidencia.
-- Usuarios que no han cargado evidencia de acciones correctivas o de control.
+- OM con acciones correctivas sin evidencia.
+- Usuarios que no han cargado evidencia de acciones correctivas.
 
 Indicadores ejecutivos:
 - Resumen general de OM.
@@ -483,7 +489,7 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
                 COUNT(*) AS total_acciones
             FROM vw_om_acciones_base
             WHERE estado_cumplimiento_accion = 'POR VENCER'
-              AND UPPER(tipo_accion) IN ('CONTROL', 'CORRECTIVA')
+              AND UPPER(tipo_accion) = 'CORRECTIVA'
             GROUP BY tipo_accion
             ORDER BY total_acciones DESC
         """, [], "predefinido_acciones"
@@ -867,7 +873,7 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
                 COUNT(*) AS total_acciones
             FROM vw_om_acciones_base
             WHERE estado_cumplimiento_accion = 'VENCIDA'
-              AND UPPER(tipo_accion) IN ('CONTROL', 'CORRECTIVA')
+              AND UPPER(tipo_accion) = 'CORRECTIVA'
             GROUP BY tipo_accion
             ORDER BY total_acciones DESC
         """, [], "predefinido_acciones"
@@ -891,7 +897,7 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
                 estado_cumplimiento_accion
             FROM vw_om_acciones_base
             WHERE estado_cumplimiento_accion = 'POR VENCER'
-              AND UPPER(tipo_accion) IN ('CONTROL', 'CORRECTIVA')
+              AND UPPER(tipo_accion) = 'CORRECTIVA'
             ORDER BY dias_para_vencer ASC
         """, [], "predefinido_acciones"
 
@@ -914,6 +920,7 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
                 estado_cumplimiento_accion
             FROM vw_om_acciones_base
             WHERE estado_cumplimiento_accion = 'POR VENCER'
+              AND UPPER(tipo_accion) = 'CORRECTIVA'
             ORDER BY fecha_compromiso ASC
         """, [], "predefinido_acciones"
 
@@ -936,6 +943,7 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
                 estado_cumplimiento_accion
             FROM vw_om_acciones_base
             WHERE estado_cumplimiento_accion = 'VENCIDA'
+              AND UPPER(tipo_accion) = 'CORRECTIVA'
             ORDER BY fecha_compromiso ASC
         """, [], "predefinido_acciones"
 
@@ -953,6 +961,7 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
             FROM vw_om_acciones_base
             WHERE ISNULL(requiere_evidencia, 0) = 1
               AND ISNULL(tiene_evidencia, 0) = 0
+              AND UPPER(tipo_accion) = 'CORRECTIVA'
             ORDER BY fecha_compromiso ASC
         """, [], "predefinido_acciones"
 
@@ -969,6 +978,7 @@ def sql_predefinido_vista(pregunta_norm: str, pregunta_original: str, user_id: i
                 estado_cumplimiento_accion
             FROM vw_om_acciones_base
             WHERE ISNULL(cumplido, 0) = 0
+              AND UPPER(tipo_accion) = 'CORRECTIVA'
             ORDER BY fecha_compromiso ASC
         """, [], "predefinido_acciones"
 
@@ -1102,6 +1112,11 @@ Reglas obligatorias:
 - "por vencer" significa estado_cumplimiento_accion = 'POR VENCER'.
 - "vencida" significa estado_cumplimiento_accion = 'VENCIDA'.
 - "cumplida" significa cumplido = 1.
+- Las acciones tipo CONTROL ya no tienen seguimiento de cumplimiento ni
+  evidencia (no aplican). Cualquier consulta de vencimiento, evidencia o
+  cumplimiento (no ligada a una OM específica por código) debe filtrar
+  UPPER(tipo_accion) = 'CORRECTIVA'. Solo omite ese filtro si la pregunta
+  pide el detalle completo de una OM puntual por su código.
 - Para buscar una OM específica usa codigo_om.
 - Para tiempo de respuesta usa dias_respuesta_sponsor.
 - Para días sin respuesta usa dias_sin_respuesta_sponsor.
@@ -1506,6 +1521,10 @@ def responder_conceptual(pregunta: str, historial: list[dict] | None = None) -> 
                     "Los estados son: Abierto, Cerrado. "
                     "El sponsor es el responsable principal de gestionar la OM. "
                     "Las acciones de control son inmediatas; las correctivas atacan la causa raíz. "
+                    "Las acciones de control ya no requieren evidencia ni se marcan como cumplidas "
+                    "en el sistema — solo quedan registradas como parte de la respuesta de la OM. "
+                    "El seguimiento de vencimiento, cumplimiento y evidencia aplica únicamente a las "
+                    "acciones correctivas. "
                     "Responde en español, de forma clara y concisa (máximo 150 palabras). "
                     "No menciones SQL ni términos técnicos."
                 ),

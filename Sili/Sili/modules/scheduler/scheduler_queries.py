@@ -373,7 +373,7 @@ SQL_SELECT_OM_ACCIONES_SEGUIMIENTO = """
       AND COALESCE(a.cumplido, 0) = 0
       AND UPPER(COALESCE(a.tipo, '')) = 'CORRECTIVA'
       AND TRY_CONVERT(date, a.fecha_compromiso) IS NOT NULL
-      AND CAST(a.fecha_compromiso AS date) > '2026-06-01'
+      AND CAST(a.fecha_compromiso AS date) > '2026-07-01'
       AND LOWER(LTRIM(RTRIM(COALESCE(r.estado_global, '')))) = 'cerrado'
 """
 
