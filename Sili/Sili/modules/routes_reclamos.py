@@ -40,8 +40,8 @@ from .security import (
     require_login,
     require_permission,
 )
-from .routes_reclamos_querys import *
-from .routes_reclamos_constants import *
+from .scheduler.scheduler_queries import *
+from .scheduler.routes_reclamos_constants import *
 
 # =========================================================
 # Helpers internos

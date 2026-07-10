@@ -1267,7 +1267,6 @@ from modules.scheduler.scheduler_repository import (
     _get_user_contact,
     _get_ultimo_jefe_id,
 )
-from modules.routes_reclamos import _send_mail_safe
 
 # Recordatorios previos (15/10/5/0 días) de acciones correctivas: no aplican
 # por ahora, solo la notificación posterior al vencimiento (digest 08:00,
@@ -1488,6 +1487,8 @@ Este es un mensaje automático. No responda a este correo.
 
 
 def _send_to_users(conn, user_ids, subject, text_body, row, titulo, dias_txt):
+    from modules.routes_reclamos import _send_mail_safe
+
     for uid in _dedup_ids(user_ids):
         u = _get_user_contact(conn, uid)
 
@@ -1763,6 +1764,8 @@ def process_om_correctivas_evidencia_digest(conn):
     destinatario (mismo criterio de escalamiento que ya usaba el correo
     individual: gerente del sponsor, creador, jefe y gerente del creador).
     """
+    from modules.routes_reclamos import _send_mail_safe
+
     cur = conn.cursor()
     cur.execute(SQL_SELECT_OM_ACCIONES_SEGUIMIENTO)
     rows = cur.fetchall()
