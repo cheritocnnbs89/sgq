@@ -1360,10 +1360,18 @@ def _guess_aprobador_for_user(conn: sqlite3.Connection, user_id: int | None) -> 
 #   EMAIL HELPER UNIFICADO
 # =========================================================
 
-def _send_mail_safe(to_email: str, subject: str, text_body: str, html_body: str | None = None):
+def _send_mail_safe(
+    to_email: str,
+    subject: str,
+    text_body: str,
+    html_body: str | None = None,
+    attachments: list[tuple[str, bytes]] | None = None,
+):
     """
     Envía correo multipart/alternative (texto + HTML) usando la configuración
     SMTP guardada en base de datos (get_config_value).
+
+    attachments: lista opcional de (filename, bytes) a adjuntar.
     """
     if not to_email:
         return
@@ -1388,6 +1396,14 @@ def _send_mail_safe(to_email: str, subject: str, text_body: str, html_body: str 
         msg.add_alternative(html_body, subtype="html")
     else:
         msg.set_content(text_body or "")
+
+    for filename, data in (attachments or []):
+        msg.add_attachment(
+            data,
+            maintype="application",
+            subtype="pdf",
+            filename=filename,
+        )
 
     try:
         with smtplib.SMTP(host, port, timeout=20) as s:

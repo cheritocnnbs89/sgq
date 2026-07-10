@@ -445,6 +445,32 @@ def start_scheduler(app=None):
                     except Exception:
                         target_app.logger.exception("Worker: recordatorio_vuelos_sin_liquidar falló")
 
+                # ==================================================
+                # Digest OM acciones correctivas sin evidencia - diario
+                # a las 08:00, solo día laboral (lun-vie)
+                # ==================================================
+                if (
+                    now.weekday() < 5
+                    and now.hour == 8
+                    and globals().get("_last_om_evidencia_digest") != today_str
+                ):
+                    try:
+                        from modules.scheduler.scheduler_services import (
+                            process_om_correctivas_evidencia_digest,
+                        )
+                        conn_evi = get_db_standalone()
+                        try:
+                            process_om_correctivas_evidencia_digest(conn_evi)
+                        finally:
+                            try:
+                                conn_evi.close()
+                            except Exception:
+                                pass
+                        globals()["_last_om_evidencia_digest"] = today_str
+                        _log("info", "Worker: digest OM acciones correctivas sin evidencia OK")
+                    except Exception:
+                        target_app.logger.exception("Worker: process_om_correctivas_evidencia_digest falló")
+
                 elapsed = time.time() - cycle_start
                 sleep_s = max(5, 300 - elapsed)
                 _log("info", "Worker: próximo ciclo en %.1fs", sleep_s)

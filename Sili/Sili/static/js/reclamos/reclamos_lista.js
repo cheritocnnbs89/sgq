@@ -4594,6 +4594,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("omChatClose")?.addEventListener("click", _cerrarPanel);
 
+    // ── Botón admin: probar envío del digest de evidencia (correo real) ──
+    document.getElementById("btnTestEvidenciaDigest")?.addEventListener("click", function () {
+        const btnTest = this;
+        if (!window.confirm(
+            "Esto ejecuta el job ahora mismo y envía correos REALES con PDF " +
+            "a los destinatarios pendientes. ¿Continuar?"
+        )) {
+            return;
+        }
+
+        const original = btnTest.innerHTML;
+        btnTest.disabled = true;
+        btnTest.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Enviando...';
+
+        fetch("/admin/scheduler/process_om_correctivas_evidencia_digest/run", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector('meta[name="csrf-token"]')?.content || "",
+            },
+            body: JSON.stringify({}),
+        })
+            .then(r => r.json())
+            .then(data => {
+                btnTest.disabled = false;
+                btnTest.innerHTML = original;
+                window.alert(data.ok
+                    ? ("OK — " + (data.resultado || ""))
+                    : ("Error: " + (data.error || "")));
+            })
+            .catch(() => {
+                btnTest.disabled = false;
+                btnTest.innerHTML = original;
+                window.alert("Error de red al ejecutar el job.");
+            });
+    });
+
     // ── Chat ──────────────────────────────────────────────────
     const input = document.getElementById("om-chat-input");
     const btn = document.getElementById("om-chat-send");

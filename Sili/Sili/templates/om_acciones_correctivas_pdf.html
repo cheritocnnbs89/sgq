@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+/* Compatible con xhtml2pdf: sin flex, sin var(), sin em spacing */
+@page {
+  size: A4;
+  margin: 16mm 14mm;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9pt;
+  color: #1a1a1a;
+}
+
+.header-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.header-table td {
+  vertical-align: middle;
+  padding: 0;
+}
+
+h1 {
+  font-size: 14pt;
+  color: #c8001c;
+  margin-bottom: 4px;
+}
+
+.subtitulo {
+  font-size: 9pt;
+  color: #555555;
+  margin-bottom: 14px;
+}
+
+.proceso-titulo {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #ffffff;
+  background: #c8001c;
+  padding: 5px 8px;
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+
+.om-titulo {
+  font-size: 9.5pt;
+  font-weight: bold;
+  color: #1a1a1a;
+  background: #f0f0f0;
+  padding: 4px 8px;
+  margin-top: 8px;
+  margin-bottom: 0px;
+}
+
+.om-creador {
+  font-size: 8pt;
+  font-weight: normal;
+  color: #555555;
+  background: #f8f8f8;
+  padding: 2px 8px 4px 8px;
+  margin-bottom: 4px;
+}
+
+table.acciones {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 6px;
+}
+
+table.acciones th {
+  background: #e8e8e8;
+  font-size: 8pt;
+  text-align: left;
+  padding: 4px 6px;
+  border: 1px solid #cccccc;
+}
+
+table.acciones td {
+  font-size: 8pt;
+  padding: 4px 6px;
+  border: 1px solid #cccccc;
+  vertical-align: top;
+}
+
+.dias-vencido {
+  color: #c8001c;
+  font-weight: bold;
+}
+
+.resumen {
+  font-size: 9pt;
+  color: #333333;
+  margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<table class="header-table">
+  <tr>
+    <td style="width:70%">
+      <h1>Acciones correctivas sin evidencia</h1>
+    </td>
+    <td style="width:30%; text-align:right;">
+      {% if logo_data_uri %}
+      <img src="{{ logo_data_uri }}" style="height:34px; width:auto;" alt="Quimpac Ecuador S.A.">
+      {% endif %}
+    </td>
+  </tr>
+</table>
+
+<div class="subtitulo">
+  Hola: {{ destinatario_nombre }} &nbsp;&middot;&nbsp; Emitido: {{ fecha_emision }}
+</div>
+
+<div class="resumen">
+  {{ total_ordenes }} oportunidad(es) de mejora con {{ total_acciones }} acci&oacute;n(es) correctiva(s)
+  vencida(s) sin evidencia cargada.
+</div>
+
+{% for proceso in procesos %}
+<div class="proceso-titulo">{{ proceso.proceso }}</div>
+
+{% for om in proceso.ordenes %}
+<div class="om-titulo">
+  OM {{ om.codigo }}{% if om.cliente_nombre %} &mdash; {{ om.cliente_nombre }}{% endif %}
+</div>
+<div class="om-creador">
+  Creado por: {{ om.creador_nombre }}
+  {% if om.fecha_creacion %} &nbsp;&middot;&nbsp; Fecha de creaci&oacute;n: {{ om.fecha_creacion }}{% endif %}
+  {% if om.fecha_cierre %} &nbsp;&middot;&nbsp; Fecha de cierre: {{ om.fecha_cierre }}{% endif %}
+  {% if om.procesos_involucrados %} &nbsp;&middot;&nbsp; Procesos involucrados: {{ om.procesos_involucrados | join(", ") }}{% endif %}
+</div>
+<table class="acciones">
+  <tr>
+    <th style="width:45%">Acci&oacute;n correctiva</th>
+    <th style="width:20%">Sponsor</th>
+    <th style="width:17%">Fecha compromiso</th>
+    <th style="width:18%">D&iacute;as vencida</th>
+  </tr>
+  {% for accion in om.acciones %}
+  <tr>
+    <td>{{ accion.descripcion }}</td>
+    <td>{{ accion.sponsor_nombre }}</td>
+    <td>{{ accion.fecha_compromiso }}</td>
+    <td class="dias-vencido">{{ accion.dias_vencido }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endfor %}
+{% endfor %}
+
+</body>
+</html>

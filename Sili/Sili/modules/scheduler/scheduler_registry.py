@@ -61,6 +61,13 @@ JOB_REGISTRY: dict[str, dict] = {
         "intervalo_min": 300,
         "hora_inicio": None,
     },
+    "process_om_correctivas_evidencia_digest": {
+        "modulo": "oportunidades_mejora",
+        "descripcion": "Digest diario (PDF por proceso/OM) de acciones correctivas vencidas sin evidencia",
+        "tipo": "hora_fija",
+        "intervalo_min": None,
+        "hora_inicio": "08:00",
+    },
     # ── Gastos Tarjeta ────────────────────────────────────
     "process_gastos_expiry": {
         "modulo": "gastos",

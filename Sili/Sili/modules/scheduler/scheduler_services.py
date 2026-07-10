@@ -1269,6 +1269,13 @@ from modules.scheduler.scheduler_repository import (
 )
 from modules.routes_reclamos import _send_mail_safe
 
+# Recordatorios previos (15/10/5/0 días) de acciones correctivas: no aplican
+# por ahora, solo la notificación posterior al vencimiento (digest 08:00,
+# ver process_om_correctivas_evidencia_digest). Se deja el código intacto
+# y solo se apaga con esta bandera — si algún día vuelven a aplicar, basta
+# con ponerla en True.
+OM_RECORDATORIOS_PREVIOS_ACTIVOS = False
+
 
 def _row_get(row, key, idx=None, default=None):
     if row is None:
@@ -1393,6 +1400,93 @@ Este es un mensaje automático. No responda a este correo.
 """
 
 
+def _html_evidencia_digest(destinatario_nombre, total_ordenes, total_acciones, procesos_involucrados, app_url):
+    procesos_txt = ", ".join(procesos_involucrados) if procesos_involucrados else "Varios"
+
+    return f"""
+<!doctype html>
+<html>
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;">
+<tr>
+<td align="center">
+<table role="presentation" width="720" cellpadding="0" cellspacing="0"
+       style="max-width:720px;background:#ffffff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+
+<tr>
+<td style="background:#c8001c;padding:18px 22px;color:#ffffff;">
+<div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.92;font-weight:700;">
+Oportunidad de Mejora
+</div>
+<div style="font-size:22px;font-weight:800;margin-top:4px;line-height:1.15;">
+Acciones correctivas sin evidencia
+</div>
+<div style="font-size:13px;opacity:.95;margin-top:8px;line-height:1.35;">
+Recordatorio diario de acciones vencidas sin evidencia cargada.
+</div>
+</td>
+</tr>
+
+<tr>
+<td style="padding:18px 22px 10px 22px;">
+<div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
+Hola <b>{destinatario_nombre}</b>,
+</div>
+
+<div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
+Tienes acciones correctivas vencidas sin evidencia cargada, agrupadas por orden de mejora (OM)
+en el PDF adjunto.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+       style="border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:10px;">
+<tr>
+<td style="width:260px;background:#fdecec;font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Oportunidades de mejora</td>
+<td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{total_ordenes}</td>
+</tr>
+<tr>
+<td style="background:#fdecec;font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Acciones correctivas sin evidencia</td>
+<td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{total_acciones}</td>
+</tr>
+<tr>
+<td style="background:#fdecec;font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Procesos involucrados</td>
+<td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{procesos_txt}</td>
+</tr>
+</table>
+
+<div style="font-size:13px;color:#374151;margin-top:14px;">
+📎 Revisa el PDF adjunto para ver el detalle de cada acción por OM.
+</div>
+
+<div style="margin-top:18px;">
+<a href="{app_url}"
+   style="display:inline-block;background:#c8001c;color:#ffffff;text-decoration:none;
+          padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;">
+Revisar OMs
+</a>
+</div>
+
+<div style="font-size:12px;color:#6b7280;margin-top:14px;">
+Este correo fue generado automáticamente por el sistema de Sili.
+</div>
+</td>
+</tr>
+
+<tr>
+<td style="padding:12px 22px 14px 22px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;">
+Este es un mensaje automático. No responda a este correo.
+</td>
+</tr>
+
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+"""
+
+
 def _send_to_users(conn, user_ids, subject, text_body, row, titulo, dias_txt):
     for uid in _dedup_ids(user_ids):
         u = _get_user_contact(conn, uid)
@@ -1457,7 +1551,7 @@ def process_om_acciones_seguimiento(conn):
             0: ("notif_0d_at", "Vence hoy", "vence hoy"),
         }
 
-        if dias in mapa:
+        if OM_RECORDATORIOS_PREVIOS_ACTIVOS and dias in mapa:
             col, titulo, dias_txt = mapa[dias]
 
             if _row_get(row, col):
@@ -1494,6 +1588,12 @@ def process_om_acciones_seguimiento(conn):
         # Escalamiento vencido
         # -------------------------
         if dias < 0:
+            # Las acciones CORRECTIVA vencidas ya no se notifican una por una
+            # aquí: se agrupan en el digest diario (ver
+            # process_om_correctivas_evidencia_digest).
+            if str(tipo).upper() == "CORRECTIVA":
+                continue
+
             cur.execute("""
                 SELECT notif_overdue_last_date
                 FROM reclamo_imputado_acciones
@@ -1554,4 +1654,232 @@ def process_om_acciones_seguimiento(conn):
                 """,
                 (accion_id,)
             )
-            conn.commit()    
+            conn.commit()
+
+
+def _agrupar_acciones_por_proceso_om(conn, filas):
+    """
+    Agrupa filas de SQL_SELECT_OM_ACCIONES_SEGUIMIENTO por proceso -> OM.
+
+    Retorna una lista de:
+        {"proceso": str, "ordenes": [{"codigo", "cliente_nombre", "creador_nombre", "acciones": [...]}]}
+    """
+    por_proceso: dict = {}
+    cache_creador: dict = {}
+
+    for row in filas:
+        proceso = _row_get(row, "proceso_text", default="") or "Sin proceso asignado"
+        codigo = _row_get(row, "codigo", default="")
+        cliente_nombre = _row_get(row, "cliente_nombre", default="")
+        descripcion = _row_get(row, "descripcion", default="")
+        fecha_compromiso = _row_get(row, "fecha_compromiso", default="")
+        dias = int(_row_get(row, "dias_restantes", default=0))
+        sponsor_nombre = _row_get(row, "sponsor_nombre", default="") or "Sin sponsor"
+        creador_id = _row_get(row, "creador_id")
+        fecha_creacion_om = _row_get(row, "fecha_reclamo", default="")
+        fecha_cierre_om = _row_get(row, "fecha_cierre_om", default="")
+        procesos_involucrados = [p.strip() for p in proceso.split(",") if p.strip()]
+
+        if creador_id not in cache_creador:
+            contacto_creador = _get_user_contact(conn, creador_id)
+            cache_creador[creador_id] = contacto_creador.get("nombre") if contacto_creador else "Desconocido"
+        creador_nombre = cache_creador[creador_id]
+
+        proc_entry = por_proceso.setdefault(proceso, {"proceso": proceso, "ordenes": {}})
+        om_entry = proc_entry["ordenes"].setdefault(codigo, {
+            "codigo": codigo,
+            "cliente_nombre": cliente_nombre,
+            "creador_nombre": creador_nombre,
+            "fecha_creacion": str(fecha_creacion_om)[:10] if fecha_creacion_om else "",
+            "fecha_cierre": str(fecha_cierre_om)[:10] if fecha_cierre_om else "",
+            "procesos_involucrados": procesos_involucrados,
+            "acciones": [],
+        })
+        om_entry["acciones"].append({
+            "descripcion": descripcion,
+            "fecha_compromiso": str(fecha_compromiso),
+            "dias_vencido": abs(dias),
+            "sponsor_nombre": sponsor_nombre,
+        })
+
+    return [
+        {"proceso": proceso, "ordenes": list(entry["ordenes"].values())}
+        for proceso, entry in por_proceso.items()
+    ]
+
+
+def _logo_data_uri():
+    """
+    Devuelve el logo como data URI base64. Se embebe directamente (en vez de
+    usar url_for/static) porque este PDF se genera fuera de un request activo.
+    """
+    import base64
+    from pathlib import Path
+
+    logo_path = Path(current_app.static_folder) / "quimpac_logo.png"
+    try:
+        with open(logo_path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+        return f"data:image/png;base64,{b64}"
+    except Exception:
+        _log("warning", "[OM_EVIDENCIA_DIGEST] no se pudo cargar el logo en %s", logo_path)
+        return ""
+
+
+def _generar_pdf_acciones_correctivas(
+    destinatario_nombre, fecha_emision, procesos, total_ordenes, total_acciones
+):
+    # No se usa render_template() a propósito: este job corre en el hilo del
+    # scheduler, que solo tiene app_context (sin request), y render_template
+    # dispara context processors (ej. lectura de session) que requieren un
+    # request activo. Se usa el entorno Jinja de la app directamente.
+    template = current_app.jinja_env.get_template("om_acciones_correctivas_pdf.html")
+    html_str = template.render(
+        destinatario_nombre=destinatario_nombre,
+        fecha_emision=fecha_emision,
+        procesos=procesos,
+        total_ordenes=total_ordenes,
+        total_acciones=total_acciones,
+        logo_data_uri=_logo_data_uri(),
+    )
+
+    import io
+    from xhtml2pdf import pisa
+
+    buf = io.BytesIO()
+    result = pisa.pisaDocument(io.StringIO(html_str), dest=buf, encoding="utf-8")
+
+    if result.err:
+        raise RuntimeError(f"xhtml2pdf reportó errores al renderizar: {result.err}")
+
+    return buf.getvalue()
+
+
+def process_om_correctivas_evidencia_digest(conn):
+    """
+    Digest diario (08:00, día laboral) de acciones CORRECTIVA vencidas sin
+    evidencia. En lugar de un correo por cada acción, agrupa por
+    proceso -> OM y envía un único correo con un PDF adjunto por
+    destinatario (mismo criterio de escalamiento que ya usaba el correo
+    individual: gerente del sponsor, creador, jefe y gerente del creador).
+    """
+    cur = conn.cursor()
+    cur.execute(SQL_SELECT_OM_ACCIONES_SEGUIMIENTO)
+    rows = cur.fetchall()
+
+    servicio_cliente_ids = _get_servicio_cliente_ids(conn)
+
+    por_destinatario: dict = {}
+
+    accion_ids_incluidas = []
+
+    for row in rows:
+        # Solo a partir de 1 día después del vencimiento (no el mismo día).
+        dias = int(_row_get(row, "dias_restantes", default=9999))
+        if dias > -1:
+            continue
+
+        accion_id = int(_row_get(row, "accion_id"))
+
+        # Bandera de "ya incluida en el digest" — se consulta aparte (no en
+        # SQL_SELECT_OM_ACCIONES_SEGUIMIENTO) para no romper el job de
+        # recordatorios existente si esta columna todavía no existe en BD.
+        cur.execute(
+            "SELECT notif_evidencia_digest_at FROM reclamo_imputado_acciones WHERE id = ?",
+            (accion_id,)
+        )
+        flag_row = cur.fetchone()
+        if flag_row and _row_get(flag_row, "notif_evidencia_digest_at"):
+            continue
+
+        accion_ids_incluidas.append(accion_id)
+
+        sponsor_id = _row_get(row, "sponsor_id")
+        creador_id = _row_get(row, "creador_id")
+
+        gerente_sponsor_id = _get_ultimo_jefe_id(conn, sponsor_id)
+        jefe_creador_id = None
+        gerente_creador_id = None
+
+        if creador_id:
+            cur.execute("SELECT jefe_id FROM usuarios WHERE id = ?", (int(creador_id),))
+            rj = cur.fetchone()
+            jefe_creador_id = _row_get(rj, "jefe_id", 0)
+            gerente_creador_id = _get_ultimo_jefe_id(conn, creador_id)
+
+        destinatarios = _dedup_ids([
+            gerente_sponsor_id,
+            creador_id,
+            jefe_creador_id,
+            gerente_creador_id,
+        ] + servicio_cliente_ids)
+
+        for uid in destinatarios:
+            por_destinatario.setdefault(int(uid), []).append(row)
+
+    _log("info", "[OM_EVIDENCIA_DIGEST] destinatarios=%s", len(por_destinatario))
+
+    if not por_destinatario:
+        return "Sin acciones correctivas vencidas (≥1 día) pendientes de notificar."
+
+    fecha_emision = datetime.now().strftime("%d/%m/%Y")
+    enviados = 0
+
+    app_url = (current_app.config.get("PUBLIC_BASE_URL") or current_app.config.get("APP_URL") or "").rstrip("/")
+    app_url = f"{app_url}/reclamos?tab=tab-imputado" if app_url else "/reclamos?tab=tab-imputado"
+
+    for uid, filas in por_destinatario.items():
+        contacto = _get_user_contact(conn, uid)
+        if not contacto or not contacto.get("email"):
+            continue
+
+        destinatario_nombre = contacto.get("nombre") or contacto.get("username") or "Usuario"
+        agrupado = _agrupar_acciones_por_proceso_om(conn, filas)
+        total_ordenes = sum(len(p["ordenes"]) for p in agrupado)
+        total_acciones = len(filas)
+        procesos_involucrados = [p["proceso"] for p in agrupado]
+
+        try:
+            pdf_bytes = _generar_pdf_acciones_correctivas(
+                destinatario_nombre=destinatario_nombre,
+                fecha_emision=fecha_emision,
+                procesos=agrupado,
+                total_ordenes=total_ordenes,
+                total_acciones=total_acciones,
+            )
+        except Exception:
+            _log("error", "[OM_EVIDENCIA_DIGEST] fallo generando PDF para uid=%s", uid)
+            continue
+
+        subject = f"[OM] {total_acciones} acción(es) correctiva(s) sin evidencia"
+        text_body = (
+            f"Adjunto el detalle de {total_acciones} acción(es) correctiva(s) vencida(s) "
+            f"sin evidencia cargada, agrupadas por orden de mejora (OM).\n"
+        )
+        html_body = _html_evidencia_digest(
+            destinatario_nombre, total_ordenes, total_acciones, procesos_involucrados, app_url
+        )
+
+        _send_mail_safe(
+            contacto["email"],
+            subject,
+            text_body,
+            html_body=html_body,
+            attachments=[("acciones_correctivas_sin_evidencia.pdf", pdf_bytes)],
+        )
+        enviados += 1
+
+    # Marcar bandera para no reincluir estas acciones en el próximo digest.
+    for accion_id in accion_ids_incluidas:
+        cur.execute(
+            "UPDATE reclamo_imputado_acciones SET notif_evidencia_digest_at = GETDATE() WHERE id = ?",
+            (accion_id,)
+        )
+    conn.commit()
+
+    resultado = (
+        f"{len(por_destinatario)} destinatario(s), {enviados} correo(s) enviado(s), "
+        f"{len(accion_ids_incluidas)} acción(es) marcada(s)."
+    )
+    _log("info", "[OM_EVIDENCIA_DIGEST] %s", resultado)
+    return resultado
