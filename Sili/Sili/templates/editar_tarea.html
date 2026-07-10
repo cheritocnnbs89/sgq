@@ -57,6 +57,7 @@
 
         <div class="col-md-6">
           <label class="form-label fw-semibold text-primary">Solicitante</label>
+          {% if is_admin %}
           <select name="solicitante_id" class="form-select" required>
             <option value="">-- Seleccione solicitante --</option>
             {% for s in solicitantes %}
@@ -67,6 +68,10 @@
               </option>
             {% endfor %}
           </select>
+          {% else %}
+          <input type="text" class="form-control" value="{{ tarea['solicitante_nombre'] or tarea['solicitante_username'] or '—' }}" disabled>
+          <div class="form-text">Solo un administrador puede cambiar el solicitante.</div>
+          {% endif %}
         </div>
 
         <div class="col-md-6">

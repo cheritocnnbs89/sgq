@@ -39,15 +39,17 @@
                 <button class="btn btn-outline-primary btn-sm btn-top js-open-om-chat" type="button">
                     <i class="bi bi-robot me-1"></i>Asistente OM
                 </button>
+                {% if (rol or session.get('rol')) == 'admin' %}
+                <button id="btnTestEvidenciaDigest" class="btn btn-outline-danger btn-sm btn-top" type="button"
+                    title="Envía ahora (correo real) el digest de acciones correctivas sin evidencia">
+                    <i class="bi bi-envelope-paper me-1"></i>Probar envío evidencia
+                </button>
+                {% endif %}
                 <button class="btn btn-outline-secondary btn-sm btn-top" type="button" data-bs-toggle="collapse"
                     data-bs-target="#filtrosCollapse" aria-expanded="true" aria-controls="filtrosCollapse">
                     <i class="bi bi-funnel me-1"></i>
                     <span>Filtros</span>
                     <i class="bi bi-chevron-down ms-1"></i>
-                </button>
-
-                <button id="themeToggle" class="btn btn-outline-secondary btn-sm no-print btn-top">
-                    <i class="bi bi-moon-stars me-1"></i><span>Tema</span>
                 </button>
 
                 {% if has_permission('reclamos','crear') %}

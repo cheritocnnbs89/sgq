@@ -565,8 +565,7 @@ function desbloquearBtn(btn) {
 
         wrap.innerHTML = items.map(x => {
             const tipo = String(x.tipo || '').toUpperCase();
-            const soloSeguimiento = (tipo === 'CONTROL' || tipo === 'CORRECTIVA');
-            if (!soloSeguimiento) return '';
+            if (tipo !== 'CORRECTIVA') return '';
 
             const requiereEvidencia = Number(x.requiere_evidencia || 0) === 1;
             const cumplido = Number(x.cumplido || 0) === 1;
@@ -615,9 +614,11 @@ function desbloquearBtn(btn) {
                             <div class="small text-muted ws-pre-wrap">${escapeHtml(observacion || '—')}</div>
                         </div>
 
-                        <div class="mt-3">
-                            ${renderEvidenciasHtmlReadonly(x.evidencias || [])}
-                        </div>
+                        ${tipo === 'CONTROL' ? '' : `
+                            <div class="mt-3">
+                                ${renderEvidenciasHtmlReadonly(x.evidencias || [])}
+                            </div>
+                        `}
                     </div>
                 </div>
             </div>
@@ -630,6 +631,7 @@ function desbloquearBtn(btn) {
 
         box.innerHTML = (Array.isArray(acciones) ? acciones : []).map(x => {
             const esControl = (x.tipo || '').toLowerCase() === 'control';
+            if (esControl) return '';
             const badgeClase = esControl ? 'det-badge-control' : 'det-badge-correctiva';
             const badgeTexto = esControl ? 'Control' : 'Correctiva';
             const cumplido = Number(x.cumplido || 0) === 1;
@@ -680,13 +682,15 @@ function desbloquearBtn(btn) {
                             `}
                         </div>
 
-                        <div class="mt-3">
-                            ${renderEvidenciasHtmlSponsor(x.evidencias || [], x.cumplido)}
-                        </div>
+                        ${esControl ? '' : `
+                            <div class="mt-3">
+                                ${renderEvidenciasHtmlSponsor(x.evidencias || [], x.cumplido)}
+                            </div>
+                        `}
                     </div>
 
                     <div class="det-seg-actions">
-                        ${cumplido ? '' : `
+                        ${(cumplido || esControl) ? '' : `
                             <button type="button"
                                     class="btn btn-sm btn-success js-cumplir-accion-sponsor"
                                     data-accion-id="${x.id}">
@@ -694,10 +698,12 @@ function desbloquearBtn(btn) {
                             </button>
                         `}
 
-                        <input type="file"
-                               class="form-control form-control-sm js-evidencia-accion-sponsor seg-evidencia-input"
-                               data-accion-id="${x.id}"
-                               ${cumplido ? 'disabled' : ''}>
+                        ${esControl ? '' : `
+                            <input type="file"
+                                   class="form-control form-control-sm js-evidencia-accion-sponsor seg-evidencia-input"
+                                   data-accion-id="${x.id}"
+                                   ${cumplido ? 'disabled' : ''}>
+                        `}
                     </div>
                 </div>
             </div>
@@ -717,8 +723,7 @@ function desbloquearBtn(btn) {
 
         wrap.innerHTML = items.map(x => {
             const tipo = String(x.tipo || '').toUpperCase();
-            const soloSeguimiento = (tipo === 'CONTROL' || tipo === 'CORRECTIVA');
-            if (!soloSeguimiento) return '';
+            if (tipo !== 'CORRECTIVA') return '';
 
             const cumplido = Number(x.cumplido || 0) === 1;
             const requiereEvidencia = Number(x.requiere_evidencia || 0) === 1;
@@ -768,13 +773,15 @@ function desbloquearBtn(btn) {
                             `}
                         </div>
 
-                        <div class="mt-3">
-                            ${renderEvidenciasHtml(x.evidencias || [], x.cumplido)}
-                        </div>
+                        ${tipo === 'CONTROL' ? '' : `
+                            <div class="mt-3">
+                                ${renderEvidenciasHtml(x.evidencias || [], x.cumplido)}
+                            </div>
+                        `}
                     </div>
 
                     <div class="det-seg-actions">
-                        ${cumplido ? '' : `
+                        ${(cumplido || tipo === 'CONTROL') ? '' : `
                             <button type="button"
                                     class="btn btn-sm btn-success js-cumplir-accion"
                                     data-accion-id="${x.id}">
@@ -782,10 +789,12 @@ function desbloquearBtn(btn) {
                             </button>
                         `}
 
-                        <input type="file"
-                               class="form-control form-control-sm js-evidencia-accion seg-evidencia-input"
-                               data-accion-id="${x.id}"
-                               ${cumplido ? 'disabled' : ''}>
+                        ${tipo === 'CONTROL' ? '' : `
+                            <input type="file"
+                                   class="form-control form-control-sm js-evidencia-accion seg-evidencia-input"
+                                   data-accion-id="${x.id}"
+                                   ${cumplido ? 'disabled' : ''}>
+                        `}
                     </div>
                 </div>
             </div>
@@ -1462,8 +1471,7 @@ function desbloquearBtn(btn) {
 
                         const html = itemsAcciones.map(x => {
                             const tipo = String(x.tipo || '').toUpperCase();
-                            const soloSeguimiento = (tipo === 'CONTROL' || tipo === 'CORRECTIVA');
-                            if (!soloSeguimiento) return '';
+                            if (tipo !== 'CORRECTIVA') return '';
 
                             const requiereEvidencia = Number(x.requiere_evidencia || 0) === 1;
                             const cumplido = Number(x.cumplido || 0) === 1;
@@ -1514,9 +1522,11 @@ function desbloquearBtn(btn) {
                                     <div class="small text-muted ws-pre-wrap">${escapeHtml(observacion || '—')}</div>
                                 </div>
 
-                                <div class="mt-3">
-                                    ${renderEvidenciasHtmlReadonly(evidencias)}
-                                </div>
+                                ${tipo === 'CONTROL' ? '' : `
+                                    <div class="mt-3">
+                                        ${renderEvidenciasHtmlReadonly(evidencias)}
+                                    </div>
+                                `}
                             </div>
                         </div>
                     </div>
@@ -3726,8 +3736,7 @@ function apRenderSeguimientoAcciones(items) {
 
     wrap.innerHTML = items.map(x => {
         const tipo = String(x.tipo || '').toUpperCase();
-        const soloSeguimiento = (tipo === 'CONTROL' || tipo === 'CORRECTIVA');
-        if (!soloSeguimiento) return '';
+        if (tipo !== 'CORRECTIVA') return '';
 
         const requiereEvidencia = Number(x.requiere_evidencia || 0) === 1;
         const observacion = x.observacion_cumplimiento || '';
@@ -3758,9 +3767,11 @@ function apRenderSeguimientoAcciones(items) {
                                 <div class="small text-muted ws-pre-wrap">${apEscapeHtml(observacion || '—')}</div>
                             </div>
 
-                            <div class="mt-3">
-                                ${apRenderEvidenciasHtml(x.evidencias || [])}
-                            </div>
+                            ${tipo === 'CONTROL' ? '' : `
+                                <div class="mt-3">
+                                    ${apRenderEvidenciasHtml(x.evidencias || [])}
+                                </div>
+                            `}
                         </div>
                     </div>
                 </div>
@@ -4593,6 +4604,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("omChatClose")?.addEventListener("click", _cerrarPanel);
+
+    // ── Botón admin: probar envío del digest de evidencia (correo real) ──
+    document.getElementById("btnTestEvidenciaDigest")?.addEventListener("click", function () {
+        const btnTest = this;
+        if (!window.confirm(
+            "Esto ejecuta el job ahora mismo y envía correos REALES con PDF " +
+            "a los destinatarios pendientes. ¿Continuar?"
+        )) {
+            return;
+        }
+
+        const original = btnTest.innerHTML;
+        btnTest.disabled = true;
+        btnTest.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Enviando...';
+
+        fetch("/admin/scheduler/process_om_correctivas_evidencia_digest/run", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector('meta[name="csrf-token"]')?.content || "",
+            },
+            body: JSON.stringify({}),
+        })
+            .then(r => r.json())
+            .then(data => {
+                btnTest.disabled = false;
+                btnTest.innerHTML = original;
+                window.alert(data.ok
+                    ? ("OK — " + (data.resultado || ""))
+                    : ("Error: " + (data.error || "")));
+            })
+            .catch(() => {
+                btnTest.disabled = false;
+                btnTest.innerHTML = original;
+                window.alert("Error de red al ejecutar el job.");
+            });
+    });
 
     // ── Chat ──────────────────────────────────────────────────
     const input = document.getElementById("om-chat-input");
