@@ -499,29 +499,6 @@ SQL_FETCH_PRODUCTOS_SEL_1 = """
 """
 
 
-# -- _ENSURE_PARAM_TABLES --
-SQL__ENSURE_PARAM_TABLES_DDL_1 = """
-
-        CREATE TABLE IF NOT EXISTS param_groups(
-            id      INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre  TEXT UNIQUE NOT NULL
-        )
-"""
-
-SQL__ENSURE_PARAM_TABLES_DDL_2 = """
-
-        CREATE TABLE IF NOT EXISTS param_values(
-            id       INTEGER PRIMARY KEY AUTOINCREMENT,
-            group_id INTEGER NOT NULL,
-            nombre   TEXT NOT NULL,
-            valor    TEXT,
-            activo   INTEGER NOT NULL DEFAULT 1,
-            orden    INTEGER NOT NULL DEFAULT 1,
-            FOREIGN KEY(group_id) REFERENCES param_groups(id)
-        )
-"""
-
-
 # -- _ENSURE_PARAM_GROUP --
 SQL__ENSURE_PARAM_GROUP_SEL_1 = """
 

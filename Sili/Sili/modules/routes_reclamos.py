@@ -204,26 +204,6 @@ def _col_names(conn, table: str) -> set[str]:
     except Exception:
         return set()
 
-def _ensure_column(conn, table, column, decl_sql):
-    # En SQL Server no alteramos esquema desde runtime
-    if _is_sqlserver_conn(conn):
-        return
-
-    cur = conn.execute(f"PRAGMA table_info({table})")
-    cols = {row["name"] for row in cur.fetchall()}
-    if column not in cols:
-        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl_sql}")
-        conn.commit()
-
-def _run_reclamos_bootstrap_if_needed(conn):
-    if _is_sqlserver_conn(conn):
-        return
-
-    #ensure_reclamos_schema(conn)
-    #ensure_reclamos_catalogos(conn)
-    #ensure_geo_schema(conn)
-    #_ensure_reclamo_imputados_extra_cols(conn)
-    
 def _can_export_all_reclamos(conn, uid: int | None) -> bool:
     """
     Puede exportar TODO:
@@ -750,20 +730,6 @@ def _col_names(conn, table: str) -> set[str]:
     except sqlite3.OperationalError:
         return set()
 
-def ensure_reclamos_schema(conn):
-    """
-    No-op en SQL Server.
-    El esquema de reclamos ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
-def ensure_reclamo_imputado_acciones_schema(conn: sqlite3.Connection):
-    """
-    No-op en SQL Server.
-    El esquema de reclamos ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
 
 def _save_respuesta_equipo_acciones(
     conn: sqlite3.Connection,
@@ -1003,35 +969,6 @@ def _puede_ver_equipo(reclamo_id: int, user_id: int | None = None) -> bool:
     return fila is not None
 
 
-def _ensure_column(conn, table, column, decl_sql):
-    """
-    No-op en SQL Server.
-    El esquema ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
-def ensure_reclamo_imputados_fishbone(conn):
-    """
-    No-op en SQL Server.
-    El esquema ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
-def ensure_reclamo_respuestas_equipo_schema(conn: sqlite3.Connection):
-    """
-    No-op en SQL Server.
-    El esquema ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
-
-def ensure_reclamo_adjuntos_schema(conn: sqlite3.Connection):
-    """
-    No-op en SQL Server.
-    El esquema ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
 # =========================================================
 #   CATÁLOGOS param_groups / param_values
 # =========================================================
@@ -1042,32 +979,6 @@ def fetch_productos(conn):
     return cur.fetchall()
 
 
-def _ensure_param_tables(conn: sqlite3.Connection):
-    """
-    Adapta los catálogos a tu esquema actual:
-
-        param_groups(id, nombre)
-        param_values(id, group_id, nombre, valor)
-
-    y, si hace falta, añade columnas 'activo' y 'orden'
-    a param_values (no rompe nada existente).
-    """
-    cur = conn.cursor()
-
-    cur.execute(SQL__ENSURE_PARAM_TABLES_DDL_1)
-
-    cur.execute(SQL__ENSURE_PARAM_TABLES_DDL_2)
-
-    cur.execute("PRAGMA table_info(param_values)")
-    cols = {r[1] for r in cur.fetchall()}
-    if "activo" not in cols:
-        cur.execute("ALTER TABLE param_values ADD COLUMN activo INTEGER NOT NULL DEFAULT 1")
-    if "orden" not in cols:
-        cur.execute("ALTER TABLE param_values ADD COLUMN orden  INTEGER NOT NULL DEFAULT 1")
-
-    conn.commit()
-
- 
 def _ensure_param_group(conn, nombre: str, descripcion: str | None = None):
     """
     En SQL Server no crea grupos en runtime.
@@ -1111,7 +1022,6 @@ def _fetch_param_values(conn: sqlite3.Connection, group_codigo: str):
     Cada row tendrá:
         id, nombre (clave), valor (etiqueta), orden
     """
-    #_ensure_param_tables(conn)
     cur = conn.cursor()
     cur.execute(SQL__FETCH_PARAM_VALUES_SEL_1, (group_codigo,))
     return cur.fetchall()
@@ -1152,26 +1062,6 @@ def _can_edit_equipo(equipo_id: int) -> bool:
     colaborador_id = row["colaborador_id"] if hasattr(row, "keys") else row[1]
 
     return int(user_id) in {int(responsable_id), int(colaborador_id)}
-
-
-def ensure_reclamos_catalogos(conn):
-    """
-    No-op en SQL Server.
-    Los catálogos ya deben existir y mantenerse fuera del backend.
-    """
-    return
-# =========================================================
-#   CATÁLOGOS GEO
-# =========================================================
- 
-
-
-def ensure_geo_schema(conn):
-    """
-    No-op en SQL Server.
-    Las tablas geográficas ya deben existir y mantenerse fuera del backend.
-    """
-    return
 
 
 def fetch_regiones(conn: sqlite3.Connection):
@@ -1880,7 +1770,6 @@ def _save_adjuntos_for_reclamo(conn: sqlite3.Connection,
       - None si todo OK
       - Mensaje de error (str) si algo no cumple las reglas
     """
-    #ensure_reclamo_adjuntos_schema(conn)
     cur = conn.cursor()
 
     # Cuántos adjuntos ya tiene esta OM
@@ -3191,7 +3080,6 @@ def register_reclamos_routes(app):
         conn = get_db()
 
         # ✅ CAMBIO CLAVE: asegurar esquema SIEMPRE antes de usar la tabla v2
-        #ensure_reclamos_catalogos(conn)
 
         cur = conn.cursor()
 
@@ -3219,7 +3107,6 @@ def register_reclamos_routes(app):
 
     import re
     from flask import jsonify, abort, request, session
-    # asumiendo que ya tienes: get_db, require_login, _can_edit_equipo, ensure_reclamos_catalogos
 
     def _row_get(row, key, idx, default=""):
         """Soporta sqlite Row (dict-like) o tupla."""
@@ -3280,7 +3167,6 @@ def register_reclamos_routes(app):
         conn = get_db()
 
         # ✅ Asegura que exista la tabla v2 antes de consultar
-        #ensure_reclamos_catalogos(conn)
 
         cur = conn.cursor()
 
@@ -3330,8 +3216,6 @@ def register_reclamos_routes(app):
         uid = _current_user_id()
 
         db = get_db()
-        #ensure_reclamos_schema(db)
-        #ensure_reclamo_respuestas_equipo_schema(db)
         
 
         # ✅ Solo responsable aprobado, miembros, creador o admin/coordinador
@@ -4135,7 +4019,6 @@ def register_reclamos_routes(app):
             return jsonify({"ok": False, "error": "No tienes permiso para modificar el equipo de respuestas."}), 403
 
         db = get_db()
-        #ensure_reclamos_schema(db)
 
         cur = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_34, (er_id, reclamo_id))
         db.commit()
@@ -4188,7 +4071,6 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, msg="Debe indicar al menos un colaborador"), 400
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         
         cur = conn.cursor()
 
@@ -4308,7 +4190,6 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, msg="Todos los campos del aporte son obligatorios"), 400
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         
         cur = conn.cursor()
 
@@ -4357,7 +4238,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_api_respuestas(reclamo_id):
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_44, (reclamo_id,))
@@ -4706,8 +4586,6 @@ def register_reclamos_routes(app):
         uid = _current_user_id()
 
         conn = get_db()
-        # Ya no crear/alterar esquema desde backend en SQL Server
-        # _run_reclamos_bootstrap_if_needed(conn)
 
         productos = fetch_productos(conn)
         cur = conn.cursor()
@@ -6076,7 +5954,6 @@ def register_reclamos_routes(app):
         region_id = request.args.get('region_id', type=int)
 
         conn = get_db()
-        #ensure_geo_schema(conn)
         rows = fetch_provincias(conn, region_id)
         conn.close()
 
@@ -6095,8 +5972,6 @@ def register_reclamos_routes(app):
 
         uid = _current_user_id()
         conn = get_db()
-        #ensure_reclamos_schema(conn)
-        #ensure_reclamos_catalogos(conn)
         cur = conn.cursor()
 
         # Permisos:
@@ -6144,7 +6019,6 @@ def register_reclamos_routes(app):
         provincia_id = request.args.get('provincia_id', type=int)
 
         conn = get_db()
-        #ensure_geo_schema(conn)
         rows = fetch_cantones(conn, provincia_id)
         conn.close()
 
@@ -6166,7 +6040,6 @@ def register_reclamos_routes(app):
             return redirect(url_for('reclamos'))
 
         conn = get_db()
-        # ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         fecha_reclamo = (request.form.get('fecha_reclamo') or '').strip()
@@ -6456,7 +6329,6 @@ def register_reclamos_routes(app):
         motivo = (data.get("motivo") or "").strip()
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_60, (imp_id,))
@@ -6551,8 +6423,6 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, msg="No se cargó ningún archivo."), 400
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
-        #ensure_reclamo_adjuntos_schema(conn)
         cur = conn.cursor()
 
         # Validar que exista la OM
@@ -6594,7 +6464,6 @@ def register_reclamos_routes(app):
         uid = _current_user_id()
 
         conn = get_db()
-        #ensure_reclamo_adjuntos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_63, (adj_id,))
@@ -6651,7 +6520,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_download_adjunto(adj_id):
         conn = get_db()
-        #ensure_reclamo_adjuntos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_65, (adj_id,))
@@ -6765,9 +6633,7 @@ def register_reclamos_routes(app):
         fish_medicion   = _safe_str(data.get("fish_medicion"))
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         _ensure_reclamo_imputados_extra_cols(conn)
-        #ensure_reclamo_imputado_acciones_schema(conn)
 
         cur = conn.cursor()
 
@@ -6907,9 +6773,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_eliminar(reclamo_id):
         conn = get_db()
-        #ensure_reclamos_schema(conn)
-        #ensure_reclamo_adjuntos_schema(conn)
-        #ensure_reclamo_respuestas_equipo_schema(conn)
 
         uid = session.get("usuario_id") or session.get("user_id") or session.get("id")
         role = (session.get('rol') or '').strip().lower()
@@ -7205,7 +7068,6 @@ def register_reclamos_routes(app):
         motivo = (data.get("motivo") or "").strip()
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_60, (imp_id,))
@@ -8929,8 +8791,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamo_imputacion_respuesta_detalle(imp_id):
         conn = get_db()
-        #ensure_reclamos_schema(conn)
-        #ensure_reclamo_imputado_acciones_schema(conn)
 
         cur = conn.cursor()
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_99, (imp_id,))
@@ -8954,8 +8814,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamo_imputado_accion_observacion(accion_id):
         db = get_db()
-        #ensure_reclamos_schema(db)
-        #ensure_reclamo_imputado_acciones_schema(db)
 
         uid = _current_user_id()
         permitido, row = _puede_gestionar_imputado_accion(accion_id, uid)
@@ -8984,8 +8842,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamo_imputado_accion_cumplir(accion_id):
         db = get_db()
-        #ensure_reclamos_schema(db)
-        #ensure_reclamo_imputado_acciones_schema(db)
 
         uid = _current_user_id()
         permitido, row = _puede_gestionar_imputado_accion(accion_id, uid)
