@@ -501,6 +501,24 @@ SQL_FETCH_PRODUCTOS_SEL_1 = f"""
 """
 
 
+# -- FETCH_USUARIOS_IMPUTABLES --
+SQL_FETCH_USUARIOS_IMPUTABLES_SEL_1 = f"""
+        SELECT
+            u.id,
+            u.username,
+            COALESCE(u.nombre_completo, u.username) AS nombre_completo,
+            d.nombre AS departamento_nombre,
+            COALESCE(j.nombre_completo, j.username) AS jefe_nombre,
+            u.empresa_id,
+            u.jefe_id
+        FROM {T_USUARIOS} u
+        LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
+        LEFT JOIN {T_USUARIOS} j ON j.id = u.jefe_id          -- 👈 jefe desde la misma tabla
+        WHERE COALESCE(u.disabled, 0) = 0
+        and u.identificacion not in ('40623','0911946630','0923577688','0929626729','1307590834'   ,'40736','0902507805','1714868211')
+    """
+
+
 # -- _ENSURE_PARAM_GROUP --
 SQL__ENSURE_PARAM_GROUP_SEL_1 = f"""
 
@@ -2459,4 +2477,62 @@ SQL_VALIDAR_CREADOR_SEL_SPONSORS = f"""
       AND u.email IS NOT NULL
       AND LTRIM(RTRIM(u.email)) <> ''
 """
+
+
+# -- RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA --
+SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_1 = f"""
+                    SELECT
+                        a.id,
+                        a.tipo,
+                        a.descripcion,
+                        a.fecha_compromiso,
+                        CASE
+                            WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
+                            ELSE 'proxima'
+                        END AS estado_fecha,
+                        NULL AS miembro_nombre
+                    FROM {T_RECLAMO_IMPUTADO_ACCIONES} a
+                    WHERE a.imputacion_id = ?
+                      AND COALESCE(a.activo, 1) = 1
+                      AND a.tipo = 'CORRECTIVA'
+                      AND COALESCE(a.cumplido, 0) = 0
+                      AND a.fecha_compromiso IS NOT NULL
+                      AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                      AND NOT EXISTS (
+                          SELECT 1 FROM {T_RECLAMO_ACCION_EVIDENCIAS} e
+                          WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
+                      )
+                    ORDER BY a.fecha_compromiso ASC
+                """
+
+SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_2 = f"""
+                    SELECT
+                        a.id,
+                        a.tipo,
+                        a.descripcion,
+                        a.fecha_compromiso,
+                        CASE
+                            WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
+                            ELSE 'proxima'
+                        END AS estado_fecha,
+                        u_m.nombre_completo AS miembro_nombre
+                    FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES} a
+                    LEFT JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} re ON re.id = a.respuesta_equipo_id
+                    LEFT JOIN {T_USUARIOS} u_m ON u_m.id = re.miembro_id
+                    WHERE a.reclamo_id = ?
+                      AND COALESCE(a.activo, 1) = 1
+                      AND a.tipo = 'CORRECTIVA'
+                      AND COALESCE(a.cumplido, 0) = 0
+                      AND a.fecha_compromiso IS NOT NULL
+                      AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                      AND NOT EXISTS (
+                          SELECT 1 FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS} e
+                          WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
+                      )
+                      AND NOT EXISTS (
+                          SELECT 1 FROM {T_RECLAMO_ACCION_EVIDENCIAS} e2
+                          WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
+                      )
+                    ORDER BY a.fecha_compromiso ASC
+                """
 

@@ -1034,21 +1034,7 @@ def fetch_usuarios_imputables(conn, empresa_ids=None):
     """
     cur = conn.cursor()
 
-    sql = """
-        SELECT
-            u.id,
-            u.username,
-            COALESCE(u.nombre_completo, u.username) AS nombre_completo,
-            d.nombre AS departamento_nombre,
-            COALESCE(j.nombre_completo, j.username) AS jefe_nombre,
-            u.empresa_id,
-            u.jefe_id
-        FROM usuarios u
-        LEFT JOIN departamentos d ON d.id = u.departamento_id
-        LEFT JOIN usuarios j ON j.id = u.jefe_id          -- 👈 jefe desde la misma tabla
-        WHERE COALESCE(u.disabled, 0) = 0
-        and u.identificacion not in ('40623','0911946630','0923577688','0929626729','1307590834'   ,'40736','0902507805','1714868211')
-    """
+    sql = SQL_FETCH_USUARIOS_IMPUTABLES_SEL_1
     params = []
 
     if empresa_ids:
@@ -5357,62 +5343,10 @@ def register_reclamos_routes(app):
         try:
             if imputacion_id:
                 # Vista Soy Sponsor: acciones del sponsor (reclamo_imputado_acciones)
-                cur.execute("""
-                    SELECT
-                        a.id,
-                        a.tipo,
-                        a.descripcion,
-                        a.fecha_compromiso,
-                        CASE
-                            WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
-                            ELSE 'proxima'
-                        END AS estado_fecha,
-                        NULL AS miembro_nombre
-                    FROM reclamo_imputado_acciones a
-                    WHERE a.imputacion_id = ?
-                      AND COALESCE(a.activo, 1) = 1
-                      AND a.tipo = 'CORRECTIVA'
-                      AND COALESCE(a.cumplido, 0) = 0
-                      AND a.fecha_compromiso IS NOT NULL
-                      AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
-                      AND NOT EXISTS (
-                          SELECT 1 FROM reclamo_accion_evidencias e
-                          WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
-                      )
-                    ORDER BY a.fecha_compromiso ASC
-                """, (imputacion_id,))
+                cur.execute(SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_1, (imputacion_id,))
             else:
                 # Vista general: acciones del equipo (reclamo_respuesta_equipo_acciones)
-                cur.execute("""
-                    SELECT
-                        a.id,
-                        a.tipo,
-                        a.descripcion,
-                        a.fecha_compromiso,
-                        CASE
-                            WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
-                            ELSE 'proxima'
-                        END AS estado_fecha,
-                        u_m.nombre_completo AS miembro_nombre
-                    FROM reclamo_respuesta_equipo_acciones a
-                    LEFT JOIN reclamo_respuestas_equipo re ON re.id = a.respuesta_equipo_id
-                    LEFT JOIN usuarios u_m ON u_m.id = re.miembro_id
-                    WHERE a.reclamo_id = ?
-                      AND COALESCE(a.activo, 1) = 1
-                      AND a.tipo = 'CORRECTIVA'
-                      AND COALESCE(a.cumplido, 0) = 0
-                      AND a.fecha_compromiso IS NOT NULL
-                      AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
-                      AND NOT EXISTS (
-                          SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
-                          WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
-                      )
-                      AND NOT EXISTS (
-                          SELECT 1 FROM reclamo_accion_evidencias e2
-                          WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
-                      )
-                    ORDER BY a.fecha_compromiso ASC
-                """, (reclamo_id,))
+                cur.execute(SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_2, (reclamo_id,))
             rows = cur.fetchall()
             acciones = [dict(r) for r in rows]
             return jsonify(ok=True, acciones=acciones)
