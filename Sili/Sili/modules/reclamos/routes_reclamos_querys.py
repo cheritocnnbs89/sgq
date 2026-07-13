@@ -2580,3 +2580,282 @@ SQL__RECLAMOS_EDITAR_PROCESO_SEL_8 = f"""SELECT STUFF((
                        FOR XML PATH(''), TYPE
                    ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS imputados_resumen"""
 
+
+
+# -- RECLAMOS_EXPORT_MIS --
+SQL__RECLAMOS_EXPORT_MIS_CTES = f"""
+            WITH
+            stats_respuesta_sponsor AS (
+                SELECT
+                    ri.reclamo_id,
+                    ri.id AS imputacion_id,
+                    AVG(
+                        CASE
+                            WHEN TRY_CONVERT(date, ri.fecha_respuesta_imputado) IS NOT NULL
+                            AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
+                            THEN DATEDIFF(
+                                DAY,
+                                TRY_CONVERT(date, r.fecha_reclamo),
+                                TRY_CONVERT(date, ri.fecha_respuesta_imputado)
+                            )
+                        END
+                    ) AS dias_promedio_respuesta_sponsor
+                FROM {T_RECLAMO_IMPUTADOS} ri
+                JOIN {T_RECLAMOS} r ON r.id = ri.reclamo_id
+                GROUP BY ri.reclamo_id, ri.id
+            ),
+
+            equipo_asignacion_detalle AS (
+                SELECT
+                    eq.reclamo_id,
+                    eq.imputacion_id,
+                    eq.usuario_id AS miembro_id,
+                    ISNULL(u.nombre_completo, u.username) AS miembro_nombre,
+                    eq.creado_at AS fecha_asignacion_miembro,
+                    CASE
+                        WHEN TRY_CONVERT(date, eq.creado_at) IS NOT NULL
+                        AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
+                        THEN DATEDIFF(
+                            DAY,
+                            TRY_CONVERT(date, r.fecha_reclamo),
+                            TRY_CONVERT(date, eq.creado_at)
+                        )
+                    END AS dias_asignacion_miembro
+                FROM {T_RECLAMO_EQUIPO_RESPUESTAS} eq
+                JOIN {T_RECLAMOS} r ON r.id = eq.reclamo_id
+                JOIN {T_USUARIOS} u ON u.id = eq.usuario_id
+                WHERE ISNULL(eq.activo, 1) = 1
+            ),
+
+            equipo_respuesta_detalle AS (
+                SELECT
+                    ead.reclamo_id,
+                    ead.imputacion_id,
+                    ead.miembro_id,
+                    ead.miembro_nombre,
+                    ead.fecha_asignacion_miembro,
+                    ead.dias_asignacion_miembro,
+
+                    ISNULL(rre.revision_at, rre.created_at) AS fecha_respuesta_miembro,
+
+                    CASE
+                        WHEN TRY_CONVERT(date, ead.fecha_asignacion_miembro) IS NOT NULL
+                        AND TRY_CONVERT(date, ISNULL(rre.revision_at, rre.created_at)) IS NOT NULL
+                        THEN DATEDIFF(
+                            DAY,
+                            TRY_CONVERT(date, ead.fecha_asignacion_miembro),
+                            TRY_CONVERT(date, ISNULL(rre.revision_at, rre.created_at))
+                        )
+                    END AS dias_respuesta_miembro,
+
+                    CASE
+                        WHEN TRY_CONVERT(date, ead.fecha_asignacion_miembro) IS NOT NULL
+                        AND ISNULL(rre.revision_at, rre.created_at) IS NULL
+                        THEN DATEDIFF(
+                            DAY,
+                            TRY_CONVERT(date, ead.fecha_asignacion_miembro),
+                            CAST(GETDATE() AS date)
+                        )
+                        ELSE 0
+                    END AS dias_sin_respuesta_miembro
+                FROM equipo_asignacion_detalle ead
+                LEFT JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} rre
+                    ON rre.id = (
+                        SELECT MAX(rre2.id)
+                        FROM {T_RECLAMO_RESPUESTAS_EQUIPO} rre2
+                        WHERE rre2.reclamo_id = ead.reclamo_id
+                        AND rre2.imputacion_id = ead.imputacion_id
+                        AND rre2.miembro_id = ead.miembro_id
+                        AND ISNULL(rre2.activo, 1) = 1
+                    )
+            ),
+
+            stats_asignacion_equipo AS (
+                SELECT
+                    x.reclamo_id,
+                    x.imputacion_id,
+                    STRING_AGG(x.miembro_nombre, ', ') AS miembros_equipo,
+                    COUNT(DISTINCT x.miembro_id) AS total_miembros_equipo,
+                    MIN(x.fecha_asignacion_miembro) AS fecha_primera_asignacion_equipo,
+                    AVG(CAST(x.dias_asignacion_miembro AS decimal(18,2))) AS dias_promedio_asignacion_equipo
+                FROM (
+                    SELECT DISTINCT
+                        reclamo_id,
+                        imputacion_id,
+                        miembro_id,
+                        miembro_nombre,
+                        fecha_asignacion_miembro,
+                        dias_asignacion_miembro
+                    FROM equipo_asignacion_detalle
+                ) x
+                GROUP BY x.reclamo_id, x.imputacion_id
+            ),
+
+            stats_respuesta_equipo AS (
+                SELECT
+                    erd.reclamo_id,
+                    erd.imputacion_id,
+
+                    STRING_AGG(
+                        CASE
+                            WHEN erd.fecha_respuesta_miembro IS NOT NULL
+                            THEN erd.miembro_nombre
+                        END,
+                        ', '
+                    ) AS miembros_equipo_respondieron,
+
+                    STRING_AGG(
+                        CASE
+                            WHEN erd.fecha_respuesta_miembro IS NULL
+                            THEN erd.miembro_nombre
+                        END,
+                        ', '
+                    ) AS miembros_equipo_pendientes,
+
+                    MIN(erd.fecha_respuesta_miembro) AS fecha_primera_respuesta_equipo,
+                    AVG(CAST(erd.dias_respuesta_miembro AS decimal(18,2))) AS dias_promedio_respuesta_equipo,
+
+                    AVG(
+                        CAST(
+                            CASE
+                                WHEN erd.fecha_respuesta_miembro IS NULL
+                                THEN erd.dias_sin_respuesta_miembro
+                            END AS decimal(18,2)
+                        )
+                    ) AS dias_promedio_sin_respuesta_equipo,
+
+                    MAX(erd.dias_sin_respuesta_miembro) AS dias_max_sin_respuesta_equipo
+                FROM equipo_respuesta_detalle erd
+                GROUP BY erd.reclamo_id, erd.imputacion_id
+            )
+"""
+
+SQL__RECLAMOS_EXPORT_MIS_SELECT = f"""
+            SELECT
+                r.codigo AS codigo_om,
+                r.fecha_reclamo,
+                r.fecha_creacion,
+
+                ucr.username AS creador_username,
+                ISNULL(ucr.nombre_completo, ucr.username) AS creador_nombre,
+
+                tr.valor AS tipo_om,
+                tt.valor AS tipo_tramite,
+                r.proceso_text,
+                r.cliente_nombre,
+                r.cliente_identificacion,
+                r.cliente_contacto,
+                r.cliente_email,
+                r.cliente_telefono,
+                r.material_desc,
+                c.nombre AS ciudad,
+                r.observacion,
+                r.tipo_reclamo AS motivo,
+                r.antecedente AS submotivo,
+                r.procede,
+                r.estado_global,
+
+                ri.id AS imputacion_id,
+                ui.username AS imputado_username,
+                ISNULL(ui.nombre_completo, ui.username) AS imputado_nombre,
+                uj.username AS jefe_username,
+                ISNULL(uj.nombre_completo, uj.username) AS jefe_nombre,
+
+                ri.estado_asignacion,
+                ri.fecha_aprobacion_asignacion,
+                ri.fecha_rechazo_asignacion,
+                ri.motivo_rechazo_asignacion,
+
+                ri.respuesta_causa,
+                ri.respuesta_preventiva,
+                ri.respuesta_correctiva,
+                ISNULL(ri.fecha_causa, '') AS fecha_causa,
+                ISNULL(ri.fecha_preventiva, '') AS fecha_preventiva,
+                ISNULL(ri.fecha_correctiva, '') AS fecha_correctiva,
+                ri.fecha_respuesta_imputado,
+
+                CASE
+                    WHEN TRY_CONVERT(date, ri.fecha_respuesta_imputado) IS NOT NULL
+                    AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
+                    THEN DATEDIFF(
+                        DAY,
+                        TRY_CONVERT(date, r.fecha_reclamo),
+                        TRY_CONVERT(date, ri.fecha_respuesta_imputado)
+                    )
+                END AS dias_respuesta_sponsor,
+
+                CASE
+                    WHEN ri.fecha_respuesta_imputado IS NULL
+                    AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
+                    THEN DATEDIFF(
+                        DAY,
+                        TRY_CONVERT(date, r.fecha_reclamo),
+                        CAST(GETDATE() AS date)
+                    )
+                    ELSE 0
+                END AS dias_sin_respuesta_sponsor,
+
+                ISNULL(sae.miembros_equipo, '') AS miembros_equipo,
+                ISNULL(sae.total_miembros_equipo, 0) AS total_miembros_equipo,
+                ISNULL(CONVERT(varchar(19), sae.fecha_primera_asignacion_equipo, 120), '') AS fecha_primera_asignacion_equipo,
+                ISNULL(sae.dias_promedio_asignacion_equipo, 0) AS dias_promedio_asignacion_equipo,
+
+                ISNULL(sre.miembros_equipo_respondieron, '') AS miembros_equipo_respondieron,
+                ISNULL(sre.miembros_equipo_pendientes, '') AS miembros_equipo_pendientes,
+                ISNULL(CONVERT(varchar(19), sre.fecha_primera_respuesta_equipo, 120), '') AS fecha_primera_respuesta_equipo,
+                ISNULL(sre.dias_promedio_respuesta_equipo, 0) AS dias_promedio_respuesta_equipo,
+                ISNULL(sre.dias_promedio_sin_respuesta_equipo, 0) AS dias_promedio_sin_respuesta_equipo,
+                ISNULL(sre.dias_max_sin_respuesta_equipo, 0) AS dias_max_sin_respuesta_equipo,
+
+                ri.estado_respuesta,
+                ri.fecha_aprobacion_respuesta,
+                ri.fecha_rechazo_respuesta,
+                ri.motivo_rechazo_respuesta
+
+            FROM {T_RECLAMOS} r
+            LEFT JOIN {T_RECLAMO_IMPUTADOS} ri ON ri.reclamo_id = r.id
+            LEFT JOIN {T_USUARIOS} ui ON ui.id = ri.imputado_id
+            LEFT JOIN {T_USUARIOS} uj ON uj.id = ri.aprobador_id
+            LEFT JOIN {T_USUARIOS} ucr ON ucr.id = r.creado_por
+            LEFT JOIN {T_CANTONES} c ON c.id = r.canton_id
+
+            LEFT JOIN stats_respuesta_sponsor srs
+                ON srs.reclamo_id = r.id
+            AND srs.imputacion_id = ri.id
+
+            LEFT JOIN stats_asignacion_equipo sae
+                ON sae.reclamo_id = r.id
+            AND sae.imputacion_id = ri.id
+
+            LEFT JOIN stats_respuesta_equipo sre
+                ON sre.reclamo_id = r.id
+            AND sre.imputacion_id = ri.id
+
+            LEFT JOIN {T_PARAM_GROUPS} gtr ON gtr.nombre = 'RECL_TIPO'
+            LEFT JOIN {T_PARAM_VALUES} tr ON tr.group_id = gtr.id AND tr.nombre = r.tipo_reclamo
+
+            LEFT JOIN {T_PARAM_GROUPS} gtt ON gtt.nombre = 'RECL_TRAMITE'
+            LEFT JOIN {T_PARAM_VALUES} tt ON tt.group_id = gtt.id AND tt.nombre = r.tipo_tramite
+
+            {{where_clause}}
+            ORDER BY r.id DESC, ri.id DESC
+"""
+
+SQL__RECLAMOS_EXPORT_MIS_MIS_RECLAMOS_CTE = f"""
+                , mis_reclamos AS (
+                    SELECT DISTINCT r.id
+                    FROM {T_RECLAMOS} r
+                    LEFT JOIN {T_RECLAMO_IMPUTADOS} ri ON ri.reclamo_id = r.id
+                    LEFT JOIN {T_RECLAMO_EQUIPO_RESPUESTAS} eq
+                        ON eq.reclamo_id = r.id
+                    AND ISNULL(eq.activo, 1) = 1
+                    LEFT JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} rre
+                        ON rre.reclamo_id = r.id
+                    AND ISNULL(rre.activo, 1) = 1
+                    WHERE r.creado_por = ?
+                    OR ri.imputado_id = ?
+                    OR ri.aprobador_id = ?
+                    OR eq.usuario_id = ?
+                    OR rre.miembro_id = ?
+                )
+"""
