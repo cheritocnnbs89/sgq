@@ -2536,3 +2536,47 @@ SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_2 = f"""
                     ORDER BY a.fecha_compromiso ASC
                 """
 
+
+# -- RECLAMOS_EDITAR_PROCESO --
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_1 = f"SELECT valor FROM {T_PARAM_VALUES} WHERE id = ?"
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_2 = f"SELECT id, codigo FROM {T_RECLAMOS} WHERE id = ?"
+
+SQL__RECLAMOS_EDITAR_PROCESO_UPD_3 = f"UPDATE {T_RECLAMOS} SET proceso_id = ?, proceso_text = ? WHERE id = ?"
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_4 = f"""SELECT u.id AS usuario_id
+                       FROM {T_PARAM_VALUES} pv
+                       JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
+                       JOIN {T_USUARIOS} u ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
+                       WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
+                         AND COALESCE(pv.activo, 1) = 1
+                         AND pv.parent_id = ?
+                         AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
+                         AND COALESCE(u.disabled, 0) = 0"""
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_5 = f"""SELECT DISTINCT u.id AS usuario_id
+                   FROM {T_PARAM_VALUES} pv
+                   JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
+                   JOIN {T_USUARIOS} u ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
+                   WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
+                     AND COALESCE(pv.activo, 1) = 1
+                     AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
+                     AND COALESCE(u.disabled, 0) = 0"""
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_6 = f"SELECT imputado_id FROM {T_RECLAMO_IMPUTADOS} WHERE reclamo_id = ? AND COALESCE(activo, 1) = 1"
+
+SQL__RECLAMOS_EDITAR_PROCESO_UPD_7 = f"""UPDATE {T_RECLAMO_IMPUTADOS}
+                        SET activo = 0
+                        WHERE reclamo_id = ?
+                          AND imputado_id IN ({{placeholders}})
+                          AND COALESCE(activo, 1) = 1"""
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_8 = f"""SELECT STUFF((
+                       SELECT DISTINCT ', ' + COALESCE(u.username, '')
+                       FROM {T_RECLAMO_IMPUTADOS} ri
+                       LEFT JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
+                       WHERE ri.reclamo_id = ?
+                         AND COALESCE(ri.activo, 1) = 1
+                       FOR XML PATH(''), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS imputados_resumen"""
+
