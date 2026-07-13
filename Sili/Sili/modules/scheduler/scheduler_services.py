@@ -1434,8 +1434,8 @@ Hola <b>{destinatario_nombre}</b>,
 </div>
 
 <div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
-Tienes acciones correctivas vencidas sin evidencia cargada, agrupadas por orden de mejora (OM)
-en el PDF adjunto.
+Existen oportunidades de mejora (OM) con acciones correctivas vencidas sin evidencia
+cargada, agrupadas por OM en el PDF adjunto.
 </div>
 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
