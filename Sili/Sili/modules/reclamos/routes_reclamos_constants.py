@@ -1,4 +1,4 @@
-# modules/scheduler/routes_reclamos_constants.py
+# modules/reclamos/routes_reclamos_constants.py
 # -*- coding: utf-8 -*-
 """
 Constantes para el módulo de reclamos/oportunidades de mejora.
