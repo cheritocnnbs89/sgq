@@ -827,71 +827,6 @@ def _save_respuesta_equipo_acciones(
 
 
 
-def ensure_reclamo_respuesta_equipo_acciones_schema(conn: sqlite3.Connection):
-    cur = conn.cursor()
-
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_1)
-
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_2)
-
-    cur.execute("PRAGMA table_info(reclamo_respuesta_equipo_acciones)")
-    cols = {r[1] for r in cur.fetchall()}
-
-    required_cols = {
-        "respuesta_equipo_id": "INTEGER NOT NULL DEFAULT 0",
-        "reclamo_id": "INTEGER NOT NULL DEFAULT 0",
-        "imputacion_id": "INTEGER NOT NULL DEFAULT 0",
-        "miembro_id": "INTEGER NOT NULL DEFAULT 0",
-        "tipo": "TEXT NOT NULL DEFAULT ''",
-        "descripcion": "TEXT NOT NULL DEFAULT ''",
-        "fecha_compromiso": "TEXT",
-        "orden": "INTEGER NOT NULL DEFAULT 1",
-        "requiere_evidencia": "INTEGER NOT NULL DEFAULT 0",
-        "cumplido": "INTEGER NOT NULL DEFAULT 0",
-        "fecha_cumplimiento": "TEXT",
-        "reminder_3d_sent": "INTEGER NOT NULL DEFAULT 0",
-        "reminder_2d_sent": "INTEGER NOT NULL DEFAULT 0",
-        "reminder_1d_sent": "INTEGER NOT NULL DEFAULT 0",
-        "escalado_jefe": "INTEGER NOT NULL DEFAULT 0",
-        "activo": "INTEGER NOT NULL DEFAULT 1",
-        "created_at": "TEXT",
-        "created_by": "INTEGER",
-        "updated_at": "TEXT",
-        "updated_by": "INTEGER",
-    }
-
-    for col, ddl in required_cols.items():
-        if col not in cols:
-            cur.execute(f"ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN {col} {ddl}")
-
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_3)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_4)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_5)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_6)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_7)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_8)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_9)
-
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_10)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_11)
-
-
-
-    cur.execute("PRAGMA table_info(reclamo_respuesta_equipo_acciones)")
-    cols = {r[1] for r in cur.fetchall()}
-
-    if "observacion_cumplimiento" not in cols:
-        cur.execute("ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN observacion_cumplimiento TEXT")
-
-    if "updated_at" not in cols:
-        cur.execute("ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN updated_at TEXT")
-
-    if "updated_by" not in cols:
-        cur.execute("ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN updated_by INTEGER")
-
-    conn.commit()
- 
-
 def _get_respuesta_equipo_acciones(conn: sqlite3.Connection, respuesta_equipo_id: int):
     cur = conn.cursor()
     rows = cur.execute(SQL__GET_RESPUESTA_EQUIPO_ACCIONES_SEL_1, (respuesta_equipo_id,)).fetchall()
@@ -8947,8 +8882,6 @@ def register_reclamos_routes(app):
     def reclamo_equipo_accion_guardar_observacion(accion_id):
         db = get_db()
         uid = _current_user_id()
-
-        #ensure_reclamo_respuesta_equipo_acciones_schema(db)
 
         data = request.get_json(silent=True) or {}
         observacion = (data.get("observacion") or "").strip()
