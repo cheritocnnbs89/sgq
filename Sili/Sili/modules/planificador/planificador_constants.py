@@ -30,8 +30,9 @@ TIPOS_SOLICITUD_DEFAULT = [
 
 ESTADOS = {
     "PENDIENTE_APROBACION_JEFE":     "Pend. aprobación jefe",
+    "PENDIENTE_COORDINACION":        "Pend. cotización coordinador",
     "PENDIENTE_APROBACION_GG_VUELO": "Pend. aprobación GG",
-    "PENDIENTE_COORDINACION":        "Pendiente coordinación",
+    "PENDIENTE_INFO_VUELO":          "Pend. información del vuelo",
     "PENDIENTE_APROBACION":          "Pendiente aprobación",
     "PENDIENTE_APROBACION_GERENTE":  "Pendiente aprobación gerente",
     "APROBADA":                      "Aprobada",
@@ -42,8 +43,9 @@ ESTADOS = {
 # Estados que agrupan cada sección de la tabla
 ESTADOS_RESERVADAS  = (
     "PENDIENTE_APROBACION_JEFE",
-    "PENDIENTE_APROBACION_GG_VUELO",
     "PENDIENTE_COORDINACION",
+    "PENDIENTE_APROBACION_GG_VUELO",
+    "PENDIENTE_INFO_VUELO",
 )
 ESTADOS_COORDINADAS   = ("PENDIENTE_APROBACION", "PENDIENTE_APROBACION_GERENTE", "APROBADA")
 ESTADOS_POR_COMPLETAR = ("COORDINADA", "PENDIENTE_LIQUIDACION")
@@ -70,6 +72,13 @@ PARAM_GROUP_TIPOS_GASTO = "PLANIFICADOR_TIPOS_GASTO"
 
 # Fallback si no hay datos en param_values todavía
 TIPOS_GASTO_DEFAULT = ["Alimentación", "Hospedaje", "Ticket aéreo"]
+
+# param_group para motivos de solicitud de Vuelo (parametrizables desde Parámetros generales)
+PARAM_GROUP_MOTIVOS_VUELO = "PLANIFICADOR_MOTIVOS_VUELO"
+
+# Fallback si no hay datos en param_values todavía
+MOTIVOS_VUELO_DEFAULT = ["Capacitación", "Visita a cliente", "Viaje de negocio", "Otros"]
+MOTIVO_VUELO_OTROS = "Otros"
 
 # Semáforo: % ejecutado a partir del cual cambia de verde a amarillo
 SEMAFORO_AMARILLO_PCT = 50  # >= 50% usado → amarillo

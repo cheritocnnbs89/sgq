@@ -534,13 +534,20 @@
             <label class="form-label">Fecha *</label>
             <input class="form-control" type="date" name="fecha" id="nfecha" required>
           </div>
-          <div>
+          <div id="campoPrioridadDiv">
             <label class="form-label">Prioridad</label>
             <select class="form-select" name="prioridad">
               {% for p in prioridades %}<option>{{ p }}</option>{% endfor %}
             </select>
           </div>
-          <div>
+          <div class="full campo-vuelo" id="campoMotivoVueloDiv">
+            <label class="form-label">Motivo *</label>
+            <select class="form-select" name="motivo_vuelo" id="campoMotivoVuelo">
+              <option value="">Seleccione...</option>
+              {% for m in motivos_vuelo %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+            </select>
+          </div>
+          <div id="campoLugarDiv">
             <label class="form-label">Lugar / destino *</label>
             <div class="lugar-input-group">
               <input class="form-control" name="lugar_destino" id="nlugar" required
@@ -606,8 +613,8 @@
                    placeholder="Ej: Guayaquil (GYE)">
           </div>
           <div class="full">
-            <label class="form-label">Descripción de la actividad *</label>
-            <textarea class="form-control textarea-desc" name="descripcion" required
+            <label class="form-label" id="lblDescripcion">Descripción de la actividad *</label>
+            <textarea class="form-control textarea-desc" name="descripcion" id="campoDescripcion" required
                       placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
           </div>
           <div class="campo-vuelo" id="campoOrdenServicioDiv">
@@ -624,12 +631,6 @@
               </label>
             </div>
           </div>
-          <div class="full campo-vuelo" id="campoPptoBaseDiv">
-            <label class="form-label">Presupuesto Base Cero *</label>
-            <input class="form-control" type="number" name="presupuesto_base_cero"
-                   id="campoPptoBase" min="0" step="0.01"
-                   placeholder="Ej: 1500.00">
-          </div>
           <div class="full campo-vuelo" id="campoSaldoPresupDiv">
             <div class="vuelo-presup-ind" id="indicadorPresup">
               <span class="vuelo-presup-dot"></span>
@@ -645,8 +646,9 @@
           </span>
           <span id="recNoticeVuelo" class="d-none">
             La solicitud de vuelo pasará primero a <strong>aprobación de su jefe directo</strong>.<br>
-            Si no hay presupuesto disponible, requerirá además aprobación del <strong>Gerente General de Vuelos</strong>.
-            Una vez aprobada, el coordinador gestionará los pasajes y cargará los documentos correspondientes.
+            Al aprobar, se notificará al <strong>coordinador de vuelos</strong> para que ingrese el valor cotizado del pasaje.<br>
+            Luego pasará a aprobación del <strong>Gerente de Presupuesto</strong> y, una vez aprobada, el coordinador
+            registrará la información del vuelo y cargará los documentos correspondientes.
           </span>
         </div>
       </div>

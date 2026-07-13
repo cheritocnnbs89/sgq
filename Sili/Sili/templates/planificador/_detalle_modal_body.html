@@ -50,6 +50,12 @@
     </strong>
   </div>
   {% endif %}
+  {% if s.tipo == 'Vuelo' and s.motivo_vuelo %}
+  <div class="detail-box"><span>Motivo</span><strong>{{ s.motivo_vuelo }}</strong></div>
+  {% endif %}
+  {% if s.tipo == 'Vuelo' and s.get('datos_ticket') and not s.puede_cotizar_vuelo %}
+  <div class="detail-box"><span>Valor cotizado</span><strong>{{ s.datos_ticket }}</strong></div>
+  {% endif %}
   {% if s.detalle_direccion %}
   <div class="detail-box detail-full"><span>Detalle de dirección</span><strong>{{ s.detalle_direccion }}</strong></div>
   {% endif %}
@@ -115,19 +121,48 @@
 </div>
 {% endif %}
 
-{# ── Vuelo: aprobación Gerente General ── #}
+{# ── Vuelo: coordinador ingresa el valor cotizado del pasaje ── #}
+{% if s.puede_cotizar_vuelo %}
+<div class="action-zone action-zone-green mt-3">
+  <h3><i class="bi bi-cash-coin me-1"></i>Cotización del pasaje</h3>
+  <p class="small text-muted mb-2">
+    Ingresa el valor cotizado del pasaje aéreo para <strong>{{ s.solicitante_nombre }}</strong>.
+    Al guardar, pasará a aprobación del Gerente de Presupuesto.
+  </p>
+  <form method="post" action="{{ url_for('planificador.planificador_vuelo_cotizar', sid=s.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-2">
+      <div class="col-12">
+        <label class="form-label">Valor cotizado del pasaje *</label>
+        <input class="form-control form-control-sm" type="text" name="valor_cotizado"
+               placeholder="Ej: $350.00 - Aerolínea X, vuelo directo" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Observación <span class="text-muted">(opcional)</span></label>
+        <textarea class="form-control form-control-sm textarea-obs" name="observacion"
+                  placeholder="Detalle adicional de la cotización."></textarea>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="submit" class="btn btn-success btn-sm">
+        <i class="bi bi-send-check me-1"></i>Enviar a aprobación
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{# ── Vuelo: aprobación Gerente de Presupuesto ── #}
 {% if s.puede_aprobar_gg_vuelo %}
 <div class="action-zone action-zone-blue mt-3">
-  <h3><i class="bi bi-building me-1"></i>Aprobación — Gerente General</h3>
+  <h3><i class="bi bi-building me-1"></i>Aprobación — Gerente de Presupuesto</h3>
   <p class="small text-muted mb-2">
-    {% if not s.get('centro_costo_id') %}
-      Esta solicitud llega a tu aprobación porque <strong>no tiene un centro de costo asignado</strong> (sin presupuesto configurado). Tu autorización es necesaria para continuar.
-    {% elif s.get('requiere_aprobacion_presupuesto') %}
-      Esta solicitud llega a tu aprobación porque <strong>el presupuesto disponible es insuficiente</strong> para cubrir el monto solicitado. Tu autorización es necesaria para continuar.
-    {% else %}
-      Esta solicitud requiere tu autorización como Gerente General para continuar.
-    {% endif %}
+    El coordinador cotizó el pasaje de <strong>{{ s.solicitante_nombre }}</strong>.
+    Revisa el valor y aprueba o rechaza para continuar.
   </p>
+  {% if s.get('datos_ticket') %}
+  <div class="detail-box mb-2"><span>Valor cotizado</span><strong>{{ s.datos_ticket }}</strong></div>
+  {% endif %}
   <label class="form-label">Observación</label>
   <textarea class="form-control form-control-sm textarea-obs" id="obsGGVuelo{{ s.id }}"
             placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
@@ -247,14 +282,6 @@
         <label class="form-label">Datos de la reservación del ticket aéreo *</label>
         <textarea class="form-control form-control-sm textarea-obs" name="observacion_coordinador"
                   placeholder="N° de reserva, aerolínea, vuelo, etc." required></textarea>
-      </div>
-      <div class="col-12">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="chkHotelDetalle">
-          <label class="form-check-label" for="chkHotelDetalle">Incluye reservación de hotel</label>
-        </div>
-        <textarea class="form-control form-control-sm mt-1 d-none" id="txtHotelDetalle"
-                  name="datos_hotel" placeholder="Nombre del hotel, N° reserva, fechas..."></textarea>
       </div>
       <div class="col-12">
         <label class="form-label">Adjuntar documento (pasaje/boleto)</label>

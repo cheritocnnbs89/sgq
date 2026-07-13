@@ -156,11 +156,20 @@ def puede_aprobar_gg_vuelo(solicitud, usuario_id, ctx):
     return solicitud.get("tipo") in ctx.get("tipos_gg_vuelo", [])
 
 
-def puede_completar_vuelo(solicitud, usuario_id, ctx):
-    """Coordinador registra gestión de Vuelo (pasa a COORDINADA)."""
+def puede_cotizar_vuelo(solicitud, usuario_id, ctx):
+    """Coordinador ingresa el valor cotizado del pasaje (pasa a aprobación GG)."""
     if solicitud.get("tipo") != "Vuelo":
         return False
     if solicitud.get("estado") != "PENDIENTE_COORDINACION":
+        return False
+    return ctx["es_admin"] or solicitud.get("tipo") in ctx["tipos_coordinador"]
+
+
+def puede_completar_vuelo(solicitud, usuario_id, ctx):
+    """Coordinador registra info del vuelo y adjuntos (pasa a COORDINADA)."""
+    if solicitud.get("tipo") != "Vuelo":
+        return False
+    if solicitud.get("estado") != "PENDIENTE_INFO_VUELO":
         return False
     return ctx["es_admin"] or solicitud.get("tipo") in ctx["tipos_coordinador"]
 
@@ -259,6 +268,7 @@ def estado_badge_class(estado):
         "PENDIENTE_APROBACION_JEFE":     "bg-warning text-dark",
         "PENDIENTE_APROBACION_GG_VUELO": "bg-orange text-dark",
         "PENDIENTE_COORDINACION":        "bg-warning text-dark",
+        "PENDIENTE_INFO_VUELO":          "bg-warning text-dark",
         "PENDIENTE_APROBACION":          "bg-info text-dark",
         "PENDIENTE_APROBACION_GERENTE":  "bg-primary",
         "APROBADA":                      "bg-success",

@@ -154,11 +154,11 @@ SQL_INSERT_SOLICITUD = f"""
          fecha_retorno, punto_salida, punto_destino,
          requiere_hospedaje, orden_servicio, centro_costo_id,
          requiere_aprobacion_presupuesto,
-         gerente_id, gerente_nombre)
+         gerente_id, gerente_nombre, motivo_vuelo)
     OUTPUT INSERTED.id
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?, ?,
-            ?, ?)
+            ?, ?, ?)
 """
 
 SQL_UPDATE_REAGENDAR = f"""
@@ -174,7 +174,7 @@ SQL_UPDATE_REAGENDAR = f"""
     WHERE id = ? AND activo = 1
 """
 
-# ── Vuelo: aprobación jefe → sin problema presupuestal → coordinación
+# ── Vuelo: aprobación jefe directo → siempre pasa a cotización del coordinador
 SQL_VUELO_APROBAR_JEFE_OK = f"""
     UPDATE {TBL_SOLICITUDES} SET
         estado                = 'PENDIENTE_COORDINACION',
@@ -185,10 +185,22 @@ SQL_VUELO_APROBAR_JEFE_OK = f"""
     WHERE id = ? AND activo = 1
 """
 
-# ── Vuelo: aprobación jefe → sin presupuesto → requiere GG
-SQL_VUELO_APROBAR_JEFE_GG = f"""
+# ── Vuelo: coordinador ingresa el valor cotizado del pasaje → pasa a aprobación GG
+SQL_VUELO_COTIZAR = f"""
     UPDATE {TBL_SOLICITUDES} SET
-        estado                = 'PENDIENTE_APROBACION_GG_VUELO',
+        estado                  = 'PENDIENTE_APROBACION_GG_VUELO',
+        datos_ticket            = ?,
+        observacion_coordinador = ?,
+        coordinador_id          = ?,
+        coordinador_nombre      = ?,
+        fecha_actualizacion     = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Vuelo: GG aprueba la cotización → coordinador debe ingresar info del vuelo
+SQL_VUELO_APROBAR_GG = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado                = 'PENDIENTE_INFO_VUELO',
         aprobador_id          = ?,
         aprobador_nombre      = ?,
         observacion_aprobador = ?,
@@ -196,11 +208,14 @@ SQL_VUELO_APROBAR_JEFE_GG = f"""
     WHERE id = ? AND activo = 1
 """
 
-# ── Vuelo: GG aprueba → coordinación
-SQL_VUELO_APROBAR_GG = f"""
+# ── Vuelo: GG rechaza la cotización → vuelve al coordinador para recotizar
+SQL_VUELO_RECHAZAR_GG = f"""
     UPDATE {TBL_SOLICITUDES} SET
-        estado              = 'PENDIENTE_COORDINACION',
-        fecha_actualizacion = GETDATE()
+        estado                = 'PENDIENTE_COORDINACION',
+        aprobador_id          = ?,
+        aprobador_nombre      = ?,
+        observacion_aprobador = ?,
+        fecha_actualizacion   = GETDATE()
     WHERE id = ? AND activo = 1
 """
 
@@ -461,6 +476,19 @@ SQL_GET_ROLES_PARA_TIPO = f"""
 # ──────────────────────────────────────────────
 
 SQL_GET_TIPOS_SOLICITUD = f"""
+    SELECT pv.nombre
+    FROM {TBL_PARAM_VALUES} pv
+    JOIN {TBL_PARAM_GROUPS} pg ON pg.id = pv.group_id
+    WHERE pg.nombre = ?
+      AND pv.activo = 1
+    ORDER BY pv.orden, pv.nombre
+"""
+
+# ──────────────────────────────────────────────
+# Motivos de solicitud de Vuelo
+# ──────────────────────────────────────────────
+
+SQL_GET_MOTIVOS_VUELO = f"""
     SELECT pv.nombre
     FROM {TBL_PARAM_VALUES} pv
     JOIN {TBL_PARAM_GROUPS} pg ON pg.id = pv.group_id

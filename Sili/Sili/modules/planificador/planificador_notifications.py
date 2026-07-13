@@ -428,7 +428,7 @@ def notif_pendiente_gerente(solicitud_id: int, tipo: str, area: str, fecha: str,
 # ──────────────────────────────────────────────────────────
 
 def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
-                                descripcion: str, presupuesto: str,
+                                descripcion: str, motivo: str,
                                 solicitante_nombre: str,
                                 jefe_id: int | None, jefe_nombre: str,
                                 es_reagenda: bool = False) -> None:
@@ -445,7 +445,7 @@ def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
         ("Área solicitante",  area),
         ("Fecha solicitada",  fecha),
         ("Descripción",       descripcion or "—"),
-        ("Presupuesto B.C.",  presupuesto or "—"),
+        ("Motivo",            motivo or "—"),
         ("Solicitante",       solicitante_nombre),
     ]
     nota = "Ingresa al SGQ para aprobar o rechazar esta solicitud."
@@ -457,33 +457,33 @@ def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
 
 
 # ──────────────────────────────────────────────────────────
-# 8. Vuelo: notificar al GG cuando no hay presupuesto
+# 8. Vuelo: notificar al Gerente de Presupuesto — coordinador cotizó el pasaje
 # ──────────────────────────────────────────────────────────
 
 def notif_vuelo_pendiente_gg(solicitud_id: int, area: str, fecha: str,
-                              descripcion: str, presupuesto: str,
-                              solicitante_nombre: str, jefe_nombre: str,
+                              descripcion: str, valor_cotizado: str,
+                              solicitante_nombre: str, coordinador_nombre: str,
                               gg_id: int | None, gg_nombre: str) -> None:
     if not gg_id:
         return
-    subject = f"[Planificador] Vuelo #{solicitud_id} sin presupuesto — requiere su aprobación"
-    titulo  = f"Solicitud de Vuelo #{solicitud_id} — Aprobación Gerente General"
-    saludo  = (f"Estimado/a <strong>{gg_nombre}</strong>, el jefe <strong>{jefe_nombre}</strong> "
-               f"aprobó una solicitud de Vuelo de <strong>{solicitante_nombre}</strong>, "
-               f"pero no existe presupuesto disponible. Requiere su autorización.")
+    subject = f"[Planificador] Vuelo #{solicitud_id} cotizado — requiere su aprobación"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} — Aprobación Gerente de Presupuesto"
+    saludo  = (f"Estimado/a <strong>{gg_nombre}</strong>, el coordinador <strong>{coordinador_nombre}</strong> "
+               f"cotizó el pasaje de la solicitud de Vuelo de <strong>{solicitante_nombre}</strong>. "
+               f"Requiere su autorización para continuar.")
     filas   = [
-        ("N° solicitud",     str(solicitud_id)),
-        ("Área solicitante", area),
-        ("Fecha solicitada", fecha),
-        ("Descripción",      descripcion or "—"),
-        ("Presupuesto B.C.", presupuesto or "—"),
-        ("Solicitante",      solicitante_nombre),
-        ("Aprobado por jefe", jefe_nombre),
+        ("N° solicitud",       str(solicitud_id)),
+        ("Área solicitante",   area),
+        ("Fecha solicitada",   fecha),
+        ("Descripción",        descripcion or "—"),
+        ("Valor cotizado",     valor_cotizado or "—"),
+        ("Solicitante",        solicitante_nombre),
+        ("Cotizado por",       coordinador_nombre),
     ]
     nota = "Ingresa al SGQ para aprobar o rechazar esta solicitud."
-    html = _email_html("PLANIFICADOR · VUELO — APROBACIÓN GG", titulo, saludo, filas, nota)
+    html = _email_html("PLANIFICADOR · VUELO — APROBACIÓN GERENTE DE PRESUPUESTO", titulo, saludo, filas, nota)
     _inapp(gg_id, subject,
-           f"Vuelo #{solicitud_id} de {solicitante_nombre} sin presupuesto — requiere aprobación GG")
+           f"Vuelo #{solicitud_id} de {solicitante_nombre} cotizado — requiere su aprobación")
     email_g = repo.get_email_by_usuario_id(gg_id)
     _email([email_g] if email_g else [], subject, html)
 
@@ -496,10 +496,11 @@ def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
                                        descripcion: str, solicitante_nombre: str,
                                        aprobador_nombre: str) -> None:
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
-    subject = f"[Planificador] Vuelo #{solicitud_id} aprobado — pendiente de coordinación"
+    subject = f"[Planificador] Vuelo #{solicitud_id} aprobado — pendiente de cotización"
     titulo  = f"Solicitud de Vuelo #{solicitud_id} aprobada"
     saludo  = (f"La solicitud de Vuelo de <strong>{solicitante_nombre}</strong> fue aprobada "
-               f"por <strong>{aprobador_nombre}</strong> y requiere que gestione los pasajes.")
+               f"por <strong>{aprobador_nombre}</strong> y requiere que ingreses el valor "
+               f"cotizado del pasaje.")
     filas   = [
         ("N° solicitud",    str(solicitud_id)),
         ("Área solicitante", area),
@@ -507,12 +508,74 @@ def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
         ("Descripción",     descripcion or "—"),
         ("Aprobado por",    aprobador_nombre),
     ]
-    nota = "Ingresa al SGQ, gestiona los pasajes y carga los archivos de soporte."
-    html = _email_html("PLANIFICADOR · VUELO — COORDINACIÓN", titulo, saludo, filas, nota)
+    nota = "Ingresa al SGQ y registra el valor cotizado del pasaje aéreo."
+    html = _email_html("PLANIFICADOR · VUELO — COTIZACIÓN", titulo, saludo, filas, nota)
     emails = []
     for c in coordinadores:
         _inapp(c["id"], subject,
-               f"Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} listo para coordinación")
+               f"Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} pendiente de cotización")
+        if c.get("email"):
+            emails.append(c["email"])
+    _email(emails, subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# 9b. Vuelo: GG aprueba la cotización → coordinador ingresa info del vuelo
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_gg_aprobo_pendiente_info(solicitud_id: int, area: str, fecha: str,
+                                          descripcion: str, solicitante_nombre: str,
+                                          gg_nombre: str) -> None:
+    coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
+    subject = f"[Planificador] Vuelo #{solicitud_id} — cotización aprobada"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} — cotización aprobada"
+    saludo  = (f"El Gerente de Presupuesto <strong>{gg_nombre}</strong> aprobó la cotización "
+               f"del vuelo de <strong>{solicitante_nombre}</strong>. Ya puedes ingresar la "
+               f"información del vuelo y adjuntar los documentos.")
+    filas   = [
+        ("N° solicitud",    str(solicitud_id)),
+        ("Área solicitante", area),
+        ("Fecha",           fecha),
+        ("Descripción",     descripcion or "—"),
+        ("Aprobado por",    gg_nombre),
+    ]
+    nota = "Ingresa al SGQ, registra la reservación y adjunta el boleto."
+    html = _email_html("PLANIFICADOR · VUELO — INFO DEL VUELO", titulo, saludo, filas, nota)
+    emails = []
+    for c in coordinadores:
+        _inapp(c["id"], subject,
+               f"Vuelo #{solicitud_id} de {solicitante_nombre} — cotización aprobada, registra la reservación")
+        if c.get("email"):
+            emails.append(c["email"])
+    _email(emails, subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# 9c. Vuelo: GG rechaza la cotización → coordinador debe recotizar
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_gg_rechazo_coordinador(solicitud_id: int, area: str, fecha: str,
+                                        motivo: str, solicitante_nombre: str,
+                                        gg_nombre: str) -> None:
+    coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
+    subject = f"[Planificador] Vuelo #{solicitud_id} — cotización rechazada"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} — cotización rechazada"
+    saludo  = (f"El Gerente de Presupuesto <strong>{gg_nombre}</strong> rechazó la cotización "
+               f"del vuelo de <strong>{solicitante_nombre}</strong>. Por favor reagenda o "
+               f"busca mejores precios y vuelve a cotizar.")
+    filas   = [
+        ("N° solicitud",    str(solicitud_id)),
+        ("Área solicitante", area),
+        ("Fecha",           fecha),
+        ("Rechazado por",   gg_nombre),
+        ("Motivo",          motivo or "—"),
+    ]
+    nota = "Ingresa al SGQ y registra una nueva cotización."
+    html = _email_html("PLANIFICADOR · VUELO — RECOTIZAR", titulo, saludo, filas, nota)
+    emails = []
+    for c in coordinadores:
+        _inapp(c["id"], subject,
+               f"Vuelo #{solicitud_id} de {solicitante_nombre} — cotización rechazada, debes recotizar")
         if c.get("email"):
             emails.append(c["email"])
     _email(emails, subject, html)

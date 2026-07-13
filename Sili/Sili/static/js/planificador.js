@@ -262,16 +262,6 @@
     container.querySelectorAll('[data-min-today]').forEach(function (el) {
       el.min = el.dataset.minToday;
     });
-    /* Toggle hotel en sección de completar vuelo */
-    var chkH = container.querySelector('#chkHotelDetalle');
-    var txtH = container.querySelector('#txtHotelDetalle');
-    if (chkH && txtH) {
-      chkH.addEventListener('change', function () {
-        txtH.classList.toggle('d-none', !chkH.checked);
-        txtH.required = chkH.checked;
-        if (!chkH.checked) txtH.value = '';
-      });
-    }
     /* Preview hora salida / regreso */
     var inpHI  = container.querySelector('#vueloHoraInicioDetalle');
     var inpHF  = container.querySelector('#vueloHoraFinDetalle');
@@ -698,8 +688,14 @@
     { divId: 'campoPuntoDestinoDiv',  inputId: 'campoPuntoDestino',     required: true  },
     { divId: 'campoOrdenServicioDiv', inputId: 'campoOrdenServicio',    required: false },
     { divId: 'campoHospedajeDiv',     inputId: 'campoRequiereHospedaje',required: false },
-    { divId: 'campoPptoBaseDiv',      inputId: 'campoPptoBase',         required: true  },
+    { divId: 'campoMotivoVueloDiv',   inputId: 'campoMotivoVuelo',      required: true  },
     { divId: 'campoSaldoPresupDiv',   inputId: null,                    required: false },
+  ];
+
+  // Campos genéricos que NO aplican para Vuelo (se ocultan y dejan de ser requeridos)
+  var CAMPOS_NO_VUELO = [
+    { divId: 'campoPrioridadDiv', inputId: null,           required: false },
+    { divId: 'campoLugarDiv',     inputId: 'nlugar',        required: true  },
   ];
 
   function toggleCampoVuelo(tipoVal) {
@@ -744,6 +740,31 @@
     if (campoContactoDiv)   campoContactoDiv.style.display   = esVuelo ? 'none' : '';
     if (campoDetalleDirDiv) campoDetalleDirDiv.style.display = esVuelo ? 'none' : '';
 
+    // Campos genéricos que Vuelo NO usa (Prioridad, Lugar/destino)
+    CAMPOS_NO_VUELO.forEach(function (c) {
+      var div = document.getElementById(c.divId);
+      if (div) div.style.display = esVuelo ? 'none' : '';
+      if (c.inputId) {
+        var inp = document.getElementById(c.inputId);
+        if (inp) {
+          inp.required = !esVuelo && c.required;
+          if (esVuelo) inp.value = '';
+        }
+      }
+    });
+
+    // "Descripción de la actividad" se llama "Observación" para Vuelo
+    var lblDescripcion = document.getElementById('lblDescripcion');
+    if (lblDescripcion) {
+      lblDescripcion.textContent = esVuelo ? 'Observación *' : 'Descripción de la actividad *';
+    }
+    var campoDescripcion = document.getElementById('campoDescripcion');
+    if (campoDescripcion) {
+      campoDescripcion.placeholder = esVuelo
+        ? 'Detalle la observación de la solicitud.'
+        : 'Detalle qué debe entregar, recibir o gestionar.';
+    }
+
     if (esVuelo) fetchSaldoPresupuesto();
 
     // Mensaje informativo según tipo
@@ -751,6 +772,15 @@
     var noticeVuelo  = document.getElementById('recNoticeVuelo');
     if (noticeNormal) noticeNormal.classList.toggle('d-none', esVuelo);
     if (noticeVuelo)  noticeVuelo.classList.toggle('d-none', !esVuelo);
+  }
+
+  function actualizarPlaceholderObservacionPorMotivo() {
+    var selMotivo = document.getElementById('campoMotivoVuelo');
+    var campoDescripcion = document.getElementById('campoDescripcion');
+    if (!selMotivo || !campoDescripcion) return;
+    if (selMotivo.value === 'Otros') {
+      campoDescripcion.placeholder = 'Especifique el motivo de la solicitud.';
+    }
   }
 
   function validarFechasVuelo() {
@@ -816,6 +846,12 @@
         toggleCampoVuelo(this.value);
       });
       toggleCampoVuelo(selectTipo.value);
+    }
+
+    /* Motivo de vuelo: pista visual cuando se elige "Otros" */
+    var selectMotivoVuelo = document.getElementById('campoMotivoVuelo');
+    if (selectMotivoVuelo) {
+      selectMotivoVuelo.addEventListener('change', actualizarPlaceholderObservacionPorMotivo);
     }
 
     /* Validación de fechas Vuelo */

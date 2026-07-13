@@ -22,6 +22,7 @@ from .planificador_constants import (
     ESTADOS, PRIORIDADES,
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
     ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR, ESTADOS_ATENDIDAS,
+    MOTIVO_VUELO_OTROS,
 )
 from flask import Response
 
@@ -77,6 +78,7 @@ def solicitudes():
         d["puede_reagendar"]          = svc.puede_reagendar(s, u["id"], ctx)
         d["puede_eliminar"]           = svc.puede_eliminar(s, u["id"], ctx)
         d["puede_aprobar_jefe_vuelo"] = svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx)
+        d["puede_cotizar_vuelo"]      = svc.puede_cotizar_vuelo(s, u["id"], ctx)
         d["puede_aprobar_gg_vuelo"]   = svc.puede_aprobar_gg_vuelo(s, u["id"], ctx)
         d["puede_completar_vuelo"]    = svc.puede_completar_vuelo(s, u["id"], ctx)
         d["estado_label"]    = svc.estado_label(s["estado"])
@@ -150,6 +152,7 @@ def solicitudes():
         por_aprobar=por_aprobar,
         filters=filters,
         tipos=tipos_solicitud,
+        motivos_vuelo=repo.get_motivos_vuelo(),
         estados=ESTADOS,
         prioridades=PRIORIDADES,
         ctx=ctx,
@@ -189,6 +192,7 @@ def detalle(sid):
     d["puede_reagendar"]         = svc.puede_reagendar(s, u["id"], ctx)
     d["puede_eliminar"]          = svc.puede_eliminar(s, u["id"], ctx)
     d["puede_aprobar_jefe_vuelo"] = svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx)
+    d["puede_cotizar_vuelo"]      = svc.puede_cotizar_vuelo(s, u["id"], ctx)
     d["puede_aprobar_gg_vuelo"]   = svc.puede_aprobar_gg_vuelo(s, u["id"], ctx)
     d["puede_completar_vuelo"]         = svc.puede_completar_vuelo(s, u["id"], ctx)
     d["puede_marcar_realizado_vuelo"]  = svc.puede_marcar_realizado_vuelo(s, u["id"], ctx)
@@ -208,8 +212,8 @@ def detalle(sid):
     _estado_bloqueado_general = s["estado"] in ("COMPLETADA", "RECHAZADA",
                                                 "PENDIENTE_APROBACION_JEFE",
                                                 "PENDIENTE_APROBACION_GG_VUELO")
-    # Para Vuelo en PENDIENTE_COORDINACION el adjunto va dentro del form de completar vuelo
-    _es_vuelo_pendiente_coord = (s["tipo"] == "Vuelo" and s["estado"] == "PENDIENTE_COORDINACION")
+    # Para Vuelo en PENDIENTE_INFO_VUELO el adjunto va dentro del form de completar vuelo
+    _es_vuelo_pendiente_coord = (s["tipo"] == "Vuelo" and s["estado"] == "PENDIENTE_INFO_VUELO")
     puede_subir_adjunto = (
         not _es_vuelo_pendiente_coord
         and (
@@ -256,15 +260,14 @@ def crear():
     lugar = request.form.get("lugar_destino", "").strip()
     fecha = request.form.get("fecha", "").strip()
 
-    if not all([tipo, area, desc, lugar, fecha]):
+    campos_base = [tipo, area, desc, fecha] if tipo == "Vuelo" else [tipo, area, desc, lugar, fecha]
+    if not all(campos_base):
         flash("Todos los campos obligatorios deben completarse.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
     if tipo not in repo.get_tipos_solicitud():
         flash("Tipo de solicitud no válido.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
-    ppto_raw = request.form.get("presupuesto_base_cero", "").strip()
-    ppto     = None
     fecha_retorno   = None
     punto_salida    = None
     punto_destino   = None
@@ -272,17 +275,15 @@ def crear():
     orden_servicio  = None
     cc_id           = None
     requiere_aprov  = 0
+    motivo_vuelo    = None
 
     if tipo == "Vuelo":
-        if not ppto_raw:
-            flash("El Presupuesto Base Cero es obligatorio para solicitudes de tipo Vuelo.", "warning")
+        motivo_vuelo = request.form.get("motivo_vuelo", "").strip()
+        if not motivo_vuelo:
+            flash("El motivo de la solicitud de Vuelo es obligatorio.", "warning")
             return redirect(url_for("planificador.planificador_solicitudes"))
-        try:
-            ppto = float(ppto_raw)
-            if ppto < 0:
-                raise ValueError
-        except ValueError:
-            flash("El Presupuesto Base Cero debe ser un número positivo.", "warning")
+        if motivo_vuelo == MOTIVO_VUELO_OTROS and not desc:
+            flash("Debe indicar el motivo en el campo Observación.", "warning")
             return redirect(url_for("planificador.planificador_solicitudes"))
 
         fecha_retorno  = request.form.get("fecha_retorno", "").strip() or None
@@ -338,7 +339,6 @@ def crear():
         "solicitante_id":                 u["id"],
         "solicitante_nombre":             u["nombre"],
         "ciudad":                         ciudad,
-        "presupuesto_base_cero":          ppto,
         "fecha_retorno":                  fecha_retorno,
         "punto_salida":                   punto_salida,
         "punto_destino":                  punto_destino,
@@ -348,13 +348,14 @@ def crear():
         "requiere_aprobacion_presupuesto": requiere_aprov,
         "gerente_id":                     jefe_id_vuelo,
         "gerente_nombre":                 jefe_nombre_vuelo,
+        "motivo_vuelo":                   motivo_vuelo,
     })
 
     if tipo == "Vuelo":
         # Notificar al jefe directo para que apruebe
         try:
             notif.notif_vuelo_pendiente_jefe(
-                sid, area, fecha, desc, ppto_raw or "—",
+                sid, area, fecha, desc, motivo_vuelo or "—",
                 u["nombre"], jefe_id_vuelo, jefe_nombre_vuelo or "—",
             )
         except Exception:
@@ -759,7 +760,7 @@ def reagendar(sid):
             notif.notif_vuelo_pendiente_jefe(
                 sid, s["area_solicitante"], nueva_fecha,
                 s.get("descripcion", ""),
-                str(s.get("presupuesto_base_cero") or "—"),
+                s.get("motivo_vuelo") or "—",
                 s["solicitante_nombre"], jefe_id, jefe_nom,
                 es_reagenda=True,
             )
@@ -831,31 +832,15 @@ def vuelo_aprobar_jefe(sid):
     if not s or not svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx):
         abort(403)
     obs = request.form.get("observacion", "").strip()
-    requiere_gg = not bool(s.get("centro_costo_id")) or bool(s.get("requiere_aprobacion_presupuesto"))
-    repo.aprobar_jefe_vuelo(sid, u["id"], u["nombre"], obs, requiere_gg)
-    if requiere_gg:
-        # Notificar al GG de Vuelos configurado
-        try:
-            gg_lista = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
-            for gg in gg_lista[1]:  # aprobadores del tipo Vuelo = GG
-                notif.notif_vuelo_pendiente_gg(
-                    sid, s["area_solicitante"], str(s["fecha"]),
-                    s.get("descripcion", ""), str(s.get("presupuesto_base_cero") or "—"),
-                    s["solicitante_nombre"], u["nombre"],
-                    gg.get("id"), gg.get("nombre", "—"),
-                )
-        except Exception:
-            pass
-        flash("Vuelo aprobado. Sin presupuesto — pasa a aprobación del Gerente General.", "info")
-    else:
-        try:
-            notif.notif_vuelo_aprobada_coordinacion(
-                sid, s["area_solicitante"], str(s["fecha"]),
-                s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
-            )
-        except Exception:
-            pass
-        flash("Vuelo aprobado. Pasa a coordinación.", "success")
+    repo.aprobar_jefe_vuelo(sid, u["id"], u["nombre"], obs)
+    try:
+        notif.notif_vuelo_aprobada_coordinacion(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+        )
+    except Exception:
+        pass
+    flash("Vuelo aprobado. Pasa al coordinador para cotizar el pasaje.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -903,35 +888,55 @@ def vuelo_aprobar_jefe_masivo():
         s = repo.get_solicitud_by_id(sid)
         if not s or not svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx):
             continue
-        requiere_gg = not bool(s.get("centro_costo_id")) or bool(s.get("requiere_aprobacion_presupuesto"))
-        repo.aprobar_jefe_vuelo(sid, u["id"], u["nombre"], "", requiere_gg)
-        if requiere_gg:
-            try:
-                gg_lista = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
-                for gg in gg_lista[1]:
-                    notif.notif_vuelo_pendiente_gg(
-                        sid, s["area_solicitante"], str(s["fecha"]),
-                        s.get("descripcion", ""), str(s.get("presupuesto_base_cero") or "—"),
-                        s["solicitante_nombre"], u["nombre"],
-                        gg.get("id"), gg.get("nombre", "—"),
-                    )
-            except Exception:
-                pass
-        else:
-            try:
-                notif.notif_vuelo_aprobada_coordinacion(
-                    sid, s["area_solicitante"], str(s["fecha"]),
-                    s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
-                )
-            except Exception:
-                pass
+        repo.aprobar_jefe_vuelo(sid, u["id"], u["nombre"], "")
+        try:
+            notif.notif_vuelo_aprobada_coordinacion(
+                sid, s["area_solicitante"], str(s["fecha"]),
+                s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+            )
+        except Exception:
+            pass
         aprobadas += 1
     flash(f"{aprobadas} solicitud(es) aprobada(s).", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
 # ─────────────────────────────────────────────────────────────
-# Vuelo: aprobación Gerente General (sin presupuesto)
+# Vuelo: coordinador ingresa el valor cotizado del pasaje
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/vuelo/cotizar", methods=["POST"],
+                       endpoint="planificador_vuelo_cotizar")
+@require_login
+def vuelo_cotizar(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_cotizar_vuelo(s, u["id"], ctx):
+        abort(403)
+    valor = request.form.get("valor_cotizado", "").strip()
+    obs   = request.form.get("observacion", "").strip()
+    if not valor:
+        flash("Debe ingresar el valor cotizado del pasaje.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+    repo.cotizar_vuelo(sid, u["id"], u["nombre"], valor, obs)
+    try:
+        gg_lista = repo.get_gerentes_presupuesto_para_tipo("Vuelo")
+        for gg in gg_lista:
+            notif.notif_vuelo_pendiente_gg(
+                sid, s["area_solicitante"], str(s["fecha"]),
+                s.get("descripcion", ""), valor,
+                s["solicitante_nombre"], u["nombre"],
+                gg.get("id"), gg.get("nombre", "—"),
+            )
+    except Exception:
+        pass
+    flash("Cotización registrada. Pasa a aprobación del Gerente de Presupuesto.", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Vuelo: aprobación Gerente de Presupuesto (revisa la cotización)
 # ─────────────────────────────────────────────────────────────
 
 @planificador_bp.route("/solicitudes/<int:sid>/vuelo/aprobar-gg", methods=["POST"],
@@ -946,13 +951,13 @@ def vuelo_aprobar_gg(sid):
     obs = request.form.get("observacion", "").strip()
     repo.aprobar_gg_vuelo(sid, u["id"], u["nombre"], obs)
     try:
-        notif.notif_vuelo_aprobada_coordinacion(
+        notif.notif_vuelo_gg_aprobo_pendiente_info(
             sid, s["area_solicitante"], str(s["fecha"]),
             s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
         )
     except Exception:
         pass
-    flash("Vuelo aprobado por GG. Pasa a coordinación.", "success")
+    flash("Cotización aprobada. Pasa al coordinador para ingresar la información del vuelo.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -969,15 +974,15 @@ def vuelo_rechazar_gg(sid):
     if not obs:
         flash("Debe indicar el motivo del rechazo.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
-    repo.rechazar_vuelo(sid, u["id"], u["nombre"], obs)
+    repo.rechazar_gg_vuelo(sid, u["id"], u["nombre"], obs)
     try:
-        notif.notif_vuelo_rechazada(
+        notif.notif_vuelo_gg_rechazo_coordinador(
             sid, s["area_solicitante"], str(s["fecha"]),
-            obs, s["solicitante_nombre"], s["solicitante_id"], u["nombre"],
+            obs, s["solicitante_nombre"], u["nombre"],
         )
     except Exception:
         pass
-    flash("Solicitud de Vuelo rechazada por GG.", "warning")
+    flash("Cotización rechazada. Vuelve al coordinador para recotizar.", "warning")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -1002,7 +1007,7 @@ def vuelo_aprobar_gg_masivo():
             continue
         repo.aprobar_gg_vuelo(sid, u["id"], u["nombre"], "")
         try:
-            notif.notif_vuelo_aprobada_coordinacion(
+            notif.notif_vuelo_gg_aprobo_pendiente_info(
                 sid, s["area_solicitante"], str(s["fecha"]),
                 s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
             )
@@ -1045,7 +1050,7 @@ def vuelo_coordinar(sid):
         try:
             notif.notif_vuelo_pendiente_jefe(
                 sid, s["area_solicitante"], nueva_fecha,
-                s.get("descripcion", ""), str(s.get("presupuesto_base_cero") or "—"),
+                s.get("descripcion", ""), s.get("motivo_vuelo") or "—",
                 s["solicitante_nombre"],
                 s.get("gerente_id"), s.get("gerente_nombre", "—"),
             )
@@ -1121,7 +1126,6 @@ def vuelo_completar(sid):
     hora_inicio = request.form.get("hora_inicio", "").strip() or None
     hora_fin    = request.form.get("hora_fin", "").strip() or None
     aeropuerto  = request.form.get("aeropuerto", "").strip()
-    hotel       = request.form.get("datos_hotel", "").strip()
 
     partes = []
     if aeropuerto:
@@ -1129,8 +1133,6 @@ def vuelo_completar(sid):
     obs_base = request.form.get("observacion_coordinador", "").strip()
     if obs_base:
         partes.append(obs_base)
-    if hotel:
-        partes.append(f"Hotel: {hotel}")
     obs = "\n".join(partes)
 
     if not obs_base and not aeropuerto:

@@ -9,8 +9,9 @@ las constantes de dominio en planificador_constants.py.
 from modules.db import get_db
 from .planificador_constants import (
     PARAM_GROUP_TIPOS, TIPOS_SOLICITUD_DEFAULT,
-    ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROLES_GERENTE,
+    ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO, ROLES_GERENTE,
     PARAM_GROUP_TIPOS_GASTO, TIPOS_GASTO_DEFAULT, SEMAFORO_AMARILLO_PCT,
+    PARAM_GROUP_MOTIVOS_VUELO, MOTIVOS_VUELO_DEFAULT,
 )
 from .planificador_querys import (
     SQL_GET_ALL_SOLICITUDES,
@@ -62,9 +63,11 @@ from .planificador_querys import (
     SQL_GET_SOLICITUD_LOGS,
     SQL_INSERT_NOTIFY_INAPP,
     SQL_VUELO_APROBAR_JEFE_OK,
-    SQL_VUELO_APROBAR_JEFE_GG,
+    SQL_VUELO_COTIZAR,
     SQL_VUELO_APROBAR_GG,
+    SQL_VUELO_RECHAZAR_GG,
     SQL_VUELO_COMPLETAR,
+    SQL_GET_MOTIVOS_VUELO,
     SQL_GET_SOLICITUDES_PENDIENTE_JEFE,
     SQL_GET_SOLICITUDES_PENDIENTE_GG_VUELO,
     SQL_UPDATE_COORDINAR_VUELO,
@@ -311,6 +314,7 @@ def crear_solicitud(data):
         data.get("requiere_aprobacion_presupuesto", 0),
         data.get("gerente_id"),
         data.get("gerente_nombre"),
+        data.get("motivo_vuelo"),
     ))
     row = cur.fetchone()
     conn.commit()
@@ -339,16 +343,13 @@ def reagendar_solicitud(solicitud_id: int, nueva_fecha: str,
     )
 
 
-def aprobar_jefe_vuelo(solicitud_id: int, jefe_id: int, jefe_nombre: str,
-                       obs: str, requiere_gg: bool) -> None:
+def aprobar_jefe_vuelo(solicitud_id: int, jefe_id: int, jefe_nombre: str, obs: str) -> None:
     conn = get_db()
     cur = conn.cursor()
-    sql = SQL_VUELO_APROBAR_JEFE_GG if requiere_gg else SQL_VUELO_APROBAR_JEFE_OK
-    cur.execute(sql, (jefe_id, jefe_nombre, obs or "", solicitud_id))
+    cur.execute(SQL_VUELO_APROBAR_JEFE_OK, (jefe_id, jefe_nombre, obs or "", solicitud_id))
     conn.commit()
-    accion = "APROBADA_JEFE_GG" if requiere_gg else "APROBADA_JEFE"
-    insert_solicitud_log(solicitud_id, accion, jefe_id, jefe_nombre,
-                         f"Jefe aprueba vuelo.{' Requiere aprobación GG (sin presupuesto).' if requiere_gg else ''}")
+    insert_solicitud_log(solicitud_id, "APROBADA_JEFE", jefe_id, jefe_nombre,
+                         "Jefe aprueba vuelo. Pasa al coordinador para cotizar.")
 
 
 def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs: str) -> None:
@@ -360,13 +361,35 @@ def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs:
                          f"Solicitud rechazada. Motivo: {obs or '—'}")
 
 
+def cotizar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
+                  valor_cotizado: str, obs: str = "") -> None:
+    """Coordinador ingresa el valor cotizado del pasaje → pasa a aprobación GG."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VUELO_COTIZAR,
+               (valor_cotizado, obs or "", coordinador_id, coordinador_nombre, solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COTIZADA", coordinador_id, coordinador_nombre,
+                         f"Coordinador cotiza el pasaje: {valor_cotizado}. Pasa a aprobación del Gerente de Presupuesto.")
+
+
 def aprobar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -> None:
     conn = get_db()
     cur = conn.cursor()
-    cur.execute(SQL_VUELO_APROBAR_GG, (solicitud_id,))
+    cur.execute(SQL_VUELO_APROBAR_GG, (gg_id, gg_nombre, obs or "", solicitud_id))
     conn.commit()
     insert_solicitud_log(solicitud_id, "APROBADA_GG", gg_id, gg_nombre,
-                         f"GG aprueba vuelo sin presupuesto. {obs or ''}")
+                         f"GG aprueba la cotización del vuelo. Pasa al coordinador para info del vuelo. {obs or ''}")
+
+
+def rechazar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -> None:
+    """GG rechaza la cotización → vuelve al coordinador para recotizar (no es rechazo final)."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VUELO_RECHAZAR_GG, (gg_id, gg_nombre, obs or "", solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COTIZACION_RECHAZADA_GG", gg_id, gg_nombre,
+                         f"GG rechaza la cotización del vuelo. Vuelve al coordinador. Motivo: {obs or '—'}")
 
 
 def completar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
@@ -684,15 +707,17 @@ def get_roles_para_tipo(tipo: str) -> dict:
     cur.execute(SQL_GET_ROLES_PARA_TIPO, (tipo,))
     rows = cur.fetchall()
     conn.close()
-    coordinadores, aprobadores, motorizados = [], [], []
+    coordinadores, aprobadores, motorizados, gerentes_presupuesto = [], [], [], []
     for r in rows:
         entry = {"id": r[0], "nombre": r[1], "email": r[3]}
-        if   r[2] == ROL_COORDINADOR: coordinadores.append(entry)
-        elif r[2] == ROL_APROBADOR:   aprobadores.append(entry)
-        elif r[2] == ROL_MOTORIZADO:  motorizados.append(entry)
-    return {"coordinadores": coordinadores,
-            "aprobadores":   aprobadores,
-            "motorizados":   motorizados}
+        if   r[2] == ROL_COORDINADOR:         coordinadores.append(entry)
+        elif r[2] == ROL_APROBADOR:           aprobadores.append(entry)
+        elif r[2] == ROL_MOTORIZADO:          motorizados.append(entry)
+        elif r[2] == ROL_GERENTE_PRESUPUESTO: gerentes_presupuesto.append(entry)
+    return {"coordinadores":        coordinadores,
+            "aprobadores":          aprobadores,
+            "motorizados":          motorizados,
+            "gerentes_presupuesto": gerentes_presupuesto}
 
 
 def get_coordinadores_aprobadores_para_tipo(tipo):
@@ -703,6 +728,11 @@ def get_coordinadores_aprobadores_para_tipo(tipo):
 
 def get_motorizados_para_tipo(tipo: str):
     return get_roles_para_tipo(tipo)["motorizados"]
+
+
+def get_gerentes_presupuesto_para_tipo(tipo: str):
+    """Usuarios configurados con rol GERENTE_PRESUPUESTO para el tipo (ej. Vuelo)."""
+    return get_roles_para_tipo(tipo)["gerentes_presupuesto"]
 
 
 # ──────────────────────────────────────────────
@@ -717,6 +747,16 @@ def get_tipos_solicitud():
     conn.close()
     tipos = [r[0] for r in rows if r[0]]
     return tipos if tipos else list(TIPOS_SOLICITUD_DEFAULT)
+
+
+def get_motivos_vuelo():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_MOTIVOS_VUELO, (PARAM_GROUP_MOTIVOS_VUELO,))
+    rows = cur.fetchall()
+    conn.close()
+    motivos = [r[0] for r in rows if r[0]]
+    return motivos if motivos else list(MOTIVOS_VUELO_DEFAULT)
 
 
 def get_tipo_flags(tipo: str) -> dict:
