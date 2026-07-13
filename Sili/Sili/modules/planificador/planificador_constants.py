@@ -77,7 +77,26 @@ TIPOS_GASTO_DEFAULT = ["Alimentación", "Hospedaje", "Ticket aéreo"]
 PARAM_GROUP_MOTIVOS_VUELO = "PLANIFICADOR_MOTIVOS_VUELO"
 
 # Fallback si no hay datos en param_values todavía
-MOTIVOS_VUELO_DEFAULT = ["Capacitación", "Visita a cliente", "Viaje de negocio", "Otros"]
+MOTIVOS_VUELO_DEFAULT = [
+    "Capacitación/charla",
+    "Charla informativa a colaboradores",
+    "Chequeo médico anual",
+    "Entrenamiento cruzado",
+    "Evaluación actividades CAPEX",
+    "Fiesta de Navidad",
+    "Inspección de trabajos preventivos y seguimiento de obras",
+    "Otros",
+    "Reunión clientes",
+    "Reuniones gerenciales/colaboradores",
+    "Seguimiento equipo comercial/servicio al cliente",
+    "Seguimiento procesos",
+    "Seguimiento procesos/ pruebas clientes",
+    "Semana de la salud",
+    "Visita planta QP internacional",
+    "Visita planta QP UIO",
+    "Visita/reunión planta QP internacional",
+    "Visita planta UIO",
+]
 MOTIVO_VUELO_OTROS = "Otros"
 
 # Semáforo: % ejecutado a partir del cual cambia de verde a amarillo
