@@ -12,6 +12,7 @@ from .planificador_constants import (
     TBL_GRUPOS,
     TBL_LOGS,
     TBL_TIPO_FLAGS,
+    TBL_ROL_FLAGS,
     TBL_NOTIFY_INAPP,
     TBL_USUARIOS,
     TBL_DEPARTAMENTOS,
@@ -524,6 +525,31 @@ SQL_UPSERT_TIPO_FLAGS = f"""
          WHERE tipo = ?
     ELSE
         INSERT INTO {TBL_TIPO_FLAGS} (tipo, requiere_aprobacion_gerente)
+        VALUES (?, ?)
+"""
+
+# ──────────────────────────────────────────────
+# Roles que auto-aprueban el paso de aprobación del jefe directo (Vuelo)
+# ──────────────────────────────────────────────
+
+SQL_GET_ALL_ROL_FLAGS = f"""
+    SELECT rol, autoaprueba_jefe_vuelo
+    FROM {TBL_ROL_FLAGS}
+"""
+
+SQL_GET_ROLES_AUTOAPROBAR_JEFE_VUELO = f"""
+    SELECT rol
+    FROM {TBL_ROL_FLAGS}
+    WHERE autoaprueba_jefe_vuelo = 1
+"""
+
+SQL_UPSERT_ROL_FLAGS = f"""
+    IF EXISTS (SELECT 1 FROM {TBL_ROL_FLAGS} WHERE rol = ?)
+        UPDATE {TBL_ROL_FLAGS}
+           SET autoaprueba_jefe_vuelo = ?
+         WHERE rol = ?
+    ELSE
+        INSERT INTO {TBL_ROL_FLAGS} (rol, autoaprueba_jefe_vuelo)
         VALUES (?, ?)
 """
 

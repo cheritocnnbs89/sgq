@@ -180,6 +180,62 @@
   </div>
   {% endif %}
 
+  {# ── Roles que auto-aprueban la aprobación del jefe directo (Vuelo) ── #}
+  {% if has_permission('planificador.configuracion','editar') %}
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-person-check me-1"></i>Roles que auto-aprueban la aprobación del jefe (Vuelo)
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('planificador.planificador_rol_flags') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <table class="table table-sm align-middle mb-3">
+              <thead class="table-light">
+                <tr>
+                  <th>Rol</th>
+                  <th class="text-center">Auto-aprueba aprobación del jefe directo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for r in roles_candidatos_autoaprobar %}
+                {% set field_key = 'autoaprueba_' ~ r.replace(' ', '_') %}
+                <tr>
+                  <td>{{ r | capitalize }}</td>
+                  <td class="text-center">
+                    <div class="form-check form-switch d-flex justify-content-center">
+                      <input class="form-check-input" type="checkbox" role="switch"
+                             id="{{ field_key }}"
+                             name="{{ field_key }}"
+                             value="1"
+                             {% if rol_flags.get(r) %}checked{% endif %}>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-save me-1"></i>Guardar opciones
+              </button>
+            </div>
+          </form>
+          <p class="small text-muted mt-2 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Cuando esta opción está activa, si el solicitante de una Vuelo tiene ese rol de sistema,
+            la solicitud salta directo a <strong>Pendiente cotización coordinador</strong> sin pasar
+            por la aprobación del jefe directo — aplica aunque en el futuro se le llegue a configurar
+            un jefe directo. Si el rol no está activado aquí, se usa el flujo normal (valida el jefe
+            directo del solicitante).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   {# ── Integración Telegram ── #}
   {% if has_permission('planificador.configuracion','editar') %}
   <div class="row g-3 mt-2">

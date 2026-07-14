@@ -9,6 +9,7 @@ TBL_CONFIG       = "planificador_config"
 TBL_GRUPOS       = "planificador_grupos"
 TBL_LOGS         = "planificador_solicitud_logs"
 TBL_TIPO_FLAGS   = "planificador_tipo_flags"
+TBL_ROL_FLAGS    = "planificador_rol_flags"
 TBL_NOTIFY_INAPP = "notify_inapp"
 TBL_USUARIOS     = "usuarios"
 TBL_DEPARTAMENTOS = "departamentos"
@@ -53,6 +54,14 @@ ESTADOS_ATENDIDAS     = ("COMPLETADA", "RECHAZADA")
 
 # Roles de sistema considerados gerentes (para aprobación gerencial)
 ROLES_GERENTE = ("gerente", "gerente financiero", "gerente general", "jefe")
+
+# Roles candidatos para auto-aprobar el paso de aprobación del jefe directo
+# en solicitudes de Vuelo (configurable en Planificador > Configuración).
+# Si el rol del solicitante está activado ahí, la solicitud salta directo
+# a PENDIENTE_COORDINACION sin pasar por PENDIENTE_APROBACION_JEFE, incluso
+# si en el futuro se le llegara a configurar un jefe_id. Si el rol no está
+# activado (o no aplica), se usa el flujo normal: valida el jefe directo.
+ROLES_CANDIDATOS_AUTOAPROBAR_VUELO = ("gerente", "gerente financiero", "gerente general")
 
 PRIORIDADES = ["Normal", "Alta", "Urgente"]
 

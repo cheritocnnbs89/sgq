@@ -22,7 +22,7 @@ from .planificador_constants import (
     ESTADOS, PRIORIDADES,
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
     ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR, ESTADOS_ATENDIDAS,
-    MOTIVO_VUELO_OTROS,
+    MOTIVO_VUELO_OTROS, ROLES_CANDIDATOS_AUTOAPROBAR_VUELO,
 )
 from flask import Response
 
@@ -327,25 +327,38 @@ def crear():
 
     ciudad = repo.get_ciudad_usuario(u["id"])
 
-    # Para Vuelo: el flujo empieza con aprobación del jefe directo
+    # Para Vuelo: el flujo empieza con aprobación del jefe directo, salvo que
+    # el rol del solicitante esté configurado para auto-aprobar ese paso
+    # (ej. gerentes que hoy no tienen jefe directo, pero podrían tenerlo en
+    # el futuro sin que eso deba forzar el flujo de aprobación).
     estado_inicial = "PENDIENTE_COORDINACION"
     jefe_id_vuelo   = None
     jefe_nombre_vuelo = None
+    autoaprobado_por_rol = False
     if tipo == "Vuelo":
-        jefe = repo.get_gerente_del_usuario(u["id"])
-        current_app.logger.info(
-            "[VUELO] usuario_id=%s nombre=%s → jefe=%s",
-            u["id"], u.get("nombre"), jefe
-        )
-        if jefe:
-            jefe_id_vuelo     = jefe["id"]
-            jefe_nombre_vuelo = jefe["nombre"]
-            estado_inicial    = "PENDIENTE_APROBACION_JEFE"
-        else:
-            current_app.logger.warning(
-                "[VUELO] Sin jefe_id para usuario %s → cae a PENDIENTE_COORDINACION", u["id"]
+        roles_autoaprobar = repo.get_roles_autoaprobar_jefe_vuelo()
+        autoaprobado_por_rol = svc.debe_autoaprobar_jefe_vuelo(u["rol"], roles_autoaprobar)
+        if autoaprobado_por_rol:
+            current_app.logger.info(
+                "[VUELO] usuario_id=%s rol=%s → autoaprobado por configuración de rol",
+                u["id"], u.get("rol")
             )
             estado_inicial = "PENDIENTE_COORDINACION"
+        else:
+            jefe = repo.get_gerente_del_usuario(u["id"])
+            current_app.logger.info(
+                "[VUELO] usuario_id=%s nombre=%s → jefe=%s",
+                u["id"], u.get("nombre"), jefe
+            )
+            if jefe:
+                jefe_id_vuelo     = jefe["id"]
+                jefe_nombre_vuelo = jefe["nombre"]
+                estado_inicial    = "PENDIENTE_APROBACION_JEFE"
+            else:
+                current_app.logger.warning(
+                    "[VUELO] Sin jefe_id para usuario %s → cae a PENDIENTE_COORDINACION", u["id"]
+                )
+                estado_inicial = "PENDIENTE_COORDINACION"
 
     sid = repo.crear_solicitud({
         "tipo":                           tipo,
@@ -373,17 +386,34 @@ def crear():
     })
 
     if tipo == "Vuelo":
-        # Notificar al jefe directo para que apruebe
-        try:
-            notif.notif_vuelo_pendiente_jefe(
-                sid, area, fecha, desc, motivo_vuelo or "—",
-                u["nombre"], jefe_id_vuelo, jefe_nombre_vuelo or "—",
-            )
-        except Exception:
-            pass
-        msg = "Solicitud de Vuelo creada. Pendiente de aprobación de su jefe directo."
-        if not jefe_id_vuelo:
-            msg = "Solicitud de Vuelo creada. No tiene jefe configurado; pasó a coordinación."
+        if estado_inicial == "PENDIENTE_APROBACION_JEFE":
+            # Notificar al jefe directo para que apruebe
+            try:
+                notif.notif_vuelo_pendiente_jefe(
+                    sid, area, fecha, desc, motivo_vuelo or "—",
+                    u["nombre"], jefe_id_vuelo, jefe_nombre_vuelo or "—",
+                )
+            except Exception:
+                pass
+            msg = "Solicitud de Vuelo creada. Pendiente de aprobación de su jefe directo."
+        else:
+            # Autoaprobada por rol, o sin jefe directo configurado: pasa
+            # directo a coordinación y hay que notificar al coordinador.
+            try:
+                aprobador_txt = (
+                    f"Auto-aprobado (rol {u.get('rol') or '—'})"
+                    if autoaprobado_por_rol
+                    else "Auto-aprobado (sin jefe directo configurado)"
+                )
+                notif.notif_vuelo_aprobada_coordinacion(
+                    sid, area, fecha, desc, u["nombre"], aprobador_txt,
+                )
+            except Exception:
+                pass
+            if autoaprobado_por_rol:
+                msg = "Solicitud de Vuelo creada y auto-aprobada según tu rol. Pasa al coordinador para cotizar."
+            else:
+                msg = "Solicitud de Vuelo creada. No tiene jefe configurado; pasó a coordinación."
     else:
         try:
             notif.notif_nueva_solicitud(sid, tipo, area, fecha, u["nombre"], solicitante_id=u["id"])
@@ -1449,6 +1479,7 @@ def configuracion():
     tipos_solicitud = repo.get_tipos_solicitud()
     tipo_flags      = repo.get_all_tipo_flags()
     motorizados_tg  = repo.get_motorizados_telegram_status()
+    rol_flags       = repo.get_all_rol_flags()
 
     return render_template(
         "planificador/configuracion.html",
@@ -1459,6 +1490,8 @@ def configuracion():
         roles_config=[ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO],
         tipo_flags=tipo_flags,
         motorizados_tg=motorizados_tg,
+        rol_flags=rol_flags,
+        roles_candidatos_autoaprobar=ROLES_CANDIDATOS_AUTOAPROBAR_VUELO,
     )
 
 
@@ -1506,6 +1539,24 @@ def tipo_flags_update():
         req_gerente = request.form.get(key) == "1"
         repo.set_tipo_flags(tipo, req_gerente)
     flash("Configuración de tipos actualizada.", "success")
+    return redirect(url_for("planificador.planificador_configuracion"))
+
+
+@planificador_bp.route("/configuracion/rol-flags", methods=["POST"],
+                       endpoint="planificador_rol_flags")
+@require_login
+@require_permission(PERM_CONFIG, "editar")
+def rol_flags_update():
+    """Actualiza qué roles auto-aprueban el paso de aprobación del jefe
+    directo en solicitudes de Vuelo (ej: gerentes que no tienen jefe)."""
+    u = _current_user()
+    if not _check_perm(u["rol"], PERM_CONFIG, "editar"):
+        abort(403)
+    for rol in ROLES_CANDIDATOS_AUTOAPROBAR_VUELO:
+        key = f"autoaprueba_{rol.replace(' ', '_')}"
+        autoaprueba = request.form.get(key) == "1"
+        repo.set_rol_flags(rol, autoaprueba)
+    flash("Configuración de roles actualizada.", "success")
     return redirect(url_for("planificador.planificador_configuracion"))
 
 

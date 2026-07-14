@@ -11,6 +11,15 @@ from .planificador_constants import (
 )
 
 
+def debe_autoaprobar_jefe_vuelo(rol_usuario, roles_autoaprobar):
+    """True si el rol del solicitante está configurado para saltar la
+    aprobación del jefe directo en solicitudes de Vuelo."""
+    if not rol_usuario or not roles_autoaprobar:
+        return False
+    rol_norm = rol_usuario.strip().lower()
+    return rol_norm in {r.strip().lower() for r in roles_autoaprobar}
+
+
 def get_user_context(usuario_id, rol):
     """
     Devuelve qué tipos puede coordinar/aprobar el usuario actual.

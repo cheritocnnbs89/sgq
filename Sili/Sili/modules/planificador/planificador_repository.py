@@ -46,6 +46,9 @@ from .planificador_querys import (
     SQL_GET_TIPO_FLAGS,
     SQL_GET_ALL_TIPO_FLAGS,
     SQL_UPSERT_TIPO_FLAGS,
+    SQL_GET_ALL_ROL_FLAGS,
+    SQL_GET_ROLES_AUTOAPROBAR_JEFE_VUELO,
+    SQL_UPSERT_ROL_FLAGS,
     SQL_GET_USUARIOS_FOR_SELECT,
     SQL_GET_DEPARTAMENTOS,
     SQL_GET_USUARIO_DEPARTAMENTO,
@@ -792,6 +795,41 @@ def set_tipo_flags(tipo: str, requiere_aprobacion_gerente: bool) -> None:
     cur.execute(SQL_UPSERT_TIPO_FLAGS,
                 (tipo, 1 if requiere_aprobacion_gerente else 0, tipo,
                  tipo, 1 if requiere_aprobacion_gerente else 0))
+    conn.commit()
+    conn.close()
+
+
+def get_all_rol_flags() -> dict:
+    """rol -> True/False (autoaprueba_jefe_vuelo)."""
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(SQL_GET_ALL_ROL_FLAGS)
+        rows = cur.fetchall()
+        conn.close()
+        return {r[0]: bool(r[1]) for r in rows}
+    except Exception:
+        return {}
+
+
+def get_roles_autoaprobar_jefe_vuelo() -> list:
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(SQL_GET_ROLES_AUTOAPROBAR_JEFE_VUELO)
+        rows = cur.fetchall()
+        conn.close()
+        return [r[0] for r in rows]
+    except Exception:
+        return []
+
+
+def set_rol_flags(rol: str, autoaprueba_jefe_vuelo: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_UPSERT_ROL_FLAGS,
+                (rol, 1 if autoaprueba_jefe_vuelo else 0, rol,
+                 rol, 1 if autoaprueba_jefe_vuelo else 0))
     conn.commit()
     conn.close()
 
