@@ -1,5 +1,11 @@
 {# Partial cargado vía AJAX – sin inline scripts ni style= #}
-<div class="detail-grid">
+<button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
+        data-bs-target="#detalleInfoBox{{ s.id }}" aria-expanded="true"
+        aria-controls="detalleInfoBox{{ s.id }}">
+  <i class="bi bi-info-circle me-1"></i>Información general
+  <i class="bi bi-chevron-up detail-accordion-chevron"></i>
+</button>
+<div class="detail-grid collapse show" id="detalleInfoBox{{ s.id }}">
   <div class="detail-box"><span>Tipo de solicitud</span><strong>{{ s.tipo }}</strong></div>
   <div class="detail-box"><span>Área solicitante</span><strong>{{ s.area_solicitante }}</strong></div>
   <div class="detail-box"><span>Prioridad</span>

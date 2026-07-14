@@ -112,6 +112,15 @@
 .modal-info-text { color: var(--muted); font-size:.85rem; margin-bottom:.75rem; }
 
 /* Detalle */
+.detail-accordion-toggle {
+  display:flex; align-items:center; width:100%; gap:.4rem;
+  background:#f3f4f6; border:1px solid var(--line); border-radius:.65rem;
+  padding:.55rem .75rem; margin-bottom:.6rem; font-size:.85rem; font-weight:600;
+  color:#111827; cursor:pointer;
+}
+.detail-accordion-toggle:hover { background:#e5e7eb; }
+.detail-accordion-chevron { margin-left:auto; transition:transform .2s ease; }
+.detail-accordion-toggle.collapsed .detail-accordion-chevron { transform:rotate(180deg); }
 .detail-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.6rem; }
 .detail-box  { background:#f9fafb; border:1px solid var(--line); border-radius:.65rem; padding:.65rem; }
 .detail-box span     { display:block; color:var(--muted); font-size:.72rem; margin-bottom:.2rem; }
