@@ -807,9 +807,26 @@
   function _setBloqueoSinCC(bloquear) {
     var alertSinCC = document.getElementById('alertSinCCVuelo');
     var formNueva   = document.querySelector('#modalNueva form');
-    var btnEnviar   = formNueva ? formNueva.querySelector('button[type="submit"]') : null;
+    if (!formNueva) return;
     if (alertSinCC) alertSinCC.classList.toggle('visible', bloquear);
-    if (btnEnviar) btnEnviar.disabled = bloquear;
+
+    var selectTipo = formNueva.querySelector('select[name="tipo"]');
+    if (bloquear) {
+      // Bloquea todo el formulario excepto "Tipo de solicitud" y "Cancelar",
+      // para que el usuario no pierda tiempo llenando campos que no podrá enviar.
+      formNueva.querySelectorAll('input, select, textarea, button').forEach(function (el) {
+        if (el === selectTipo) return;
+        if (el.hasAttribute('data-close-modal')) return;
+        if (!el.disabled) el.setAttribute('data-blocked-by-cc', '1');
+        el.disabled = true;
+      });
+      if (selectTipo) selectTipo.focus();
+    } else {
+      formNueva.querySelectorAll('[data-blocked-by-cc]').forEach(function (el) {
+        el.disabled = false;
+        el.removeAttribute('data-blocked-by-cc');
+      });
+    }
   }
 
   function fetchSaldoPresupuesto() {
