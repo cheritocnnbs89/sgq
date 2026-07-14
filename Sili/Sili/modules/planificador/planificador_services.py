@@ -50,7 +50,7 @@ def get_solicitudes_for_user(usuario_id, rol, filters=None):
     if ctx["tipos_coordinador"]:
         extra += repo.get_solicitudes_by_tipos(
             ctx["tipos_coordinador"],
-            ["PENDIENTE_COORDINACION"],
+            ["PENDIENTE_COORDINACION", "PENDIENTE_INFO_VUELO"],
             filters
         )
     if ctx["tipos_aprobador"]:
