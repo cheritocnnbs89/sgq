@@ -1,5 +1,25 @@
 /* ── planificador.css ── */
 
+/* Encabezados ordenables de tablas */
+.th-sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.th-sortable i {
+  opacity: .65;
+  font-size: .85em;
+  transition: transform .15s ease, opacity .15s ease;
+}
+th.sorted-asc .th-sortable i {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+th.sorted-desc .th-sortable i {
+  opacity: 1;
+  transform: none;
+}
+
 /* Hero */
 .planner-hero {
   background: #fff;

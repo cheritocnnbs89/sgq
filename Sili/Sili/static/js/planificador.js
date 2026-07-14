@@ -580,7 +580,6 @@
   var PAGE_SIZE = 15;
 
   function initPagination(container) {
-    var rows   = Array.from(container.querySelectorAll('tbody tr'));
     var pg     = container.querySelector('.planner-pagination');
     var info   = container.querySelector('.planner-page-info');
     var nums   = container.querySelector('.planner-page-nums');
@@ -589,15 +588,16 @@
 
     if (!pg || !info || !nums || !prev || !next) return;
 
-    // Si no hay suficientes filas (o solo el "empty" row) no mostrar paginación
-    var dataRows = rows.filter(function(r){ return r.cells.length > 1; });
-    if (dataRows.length <= PAGE_SIZE) {
-      pg.classList.add('planner-pagination--hidden');
-      return;
-    }
-
-    var totalPages = Math.ceil(dataRows.length / PAGE_SIZE);
+    var dataRows = [];
+    var totalPages = 1;
     var current = 1;
+    var bound = false;
+
+    function refreshRows() {
+      var rows = Array.from(container.querySelectorAll('tbody tr'));
+      dataRows = rows.filter(function(r){ return r.cells.length > 1; });
+      totalPages = Math.max(1, Math.ceil(dataRows.length / PAGE_SIZE));
+    }
 
     function render(page) {
       current = page;
@@ -650,15 +650,131 @@
       return pages;
     }
 
-    prev.addEventListener('click', function(){ if (current > 1) render(current - 1); });
-    next.addEventListener('click', function(){ if (current < totalPages) render(current + 1); });
+    function refreshAndRender() {
+      refreshRows();
+      if (dataRows.length <= PAGE_SIZE) {
+        pg.classList.add('planner-pagination--hidden');
+        dataRows.forEach(function(r){ r.classList.remove('pg-hidden'); });
+        return;
+      }
+      if (!bound) {
+        prev.addEventListener('click', function(){ if (current > 1) render(current - 1); });
+        next.addEventListener('click', function(){ if (current < totalPages) render(current + 1); });
+        bound = true;
+      }
+      render(1);
+    }
 
-    render(1);
+    refreshAndRender();
+    // Expuesto para que el ordenamiento de columnas pueda re-paginar tras reordenar el tbody
+    container._plannerRefreshAfterSort = refreshAndRender;
   }
 
   function initAllPaginations() {
     document.querySelectorAll('[data-paginated-table]').forEach(function(container) {
       initPagination(container);
+    });
+  }
+
+  /* ── Ordenamiento de columnas por click en encabezado ── */
+  function parseEsNumber(s) {
+    if (!s) return 0;
+    var n = s.replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, '');
+    var v = parseFloat(n);
+    return isNaN(v) ? 0 : v;
+  }
+
+  function sortCellValue(tr, idx, type) {
+    var td = tr.children[idx];
+    if (!td) return '';
+    if (td.hasAttribute('data-sort-value')) {
+      var raw = td.getAttribute('data-sort-value');
+      return type === 'num' ? parseEsNumber(raw) : raw.toLocaleLowerCase();
+    }
+    var txt = (td.textContent || '').trim();
+    if (type === 'num') return parseEsNumber(txt);
+    if (type === 'date') {
+      var t = Date.parse(txt.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+      if (isNaN(t)) t = Date.parse(txt);
+      return isNaN(t) ? 0 : t;
+    }
+    return txt.toLocaleLowerCase();
+  }
+
+  function initSortableTable(container) {
+    var table = container.querySelector('table');
+    var thead = table && table.querySelector('thead');
+    var tbody = table && table.querySelector('tbody');
+    if (!thead || !tbody) return;
+
+    var sortState = { index: -1, dir: 'asc' };
+
+    function clearIcons() {
+      thead.querySelectorAll('th').forEach(function (th) {
+        th.classList.remove('sorted-asc', 'sorted-desc');
+        var i = th.querySelector('.th-sortable i');
+        if (i) {
+          i.classList.remove('bi-chevron-up', 'bi-chevron-down');
+          i.classList.add('bi-arrow-down-up');
+        }
+      });
+    }
+
+    function setIcon(th, dir) {
+      var i = th.querySelector('.th-sortable i');
+      if (!i) return;
+      i.classList.remove('bi-arrow-down-up', 'bi-chevron-up', 'bi-chevron-down');
+      i.classList.add(dir === 'asc' ? 'bi-chevron-up' : 'bi-chevron-down');
+    }
+
+    function applySort(th, idx, type) {
+      var same = idx === sortState.index;
+      sortState.dir = same ? (sortState.dir === 'asc' ? 'desc' : 'asc') : 'asc';
+      sortState.index = idx;
+
+      var dataRows = Array.from(tbody.querySelectorAll('tr')).filter(function (r) {
+        return r.cells.length > 1;
+      });
+
+      dataRows.sort(function (a, b) {
+        var va = sortCellValue(a, idx, type);
+        var vb = sortCellValue(b, idx, type);
+        var c = 0;
+        if (va > vb) c = 1; else if (va < vb) c = -1;
+        return sortState.dir === 'asc' ? c : -c;
+      });
+
+      var frag = document.createDocumentFragment();
+      dataRows.forEach(function (r) { frag.appendChild(r); });
+      tbody.appendChild(frag);
+
+      clearIcons();
+      th.classList.add(sortState.dir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+      setIcon(th, sortState.dir);
+
+      if (container._plannerRefreshAfterSort) container._plannerRefreshAfterSort();
+    }
+
+    thead.querySelectorAll('th[data-sort]').forEach(function (th) {
+      var type = (th.getAttribute('data-sort') || 'text').toLowerCase();
+      var clickable = th.querySelector('.th-sortable') || th;
+      clickable.setAttribute('role', 'button');
+      clickable.setAttribute('tabindex', '0');
+
+      clickable.addEventListener('click', function () {
+        var idx = Array.from(th.parentElement.children).indexOf(th);
+        applySort(th, idx, type);
+      });
+
+      clickable.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); clickable.click(); }
+      });
+    });
+  }
+
+  function initAllSortableTables() {
+    document.querySelectorAll('[data-paginated-table]').forEach(function(container) {
+      initSortableTable(container);
     });
   }
 
@@ -861,6 +977,7 @@
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', function () {
     initAllPaginations();
+    initAllSortableTables();
     renderCalendar();
 
     /* Prellenar fecha de hoy en campo fecha regular */

@@ -136,16 +136,22 @@
           <table class="table table-hover align-middle mb-0 table-sm">
             <thead class="table-light">
               <tr>
-                <th>#</th><th>Tipo</th><th>Área</th>
-                <th>Fecha</th><th>Horario</th><th>Prioridad</th>
-                <th>Estado</th><th>Solicitante</th><th>Jefe</th>
+                <th data-sort="num"><span class="th-sortable">#<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Tipo<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Área<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="date"><span class="th-sortable">Fecha<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Horario<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Prioridad<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Estado<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Solicitante<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Jefe<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th class="text-end">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {% for r in section_rows %}
               <tr>
-                <td class="text-muted small">
+                <td class="text-muted small" data-sort-value="{{ r.id }}">
                   {{ r.id }}
                   {% if r.grupo_id %}
                   <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
@@ -303,9 +309,14 @@
               <thead class="table-light">
                 <tr>
                   {% if tiene_checks %}<th><input type="checkbox" id="check-all-aprobar" title="Seleccionar todas"></th>{% endif %}
-                  <th>#</th><th>Tipo</th><th>Área</th>
-                  <th>Fecha</th><th>Horario</th><th>Prioridad</th>
-                  <th>Estado</th><th>Solicitante</th>
+                  <th data-sort="num"><span class="th-sortable">#<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Tipo<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Área<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="date"><span class="th-sortable">Fecha<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Horario<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Prioridad<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Estado<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Solicitante<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                   <th class="text-end">Acciones</th>
                 </tr>
               </thead>
@@ -321,7 +332,7 @@
                     {% endif %}
                   </td>
                   {% endif %}
-                  <td class="text-muted small">
+                  <td class="text-muted small" data-sort-value="{{ r.id }}">
                     {{ r.id }}
                     {% if r.grupo_id %}
                     <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
