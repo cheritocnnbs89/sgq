@@ -891,6 +891,11 @@
     var formNueva = document.querySelector('#modalNueva form');
     if (formNueva) {
       formNueva.addEventListener('submit', function (e) {
+        var alertSinCC = document.getElementById('alertSinCCVuelo');
+        if (alertSinCC && alertSinCC.classList.contains('visible')) {
+          e.preventDefault();
+          return;
+        }
         if (!validarFechasVuelo()) e.preventDefault();
       });
     }
