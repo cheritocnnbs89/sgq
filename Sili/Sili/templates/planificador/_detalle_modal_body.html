@@ -14,13 +14,21 @@
     <strong><span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span></strong>
   </div>
   {% endif %}
-  <div class="detail-box"><span>Fecha</span><strong>{{ s.fecha_str }}</strong></div>
+  <div class="detail-box"><span>{{ 'Fecha de salida' if s.tipo == 'Vuelo' else 'Fecha' }}</span><strong>{{ s.fecha_str }}</strong></div>
+  {% if s.tipo == 'Vuelo' %}
+  <div class="detail-box"><span>Fecha de regreso</span><strong>{{ s.get('fecha_retorno') or '—' }}</strong></div>
+  {% endif %}
   <div class="detail-box"><span>Horario asignado</span>
     <strong>
       {% if s.hora_inicio %}{{ s.hora_inicio }} – {{ s.hora_fin }}
       {% else %}<span class="text-muted">Sin asignar</span>{% endif %}
     </strong>
   </div>
+  {% if s.tipo == 'Vuelo' %}
+  {% if aeropuerto_display %}
+  <div class="detail-box"><span>Aeropuerto</span><strong>{{ aeropuerto_display }}</strong></div>
+  {% endif %}
+  {% else %}
   <div class="detail-box">
     <span>Lugar / destino</span>
     <strong>{{ s.lugar_destino }}</strong>
@@ -30,8 +38,6 @@
       <i class="bi bi-geo-alt-fill"></i> Ver en mapa
     </a>
   </div>
-  {% if s.ciudad %}
-  <div class="detail-box"><span>Ciudad</span><strong>{{ s.ciudad }}</strong></div>
   {% endif %}
   <div class="detail-box"><span>Solicitante</span><strong>{{ s.solicitante_nombre }}</strong></div>
   {% if s.coordinador_nombre %}

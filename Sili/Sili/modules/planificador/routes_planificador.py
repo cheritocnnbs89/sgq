@@ -238,6 +238,14 @@ def detalle(sid):
         if m:
             costo_ticket_sugerido = m.group(0).replace(",", ".")
 
+    # Aeropuerto: vuelo_completar() lo antepone como "Aeropuerto: XXX" en observacion_coordinador
+    aeropuerto_display = None
+    if d.get("tipo") == "Vuelo" and d.get("observacion_coordinador"):
+        import re
+        m = re.search(r"Aeropuerto:\s*(\S+)", str(d["observacion_coordinador"]))
+        if m:
+            aeropuerto_display = m.group(1)
+
     return render_template(
         "planificador/_detalle_modal_body.html",
         s=d,
@@ -250,6 +258,7 @@ def detalle(sid):
         puede_eliminar_adjunto=puede_eliminar_adjunto,
         cc_nombre=cc_nombre,
         tipos_gasto=tipos_gasto,
+        aeropuerto_display=aeropuerto_display,
         costo_ticket_sugerido=costo_ticket_sugerido,
     )
 

@@ -131,12 +131,12 @@
         </div>
 
         {# Macro tabla interna #}
-        {% macro tabla_tab(section_rows, empty_msg, show_ciudad=true) %}
+        {% macro tabla_tab(section_rows, empty_msg) %}
         <div class="table-responsive" data-paginated-table>
           <table class="table table-hover align-middle mb-0 table-sm">
             <thead class="table-light">
               <tr>
-                <th>#</th><th>Tipo</th><th>Área</th>{% if show_ciudad %}<th>Ciudad</th>{% endif %}
+                <th>#</th><th>Tipo</th><th>Área</th>
                 <th>Fecha</th><th>Horario</th><th>Prioridad</th>
                 <th>Estado</th><th>Solicitante</th><th>Jefe</th>
                 <th class="text-end">Acciones</th>
@@ -153,7 +153,6 @@
                 </td>
                 <td>{{ r.tipo }}</td>
                 <td>{{ r.area_solicitante }}</td>
-                {% if show_ciudad %}<td class="text-muted small">{{ r.ciudad or '—' }}</td>{% endif %}
                 <td class="text-nowrap">{{ r.fecha_str }}</td>
                 <td class="text-nowrap">
                   {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
@@ -261,7 +260,7 @@
           {{ tabla_tab(reservadas, "Sin solicitudes pendientes de coordinación") }}
         </div>
         <div class="planner-tab-content" id="tab-coordinadas">
-          {{ tabla_tab(coordinadas, "Sin solicitudes en proceso", show_ciudad=false) }}
+          {{ tabla_tab(coordinadas, "Sin solicitudes en proceso") }}
         </div>
         {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
         <div class="planner-tab-content" id="tab-por-aprobar">
@@ -304,7 +303,7 @@
               <thead class="table-light">
                 <tr>
                   {% if tiene_checks %}<th><input type="checkbox" id="check-all-aprobar" title="Seleccionar todas"></th>{% endif %}
-                  <th>#</th><th>Tipo</th><th>Área</th><th>Ciudad</th>
+                  <th>#</th><th>Tipo</th><th>Área</th>
                   <th>Fecha</th><th>Horario</th><th>Prioridad</th>
                   <th>Estado</th><th>Solicitante</th>
                   <th class="text-end">Acciones</th>
@@ -330,7 +329,6 @@
                   </td>
                   <td>{{ r.tipo }}</td>
                   <td>{{ r.area_solicitante }}</td>
-                  <td class="text-muted small">{{ r.ciudad or '—' }}</td>
                   <td class="text-nowrap">{{ r.fecha_str }}</td>
                   <td class="text-nowrap">
                     {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
