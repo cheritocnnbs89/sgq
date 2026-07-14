@@ -247,7 +247,16 @@ def puede_reagendar(solicitud, usuario_id, ctx):
 
 def agrupar_por_seccion(rows):
     """Divide las filas en cuatro secciones para mostrar en la tabla."""
-    reservadas     = [r for r in rows if r.get("estado") in ESTADOS_RESERVADAS]
+    def _va_en_reservadas(r):
+        if r.get("estado") not in ESTADOS_RESERVADAS:
+            return False
+        # El Gerente de Presupuesto ya la ve (accionable) en "Por aprobar";
+        # no aporta verla también pasivamente en "Reservadas".
+        if r.get("estado") == "PENDIENTE_APROBACION_GG_VUELO" and r.get("puede_aprobar_gg_vuelo"):
+            return False
+        return True
+
+    reservadas     = [r for r in rows if _va_en_reservadas(r)]
     coordinadas    = [r for r in rows if r.get("estado") in ESTADOS_COORDINADAS]
     por_completar  = [r for r in rows if r.get("estado") in ESTADOS_POR_COMPLETAR]
     atendidas      = [r for r in rows if r.get("estado") in ESTADOS_ATENDIDAS]
