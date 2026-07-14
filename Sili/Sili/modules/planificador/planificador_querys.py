@@ -116,9 +116,23 @@ SQL_GET_SOLICITUDES_PARA_REPORTE = f"""
         s.aprobador_nombre                         AS [Aprobador],
         s.observacion_coordinador                  AS [Obs. Coordinador],
         s.observacion_aprobador                    AS [Obs. Aprobador],
+        cc.nombre                                  AS [Centro de Costo],
+        pres.presupuestado                         AS [Presupuesto Total (Año)],
+        pres.ejecutado                             AS [Valor Consumido (Año)],
+        s.costo_real                               AS [Gasto Realizado],
         CONVERT(VARCHAR,s.fecha_creacion,120)      AS [Fecha Creación],
         CONVERT(VARCHAR,s.fecha_actualizacion,120) AS [Última Actualización]
     FROM {TBL_SOLICITUDES} s
+    LEFT JOIN {TBL_USUARIOS} su ON su.id = s.solicitante_id
+    LEFT JOIN {TBL_PARAM_VALUES} cc ON cc.id = s.centro_costo_id
+    LEFT JOIN (
+        SELECT centro_costo_id, empresa_id,
+               SUM(monto_presupuestado) AS presupuestado,
+               SUM(monto_ejecutado)     AS ejecutado
+        FROM {TBL_PRESUPUESTO}
+        WHERE tipo_gasto = N'Ticket aéreo' AND anio = YEAR(GETDATE())
+        GROUP BY centro_costo_id, empresa_id
+    ) pres ON pres.centro_costo_id = s.centro_costo_id AND pres.empresa_id = su.empresa_id
     WHERE {{where}}
     ORDER BY s.fecha DESC, s.hora_inicio
 """

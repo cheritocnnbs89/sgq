@@ -1614,13 +1614,15 @@ def reverse_geocode():
 @require_login
 @require_permission(PERM_SOLICITUDES, "ver")
 def reporte():
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
     filters = {
         "estado":      request.args.get("estado", ""),
         "tipo":        request.args.get("tipo",   ""),
         "fecha_desde": request.args.get("fecha_desde", ""),
         "fecha_hasta": request.args.get("fecha_hasta", ""),
     }
-    cols, rows = repo.get_solicitudes_para_reporte(filters)
+    cols, rows = repo.get_solicitudes_para_reporte(filters, u["id"], ctx)
 
     output = io.StringIO()
     writer = csv.writer(output, delimiter=";", quoting=csv.QUOTE_ALL)
@@ -1645,13 +1647,15 @@ def reporte():
 @require_login
 @require_permission(PERM_SOLICITUDES, "ver")
 def reporte_excel():
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
     filters = {
         "estado":      request.args.get("estado", ""),
         "tipo":        request.args.get("tipo",   ""),
         "fecha_desde": request.args.get("fecha_desde", ""),
         "fecha_hasta": request.args.get("fecha_hasta", ""),
     }
-    output = _build_planificador_excel(filters)
+    output = _build_planificador_excel(filters, u["id"], ctx)
     filename = f"planificador_{date.today()}.xlsx"
     return Response(
         output.getvalue(),
@@ -1660,8 +1664,9 @@ def reporte_excel():
     )
 
 
-def _build_planificador_excel(filters: dict) -> BytesIO:
+def _build_planificador_excel(filters: dict, usuario_id=None, ctx=None) -> BytesIO:
     """Genera el Excel de solicitudes del planificador con formato."""
+    from decimal import Decimal
     try:
         from openpyxl import Workbook
         from openpyxl.styles import (Font, PatternFill, Alignment,
@@ -1670,7 +1675,7 @@ def _build_planificador_excel(filters: dict) -> BytesIO:
     except ImportError:
         raise RuntimeError("openpyxl no instalado. Ejecuta: pip install openpyxl")
 
-    cols, rows = repo.get_solicitudes_para_reporte(filters)
+    cols, rows = repo.get_solicitudes_para_reporte(filters, usuario_id, ctx)
 
     wb = Workbook()
     ws = wb.active
@@ -1728,8 +1733,15 @@ def _build_planificador_excel(filters: dict) -> BytesIO:
         row_fill = ESTADO_FILL.get(estado_val)
 
         for ci, v in enumerate(values, start=1):
-            cell = ws.cell(row=ri, column=ci,
-                           value="" if v is None else (str(v) if not isinstance(v, (int, float)) else v))
+            if v is None:
+                cell_val = ""
+            elif isinstance(v, Decimal):
+                cell_val = float(v)
+            elif isinstance(v, (int, float)):
+                cell_val = v
+            else:
+                cell_val = str(v)
+            cell = ws.cell(row=ri, column=ci, value=cell_val)
             cell.font      = Font(name="Calibri", size=9)
             cell.border    = thin_border
             cell.alignment = Alignment(vertical="center", wrap_text=False)
@@ -1752,6 +1764,8 @@ def _build_planificador_excel(filters: dict) -> BytesIO:
         "Estado": 22, "Solicitante": 20, "Coordinador": 20,
         "Aprobador": 20, "Obs. Coordinador": 28, "Obs. Aprobador": 28,
         "Ciudad": 14, "Detalle Dirección": 30,
+        "Centro de Costo": 22, "Presupuesto Total (Año)": 18,
+        "Valor Consumido (Año)": 18, "Gasto Realizado": 16,
         "Fecha Creación": 18, "Última Actualización": 18,
     }
     for ci, col_name in enumerate(cols, start=1):

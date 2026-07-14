@@ -251,7 +251,14 @@ def get_solicitudes_del_grupo(grupo_id: int):
     return rows
 
 
-def get_solicitudes_para_reporte(filters=None):
+def get_solicitudes_para_reporte(filters=None, usuario_id=None, ctx=None):
+    """
+    ctx (de get_user_context) acota qué filas puede descargar cada usuario:
+    - admin: todas.
+    - coordinador/aprobador/motorizado/gerente de presupuesto de un tipo: todas
+      las solicitudes de ese tipo (no solo las pendientes de su acción).
+    - usuario normal: solo sus propias solicitudes.
+    """
     filters = filters or {}
     conn = get_db()
     cur = conn.cursor()
@@ -269,6 +276,21 @@ def get_solicitudes_para_reporte(filters=None):
     if filters.get("fecha_hasta"):
         where.append("s.fecha <= ?")
         params.append(filters["fecha_hasta"])
+
+    if ctx is not None and not ctx.get("es_admin"):
+        tipos_gestionados = list(dict.fromkeys(
+            ctx.get("tipos_coordinador", []) + ctx.get("tipos_aprobador", []) +
+            ctx.get("tipos_motorizado", [])  + ctx.get("tipos_gg_vuelo", [])
+        ))
+        scope_parts = ["s.solicitante_id = ?"]
+        scope_params = [usuario_id]
+        if tipos_gestionados:
+            placeholders = ",".join("?" * len(tipos_gestionados))
+            scope_parts.append(f"s.tipo IN ({placeholders})")
+            scope_params += tipos_gestionados
+        where.append("(" + " OR ".join(scope_parts) + ")")
+        params += scope_params
+
     sql = SQL_GET_SOLICITUDES_PARA_REPORTE.format(where=" AND ".join(where))
     cur.execute(sql, params)
     rows = cur.fetchall()
