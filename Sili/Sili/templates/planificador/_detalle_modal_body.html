@@ -338,8 +338,12 @@
         <div class="input-group input-group-sm">
           <span class="input-group-text">$</span>
           <input class="form-control tipo-costo-input" type="number"
-                 name="tipo_costo_{{ tipo }}" min="0" step="0.01" placeholder="0.00">
+                 name="tipo_costo_{{ tipo }}" min="0" step="0.01" placeholder="0.00"
+                 {% if tipo == 'Ticket aéreo' and costo_ticket_sugerido %}value="{{ costo_ticket_sugerido }}"{% endif %}>
         </div>
+        {% if tipo == 'Ticket aéreo' and costo_ticket_sugerido %}
+        <div class="form-text">Sugerido según cotización: {{ s.datos_ticket }}</div>
+        {% endif %}
       </div>
       {% endfor %}
       <div class="col-12 mt-1">

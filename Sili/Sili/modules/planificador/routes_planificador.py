@@ -230,6 +230,14 @@ def detalle(sid):
     cc_nombre   = repo.get_cc_nombre(d.get("centro_costo_id")) if d.get("centro_costo_id") else None
     tipos_gasto = repo.get_tipos_gasto() if d.get("puede_liquidar_vuelo") else []
 
+    # Al liquidar, sugerir el valor del "Ticket aéreo" con lo que cotizó el coordinador
+    costo_ticket_sugerido = None
+    if d.get("puede_liquidar_vuelo") and d.get("datos_ticket"):
+        import re
+        m = re.search(r"\d+(?:[.,]\d+)?", str(d["datos_ticket"]))
+        if m:
+            costo_ticket_sugerido = m.group(0).replace(",", ".")
+
     return render_template(
         "planificador/_detalle_modal_body.html",
         s=d,
@@ -242,6 +250,7 @@ def detalle(sid):
         puede_eliminar_adjunto=puede_eliminar_adjunto,
         cc_nombre=cc_nombre,
         tipos_gasto=tipos_gasto,
+        costo_ticket_sugerido=costo_ticket_sugerido,
     )
 
 

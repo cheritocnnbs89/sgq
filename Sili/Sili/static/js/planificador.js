@@ -290,15 +290,17 @@
     /* Total acumulado en formulario de liquidación */
     var totalEl = container.querySelector('#vueloTotalLiquidacion');
     if (totalEl) {
-      container.querySelectorAll('.tipo-costo-input').forEach(function (inp) {
-        inp.addEventListener('input', function () {
-          var sum = 0;
-          container.querySelectorAll('.tipo-costo-input').forEach(function (i) {
-            sum += parseFloat(i.value) || 0;
-          });
-          totalEl.textContent = '$' + sum.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      var _recalcularTotalLiquidacion = function () {
+        var sum = 0;
+        container.querySelectorAll('.tipo-costo-input').forEach(function (i) {
+          sum += parseFloat(i.value) || 0;
         });
+        totalEl.textContent = '$' + sum.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      };
+      container.querySelectorAll('.tipo-costo-input').forEach(function (inp) {
+        inp.addEventListener('input', _recalcularTotalLiquidacion);
       });
+      _recalcularTotalLiquidacion();
     }
   }
 
