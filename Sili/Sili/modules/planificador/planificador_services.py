@@ -228,7 +228,8 @@ def puede_eliminar(solicitud, usuario_id, ctx):
     - Admin: puede en cualquier otro estado.
     - Coordinador: puede si estado NO es APROBADA ni COMPLETADA.
     - Aprobador: puede si estado NO es COMPLETADA.
-    - Solicitante (usuario normal): solo si estado es PENDIENTE_COORDINACION y es su propia solicitud.
+    - Solicitante (usuario normal): solo si estado es PENDIENTE_COORDINACION (o, para Vuelo,
+      PENDIENTE_APROBACION_JEFE mientras el jefe aún no aprueba) y es su propia solicitud.
     """
     estado = solicitud["estado"]
     if estado == "COMPLETADA":
@@ -241,9 +242,9 @@ def puede_eliminar(solicitud, usuario_id, ctx):
         return estado not in ("APROBADA", "COMPLETADA")
     if solicitud["tipo"] in ctx["tipos_aprobador"]:
         return estado != "COMPLETADA"
-    # Usuario normal: solo la propia solicitud en PENDIENTE_COORDINACION
+    # Usuario normal: solo la propia solicitud mientras no ha sido aprobada aún
     if solicitud.get("solicitante_id") == usuario_id:
-        return estado == "PENDIENTE_COORDINACION"
+        return estado in ("PENDIENTE_COORDINACION", "PENDIENTE_APROBACION_JEFE")
     return False
 
 
