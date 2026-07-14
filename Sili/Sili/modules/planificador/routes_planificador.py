@@ -313,14 +313,17 @@ def crear():
         # Detectar CC del usuario y validar saldo anual de presupuesto (Ticket aéreo)
         import datetime
         cc_info = repo.get_cc_usuario(u["id"])
-        if cc_info:
-            cc_id = cc_info["cc_id"]
-            anio_actual = datetime.date.today().year
-            saldo = repo.get_saldo_anual_presupuesto(
-                cc_info["empresa_id"], cc_id, "Ticket aéreo", anio_actual
-            )
-            if saldo["semaforo"] == "rojo":
-                requiere_aprov = 1
+        if not cc_info:
+            flash("No tienes un centro de costo configurado, por lo que no puedes crear "
+                  "solicitudes de tipo Vuelo. Selecciona otro tipo de solicitud.", "danger")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+        cc_id = cc_info["cc_id"]
+        anio_actual = datetime.date.today().year
+        saldo = repo.get_saldo_anual_presupuesto(
+            cc_info["empresa_id"], cc_id, "Ticket aéreo", anio_actual
+        )
+        if saldo["semaforo"] == "rojo":
+            requiere_aprov = 1
 
     ciudad = repo.get_ciudad_usuario(u["id"])
 

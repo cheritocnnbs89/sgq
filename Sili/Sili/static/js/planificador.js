@@ -767,7 +767,11 @@
         : 'Detalle qué debe entregar, recibir o gestionar.';
     }
 
-    if (esVuelo) fetchSaldoPresupuesto();
+    if (esVuelo) {
+      fetchSaldoPresupuesto();
+    } else {
+      _setBloqueoSinCC(false);
+    }
 
     // Mensaje informativo según tipo
     var noticeNormal = document.getElementById('recNoticeTxt');
@@ -800,17 +804,27 @@
     return true;
   }
 
+  function _setBloqueoSinCC(bloquear) {
+    var alertSinCC = document.getElementById('alertSinCCVuelo');
+    var formNueva   = document.querySelector('#modalNueva form');
+    var btnEnviar   = formNueva ? formNueva.querySelector('button[type="submit"]') : null;
+    if (alertSinCC) alertSinCC.classList.toggle('visible', bloquear);
+    if (btnEnviar) btnEnviar.disabled = bloquear;
+  }
+
   function fetchSaldoPresupuesto() {
     var ind = document.getElementById('indicadorPresup');
     if (!ind) return;
     ind.className = 'vuelo-presup-ind vuelo-presup-cargando';
     ind.querySelector('.vuelo-presup-label').textContent = 'Verificando presupuesto...';
+    _setBloqueoSinCC(false);
     fetch('/planificador/presupuesto/saldo-usuario', { credentials: 'same-origin' })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (!d.ok) {
           ind.className = 'vuelo-presup-ind vuelo-presup-sin-cc';
           ind.querySelector('.vuelo-presup-label').textContent = 'Sin centro de costo asignado';
+          _setBloqueoSinCC(true);
           return;
         }
         var msgs = {
