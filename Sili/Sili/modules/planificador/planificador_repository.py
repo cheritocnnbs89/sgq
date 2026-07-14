@@ -531,17 +531,18 @@ def coordinar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: 
                          f"Hotel: {'Sí' if datos_hotel else 'No'}.")
 
 
-def reagendar_vuelo_a_jefe(solicitud_id: int, nueva_fecha: str,
+def reagendar_vuelo_a_jefe(solicitud_id: int, nueva_fecha: str, nueva_fecha_retorno: str | None,
                             coordinador_id: int, coordinador_nombre: str, motivo: str) -> None:
     conn = get_db()
     cur = conn.cursor()
     cur.execute(SQL_GET_FECHA_SOLICITUD, (solicitud_id,))
     row_prev = cur.fetchone()
     fecha_anterior = str(row_prev[0]) if row_prev else "—"
-    cur.execute(SQL_REAGENDAR_VUELO_A_JEFE, (nueva_fecha, solicitud_id))
+    cur.execute(SQL_REAGENDAR_VUELO_A_JEFE, (nueva_fecha, nueva_fecha_retorno, solicitud_id))
     conn.commit()
     insert_solicitud_log(solicitud_id, "REPROGRAMADA_VUELO", coordinador_id, coordinador_nombre,
-                         f"Fecha anterior: {fecha_anterior} → Nueva: {nueva_fecha}. "
+                         f"Fecha anterior: {fecha_anterior} → Nueva: {nueva_fecha}"
+                         f"{' / regreso ' + nueva_fecha_retorno if nueva_fecha_retorno else ''}. "
                          f"Motivo: {motivo or '—'}. Vuelve a aprobación del jefe.")
 
 

@@ -732,14 +732,22 @@ def reagendar(sid):
 
     nueva_fecha = request.form.get("nueva_fecha", "").strip()
     motivo      = request.form.get("motivo_reagenda", "").strip()
+    es_vuelo    = s["tipo"] == "Vuelo"
+    nueva_fecha_retorno = request.form.get("nueva_fecha_retorno", "").strip() or None
 
     if not nueva_fecha:
         flash("Debe indicar la nueva fecha.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+    if es_vuelo and not nueva_fecha_retorno:
+        flash("Debe indicar la nueva fecha de regreso.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
     try:
         if date.fromisoformat(nueva_fecha) < date.today():
             flash("La nueva fecha no puede ser anterior al día de hoy.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+        if es_vuelo and date.fromisoformat(nueva_fecha_retorno) < date.fromisoformat(nueva_fecha):
+            flash("La fecha de regreso no puede ser anterior a la de salida.", "warning")
             return redirect(url_for("planificador.planificador_solicitudes"))
     except ValueError:
         flash("Fecha inválida.", "warning")
@@ -748,11 +756,8 @@ def reagendar(sid):
     # Guardar fecha anterior para la notificación
     fecha_anterior = str(s["fecha"]) if s["fecha"] else "—"
 
-    es_vuelo = s["tipo"] == "Vuelo"
-    nuevo_estado = "PENDIENTE_APROBACION_JEFE" if es_vuelo else "PENDIENTE_COORDINACION"
-    repo.reagendar_solicitud(sid, nueva_fecha, u["id"], u["nombre"], motivo, nuevo_estado)
-
     if es_vuelo:
+        repo.reagendar_vuelo_a_jefe(sid, nueva_fecha, nueva_fecha_retorno, u["id"], u["nombre"], motivo)
         # Renotificar al jefe para que vuelva a aprobar con la nueva fecha
         try:
             jefe_id   = s.get("gerente_id")
@@ -766,8 +771,9 @@ def reagendar(sid):
             )
         except Exception:
             pass
-        flash(f"Vuelo reagendado para el {nueva_fecha}. Vuelve a aprobación del jefe.", "success")
+        flash(f"Vuelo reagendado para el {nueva_fecha}. Vuelve a aprobación del jefe directo.", "success")
     else:
+        repo.reagendar_solicitud(sid, nueva_fecha, u["id"], u["nombre"], motivo, "PENDIENTE_COORDINACION")
         try:
             notif.notif_reagendada(
                 sid, s["tipo"], s["area_solicitante"],

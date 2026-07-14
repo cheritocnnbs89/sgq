@@ -340,15 +340,20 @@ SQL_UPDATE_COORDINAR_VUELO = f"""
 
 SQL_REAGENDAR_VUELO_A_JEFE = f"""
     UPDATE {TBL_SOLICITUDES} SET
-        fecha               = ?,
-        hora_inicio         = NULL,
-        hora_fin            = NULL,
-        datos_ticket        = NULL,
-        datos_hotel         = NULL,
-        aprobador_id        = NULL,
-        aprobador_nombre    = NULL,
-        estado              = 'PENDIENTE_APROBACION_JEFE',
-        fecha_actualizacion = GETDATE()
+        fecha                  = ?,
+        fecha_retorno          = ?,
+        hora_inicio            = NULL,
+        hora_fin               = NULL,
+        datos_ticket           = NULL,
+        datos_hotel            = NULL,
+        aprobador_id           = NULL,
+        aprobador_nombre       = NULL,
+        observacion_aprobador  = NULL,
+        coordinador_id         = NULL,
+        coordinador_nombre     = NULL,
+        observacion_coordinador = NULL,
+        estado                 = 'PENDIENTE_APROBACION_JEFE',
+        fecha_actualizacion    = GETDATE()
     WHERE id = ? AND activo = 1
 """
 
