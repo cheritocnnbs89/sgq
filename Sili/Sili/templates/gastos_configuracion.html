@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Gastos — Configuración{% endblock %}
+
+{% block head %}
+<script src="{{ url_for('static', filename='js/reembolsos/gastos_configuracion.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <div>
+      <h4 class="mb-0"><i class="bi bi-gear me-1"></i>Configuración de Gastos</h4>
+      <p class="text-muted mb-0 small">
+        Define quién es el coordinador del módulo de gastos de tarjeta de crédito.
+      </p>
+    </div>
+    <a href="{{ url_for('lista_gastos') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Volver a Reembolsos
+    </a>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-person-check me-1"></i>Coordinador del módulo
+        </div>
+        <div class="card-body">
+          {% if coordinador %}
+          <div class="alert alert-info d-flex align-items-center justify-content-between mb-3">
+            <div>
+              <i class="bi bi-person-fill me-1"></i>
+              <strong>{{ coordinador.usuario_nombre }}</strong> es el coordinador actual.
+            </div>
+            <form method="post" action="{{ url_for('gastos_configuracion_coordinador') }}"
+                  data-confirm-message="¿Quitar al coordinador actual? Los gastos de tarjeta quedarán sin revisor hasta asignar uno nuevo.">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="usuario_id" value="">
+              <button type="submit" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-x-lg"></i> Quitar
+              </button>
+            </form>
+          </div>
+          {% else %}
+          <div class="alert alert-warning mb-3">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            Sin coordinador asignado — los gastos de tarjeta quedarán pendientes de revisión
+            hasta que asignes uno.
+          </div>
+          {% endif %}
+
+          <form method="post" action="{{ url_for('gastos_configuracion_coordinador') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Usuario *</label>
+              <select class="form-select form-select-sm" name="usuario_id" required>
+                <option value="">Seleccione...</option>
+                {% for u in usuarios %}
+                <option value="{{ u.id }}" {% if coordinador and coordinador.usuario_id == u.id %}selected{% endif %}>
+                  {{ u.nombre_completo or u.username }} ({{ u.username }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="bi bi-save me-1"></i>Guardar asignación
+            </button>
+          </form>
+
+          <p class="small text-muted mt-3 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Esta persona revisará los gastos de tarjeta de crédito, boletos aéreos y tarjeta
+            online antes de que pasen a aprobación del gerente, y también los enviará a SAP
+            una vez aprobados — igual que hoy. Caja chica y reembolso de vendedor no pasan
+            por esta revisión.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

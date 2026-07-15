@@ -139,6 +139,18 @@
       <a href="{{ url_for('nuevo_gasto') }}" class="btn btn-primary btn-sm">
         <i class="bi bi-plus-lg me-1"></i>Nuevo
       </a>
+
+      {% if readonly_view or rol == 'admin' %}
+      <a href="{{ url_for('lista_gastos', pend_view='coord_revision') }}" class="btn btn-outline-warning btn-sm">
+        <i class="bi bi-hourglass-split me-1"></i>Por revisar
+      </a>
+      {% endif %}
+
+      {% if rol == 'admin' %}
+      <a href="{{ url_for('gastos_configuracion') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-gear me-1"></i>Configuración
+      </a>
+      {% endif %}
     </div>
 
     <div class="btn-group btn-group-sm ms-auto">
@@ -601,6 +613,21 @@
                     <i class="bi bi-trash"></i>
                   </button>
                 </form>
+                {% endif %}
+
+                {% if g.get('puede_enviar_gerencia') %}
+                <form method="post" class="d-inline m-0 p-0"
+                  action="{{ url_for('enviar_gasto_gerencia', gasto_id=g['id']) }}"
+                  data-confirm-message="¿Enviar este gasto a gerencia? Ya no podrás editarlo desde aquí como pendiente de revisión.">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-outline-primary btn-sm" title="Enviar a gerencia para aprobación">
+                    <i class="bi bi-send-check"></i> Enviar a Gerencia
+                  </button>
+                </form>
+                {% elif (g.get('coord_revisado')|default(0))|int == 0 and (g.get('tipo_gasto') or '')|lower in ['tarjeta','tarjeta_online','tarjeta_boletos'] %}
+                <span class="badge rounded-pill badge-pend" title="Aún no ha sido revisado por el coordinador">
+                  Pend. revisión coordinador
+                </span>
                 {% endif %}
               </div>
             </div>

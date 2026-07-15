@@ -1838,6 +1838,7 @@ def register_gastos_routes(app):
                 COALESCE(g.ga_aprobado, 0) AS ga_aprobado,
                 COALESCE(g.tarjeta_sin_soporte,0) AS tarjeta_sin_soporte,
                 COALESCE(g.boletos_aereos,0) AS boletos_aereos,
+                COALESCE(g.coord_revisado,0) AS coord_revisado,
 
                 (
                     SELECT STRING_AGG(m.x, ', ')
@@ -1932,6 +1933,7 @@ def register_gastos_routes(app):
             rows2 = []
             is_gg_gf = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
             ROLE_VER_GERENTE = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
+            es_coordinador_actual = (role_name == 'admin') or gh.es_coordinador_gastos(uid, role_name)
 
             for d in rows:
                 d = dict(d or {})
@@ -1941,6 +1943,9 @@ def register_gastos_routes(app):
 
                 es_tarjeta = tipo_gasto in ('tarjeta', 'tarjeta_online', 'tarjeta_boletos')
                 es_restringido = tipo_gasto in ('caja_chica', 'reembolso')
+
+                d['coord_revisado'] = int(d.get('coord_revisado') or 0)
+                d['puede_enviar_gerencia'] = bool(es_tarjeta and d['coord_revisado'] == 0 and es_coordinador_actual)
 
                 d['can_act_as_gf_tarjeta'] = int(d.get('can_act_as_gf_tarjeta') or 0)
                 d['can_act_as_ga_tarjeta'] = int(d.get('can_act_as_ga_tarjeta') or 0)
@@ -2033,7 +2038,7 @@ def register_gastos_routes(app):
             can_approve_gf = is_admin or (role_name == 'gerente financiero')
             can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
 
-            readonly_view = (role_name == 'coordinador')
+            readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid, role_name)
 
             return render_template(
                 'gastos_lista.html',
@@ -2404,7 +2409,7 @@ def register_gastos_routes(app):
         can_approve_gg = is_admin or (role_name == 'gerente general')
         can_approve_gf = is_admin or (role_name == 'gerente financiero')
         can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
-        readonly_view = (role_name == 'coordinador')
+        readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid_session, role_name)
 
         try:
             conn.close()
@@ -2950,7 +2955,7 @@ def register_gastos_routes(app):
             can_approve_gf = is_admin or (role_name == 'gerente financiero')
             can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
 
-            readonly_view = (role_name == 'coordinador')
+            readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid, role_name)
 
             return render_template(
                 'gastos_pendientes_aprobacion.html',
@@ -4432,9 +4437,12 @@ def register_gastos_routes(app):
                 except Exception as _e:
                     current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s en detalle: %s", _col, _e)
 
-            # Columnas boletos_aereos / tarjeta_sin_soporte en gastos_tarjeta (cabecera)
-            for _col, _tipo in [('boletos_aereos',     'BIT'),
-                                 ('tarjeta_sin_soporte','BIT')]:
+            # Columnas boletos_aereos / tarjeta_sin_soporte / revisión de coordinador en gastos_tarjeta (cabecera)
+            for _col, _tipo in [('boletos_aereos',      'BIT'),
+                                 ('tarjeta_sin_soporte', 'BIT'),
+                                 ('coord_revisado',      'BIT'),
+                                 ('coord_revisado_por',  'INT'),
+                                 ('coord_revisado_at',   'DATETIME')]:
                 try:
                     cur.execute(f"""
                         IF NOT EXISTS (
@@ -4549,13 +4557,23 @@ def register_gastos_routes(app):
                 )
 
             # Notificación fuera de transacción
+            # Los gastos tipo tarjeta (incluye boletos aéreos y tarjeta online) pasan
+            # primero por revisión del coordinador del módulo antes de notificar al
+            # gerente; caja chica y reembolso de vendedor siguen el flujo de siempre.
+            es_tarjeta_familia = (es_caja_chica == 0 and es_reembolso_vendedor == 0)
             try:
                 if gasto_id:
-                    mail.notify_gasto_created(app, gasto_id, uid)
+                    if es_tarjeta_familia:
+                        mail.notify_gasto_pending_coordinador(app, gasto_id, uid)
+                    else:
+                        mail.notify_gasto_created(app, gasto_id, uid)
             except Exception:
                 app.logger.exception("No se pudo enviar la notificación de creación")
 
-            flash('Gasto creado correctamente.', 'success')
+            if es_tarjeta_familia:
+                flash('Gasto creado correctamente. Queda pendiente de revisión del coordinador antes de pasar a gerencia.', 'success')
+            else:
+                flash('Gasto creado correctamente.', 'success')
             return redirect(url_for('lista_gastos'))
 
         finally:
@@ -4664,6 +4682,67 @@ def register_gastos_routes(app):
     
         
 
+    # ── Configuración: coordinador del módulo ─────────────────────────────────
+    @app.route('/reembolsos/gastos/configuracion', methods=['GET'], endpoint='gastos_configuracion')
+    @require_login
+    def gastos_configuracion():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede acceder a esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, nombre_completo, username
+            FROM usuarios
+            WHERE COALESCE(disabled, 0) = 0
+            ORDER BY nombre_completo
+        """)
+        usuarios = cur.fetchall()
+        conn.close()
+
+        coordinador = gh.get_coordinador_gastos()
+
+        return render_template(
+            'gastos_configuracion.html',
+            usuarios=usuarios,
+            coordinador=coordinador,
+            usuario=session.get('usuario'),
+            rol=session.get('rol'),
+            active_page='gastos_tarjeta',
+        )
+
+    @app.route('/reembolsos/gastos/configuracion/coordinador', methods=['POST'],
+               endpoint='gastos_configuracion_coordinador')
+    @require_login
+    def gastos_configuracion_coordinador():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        usuario_id_raw = (request.form.get('usuario_id') or '').strip()
+        if not usuario_id_raw:
+            gh.quitar_coordinador_gastos()
+            flash('Se quitó el coordinador del módulo. Los gastos de tarjeta quedarán sin revisor hasta que asignes uno.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("SELECT id, nombre_completo, username FROM usuarios WHERE id = ?", (usuario_id_raw,))
+        row = cur.fetchone()
+        conn.close()
+
+        if not row:
+            flash('Usuario no encontrado.', 'danger')
+            return redirect(url_for('gastos_configuracion'))
+
+        nombre = (row['nombre_completo'] or row['username'] or '').strip()
+        gh.set_coordinador_gastos(int(row['id']), nombre)
+        flash(f'Coordinador del módulo asignado: {nombre}.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
     # ── Editar solo campo CCB (coordinador) ──────────────────────────────────
     @app.route('/reembolsos/gastos/<int:gasto_id>/editar-ccb', methods=['POST'],
                endpoint='editar_ccb_gasto')
@@ -4671,7 +4750,8 @@ def register_gastos_routes(app):
     def editar_ccb_gasto(gasto_id):
         from flask import jsonify
         rol = (session.get('rol') or '').lower()
-        if rol not in ('coordinador', 'admin'):
+        uid_ccb = session.get('usuario_id') or session.get('user_id')
+        if not (rol == 'admin' or gh.es_coordinador_gastos(uid_ccb, rol)):
             return jsonify(ok=False, error='Sin permiso'), 403
 
         conn = get_db()
@@ -4691,6 +4771,60 @@ def register_gastos_routes(app):
         conn.commit()
         return jsonify(ok=True, ccb=nuevo_ccb)
 
+    # ── Enviar a Gerencia (revisión del coordinador) ──────────────────────────
+    @app.route('/reembolsos/gastos/<int:gasto_id>/enviar-gerencia', methods=['POST'],
+               endpoint='enviar_gasto_gerencia')
+    @require_login
+    def enviar_gasto_gerencia(gasto_id):
+        role = (session.get('rol') or '').strip().lower()
+        uid = session.get('usuario_id') or session.get('user_id')
+
+        if not (role == 'admin' or gh.es_coordinador_gastos(uid, role)):
+            flash('Sin permiso para revisar este gasto.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, usuario_id, COALESCE(es_caja_chica,0) AS es_caja_chica,
+                   COALESCE(reembolso_vendedor,0) AS reembolso_vendedor,
+                   COALESCE(coord_revisado,0) AS coord_revisado
+            FROM gastos_tarjeta WHERE id = ?
+        """, (gasto_id,))
+        row = cur.fetchone()
+        if not row:
+            conn.close()
+            flash('Gasto no encontrado.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        if int(row['es_caja_chica']) == 1 or int(row['reembolso_vendedor']) == 1:
+            conn.close()
+            flash('Este gasto no pasa por revisión de coordinador.', 'warning')
+            return redirect(url_for('lista_gastos'))
+
+        if int(row['coord_revisado']) == 1:
+            conn.close()
+            flash('Este gasto ya fue enviado a gerencia.', 'info')
+            return redirect(url_for('lista_gastos'))
+
+        cur.execute("""
+            UPDATE gastos_tarjeta
+               SET coord_revisado = 1, coord_revisado_por = ?, coord_revisado_at = GETDATE()
+             WHERE id = ?
+        """, (uid, gasto_id))
+        conn.commit()
+
+        creador_id = row['usuario_id']
+        conn.close()
+
+        try:
+            mail.notify_gasto_created(app, gasto_id, creador_id)
+        except Exception:
+            app.logger.exception("No se pudo enviar la notificación al gerente tras revisión del coordinador")
+
+        flash('Gasto enviado a gerencia.', 'success')
+        return redirect(url_for('lista_gastos'))
+
      # EDITAR
     @app.route('/reembolsos/gastos/<int:gasto_id>/editar', methods=['GET', 'POST'], endpoint='editar_gasto')
     @require_login
@@ -4706,11 +4840,11 @@ def register_gastos_routes(app):
         role_name = (session.get('rol') or '').lower()
         uid = session.get('usuario_id') or session.get('user_id')
 
-        PRIV_ALL = ('admin', 'coordinador', 'gerente general', 'gerente financiero')
+        PRIV_ALL = ('admin', 'gerente general', 'gerente financiero')
         GERENTE_ROLES = ('gerente', 'gerente de área', 'gerente de area')
 
         def _allowed_user_ids_for_role():
-            if role_name in PRIV_ALL:
+            if role_name in PRIV_ALL or gh.es_coordinador_gastos(uid, role_name):
                 return None
             if role_name in GERENTE_ROLES:
                 gerente_id = uid
@@ -6404,7 +6538,8 @@ def register_gastos_routes(app):
         from decimal import Decimal, ROUND_HALF_UP
 
         role = (session.get('rol') or '').strip().lower()
-        if role not in ('admin', 'coordinador'):
+        uid_sap = session.get('usuario_id') or session.get('user_id')
+        if not (role == 'admin' or gh.es_coordinador_gastos(uid_sap, role)):
             return jsonify(ok=False, msg='No autorizado'), 403
 
         conn = get_db()
@@ -7056,7 +7191,8 @@ def register_gastos_routes(app):
         from decimal import Decimal, ROUND_HALF_UP
 
         role = (session.get('rol') or '').strip().lower()
-        if role not in ('admin', 'coordinador'):
+        uid_sap_masivo = session.get('usuario_id') or session.get('user_id')
+        if not (role == 'admin' or gh.es_coordinador_gastos(uid_sap_masivo, role)):
             return jsonify(ok=False, msg='No autorizado'), 403
 
         payload_in = request.get_json(silent=True) or {}

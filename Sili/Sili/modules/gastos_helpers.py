@@ -6,12 +6,59 @@ from datetime import date, timedelta
 from flask import request
 from typing import Dict, Any
 
-from .db import get_db
+from .db import get_db, get_config_value, set_config_values
 from .config import TABLE_GASTOS
 from flask import current_app
 # ---------------- filtros ----------------
 from typing import Dict, Any, Tuple
 from flask import current_app
+
+# ---------------- coordinador del módulo (configurable) ----------------
+CLAVE_COORDINADOR_ID     = "gastos_coordinador_usuario_id"
+CLAVE_COORDINADOR_NOMBRE = "gastos_coordinador_usuario_nombre"
+
+
+def get_coordinador_gastos() -> dict | None:
+    """Usuario configurado como coordinador del módulo de gastos, o None si no hay ninguno."""
+    uid_raw = get_config_value(CLAVE_COORDINADOR_ID)
+    if not uid_raw:
+        return None
+    try:
+        uid = int(uid_raw)
+    except (TypeError, ValueError):
+        return None
+    nombre = get_config_value(CLAVE_COORDINADOR_NOMBRE) or ""
+    return {"usuario_id": uid, "usuario_nombre": nombre}
+
+
+def set_coordinador_gastos(usuario_id: int, usuario_nombre: str) -> None:
+    set_config_values({
+        CLAVE_COORDINADOR_ID:     str(usuario_id),
+        CLAVE_COORDINADOR_NOMBRE: usuario_nombre or "",
+    })
+
+
+def quitar_coordinador_gastos() -> None:
+    set_config_values({
+        CLAVE_COORDINADOR_ID:     "",
+        CLAVE_COORDINADOR_NOMBRE: "",
+    })
+
+
+def es_coordinador_gastos(usuario_id, rol=None) -> bool:
+    """
+    True si el usuario puede actuar como coordinador del módulo de gastos:
+    - Tiene el rol de sistema 'coordinador' (comportamiento actual, no se retira), o
+    - Está asignado explícitamente en la ventana de configuración (nuevo).
+    Sin ninguna de las dos condiciones, no hay coordinador para ese usuario —
+    no existe un tercer camino de respaldo.
+    """
+    if rol and str(rol).strip().lower() == "coordinador":
+        return True
+    if usuario_id is None:
+        return False
+    coord = get_coordinador_gastos()
+    return bool(coord) and int(coord["usuario_id"]) == int(usuario_id)
 
 def collect_gastos_filters2(request, session, privileged_roles=None) -> tuple[dict, list[str], list, bool]:
     if privileged_roles is None:
@@ -388,7 +435,7 @@ def collect_gastos_filters(request, session, privileged_roles=None) -> tuple[dic
             where.append(f"({ga_step_pending_sql}) = 1")
 
     elif pend_mode == "pend_sap":
-        if role_name not in ("coordinador", "admin"):
+        if not es_coordinador_gastos(uid, role_name) and role_name != "admin":
             where.append("1=0")
         else:
             where.append(f"""
@@ -407,7 +454,19 @@ def collect_gastos_filters(request, session, privileged_roles=None) -> tuple[dic
                 )
             """)
 
-    if not is_privileged and pend_mode != "mis_aprobaciones":
+    elif pend_mode == "coord_revision":
+        # Cola de revisión previa del coordinador: gastos tipo tarjeta/boletos/online
+        # que aún no fueron enviados a gerencia.
+        if not es_coordinador_gastos(uid, role_name) and role_name != "admin":
+            where.append("1=0")
+        else:
+            where.append("""
+                COALESCE(g.es_caja_chica,0)=0
+                AND COALESCE(g.reembolso_vendedor,0)=0
+                AND COALESCE(g.coord_revisado,0)=0
+            """)
+
+    if not is_privileged and pend_mode not in ("mis_aprobaciones", "coord_revision"):
         where.append("g.usuario_id = ?")
         args.append(uid or -1)
 
