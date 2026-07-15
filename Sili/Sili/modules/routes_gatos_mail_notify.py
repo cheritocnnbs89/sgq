@@ -978,15 +978,20 @@ def notify_gasto_pending_coordinador(app, gasto_id: int, by_user_id: int | None)
     )
 
     sent_any = False
+    # Si el creador y el coordinador son la misma persona (ej. el propio
+    # coordinador registró un gasto), prioriza el correo de revisión —
+    # es el accionable — y omite el de confirmación genérica para no
+    # perder ese aviso en un correo redundante.
+    mismo_destinatario = bool(coordinador_email) and coordinador_email == creator_email
 
     try:
-        if creator_email:
+        if creator_email and not mismo_destinatario:
             sent_any = _send_creator_gasto_created(app, g) or sent_any
     except Exception:
         app.logger.exception("[GASTOS][MAIL] Error correo creador")
 
     try:
-        if coordinador_email and coordinador_email != creator_email:
+        if coordinador_email:
             sent_any = _send_coordinador_gasto_pending(app, g, coordinador_email) or sent_any
     except Exception:
         app.logger.exception("[GASTOS][MAIL] Error correo coordinador")
