@@ -141,7 +141,7 @@
       </a>
 
       {% if readonly_view or rol == 'admin' %}
-      <a href="{{ url_for('lista_gastos', pend_view='coord_revision') }}" class="btn btn-outline-warning btn-sm">
+      <a href="{{ url_for('lista_gastos', pend_view='coord_revision', pendientes='1') }}" class="btn btn-outline-warning btn-sm">
         <i class="bi bi-hourglass-split me-1"></i>Por revisar
       </a>
       {% endif %}

@@ -577,6 +577,18 @@ def collect_gastos_pendientes_aprobacion_filters(request, session, privileged_ro
 
     where.append("(g.sap_contabilizacion IS NULL OR LTRIM(RTRIM(COALESCE(g.sap_contabilizacion,'')))='')")
 
+    # Los gastos tipo tarjeta (incluye boletos aéreos y tarjeta online) que aún no
+    # pasaron por la revisión del coordinador no deben aparecer en la aprobación
+    # de gerencia todavía — el admin sí los puede ver para seguimiento.
+    if role_name != 'admin':
+        where.append("""
+            NOT (
+                COALESCE(g.es_caja_chica,0)=0
+                AND COALESCE(g.reembolso_vendedor,0)=0
+                AND COALESCE(g.coord_revisado,0)=0
+            )
+        """)
+
     if not is_privileged:
         where.append("g.usuario_id = ?")
         args.append(uid or -1)

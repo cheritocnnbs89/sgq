@@ -4710,7 +4710,7 @@ def register_gastos_routes(app):
             coordinador=coordinador,
             usuario=session.get('usuario'),
             rol=session.get('rol'),
-            active_page='gastos_tarjeta',
+            active_page='gastos_configuracion',
         )
 
     @app.route('/reembolsos/gastos/configuracion/coordinador', methods=['POST'],
