@@ -410,17 +410,6 @@
                 chk.checked = checked;
             });
         });
-
-        if (IS_PENDIENTES_VIEW) {
-            document.querySelectorAll('.row-select').forEach(chk => {
-                if (chk.disabled) return;
-                if (!isVisible(chk)) return;
-                chk.checked = true;
-            });
-
-            const box = document.getElementById('chkSelectAllVisible')?.closest('.form-check');
-            if (box) box.style.display = 'none';
-        }
     }
 
     function initApprovals() {

@@ -1033,7 +1033,10 @@ def enqueue_gasto_rejected_gg(conn, gasto_id: int, by_user_id: int, comentario: 
         motivo = row[3] or ""
         fecha = row[4] or ""
 
-    gerente_id = _get_ultimo_jefe_id(conn, gasto_usuario_id, fallback_to_self=False)
+    # Si el usuario que registró el gasto no tiene jefe configurado (por
+    # ejemplo, es él mismo un gerente sin jefe directo), se le notifica a
+    # él mismo el rechazo en vez de fallar por "sin gerente configurado".
+    gerente_id = _get_ultimo_jefe_id(conn, gasto_usuario_id, fallback_to_self=True)
     if not gerente_id:
         raise RuntimeError("No se encontró gerente para el gasto")
 
