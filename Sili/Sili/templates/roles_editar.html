@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Editar rol{% endblock %}
+
+{% block head %}
+<script src="{{ url_for('static', filename='js/roles.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <h4 class="mb-0 fs-6 fw-semibold">Editar rol</h4>
+  <a href="{{ url_for('roles') }}" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i> Volver a Roles
+  </a>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show small py-2 px-3 mb-2" role="alert">
+  {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="card border-0 shadow-sm rounded-3">
+  <div class="card-body">
+
+    {% if usuarios_count > 0 %}
+    <div class="alert alert-warning">
+      <i class="bi bi-exclamation-triangle me-1"></i>
+      <strong>{{ usuarios_count }}</strong> usuario(s) tienen asignado el rol
+      "<strong>{{ r.nombre }}</strong>" actualmente. Si lo renombras, esos usuarios
+      pasan automáticamente al nuevo nombre.
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('editar_rol', rid=r.id) }}"
+          data-confirm-message="¿Renombrar el rol &quot;{{ r.nombre }}&quot;? Esto actualiza a los usuarios que lo tienen asignado.">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3 col-md-4">
+        <label class="form-label fw-semibold small">Nombre *</label>
+        <input type="text" name="nombre" class="form-control form-control-sm" required
+               value="{{ r.nombre }}">
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm">
+        <i class="bi bi-save me-1"></i>Guardar cambios
+      </button>
+    </form>
+
+    <p class="small text-muted mt-3 mb-0">
+      <i class="bi bi-info-circle me-1"></i>
+      Renombrar aquí solo actualiza el catálogo de roles y a los usuarios que lo tienen
+      asignado. No modifica las validaciones específicas ya escritas en el código para
+      roles como "admin", "coordinador", "gerente", "gerente general" o "gerente
+      financiero" — si renombras uno de esos, esas validaciones dejan de reconocer el
+      nombre nuevo hasta que se actualice el código correspondiente.
+    </p>
+  </div>
+</div>
+
+{% endblock %}
