@@ -2034,11 +2034,14 @@ def register_gastos_routes(app):
 
             is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
 
+            is_coord = gh.es_coordinador_gastos(uid, role_name)
+            is_ga_role = gh.es_rol_ga(role_name)
+
             can_approve_gg = is_admin or (role_name == gh.rol_gg())
             can_approve_gf = is_admin or (role_name == gh.rol_gf())
-            can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
+            can_approve_ga = is_admin or is_ga_role
 
-            readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid, role_name)
+            readonly_view = (not is_admin) and is_coord
 
             return render_template(
                 'gastos_lista.html',
@@ -2052,6 +2055,9 @@ def register_gastos_routes(app):
                 can_approve_gf=can_approve_gf,
                 can_approve_ga=can_approve_ga,
                 readonly_view=readonly_view,
+                is_coord=is_coord,
+                is_ga_role=is_ga_role,
+                puede_ver_reporte_excel=gh.puede_ver_reporte_excel(role_name, is_coord),
                 rol_gg=gh.rol_gg(),
                 rol_gf=gh.rol_gf(),
                 usuario=session.get('usuario'),
@@ -2953,11 +2959,14 @@ def register_gastos_routes(app):
 
             is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
 
+            is_coord = gh.es_coordinador_gastos(uid, role_name)
+            is_ga_role = gh.es_rol_ga(role_name)
+
             can_approve_gg = is_admin or (role_name == gh.rol_gg())
             can_approve_gf = is_admin or (role_name == gh.rol_gf())
-            can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
+            can_approve_ga = is_admin or is_ga_role
 
-            readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid, role_name)
+            readonly_view = (not is_admin) and is_coord
 
             return render_template(
                 'gastos_pendientes_aprobacion.html',
@@ -2971,6 +2980,9 @@ def register_gastos_routes(app):
                 can_approve_gf=can_approve_gf,
                 can_approve_ga=can_approve_ga,
                 readonly_view=readonly_view,
+                is_coord=is_coord,
+                is_ga_role=is_ga_role,
+                puede_ver_reporte_excel=gh.puede_ver_reporte_excel(role_name, is_coord),
                 rol_gg=gh.rol_gg(),
                 rol_gf=gh.rol_gf(),
                 usuario=session.get('usuario'),
@@ -4754,10 +4766,48 @@ def register_gastos_routes(app):
             ga_puede_rechazar=gh.ga_puede_rechazar(),
             gg_puede_rechazar=gh.gg_puede_rechazar(),
             gf_puede_rechazar=gh.gf_puede_rechazar(),
+            roles_ga=gh.roles_ga(),
+            rol_reporte_excel=gh.rol_reporte_excel(),
             usuario=session.get('usuario'),
             rol=session.get('rol'),
             active_page='gastos_configuracion',
         )
+
+    @app.route('/reembolsos/gastos/configuracion/roles-ga', methods=['POST'],
+               endpoint='gastos_configuracion_roles_ga')
+    @require_login
+    def gastos_configuracion_roles_ga():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        roles_nuevos = [r.strip() for r in request.form.getlist('roles_ga') if r.strip()]
+        if not roles_nuevos:
+            flash('Debes seleccionar al menos un rol como GA.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        gh.set_roles_ga(roles_nuevos)
+        flash(f'Roles GA actualizados: {", ".join(roles_nuevos)}.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/reporte-excel', methods=['POST'],
+               endpoint='gastos_configuracion_reporte_excel')
+    @require_login
+    def gastos_configuracion_reporte_excel():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        rol_nuevo = (request.form.get('rol_reporte_excel') or '').strip()
+        if not rol_nuevo:
+            flash('Debes seleccionar un rol.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        gh.set_rol_reporte_excel(rol_nuevo)
+        flash(f'Rol con acceso al Reporte Excel actualizado: {rol_nuevo}.', 'success')
+        return redirect(url_for('gastos_configuracion'))
 
     @app.route('/reembolsos/gastos/configuracion/rechazo', methods=['POST'],
                endpoint='gastos_configuracion_rechazo')

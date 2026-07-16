@@ -13,7 +13,7 @@
   data-lista-gastos-url="{{ url_for('lista_gastos') }}"
   data-aprobar-gasto-masivo-url="{{ url_for('aprobar_gasto_masivo') }}"
   data-enviar-gasto-sap-masivo-url="{{ url_for('enviar_gasto_sap_masivo') }}"
-  data-is-coord="{{ '1' if ((rol or '')|lower) == 'coordinador' else '0' }}"
+  data-is-coord="{{ '1' if is_coord else '0' }}"
   data-status-deleted="{{ '1' if request.args.get('status') == 'deleted' else '0' }}">
 </div>
 
@@ -94,7 +94,7 @@
     </div>
 
     {% set role_lower = (rol or '')|lower %}
-    {% if role_lower in [rol_gg,rol_gf,'coordinador','admin'] %}
+    {% if role_lower in [rol_gg,rol_gf,'admin'] or is_coord %}
     <div class="flex-grow-1 d-flex flex-column">
       <label class="form-label mb-1">Gerente</label>
       <select name="gerente_id" id="gerente_id" class="form-select form-select-sm w-220">
@@ -131,7 +131,7 @@
 
       {% set rol = (session.get('rol') or '')|lower %}
 
-      {% if rol in ['gerente', 'gerente de área', 'gerente de area', rol_gg, rol_gf] %}
+      {% if is_ga_role or rol in [rol_gg, rol_gf] %}
       {% set q = request.args.to_dict(flat=True) %}
       {% set _ = q.update({'pend_view':'1'}) %}
       {% endif %}
@@ -197,7 +197,7 @@
         <i class="bi bi-file-earmark-excel me-1"></i>Excel
       </a>
 
-      {% if role_lower in ['admin','coordinador','asistente _gerencia'] %}
+      {% if puede_ver_reporte_excel %}
       <a id="btnReporteExcel" class="btn btn-outline-success btn-sm" href="#"
         data-export-url="{{ url_for('export_gastos_reporte_excel') }}">
         <i class="bi bi-file-earmark-spreadsheet me-1"></i>Reporte Excel
@@ -223,7 +223,7 @@
   </div>
 
   {% set role_lower = (rol or '')|lower %}
-  {% set can_select = (role_lower in ['admin','coordinador',rol_gg,rol_gf,'gerente'] or
+  {% set can_select = (role_lower in ['admin',rol_gg,rol_gf] or is_coord or is_ga_role or
   can_approve_ga or can_approve_gf or can_approve_gg) %}
 
   {% if can_select %}
@@ -251,10 +251,10 @@
     {% set es_caja_chica_filter = (tipo_sel == 'caja_chica') %}
 
     {% set show_bulk_ga_btn = (
-    role_lower in ['admin','gerente','gerente de área','gerente de area']
+    role_lower == 'admin' or is_ga_role
     ) %}
 
-    {% if role_lower == 'coordinador' %}
+    {% if is_coord %}
     <button type="button" class="btn btn-outline-info btn-sm" id="btnSapMasivo">
       <i class="bi bi-send me-1"></i>Enviar SAP seleccionados
     </button>
@@ -266,12 +266,11 @@
     <table id="tabla-gastos" class="table table-striped align-middle">
       {% set role_lower = (rol or '')|lower %}
 
-      {% set show_col_ga = role_lower in ['admin','coordinador','gerente','gerente de área','gerente de area'] %}
-      {% set show_col_gg = role_lower in ['admin','coordinador',rol_gg] %}
-      {% set show_col_gf = role_lower in ['admin','coordinador',rol_gf] %}
+      {% set show_col_ga = (role_lower == 'admin' or is_coord or is_ga_role) %}
+      {% set show_col_gg = (role_lower in ['admin',rol_gg] or is_coord) %}
+      {% set show_col_gf = (role_lower in ['admin',rol_gf] or is_coord) %}
 
-      {% set is_sender = role_lower in ['admin','coordinador'] %}
-      {% set is_coord = role_lower == 'coordinador' %}
+      {% set is_sender = (role_lower == 'admin' or is_coord) %}
       {% set tipo_sel = (filtros.tipo or '') %}
       {% set tipo_restringido = (tipo_sel in ['caja_chica','reembolso']) %}
 
@@ -285,7 +284,6 @@
 
       {% set role_lower = (rol or '')|lower %}
       {% set is_admin = role_lower == 'admin' %}
-      {% set is_coord = role_lower == 'coordinador' %}
       {% set is_gg_gf = role_lower in [rol_gg,rol_gf] %}
       {% set is_sender = is_admin or is_coord %}
 
@@ -390,8 +388,8 @@
         {% endif %}
         {% endif %}
 
-        {% set can_sap_row = (role_lower in ['admin','coordinador']) and sap_ready_row and (not has_sap) and (not proveedor_sin_sap) %}
-        {% set can_bulk_sap = (role_lower == 'coordinador') and can_sap_row %}
+        {% set can_sap_row = (role_lower == 'admin' or is_coord) and sap_ready_row and (not has_sap) and (not proveedor_sin_sap) %}
+        {% set can_bulk_sap = is_coord and can_sap_row %}
 
         {% set actions_locked = (ga_ok or gg_ok or gf_ok) %}
         {% set can_ga_special = (g.get('can_act_as_ga_restringido', 0)|int == 1) %}
@@ -452,10 +450,10 @@
               data-can-gg="{{ 1 if (can_bulk_gg or allow_free_select) else 0 }}"
               data-can-gf="{{ 1 if (can_bulk_gf or allow_free_select) else 0 }}"
               data-free-select="{{ 1 if allow_free_select else 0 }}"
-              data-can-sap="{{ 1 if ((role_lower == 'coordinador') and can_sap_row) else 0 }}"
+              data-can-sap="{{ 1 if (is_coord and can_sap_row) else 0 }}"
               {% if not can_select_row %}disabled{% endif %}
               title="{% if has_sap %}No editable: ya tiene Doc. SAP
-{% elif role_lower=='coordinador' and not sap_ready_row %}No listo para SAP
+{% elif is_coord and not sap_ready_row %}No listo para SAP
 {% elif can_approve_gg and (not ga_ok) %}Pendiente aprobación GA
 {% elif can_approve_gf and (hay_ga_real_tarjeta and (not ga_ok)) %}Pendiente aprobación GA
 {% elif can_approve_gf and (es_tarjeta_row and ga_actor_is_gg and (not gg_ok)) %}Pendiente aprobación GG (GA=GG)
@@ -551,7 +549,7 @@
 
           <td data-th="Acciones" class="text-end sticky-end">
             <div class="actions-wrap">
-              {% set is_sender_row = role_lower in ['admin','coordinador'] %}
+              {% set is_sender_row = (role_lower == 'admin' or is_coord) %}
               {% set can_sap = is_sender_row and sap_ready_row and (not has_sap) %}
               {% set prov_sap = (g.get('proveedor_codigo_sap') or '')|string|trim %}
               {% set proveedor_sin_sap = es_tarjeta_row and (prov_sap == '') %}
@@ -590,7 +588,7 @@
                 {% endif %}
 
                 {% set is_owner = (session.get('user_id')|int == (g.get('usuario_id')|int)) %}
-                {% set can_edit_delete = (role_lower in ['admin','coordinador','usuario','gerente'] or is_owner) and
+                {% set can_edit_delete = (role_lower in ['admin','usuario'] or is_coord or is_ga_role or is_owner) and
                 (role_lower != rol_gf) %}
 
                 {% if can_edit_delete %}

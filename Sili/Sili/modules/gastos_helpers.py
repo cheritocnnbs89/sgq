@@ -202,6 +202,53 @@ def set_rechazo_config(ga: bool, gg: bool, gf: bool) -> None:
         CLAVE_GF_PUEDE_RECHAZAR: "1" if gf else "0",
     })
 
+
+# ---------------- roles con rol de GA general (configurable) ----------------
+# No confundir con el GA dinámico por gasto (último jefe en la jerarquía):
+# esto es un gate más amplio, usado para decidir si a un usuario se le
+# muestran en general la columna/botones de GA (p.ej. para que coordinador
+# o cualquier "gerente" vea la columna aunque no sea el jefe de ese gasto puntual).
+CLAVE_ROLES_GA = "gastos_roles_ga"
+ROLES_GA_DEFAULT = ["gerente", "gerente de área", "gerente de area"]
+
+
+def roles_ga() -> list[str]:
+    raw = get_config_value(CLAVE_ROLES_GA)
+    if not raw:
+        return list(ROLES_GA_DEFAULT)
+    roles = [r.strip().lower() for r in raw.split(",") if r.strip()]
+    return roles or list(ROLES_GA_DEFAULT)
+
+
+def es_rol_ga(rol) -> bool:
+    return (rol or "").strip().lower() in roles_ga()
+
+
+def set_roles_ga(roles: list[str]) -> None:
+    limpio = [r.strip().lower() for r in (roles or []) if r and r.strip()]
+    set_config_values({CLAVE_ROLES_GA: ",".join(limpio)})
+
+
+# ---------------- rol con acceso al reporte Excel puntual (configurable) ----------------
+CLAVE_ROL_REPORTE_EXCEL = "gastos_rol_reporte_excel"
+ROL_REPORTE_EXCEL_DEFAULT = "asistente_gerencia"
+
+
+def rol_reporte_excel() -> str:
+    return (get_config_value(CLAVE_ROL_REPORTE_EXCEL) or ROL_REPORTE_EXCEL_DEFAULT).strip().lower()
+
+
+def set_rol_reporte_excel(rol: str) -> None:
+    set_config_values({CLAVE_ROL_REPORTE_EXCEL: (rol or "").strip().lower()})
+
+
+def puede_ver_reporte_excel(rol, is_coord: bool = False) -> bool:
+    role_lower = (rol or "").strip().lower()
+    if role_lower == "admin" or is_coord:
+        return True
+    return role_lower == rol_reporte_excel()
+
+
 def collect_gastos_filters2(request, session, privileged_roles=None) -> tuple[dict, list[str], list, bool]:
     if privileged_roles is None:
         privileged_roles = {

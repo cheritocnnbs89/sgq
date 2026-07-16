@@ -118,6 +118,69 @@
       </div>
     </div>
 
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-person-badge me-1"></i>Roles GA (aprobador de área)
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('gastos_configuracion_roles_ga') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Roles que ven la columna/acción de GA *</label>
+              {% for r in roles_disponibles %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="roles_ga" value="{{ r }}"
+                       id="roles_ga_{{ loop.index }}" {% if r in roles_ga %}checked{% endif %}>
+                <label class="form-check-label small" for="roles_ga_{{ loop.index }}">{{ r }}</label>
+              </div>
+              {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="bi bi-save me-1"></i>Guardar roles GA
+            </button>
+          </form>
+          <p class="small text-muted mt-3 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            El GA real de cada gasto siempre es el último jefe en la jerarquía del usuario que
+            lo creó — esto no cambia. Esta lista solo define qué roles, en general, pueden ver
+            la columna y los botones de aprobación GA (por ejemplo, para que coordinador o
+            cualquier gerente los vea aunque no sean el jefe directo de ese gasto puntual).
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-file-earmark-spreadsheet me-1"></i>Reporte Excel puntual
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('gastos_configuracion_reporte_excel') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Rol con acceso al botón "Reporte Excel" *</label>
+              <select class="form-select form-select-sm" name="rol_reporte_excel" required>
+                {% for r in roles_disponibles %}
+                <option value="{{ r }}" {% if r == rol_reporte_excel %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="bi bi-save me-1"></i>Guardar rol
+            </button>
+          </form>
+          <p class="small text-muted mt-3 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Admin y el coordinador del módulo siempre ven este botón. Este rol es un acceso
+            adicional puntual para un reporte específico, sin necesidad de asignarle el rol
+            de coordinador.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="col-12">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-light fw-bold">
