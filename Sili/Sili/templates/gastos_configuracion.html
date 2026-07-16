@@ -78,6 +78,114 @@
         </div>
       </div>
     </div>
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-people me-1"></i>Roles GG y GF
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('gastos_configuracion_roles_gg_gf') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Rol que actúa como GG (Gerente General) *</label>
+              <select class="form-select form-select-sm" name="rol_gg" required>
+                {% for r in roles_disponibles %}
+                <option value="{{ r }}" {% if r == rol_gg %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Rol que actúa como GF (Gerente Financiero) *</label>
+              <select class="form-select form-select-sm" name="rol_gf" required>
+                {% for r in roles_disponibles %}
+                <option value="{{ r }}" {% if r == rol_gf %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="bi bi-save me-1"></i>Guardar roles
+            </button>
+          </form>
+          <p class="small text-muted mt-3 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Cualquier usuario con este rol de sistema puede aprobar en ese paso, en cualquier
+            gasto que lo requiera. No es una persona específica — es el rol completo.
+            GA sigue siendo automático (último jefe con rol gerente en la cadena) y no se
+            configura aquí.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-diagram-3 me-1"></i>Pasos de aprobación requeridos por tipo de gasto
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('gastos_configuracion_flujo_requerido') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-3">
+                <thead class="table-light">
+                  <tr>
+                    <th>Tipo de gasto</th>
+                    <th class="text-center">Requiere GA</th>
+                    <th class="text-center">Requiere GG</th>
+                    <th class="text-center">Requiere GF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% set etiquetas = {
+                    'tarjeta': 'Tarjeta',
+                    'tarjeta_online': 'Tarjeta (Online)',
+                    'tarjeta_boletos': 'Tarjeta (Boletos aéreos)',
+                    'caja_chica': 'Caja chica',
+                    'reembolso': 'Reembolso de vendedor',
+                  } %}
+                  {% for tipo, cfg in flujo_requerido.items() %}
+                  <tr>
+                    <td>{{ etiquetas.get(tipo, tipo) }}</td>
+                    <td class="text-center">
+                      <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" role="switch"
+                               name="requiere_ga_{{ tipo }}" value="1"
+                               {% if cfg.ga %}checked{% endif %}>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" role="switch"
+                               name="requiere_gg_{{ tipo }}" value="1"
+                               {% if cfg.gg %}checked{% endif %}>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" role="switch"
+                               name="requiere_gf_{{ tipo }}" value="1"
+                               {% if cfg.gf %}checked{% endif %}>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="bi bi-save me-1"></i>Guardar flujo de aprobación
+            </button>
+          </form>
+          <p class="small text-muted mt-3 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Si apagas GG o GF para un tipo, ese paso se salta automáticamente para los gastos
+            de ese tipo — no queda pendiente de nadie. GA prácticamente siempre debería estar
+            activo.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>

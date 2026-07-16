@@ -455,9 +455,9 @@ def _can_approve_area(area: str) -> bool:
     if _is_super():
         return True
     if a == "gg":
-        return r == "gerente general"
+        return gh.es_rol_gg(r)
     if a == "gf":
-        return r == "gerente financiero"
+        return gh.es_rol_gf(r)
     if a == "ga":
         return r in ("gerente", "gerente de área", "gerente de area")
     return False
@@ -807,8 +807,8 @@ def guess_gerente_area(conn: sqlite3.Connection, user_id: int | None) -> int | N
     BOSS_ROLES = (
         'jefe',
         'gerente',
-        'gerente general',
-        'gerente financiero',
+        gh.rol_gg(),
+        gh.rol_gf(),
         'coordinador',
         'admin','usuario'
     )
@@ -1699,16 +1699,16 @@ def register_gastos_routes(app):
             current_app.logger.info("ROL_SESSION=%r role_name=%r pendientes=%r", session.get("rol"), role_name, pendientes)
 
             if pendientes == "1":
-                if tipo in TIPOS_RESTRINGIDOS and role_name in ("gerente general", "gerente financiero"):
+                if tipo in TIPOS_RESTRINGIDOS and role_name in (gh.rol_gg(), gh.rol_gf()):
                     where.append("1=0")
                 else:
                     if role_name in ("gerente", "gerente de área", "gerente de area"):
                         where.append("COALESCE(g.ga_aprobado,0)=0")
-                    elif role_name == "gerente general":
+                    elif role_name == gh.rol_gg():
                         where.append("COALESCE(g.ga_aprobado,0)=1 AND COALESCE(g.gg_aprobado,0)=0")
-                    #elif role_name == "gerente financiero":
+                    #elif role_name == gh.rol_gf():
                         #where.append("COALESCE(g.gg_aprobado,0)=1 AND COALESCE(g.gf_aprobado,0)=0")
-                    elif role_name == "gerente financiero":
+                    elif role_name == gh.rol_gf():
                         where.append("COALESCE(g.ga_aprobado,0)=1 AND COALESCE(g.gf_aprobado,0)=0")
                     else:
                         where.append("1=0")
@@ -1723,13 +1723,13 @@ def register_gastos_routes(app):
 
             PRIV_ALL = ('admin', 'coordinador')
             if tipo not in TIPOS_RESTRINGIDOS:
-                PRIV_ALL = ('admin', 'coordinador', 'gerente general', 'gerente financiero')
+                PRIV_ALL = ('admin', 'coordinador', gh.rol_gg(), gh.rol_gf())
 
             GERENTE_ROLES = ('gerente', 'gerente de área', 'gerente de area')
             allowed_ids = None
 
             scope_ids_set = set()
-            if role_name in ('gerente general', 'gerente financiero'):
+            if role_name in (gh.rol_gg(), gh.rol_gf()):
                 scope_ids_set = set(obtener_subordinados(conn, uid) or [])
                 if uid:
                     scope_ids_set.add(uid)
@@ -1747,7 +1747,7 @@ def register_gastos_routes(app):
             if role_name in PRIV_ALL:
                 pass
 
-            elif role_name in ('gerente general', 'gerente financiero'):
+            elif role_name in (gh.rol_gg(), gh.rol_gf()):
                 if allowed_ids is None:
                     allowed_ids = {uid}
 
@@ -1787,7 +1787,7 @@ def register_gastos_routes(app):
                     else:
                         filtros['usuario_id'] = ''
 
-                elif role_name in ('gerente general', 'gerente financiero'):
+                elif role_name in (gh.rol_gg(), gh.rol_gf()):
                     if allowed_ids and uid_req in allowed_ids:
                         where.append("g.usuario_id = ?")
                         args.append(uid_req)
@@ -1931,8 +1931,8 @@ def register_gastos_routes(app):
                     return ""
 
             rows2 = []
-            is_gg_gf = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
-            ROLE_VER_GERENTE = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
+            is_gg_gf = role_name in (gh.rol_gg(), gh.rol_gf(), "coordinador", "admin")
+            ROLE_VER_GERENTE = role_name in (gh.rol_gg(), gh.rol_gf(), "coordinador", "admin")
             es_coordinador_actual = (role_name == 'admin') or gh.es_coordinador_gastos(uid, role_name)
 
             for d in rows:
@@ -1952,18 +1952,18 @@ def register_gastos_routes(app):
                 d['can_act_as_ga_restringido'] = int(d.get('can_act_as_ga_restringido') or 0)
                 d['ga_actor'] = (d.get('ga_actor') or 'ga')
 
-                if es_tarjeta and role_name == 'gerente financiero':
+                if es_tarjeta and role_name == gh.rol_gf():
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_tarjeta'] = 1
                         d['can_act_as_gf_tarjeta'] = 1
                         d['ga_actor'] = 'gf'
 
-                if es_tarjeta and role_name == 'gerente general':
+                if es_tarjeta and role_name == gh.rol_gg():
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_tarjeta'] = 1
                         d['ga_actor'] = 'gg'
 
-                if es_restringido and role_name in ('gerente financiero', 'gerente general'):
+                if es_restringido and role_name in (gh.rol_gf(), gh.rol_gg()):
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_restringido'] = 1
 
@@ -2034,8 +2034,8 @@ def register_gastos_routes(app):
 
             is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
 
-            can_approve_gg = is_admin or (role_name == 'gerente general')
-            can_approve_gf = is_admin or (role_name == 'gerente financiero')
+            can_approve_gg = is_admin or (role_name == gh.rol_gg())
+            can_approve_gf = is_admin or (role_name == gh.rol_gf())
             can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
 
             readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid, role_name)
@@ -2406,8 +2406,8 @@ def register_gastos_routes(app):
 
         # flags para template
         is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
-        can_approve_gg = is_admin or (role_name == 'gerente general')
-        can_approve_gf = is_admin or (role_name == 'gerente financiero')
+        can_approve_gg = is_admin or (role_name == gh.rol_gg())
+        can_approve_gf = is_admin or (role_name == gh.rol_gf())
         can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
         readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid_session, role_name)
 
@@ -2482,7 +2482,7 @@ def register_gastos_routes(app):
                 return redirect(url_for("gastos_pendientes_aprobacion", **qs))
 
             # ✅ SOLO GERENTES (capa extra de seguridad)
-            ALLOWED = ("gerente", "gerente de área", "gerente de area", "gerente general", "gerente financiero")
+            ALLOWED = ("gerente", "gerente de área", "gerente de area", gh.rol_gg(), gh.rol_gf())
             if role_name not in ALLOWED:
                 try:
                     conn.close()
@@ -2577,14 +2577,14 @@ def register_gastos_routes(app):
             # ==========================================================
             PRIV_ALL = ('admin', 'coordinador')
             if tipo not in TIPOS_RESTRINGIDOS:
-                PRIV_ALL = ('admin', 'coordinador', 'gerente general', 'gerente financiero')
+                PRIV_ALL = ('admin', 'coordinador', gh.rol_gg(), gh.rol_gf())
 
             GERENTE_ROLES = ('gerente', 'gerente de área', 'gerente de area')
 
             allowed_ids = None
             scope_ids_set = set()
 
-            if role_name in ('gerente general', 'gerente financiero'):
+            if role_name in (gh.rol_gg(), gh.rol_gf()):
                 scope_ids_set = set(obtener_subordinados(conn, uid) or [])
                 if uid:
                     scope_ids_set.add(uid)
@@ -2603,7 +2603,7 @@ def register_gastos_routes(app):
             if role_name in PRIV_ALL:
                 pass
 
-            elif role_name in ('gerente general', 'gerente financiero'):
+            elif role_name in (gh.rol_gg(), gh.rol_gf()):
                 if allowed_ids is None:
                     allowed_ids = {uid}
 
@@ -2644,7 +2644,7 @@ def register_gastos_routes(app):
                     else:
                         filtros['usuario_id'] = ''
 
-                elif role_name in ('gerente general', 'gerente financiero'):
+                elif role_name in (gh.rol_gg(), gh.rol_gf()):
                     if allowed_ids and uid_req in allowed_ids:
                         where.append("g.usuario_id = ?")
                         args.append(uid_req)
@@ -2794,8 +2794,8 @@ def register_gastos_routes(app):
             # FLAGS POR FILA + gerente por fila
             # ==========================================================
             rows2 = []
-            is_gg_gf = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
-            ROLE_VER_GERENTE = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
+            is_gg_gf = role_name in (gh.rol_gg(), gh.rol_gf(), "coordinador", "admin")
+            ROLE_VER_GERENTE = role_name in (gh.rol_gg(), gh.rol_gf(), "coordinador", "admin")
 
             for d in rows:
                 d = dict(d or {})
@@ -2815,7 +2815,7 @@ def register_gastos_routes(app):
                 d['can_act_as_ga_restringido'] = int(d.get('can_act_as_ga_restringido') or 0)
                 d['ga_actor'] = (d.get('ga_actor') or 'ga')
 
-                if es_tarjeta and role_name == 'gerente financiero':
+                if es_tarjeta and role_name == gh.rol_gf():
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_tarjeta'] = 1
                         d['can_act_as_gf_tarjeta'] = 1
@@ -2824,12 +2824,12 @@ def register_gastos_routes(app):
                         if tipo_gasto != "tarjeta_online":
                             d['ga_actor'] = 'gf'
 
-                if es_tarjeta and role_name == 'gerente general':
+                if es_tarjeta and role_name == gh.rol_gg():
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_tarjeta'] = 1
                         d['ga_actor'] = 'gg'
 
-                if es_restringido and role_name in ('gerente financiero', 'gerente general'):
+                if es_restringido and role_name in (gh.rol_gf(), gh.rol_gg()):
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_restringido'] = 1
 
@@ -2868,7 +2868,7 @@ def register_gastos_routes(app):
                 if role_name in ("gerente", "gerente de área", "gerente de area"):
                     return ga == 0
 
-                if role_name == "gerente general":
+                if role_name == gh.rol_gg():
                     if es_restringido:
                         if int(d.get("can_act_as_ga_restringido") or 0) == 1:
                             return ga_eff_restringido == 0
@@ -2882,7 +2882,7 @@ def register_gastos_routes(app):
 
                     return False
 
-                if role_name == "gerente financiero":
+                if role_name == gh.rol_gf():
                     if es_restringido:
                         if int(d.get("can_act_as_ga_restringido") or 0) == 1:
                             return ga_eff_restringido == 0
@@ -2951,8 +2951,8 @@ def register_gastos_routes(app):
 
             is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
 
-            can_approve_gg = is_admin or (role_name == 'gerente general')
-            can_approve_gf = is_admin or (role_name == 'gerente financiero')
+            can_approve_gg = is_admin or (role_name == gh.rol_gg())
+            can_approve_gf = is_admin or (role_name == gh.rol_gf())
             can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
 
             readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid, role_name)
@@ -3287,13 +3287,13 @@ def register_gastos_routes(app):
         rol = (session.get("rol") or "").lower().strip()
         is_admin = (rol == "admin") or bool(session.get("is_admin"))
 
-        if area == "gg" and not (is_admin or rol == "gerente general"):
+        if area == "gg" and not (is_admin or rol == gh.rol_gg()):
             return jsonify(ok=False, msg="No puede aprobar como Gerente General"), 403
-        if area == "gf" and not (is_admin or rol == "gerente financiero"):
+        if area == "gf" and not (is_admin or rol == gh.rol_gf()):
             return jsonify(ok=False, msg="No puede aprobar como Gerente Financiero"), 403
 
         GA_ROLES = ("gerente", "gerente de área", "gerente de area")
-        GA_ACT_AS_ROLES = ("gerente general", "gerente financiero")
+        GA_ACT_AS_ROLES = (gh.rol_gg(), gh.rol_gf())
 
         if area == "ga" and not (is_admin or rol in GA_ROLES or rol in GA_ACT_AS_ROLES):
             return jsonify(ok=False, msg="No puede aprobar como Gerente de área"), 403
@@ -3368,7 +3368,7 @@ def register_gastos_routes(app):
                 if rol in ("gerente", "gerente de área", "gerente de area"):
                     subordinados = set(obtener_subordinados(conn, uid) or [])
                     subordinados.add(int(uid))
-                elif rol in ("gerente general", "gerente financiero"):
+                elif rol in (gh.rol_gg(), gh.rol_gf()):
                     ga_act_as_tarjeta = True
 
             def _has_sap(x) -> bool:
@@ -3409,8 +3409,8 @@ def register_gastos_routes(app):
                 es_auto_tipo = (int(row.get("reembolso_vendedor") or 0) == 1) or (int(row.get("es_caja_chica") or 0) == 1)
                 es_tarjeta = _es_tarjeta(row)
 
-                gf_es_ga = (rol == "gerente financiero") and es_tarjeta and _actua_como_ga_por_ultimo_jefe(row)
-                gg_es_ga = (rol == "gerente general") and es_tarjeta and _actua_como_ga_por_ultimo_jefe(row)
+                gf_es_ga = (rol == gh.rol_gf()) and es_tarjeta and _actua_como_ga_por_ultimo_jefe(row)
+                gg_es_ga = (rol == gh.rol_gg()) and es_tarjeta and _actua_como_ga_por_ultimo_jefe(row)
 
                 if subordinados is not None:
                     if int(row.get("usuario_id") or 0) not in subordinados:
@@ -3431,9 +3431,9 @@ def register_gastos_routes(app):
 
                 effective_area = area
                 if area == "ga" and es_auto_tipo and (not is_admin):
-                    if rol == "gerente financiero":
+                    if rol == gh.rol_gf():
                         effective_area = "gf"
-                    elif rol == "gerente general":
+                    elif rol == gh.rol_gg():
                         effective_area = "gg"
 
                 if area == "ga":
@@ -3593,13 +3593,13 @@ def register_gastos_routes(app):
             rol = (session.get("rol") or "").lower().strip()
             is_admin = (rol == "admin") or bool(session.get("is_admin"))
 
-            if area == "gg" and not (is_admin or rol == "gerente general"):
+            if area == "gg" and not (is_admin or rol == gh.rol_gg()):
                 return jsonify(ok=False, msg="No puede aprobar como Gerente General"), 403
-            if area == "gf" and not (is_admin or rol == "gerente financiero"):
+            if area == "gf" and not (is_admin or rol == gh.rol_gf()):
                 return jsonify(ok=False, msg="No puede aprobar como Gerente Financiero"), 403
 
             GA_ROLES = ("gerente", "gerente de área", "gerente de area")
-            GA_ACT_AS_ROLES = ("gerente general", "gerente financiero")
+            GA_ACT_AS_ROLES = (gh.rol_gg(), gh.rol_gf())
 
             if area == "ga" and not (is_admin or rol in GA_ROLES or rol in GA_ACT_AS_ROLES):
                 return jsonify(ok=False, msg="No puede aprobar como Gerente de área"), 403
@@ -3649,7 +3649,7 @@ def register_gastos_routes(app):
                         if int(usuario_meta or 0) not in subordinados:
                             return jsonify(ok=False, msg="No puede aprobar gastos fuera de su jerarquía."), 403
 
-                    elif rol in ("gerente general", "gerente financiero"):
+                    elif rol in (gh.rol_gg(), gh.rol_gf()):
                         es_tarjeta = (reembolso_vendedor == 0) and (es_caja_chica == 0)
                         if not es_tarjeta:
                             return jsonify(ok=False, msg="No autorizado para GA en este tipo de gasto."), 403
@@ -3667,9 +3667,9 @@ def register_gastos_routes(app):
 
                 effective_area = area
                 if area == "ga" and es_auto_tipo and (not is_admin):
-                    if rol == "gerente financiero":
+                    if rol == gh.rol_gf():
                         effective_area = "gf"
-                    elif rol == "gerente general":
+                    elif rol == gh.rol_gg():
                         effective_area = "gg"
 
                 col = {"gg": "gg", "gf": "gf", "ga": "ga"}[effective_area]
@@ -4602,7 +4602,7 @@ def register_gastos_routes(app):
         current_app.logger.info("[RECHAZAR_NOTIFICAR] llega gasto_id=%s", gasto_id)
 
         role = (session.get('rol') or '').strip().lower()
-        if role not in ('gerente general', 'admin', 'gerente financiero'):
+        if role not in (gh.rol_gg(), 'admin', gh.rol_gf()):
             return jsonify(ok=False, msg='No autorizado'), 403
 
         by_uid = session.get('usuario_id') or session.get('user_id')
@@ -4709,6 +4709,9 @@ def register_gastos_routes(app):
             ORDER BY nombre_completo
         """)
         usuarios = cur.fetchall()
+
+        cur.execute("SELECT nombre FROM roles ORDER BY nombre")
+        roles_disponibles = [r['nombre'] for r in cur.fetchall()]
         conn.close()
 
         coordinador = gh.get_coordinador_gastos()
@@ -4717,10 +4720,58 @@ def register_gastos_routes(app):
             'gastos_configuracion.html',
             usuarios=usuarios,
             coordinador=coordinador,
+            roles_disponibles=roles_disponibles,
+            rol_gg=gh.rol_gg(),
+            rol_gf=gh.rol_gf(),
+            flujo_requerido=gh.get_flujo_requerido(),
             usuario=session.get('usuario'),
             rol=session.get('rol'),
             active_page='gastos_configuracion',
         )
+
+    @app.route('/reembolsos/gastos/configuracion/roles-gg-gf', methods=['POST'],
+               endpoint='gastos_configuracion_roles_gg_gf')
+    @require_login
+    def gastos_configuracion_roles_gg_gf():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        rol_gg_nuevo = (request.form.get('rol_gg') or '').strip()
+        rol_gf_nuevo = (request.form.get('rol_gf') or '').strip()
+        if not rol_gg_nuevo or not rol_gf_nuevo:
+            flash('Debes seleccionar un rol para GG y otro para GF.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        gh.set_roles_gg_gf(rol_gg_nuevo, rol_gf_nuevo)
+        flash(f'Roles actualizados: GG = {rol_gg_nuevo}, GF = {rol_gf_nuevo}.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/flujo-requerido', methods=['POST'],
+               endpoint='gastos_configuracion_flujo_requerido')
+    @require_login
+    def gastos_configuracion_flujo_requerido():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        try:
+            for tipo in gh.FLUJO_REQUERIDO_DEFAULT.keys():
+                requiere_ga = request.form.get(f'requiere_ga_{tipo}') == '1'
+                requiere_gg = request.form.get(f'requiere_gg_{tipo}') == '1'
+                requiere_gf = request.form.get(f'requiere_gf_{tipo}') == '1'
+                gh.set_flujo_requerido(tipo, requiere_ga, requiere_gg, requiere_gf)
+            flash('Flujo de aprobación actualizado.', 'success')
+        except Exception:
+            current_app.logger.exception("Error guardando gastos_flujo_requerido")
+            flash(
+                'No se pudo guardar: falta crear la tabla gastos_flujo_requerido en la base '
+                '(pídele a tu DBA que corra la DDL pendiente).',
+                'danger'
+            )
+        return redirect(url_for('gastos_configuracion'))
 
     @app.route('/reembolsos/gastos/configuracion/coordinador', methods=['POST'],
                endpoint='gastos_configuracion_coordinador')
@@ -4849,7 +4900,7 @@ def register_gastos_routes(app):
         role_name = (session.get('rol') or '').lower()
         uid = session.get('usuario_id') or session.get('user_id')
 
-        PRIV_ALL = ('admin', 'gerente general', 'gerente financiero')
+        PRIV_ALL = ('admin', gh.rol_gg(), gh.rol_gf())
         GERENTE_ROLES = ('gerente', 'gerente de área', 'gerente de area')
 
         def _allowed_user_ids_for_role():
@@ -5795,7 +5846,7 @@ def register_gastos_routes(app):
         role_name = (session.get('rol') or '').strip().lower()
         uid = session.get('usuario_id') or session.get('user_id')
 
-        privileged = {'admin', 'gerente general', 'gerente financiero', 'coordinador'}
+        privileged = {'admin', gh.rol_gg(), gh.rol_gf(), 'coordinador'}
         gerente_roles = {'gerente', 'gerente de área', 'gerente de area'}
 
         # -------------------------------
@@ -6746,10 +6797,10 @@ def register_gastos_routes(app):
 
                 actor = _norm_actor(gasto)
 
-                if actor in ("gg", "gerente general", "gerente_general"):
+                if actor in ("gg", gh.rol_gg(), "gerente_general"):
                     return gg_ok_
 
-                if actor in ("gf", "gerente financiero", "gerente_financiero"):
+                if actor in ("gf", gh.rol_gf(), "gerente_financiero"):
                     return gf_ok_
 
                 if (not ga_ok_) and (gg_ok_ or gf_ok_):
@@ -7285,10 +7336,10 @@ def register_gastos_routes(app):
 
                 actor = _norm_actor(g)
 
-                if actor in ("gg", "gerente general", "gerente_general"):
+                if actor in ("gg", gh.rol_gg(), "gerente_general"):
                     return gg_ok
 
-                if actor in ("gf", "gerente financiero", "gerente_financiero"):
+                if actor in ("gf", gh.rol_gf(), "gerente_financiero"):
                     return gf_ok
 
                 if (not ga_ok) and (gg_ok or gf_ok):

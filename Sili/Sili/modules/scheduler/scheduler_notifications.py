@@ -13,6 +13,7 @@ from typing import Optional
 
 from flask import current_app
 
+from modules import gastos_helpers as gh
 from .scheduler_security import _exec_retry, _log
 from .scheduler_repository import (
     ensure_notify_schema,
@@ -860,10 +861,10 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
 
     area_key = (area or "").lower().strip()
     if area_key == "ga":
-        next_roles = ("gerente general",)
+        next_roles = (gh.rol_gg(),)
         template_next = TPL_GASTO_NEXT_GG
     elif area_key == "gg":
-        next_roles = ("gerente financiero",)
+        next_roles = (gh.rol_gf(),)
         template_next = TPL_GASTO_NEXT_GF
     elif area_key == "gf":
         next_roles = ("coordinador", "admin")
