@@ -166,6 +166,42 @@ def set_flujo_requerido(tipo_gasto: str, requiere_ga: bool, requiere_gg: bool, r
     finally:
         conn.close()
 
+
+# ---------------- quién puede rechazar (configurable) ----------------
+CLAVE_GA_PUEDE_RECHAZAR = "gastos_ga_puede_rechazar"
+CLAVE_GG_PUEDE_RECHAZAR = "gastos_gg_puede_rechazar"
+CLAVE_GF_PUEDE_RECHAZAR = "gastos_gf_puede_rechazar"
+
+# Comportamiento de hoy: solo GG y GF rechazan, GA no.
+RECHAZO_DEFAULT = {"ga": False, "gg": True, "gf": True}
+
+
+def _bool_config(clave: str, default: bool) -> bool:
+    v = get_config_value(clave)
+    if v is None or v == "":
+        return default
+    return str(v).strip() == "1"
+
+
+def ga_puede_rechazar() -> bool:
+    return _bool_config(CLAVE_GA_PUEDE_RECHAZAR, RECHAZO_DEFAULT["ga"])
+
+
+def gg_puede_rechazar() -> bool:
+    return _bool_config(CLAVE_GG_PUEDE_RECHAZAR, RECHAZO_DEFAULT["gg"])
+
+
+def gf_puede_rechazar() -> bool:
+    return _bool_config(CLAVE_GF_PUEDE_RECHAZAR, RECHAZO_DEFAULT["gf"])
+
+
+def set_rechazo_config(ga: bool, gg: bool, gf: bool) -> None:
+    set_config_values({
+        CLAVE_GA_PUEDE_RECHAZAR: "1" if ga else "0",
+        CLAVE_GG_PUEDE_RECHAZAR: "1" if gg else "0",
+        CLAVE_GF_PUEDE_RECHAZAR: "1" if gf else "0",
+    })
+
 def collect_gastos_filters2(request, session, privileged_roles=None) -> tuple[dict, list[str], list, bool]:
     if privileged_roles is None:
         privileged_roles = {

@@ -4602,10 +4602,33 @@ def register_gastos_routes(app):
         current_app.logger.info("[RECHAZAR_NOTIFICAR] llega gasto_id=%s", gasto_id)
 
         role = (session.get('rol') or '').strip().lower()
-        if role not in (gh.rol_gg(), 'admin', gh.rol_gf()):
-            return jsonify(ok=False, msg='No autorizado'), 403
-
         by_uid = session.get('usuario_id') or session.get('user_id')
+
+        autorizado = role == 'admin'
+        if not autorizado and role == gh.rol_gg() and gh.gg_puede_rechazar():
+            autorizado = True
+        if not autorizado and role == gh.rol_gf() and gh.gf_puede_rechazar():
+            autorizado = True
+        if not autorizado and gh.ga_puede_rechazar():
+            # GA no es un rol global fijo: solo puede rechazar si es el jefe
+            # real (último jefe con rol gerente, o él mismo si no tiene jefe)
+            # del usuario dueño de ESTE gasto en particular.
+            conn_chk = get_db()
+            try:
+                cur_chk = conn_chk.cursor()
+                cur_chk.execute(f"SELECT usuario_id FROM {TABLE_GASTOS} WHERE id = ?", (gasto_id,))
+                row_chk = cur_chk.fetchone()
+                if row_chk and by_uid:
+                    ultimo_jefe = _get_ultimo_jefe_id(
+                        conn_chk, row_chk['usuario_id'], fallback_to_self=True
+                    )
+                    if ultimo_jefe and int(ultimo_jefe) == int(by_uid):
+                        autorizado = True
+            finally:
+                conn_chk.close()
+
+        if not autorizado:
+            return jsonify(ok=False, msg='No autorizado'), 403
 
         data = request.get_json(silent=True) or {}
         comentario = (data.get('comentario') or '').strip()
@@ -4724,10 +4747,29 @@ def register_gastos_routes(app):
             rol_gg=gh.rol_gg(),
             rol_gf=gh.rol_gf(),
             flujo_requerido=gh.get_flujo_requerido(),
+            ga_puede_rechazar=gh.ga_puede_rechazar(),
+            gg_puede_rechazar=gh.gg_puede_rechazar(),
+            gf_puede_rechazar=gh.gf_puede_rechazar(),
             usuario=session.get('usuario'),
             rol=session.get('rol'),
             active_page='gastos_configuracion',
         )
+
+    @app.route('/reembolsos/gastos/configuracion/rechazo', methods=['POST'],
+               endpoint='gastos_configuracion_rechazo')
+    @require_login
+    def gastos_configuracion_rechazo():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        ga = request.form.get('ga_puede_rechazar') == '1'
+        gg = request.form.get('gg_puede_rechazar') == '1'
+        gf = request.form.get('gf_puede_rechazar') == '1'
+        gh.set_rechazo_config(ga, gg, gf)
+        flash('Permisos de rechazo actualizados.', 'success')
+        return redirect(url_for('gastos_configuracion'))
 
     @app.route('/reembolsos/gastos/configuracion/roles-gg-gf', methods=['POST'],
                endpoint='gastos_configuracion_roles_gg_gf')

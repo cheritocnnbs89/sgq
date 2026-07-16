@@ -186,6 +186,52 @@
         </div>
       </div>
     </div>
+
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-x-octagon me-1"></i>Quién puede rechazar un gasto
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('gastos_configuracion_rechazo') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" role="switch"
+                     id="ga_puede_rechazar" name="ga_puede_rechazar" value="1"
+                     {% if ga_puede_rechazar %}checked{% endif %}>
+              <label class="form-check-label small" for="ga_puede_rechazar">
+                GA (solo el jefe real del gasto — se valida por jerarquía, no por rol)
+              </label>
+            </div>
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" role="switch"
+                     id="gg_puede_rechazar" name="gg_puede_rechazar" value="1"
+                     {% if gg_puede_rechazar %}checked{% endif %}>
+              <label class="form-check-label small" for="gg_puede_rechazar">
+                GG ({{ rol_gg }})
+              </label>
+            </div>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" role="switch"
+                     id="gf_puede_rechazar" name="gf_puede_rechazar" value="1"
+                     {% if gf_puede_rechazar %}checked{% endif %}>
+              <label class="form-check-label small" for="gf_puede_rechazar">
+                GF ({{ rol_gf }})
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="bi bi-save me-1"></i>Guardar permisos de rechazo
+            </button>
+          </form>
+          <p class="small text-muted mt-3 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Admin siempre puede rechazar, sin importar esta configuración. Hoy solo GG y GF
+            pueden — si activas GA, esa persona solo podrá rechazar los gastos donde
+            realmente es el jefe (no cualquier gasto).
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
