@@ -60,6 +60,112 @@ def es_coordinador_gastos(usuario_id, rol=None) -> bool:
     coord = get_coordinador_gastos()
     return bool(coord) and int(coord["usuario_id"]) == int(usuario_id)
 
+
+# ---------------- flujo de aprobación GA/GG/GF (configurable) ----------------
+CLAVE_ROL_GG = "gastos_rol_gg"
+CLAVE_ROL_GF = "gastos_rol_gf"
+ROL_GG_DEFAULT = "gerente general"
+ROL_GF_DEFAULT = "gerente financiero"
+
+TBL_FLUJO_REQUERIDO = "gastos_flujo_requerido"
+
+# Comportamiento de hoy, usado como respaldo si la tabla no existe todavía
+# (falta la DDL) o el tipo de gasto no tiene fila propia.
+FLUJO_REQUERIDO_DEFAULT = {
+    "tarjeta":         {"ga": True, "gg": True,  "gf": True},
+    "tarjeta_online":  {"ga": True, "gg": True,  "gf": True},
+    "tarjeta_boletos": {"ga": True, "gg": False, "gf": False},
+    "caja_chica":      {"ga": True, "gg": False, "gf": False},
+    "reembolso":       {"ga": True, "gg": False, "gf": False},
+}
+
+
+def rol_gg() -> str:
+    """Rol de sistema que actúa como GG (Gerente General) en la aprobación de gastos."""
+    return (get_config_value(CLAVE_ROL_GG) or ROL_GG_DEFAULT).strip().lower()
+
+
+def rol_gf() -> str:
+    """Rol de sistema que actúa como GF (Gerente Financiero) en la aprobación de gastos."""
+    return (get_config_value(CLAVE_ROL_GF) or ROL_GF_DEFAULT).strip().lower()
+
+
+def es_rol_gg(rol) -> bool:
+    return (rol or "").strip().lower() == rol_gg()
+
+
+def es_rol_gf(rol) -> bool:
+    return (rol or "").strip().lower() == rol_gf()
+
+
+def set_roles_gg_gf(rol_gg_nombre: str, rol_gf_nombre: str) -> None:
+    set_config_values({
+        CLAVE_ROL_GG: (rol_gg_nombre or ROL_GG_DEFAULT).strip().lower(),
+        CLAVE_ROL_GF: (rol_gf_nombre or ROL_GF_DEFAULT).strip().lower(),
+    })
+
+
+def get_flujo_requerido() -> dict:
+    """
+    {tipo_gasto: {"ga": bool, "gg": bool, "gf": bool}} para los 5 tipos de gasto.
+    Si la tabla gastos_flujo_requerido no existe o no tiene fila para un tipo,
+    ese tipo cae al comportamiento actual (FLUJO_REQUERIDO_DEFAULT).
+    """
+    conn = get_db()
+    cur = conn.cursor()
+    rows = []
+    try:
+        cur.execute(f"""
+            SELECT tipo_gasto, requiere_ga, requiere_gg, requiere_gf
+            FROM {TBL_FLUJO_REQUERIDO}
+        """)
+        rows = cur.fetchall()
+    except Exception:
+        rows = []
+    finally:
+        conn.close()
+
+    resultado = {k: dict(v) for k, v in FLUJO_REQUERIDO_DEFAULT.items()}
+    for r in rows:
+        tipo = (r["tipo_gasto"] or "").strip().lower()
+        if tipo in resultado:
+            resultado[tipo] = {
+                "ga": bool(r["requiere_ga"]),
+                "gg": bool(r["requiere_gg"]),
+                "gf": bool(r["requiere_gf"]),
+            }
+    return resultado
+
+
+def requiere_paso(tipo_gasto: str, paso: str) -> bool:
+    """paso: 'ga' | 'gg' | 'gf'. Devuelve True si ese paso aplica para este tipo."""
+    flujo = get_flujo_requerido()
+    tipo = (tipo_gasto or "").strip().lower()
+    cfg = flujo.get(tipo) or FLUJO_REQUERIDO_DEFAULT.get("tarjeta")
+    return bool(cfg.get((paso or "").strip().lower(), True))
+
+
+def set_flujo_requerido(tipo_gasto: str, requiere_ga: bool, requiere_gg: bool, requiere_gf: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    tipo = (tipo_gasto or "").strip().lower()
+    try:
+        cur.execute(f"SELECT tipo_gasto FROM {TBL_FLUJO_REQUERIDO} WHERE tipo_gasto = ?", (tipo,))
+        if cur.fetchone():
+            cur.execute(f"""
+                UPDATE {TBL_FLUJO_REQUERIDO}
+                SET requiere_ga = ?, requiere_gg = ?, requiere_gf = ?
+                WHERE tipo_gasto = ?
+            """, (int(requiere_ga), int(requiere_gg), int(requiere_gf), tipo))
+        else:
+            cur.execute(f"""
+                INSERT INTO {TBL_FLUJO_REQUERIDO} (tipo_gasto, requiere_ga, requiere_gg, requiere_gf)
+                VALUES (?, ?, ?, ?)
+            """, (tipo, int(requiere_ga), int(requiere_gg), int(requiere_gf)))
+        conn.commit()
+    finally:
+        conn.close()
+
 def collect_gastos_filters2(request, session, privileged_roles=None) -> tuple[dict, list[str], list, bool]:
     if privileged_roles is None:
         privileged_roles = {

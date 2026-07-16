@@ -3380,7 +3380,12 @@ def register_gastos_routes(app):
 
             def _actua_como_ga_por_ultimo_jefe(row) -> bool:
                 try:
-                    ultimo_jefe = _get_ultimo_jefe_id(conn, int(row.get("usuario_id") or 0))
+                    # fallback_to_self=True: si el dueño del gasto no tiene jefe_id
+                    # (ej. un gerente que registra su propio gasto), él mismo cuenta
+                    # como su "último jefe" — puede aprobarse su propio paso GA.
+                    ultimo_jefe = _get_ultimo_jefe_id(
+                        conn, int(row.get("usuario_id") or 0), fallback_to_self=True
+                    )
                     return bool(ultimo_jefe) and int(ultimo_jefe) == int(uid)
                 except Exception:
                     return False
@@ -3417,7 +3422,9 @@ def register_gastos_routes(app):
                         skipped.append({"id": gid, "msg": "No aplica: solo tarjeta"})
                         continue
 
-                    ultimo_jefe = _get_ultimo_jefe_id(conn, int(row.get("usuario_id") or 0))
+                    ultimo_jefe = _get_ultimo_jefe_id(
+                        conn, int(row.get("usuario_id") or 0), fallback_to_self=True
+                    )
                     if not ultimo_jefe or int(ultimo_jefe) != int(uid):
                         skipped.append({"id": gid, "msg": "No es último jefe (GA tarjeta)"})
                         continue
@@ -3647,7 +3654,9 @@ def register_gastos_routes(app):
                         if not es_tarjeta:
                             return jsonify(ok=False, msg="No autorizado para GA en este tipo de gasto."), 403
 
-                        ultimo_jefe = _get_ultimo_jefe_id(conn, int(usuario_meta) if usuario_meta else None)
+                        ultimo_jefe = _get_ultimo_jefe_id(
+                            conn, int(usuario_meta) if usuario_meta else None, fallback_to_self=True
+                        )
                         if not ultimo_jefe or int(ultimo_jefe) != int(uid):
                             return jsonify(ok=False, msg="No puede aprobar como GA: no es el último jefe del usuario."), 403
 
