@@ -91,7 +91,7 @@
     </div>
 
     {% set role_lower = (rol or '')|lower %}
-    {% if role_lower in ['gerente general','gerente financiero','coordinador','admin'] %}
+    {% if role_lower in [rol_gg,rol_gf,'coordinador','admin'] %}
     <div class="flex-grow-1 d-flex flex-column">
       <label class="form-label mb-1">Gerente</label>
       <select name="gerente_id" id="gerente_id" class="form-select form-select-sm w-220">
@@ -201,7 +201,7 @@
   </div>
 
   {% set role_lower = (rol or '')|lower %}
-  {% set can_select = (role_lower in ['admin','coordinador','gerente general','gerente financiero','gerente'] or can_approve_ga or can_approve_gf or can_approve_gg) %}
+  {% set can_select = (role_lower in ['admin','coordinador',rol_gg,rol_gf,'gerente'] or can_approve_ga or can_approve_gf or can_approve_gg) %}
 
   {% if can_select %}
   <div class="d-flex align-items-center gap-2 mb-2 no-print">
@@ -213,8 +213,8 @@
     </div>
 
     {% set tipo_sel = (filtros.tipo or '')|lower %}
-    {% set is_gg = (role_lower == 'gerente general') %}
-    {% set is_gf = (role_lower == 'gerente financiero') %}
+    {% set is_gg = (role_lower == rol_gg) %}
+    {% set is_gf = (role_lower == rol_gf) %}
     {% set show_bulk_ga_btn = ((not is_gg) and (not is_gf) and role_lower in ['admin','coordinador','gerente','gerente de área','gerente de area']) %}
 
     {% if show_bulk_ga_btn %}
@@ -259,8 +259,8 @@
 
       {% set show_aprob_gf = (is_coord or can_approve_gf or role_lower == 'admin') %}
       {% set is_admin = role_lower == 'admin' %}
-      {% set is_gg_gf = role_lower in ['gerente general','gerente financiero'] %}
-      {% set hide_aprob_cols = role_lower in ['gerente general','gerente financiero'] %}
+      {% set is_gg_gf = role_lower in [rol_gg,rol_gf] %}
+      {% set hide_aprob_cols = role_lower in [rol_gg,rol_gf] %}
 
       <thead>
         <tr>
@@ -320,9 +320,9 @@
         {% set has_sap = sap_doc_clean not in ['', '0', 'none', 'null', 'None', 'NULL'] %}
 
         {% set ga_actor = (g.get('ga_actor') or g.get('ga_aprobador') or g.get('ga_aprobador_rol') or '')|string|lower %}
-        {% set ga_actor_is_gg = es_tarjeta_row and (ga_actor in ['gg','gerente general','gerente_general']) %}
-        {% set ga_actor_is_gf = es_tarjeta_row and (ga_actor in ['gf','gerente financiero','gerente_financiero']) %}
-        {% set gf_o_gg_puede_actuar_como_ga_restringido = (es_restringido_row and (g.get('can_act_as_ga_restringido',0)|int == 1) and (role_lower in ['gerente financiero','gerente general'])) %}
+        {% set ga_actor_is_gg = es_tarjeta_row and (ga_actor in ['gg',rol_gg,'gerente_general']) %}
+        {% set ga_actor_is_gf = es_tarjeta_row and (ga_actor in ['gf',rol_gf,'gerente_financiero']) %}
+        {% set gf_o_gg_puede_actuar_como_ga_restringido = (es_restringido_row and (g.get('can_act_as_ga_restringido',0)|int == 1) and (role_lower in [rol_gf,rol_gg])) %}
         {% set ga_no_aplica_por_actor = false %}
         {% set gg_no_aplica_por_actor = es_tarjeta_row and ga_actor_is_gf %}
         {% set hay_ga_real_tarjeta = es_tarjeta_row and (not ga_no_aplica_por_actor) %}
@@ -352,11 +352,11 @@
         {% endif %}
 
         {% set can_ga_special = (g.get('can_act_as_ga_restringido', 0)|int == 1) %}
-        {% set can_manual_ga = (can_approve_ga or (es_tarjeta_row and (g.get('can_act_as_ga_tarjeta',0)|int == 1) and role_lower in ['gerente financiero','gerente general']) or gf_o_gg_puede_actuar_como_ga_restringido) %}
+        {% set can_manual_ga = (can_approve_ga or (es_tarjeta_row and (g.get('can_act_as_ga_tarjeta',0)|int == 1) and role_lower in [rol_gf,rol_gg]) or gf_o_gg_puede_actuar_como_ga_restringido) %}
         {% set can_bulk_ga = (can_manual_ga and (not has_sap) and (not ga_effective_ok) and (not gf_ok)) %}
         {% set can_bulk_gg = (can_approve_gg and (not has_sap) and (not gg_ok) and (not gg_no_aplica_por_actor) and (es_restringido_row or (es_tarjeta_row and (ga_effective_ok or ga_actor_is_gg)))) %}
         {% set can_bulk_gf = (can_approve_gf and can_gf_row and (not has_sap) and (not gf_ok) and (es_restringido_row or (es_tarjeta_row and gg_ok and ga_effective_ok))) %}
-        {% set allow_free_select = ((role_lower in ['gerente financiero','gerente general']) and es_tarjeta_row and (not has_sap)) %}
+        {% set allow_free_select = ((role_lower in [rol_gf,rol_gg]) and es_tarjeta_row and (not has_sap)) %}
         {% set prov_sap = (g.get('proveedor_codigo_sap') or '')|string|trim %}
         {% set proveedor_sin_sap = es_tarjeta_row and (prov_sap == '') %}
         {% set can_sap_row = (role_lower in ['admin','coordinador']) and sap_ready_row and (not has_sap) and (not proveedor_sin_sap) %}
@@ -477,7 +477,7 @@
                 </button>
                 {% endif %}
 
-                {% if role_lower in ['gerente general','admin','gerente financiero'] %}
+                {% if role_lower in [rol_gg,'admin',rol_gf] %}
                 <button type="button" class="btn btn-outline-danger btn-sm btn-icon js-rechazo-gg"
                   data-url="{{ url_for('rechazar_gasto_notificar_gerente', gasto_id=g['id']) }}"
                   data-gasto-id="{{ g['id'] }}"
@@ -509,7 +509,7 @@
             </td>
             {% else %}
             <td data-th="Aprob. GA" class="text-center">
-              {% set can_ga_asignado_por_jerarquia = (g.get('can_act_as_ga_tarjeta',0)|int == 1) and (role_lower in ['gerente financiero','gerente general']) %}
+              {% set can_ga_asignado_por_jerarquia = (g.get('can_act_as_ga_tarjeta',0)|int == 1) and (role_lower in [rol_gf,rol_gg]) %}
               {% if ga_no_aplica_por_actor %}
               <span class="badge rounded-pill badge-pend" title="GA no aplica: el aprobador de área es GG">N/A</span>
               {% elif can_approve_ga or can_ga_asignado_por_jerarquia %}
@@ -520,7 +520,7 @@
                   {% if ga_ok %}checked{% endif %}
                   {% if has_sap %}disabled data-locked="1" title="No editable: ya tiene Doc. SAP"{% endif %}>
               </div>
-              {% elif es_restringido_row and can_ga_special and role_lower in ['gerente financiero','gerente general'] %}
+              {% elif es_restringido_row and can_ga_special and role_lower in [rol_gf,rol_gg] %}
               <span class="badge rounded-pill badge-pend" title="Autoaprobado por rol combinado (no implica aprobación manual de GA).">N/A</span>
               {% else %}
               <span class="badge rounded-pill {{ 'badge-ok' if ga_ok else 'badge-pend' }}">
@@ -531,7 +531,7 @@
 
             {% if show_aprob_gg %}
             <td data-th="Aprob. GG" class="text-center">
-              {% if es_restringido_row and role_lower == 'gerente financiero' %}
+              {% if es_restringido_row and role_lower == rol_gf %}
               <span class="badge rounded-pill badge-pend">N/A</span>
               {% else %}
                 {% set lock_gg = has_sap or (es_tarjeta_row and (not ga_actor_is_gg) and (not ga_effective_ok)) %}

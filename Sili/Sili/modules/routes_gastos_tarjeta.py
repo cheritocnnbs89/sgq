@@ -2052,6 +2052,8 @@ def register_gastos_routes(app):
                 can_approve_gf=can_approve_gf,
                 can_approve_ga=can_approve_ga,
                 readonly_view=readonly_view,
+                rol_gg=gh.rol_gg(),
+                rol_gf=gh.rol_gf(),
                 usuario=session.get('usuario'),
                 rol=session.get('rol'),
                 active_page='gastos_tarjeta'
@@ -2969,6 +2971,8 @@ def register_gastos_routes(app):
                 can_approve_gf=can_approve_gf,
                 can_approve_ga=can_approve_ga,
                 readonly_view=readonly_view,
+                rol_gg=gh.rol_gg(),
+                rol_gf=gh.rol_gf(),
                 usuario=session.get('usuario'),
                 rol=session.get('rol'),
                 active_page='gastos_pendientes'
