@@ -1696,9 +1696,10 @@ def register_gastos_routes(app):
                 filtros["gerente_id"] = ""
 
             pendientes = (request.args.get("pendientes") or request.args.get("pend") or "").strip()
-            current_app.logger.info("ROL_SESSION=%r role_name=%r pendientes=%r", session.get("rol"), role_name, pendientes)
+            pend_view_req = (request.args.get("pend_view") or "").strip().lower()
+            current_app.logger.info("ROL_SESSION=%r role_name=%r pendientes=%r pend_view=%r", session.get("rol"), role_name, pendientes, pend_view_req)
 
-            if pendientes == "1":
+            if pendientes == "1" and pend_view_req == "":
                 if tipo in TIPOS_RESTRINGIDOS and role_name in (gh.rol_gg(), gh.rol_gf()):
                     where.append("1=0")
                 else:
