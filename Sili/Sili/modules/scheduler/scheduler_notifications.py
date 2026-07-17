@@ -1072,7 +1072,7 @@ def enqueue_gasto_rejected_gg(conn, gasto_id: int, by_user_id: int, comentario: 
     tarea_id = int(gasto_id)
     area = "gg"
     canal = "email"
-    template_key = "gasto_rejected_gg"
+    template_key = TPL_GASTO_RECHAZO_GG
     estado = "pending"
     fecha_obj = date.today()
     scheduled_at = datetime.now()
