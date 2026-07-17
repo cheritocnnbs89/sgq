@@ -53,19 +53,43 @@ HEADERS = {
 AWS_AUTH_API_URL = os.environ.get("AWS_AUTH_API_URL", "").strip().rstrip("/")
 AWS_AUTH_TOKEN = os.environ.get("AWS_AUTH_TOKEN", "").strip()
 
+# El nombre del header lo define el autorizador Lambda del lado AWS
+# (quimpac-sync-auth-authorizer), no es arbitrario de este lado.
 AUTH_HEADERS = {
-    "x-flask-token": AWS_AUTH_TOKEN,
+    "x-flask-auth-token": AWS_AUTH_TOKEN,
     "Content-Type": "application/json",
 }
 
-# Roles que se consideran "gerente" para efectos de esta sincronización.
-ROLES_GERENTE_AUTH = (
-    "gerente",
-    "gerente general",
-    "gerente financiero",
-    "gerente de area",
-    "gerente de área",
-)
+
+def _rol_aprobacion(rol_sistema: str) -> str | None:
+    """
+    Traduce el rol de sistema (usuarios.rol) al nivel de aprobación que
+    espera la Lambda de AWS: GA / GG / GF. Usa la misma configuración de
+    gastos_helpers ya usada en el resto de la app (rol_gg()/rol_gf()/roles
+    GA), en vez de una lista de nombres literales aparte -- si alguien
+    reconfigura quién es GG o GF desde Configuración de Gastos, este mapeo
+    lo respeta automáticamente sin tocar código.
+    """
+    from . import gastos_helpers as gh
+
+    rol = (rol_sistema or "").strip().lower()
+    if gh.es_rol_gg(rol):
+        return "GG"
+    if gh.es_rol_gf(rol):
+        return "GF"
+    if gh.es_rol_ga(rol):
+        return "GA"
+    return None
+
+
+def _roles_gerente_auth() -> tuple[str, ...]:
+    """Roles de sistema que hoy mapean a algún nivel de aprobación (GA/GG/GF)."""
+    from . import gastos_helpers as gh
+
+    roles = set(gh.roles_ga())
+    roles.add(gh.rol_gg())
+    roles.add(gh.rol_gf())
+    return tuple(roles)
 
 
 # ============================================================
@@ -587,6 +611,8 @@ def push_gerentes_auth_a_aws(app=None):
     try:
         conn = _get_db()
 
+        roles_gerente_auth = _roles_gerente_auth()
+
         try:
             rows = conn.execute(
                 f"""
@@ -594,9 +620,9 @@ def push_gerentes_auth_a_aws(app=None):
                        COALESCE(disabled, 0) AS disabled, password,
                        auth_aws_hash_enviado
                 FROM usuarios
-                WHERE LOWER(LTRIM(RTRIM(rol))) IN ({",".join("?" for _ in ROLES_GERENTE_AUTH)})
+                WHERE LOWER(LTRIM(RTRIM(rol))) IN ({",".join("?" for _ in roles_gerente_auth)})
                 """,
-                ROLES_GERENTE_AUTH,
+                roles_gerente_auth,
             ).fetchall()
         except Exception:
             logger.exception(
@@ -647,11 +673,23 @@ def push_gerentes_auth_a_aws(app=None):
                 )
                 continue
 
+            rol_aprobacion = _rol_aprobacion(u["rol"])
+            if not rol_aprobacion:
+                # No calza con GA/GG/GF configurados actualmente (p.ej. quedó
+                # en la lista por una configuración anterior). No se envía.
+                logger.warning(
+                    "[AWS SYNC][AUTH_PUSH][SKIP] run_id=%s | usuario_id=%s | "
+                    "motivo=sin_nivel_aprobacion",
+                    run_id,
+                    u["id"],
+                )
+                continue
+
             activo = 0 if int(u["disabled"] or 0) else 1
             hash_type = password.split(":")[0]
 
             estado_actual = hashlib.sha256(
-                f"{password}|{u['rol']}|{activo}".encode("utf-8")
+                f"{password}|{rol_aprobacion}|{activo}".encode("utf-8")
             ).hexdigest()
 
             if estado_actual == (u["auth_aws_hash_enviado"] or ""):
@@ -661,7 +699,7 @@ def push_gerentes_auth_a_aws(app=None):
                 {
                     "email": email,
                     "nombre": u["nombre_completo"] or u["username"] or "",
-                    "rol": u["rol"],
+                    "rol": rol_aprobacion,
                     "activo": activo,
                     "password_hash": password,
                     "hash_type": hash_type,
