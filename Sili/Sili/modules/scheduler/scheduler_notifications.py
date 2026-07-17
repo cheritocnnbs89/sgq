@@ -897,7 +897,7 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
     scheduled_at = datetime.now() + timedelta(minutes=5)
     fecha_obj = date.today()
     canal = CANAL_EMAIL
-    estado = "PENDIENTE"
+    estado = "pending"
 
     # 1) Notificación al creador del gasto
     event_key_user = f"{int(gasto_id)}:{area_key}:user"
@@ -1073,7 +1073,7 @@ def enqueue_gasto_rejected_gg(conn, gasto_id: int, by_user_id: int, comentario: 
     area = "gg"
     canal = "email"
     template_key = "gasto_rejected_gg"
-    estado = "PENDIENTE"
+    estado = "pending"
     fecha_obj = date.today()
     scheduled_at = datetime.now()
 
