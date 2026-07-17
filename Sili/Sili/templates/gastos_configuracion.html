@@ -365,11 +365,17 @@
           {% endif %}
 
           <form method="post" action="{{ url_for('gastos_configuracion_auto_registro_crear') }}"
-                class="row g-2 align-items-end">
+                id="frmAutoRegistroRegla"
+                class="row g-2 align-items-end"
+                data-api-proveedores-search="{{ url_for('api_proveedores_search') }}"
+                data-api-param-motivos="{{ url_for('api_param_motivos') }}"
+                data-api-param-centros="{{ url_for('api_param_centros') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="col-md-2">
-              <label class="form-label fw-semibold small">RUC proveedor *</label>
-              <input type="text" class="form-control form-control-sm" name="ruc_proveedor" required>
+              <label class="form-label fw-semibold small">Proveedor *</label>
+              <input type="text" class="form-control form-control-sm" name="ruc_proveedor" id="autoreg_proveedor"
+                     list="dl-autoreg-proveedores" autocomplete="off" placeholder="Escribe para buscar…" required>
+              <datalist id="dl-autoreg-proveedores"></datalist>
             </div>
             <div class="col-md-2">
               <label class="form-label fw-semibold small">Monto exacto *</label>
@@ -377,11 +383,15 @@
             </div>
             <div class="col-md-2">
               <label class="form-label fw-semibold small">Motivo (cuenta contable) *</label>
-              <input type="text" class="form-control form-control-sm" name="motivo" required>
+              <input type="text" class="form-control form-control-sm" name="motivo" id="autoreg_motivo"
+                     list="dl-autoreg-motivos" autocomplete="off" placeholder="Escribe para buscar…" required>
+              <datalist id="dl-autoreg-motivos"></datalist>
             </div>
             <div class="col-md-2">
               <label class="form-label fw-semibold small">Centro de costo *</label>
-              <input type="text" class="form-control form-control-sm" name="centro_costo" required>
+              <input type="text" class="form-control form-control-sm" name="centro_costo" id="autoreg_centro"
+                     list="dl-autoreg-centros" autocomplete="off" placeholder="Escribe para buscar…" required>
+              <datalist id="dl-autoreg-centros"></datalist>
             </div>
             <div class="col-md-2">
               <label class="form-label fw-semibold small">Usuario dueño / notificado *</label>
