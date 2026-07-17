@@ -4769,10 +4769,76 @@ def register_gastos_routes(app):
             gf_puede_rechazar=gh.gf_puede_rechazar(),
             roles_ga=gh.roles_ga(),
             rol_reporte_excel=gh.rol_reporte_excel(),
+            auto_registro_reglas=gh.list_auto_registro_reglas(),
             usuario=session.get('usuario'),
             rol=session.get('rol'),
             active_page='gastos_configuracion',
         )
+
+    @app.route('/reembolsos/gastos/configuracion/auto-registro/crear', methods=['POST'],
+               endpoint='gastos_configuracion_auto_registro_crear')
+    @require_login
+    def gastos_configuracion_auto_registro_crear():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        ruc = (request.form.get('ruc_proveedor') or '').strip()
+        monto_raw = (request.form.get('monto') or '').strip()
+        motivo = (request.form.get('motivo') or '').strip()
+        centro_costo = (request.form.get('centro_costo') or '').strip()
+        usuario_id_raw = (request.form.get('usuario_id') or '').strip()
+        enviar_sap_auto = request.form.get('enviar_sap_auto') == '1'
+
+        if not (ruc and monto_raw and motivo and centro_costo and usuario_id_raw.isdigit()):
+            flash('Completa RUC, monto, motivo, centro de costo y usuario.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        try:
+            monto = float(monto_raw)
+        except ValueError:
+            flash('Monto inválido.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        try:
+            gh.crear_auto_registro_regla(ruc, monto, motivo, centro_costo, int(usuario_id_raw), enviar_sap_auto)
+            flash('Regla de auto-registro creada.', 'success')
+        except Exception:
+            current_app.logger.exception("Error creando regla de auto-registro")
+            flash(
+                'No se pudo crear la regla: falta crear la tabla gastos_auto_registro_reglas en la base '
+                '(pídele a tu DBA que corra la DDL pendiente).',
+                'danger'
+            )
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/auto-registro/<int:regla_id>/eliminar', methods=['POST'],
+               endpoint='gastos_configuracion_auto_registro_eliminar')
+    @require_login
+    def gastos_configuracion_auto_registro_eliminar(regla_id):
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        gh.eliminar_auto_registro_regla(regla_id)
+        flash('Regla de auto-registro eliminada.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/auto-registro/<int:regla_id>/toggle', methods=['POST'],
+               endpoint='gastos_configuracion_auto_registro_toggle')
+    @require_login
+    def gastos_configuracion_auto_registro_toggle(regla_id):
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        activo = request.form.get('activo') == '1'
+        gh.set_auto_registro_regla_activa(regla_id, activo)
+        flash('Regla actualizada.', 'success')
+        return redirect(url_for('gastos_configuracion'))
 
     @app.route('/reembolsos/gastos/configuracion/roles-ga', methods=['POST'],
                endpoint='gastos_configuracion_roles_ga')

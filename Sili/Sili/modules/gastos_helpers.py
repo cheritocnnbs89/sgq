@@ -249,6 +249,94 @@ def puede_ver_reporte_excel(rol, is_coord: bool = False) -> bool:
     return role_lower == rol_reporte_excel()
 
 
+# ---------------- auto-registro de facturas recurrentes (configurable) ----------------
+# Reglas para reconocer facturas de facturas_xml (sincronizadas desde seedbilling) que
+# corresponden a un gasto tipo tarjeta recurrente y siempre igual (mismo proveedor, mismo
+# monto), y registrarlas solas sin que nadie las digite a mano.
+TBL_AUTO_REGISTRO_REGLAS = "gastos_auto_registro_reglas"
+
+
+def list_auto_registro_reglas(solo_activas: bool = False) -> list[dict]:
+    """
+    Devuelve [] si la tabla todavía no existe (falta correr la DDL) — igual que
+    get_flujo_requerido(), para no romper la pantalla de configuración ni el job.
+    """
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        sql = f"""
+            SELECT r.id, r.ruc_proveedor, r.monto, r.motivo, r.centro_costo,
+                   r.usuario_id, r.enviar_sap_auto, r.activo,
+                   u.nombre_completo AS usuario_nombre, u.username AS usuario_username
+            FROM {TBL_AUTO_REGISTRO_REGLAS} r
+            LEFT JOIN usuarios u ON u.id = r.usuario_id
+        """
+        if solo_activas:
+            sql += " WHERE COALESCE(r.activo,1) = 1"
+        sql += " ORDER BY r.id"
+        cur.execute(sql)
+        rows = cur.fetchall()
+    except Exception:
+        rows = []
+    finally:
+        conn.close()
+
+    return [
+        {
+            "id": r["id"],
+            "ruc_proveedor": r["ruc_proveedor"],
+            "monto": float(r["monto"] or 0),
+            "motivo": r["motivo"],
+            "centro_costo": r["centro_costo"],
+            "usuario_id": r["usuario_id"],
+            "usuario_nombre": r["usuario_nombre"] or r["usuario_username"] or "",
+            "enviar_sap_auto": bool(r["enviar_sap_auto"]),
+            "activo": bool(r["activo"]),
+        }
+        for r in rows
+    ]
+
+
+def crear_auto_registro_regla(ruc_proveedor: str, monto: float, motivo: str,
+                               centro_costo: str, usuario_id: int,
+                               enviar_sap_auto: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute(f"""
+            INSERT INTO {TBL_AUTO_REGISTRO_REGLAS}
+                (ruc_proveedor, monto, motivo, centro_costo, usuario_id, enviar_sap_auto, activo)
+            VALUES (?, ?, ?, ?, ?, ?, 1)
+        """, (
+            (ruc_proveedor or "").strip(), monto, (motivo or "").strip(),
+            (centro_costo or "").strip(), usuario_id, int(bool(enviar_sap_auto))
+        ))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def eliminar_auto_registro_regla(regla_id: int) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute(f"DELETE FROM {TBL_AUTO_REGISTRO_REGLAS} WHERE id = ?", (regla_id,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def set_auto_registro_regla_activa(regla_id: int, activo: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute(f"UPDATE {TBL_AUTO_REGISTRO_REGLAS} SET activo = ? WHERE id = ?",
+                    (int(bool(activo)), regla_id))
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def collect_gastos_filters2(request, session, privileged_roles=None) -> tuple[dict, list[str], list, bool]:
     if privileged_roles is None:
         privileged_roles = {

@@ -179,6 +179,21 @@ def start_scheduler(app=None):
                 _log("debug", "Worker: process_om_acciones_seguimiento omitido (fuera de horario laboral)")
 
             try:
+                _log("info", "Worker: Ejecutando auto-registro de facturas recurrentes...")
+                cauto = get_db_standalone()
+                try:
+                    from modules.gastos_auto_registro import procesar_auto_registro_facturas
+                    creados = procesar_auto_registro_facturas(cauto)
+                    _log("info", "Worker: auto-registro de facturas OK, gastos creados=%s", creados)
+                finally:
+                    try:
+                        cauto.close()
+                    except Exception:
+                        pass
+            except Exception:
+                target_app.logger.exception("Worker: procesar_auto_registro_facturas falló")
+
+            try:
                 _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
                 from modules.contratos.contratos_services import encolar_notificaciones_contratos_por_vencer
                 n_contratos = encolar_notificaciones_contratos_por_vencer()

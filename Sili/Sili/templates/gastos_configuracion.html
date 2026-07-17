@@ -295,6 +295,119 @@
         </div>
       </div>
     </div>
+
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-robot me-1"></i>Auto-registro de facturas recurrentes
+        </div>
+        <div class="card-body">
+          <p class="small text-muted">
+            Cuando una factura sincronizada de seedbilling calza exactamente con RUC del
+            proveedor + monto de una regla, el sistema la registra sola como gasto tipo
+            Tarjeta, ya aprobado (GA/GG/GF), y notifica al usuario configurado.
+          </p>
+
+          {% if auto_registro_reglas %}
+          <div class="table-responsive mb-3">
+            <table class="table table-sm align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>RUC proveedor</th>
+                  <th class="text-end">Monto</th>
+                  <th>Motivo (cuenta contable)</th>
+                  <th>Centro de costo</th>
+                  <th>Usuario</th>
+                  <th class="text-center">Envío SAP auto</th>
+                  <th class="text-center">Activa</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for r in auto_registro_reglas %}
+                <tr>
+                  <td>{{ r.ruc_proveedor }}</td>
+                  <td class="text-end">{{ '%.2f'|format(r.monto) }}</td>
+                  <td>{{ r.motivo }}</td>
+                  <td>{{ r.centro_costo }}</td>
+                  <td>{{ r.usuario_nombre }}</td>
+                  <td class="text-center">
+                    {% if r.enviar_sap_auto %}<span class="badge bg-success">Sí</span>
+                    {% else %}<span class="badge bg-secondary">No</span>{% endif %}
+                  </td>
+                  <td class="text-center">
+                    <form method="post" class="d-inline"
+                          action="{{ url_for('gastos_configuracion_auto_registro_toggle', regla_id=r.id) }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <input type="hidden" name="activo" value="{{ '0' if r.activo else '1' }}">
+                      <button type="submit" class="btn btn-sm {{ 'btn-success' if r.activo else 'btn-outline-secondary' }}">
+                        {{ 'Activa' if r.activo else 'Inactiva' }}
+                      </button>
+                    </form>
+                  </td>
+                  <td class="text-end">
+                    <form method="post"
+                          action="{{ url_for('gastos_configuracion_auto_registro_eliminar', regla_id=r.id) }}"
+                          data-confirm-message="¿Eliminar esta regla de auto-registro?">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="alert alert-secondary small mb-3">Sin reglas configuradas todavía.</div>
+          {% endif %}
+
+          <form method="post" action="{{ url_for('gastos_configuracion_auto_registro_crear') }}"
+                class="row g-2 align-items-end">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="col-md-2">
+              <label class="form-label fw-semibold small">RUC proveedor *</label>
+              <input type="text" class="form-control form-control-sm" name="ruc_proveedor" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label fw-semibold small">Monto exacto *</label>
+              <input type="number" step="0.01" class="form-control form-control-sm" name="monto" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label fw-semibold small">Motivo (cuenta contable) *</label>
+              <input type="text" class="form-control form-control-sm" name="motivo" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label fw-semibold small">Centro de costo *</label>
+              <input type="text" class="form-control form-control-sm" name="centro_costo" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label fw-semibold small">Usuario dueño / notificado *</label>
+              <select class="form-select form-select-sm" name="usuario_id" required>
+                <option value="">Seleccione...</option>
+                {% for u in usuarios %}
+                <option value="{{ u.id }}">{{ u.nombre_completo or u.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-1">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="enviar_sap_auto"
+                       name="enviar_sap_auto" value="1">
+                <label class="form-check-label small" for="enviar_sap_auto">SAP auto</label>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <button type="submit" class="btn btn-primary btn-sm w-100">
+                <i class="bi bi-plus-lg"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
