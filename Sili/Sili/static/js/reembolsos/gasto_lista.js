@@ -158,13 +158,21 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   (function initDefaultDates() {
+    // No usar location.search: el gateway de la app enmascara rutas GET en
+    // /g/<token>, por lo que la barra de direcciones no refleja los filtros
+    // reales (p.ej. pend_view). Se lee el estado ya resuelto por el servidor
+    // directamente de los campos del formulario en vez de la URL.
     const pad = (n) => String(n).padStart(2, '0');
     const fmt = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
     const desde = document.querySelector('input[name="desde"]');
     const hasta = document.querySelector('input[name="hasta"]');
+    const pendientesField = document.querySelector('[name="pendientes"]');
+    const ccbField = document.querySelector('[name="ccb"]');
 
-    const qs = new URLSearchParams(location.search);
-    const special = ['ccb', 'pendientes'].some(k => qs.get(k) === '1');
+    const special = (pendientesField && pendientesField.value === '1')
+      || (ccbField && ccbField.value === '1');
+    const hadDesde = !!(desde && desde.value);
+    const hadHasta = !!(hasta && hasta.value);
 
     if (!special) {
       const today = fmt(new Date());
@@ -173,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const form = desde?.closest('form');
-    if (form && !qs.has('desde') && !qs.has('hasta') && !special) {
+    if (form && !hadDesde && !hadHasta && !special) {
       form.submit();
     }
   })();
