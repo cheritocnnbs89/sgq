@@ -687,9 +687,14 @@ def push_gerentes_auth_a_aws(app=None):
 
             activo = 0 if int(u["disabled"] or 0) else 1
             hash_type = password.split(":")[0]
+            nombre = u["nombre_completo"] or u["username"] or ""
 
+            # Incluye email y nombre además de password/rol/activo: la tabla
+            # de AWS está indexada por email, así que un cambio de correo
+            # también debe disparar un reenvío (si no, quedaría desincronizado
+            # en silencio -- el hash de antes seguiría "coincidiendo").
             estado_actual = hashlib.sha256(
-                f"{password}|{rol_aprobacion}|{activo}".encode("utf-8")
+                f"{email}|{nombre}|{password}|{rol_aprobacion}|{activo}".encode("utf-8")
             ).hexdigest()
 
             if estado_actual == (u["auth_aws_hash_enviado"] or ""):
@@ -698,7 +703,7 @@ def push_gerentes_auth_a_aws(app=None):
             payload.append(
                 {
                     "email": email,
-                    "nombre": u["nombre_completo"] or u["username"] or "",
+                    "nombre": nombre,
                     "rol": rol_aprobacion,
                     "activo": activo,
                     "password_hash": password,
