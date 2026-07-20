@@ -1374,6 +1374,7 @@ def register_gastos_routes(app):
                     COALESCE(t.nombre, g.proveedor, '') AS proveedor_nombre,
                     COALESCE(g.numero_factura, '') AS numero_factura,
                     COALESCE(g.orden_compra, '') AS orden_compra,
+                    COALESCE(g.clave_autorizacion, '') AS clave_autorizacion,
 
                     COALESCE(g.subtotal_factura, 0) AS subtotal_factura,
                     COALESCE(g.servicios_10, 0) AS servicios_10,
@@ -1487,6 +1488,7 @@ def register_gastos_routes(app):
                 ("proveedor_nombre", "Proveedor"),
                 ("numero_factura", "N° factura"),
                 ("orden_compra", "N° Orden de compra"),
+                ("clave_autorizacion", "Clave de autorización"),
 
                 ("det_observacion", "Observación (línea)"),
                 ("det_motivo_gasto", "Motivo gasto (línea)"),
