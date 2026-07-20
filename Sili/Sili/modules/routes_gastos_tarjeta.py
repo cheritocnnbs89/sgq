@@ -1375,7 +1375,24 @@ def register_gastos_routes(app):
                     COALESCE(t.nombre, g.proveedor, '') AS proveedor_nombre,
                     COALESCE(g.numero_factura, '') AS numero_factura,
                     COALESCE(g.orden_compra, '') AS orden_compra,
-                    COALESCE(fx.clave_acceso, '') AS clave_autorizacion,
+                    COALESCE(
+                        fx.clave_acceso,
+                        (
+                            SELECT TOP 1 fx2.clave_acceso
+                            FROM facturas_xml fx2
+                            WHERE g.factura_xml_id IS NULL
+                              AND g.numero_factura IS NOT NULL
+                              AND LTRIM(RTRIM(g.numero_factura)) <> ''
+                              AND CHARINDEX('-', REVERSE(g.numero_factura)) > 0
+                              AND fx2.secuencial LIKE SUBSTRING(
+                                    g.numero_factura,
+                                    LEN(g.numero_factura) - CHARINDEX('-', REVERSE(g.numero_factura)) + 2,
+                                    LEN(g.numero_factura)
+                                  ) + '%'
+                              AND fx2.ruc_emisor = t.identificacion
+                        ),
+                        ''
+                    ) AS clave_autorizacion,
 
                     COALESCE(g.subtotal_factura, 0) AS subtotal_factura,
                     COALESCE(g.servicios_10, 0) AS servicios_10,
