@@ -44,7 +44,9 @@ from .seedbilling_xml_job import process_seedbilling_facturas_recibidas
 
 # ── AWS Sync (DynamoDB) ───────────────────────────────────────
 try:
-    from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws, push_gerentes_auth_a_aws
+    from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws
+    # push_gerentes_auth_a_aws: aun no esta en produccion, se activa aparte.
+    # from modules.aws_sync import push_gerentes_auth_a_aws
     _AWS_SYNC_ENABLED = True
 except Exception as _aws_err:
     _AWS_SYNC_ENABLED = False
@@ -178,36 +180,21 @@ def start_scheduler(app=None):
             else:
                 _log("debug", "Worker: process_om_acciones_seguimiento omitido (fuera de horario laboral)")
 
-            try:
-                _log("info", "Worker: Ejecutando auto-registro de facturas recurrentes...")
-                cauto = get_db_standalone()
-                try:
-                    from modules.gastos_auto_registro import procesar_auto_registro_facturas
-                    creados = procesar_auto_registro_facturas(cauto)
-                    _log("info", "Worker: auto-registro de facturas OK, gastos creados=%s", creados)
-                finally:
-                    try:
-                        cauto.close()
-                    except Exception:
-                        pass
-            except Exception:
-                target_app.logger.exception("Worker: procesar_auto_registro_facturas falló")
-
-            try:
-                _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
-                from modules.contratos.contratos_services import encolar_notificaciones_contratos_por_vencer
-                n_contratos = encolar_notificaciones_contratos_por_vencer()
-                _log("info", "Worker: contratos_por_vencer encolados=%s", n_contratos)
-            except Exception:
-                target_app.logger.exception("Worker: encolar_notificaciones_contratos_por_vencer falló")
-
-            try:
-                _log("info", "Worker: Encolando notificaciones de garantías por vencer (20/10/5/0d)...")
-                from modules.contratos.contratos_services import encolar_notificaciones_garantias_multi_dia
-                n_garantias = encolar_notificaciones_garantias_multi_dia()
-                _log("info", "Worker: garantias_multi_dia encoladas=%s", n_garantias)
-            except Exception:
-                target_app.logger.exception("Worker: encolar_notificaciones_garantias_multi_dia falló")
+            # auto-registro de facturas recurrentes: aun no esta en produccion.
+            # try:
+            #     _log("info", "Worker: Ejecutando auto-registro de facturas recurrentes...")
+            #     cauto = get_db_standalone()
+            #     try:
+            #         from modules.gastos_auto_registro import procesar_auto_registro_facturas
+            #         creados = procesar_auto_registro_facturas(cauto)
+            #         _log("info", "Worker: auto-registro de facturas OK, gastos creados=%s", creados)
+            #     finally:
+            #         try:
+            #             cauto.close()
+            #         except Exception:
+            #             pass
+            # except Exception:
+            #     target_app.logger.exception("Worker: procesar_auto_registro_facturas falló")
 
         except Exception:
             target_app.logger.exception("Worker: fallo general en %s", tick_label)
@@ -271,6 +258,7 @@ def start_scheduler(app=None):
             last_om_date           = None
             last_seedbilling_slots = set()
             last_weekly_report_date = None   # ← control reporte semanal planilla
+            last_contratos_garantias_date = None   # ← control encolado contratos/garantías por vencer (09:00)
             last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
             last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
             last_aws_sync          = 0.0     # ← control sync AWS DynamoDB (cada 5 min)
@@ -358,6 +346,31 @@ def start_scheduler(app=None):
                             target_app.logger.exception("Worker: send_daily_report falló")
 
                 # ==================================================
+                # Notificaciones de contratos/garantías por vencer - diario 09:00
+                # ==================================================
+                now4 = datetime.now()
+                is_0900 = now4.hour == 9 and now4.minute < 6  # ventana de 5 min
+
+                if is_0900 and last_contratos_garantias_date != now4.date():
+                    try:
+                        _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
+                        from modules.contratos.contratos_services import encolar_notificaciones_contratos_por_vencer
+                        n_contratos = encolar_notificaciones_contratos_por_vencer()
+                        _log("info", "Worker: contratos_por_vencer encolados=%s", n_contratos)
+                    except Exception:
+                        target_app.logger.exception("Worker: encolar_notificaciones_contratos_por_vencer falló")
+
+                    try:
+                        _log("info", "Worker: Encolando notificaciones de garantías por vencer (20/10/5/0d)...")
+                        from modules.contratos.contratos_services import encolar_notificaciones_garantias_multi_dia
+                        n_garantias = encolar_notificaciones_garantias_multi_dia()
+                        _log("info", "Worker: garantias_multi_dia encoladas=%s", n_garantias)
+                    except Exception:
+                        target_app.logger.exception("Worker: encolar_notificaciones_garantias_multi_dia falló")
+
+                    last_contratos_garantias_date = now4.date()
+
+                # ==================================================
                 # Reporte SEMANAL planilla - Viernes 17:00
                 # ==================================================
                 now3 = datetime.now()
@@ -431,8 +444,9 @@ def start_scheduler(app=None):
                         push_gastos_a_aws(target_app)
                         _log("info", "Worker: AWS sync — pull aprobaciones...")
                         pull_aprobaciones_de_aws(target_app)
-                        _log("info", "Worker: AWS sync — push auth gerentes...")
-                        push_gerentes_auth_a_aws(target_app)
+                        # push_gerentes_auth_a_aws: aun no esta en produccion.
+                        # _log("info", "Worker: AWS sync — push auth gerentes...")
+                        # push_gerentes_auth_a_aws(target_app)
                         last_aws_sync = now_ts4
                         _log("info", "Worker: AWS sync OK")
                     except Exception:
