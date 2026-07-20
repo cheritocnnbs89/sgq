@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>BAYAS ARELLANO CECILIA LISSETTE</razonSocial>
+        <nombreComercial>BLISS CENTRO FAMILIAR</nombreComercial>
+        <ruc>0915956510001</ruc>
+        <claveAcceso>1907202601091595651000120011000000000485472550716</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>100</ptoEmi>
+        <secuencial>000000048</secuencial>
+        <dirMatriz>Ciudadela: ENTRERIOS Calle: SEPTIMA Numero: 33 Interseccion: AV. RIO VINCES  Manzana: I 1 Supermanzana: SEGUNDA ETAPA </dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>19/07/2026</fechaEmision>
+        <dirEstablecimiento>Ciudadela: ENTRERIOS Calle: SEPTIMA Numero: 33 Interseccion: AV. RIO VINCES  Manzana: I 1 Supermanzana: SEGUNDA ETAPA </dirEstablecimiento>
+        <obligadoContabilidad>NO</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <direccionComprador>Km. 16 1/2 Via Daule / Av. Rosavin Y Calle Cobre</direccionComprador>
+        <totalSinImpuestos>777.78</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>777.78</baseImponible>
+                <valor>116.67</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0</propina>
+        <importeTotal>894.45</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>894.45</total>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>1001648957</codigoPrincipal>
+            <codigoAuxiliar>750050026</codigoAuxiliar>
+            <descripcion>BIENESTAR EMOCIONAL GYE- MES DE JULIO</descripcion>
+            <cantidad>1</cantidad>
+            <precioUnitario>777.78</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>777.78</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>777.78</baseImponible>
+                    <valor>116.67</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Telefono">045000460</campoAdicional>
+        <campoAdicional nombre="Email">enfermeria@quimpac.com.ec</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-39c8ad6a-b941-4191-817a-ad790d79da21"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-39c8ad6a-b941-4191-817a-ad790d79da21-ref0" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>APOP1UOje5MyRnODMw4y5jbxuQ7aaZ8znNDr/NutySk=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-39c8ad6a-b941-4191-817a-ad790d79da21-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>YI5nrYu3hYHTc6AE55YWwCMoPKnylsjYZrmin19z/84=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-39c8ad6a-b941-4191-817a-ad790d79da21-sigvalue">Jpnq9UxgWR/7dKsz3jBKFwajtuFpcOcYT4Ktei2pU5CNzqNsDemYyGTX3P1Y9TPeJlUVhQhly3kVGTd8vlZusYtrQydModLREg2NU+n6LWCKQIZ0PquuMtx78FOKarAbErgThP4X2BE8UavY3tnDFAtVspZ0f0MDD/FxGansqYaN2lJgfdfxGOR1Gzvu1audlinZ4Ho9YB2QUWLhmKRLb+JGvT5MIXkZLWA9yMgIdSRTs24pwVMIIGct6Kmx/KrPZSxJi9XaONZaWAOmUoel1sVQn2ZbEpxrI5KjCRsduHmw1fGAODwjsXF6KTWb2E0jbyd+rll8+Y+MdNgImzXqbQ==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIKvTCCCKWgAwIBAgIID6fJwwejOAIwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwNTIyMDM0NjM5WhcNMjgwNTIxMDM0NjM5WjCBqjEoMCYGA1UEAwwfQ0VDSUxJQSBMSVNTRVRURSBCQVlBUyBBUkVMTEFOTzEgMB4GA1UEBRMXMDkxNTk1NjUxMC0yMTA1MjYyMjU2MjcxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzf0+N0cYsQs6sItoI/th5iWN26uFblAhU+2pENj8KaBvOTv16gtTUw61VabuCjIX8j0KooW2/sXBlAb/pxJ5yS4n8OmjEp88xn0kcuW0U+/J879GEMWeqKUAS2murnlKD/Q36gZZ3OlTowEZWXiwcBfkl0Onh6fmIj6Th19eqRKmv94xNmdavdnzPS32Q2JSWLZ374pxxu/5ZD4jsgit/gVHA262s+N9nd2wM+J76cA6SFP2pKDt2dn+rDAktANwDVIid1Q8nwbuw3SV7m+0jZC2ejtVN1+YUYlsOPIA2l5Spk529cc77MhtkfZyh+8nKk4toYnLCUtvallgXQU4MwIDAQABo4IF9DCCBfAwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwKAYDVR0RBCEwH4EdcHNpY29jZWNpbGlhYmF5YXNAaG90bWFpbC5jb20wggEGBgNVHSAEgf4wgfswWgYKKwYBBAGCpnICBzBMMEoGCCsGAQUFBwICMD4ePABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABQAGUAcgBzAG8AbgBhACAATgBhAHQAdQByAGEAbDCBnAYKKwYBBAGCpnICATCBjTCBigYIKwYBBQUHAgEWfmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUGVyc29uYSBOYXR1cmFsLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB3qA6oDiGNmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxlLmNybKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqgOIY2aHR0cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3JsMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFLtUTzCLZilm+rP9UKlTFuBgYXa5MCsGA1UdEAQkMCKADzIwMjYwNTIyMDM0NjM5WoEPMjAyODA1MjEwMzQ2MzlaMAsGA1UdDwQEAwIF4DAaBgorBgEEAYKmcgMBBAwMCjA5MTU5NTY1MTAwLQYKKwYBBAGCpnIDCQQfDB1TQU1CT1JPTkRPTiBDQUJFQ0VSQSBDQU5UT05BTDARBgorBgEEAYKmcgMiBAMMAS4wKgYKKwYBBAGCpnIDBwQcDBpTRVBUSU1BIDMzIFkgQVYgUklPIFZJTkNFUzAgBgorBgEEAYKmcgMCBBIMEENFQ0lMSUEgTElTU0VUVEUwHwYKKwYBBAGCpnIDIAQRDA8wMDEwMDIwMDExNTM5ODYwEQYKKwYBBAGCpnIDIwQDDAEuMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAVBgorBgEEAYKmcgMDBAcMBUJBWUFTMBgGCisGAQQBgqZyAx4ECgwITUFHSVNURVIwHQYKKwYBBAGCpnIDCwQPDA0wOTE1OTU2NTEwMDAxMBEGCisGAQQBgqZyAx0EAwwBLjAYBgorBgEEAYKmcgMEBAoMCEFSRUxMQU5PMBoGCisGAQQBgqZyAwgEDAwKMDk4MTc4MTA3OTANBgkqhkiG9w0BAQsFAAOCAgEAODwDwSV/xWX62QGC8L/gBvlaVbc2MdpNWkGwGO+W0b8NovMpok4OR9dhy1AA4PC98Tg4YPI1qSNy8aK52oTDxxMEqV5OfyW314TFhwhp+7SfQuapWqhFkKc9Bp57tbYuC8iBj/sXOoTguQ+mZOOG87WVI5B+2M+YRBRyXLRjPcky+kYi0ANgNr0/sS/1ZI6wkd/kFCtRfHh5+oRrheFbtAf7bne1YhqOmUNWZ3u3JytzZTvdOOzUnCX/ygLevJxLiSVOxWaFQgXaGg18rszKUYG53X3tLr2DCC9PHlj9ME8lETPIiEvlCJMaSvq4Sccp/nXv5X65fEN/GIOwc50xANEjDvrmmGaenRfZbHC2xdjzaS9Se1zMEXt4KnwSt9frdlk465Nv4JoKGId8dN+ORlrd9wOuOVwi+gfwVkLGv2JO3uZU2Tc09xlSKq+OhtyCanrk9zn1vXA/Ggg0j7UtODoQZkrv90+K6dzM4lVQgrApXy/CwsNBMBwkqx9bLBhtNc1sGS778O95aw0rKeQJ3/QHRrbAyFgxkNOTRbrLhdXlr//AaTT0bd3+9Nf0XBHRCNnIkPpgO0lPa7dwXw6FzbwFH5pqnQtOvK6hQIlOk0MglVf6HO9hSD0T+BwWUpox/MAYqdQvlxUikw6/ZD3lZ1jL3yqgNf5LGCO/P/tr0Kc=</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-39c8ad6a-b941-4191-817a-ad790d79da21"><xades:SignedProperties Id="xmldsig-39c8ad6a-b941-4191-817a-ad790d79da21-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-07-19T19:52:15.658-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>QXgRf/DLe+iLTRErI9/LnmdgCnHBEQqHIRYynp0MUJg=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1128092071163541506</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-39c8ad6a-b941-4191-817a-ad790d79da21-ref0"><xades:Description>FIRMA DIGITAL SRI</xades:Description><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>

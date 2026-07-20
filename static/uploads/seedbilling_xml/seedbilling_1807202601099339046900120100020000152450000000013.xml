@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>MATJUFI S.A.S.</razonSocial>
+	    <nombreComercial>MATJUFI S.A.S.</nombreComercial>
+	    <ruc>0993390469001</ruc>
+	    <claveAcceso>1807202601099339046900120100020000152450000000013</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>010</estab>
+	    <ptoEmi>002</ptoEmi>
+	    <secuencial>000015245</secuencial>
+	    <dirMatriz>GUAYAS / GUAYAQUIL / GUAYAQUIL / ELEODORO AVILES MINUCHE Y BENJAMIN CARRION</dirMatriz>
+		
+		
+			<agenteRetencion>10</agenteRetencion>
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>18/07/2026</fechaEmision>
+		
+			<dirEstablecimiento>GUAYAS / GUAYAQUIL / GUAYAQUIL / ELEODORO AVILES MINUCHE Y BENJAMIN CARRION</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>Quimpac Ecuador S.A</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>xxxxxx</direccionComprador>
+	    
+	    <totalSinImpuestos>5.04000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>5.04</baseImponible>
+				<valor>0.76000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>5.80000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>19</formaPago>
+	    		<total>5.80</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>EXT003</codigoPrincipal>
+		<codigoAuxiliar>EXT003</codigoAuxiliar>
+      	<descripcion>CHIFLE</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>0.782610</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>0.78</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>0.78000</baseImponible>
+          <valor>0.12</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>BEP005</codigoPrincipal>
+		<codigoAuxiliar>BEP005</codigoAuxiliar>
+      	<descripcion>COCA COLA ZERO</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>1.304350</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1.30</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1.30000</baseImponible>
+          <valor>0.20</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>ENC001</codigoPrincipal>
+		<codigoAuxiliar>ENC001</codigoAuxiliar>
+      	<descripcion>NORMAL</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.956520</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.96</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2.96000</baseImponible>
+          <valor>0.44</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+	
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">VENTA PUNTO DE VENTA</campoAdicional>
+    		
+    	
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature19980">
+<ds:SignedInfo Id="Signature-SignedInfo471666">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID345546" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature19980-SignedProperties619166">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>ghfL53Oe6viSmg9KHASqolGwGmA=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate664970">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>h3X6C7f5hz1Joza3cg++G+LTBEk=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-644606" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>6cKQ/fZB1XS2yh4lPhqRBe97kfk=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue119091">
+Hm3ghy/lKrdkWa1tkI0gvcAQRlRUXebTI8bipYOBlqCUi8btDPvla7/euj50XnEPNjGtUmWquUc8
+gwnW2V0hERJO6DsPN6PMmazIbxxCYhUkixpNGRMNH01kjVV5nbPI3d1wh+sL/aa2J6PYvFtTQyi/
+lWs+xeiyIELAAY6OHvLG+1kPMFcVVXXxfhWXAF6FPglc4TWcNjw3o/CBItfkcja/+bvrTxG5S6aD
+cubWHXNwKil5v6gE7AbqJGXDCjQM2wn/tgENxln865knbqK9/re/SVVHjldls460DVwol0jTYlvc
+wGYH3C+tw81lJ5pSKkUERIbegtQPIxpdd3fBSA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate664970">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJizCCB3OgAwIBAgIIZ/S3KFjnOVcwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI1MDczMDE2MzcwMFoXDTI2MDczMDE2MzcwMFowgdMxCzAJBgNVBAYTAkVDMRcwFQYDVQQKDA5N
+QVRKVUZJIFMuQS5TLjEYMBYGA1UEDAwPR0VSRU5URSBHRU5FUkFMMRcwFQYDVQQEDA5QQVJSQSBC
+RVJST05FUzEXMBUGA1UEKgwOV0lMTElBTSBIRVJOQU4xGTAXBgNVBAUTEElEQ0VDLTA5MTExODU2
+MDExJjAkBgNVBAMMHVdJTExJQU0gSEVSTkFOIFBBUlJBIEJFUlJPTkVTMRwwGgYDVQRhDBNWQVRF
+Qy0wOTkzMzkwNDY5MDAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnDyFV7eAIs5v
+nmEd3I5GtlJQ8D0T8wmPvwJ+2rEC3CD9g0L6pIyYxl7S5P9w0syYe5uRa+/fx6gi9Uoka1HgguAZ
+E/Tv8VW3EZZE8i38K72VACi37Rl2pZeaYmXxdbH1AzvnOMwx2NXPaXr6XFk/c6prremuK0cDi/Ex
+SQviibdwifXhUxiIbGAkiOSjGw+LNwaLI2KxKRZMuL5EkdEiCBUUACShDlwGSyyZ3dL25G5EkSRh
+uXqXJP+uHLA/JOc4MpGmd2vdrbLo7Voj780kTpbh09zWL4h9Xj5mTjILikw+Rrkl5+jUfSqduYna
+RLDvrE6OLS3PdYd/S+skZovDzQIDAQABo4IEejCCBHYwGwYLKwYBBAGC8TZmAwEEDAwKMDkxMTE4
+NTYwMTAeBgsrBgEEAYLxNmYDCwQPDA0wOTkzMzkwNDY5MDAxMIHXBggrBgEFBQcBAQSByjCBxzBV
+BggrBgEFBQcwAoZJaHR0cDovL3d3dy51YW5hdGFjYS5jb20vcHVibGljL2Rvd25sb2FkL3RzcF9j
+ZXJ0aWZpY2F0ZXMvc3Vib3JkaW5hdGUxLmNydDA2BggrBgEFBQcwAYYqaHR0cDovL29jc3AxLnVh
+bmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDIudWFu
+YXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wHQYDVR0OBBYEFHqhvQ48b+qFiojKJF0pYppLQKjP
+MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUfVfnYHPOB0ap4qNo8OERsnSSc/0wgY4GA1UdIASB
+hjCBgzCBgAYMKwYBBAGC8TZmAgMBMHAwNwYIKwYBBQUHAgEWK2h0dHBzOi8vd3d3LnVhbmF0YWNh
+LmNvbS9wdWJsaWMvcGtpL2RwYy1lYy8wNQYIKwYBBQUHAgIwKQwnQ0VSVElGSUNBRE8gREUgUkVQ
+UkVTRU5UQU5URSBFTiBBUkNISVZPMIGPBgNVHR8EgYcwgYQwQKA+oDyGOmh0dHA6Ly9jcmwxLnVh
+bmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5jcmwwQKA+oDyGOmh0dHA6
+Ly9jcmwyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5jcmwwDgYD
+VR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAbsGA1UdEQSCAbIw
+ggGugRF3cGFycmEyNEB5YWhvby5lc6AbBgsrBgEEAYLxNmYDAaAMDAowOTExMTg1NjAxoB8GCysG
+AQQBgvE2ZgMCoBAMDldJTExJQU0gSEVSTkFOoBYGCysGAQQBgvE2ZgMDoAcMBVBBUlJBoBkGCysG
+AQQBgvE2ZgMEoAoMCEJFUlJPTkVToCAGCysGAQQBgvE2ZgMFoBEMD0dFUkVOVEUgR0VORVJBTKAz
+BgsrBgEEAYLxNmYDB6AkDCJBTEJPUkFEQSA2VEEgRVRBUEEgTVogNjcwRCBWSUxMQSAxoB8GCysG
+AQQBgvE2ZgMIoBAMDjAwNTkzOTgwMTgyNDc0oBoGCysGAQQBgvE2ZgMJoAsMCUdVQVlBUVVJTKAf
+BgsrBgEEAYLxNmYDCqAQDA5NQVRKVUZJIFMuQS5TLqAeBgsrBgEEAYLxNmYDC6APDA0wOTkzMzkw
+NDY5MDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCQGCysGAQQBgvE2ZgMyoBUME1JFUFJFU0VOVEFO
+VEUgTEVHQUygGAYLKwYBBAGC8TZmAzOgCQwHQVJDSElWTzANBgkqhkiG9w0BAQsFAAOCAgEAYRCr
+3f0gBjx9ZsT5xA4kJpWRB2fMhIYpeimChLxikG4hrNVQ+QrwVKaMDm24LCpjGOuRacF1htbbHue3
+K0LSVyA9g3ZJUL+gbhdtGVBoYQmw8bUtsg/47QPP0vnEfK4kFLGTvP6RFyv1xZlPlCJnftFrFKFL
+owLZaR+/0w/asaVCSuzfG5SvQEV3ZG+Z08VlooIhWlHhuqFYKV8WxO7eY4TXRp8gqZidfxpMrnxm
+s/8ib7G/PrUtaNhWBJ959TirkWmQdwsBoVFEgmAMy4Cmw1PiCChVkwKHvMHHkRSVHiwqu8dRcp6P
+pisixhKmXtQtRYg5DVGfXoDmOOor3KnNqo7ct3lyOnWMqh7/cFexQLuG07bTUS2zlyMys+AnDWZj
+JDpVUQ6S+++2hOXyXSMI1oAqJk5rQxeyMqjb7FBrsD+g6mj5M9Q+T+yf1YUJN08i1tiDQy/OSyzG
+TwqMtqDUkbt0nLZ569Bh2Kid+N4gpqUpRD4H93xelNqvFnv7GJkUinmLlDaHHNS2DrqKRut2OBxe
+9L2TqlWa1XWo5FDg3x9BmMTxt2rV/ipIgqRvNOpFn/OBpzNYe42K44JmIvQZln8d9ZtsuAsG9jFh
+fr/wdl82FU5lcJNS6L+9LlcUx3VywVZ9hzI/Und0JbL0TCf3RBS8VG3ji+jYEOwdZRPYv1I=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+nDyFV7eAIs5vnmEd3I5GtlJQ8D0T8wmPvwJ+2rEC3CD9g0L6pIyYxl7S5P9w0syYe5uRa+/fx6gi
+9Uoka1HgguAZE/Tv8VW3EZZE8i38K72VACi37Rl2pZeaYmXxdbH1AzvnOMwx2NXPaXr6XFk/c6pr
+remuK0cDi/ExSQviibdwifXhUxiIbGAkiOSjGw+LNwaLI2KxKRZMuL5EkdEiCBUUACShDlwGSyyZ
+3dL25G5EkSRhuXqXJP+uHLA/JOc4MpGmd2vdrbLo7Voj780kTpbh09zWL4h9Xj5mTjILikw+Rrkl
+5+jUfSqduYnaRLDvrE6OLS3PdYd/S+skZovDzQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature19980-Object78262"><etsi:QualifyingProperties Target="#Signature19980"><etsi:SignedProperties Id="Signature19980-SignedProperties619166"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-18T09:09:58-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>BO3m0e0uJ9S4Xxjzr85S6/Mm5vk=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA</ds:X509IssuerName><ds:X509SerialNumber>7490813464142100823</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

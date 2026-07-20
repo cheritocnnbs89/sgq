@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalle de gasto #{{ g['id'] }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+
+<body class="bg-white">
+  <div class="container-fluid p-3">
+    <h4 class="mb-3">Detalle de gasto #{{ g['id'] }}</h4>
+
+ 
+  </div>
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">Adjuntos</div>
+    <div class="card-body">
+      {% if adjuntos and adjuntos|length > 0 %}
+      <div class="list-group">
+        {% for a in adjuntos %}
+        {% set fname = a.split('/')[-1] %}
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+          href="{{ url_for('static', filename='uploads/' + a) }}" target="_blank" rel="noopener">
+          <span class="text-truncate">
+            <i class="bi bi-paperclip me-2"></i>{{ fname }}
+          </span>
+          <span class="badge bg-primary rounded-pill">Abrir</span>
+        </a>
+        {% endfor %}
+      </div>
+      <small class="text-muted d-block mt-2">
+        Se abrirán en una nueva pestaña.
+      </small>
+      {% else %}
+      <div class="text-muted">Sin adjuntos.</div>
+      {% endif %}
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+{# templates/garantia_detalle_fragment.html #}
+
+{% macro val(obj, key, default='-') -%}
+  {%- if obj and (key in obj) and obj[key] not in (None, '') -%}
+    {{ obj[key] }}
+  {%- else -%}
+    {{ default }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro money(x) -%}
+  {%- if x is not none and x != '' -%}
+    ${{ '%.2f'|format(x|float) }}
+  {%- else -%}
+    -
+  {%- endif -%}
+{%- endmacro %}
+
+<div class="mb-3 d-flex justify-content-between align-items-start">
+  <div>
+    <div class="text-muted small">Detalle de garantía</div>
+    <div class="h6 mb-0">{{ val(contrato, 'proveedor', '') }}</div>
+    <div class="text-muted small">Pedido: {{ val(contrato, 'pedido', '') }}</div>
+  </div>
+</div>
+
+<div class="row g-3">
+
+  <div class="col-12">
+    <div class="detail-card">
+      <div class="detail-head"><i class="bi bi-link-45deg"></i> Contrato asociado</div>
+      <div class="detail-body">
+        <table class="kv-table">
+          <tr><td class="k">Pedido</td><td class="v">{{ val(contrato, 'pedido') }}</td></tr>
+          <tr><td class="k">Proveedor</td><td class="v">{{ val(contrato, 'proveedor') }}</td></tr>
+          <tr><td class="k">Objeto</td><td class="v">{{ val(contrato, 'objeto') }}</td></tr>
+          <tr><td class="k">Valor contrato</td><td class="v">{{ money(val(contrato, 'valor_contrato', none)) }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="detail-card h-100">
+      <div class="detail-head"><i class="bi bi-shield-check"></i> Datos de la garantía</div>
+      <div class="detail-body">
+        <table class="kv-table">
+          <tr><td class="k">Tipo</td><td class="v">{{ val(garantia, 'tipo') }}</td></tr>
+          <tr><td class="k">Compañía emisora</td><td class="v">{{ val(garantia, 'compania_emisora') }}</td></tr>
+          <tr><td class="k">Monto</td><td class="v">{{ money(val(garantia, 'monto_poliza', none)) }}</td></tr>
+          <tr><td class="k">Vigencia (días)</td><td class="v">{{ val(garantia, 'vigencia_dias') }}</td></tr>
+          <tr><td class="k">Estado</td><td class="v">{{ val(garantia, 'estado') }}</td></tr>
+          <tr>
+            <td class="k">Requiere renovación</td>
+            <td class="v">
+              {% set rr = (val(garantia, 'requiere_renovacion', 0)|int) %}
+              {{ 'Sí' if rr == 1 else 'No' }}
+            </td>
+          </tr>
+          <tr><td class="k">Status interno</td><td class="v">{{ val(garantia, 'status_interno') }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="detail-card h-100">
+      <div class="detail-head"><i class="bi bi-check2-circle"></i> Aprobaciones</div>
+      <div class="detail-body">
+        {% set aj = (val(garantia, 'aprobado_jefe', 0)|int) %}
+        {% set ag = (val(garantia, 'aprobado', 0)|int) %}
+        {% set gf = (val(garantia, 'aprob_gf', 0)|int) %}
+
+        <table class="kv-table">
+          <tr>
+            <td class="k">Aprobación jefatura</td>
+            <td class="v">
+              {% if aj == 1 %}
+                <span class="badge-ok">Sí</span>
+              {% else %}
+                <span class="badge-no">No</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td class="k">Aprobación gerencial</td>
+            <td class="v">
+              {% if ag == 1 %}
+                <span class="badge-ok">Sí</span>
+              {% else %}
+                <span class="badge-no">No</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td class="k">Aprobación GF (Final)</td>
+            <td class="v">
+              {% if gf == 1 %}
+                <span class="badge-ok">Sí</span>
+              {% else %}
+                <span class="badge-no">No</span>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="detail-card">
+      <div class="detail-head"><i class="bi bi-calendar-event"></i> Fechas</div>
+      <div class="detail-body">
+        <table class="kv-table">
+          <tr><td class="k">Suscripción</td><td class="v">{{ val(garantia, 'fecha_suscripcion') }}</td></tr>
+          <tr><td class="k">Vencimiento</td><td class="v">{{ val(garantia, 'fecha_vencimiento') }}</td></tr>
+          <tr><td class="k">Vencimiento actualizado</td><td class="v">{{ val(garantia, 'fecha_vencimiento_actual') }}</td></tr>
+          <tr><td class="k">Renovación</td><td class="v">{{ val(garantia, 'fecha_renovacion') }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="detail-card">
+      <div class="detail-head"><i class="bi bi-chat-left-text"></i> Observaciones</div>
+      <div class="detail-body">
+        <div class="text-muted small mb-1">Comentario</div>
+        <div class="fw-semibold">{{ val(garantia, 'observaciones') }}</div>
+      </div>
+    </div>
+  </div>
+
+</div>

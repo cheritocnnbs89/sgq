@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Aprobaciones{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h5 mb-0">Aprobaciones</h1>
+  <a class="btn btn-primary" href="{{ url_for('contratos_aprobacion_new') }}"><i class="bi bi-plus"></i> Nuevo</a>
+</div>
+
+<table class="table table-sm table-dark align-middle">
+  <thead><tr>
+    <th>ID</th><th>Campo 1</th><th>Campo 2</th><th>Campo 3</th><th>Email 1</th><th>Email 2</th><th></th>
+  </tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td>{{ r.id }}</td>
+      <td>{{ r.campo1 or '' }}</td>
+      <td>{{ r.campo2 or '' }}</td>
+      <td>{{ r.campo3 or '' }}</td>
+      <td>{{ r.email1 or '' }}</td>
+      <td>{{ r.email2 or '' }}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-light" href="{{ url_for('contratos_aprobacion_edit', item_id=r.id) }}">Editar</a>
+        <form class="d-inline" method="post" action="{{ url_for('contratos_aprobacion_delete', item_id=r.id) }}" onsubmit="return confirm('¿Eliminar registro?');">
+          <button class="btn btn-sm btn-outline-danger">Borrar</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

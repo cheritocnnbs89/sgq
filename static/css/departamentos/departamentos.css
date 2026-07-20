@@ -1,0 +1,192 @@
+:root {
+    --app-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI",
+        Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans",
+        "Apple Color Emoji", "Segoe UI Emoji");
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --ink: #111827;
+    --muted: #6B7280;
+    --line: #E5E7EB;
+    --surface-1: #FFFFFF;
+    --surface-2: #F3F4F6;
+    --input-bg: #FFFFFF;
+    --input-border: #CBD5E1;
+    --th-bg: #F3F4F6;
+    --row-hover: rgba(37, 99, 235, .06);
+    --primary: #2563EB;
+    --primary-600: #1D4ED8;
+    --grad-hero: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #22D3EE 100%);
+    --accent: #dc2626;
+    --accent-600: #b91c1c;
+    --accent-200: #fecaca;
+    --accent-100: #fee2e2;
+    --accent-50: #fff1f2;
+    --shadow-soft: 0 6px 20px rgba(2, 6, 23, .08);
+    --shadow-focus: 0 0 0 3px rgba(37, 99, 235, .28);
+  }
+
+  html.theme-dark {
+    --bg: #0B1220;
+    --card: #0F172A;
+    --ink: #E5E7EB;
+    --muted: #94A3B8;
+    --line: #1F2A44;
+    --surface-1: #0F172A;
+    --surface-2: #0B1629;
+    --input-bg: #0D1324;
+    --input-border: #334155;
+    --th-bg: #0B1629;
+    --row-hover: rgba(56, 189, 248, .08);
+    --shadow-soft: 0 10px 32px rgba(0, 0, 0, .45);
+    --shadow-focus: 0 0 0 3px rgba(59, 130, 246, .35);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink)
+  }
+
+  .departamentos-page,
+  .departamentos-page * {
+    font-family: var(--app-font) !important;
+  }
+
+  .title-blue {
+    background: var(--grad-hero);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+  }
+
+  .count-badge--red {
+    background: var(--accent-100);
+    color: var(--accent-600);
+    border: 1px solid var(--accent-200);
+    font-weight: 600;
+    padding: .2rem .55rem;
+    border-radius: 999px;
+  }
+
+  .panel-outline {
+    background: var(--surface-1);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+    padding: .65rem .85rem;
+  }
+
+  .panel-body {
+    padding: .85rem;
+  }
+
+  .form-control,
+  .form-select {
+    background: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--ink)
+  }
+
+  .input-group-text {
+    background: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--muted)
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    border-color: var(--primary)
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-600);
+    border-color: var(--primary-600)
+  }
+
+  .btn-outline-secondary {
+    border-color: var(--input-border);
+    color: var(--ink)
+  }
+
+  .btn-outline-secondary:hover {
+    background: var(--row-hover)
+  }
+
+  .btn-cta-blue {
+    appearance: none;
+    background-image: var(--grad-hero) !important;
+    color: #fff !important;
+    font-weight: 800;
+    border-radius: 999px;
+    padding: .50rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, .25) !important;
+    transition: transform .12s ease, filter .12s ease, background-position .2s ease, box-shadow .2s ease;
+  }
+
+  .btn-cta-blue:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(37, 99, 235, .30) !important;
+  }
+
+  table#tabla-deptos thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--th-bg);
+    color: var(--ink)
+  }
+
+  table#tabla-deptos tbody tr:hover {
+    background: var(--row-hover)
+  }
+
+  .table-compact td,
+  .table-compact th {
+    padding: .25rem .5rem !important
+  }
+
+  @media (max-width:768px) {
+    table#tabla-deptos thead {
+      display: none
+    }
+
+    table#tabla-deptos tbody tr {
+      display: block;
+      margin-bottom: .75rem;
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      background: var(--surface-1)
+    }
+
+    table#tabla-deptos tbody td {
+      display: flex;
+      justify-content: space-between;
+      gap: .5rem;
+      padding: .35rem .6rem !important
+    }
+
+    table#tabla-deptos tbody td::before {
+      content: attr(data-th);
+      font-weight: 600;
+      color: var(--muted)
+    }
+  }
+
+/* CSP fix */
+.toolbar-search-wrap { max-width: 320px; }
+.text-muted-var { color: var(--muted); }
+.w-110px { width: 110px; }
+.w-220px { width: 220px; }
+.row-hidden { display: none !important; }

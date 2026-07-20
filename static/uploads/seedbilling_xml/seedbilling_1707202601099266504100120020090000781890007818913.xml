@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.0.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>FIDEICOMISO HOTEL AEROPUERTO</razonSocial>
+    <nombreComercial>HOLIDAY INN GUAYAQUIL AIRPORT</nombreComercial>
+    <ruc>0992665041001</ruc>
+    <claveAcceso>1707202601099266504100120020090000781890007818913</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>002</estab>
+    <ptoEmi>009</ptoEmi>
+    <secuencial>000078189</secuencial>
+    <dirMatriz>AV. MIGUEL H. ALCIVAR No. 106 Y NAHIM ISAIAS</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>17/07/2026</fechaEmision>
+    <dirEstablecimiento>BAHIA NORTE MZ. 47 SOLAR 21 EDIF. HOTEL HOLIDAY INN</dirEstablecimiento>
+    <contribuyenteEspecial>011</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador> Quimpac Ecuador S.A Quimpacsa</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>Via a Daule Km 16.5 Rosavin Lote 1 y Cobre Via a Daule Km 16.5 Rosavin Lote 1 y Cobre</direccionComprador>
+    <totalSinImpuestos>984.20</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <descuentoAdicional>0</descuentoAdicional>
+        <baseImponible>984.20</baseImponible>
+        <tarifa>15.00</tarifa>
+        <valor>147.63</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>98.42</propina>
+    <importeTotal>1230.25</importeTotal>
+    <moneda>USD</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>1230.25</total>
+        <plazo>0</plazo>
+        <unidadTiempo>Dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>GROUP_14</codigoPrincipal>
+      <descripcion>Realizacion Eventos</descripcion>
+      <cantidad>1</cantidad>
+      <precioUnitario>984.20</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>984.20</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>984.20</baseImponible>
+          <valor>147.63</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="FPDirect Billing/City Ledger">1230.25</campoAdicional>
+    <campoAdicional nombre="FOLIO">1191907</campoAdicional>
+    <campoAdicional nombre="ADULTOS/NIÑOS">0/0</campoAdicional>
+    <campoAdicional nombre="BILL NO">126667</campoAdicional>
+    <campoAdicional nombre="CAJERO">265</campoAdicional>
+    <campoAdicional nombre="LLEGADA">2026-07-17</campoAdicional>
+    <campoAdicional nombre="NOCHES">0</campoAdicional>
+    <campoAdicional nombre="ROOM">9008</campoAdicional>
+    <campoAdicional nombre="SALIDA">2026-07-17</campoAdicional>
+    <campoAdicional nombre="TARIFA">0</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature231280">
+<ds:SignedInfo Id="Signature-SignedInfo368766">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID266515" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature231280-SignedProperties844799">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>5k/XG/TWhj2Z18orUL+HwgVwpbk=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1573571">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>HXA5EswxzMdWqkoP5B1U4lncHfs=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-716165" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>/3Q309COpKo6S7iTRBdb8Ig+V8w=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue376796">
+p4NbjAq8SyTs02cUtXEcqt+MFCvhjWRlGOAZK1pldn5UyY2qT11lh+gO2YXixBE/2GCxyKwS07Is
+cyjq/gdNw0tgODdzn+nlfmTJKLiBgz8R2sv9cb8HHTZfQiPccCqA9lCGOVHukD6IZBg2drwfYK5D
+PeRVN2J1TH3bAZt9d2tlO490WnLXjgHo3CP9d+CpptREH2H5EhALj7xPpwztz7q9NW4t+MpYWA+y
+aiYzmoHhXQLr3NXaij7bCnEBVf9BxBsasi9jCH550r79a1NM8zm+oXdO4IIRsrCUylmWogR+D/P5
+t1k/kX345UeggxvZNz10kRApRU7uhUUPnzl/7w==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1573571">
+<ds:X509Data>
+<ds:X509Certificate>
+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
+fw==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+zBmvE/2SAHMUX2k62tbokznUjeGHp9rtT2veuwigo6zhDL9eMdJxVeL5kgtFQg7z6khDpH51VD2r
+oC8IwmFaB/MnvWNqyzRHsdnzEpOOnBsBDFNB3jgMuBUvw5Ve30XIQQPRoD/Agcm7zix/R0yPvNN+
+m2CagBYC/egWLuw4tMSRLFWzWkKN3eZq59EC4PprZ55GxU6yQMEdQWdFGJOJbHavIetUwZiincsj
+KvgOyzNd4EjDKndMQRTi+2H1inEKwI66ZCTW2k2jIshu9Z3Pqe5dKHl4xu0JODGhASpf1ycFZzLo
+c9BoMqVQKfX2cTK8NQGcET2R8+Y39BSGONSGCw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature231280-Object736953"><etsi:QualifyingProperties Target="#Signature231280"><etsi:SignedProperties Id="Signature231280-SignedProperties844799"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T12:43:36-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>k1YUQAT8KnisdqRf+SNOhhjfzzs=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=Lazzate Emisor CA,OU=Ente de Certificacion,O=Lazzate Cia. Ltda.,2.5.4.97=#13053539333832,1.2.840.113549.1.9.1=#1615636572746966696361646f7340656e6578742e6563,L=Quito,ST=Quito - Pichincha,C=EC</ds:X509IssuerName><ds:X509SerialNumber>630150092530718229972150435104323826769439126717</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-716165"><etsi:Description>SATCOM Servicios Profesionales</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

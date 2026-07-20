@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Áreas{% endblock %}
+
+{% block content %}
+{% set can_create = permissions.get('departamentos', {}).get('crear') %}
+{% set can_edit = permissions.get('departamentos', {}).get('editar') %}
+{% set can_delete = permissions.get('departamentos', {}).get('eliminar') %}
+
+<div class="container mt-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <h4 class="mb-0 title-blue">Listado de áreas</h4>
+      <span class="count-badge--red">{{ (areas or [])|length }}</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="{{ url_for('departamentos') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Departamentos
+      </a>
+      {% if can_create %}
+      <a href="{{ url_for('nueva_area') }}" class="btn btn-cta-blue btn-sm">
+        <i class="bi bi-plus-lg"></i> Nueva área
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} mb-2">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="panel-outline">
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+          <thead class="border-bottom">
+            <tr>
+              <th class="w-110px">ID</th>
+              <th>Nombre</th>
+              <th class="text-end w-220px">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in (areas or []) %}
+            <tr>
+              <td class="text-muted">{{ a['id'] }}</td>
+              <td>{{ a['nombre'] }}</td>
+              <td class="text-end">
+                {% if can_edit %}
+                <a href="{{ url_for('editar_area', area_id=a['id']) }}"
+                   class="btn btn-sm btn-outline-secondary me-1">
+                  <i class="bi bi-pencil-square me-1"></i>Editar
+                </a>
+                {% endif %}
+                {% if can_delete %}
+                <form method="post" action="{{ url_for('eliminar_area', area_id=a['id']) }}"
+                      class="d-inline js-confirm-delete">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash me-1"></i>Eliminar
+                  </button>
+                </form>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            {% if (areas or [])|length == 0 %}
+            <tr>
+              <td colspan="3" class="text-center text-muted py-4">No hay áreas registradas.</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

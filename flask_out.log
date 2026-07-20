@@ -1,0 +1,1062 @@
+[2026-07-16T01:33:53.304956] [WARNING] [PLANILLA_WEEKLY] matplotlib no instalado — PDF omitido. Instala: pip install matplotlib
+>>> APP_MENU IMPORTADO DESDE: C:\Proyectos\V2 Proyecto Claude Code\PROYECTO MATIAS SGQ\Sili\Sili\Sili\modules\app_core\app_menu.py
+>>> REGISTER_CONTEXT_PROCESSORS: <function register_context_processors at 0x000001FDDD6BC0F0>
+>>> REGISTER_CONTEXT_PROCESSORS EJECUTADO
+>>> Intentando arrancar scheduler...
+>>> start_scheduler_if_enabled entró
+>>> app.debug = False
+>>> WERKZEUG_RUN_MAIN = None
+>>> Condición OK, arrancando scheduler...
+[SCHEDULER] Jobs deshabilitados
+>>> Scheduler retornó: None
+>>> Obligaciones scheduler arrancado
+>>> Scheduler llamado
+>>> EmailPoller no arranca: SCHEDULER_JOBS_ENABLED=False
+
+== Rutas registradas ==
+static -> /static/<path:filename>   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.planilla_dashboard -> /planilla-mensual/dashboard   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.toggle_evidence_mode -> /planilla-mensual/config/evidence-mode   methods= {'POST', 'OPTIONS'}
+planilla_mensual.planilla -> /planilla-mensual/   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.toggle_check -> /planilla-mensual/check   methods= {'POST', 'OPTIONS'}
+planilla_mensual.evidence_post -> /planilla-mensual/evidencia   methods= {'POST', 'OPTIONS'}
+planilla_mensual.evidence_get -> /planilla-mensual/evidencia/<int:tarea_id>/<fecha>   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.evidence_meta -> /planilla-mensual/evidencia/meta/<int:tarea_id>/<fecha>   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.tareas_list -> /planilla-mensual/tareas   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.tareas_new -> /planilla-mensual/tareas/nueva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.tareas_edit -> /planilla-mensual/tareas/<int:tid>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.tareas_delete -> /planilla-mensual/tareas/<int:tid>/eliminar   methods= {'POST', 'OPTIONS'}
+planilla_mensual.mail_template -> /planilla-mensual/config/plantilla   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.api_usuarios_by_dep -> /planilla-mensual/api/usuarios/by-dep/<int:depid>   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.dept_cfg -> /planilla-mensual/config/departamento   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.api_list_feriados -> /planilla-mensual/api/feriados   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.api_add_feriado -> /planilla-mensual/api/feriados   methods= {'POST', 'OPTIONS'}
+planilla_mensual.api_delete_feriado -> /planilla-mensual/api/feriados/<int:fid>   methods= {'DELETE', 'OPTIONS'}
+planilla_mensual.admin_send_weekly_report -> /planilla-mensual/admin/send-weekly-report   methods= {'POST', 'OPTIONS'}
+planilla_mensual.api_okrs_list -> /planilla-mensual/api/okrs   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.api_okrs_create -> /planilla-mensual/api/okrs   methods= {'POST', 'OPTIONS'}
+planilla_mensual.api_resultados_clave_list -> /planilla-mensual/api/okrs/<int:okr_id>/resultados-clave   methods= {'HEAD', 'OPTIONS', 'GET'}
+planilla_mensual.api_resultados_clave_create -> /planilla-mensual/api/resultados-clave   methods= {'POST', 'OPTIONS'}
+xml.index -> /xml/   methods= {'HEAD', 'OPTIONS', 'GET'}
+xml.api_parse -> /xml/api/parse   methods= {'POST', 'OPTIONS'}
+menu.menu_admin -> /config/menu   methods= {'HEAD', 'OPTIONS', 'GET'}
+menu.menu_edit -> /config/menu/<int:item_id>/edit   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+menu.menu_new -> /config/menu/new   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+menu.menu_delete -> /config/menu/<int:item_id>/delete   methods= {'POST', 'OPTIONS'}
+empresas.lista_empresas -> /empresas/   methods= {'HEAD', 'OPTIONS', 'GET'}
+empresas.nueva_empresa -> /empresas/nueva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+empresas.editar_empresa -> /empresas/<int:empresa_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+empresas.eliminar_empresa -> /empresas/<int:empresa_id>/eliminar   methods= {'POST', 'OPTIONS'}
+obligaciones.lista_obligaciones -> /obligaciones/   methods= {'HEAD', 'OPTIONS', 'GET'}
+obligaciones.nueva_obligacion -> /obligaciones/nueva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+obligaciones.editar_obligacion -> /obligaciones/<int:oblig_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+obligaciones.eliminar_obligacion -> /obligaciones/<int:oblig_id>/eliminar   methods= {'POST', 'OPTIONS'}
+obligaciones.cumplir_obligacion -> /obligaciones/<int:oblig_id>/cumplir   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+obligaciones.descargar_evidencia -> /obligaciones/<int:oblig_id>/evidencia/<int:evidencia_id>   methods= {'HEAD', 'OPTIONS', 'GET'}
+obligaciones.historial_obligaciones -> /obligaciones/historial   methods= {'HEAD', 'OPTIONS', 'GET'}
+obligaciones.exportar_historial -> /obligaciones/historial/exportar   methods= {'HEAD', 'OPTIONS', 'GET'}
+obligaciones.dashboard_obligaciones -> /obligaciones/dashboard   methods= {'HEAD', 'OPTIONS', 'GET'}
+obligaciones.carga_masiva -> /obligaciones/carga-masiva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+obligaciones.carga_masiva_confirmar -> /obligaciones/carga-masiva/confirmar   methods= {'POST', 'OPTIONS'}
+obligaciones.lista_frecuencias -> /obligaciones/frecuencias   methods= {'HEAD', 'OPTIONS', 'GET'}
+obligaciones.nueva_frecuencia -> /obligaciones/frecuencias/nueva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+obligaciones.editar_frecuencia -> /obligaciones/frecuencias/<int:frecuencia_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+obligaciones.eliminar_frecuencia -> /obligaciones/frecuencias/<int:frecuencia_id>/eliminar   methods= {'POST', 'OPTIONS'}
+login -> /   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+logout -> /logout   methods= {'POST', 'OPTIONS'}
+forgot_password -> /forgot_password   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+verificar_codigo -> /verificar_codigo   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+establecer_clave -> /establecer_clave   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+cambiar_clave -> /cambiar_clave   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+verificar_login_codigo -> /verificar_login_codigo   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+usuarios -> /usuarios   methods= {'HEAD', 'OPTIONS', 'GET'}
+editar_usuario -> /usuarios/<int:user_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+usuarios_eliminar -> /usuarios/<int:user_id>/eliminar   methods= {'POST', 'OPTIONS'}
+nuevo_usuario -> /usuarios/nuevo   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+usuarios_reporte_csv -> /usuarios/reporte.csv   methods= {'HEAD', 'OPTIONS', 'GET'}
+usuarios_asignar_jefe -> /usuarios/asignar-jefe   methods= {'POST', 'OPTIONS'}
+usuarios_bulk_template -> /usuarios/plantilla.csv   methods= {'HEAD', 'OPTIONS', 'GET'}
+usuarios_bulk_upload -> /usuarios/bulk   methods= {'POST', 'OPTIONS'}
+areas -> /areas   methods= {'HEAD', 'OPTIONS', 'GET'}
+areas -> /areas   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+nueva_area -> /areas/nueva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+editar_area -> /areas/<int:area_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+eliminar_area -> /areas/<int:area_id>/eliminar   methods= {'POST', 'OPTIONS'}
+departamentos -> /departamentos   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+editar_departamento -> /departamentos/<int:dep_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+eliminar_departamento -> /departamentos/<int:dep_id>/eliminar   methods= {'POST', 'OPTIONS'}
+nuevo_departamento -> /departamentos/nuevo   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+departamentos_bulk -> /departamentos/bulk   methods= {'POST', 'OPTIONS'}
+departamentos_bulk_template -> /departamentos/bulk/template   methods= {'HEAD', 'OPTIONS', 'GET'}
+organigrama -> /organigrama   methods= {'HEAD', 'OPTIONS', 'GET'}
+listar_tareas -> /tareas   methods= {'HEAD', 'OPTIONS', 'GET'}
+nueva_tarea -> /tareas/nueva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+ver_tarea -> /tareas/<int:task_id>/ver   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+tarea_detalle_json -> /tareas/<int:task_id>/detalle-json   methods= {'HEAD', 'OPTIONS', 'GET'}
+accion_tarea_ajax -> /tareas/<int:task_id>/accion-ajax   methods= {'POST', 'OPTIONS'}
+api_tareas_mejorar_comentario -> /api/tareas/mejorar-comentario   methods= {'POST', 'OPTIONS'}
+reenviar_observacion -> /tareas/reenviar-accion/<int:accion_id>   methods= {'POST', 'OPTIONS'}
+finalizar_accion -> /tareas/accion/<int:accion_id>/finalizar   methods= {'POST', 'OPTIONS'}
+editar_tarea -> /tareas/<int:task_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+tarea_json -> /tareas/<int:task_id>/json   methods= {'HEAD', 'OPTIONS', 'GET'}
+editar_tarea_ajax -> /tareas/<int:task_id>/editar-ajax   methods= {'POST', 'OPTIONS'}
+eliminar_tarea -> /tareas/<int:task_id>/eliminar   methods= {'POST', 'OPTIONS'}
+exportar_tareas_excel -> /tareas/reporte/excel   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_inbound_email_create_task -> /api/inbound/email   methods= {'POST', 'OPTIONS'}
+dashboard -> /dashboard   methods= {'HEAD', 'OPTIONS', 'GET'}
+listar_encuestas -> /encuestas   methods= {'HEAD', 'OPTIONS', 'GET'}
+responder_encuesta -> /encuestas/responder/<token>   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+encuesta_diagnostico -> /encuestas/diagnostico/<int:task_id>   methods= {'HEAD', 'OPTIONS', 'GET'}
+encuesta_reenviar -> /encuestas/reenviar/<int:task_id>   methods= {'POST', 'OPTIONS'}
+responder_encuesta_desde_bandeja -> /encuestas/tarea/<int:task_id>/responder   methods= {'POST', 'OPTIONS'}
+bandeja_diagnostico -> /tareas/bandeja-soporte/diagnostico   methods= {'HEAD', 'OPTIONS', 'GET'}
+bandeja_soporte -> /tareas/bandeja-soporte   methods= {'HEAD', 'OPTIONS', 'GET'}
+bandeja_asignar -> /tareas/bandeja-soporte/<int:inbox_id>/asignar   methods= {'POST', 'OPTIONS'}
+bandeja_descartar -> /tareas/bandeja-soporte/<int:inbox_id>/descartar   methods= {'POST', 'OPTIONS'}
+bandeja_body -> /tareas/bandeja-soporte/<int:inbox_id>/body   methods= {'HEAD', 'OPTIONS', 'GET'}
+bandeja_replies -> /tareas/bandeja-soporte/<int:inbox_id>/replies.json   methods= {'HEAD', 'OPTIONS', 'GET'}
+bandeja_attachments_list -> /tareas/bandeja-soporte/attachments/<path:message_id>.json   methods= {'HEAD', 'OPTIONS', 'GET'}
+bandeja_img -> /tareas/bandeja-soporte/img/<path:message_id>/<attachment_id>   methods= {'HEAD', 'OPTIONS', 'GET'}
+facturas_xml_seedbilling_consumir -> /reembolsos/xml/seedbilling-consumir   methods= {'POST', 'OPTIONS'}
+export_gastos_reporte_excel -> /reembolsos/gastos/export/reporte.xlsx   methods= {'HEAD', 'OPTIONS', 'GET'}
+lista_gastos -> /reembolsos/gastos   methods= {'HEAD', 'OPTIONS', 'GET'}
+reporte_gastos -> /reembolsos/gastos/reporte   methods= {'HEAD', 'OPTIONS', 'GET'}
+gastos_pendientes_aprobacion -> /reembolsos/gastos/pendientes-aprobacion   methods= {'HEAD', 'OPTIONS', 'GET'}
+ver_gasto_adjuntos -> /reembolsos/gastos/<int:gid>/adjuntos   methods= {'HEAD', 'OPTIONS', 'GET'}
+factura_xml_detalle -> /reembolsos/xml/<int:fid>   methods= {'HEAD', 'OPTIONS', 'GET'}
+ver_gasto2 -> /reembolsos/gastos/<int:gid>/ver   methods= {'HEAD', 'OPTIONS', 'GET'}
+ver_gasto -> /reembolsos/gastos/<int:gid>/ver   methods= {'HEAD', 'OPTIONS', 'GET'}
+eliminar_gasto -> /reembolsos/gastos/<int:gasto_id>/eliminar   methods= {'POST', 'OPTIONS'}
+eliminar_gasto -> /reembolsos/gastos/<int:gid>/eliminar   methods= {'POST', 'OPTIONS'}
+aprobar_gasto_masivo -> /reembolsos/gastos/aprobar-masivo   methods= {'POST', 'OPTIONS'}
+aprobar_gasto -> /reembolsos/gastos/<int:gasto_id>/aprobar   methods= {'POST', 'OPTIONS'}
+nuevo_gasto -> /reembolsos/gastos/nuevo   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+nuevo_gasto -> /reembolsos/gastos/nuevo   methods= {'HEAD', 'OPTIONS', 'GET'}
+rechazar_gasto_notificar_gerente -> /reembolsos/gastos/<int:gasto_id>/rechazar-notificar   methods= {'POST', 'OPTIONS'}
+factura_xml_eliminar -> /reembolsos/facturas-xml/<int:fid>/eliminar   methods= {'POST', 'OPTIONS'}
+editar_gasto -> /reembolsos/gastos/<int:gasto_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+editar_gasto -> /reembolsos/gastos/<int:gasto_id>/editar   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_next_caja_chica_factura -> /api/secuencias/caja-chica/next   methods= {'POST', 'OPTIONS'}
+api_facturas_xml_search -> /api/facturas-xml/search   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_sugerencias_proveedor -> /api/gastos/sugerencias-proveedor   methods= {'HEAD', 'OPTIONS', 'GET'}
+facturas_xml_procesar_carpeta -> /reembolsos/xml/procesar-carpeta   methods= {'POST', 'OPTIONS'}
+gastos_dashboard -> /reembolsos/dashboard   methods= {'HEAD', 'OPTIONS', 'GET'}
+facturas_xml_list -> /reembolsos/xml   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+factura_xml_resumen -> /reembolsos/api/factura_xml/<int:fid>/resumen   methods= {'HEAD', 'OPTIONS', 'GET'}
+export_gastos_excel -> /reembolsos/gastos/export/excel   methods= {'HEAD', 'OPTIONS', 'GET'}
+export_gastos_pdf -> /reembolsos/gastos/export/pdf   methods= {'HEAD', 'OPTIONS', 'GET'}
+export_gastos_csv -> /reembolsos/gastos/export/csv   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_proveedores_search -> /api/proveedores/search   methods= {'HEAD', 'OPTIONS', 'GET'}
+enviar_gasto_sap -> /reembolsos/gastos/<int:gasto_id>/enviar-sap   methods= {'POST', 'OPTIONS'}
+enviar_gasto_sap_masivo -> /reembolsos/gastos/enviar-sap-masivo   methods= {'POST', 'OPTIONS'}
+factura_xml_estado -> /reembolsos/xml/<int:fid>/estado   methods= {'POST', 'OPTIONS'}
+config -> /config   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+politicas_seguridad -> /politicas_seguridad   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+api_reclamos_clientes -> /api/reclamos/clientes   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_subtipos -> /reclamos/api/subtipos   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_save_equipo_acciones -> /reclamos/equipo/<int:equipo_id>/acciones   methods= {'POST', 'OPTIONS'}
+api_get_equipo_acciones -> /reclamos/equipo/<int:equipo_id>/acciones   methods= {'HEAD', 'OPTIONS', 'GET'}
+equipo_respuestas_json -> /reclamos/<int:reclamo_id>/equipo-respuestas/json   methods= {'HEAD', 'OPTIONS', 'GET'}
+equipo_respuestas_add -> /reclamos/<int:reclamo_id>/equipo-respuestas/add   methods= {'POST', 'OPTIONS'}
+equipo_respuestas_guardar -> /reclamos/<int:reclamo_id>/equipo-respuestas/guardar   methods= {'POST', 'OPTIONS'}
+equipo_respuestas_ver_aporte -> /reclamos/<int:reclamo_id>/equipo-respuestas/aporte   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamo_respuestas_equipo_json -> /reclamos/imputacion/<int:imputacion_id>/respuestas_equipo/json   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamo_responder_equipo -> /reclamos/imputacion/<int:imputacion_id>/responder_equipo   methods= {'POST', 'OPTIONS'}
+reclamos_equipo_aprobar -> /reclamos/equipo/<int:eq_id>/aprobar   methods= {'POST', 'OPTIONS'}
+reclamo_equipo_respuestas_eliminar -> /reclamos/<int:reclamo_id>/equipo-respuestas/<int:er_id>/eliminar   methods= {'POST', 'OPTIONS'}
+reclamos_usuario_por_cedula -> /reclamos/api/usuario_por_cedula/<cedula>   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_equipo_asignar -> /reclamos/<int:reclamo_id>/equipo/asignar   methods= {'POST', 'OPTIONS'}
+reclamo_detalle_json -> /reclamos/<int:reclamo_id>/detalle-json   methods= {'HEAD', 'OPTIONS', 'GET'}
+equipo_respuestas_usuarios -> /reclamos/<int:reclamo_id>/equipo-respuestas/usuarios   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_equipo_responder -> /reclamos/equipo/<int:eq_id>/responder   methods= {'POST', 'OPTIONS'}
+reclamos_api_respuestas -> /reclamos/api/<int:reclamo_id>/respuestas   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_respuestas_detalle -> /reclamos/api/<int:reclamo_id>/respuestas-detalle   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamo_equipo_accion_cumplir -> /reclamos/equipo-acciones/<int:accion_id>/cumplir   methods= {'POST', 'OPTIONS'}
+reclamo_equipo_accion_evidencia_download -> /reclamos/equipo-acciones/evidencias/<int:evidencia_id>/download   methods= {'HEAD', 'OPTIONS', 'GET'}
+descargar_evidencia_equipo_accion -> /reclamos/equipo-acciones/evidencias/<int:evidencia_id>/download   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamo_equipo_accion_subir_evidencia -> /reclamos/equipo-acciones/<int:accion_id>/evidencia   methods= {'POST', 'OPTIONS'}
+reclamo_equipo_acciones_seguimiento -> /reclamos/equipo-acciones/<int:respuesta_id>/seguimiento   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos -> /reclamos   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_export_mis -> /reclamos/export/mis   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_provincias -> /reclamos/api/provincias   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_materiales_nuevo -> /reclamos/api/materiales/nuevo   methods= {'POST', 'OPTIONS'}
+reclamos_api_cantones -> /reclamos/api/cantones   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_nuevo -> /reclamos/nuevo   methods= {'POST', 'OPTIONS'}
+reclamos_aprobar_imputacion -> /reclamos/imputacion/<int:imp_id>/aprobar   methods= {'POST', 'OPTIONS'}
+reclamos_add_adjuntos -> /reclamos/<int:reclamo_id>/adjuntos   methods= {'POST', 'OPTIONS'}
+reclamos_delete_adjunto -> /reclamos/adjunto/<int:adj_id>/delete   methods= {'POST', 'OPTIONS'}
+reclamos_api_adjuntos -> /reclamos/api/<int:reclamo_id>/adjuntos   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_download_adjunto -> /reclamos/adjunto/<int:adj_id>/download   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_responder_imputado -> /reclamos/imputacion/<int:imp_id>/responder   methods= {'POST', 'OPTIONS'}
+reclamos_eliminar -> /reclamos/<int:reclamo_id>/eliminar   methods= {'POST', 'OPTIONS'}
+reclamos_editar_proceso -> /reclamos/<int:reclamo_id>/editar-proceso   methods= {'POST', 'OPTIONS'}
+reclamos_acciones_pendientes_evidencia -> /reclamos/<int:reclamo_id>/acciones-pendientes-evidencia   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_validar_respuesta -> /reclamos/imputacion/<int:imp_id>/validar_respuesta   methods= {'POST', 'OPTIONS'}
+reclamos_api_dashboard_resumen -> /api/dashboard/resumen   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_dashboard_estados -> /api/dashboard/estados   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_dashboard_sla -> /api/dashboard/sla   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_dashboard_imputados -> /api/dashboard/imputados   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_dashboard_clientes_procesos -> /api/dashboard/clientes_procesos   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_dashboard_departamentos -> /api/dashboard/departamentos   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_dashboard -> /reclamos/dashboard   methods= {'HEAD', 'OPTIONS', 'GET'}
+equipo_respuestas_aprobar -> /reclamos/<int:reclamo_id>/equipo-respuestas/aprobar   methods= {'POST', 'OPTIONS'}
+equipo_respuestas_rechazar -> /reclamos/<int:reclamo_id>/equipo-respuestas/rechazar   methods= {'POST', 'OPTIONS'}
+reclamo_equipo_accion_guardar_observacion -> /reclamos/equipo-acciones/<int:accion_id>/observacion   methods= {'POST', 'OPTIONS'}
+reclamo_equipo_accion_evidencia_eliminar -> /reclamos/equipo-acciones/evidencias/<int:evidencia_id>/eliminar   methods= {'POST', 'OPTIONS'}
+reclamo_imputacion_respuesta_detalle -> /reclamos/imputacion/<int:imp_id>/respuesta-detalle   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamo_imputado_accion_observacion -> /reclamos/imputado-acciones/<int:accion_id>/observacion   methods= {'POST', 'OPTIONS'}
+reclamo_imputado_accion_cumplir -> /reclamos/imputado-acciones/<int:accion_id>/cumplir   methods= {'POST', 'OPTIONS'}
+reclamo_imputado_accion_evidencia -> /reclamos/imputado-acciones/<int:accion_id>/evidencia   methods= {'POST', 'OPTIONS'}
+reclamo_imputado_accion_evidencia_eliminar -> /reclamos/imputado-acciones/evidencias/<int:evidencia_id>/eliminar   methods= {'POST', 'OPTIONS'}
+reclamo_imputado_accion_evidencia_download -> /reclamos/imputado-acciones/evidencias/<int:evidencia_id>/download   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_ia_mejorar_respuesta -> /reclamos/ia/mejorar_respuesta   methods= {'POST', 'OPTIONS'}
+api_om_chat -> /api/om-chat   methods= {'POST', 'OPTIONS'}
+api_om_analizar_descripcion -> /api/om/analizar-descripcion   methods= {'POST', 'OPTIONS'}
+api_om_mejorar_descripcion -> /api/om/mejorar-descripcion   methods= {'POST', 'OPTIONS'}
+api_om_chat_debug_sponsor -> /api/om-chat/debug-sponsor   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_om_chat_reset -> /api/om-chat/reset   methods= {'POST', 'OPTIONS'}
+reclamos_api_proceso_sponsor_principal -> /reclamos/api/proceso/<int:proceso_id>/sponsor-principal   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_api_proceso_sponsors -> /reclamos/api/proceso/<int:proceso_id>/sponsors   methods= {'HEAD', 'OPTIONS', 'GET'}
+reclamos_subir_carta_cliente -> /reclamos/<int:reclamo_id>/carta-cliente   methods= {'POST', 'OPTIONS'}
+reclamos_generar_carta_pdf -> /reclamos/<int:reclamo_id>/generar-carta-pdf   methods= {'POST', 'OPTIONS'}
+reclamos_validar_creador -> /reclamos/<int:reclamo_id>/validar-creador   methods= {'POST', 'OPTIONS'}
+roles_permisos -> /roles-permisos   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+parametros_generales -> /parametros/generales   methods= {'HEAD', 'OPTIONS', 'GET'}
+parametros_generales_alias -> /parametros_generales   methods= {'HEAD', 'OPTIONS', 'GET'}
+parametro_items -> /parametros/generales/<int:group_id>/items   methods= {'HEAD', 'OPTIONS', 'GET'}
+nuevo_parametro -> /parametros/generales/nuevo   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+editar_parametro -> /parametros/generales/<int:group_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+eliminar_parametro -> /parametros/generales/<int:group_id>/eliminar   methods= {'HEAD', 'OPTIONS', 'GET'}
+nuevo_valor -> /parametros/generales/<int:group_id>/items/nuevo   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+editar_valor -> /parametros/generales/<int:group_id>/items/<int:item_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+eliminar_valor -> /parametros/generales/<int:group_id>/items/<int:item_id>/eliminar   methods= {'HEAD', 'OPTIONS', 'GET'}
+param_carga_plantilla -> /config/parametros/carga-masiva/plantilla   methods= {'HEAD', 'OPTIONS', 'GET'}
+param_carga_masiva -> /config/parametros/carga-masiva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+clientes -> /config/clientes   methods= {'HEAD', 'OPTIONS', 'GET'}
+proveedores_carga_plantilla -> /terceros/proveedores/carga-masiva/plantilla   methods= {'HEAD', 'OPTIONS', 'GET'}
+proveedores_carga_masiva -> /terceros/proveedores/carga-masiva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+clientes_carga_masiva -> /terceros/clientes/carga-masiva   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+proveedores -> /config/proveedores   methods= {'HEAD', 'OPTIONS', 'GET'}
+tercero_nuevo -> /config/terceros/nuevo/<tipo>   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+tercero_editar -> /config/terceros/<int:tid>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+tercero_eliminar -> /config/terceros/<int:tid>/eliminar   methods= {'POST', 'OPTIONS'}
+api_param_search -> /api/param/grupo/<int:group_id>/search   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_param_motivos -> /api/param/motivos/search   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_param_centros_alias -> /api/param/centros   methods= {'HEAD', 'OPTIONS', 'GET'}
+api_param_centros -> /api/param/centros/search   methods= {'HEAD', 'OPTIONS', 'GET'}
+parametros -> /parametros   methods= {'HEAD', 'OPTIONS', 'GET'}
+tareas -> /tareas   methods= {'HEAD', 'OPTIONS', 'GET'}
+seguridad -> /seguridad   methods= {'HEAD', 'OPTIONS', 'GET'}
+reembolsos -> /reembolsos   methods= {'HEAD', 'OPTIONS', 'GET'}
+reembolsos_efectivo -> /reembolsos_efectivo   methods= {'HEAD', 'OPTIONS', 'GET'}
+gastos_tarjeta -> /gastos_tarjeta   methods= {'HEAD', 'OPTIONS', 'GET'}
+puestos -> /puestos   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+editar_puesto -> /puestos/<int:pid>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+toggle_puesto -> /puestos/<int:pid>/toggle   methods= {'POST', 'OPTIONS'}
+puestos_import -> /puestos/import   methods= {'POST', 'OPTIONS'}
+planificador.planificador_solicitudes -> /planificador/solicitudes   methods= {'HEAD', 'OPTIONS', 'GET'}
+planificador.planificador_detalle -> /planificador/solicitudes/<int:sid>/detalle   methods= {'HEAD', 'OPTIONS', 'GET'}
+planificador.planificador_crear -> /planificador/solicitudes/crear   methods= {'POST', 'OPTIONS'}
+planificador.planificador_pendientes_mismo_tipo -> /planificador/solicitudes/<int:sid>/pendientes-mismo-tipo   methods= {'HEAD', 'OPTIONS', 'GET'}
+planificador.planificador_coordinar -> /planificador/solicitudes/<int:sid>/coordinar   methods= {'POST', 'OPTIONS'}
+planificador.planificador_aprobar -> /planificador/solicitudes/<int:sid>/aprobar   methods= {'POST', 'OPTIONS'}
+planificador.planificador_aprobar_grupo -> /planificador/solicitudes/grupo/<int:grupo_id>/aprobar   methods= {'POST', 'OPTIONS'}
+planificador.planificador_aprobar_gerente -> /planificador/solicitudes/<int:sid>/aprobar-gerente   methods= {'POST', 'OPTIONS'}
+planificador.planificador_rechazar_gerente -> /planificador/solicitudes/<int:sid>/rechazar-gerente   methods= {'POST', 'OPTIONS'}
+planificador.planificador_rechazar -> /planificador/solicitudes/<int:sid>/rechazar   methods= {'POST', 'OPTIONS'}
+planificador.planificador_completar -> /planificador/solicitudes/<int:sid>/completar   methods= {'POST', 'OPTIONS'}
+planificador.planificador_reagendar -> /planificador/solicitudes/<int:sid>/reagendar   methods= {'POST', 'OPTIONS'}
+planificador.planificador_eliminar -> /planificador/solicitudes/<int:sid>/eliminar   methods= {'POST', 'OPTIONS'}
+planificador.planificador_configuracion -> /planificador/configuracion   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+planificador.planificador_config_eliminar -> /planificador/configuracion/<int:cid>/eliminar   methods= {'POST', 'OPTIONS'}
+planificador.planificador_set_telegram_chat_id -> /planificador/configuracion/telegram-chat-id   methods= {'POST', 'OPTIONS'}
+planificador.planificador_tipo_flags -> /planificador/configuracion/tipo-flags   methods= {'POST', 'OPTIONS'}
+planificador.planificador_reverse_geocode -> /planificador/reverse-geocode   methods= {'HEAD', 'OPTIONS', 'GET'}
+planificador.planificador_reporte -> /planificador/solicitudes/reporte   methods= {'HEAD', 'OPTIONS', 'GET'}
+planificador.planificador_reporte_excel -> /planificador/solicitudes/reporte.xlsx   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.compras_nuevo -> /contratos/ingresar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+contratos.compras_editar -> /contratos/compras/<int:contrato_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+contratos.compras_eliminar -> /contratos/compras/<int:contrato_id>/eliminar   methods= {'POST', 'OPTIONS'}
+contratos.compras_lista -> /contratos/compras   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.exportar_contratos_compras -> /contratos/compras/exportar   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.compras_archivos_fragment -> /contratos/compras/<int:contrato_id>/archivos/fragment   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.toggle_aprobacion_jefe -> /contratos/compras/<int:contrato_id>/aprobj/toggle   methods= {'POST', 'OPTIONS'}
+contratos.contab_lista -> /contratos/contab   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.ver_garantia_fragment -> /contratos/ver/garantia/<int:garantia_id>/fragment   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.contab_nuevo -> /contratos/contab/nuevo   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+contratos.contab_editar -> /contratos/contab/<int:garantia_id>/editar   methods= {'POST', 'HEAD', 'OPTIONS', 'GET'}
+contratos.contab_eliminar -> /contratos/contab/<int:garantia_id>/eliminar   methods= {'POST', 'OPTIONS'}
+contratos.toggle_aprobacion_jefe_garantia -> /contratos/contab/<int:garantia_id>/aprobj/toggle   methods= {'POST', 'OPTIONS'}
+contratos.ver_archivo_contrato -> /contratos/archivo/<int:archivo_id>/ver   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.descargar_archivo_contrato -> /contratos/archivo/<int:archivo_id>/descargar   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.aprobacion -> /contratos/aprobacion   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.ver_contrato_fragment -> /contratos/ver/contrato/<int:contrato_id>/fragment   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.actualizar_finanzas_contrato -> /contratos/compras/<int:contrato_id>/finanzas   methods= {'POST', 'OPTIONS'}
+contratos.ver_contrato_full -> /contratos/ver/contrato/<int:contrato_id>/full   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.ver_contrato -> /contratos/ver/contrato/<int:contrato_id>   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.ver_garantia -> /contratos/ver/garantia/<int:garantia_id>   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.toggle_aprobacion_gf -> /contratos/aprobacion/toggle_gf   methods= {'POST', 'OPTIONS'}
+contratos.toggle_aprobar_contrato -> /contratos/aprobacion/contrato/<int:contrato_id>/toggle   methods= {'POST', 'OPTIONS'}
+contratos.toggle_aprobar_garantia -> /contratos/aprobacion/garantia/<int:garantia_id>/toggle   methods= {'POST', 'OPTIONS'}
+contratos.exportar_garantias_contab -> /contratos/contab/exportar   methods= {'HEAD', 'OPTIONS', 'GET'}
+contratos.notificar_vencimientos_garantias -> /contratos/contab/notificar-vencimientos   methods= {'POST', 'OPTIONS'}
+contratos.encolar_vencimientos_garantias -> /contratos/contab/encolar-vencimientos   methods= {'POST', 'OPTIONS'}
+contratos.encolar_vencimientos_garantias_multi -> /contratos/contab/encolar-vencimientos-multi   methods= {'POST', 'OPTIONS'}
+contratos.encolar_vencimientos_contratos -> /contratos/compras/encolar-vencimientos-contratos   methods= {'POST', 'OPTIONS'}
+telegram.telegram_webhook -> /telegram/webhook   methods= {'POST', 'OPTIONS'}
+telegram.telegram_setup_webhook -> /telegram/setup-webhook   methods= {'POST', 'OPTIONS'}
+telegram.telegram_status -> /telegram/status   methods= {'HEAD', 'OPTIONS', 'GET'}
+scheduler_admin.scheduler_admin_view -> /admin/scheduler   methods= {'HEAD', 'OPTIONS', 'GET'}
+scheduler_admin.scheduler_toggle -> /admin/scheduler/<job_key>/toggle   methods= {'POST', 'OPTIONS'}
+scheduler_admin.scheduler_update_config -> /admin/scheduler/<job_key>/config   methods= {'POST', 'OPTIONS'}
+scheduler_admin.scheduler_run_now -> /admin/scheduler/<job_key>/run   methods= {'POST', 'OPTIONS'}
+_home -> /   methods= {'HEAD', 'OPTIONS', 'GET'}
+whatsapp.verify -> /whatsapp/webhook   methods= {'HEAD', 'OPTIONS', 'GET'}
+whatsapp.recibir_mensaje -> /whatsapp/webhook   methods= {'POST', 'OPTIONS'}
+gateway_disp -> /g/<token>   methods= {'HEAD', 'OPTIONS', 'GET'}
+bi -> /bi   methods= {'HEAD', 'OPTIONS', 'GET'}
+csp_report -> /csp-report   methods= {'POST', 'OPTIONS'}
+ * Serving Flask app 'app'
+ * Debug mode: off
+>>> ENTRO fetch_menu_tree *****
+>>> MENU ROWS: 51
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'scheduler_admin.scheduler_admin_view'
+>>> resolve_endpoint_href OK: 'scheduler_admin.scheduler_admin_view' -> '/admin/scheduler'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'departamentos'
+>>> resolve_endpoint_href OK: 'departamentos' -> '/departamentos'
+>>> resolve_endpoint_href RECIBIDO: 'empresas.lista_empresas'
+>>> resolve_endpoint_href OK: 'empresas.lista_empresas' -> '/empresas/'
+>>> resolve_endpoint_href RECIBIDO: 'usuarios'
+>>> resolve_endpoint_href OK: 'usuarios' -> '/usuarios'
+>>> resolve_endpoint_href RECIBIDO: 'config'
+>>> resolve_endpoint_href OK: 'config' -> '/config'
+>>> resolve_endpoint_href RECIBIDO: 'puestos'
+>>> resolve_endpoint_href OK: 'puestos' -> '/puestos'
+>>> resolve_endpoint_href RECIBIDO: 'parametros_generales'
+>>> resolve_endpoint_href OK: 'parametros_generales' -> '/parametros/generales'
+>>> resolve_endpoint_href RECIBIDO: 'roles_permisos'
+>>> resolve_endpoint_href OK: 'roles_permisos' -> '/roles-permisos'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_frecuencias'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_frecuencias' -> '/obligaciones/frecuencias'
+>>> resolve_endpoint_href RECIBIDO: 'politicas_seguridad'
+>>> resolve_endpoint_href OK: 'politicas_seguridad' -> '/politicas_seguridad'
+>>> resolve_endpoint_href RECIBIDO: 'cambiar_clave'
+>>> resolve_endpoint_href OK: 'cambiar_clave' -> '/cambiar_clave'
+>>> resolve_endpoint_href RECIBIDO: 'menu.menu_admin'
+>>> resolve_endpoint_href OK: 'menu.menu_admin' -> '/config/menu'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'listar_tareas'
+>>> resolve_endpoint_href OK: 'listar_tareas' -> '/tareas'
+>>> MENU ENCUESTA RAW: id= 39 label= Gestión de encuesta endpoint= 'listar_encuestas' external_url= '' parent_id= 2
+>>> resolve_endpoint_href RECIBIDO: 'listar_encuestas'
+>>> resolve_endpoint_href OK: 'listar_encuestas' -> '/encuestas'
+>>> MENU ENCUESTA HREF: label= Gestión de encuesta endpoint= 'listar_encuestas' href= '/encuestas'
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'gastos_dashboard'
+>>> resolve_endpoint_href OK: 'gastos_dashboard' -> '/reembolsos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'gastos_pendientes_aprobacion'
+>>> resolve_endpoint_href OK: 'gastos_pendientes_aprobacion' -> '/reembolsos/gastos/pendientes-aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'lista_gastos'
+>>> resolve_endpoint_href OK: 'lista_gastos' -> '/reembolsos/gastos'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'reporte_gastos'
+>>> resolve_endpoint_href OK: 'reporte_gastos' -> '/reembolsos/gastos/reporte'
+>>> resolve_endpoint_href RECIBIDO: 'clientes'
+>>> resolve_endpoint_href OK: 'clientes' -> '/config/clientes'
+>>> resolve_endpoint_href RECIBIDO: 'proveedores'
+>>> resolve_endpoint_href OK: 'proveedores' -> '/config/proveedores'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.compras_lista'
+>>> resolve_endpoint_href OK: 'contratos.compras_lista' -> '/contratos/compras'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.contab_lista'
+>>> resolve_endpoint_href OK: 'contratos.contab_lista' -> '/contratos/contab'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.aprobacion'
+>>> resolve_endpoint_href OK: 'contratos.aprobacion' -> '/contratos/aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla' -> '/planilla-mensual/'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.tareas_list'
+>>> resolve_endpoint_href OK: 'planilla_mensual.tareas_list' -> '/planilla-mensual/tareas'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.dept_cfg'
+>>> resolve_endpoint_href OK: 'planilla_mensual.dept_cfg' -> '/planilla-mensual/config/departamento'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.mail_template'
+>>> resolve_endpoint_href OK: 'planilla_mensual.mail_template' -> '/planilla-mensual/config/plantilla'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla_dashboard'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla_dashboard' -> '/planilla-mensual/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'notifications.dashboard'
+>>> resolve_endpoint_href FAIL: 'notifications.dashboard' Could not build url for endpoint 'notifications.dashboard'. Did you mean 'reclamos_dashboard' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos_dashboard'
+>>> resolve_endpoint_href OK: 'reclamos_dashboard' -> '/reclamos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_solicitudes'
+>>> resolve_endpoint_href OK: 'planificador.planificador_solicitudes' -> '/planificador/solicitudes'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_presupuesto'
+>>> resolve_endpoint_href FAIL: 'planificador.planificador_presupuesto' Could not build url for endpoint 'planificador.planificador_presupuesto'. Did you mean 'planificador.planificador_reporte' instead?
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_configuracion'
+>>> resolve_endpoint_href OK: 'planificador.planificador_configuracion' -> '/planificador/configuracion'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.dashboard_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.dashboard_obligaciones' -> '/obligaciones/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_obligaciones' -> '/obligaciones/'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.nueva_obligacion'
+>>> resolve_endpoint_href OK: 'obligaciones.nueva_obligacion' -> '/obligaciones/nueva'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.historial_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.historial_obligaciones' -> '/obligaciones/historial'
+>>> ENTRO fetch_menu_tree *****
+>>> MENU ROWS: 51
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'scheduler_admin.scheduler_admin_view'
+>>> resolve_endpoint_href OK: 'scheduler_admin.scheduler_admin_view' -> '/admin/scheduler'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'departamentos'
+>>> resolve_endpoint_href OK: 'departamentos' -> '/departamentos'
+>>> resolve_endpoint_href RECIBIDO: 'empresas.lista_empresas'
+>>> resolve_endpoint_href OK: 'empresas.lista_empresas' -> '/empresas/'
+>>> resolve_endpoint_href RECIBIDO: 'usuarios'
+>>> resolve_endpoint_href OK: 'usuarios' -> '/usuarios'
+>>> resolve_endpoint_href RECIBIDO: 'config'
+>>> resolve_endpoint_href OK: 'config' -> '/config'
+>>> resolve_endpoint_href RECIBIDO: 'puestos'
+>>> resolve_endpoint_href OK: 'puestos' -> '/puestos'
+>>> resolve_endpoint_href RECIBIDO: 'parametros_generales'
+>>> resolve_endpoint_href OK: 'parametros_generales' -> '/parametros/generales'
+>>> resolve_endpoint_href RECIBIDO: 'roles_permisos'
+>>> resolve_endpoint_href OK: 'roles_permisos' -> '/roles-permisos'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_frecuencias'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_frecuencias' -> '/obligaciones/frecuencias'
+>>> resolve_endpoint_href RECIBIDO: 'politicas_seguridad'
+>>> resolve_endpoint_href OK: 'politicas_seguridad' -> '/politicas_seguridad'
+>>> resolve_endpoint_href RECIBIDO: 'cambiar_clave'
+>>> resolve_endpoint_href OK: 'cambiar_clave' -> '/cambiar_clave'
+>>> resolve_endpoint_href RECIBIDO: 'menu.menu_admin'
+>>> resolve_endpoint_href OK: 'menu.menu_admin' -> '/config/menu'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'listar_tareas'
+>>> resolve_endpoint_href OK: 'listar_tareas' -> '/tareas'
+>>> MENU ENCUESTA RAW: id= 39 label= Gestión de encuesta endpoint= 'listar_encuestas' external_url= '' parent_id= 2
+>>> resolve_endpoint_href RECIBIDO: 'listar_encuestas'
+>>> resolve_endpoint_href OK: 'listar_encuestas' -> '/encuestas'
+>>> MENU ENCUESTA HREF: label= Gestión de encuesta endpoint= 'listar_encuestas' href= '/encuestas'
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'gastos_dashboard'
+>>> resolve_endpoint_href OK: 'gastos_dashboard' -> '/reembolsos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'gastos_pendientes_aprobacion'
+>>> resolve_endpoint_href OK: 'gastos_pendientes_aprobacion' -> '/reembolsos/gastos/pendientes-aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'lista_gastos'
+>>> resolve_endpoint_href OK: 'lista_gastos' -> '/reembolsos/gastos'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'reporte_gastos'
+>>> resolve_endpoint_href OK: 'reporte_gastos' -> '/reembolsos/gastos/reporte'
+>>> resolve_endpoint_href RECIBIDO: 'clientes'
+>>> resolve_endpoint_href OK: 'clientes' -> '/config/clientes'
+>>> resolve_endpoint_href RECIBIDO: 'proveedores'
+>>> resolve_endpoint_href OK: 'proveedores' -> '/config/proveedores'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.compras_lista'
+>>> resolve_endpoint_href OK: 'contratos.compras_lista' -> '/contratos/compras'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.contab_lista'
+>>> resolve_endpoint_href OK: 'contratos.contab_lista' -> '/contratos/contab'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.aprobacion'
+>>> resolve_endpoint_href OK: 'contratos.aprobacion' -> '/contratos/aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla' -> '/planilla-mensual/'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.tareas_list'
+>>> resolve_endpoint_href OK: 'planilla_mensual.tareas_list' -> '/planilla-mensual/tareas'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.dept_cfg'
+>>> resolve_endpoint_href OK: 'planilla_mensual.dept_cfg' -> '/planilla-mensual/config/departamento'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.mail_template'
+>>> resolve_endpoint_href OK: 'planilla_mensual.mail_template' -> '/planilla-mensual/config/plantilla'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla_dashboard'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla_dashboard' -> '/planilla-mensual/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'notifications.dashboard'
+>>> resolve_endpoint_href FAIL: 'notifications.dashboard' Could not build url for endpoint 'notifications.dashboard'. Did you mean 'reclamos_dashboard' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos_dashboard'
+>>> resolve_endpoint_href OK: 'reclamos_dashboard' -> '/reclamos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_solicitudes'
+>>> resolve_endpoint_href OK: 'planificador.planificador_solicitudes' -> '/planificador/solicitudes'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_presupuesto'
+>>> resolve_endpoint_href FAIL: 'planificador.planificador_presupuesto' Could not build url for endpoint 'planificador.planificador_presupuesto'. Did you mean 'planificador.planificador_reporte' instead?
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_configuracion'
+>>> resolve_endpoint_href OK: 'planificador.planificador_configuracion' -> '/planificador/configuracion'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.dashboard_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.dashboard_obligaciones' -> '/obligaciones/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_obligaciones' -> '/obligaciones/'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.nueva_obligacion'
+>>> resolve_endpoint_href OK: 'obligaciones.nueva_obligacion' -> '/obligaciones/nueva'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.historial_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.historial_obligaciones' -> '/obligaciones/historial'
+>>> ENTRO fetch_menu_tree *****
+>>> MENU ROWS: 51
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'scheduler_admin.scheduler_admin_view'
+>>> resolve_endpoint_href OK: 'scheduler_admin.scheduler_admin_view' -> '/admin/scheduler'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'departamentos'
+>>> resolve_endpoint_href OK: 'departamentos' -> '/departamentos'
+>>> resolve_endpoint_href RECIBIDO: 'empresas.lista_empresas'
+>>> resolve_endpoint_href OK: 'empresas.lista_empresas' -> '/empresas/'
+>>> resolve_endpoint_href RECIBIDO: 'usuarios'
+>>> resolve_endpoint_href OK: 'usuarios' -> '/usuarios'
+>>> resolve_endpoint_href RECIBIDO: 'config'
+>>> resolve_endpoint_href OK: 'config' -> '/config'
+>>> resolve_endpoint_href RECIBIDO: 'puestos'
+>>> resolve_endpoint_href OK: 'puestos' -> '/puestos'
+>>> resolve_endpoint_href RECIBIDO: 'parametros_generales'
+>>> resolve_endpoint_href OK: 'parametros_generales' -> '/parametros/generales'
+>>> resolve_endpoint_href RECIBIDO: 'roles_permisos'
+>>> resolve_endpoint_href OK: 'roles_permisos' -> '/roles-permisos'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_frecuencias'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_frecuencias' -> '/obligaciones/frecuencias'
+>>> resolve_endpoint_href RECIBIDO: 'politicas_seguridad'
+>>> resolve_endpoint_href OK: 'politicas_seguridad' -> '/politicas_seguridad'
+>>> resolve_endpoint_href RECIBIDO: 'cambiar_clave'
+>>> resolve_endpoint_href OK: 'cambiar_clave' -> '/cambiar_clave'
+>>> resolve_endpoint_href RECIBIDO: 'menu.menu_admin'
+>>> resolve_endpoint_href OK: 'menu.menu_admin' -> '/config/menu'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'listar_tareas'
+>>> resolve_endpoint_href OK: 'listar_tareas' -> '/tareas'
+>>> MENU ENCUESTA RAW: id= 39 label= Gestión de encuesta endpoint= 'listar_encuestas' external_url= '' parent_id= 2
+>>> resolve_endpoint_href RECIBIDO: 'listar_encuestas'
+>>> resolve_endpoint_href OK: 'listar_encuestas' -> '/encuestas'
+>>> MENU ENCUESTA HREF: label= Gestión de encuesta endpoint= 'listar_encuestas' href= '/encuestas'
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'gastos_dashboard'
+>>> resolve_endpoint_href OK: 'gastos_dashboard' -> '/reembolsos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'gastos_pendientes_aprobacion'
+>>> resolve_endpoint_href OK: 'gastos_pendientes_aprobacion' -> '/reembolsos/gastos/pendientes-aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'lista_gastos'
+>>> resolve_endpoint_href OK: 'lista_gastos' -> '/reembolsos/gastos'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'reporte_gastos'
+>>> resolve_endpoint_href OK: 'reporte_gastos' -> '/reembolsos/gastos/reporte'
+>>> resolve_endpoint_href RECIBIDO: 'clientes'
+>>> resolve_endpoint_href OK: 'clientes' -> '/config/clientes'
+>>> resolve_endpoint_href RECIBIDO: 'proveedores'
+>>> resolve_endpoint_href OK: 'proveedores' -> '/config/proveedores'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.compras_lista'
+>>> resolve_endpoint_href OK: 'contratos.compras_lista' -> '/contratos/compras'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.contab_lista'
+>>> resolve_endpoint_href OK: 'contratos.contab_lista' -> '/contratos/contab'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.aprobacion'
+>>> resolve_endpoint_href OK: 'contratos.aprobacion' -> '/contratos/aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla' -> '/planilla-mensual/'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.tareas_list'
+>>> resolve_endpoint_href OK: 'planilla_mensual.tareas_list' -> '/planilla-mensual/tareas'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.dept_cfg'
+>>> resolve_endpoint_href OK: 'planilla_mensual.dept_cfg' -> '/planilla-mensual/config/departamento'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.mail_template'
+>>> resolve_endpoint_href OK: 'planilla_mensual.mail_template' -> '/planilla-mensual/config/plantilla'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla_dashboard'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla_dashboard' -> '/planilla-mensual/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'notifications.dashboard'
+>>> resolve_endpoint_href FAIL: 'notifications.dashboard' Could not build url for endpoint 'notifications.dashboard'. Did you mean 'reclamos_dashboard' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos_dashboard'
+>>> resolve_endpoint_href OK: 'reclamos_dashboard' -> '/reclamos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_solicitudes'
+>>> resolve_endpoint_href OK: 'planificador.planificador_solicitudes' -> '/planificador/solicitudes'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_presupuesto'
+>>> resolve_endpoint_href FAIL: 'planificador.planificador_presupuesto' Could not build url for endpoint 'planificador.planificador_presupuesto'. Did you mean 'planificador.planificador_reporte' instead?
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_configuracion'
+>>> resolve_endpoint_href OK: 'planificador.planificador_configuracion' -> '/planificador/configuracion'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.dashboard_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.dashboard_obligaciones' -> '/obligaciones/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_obligaciones' -> '/obligaciones/'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.nueva_obligacion'
+>>> resolve_endpoint_href OK: 'obligaciones.nueva_obligacion' -> '/obligaciones/nueva'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.historial_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.historial_obligaciones' -> '/obligaciones/historial'
+>>> ENTRO fetch_menu_tree *****
+>>> MENU ROWS: 51
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'scheduler_admin.scheduler_admin_view'
+>>> resolve_endpoint_href OK: 'scheduler_admin.scheduler_admin_view' -> '/admin/scheduler'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'departamentos'
+>>> resolve_endpoint_href OK: 'departamentos' -> '/departamentos'
+>>> resolve_endpoint_href RECIBIDO: 'empresas.lista_empresas'
+>>> resolve_endpoint_href OK: 'empresas.lista_empresas' -> '/empresas/'
+>>> resolve_endpoint_href RECIBIDO: 'usuarios'
+>>> resolve_endpoint_href OK: 'usuarios' -> '/usuarios'
+>>> resolve_endpoint_href RECIBIDO: 'config'
+>>> resolve_endpoint_href OK: 'config' -> '/config'
+>>> resolve_endpoint_href RECIBIDO: 'puestos'
+>>> resolve_endpoint_href OK: 'puestos' -> '/puestos'
+>>> resolve_endpoint_href RECIBIDO: 'parametros_generales'
+>>> resolve_endpoint_href OK: 'parametros_generales' -> '/parametros/generales'
+>>> resolve_endpoint_href RECIBIDO: 'roles_permisos'
+>>> resolve_endpoint_href OK: 'roles_permisos' -> '/roles-permisos'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_frecuencias'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_frecuencias' -> '/obligaciones/frecuencias'
+>>> resolve_endpoint_href RECIBIDO: 'politicas_seguridad'
+>>> resolve_endpoint_href OK: 'politicas_seguridad' -> '/politicas_seguridad'
+>>> resolve_endpoint_href RECIBIDO: 'cambiar_clave'
+>>> resolve_endpoint_href OK: 'cambiar_clave' -> '/cambiar_clave'
+>>> resolve_endpoint_href RECIBIDO: 'menu.menu_admin'
+>>> resolve_endpoint_href OK: 'menu.menu_admin' -> '/config/menu'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'listar_tareas'
+>>> resolve_endpoint_href OK: 'listar_tareas' -> '/tareas'
+>>> MENU ENCUESTA RAW: id= 39 label= Gestión de encuesta endpoint= 'listar_encuestas' external_url= '' parent_id= 2
+>>> resolve_endpoint_href RECIBIDO: 'listar_encuestas'
+>>> resolve_endpoint_href OK: 'listar_encuestas' -> '/encuestas'
+>>> MENU ENCUESTA HREF: label= Gestión de encuesta endpoint= 'listar_encuestas' href= '/encuestas'
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'gastos_dashboard'
+>>> resolve_endpoint_href OK: 'gastos_dashboard' -> '/reembolsos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'gastos_pendientes_aprobacion'
+>>> resolve_endpoint_href OK: 'gastos_pendientes_aprobacion' -> '/reembolsos/gastos/pendientes-aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'lista_gastos'
+>>> resolve_endpoint_href OK: 'lista_gastos' -> '/reembolsos/gastos'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'reporte_gastos'
+>>> resolve_endpoint_href OK: 'reporte_gastos' -> '/reembolsos/gastos/reporte'
+>>> resolve_endpoint_href RECIBIDO: 'clientes'
+>>> resolve_endpoint_href OK: 'clientes' -> '/config/clientes'
+>>> resolve_endpoint_href RECIBIDO: 'proveedores'
+>>> resolve_endpoint_href OK: 'proveedores' -> '/config/proveedores'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.compras_lista'
+>>> resolve_endpoint_href OK: 'contratos.compras_lista' -> '/contratos/compras'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.contab_lista'
+>>> resolve_endpoint_href OK: 'contratos.contab_lista' -> '/contratos/contab'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.aprobacion'
+>>> resolve_endpoint_href OK: 'contratos.aprobacion' -> '/contratos/aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla' -> '/planilla-mensual/'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.tareas_list'
+>>> resolve_endpoint_href OK: 'planilla_mensual.tareas_list' -> '/planilla-mensual/tareas'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.dept_cfg'
+>>> resolve_endpoint_href OK: 'planilla_mensual.dept_cfg' -> '/planilla-mensual/config/departamento'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.mail_template'
+>>> resolve_endpoint_href OK: 'planilla_mensual.mail_template' -> '/planilla-mensual/config/plantilla'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla_dashboard'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla_dashboard' -> '/planilla-mensual/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'notifications.dashboard'
+>>> resolve_endpoint_href FAIL: 'notifications.dashboard' Could not build url for endpoint 'notifications.dashboard'. Did you mean 'reclamos_dashboard' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos_dashboard'
+>>> resolve_endpoint_href OK: 'reclamos_dashboard' -> '/reclamos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_solicitudes'
+>>> resolve_endpoint_href OK: 'planificador.planificador_solicitudes' -> '/planificador/solicitudes'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_presupuesto'
+>>> resolve_endpoint_href FAIL: 'planificador.planificador_presupuesto' Could not build url for endpoint 'planificador.planificador_presupuesto'. Did you mean 'planificador.planificador_reporte' instead?
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_configuracion'
+>>> resolve_endpoint_href OK: 'planificador.planificador_configuracion' -> '/planificador/configuracion'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.dashboard_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.dashboard_obligaciones' -> '/obligaciones/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_obligaciones' -> '/obligaciones/'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.nueva_obligacion'
+>>> resolve_endpoint_href OK: 'obligaciones.nueva_obligacion' -> '/obligaciones/nueva'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.historial_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.historial_obligaciones' -> '/obligaciones/historial'
+>>> ENTRO fetch_menu_tree *****
+>>> MENU ROWS: 51
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'scheduler_admin.scheduler_admin_view'
+>>> resolve_endpoint_href OK: 'scheduler_admin.scheduler_admin_view' -> '/admin/scheduler'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'departamentos'
+>>> resolve_endpoint_href OK: 'departamentos' -> '/departamentos'
+>>> resolve_endpoint_href RECIBIDO: 'empresas.lista_empresas'
+>>> resolve_endpoint_href OK: 'empresas.lista_empresas' -> '/empresas/'
+>>> resolve_endpoint_href RECIBIDO: 'usuarios'
+>>> resolve_endpoint_href OK: 'usuarios' -> '/usuarios'
+>>> resolve_endpoint_href RECIBIDO: 'config'
+>>> resolve_endpoint_href OK: 'config' -> '/config'
+>>> resolve_endpoint_href RECIBIDO: 'puestos'
+>>> resolve_endpoint_href OK: 'puestos' -> '/puestos'
+>>> resolve_endpoint_href RECIBIDO: 'parametros_generales'
+>>> resolve_endpoint_href OK: 'parametros_generales' -> '/parametros/generales'
+>>> resolve_endpoint_href RECIBIDO: 'roles_permisos'
+>>> resolve_endpoint_href OK: 'roles_permisos' -> '/roles-permisos'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_frecuencias'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_frecuencias' -> '/obligaciones/frecuencias'
+>>> resolve_endpoint_href RECIBIDO: 'politicas_seguridad'
+>>> resolve_endpoint_href OK: 'politicas_seguridad' -> '/politicas_seguridad'
+>>> resolve_endpoint_href RECIBIDO: 'cambiar_clave'
+>>> resolve_endpoint_href OK: 'cambiar_clave' -> '/cambiar_clave'
+>>> resolve_endpoint_href RECIBIDO: 'menu.menu_admin'
+>>> resolve_endpoint_href OK: 'menu.menu_admin' -> '/config/menu'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'listar_tareas'
+>>> resolve_endpoint_href OK: 'listar_tareas' -> '/tareas'
+>>> MENU ENCUESTA RAW: id= 39 label= Gestión de encuesta endpoint= 'listar_encuestas' external_url= '' parent_id= 2
+>>> resolve_endpoint_href RECIBIDO: 'listar_encuestas'
+>>> resolve_endpoint_href OK: 'listar_encuestas' -> '/encuestas'
+>>> MENU ENCUESTA HREF: label= Gestión de encuesta endpoint= 'listar_encuestas' href= '/encuestas'
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'gastos_dashboard'
+>>> resolve_endpoint_href OK: 'gastos_dashboard' -> '/reembolsos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'gastos_pendientes_aprobacion'
+>>> resolve_endpoint_href OK: 'gastos_pendientes_aprobacion' -> '/reembolsos/gastos/pendientes-aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'lista_gastos'
+>>> resolve_endpoint_href OK: 'lista_gastos' -> '/reembolsos/gastos'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'reporte_gastos'
+>>> resolve_endpoint_href OK: 'reporte_gastos' -> '/reembolsos/gastos/reporte'
+>>> resolve_endpoint_href RECIBIDO: 'clientes'
+>>> resolve_endpoint_href OK: 'clientes' -> '/config/clientes'
+>>> resolve_endpoint_href RECIBIDO: 'proveedores'
+>>> resolve_endpoint_href OK: 'proveedores' -> '/config/proveedores'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.compras_lista'
+>>> resolve_endpoint_href OK: 'contratos.compras_lista' -> '/contratos/compras'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.contab_lista'
+>>> resolve_endpoint_href OK: 'contratos.contab_lista' -> '/contratos/contab'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.aprobacion'
+>>> resolve_endpoint_href OK: 'contratos.aprobacion' -> '/contratos/aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla' -> '/planilla-mensual/'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.tareas_list'
+>>> resolve_endpoint_href OK: 'planilla_mensual.tareas_list' -> '/planilla-mensual/tareas'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.dept_cfg'
+>>> resolve_endpoint_href OK: 'planilla_mensual.dept_cfg' -> '/planilla-mensual/config/departamento'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.mail_template'
+>>> resolve_endpoint_href OK: 'planilla_mensual.mail_template' -> '/planilla-mensual/config/plantilla'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla_dashboard'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla_dashboard' -> '/planilla-mensual/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'notifications.dashboard'
+>>> resolve_endpoint_href FAIL: 'notifications.dashboard' Could not build url for endpoint 'notifications.dashboard'. Did you mean 'reclamos_dashboard' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos_dashboard'
+>>> resolve_endpoint_href OK: 'reclamos_dashboard' -> '/reclamos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_solicitudes'
+>>> resolve_endpoint_href OK: 'planificador.planificador_solicitudes' -> '/planificador/solicitudes'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_presupuesto'
+>>> resolve_endpoint_href FAIL: 'planificador.planificador_presupuesto' Could not build url for endpoint 'planificador.planificador_presupuesto'. Did you mean 'planificador.planificador_reporte' instead?
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_configuracion'
+>>> resolve_endpoint_href OK: 'planificador.planificador_configuracion' -> '/planificador/configuracion'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.dashboard_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.dashboard_obligaciones' -> '/obligaciones/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_obligaciones' -> '/obligaciones/'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.nueva_obligacion'
+>>> resolve_endpoint_href OK: 'obligaciones.nueva_obligacion' -> '/obligaciones/nueva'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.historial_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.historial_obligaciones' -> '/obligaciones/historial'
+>>> ENTRO fetch_menu_tree *****
+>>> MENU ROWS: 51
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'scheduler_admin.scheduler_admin_view'
+>>> resolve_endpoint_href OK: 'scheduler_admin.scheduler_admin_view' -> '/admin/scheduler'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'departamentos'
+>>> resolve_endpoint_href OK: 'departamentos' -> '/departamentos'
+>>> resolve_endpoint_href RECIBIDO: 'empresas.lista_empresas'
+>>> resolve_endpoint_href OK: 'empresas.lista_empresas' -> '/empresas/'
+>>> resolve_endpoint_href RECIBIDO: 'usuarios'
+>>> resolve_endpoint_href OK: 'usuarios' -> '/usuarios'
+>>> resolve_endpoint_href RECIBIDO: 'config'
+>>> resolve_endpoint_href OK: 'config' -> '/config'
+>>> resolve_endpoint_href RECIBIDO: 'puestos'
+>>> resolve_endpoint_href OK: 'puestos' -> '/puestos'
+>>> resolve_endpoint_href RECIBIDO: 'parametros_generales'
+>>> resolve_endpoint_href OK: 'parametros_generales' -> '/parametros/generales'
+>>> resolve_endpoint_href RECIBIDO: 'roles_permisos'
+>>> resolve_endpoint_href OK: 'roles_permisos' -> '/roles-permisos'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_frecuencias'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_frecuencias' -> '/obligaciones/frecuencias'
+>>> resolve_endpoint_href RECIBIDO: 'politicas_seguridad'
+>>> resolve_endpoint_href OK: 'politicas_seguridad' -> '/politicas_seguridad'
+>>> resolve_endpoint_href RECIBIDO: 'cambiar_clave'
+>>> resolve_endpoint_href OK: 'cambiar_clave' -> '/cambiar_clave'
+>>> resolve_endpoint_href RECIBIDO: 'menu.menu_admin'
+>>> resolve_endpoint_href OK: 'menu.menu_admin' -> '/config/menu'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'listar_tareas'
+>>> resolve_endpoint_href OK: 'listar_tareas' -> '/tareas'
+>>> MENU ENCUESTA RAW: id= 39 label= Gestión de encuesta endpoint= 'listar_encuestas' external_url= '' parent_id= 2
+>>> resolve_endpoint_href RECIBIDO: 'listar_encuestas'
+>>> resolve_endpoint_href OK: 'listar_encuestas' -> '/encuestas'
+>>> MENU ENCUESTA HREF: label= Gestión de encuesta endpoint= 'listar_encuestas' href= '/encuestas'
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'gastos_dashboard'
+>>> resolve_endpoint_href OK: 'gastos_dashboard' -> '/reembolsos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'gastos_pendientes_aprobacion'
+>>> resolve_endpoint_href OK: 'gastos_pendientes_aprobacion' -> '/reembolsos/gastos/pendientes-aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'lista_gastos'
+>>> resolve_endpoint_href OK: 'lista_gastos' -> '/reembolsos/gastos'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'reporte_gastos'
+>>> resolve_endpoint_href OK: 'reporte_gastos' -> '/reembolsos/gastos/reporte'
+>>> resolve_endpoint_href RECIBIDO: 'clientes'
+>>> resolve_endpoint_href OK: 'clientes' -> '/config/clientes'
+>>> resolve_endpoint_href RECIBIDO: 'proveedores'
+>>> resolve_endpoint_href OK: 'proveedores' -> '/config/proveedores'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.compras_lista'
+>>> resolve_endpoint_href OK: 'contratos.compras_lista' -> '/contratos/compras'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.contab_lista'
+>>> resolve_endpoint_href OK: 'contratos.contab_lista' -> '/contratos/contab'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.aprobacion'
+>>> resolve_endpoint_href OK: 'contratos.aprobacion' -> '/contratos/aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla' -> '/planilla-mensual/'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.tareas_list'
+>>> resolve_endpoint_href OK: 'planilla_mensual.tareas_list' -> '/planilla-mensual/tareas'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.dept_cfg'
+>>> resolve_endpoint_href OK: 'planilla_mensual.dept_cfg' -> '/planilla-mensual/config/departamento'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.mail_template'
+>>> resolve_endpoint_href OK: 'planilla_mensual.mail_template' -> '/planilla-mensual/config/plantilla'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla_dashboard'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla_dashboard' -> '/planilla-mensual/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'notifications.dashboard'
+>>> resolve_endpoint_href FAIL: 'notifications.dashboard' Could not build url for endpoint 'notifications.dashboard'. Did you mean 'reclamos_dashboard' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos_dashboard'
+>>> resolve_endpoint_href OK: 'reclamos_dashboard' -> '/reclamos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_solicitudes'
+>>> resolve_endpoint_href OK: 'planificador.planificador_solicitudes' -> '/planificador/solicitudes'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_presupuesto'
+>>> resolve_endpoint_href FAIL: 'planificador.planificador_presupuesto' Could not build url for endpoint 'planificador.planificador_presupuesto'. Did you mean 'planificador.planificador_reporte' instead?
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_configuracion'
+>>> resolve_endpoint_href OK: 'planificador.planificador_configuracion' -> '/planificador/configuracion'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.dashboard_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.dashboard_obligaciones' -> '/obligaciones/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_obligaciones' -> '/obligaciones/'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.nueva_obligacion'
+>>> resolve_endpoint_href OK: 'obligaciones.nueva_obligacion' -> '/obligaciones/nueva'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.historial_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.historial_obligaciones' -> '/obligaciones/historial'
+>>> ENTRO fetch_menu_tree *****
+>>> MENU ROWS: 51
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'scheduler_admin.scheduler_admin_view'
+>>> resolve_endpoint_href OK: 'scheduler_admin.scheduler_admin_view' -> '/admin/scheduler'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'departamentos'
+>>> resolve_endpoint_href OK: 'departamentos' -> '/departamentos'
+>>> resolve_endpoint_href RECIBIDO: 'empresas.lista_empresas'
+>>> resolve_endpoint_href OK: 'empresas.lista_empresas' -> '/empresas/'
+>>> resolve_endpoint_href RECIBIDO: 'usuarios'
+>>> resolve_endpoint_href OK: 'usuarios' -> '/usuarios'
+>>> resolve_endpoint_href RECIBIDO: 'config'
+>>> resolve_endpoint_href OK: 'config' -> '/config'
+>>> resolve_endpoint_href RECIBIDO: 'puestos'
+>>> resolve_endpoint_href OK: 'puestos' -> '/puestos'
+>>> resolve_endpoint_href RECIBIDO: 'parametros_generales'
+>>> resolve_endpoint_href OK: 'parametros_generales' -> '/parametros/generales'
+>>> resolve_endpoint_href RECIBIDO: 'roles_permisos'
+>>> resolve_endpoint_href OK: 'roles_permisos' -> '/roles-permisos'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_frecuencias'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_frecuencias' -> '/obligaciones/frecuencias'
+>>> resolve_endpoint_href RECIBIDO: 'politicas_seguridad'
+>>> resolve_endpoint_href OK: 'politicas_seguridad' -> '/politicas_seguridad'
+>>> resolve_endpoint_href RECIBIDO: 'cambiar_clave'
+>>> resolve_endpoint_href OK: 'cambiar_clave' -> '/cambiar_clave'
+>>> resolve_endpoint_href RECIBIDO: 'menu.menu_admin'
+>>> resolve_endpoint_href OK: 'menu.menu_admin' -> '/config/menu'
+>>> resolve_endpoint_href RECIBIDO: ''
+>>> resolve_endpoint_href VACIO -> #
+>>> resolve_endpoint_href RECIBIDO: 'listar_tareas'
+>>> resolve_endpoint_href OK: 'listar_tareas' -> '/tareas'
+>>> MENU ENCUESTA RAW: id= 39 label= Gestión de encuesta endpoint= 'listar_encuestas' external_url= '' parent_id= 2
+>>> resolve_endpoint_href RECIBIDO: 'listar_encuestas'
+>>> resolve_endpoint_href OK: 'listar_encuestas' -> '/encuestas'
+>>> MENU ENCUESTA HREF: label= Gestión de encuesta endpoint= 'listar_encuestas' href= '/encuestas'
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'None'
+>>> resolve_endpoint_href FAIL: 'None' Could not build url for endpoint 'None'. Did you mean 'login' instead?
+>>> resolve_endpoint_href RECIBIDO: 'gastos_dashboard'
+>>> resolve_endpoint_href OK: 'gastos_dashboard' -> '/reembolsos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'gastos_pendientes_aprobacion'
+>>> resolve_endpoint_href OK: 'gastos_pendientes_aprobacion' -> '/reembolsos/gastos/pendientes-aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'lista_gastos'
+>>> resolve_endpoint_href OK: 'lista_gastos' -> '/reembolsos/gastos'
+>>> resolve_endpoint_href RECIBIDO: 'facturas_xml_list'
+>>> resolve_endpoint_href OK: 'facturas_xml_list' -> '/reembolsos/xml'
+>>> resolve_endpoint_href RECIBIDO: 'reporte_gastos'
+>>> resolve_endpoint_href OK: 'reporte_gastos' -> '/reembolsos/gastos/reporte'
+>>> resolve_endpoint_href RECIBIDO: 'clientes'
+>>> resolve_endpoint_href OK: 'clientes' -> '/config/clientes'
+>>> resolve_endpoint_href RECIBIDO: 'proveedores'
+>>> resolve_endpoint_href OK: 'proveedores' -> '/config/proveedores'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.compras_lista'
+>>> resolve_endpoint_href OK: 'contratos.compras_lista' -> '/contratos/compras'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.contab_lista'
+>>> resolve_endpoint_href OK: 'contratos.contab_lista' -> '/contratos/contab'
+>>> resolve_endpoint_href RECIBIDO: 'contratos.aprobacion'
+>>> resolve_endpoint_href OK: 'contratos.aprobacion' -> '/contratos/aprobacion'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla' -> '/planilla-mensual/'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.tareas_list'
+>>> resolve_endpoint_href OK: 'planilla_mensual.tareas_list' -> '/planilla-mensual/tareas'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.dept_cfg'
+>>> resolve_endpoint_href OK: 'planilla_mensual.dept_cfg' -> '/planilla-mensual/config/departamento'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.mail_template'
+>>> resolve_endpoint_href OK: 'planilla_mensual.mail_template' -> '/planilla-mensual/config/plantilla'
+>>> resolve_endpoint_href RECIBIDO: 'planilla_mensual.planilla_dashboard'
+>>> resolve_endpoint_href OK: 'planilla_mensual.planilla_dashboard' -> '/planilla-mensual/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'notifications.dashboard'
+>>> resolve_endpoint_href FAIL: 'notifications.dashboard' Could not build url for endpoint 'notifications.dashboard'. Did you mean 'reclamos_dashboard' instead?
+>>> resolve_endpoint_href RECIBIDO: 'reclamos_dashboard'
+>>> resolve_endpoint_href OK: 'reclamos_dashboard' -> '/reclamos/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'reclamos'
+>>> resolve_endpoint_href OK: 'reclamos' -> '/reclamos'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_solicitudes'
+>>> resolve_endpoint_href OK: 'planificador.planificador_solicitudes' -> '/planificador/solicitudes'
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_presupuesto'
+>>> resolve_endpoint_href FAIL: 'planificador.planificador_presupuesto' Could not build url for endpoint 'planificador.planificador_presupuesto'. Did you mean 'planificador.planificador_reporte' instead?
+>>> resolve_endpoint_href RECIBIDO: 'planificador.planificador_configuracion'
+>>> resolve_endpoint_href OK: 'planificador.planificador_configuracion' -> '/planificador/configuracion'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.dashboard_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.dashboard_obligaciones' -> '/obligaciones/dashboard'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.lista_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.lista_obligaciones' -> '/obligaciones/'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.nueva_obligacion'
+>>> resolve_endpoint_href OK: 'obligaciones.nueva_obligacion' -> '/obligaciones/nueva'
+>>> resolve_endpoint_href RECIBIDO: 'obligaciones.historial_obligaciones'
+>>> resolve_endpoint_href OK: 'obligaciones.historial_obligaciones' -> '/obligaciones/historial'

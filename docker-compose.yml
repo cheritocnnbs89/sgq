@@ -1,0 +1,46 @@
+version: '3.9'
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sgq-local
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SGQ_LOCAL_DB_PASS}
+    ports:
+      - "14330:1433"
+    volumes:
+      - sgq_local_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  bitacora:
+    build: .
+    container_name: bitacora_app
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    environment:
+      - BITACORA_SECRET=bitacora_super_secreto
+      - SQLSERVER_HOST=db
+      - SQLSERVER_PORT=1433
+      - SQLSERVER_USER=sa
+      - SQLSERVER_PASSWORD=${SGQ_LOCAL_DB_PASS}
+      - SQLSERVER_DATABASE=SGQ_BITACORA
+      - SQLSERVER_DRIVER=ODBC Driver 17 for SQL Server
+      - SQLSERVER_ENCRYPT=no
+      - SMTP_HOST=
+      - SMTP_PORT=587
+      - SMTP_USER=
+      - SMTP_PASS=
+      - SMTP_FROM=
+    volumes:
+      - ./database:/app/database
+      - ./static/uploads:/app/static/uploads
+
+volumes:
+  sgq_local_data:

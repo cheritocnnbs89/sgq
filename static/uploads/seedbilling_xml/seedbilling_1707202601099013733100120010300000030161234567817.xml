@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><factura xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>TRANSOCEANICA LOGISTICS TCLOG S.A.</razonSocial><ruc>0990137331001</ruc><claveAcceso>1707202601099013733100120010300000030161234567817</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>030</ptoEmi><secuencial>000003016</secuencial><dirMatriz>Malecón 1401 e Illingworth</dirMatriz></infoTributaria><infoFactura><fechaEmision>17/07/2026</fechaEmision><dirEstablecimiento>Malecón 1401 e Illingworth</dirEstablecimiento><contribuyenteEspecial>616</contribuyenteEspecial><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE, KM 16.5 VIA A DAULE</direccionComprador><totalSinImpuestos>119.77</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><baseImponible>119.77</baseImponible><tarifa>0</tarifa><valor>0.00</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>119.77</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>119.77</total><plazo>0</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>O-0132</codigoPrincipal><descripcion>TRANSPORTE INTERNACIONAL</descripcion><cantidad>1.0000</cantidad><precioUnitario>51.420</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>51.42</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><tarifa>0</tarifa><baseImponible>51.42</baseImponible><valor>0.00</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>O-0132</codigoPrincipal><descripcion>TRANSPORTE INTERNACIONAL</descripcion><cantidad>1.0000</cantidad><precioUnitario>5.000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>5.00</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><tarifa>0</tarifa><baseImponible>5.00</baseImponible><valor>0.00</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>O-0088</codigoPrincipal><descripcion>TRANSPORTE INTERNACIONAL DE CARGA  AEREO</descripcion><cantidad>1.0000</cantidad><precioUnitario>63.350</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>63.35</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Concepto" valor="SERVICIOS EN EL EXTERIOR"/></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><tarifa>0</tarifa><baseImponible>63.35</baseImponible><valor>0.00</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="CORREO">imports-exports@quimpac.com.ec;customerserv@transoceanicaec.onmicrosoft.com;lrosado@transoceanicaec.onmicrosoft.com</campoAdicional><campoAdicional nombre="DIRECCION DEL ADQUIRIENTE">AV. ROSAVIN LOTE 1 Y CALLE COBRE, KM 16.5 VIA A DAULE</campoAdicional><campoAdicional nombre="SAP">105003016 - 383949</campoAdicional><campoAdicional nombre="No. de BL">|  |BK:</campoAdicional><campoAdicional nombre="No. de Orden">2000031212|</campoAdicional><campoAdicional nombre="FECHA VENCIMIENTO DOC">17/07/2026</campoAdicional><campoAdicional nombre="MONEDA">DOLAR</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature151395">
+<ds:SignedInfo Id="Signature-SignedInfo964156">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID293034" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature151395-SignedProperties479441">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>G89WrHEKhte4xe/7phdLpaCHdFY=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1565750">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>vgc9eVF81y+JI6WC8mUNoewt+jo=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-123112" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>uFXbZX4RuE3/TMnlwKLq+XroaFY=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue584160">
+NpeXlS+MgGC/qHSm39YFXPT/Ellv0NmxtSjWpAZdQaek6gEVG5tvDO/zOJglgI2XrFKax/CGzRuy
+llz0icI7brgfsAt+zYbH2gCPZ11jn3y+/hI5XA39rCzg5pCVHD09sJtn9OdCvXkg3hLDJ0dvinEi
+vprsCORcwF2LARTbjJhaJ3iwpfR0mF840Ft/VRMF9w/JO/U7Lv1hBK4ILXx9dzlMG/uuerooxQ8N
+GYE/HE2wC5wQ0owseBgvJcGK1SXs5xeANbsu/yMQENlU1CqBCrJFHP8XbJ6vuDLaZ7OyjHPQOd+L
+GV24TRfcnDLkYJGCmH2i7z3CFXsAaS4mUEAAkA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1565750">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIK1DCCCLygAwIBAgIEHbHdlTANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTAzMTEyMjA0NDVaFw0yNzAzMTEyMjA0NDVaMIGoMSYw
+JAYDVQQDDB1HVVNUQVZPIEVSTkVTVE8gU09TQSBBTFZBUkFETzEgMB4GA1UEBRMXMDkxODM0MDk0
+NC0xMTAzMjUxNzE0NDExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZP
+Uk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwGCPgYmN9hgV90Un+FnP44ugyx4oYcIfTz8MdLtH
+ckdpSghNLIEiwZvHQMmjHAPvOur9wp8r7NHwNLWpc6dFzZh4bvxJcj15U/GfPLzUrqckcsTsEar1
+V7O+EUCRvwvp8OMhPP3ddFPmq7flQq1RmadbqzUfOKDNAyBFTBkJp41oMBSr7tTT8EBb2itVeVfU
+tQokDCK4t7xUmUhKfU9AgtQG0K5VLwGGrZOqqEtj2PWoHr9bWq4Iddkq21cZy4OId7qyTykw2756
+3Xe5jg0yLyV4DeWu3MEjwKPpQnoFYuJwRWR3IhyNOIUnVb3Y67mr8Wcs+/GsV87XpdvCqIk4TwID
+AQABo4IGETCCBg0wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29
+jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRh
+Lm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwHwYDVR0RBBgwFoEUZ3Nvc2FAYnJv
+a2Vyc2Ntcy5jb20wggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIw
+Rh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0
+AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93
+d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1Bf
+ZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExl
+Z2FsLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB
+3qA6oDiGNmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxl
+LmNybKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0Et
+MiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5G
+T1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqg
+OIY2aHR0cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3Js
+MIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMv
+ZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJ
+REFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMw
+HQYDVR0OBBYEFIbSzhhch8MMSisrKPrPa70CTTPVMCsGA1UdEAQkMCKADzIwMjUwMzExMjIwNDQ1
+WoEPMjAyNzAzMTEyMjA0NDVaMAsGA1UdDwQEAwIF4DAXBgorBgEEAYKmcgMFBAkMB0dFUkVOVEUw
+GgYKKwYBBAGCpnIDAQQMDAowOTE4MzQwOTQ0MBoGCisGAQQBgqZyAwkEDAwKUk9DQUZVRVJURTAR
+BgorBgEEAYKmcgMiBAMMAS4wNwYKKwYBBAGCpnIDBwQpDCdNQUxFQ09OIFNJTU9OIEJPTElWQVIg
+MTQwMSBZIElMTElOR1dPVEgwHwYKKwYBBAGCpnIDAgQRDA9HVVNUQVZPIEVSTkVTVE8wHwYKKwYB
+BAGCpnIDIAQRDA8wMDEwMDIwMDA3MjY3OTYwEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGC
+pnIDDAQJDAdFQ1VBRE9SMBQGCisGAQQBgqZyAwMEBgwEU09TQTAxBgorBgEEAYKmcgMKBCMMIVRS
+QU5TT0NFQU5JQ0EgTE9HSVNUSUNTIFRDTE9HIFMgQTAdBgorBgEEAYKmcgMLBA8MDTA5OTAxMzcz
+MzEwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBgGCisGAQQBgqZyAwQECgwIQUxWQVJBRE8wGgYKKwYB
+BAGCpnIDCAQMDAowOTkyNjU5MzM4MA0GCSqGSIb3DQEBCwUAA4ICAQCrFtuIHZK4ko9wCH8Fuoz0
+mdIw9ACHdWRP5tONKrqin8KfUsm0kY4ZL7ywkKOvG8DY5io5Ldw5Zmm1Fp2MG7RByjOJVnWwLO5P
+w50IYrNStMuDGb8ZlKXlcGgDOoxFd2KzsMY+FN0KLw3WTJ/cECt0fHCaYHWiVxZFJEq5Xpj6Xs+z
+qGALPReigkKNrxozs5cpqy+gqFIoKJK6CWtS7cfHYMBiULkL4h0h53kp7FGSPthYdqB8Ddkcvb3f
+U65roaiALkPJhNY0d+1/GAFop9UncDHJg8XGl7aDH5IjlIiOTpyufnwRVT1AbI+429cCaXVuB/0V
+mi4ngxHYIq7MMO52l3BpL6q5EvSh2JX2kayKi88sRwGIGiS4UYKCfZ8zyL0ai0Qy16TqUsEqezYe
+mjaY3wE70C0CLSgSAEjzMlB31LwHvK1wHsNlpEr8NK8W2AT3OfiNxqZzZ1pvtnzqIc+9jPCDwBah
+fbcMKsnaNravy4HoeUzaQfmWZpGjMyxcTNHemvCN+COvoZTsLBcaq+BmtBs57JxG6aMi8RAiS9u3
+BisSW33fXdKmLFe0uztUZYnqCWyeELl7O/jOxo3j8NdlMelJkcYA8I5I2rEB00LND2FJHEzgxGys
+J3oJ7yeuWfCHw0nnBtpQDb9HJ1ab9sgJ/a61t+GuhIHFuNFZYHlKjQ==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+wGCPgYmN9hgV90Un+FnP44ugyx4oYcIfTz8MdLtHckdpSghNLIEiwZvHQMmjHAPvOur9wp8r7NHw
+NLWpc6dFzZh4bvxJcj15U/GfPLzUrqckcsTsEar1V7O+EUCRvwvp8OMhPP3ddFPmq7flQq1Rmadb
+qzUfOKDNAyBFTBkJp41oMBSr7tTT8EBb2itVeVfUtQokDCK4t7xUmUhKfU9AgtQG0K5VLwGGrZOq
+qEtj2PWoHr9bWq4Iddkq21cZy4OId7qyTykw27563Xe5jg0yLyV4DeWu3MEjwKPpQnoFYuJwRWR3
+IhyNOIUnVb3Y67mr8Wcs+/GsV87XpdvCqIk4Tw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature151395-Object882916"><etsi:QualifyingProperties Target="#Signature151395"><etsi:SignedProperties Id="Signature151395-SignedProperties479441"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T09:17:53-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>bDPPs+ibXJOvurXwl4P58eM7Dys=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>498195861</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-123112"><etsi:Description>comprobateFirma</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

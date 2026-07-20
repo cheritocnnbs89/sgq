@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% block title %}Reporte de Gasto con Tarjeta — Reporte{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reembolsos/gastos_reportes.css') }}">
+
+{% if request.args.get('status') == 'deleted' %}
+<div class="alert alert-success alert-dismissible fade show" role="alert" data-once="1">
+  Registro eliminado.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="container mt-4 gastos-page">
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <h3 class="mb-0">
+      <i class="bi bi-credit-card me-2"></i>Reporte de Gasto con Tarjeta — Reporte
+    </h3>
+
+    <div class="d-none d-md-flex align-items-center gap-2 text-muted small">
+      <span class="badge bg-light text-dark border">
+        <i class="bi bi-person-circle me-1"></i>{{ (usuario or session.get('usuario') or session.get('username') or '—') }}
+      </span>
+      <span class="badge bg-light text-dark border">
+        <i class="bi bi-shield-lock me-1"></i>{{ (rol or session.get('rol') or '—') }}
+      </span>
+    </div>
+  </div>
+
+  <form method="get"
+        action="{{ url_for('reporte_gastos') }}"
+        class="d-flex flex-wrap align-items-end gap-2 mb-2 filtros-gastos no-print">
+
+    <div class="d-flex flex-column">
+      <label class="form-label mb-1">Desde</label>
+      <input type="date" name="desde" class="form-control form-control-sm w-160" value="{{ filtros.desde or '' }}">
+    </div>
+
+    <div class="d-flex flex-column">
+      <label class="form-label mb-1">Hasta</label>
+      <input type="date" name="hasta" class="form-control form-control-sm w-160" value="{{ filtros.hasta or '' }}">
+    </div>
+
+    <div class="flex-grow-1 d-flex flex-column">
+      <label class="form-label mb-1">Usuario</label>
+      <select name="usuario_id" id="usuario_id" class="form-select form-select-sm w-220">
+        <option value="">— Todos —</option>
+        {% for u in usuarios_reg %}
+          <option value="{{ u.id }}" {{ 'selected' if (filtros.usuario_id|string)==(u.id|string) else '' }}>
+            {{ u.username }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="d-flex flex-column">
+      <label class="form-label mb-1">Tipo</label>
+      <select name="tipo" id="tipo" class="form-select form-select-sm w-220">
+        <option value="" {{ 'selected' if not filtros.tipo else '' }}>— Todos —</option>
+        <option value="caja_chica" {{ 'selected' if filtros.tipo=='caja_chica' else '' }}>Caja chica</option>
+        <option value="reembolso" {{ 'selected' if filtros.tipo=='reembolso' else '' }}>Reembolso vendedor</option>
+        <option value="tarjeta" {{ 'selected' if filtros.tipo=='tarjeta' else '' }}>Tarjeta</option>
+        <option value="tarjeta_online" {{ 'selected' if filtros.tipo=='tarjeta_online' else '' }}>Tarjeta (Online)</option>
+        <option value="tarjeta_boletos" {{ 'selected' if filtros.tipo=='tarjeta_boletos' else '' }}>Tarjeta (Boletos)</option>
+      </select>
+    </div>
+
+    <div class="flex-grow-1 d-flex flex-column">
+      <label class="form-label mb-1">Gerente</label>
+      <select name="gerente_id" id="gerente_id" class="form-select form-select-sm w-220">
+        <option value="">— Todos —</option>
+        {% for g in gerentes_reg %}
+          <option value="{{ g.id }}" {{ 'selected' if (filtros.gerente_id|string)==(g.id|string) else '' }}>
+            {{ g.nombre }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <input type="hidden" id="pendientes" name="pendientes" value="{{ filtros.pendientes or '' }}">
+
+    <div class="d-flex align-items-end gap-2">
+      <button type="submit" class="btn btn-primary btn-sm" name="accion" value="buscar">
+        Buscar
+      </button>
+
+      <div class="d-flex flex-column">
+        <label class="form-label mb-1">CCB</label>
+        <div class="input-group input-group-sm input-group-ccb">
+          <span class="input-group-text" title="CCB"><i class="bi bi-star"></i></span>
+          <select name="ccb" id="ccb" class="form-select">
+            <option value="" {{ 'selected' if (filtros.ccb|string)=='' else '' }}>Todos</option>
+            <option value="1" {{ 'selected' if (filtros.ccb|string)=='1' else '' }}>Con CCB</option>
+            <option value="0" {{ 'selected' if (filtros.ccb|string)=='0' else '' }}>Sin CCB</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-group btn-group-sm ms-auto">
+      <button type="button" class="btn btn-outline-secondary" data-range="today">Hoy</button>
+      <button type="button" class="btn btn-outline-secondary" data-range="week">Semana</button>
+      <button type="button" class="btn btn-outline-secondary" data-range="month">Mes</button>
+      <button type="button" class="btn btn-outline-secondary" data-range="30">Últ. 30 días</button>
+    </div>
+  </form>
+
+  {% if totales %}
+  <div class="row g-2 mb-2 no-print">
+    <div class="col-12 col-sm-4">
+      <div class="kpi-card">
+        <div class="small">Sub Total</div>
+        <div class="fs-5 fw-semibold tabular-nums">
+          {{ '{:,.2f}'.format((totales.con_soporte|default(0,true)) + (totales.sin_soporte|default(0,true)))
+             |replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4">
+      <div class="kpi-card">
+        <div class="small">IVA</div>
+        <div class="fs-5 fw-semibold tabular-nums">
+          {{ '{:,.2f}'.format(totales.iva)|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-4">
+      <div class="kpi-card">
+        <div class="small">Total</div>
+        <div class="fs-5 fw-semibold tabular-nums">
+          {{ '{:,.2f}'.format(totales.total_con_iva)|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="d-flex align-items-center justify-content-between mb-2 no-print">
+    <div class="btn-toolbar gap-2">
+      <a id="btnExcelVisible" class="btn btn-success btn-sm"
+         href="#"
+         data-export-url="/reembolsos/gastos/export/excel">
+        <i class="bi bi-file-earmark-excel me-1"></i>Excel
+      </a>
+
+      <a id="btnReporteExcel" class="btn btn-outline-success btn-sm"
+         href="#"
+         data-export-url="{{ url_for('export_gastos_reporte_excel') }}">
+        <i class="bi bi-file-earmark-spreadsheet me-1"></i>Reporte Excel
+      </a>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <div class="dropdown">
+        <button id="pageLengthBtn" class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                data-bs-toggle="dropdown">
+          Mostrar 15 filas
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#" data-page-length="5">5</a></li>
+          <li><a class="dropdown-item" href="#" data-page-length="10">10</a></li>
+          <li><a class="dropdown-item" href="#" data-page-length="15">15</a></li>
+          <li><a class="dropdown-item" href="#" data-page-length="25">25</a></li>
+          <li><a class="dropdown-item" href="#" data-page-length="50">50</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table id="tabla-gastos" class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th data-sort="date"><span class="th-sortable">Fecha <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">Proveedor <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">Detalle <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">Tipo <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">CCB <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="num" class="text-end">
+            <span class="th-sortable">Sub total factura <i class="bi bi-arrow-down-up ms-1"></i></span>
+          </th>
+          <th class="text-end">IVA</th>
+          <th data-sort="num" class="text-end">
+            <span class="th-sortable">Total con IVA <i class="bi bi-arrow-down-up ms-1"></i></span>
+          </th>
+          <th data-sort="text"><span class="th-sortable">Usuario <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+          <th data-sort="text"><span class="th-sortable">Gerente <i class="bi bi-arrow-down-up ms-1"></i></span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for g in gastos %}
+        <tr data-row="1" data-id="{{ g['id'] }}">
+          <td data-th="Fecha">{{ g['fecha'] }}</td>
+
+          <td data-th="Proveedor">
+            {{ g['proveedor_nombre'] or '' }}
+          </td>
+
+          <td data-th="Detalle">
+            <div>{{ g.get('motivo') or '' }}</div>
+            {% set md = (g.get('motivos_detalle') or '')|trim %}
+            {% if md %}
+              <div class="small text-muted">Motivos: {{ md|replace(',', ' | ') }}</div>
+            {% endif %}
+          </td>
+
+          <td data-th="Tipo">
+            {% set t = (g['tipo_gasto'] or '')|lower %}
+            {% set tss = (g.get('tarjeta_sin_soporte', 0)|int == 1) %}
+            {% if t == 'caja_chica' %}
+              <span class="badge bg-warning text-dark">Caja chica</span>
+            {% elif t == 'reembolso' %}
+              <span class="badge bg-info text-dark">Reembolso</span>
+            {% elif t == 'tarjeta_boletos' %}
+              <span class="badge bg-primary">Tarjeta (Boletos)</span>
+            {% else %}
+              {% if tss %}
+                <span class="badge bg-danger-subtle text-danger border border-danger">Tarjeta (Online)</span>
+              {% else %}
+                <span class="badge bg-secondary">Tarjeta</span>
+              {% endif %}
+            {% endif %}
+          </td>
+
+          <td data-th="CCB">
+            <span class="fw-semibold">{% if (g['ccb']|default(0))|int == 1 %}SI{% else %}NO{% endif %}</span>
+          </td>
+
+          <td data-th="Sub total factura" class="text-end tabular-nums">
+            {{ '{:,.2f}'.format(((g.con_soporte|default(0,true))|float + (g.sin_soporte|default(0,true))|float))
+               |replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </td>
+
+          <td data-th="IVA" class="text-end tabular-nums">
+            {{ '{:,.2f}'.format(g['iva'])|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </td>
+
+          <td data-th="Total con IVA" class="text-end tabular-nums">
+            {{ '{:,.2f}'.format(g['total_con_iva'])|replace(',', 'X')|replace('.', ',')|replace('X','.') }}
+          </td>
+
+          <td data-th="Usuario">{{ g['usuario_username'] or '' }}</td>
+          <td data-th="Gerente">{{ g.get('gerente_nombre') or '' }}</td>
+        </tr>
+
+        {% else %}
+        <tr>
+          <td colspan="10" class="text-center py-5 text-muted-var">
+            No hay resultados para los filtros actuales.
+          </td>
+        </tr>
+        {% endfor %}
+
+        {% if gastos|length > 0 %}
+        <tr class="fw-bold row-totales-bg" data-totales="1">
+          <td colspan="5" data-th="Totales">Totales</td>
+
+          <td class="text-end" data-th="Sub total factura">
+            {{ '{:,.2f}'.format((totales.con_soporte|default(0,true)) + (totales.sin_soporte|default(0,true)))
+               |replace(',','X')|replace('.',',')|replace('X','.') }}
+          </td>
+
+          <td class="text-end" data-th="IVA">
+            {{ '{:,.2f}'.format(totales.iva)|replace(',','X')|replace('.',',')|replace('X','.') }}
+          </td>
+
+          <td class="text-end" data-th="Total con IVA">
+            {{ '{:,.2f}'.format(totales.total_con_iva)|replace(',','X')|replace('.',',')|replace('X','.') }}
+          </td>
+
+          <td colspan="2"></td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-between">
+    <div id="tableInfo" class="small text-muted-var">Mostrando 0 a 0 de 0 registros</div>
+    <nav class="no-print">
+      <ul id="pagination" class="pagination pagination-sm mb-0"></ul>
+    </nav>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts_extra %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/reembolsos/gastos_reportes.js') }}"></script>
+{% endblock %}

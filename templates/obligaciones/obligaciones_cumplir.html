@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Cumplir obligación{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/obligaciones.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container container-max-800">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 title-blue"><i class="bi bi-check2-square"></i> Cumplir obligación #{{ row.id }}</h4>
+    <a href="{{ url_for('obligaciones.lista_obligaciones') }}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  <div class="section {{ 'section-danger' if row.estado == 'atrasado' else 'section-warning' }} mb-3">
+    <div class="section-header">
+      <i class="bi {{ 'bi-exclamation-triangle-fill' if row.estado == 'atrasado' else 'bi-clock-history' }}"></i>
+      {{ 'Obligación atrasada' if row.estado == 'atrasado' else 'Obligación pendiente de cumplir' }}
+    </div>
+    <dl class="row mb-0">
+      <dt class="col-sm-3">Descripción</dt><dd class="col-sm-9">{{ row.descripcion }}</dd>
+      <dt class="col-sm-3">Empresa</dt><dd class="col-sm-9">{{ row.empresa_nombre }}</dd>
+      <dt class="col-sm-3">Entidad</dt><dd class="col-sm-9">{{ row.entidad_nombre }}</dd>
+      <dt class="col-sm-3">Fecha vencimiento</dt><dd class="col-sm-9">{{ row.fecha_vencimiento or '-' }}</dd>
+      <dt class="col-sm-3">Estado actual</dt>
+      <dd class="col-sm-9">
+        {% if row.estado == 'atrasado' %}<span class="badge bg-danger">Atrasado</span>{% else %}Vigente{% endif %}
+      </dd>
+    </dl>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="card shadow-sm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="card-body">
+      <div class="mb-3">
+        <label class="form-label">Evidencia (uno o más archivos) *</label>
+        <div class="oblig-dropzone" id="dropzoneEvidencia">
+          <i class="bi bi-cloud-upload d-block mb-2"></i>
+          Arrastra el archivo aquí o hacé clic para seleccionar
+        </div>
+        <input type="file" name="evidencias" id="evidencias" class="d-none" multiple required
+               accept=".pdf,.jpg,.jpeg,.png,.xlsx,.docx">
+        <small class="text-muted">Formatos permitidos: PDF, Excel, Word, imágenes. Máximo 4 MB por archivo.</small>
+        <div id="previewArchivoEvidencia" class="mt-2"></div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Observación (opcional)</label>
+        <textarea name="observacion" class="form-control" rows="3" maxlength="1000"></textarea>
+      </div>
+      <div class="alert alert-warning mb-0">
+        <i class="bi bi-exclamation-triangle"></i>
+        Las evidencias quedan permanentes en el historial de auditoría — no se pueden borrar.
+      </div>
+    </div>
+    <div class="card-footer d-flex justify-content-end gap-2">
+      <button class="btn btn-success" type="submit"><i class="bi bi-check2-circle"></i> Confirmar cumplimiento</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('obligaciones.lista_obligaciones') }}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/obligaciones_cumplir.js') }}"></script>
+{% endblock %}

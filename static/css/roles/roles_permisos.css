@@ -1,0 +1,39 @@
+.perm-table-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: .375rem;
+}
+
+#tabla-permisos thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f8f9fa;
+}
+
+.th-sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.th-sortable i {
+  font-size: .85em;
+  opacity: .6;
+  transition: transform .15s ease, opacity .15s ease;
+}
+
+th.sorted-asc .th-sortable i {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+th.sorted-desc .th-sortable i {
+  opacity: 1;
+  transform: none;
+}
+
+.roles-toast-wrap {
+  z-index: 1080;
+}

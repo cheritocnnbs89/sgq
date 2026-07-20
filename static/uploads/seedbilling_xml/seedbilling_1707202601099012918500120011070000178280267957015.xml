@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>Hivimar S. A.</razonSocial><nombreComercial>Hivimar S. A.</nombreComercial><ruc>0990129185001</ruc><claveAcceso>1707202601099012918500120011070000178280267957015</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>107</ptoEmi><secuencial>000017828</secuencial><dirMatriz>Av. Juan Tanca Marengo Km 2.5 y Av. Agustín Freire</dirMatriz></infoTributaria><infoFactura><fechaEmision>17/07/2026</fechaEmision><dirEstablecimiento>Av. Juan Tanca Marengo Km 2.5  Y A. Freire</dirEstablecimiento><contribuyenteEspecial>6925</contribuyenteEspecial><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><totalSinImpuestos>318.08</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>318.08</baseImponible><valor>47.71</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>365.79</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>365.79</total><plazo>30</plazo><unidadTiempo>días</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>1063564</codigoPrincipal><codigoAuxiliar>1063564</codigoAuxiliar><descripcion>SNR UCF215-300 (UCF215-48)</descripcion><cantidad>2.000</cantidad><precioUnitario>122.21</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>244.42</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Unidad" valor="UND"></detAdicional><detAdicional nombre="Posición" valor="10"></detAdicional><detAdicional nombre="Centro" valor="1100"></detAdicional></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>244.42</baseImponible><valor>36.66</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>1015359</codigoPrincipal><codigoAuxiliar>1015359</codigoAuxiliar><descripcion>SKF PHG 3VX670</descripcion><cantidad>4.000</cantidad><precioUnitario>11.36</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>45.44</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Unidad" valor="UND"></detAdicional><detAdicional nombre="Posición" valor="30"></detAdicional><detAdicional nombre="Centro" valor="1100"></detAdicional></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>45.44</baseImponible><valor>6.82</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>1006579</codigoPrincipal><codigoAuxiliar>4547359503005</codigoAuxiliar><descripcion>NTN UCP202-010 D1</descripcion><cantidad>1.000</cantidad><precioUnitario>28.22</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>28.22</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Unidad" valor="UND"></detAdicional><detAdicional nombre="Posición" valor="31"></detAdicional><detAdicional nombre="Centro" valor="1300"></detAdicional></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>28.22</baseImponible><valor>4.23</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Nro. OC Cliente">1000626412 - 5000179384</campoAdicional><campoAdicional nombre="Forma de Pago">Crédito</campoAdicional><campoAdicional nombre="Items - Kits">Total Items: 7.000  - Total Kits: 0</campoAdicional><campoAdicional nombre="Telf./Direc.">0450004601204/VIAADAULEKM16.5ROSAVINLOTE1</campoAdicional><campoAdicional nombre="Direc. Dest.">VIA A DAULE KM 16.5 ROSAVIN LOTE 1/GUAYAQUIL</campoAdicional><campoAdicional nombre="Cliente">465428</campoAdicional><campoAdicional nombre="Tipo">GRAN CONTRIBUYENTE - RES. NAC-GCFOIOC21-00001109-E</campoAdicional><campoAdicional nombre="Documento Sap">1001508931-5402069371-0001696915</campoAdicional><campoAdicional nombre="Sucursal">1100-Guayaquil Matriz</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature1044434">
+<ds:SignedInfo Id="Signature-SignedInfo955757">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID27031" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature1044434-SignedProperties267674">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>Ft1xaCcia00ItdJwQDLAqZxYV+w=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1856095">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>3Vu24vftCt5u88o5Ktn799Jml18=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-562100" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>KN4MWisLF04tuCgDDyOn1EYrT3I=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue832077">
+lGFIMrAMkf3lEthBNBZCrPsjn19TwPb6aapThtA70n4BJbsNDbJE79Wp0vvXSX2y0LsYLxh5uf1D
+5/2CSDeMGJvaDVAGRyOGhipUv39eS+7JUp75p5wDlavKxgiVU8EiR+VP2ex+Os2Kxtm3j93943/g
+2DKNUFZ7waN6A3dsNfmjYgyrqEhHbcUXM+Xx0brnZ1otjrF6MfUlKRoyO7QMerqzA0soGePAefpW
+E+5paxw3yjudemkzfsYrlX/XgBDidseMCNMzsRHoIAVyO9b0o6gmHbIBIDn+HVbmG1XdeLDkGm8h
+S3FMya++w0xodx1ajBSj1nLeMN58ictNXC/ayA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1856095">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIMETCCCfmgAwIBAgIEQ995gDANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMzA3MjUxNjQ1MDZaFw0yNjA3MjQxNjQ1MDZaMIGeMScw
+JQYDVQQDDB5SSUNBUkRPIEpPU0UgRUNIRVZFUlJJQSBHUkFOSkExFTATBgNVBAUTDDI1MDcyMzEx
+NTQ1MDEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQCWKi+geOYgGbFtBIsAaUd+vR/WYQBD2EScWcJy8bWVZedQVIq3PTSU
+5rf8I1IWvXTUQPd2tIwVkGl6dp4tsb4QLgtNrFJoUVaj5UHOlhduEcdokejIh7sQKRDmhQa+vX98
+/vfSCSO4R0gMoVShLtpUyDPqVsqPFntstH3vSr3cgpHsVldpJpF+Ba6VaFH9DeAvfWiGPHOM0RSd
+aVbcCKPuUXnCjVu0UHbuebr81BoLMI8mWPgj6NxucV9SkAwgxDXAeBkXeQLA81rWviKAb0Q6MkGl
+8n4r29860SkV+buUCE5pvmq+qcjqF1KCwKs2F3lrHAeIOsRsefQRZ5nbJAxBAgMBAAGjggdYMIIH
+VDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUF
+BwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2Vq
+YmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4bGRhcDov
+L2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FD
+SU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2NhdGlvbkxp
+c3Q/YmFzZTAeBgNVHREEFzAVgRNnYm1AYXVkaXRpbmd0YXguY29tMIIBFQYDVR0gBIIBDDCCAQgw
+YgYKKwYBBAGCpnICCTBUMFIGCCsGAQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABk
+AGUAIABSAGUAcAByAGUAcwBlAG4AdABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgID
+MIGSMIGPBggrBgEFBQcCARaBgmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29u
+dGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUg
+Q2VydGlmaWNhZG8gUmVwcmVzZW50YW50ZSBMZWdhbC5wZGYwggKiBgNVHR8EggKZMIIClTCB5aBB
+oD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3Rh
+dHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERF
+IElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMw
+gceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJ
+REFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/
+Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwt
+b3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2Vy
+dGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0Et
+MiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lP
+TixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFKzMt1tdhFiYGrQDm7ShdOq9
+Q/uaMCsGA1UdEAQkMCKADzIwMjMwNzI1MTY0NTA2WoEPMjAyNjA3MjQxNjQ1MDZaMAsGA1UdDwQE
+AwIF4DAoBgorBgEEAYKmcgMFBBoMGFZJQ0VQUkVTSURFTlRFIEVKRUNVVElWTzAaBgorBgEEAYKm
+cgMBBAwMCjA5MTAxMTkwMDcwGQYKKwYBBAGCpnIDCQQLDAlHVUFZQVFVSUwwEQYKKwYBBAGCpnID
+IgQDDAEuMD0GCisGAQQBgqZyAwcELwwtQVYgSlVBTiBUQU5DQSBNQVJFTkdPIFMgTiBZIEFWIEFH
+VVNUSU4gRlJFSVJFMBwGCisGAQQBgqZyAwIEDgwMUklDQVJETyBKT1NFMB8GCisGAQQBgqZyAyAE
+EQwPMDAxMDAyMDAwNDI4ODM1MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwH
+RUNVQURPUjAaBgorBgEEAYKmcgMDBAwMCkVDSEVWRVJSSUEwGwYKKwYBBAGCpnIDCgQNDAtISVZJ
+TUFSIFMgQTAdBgorBgEEAYKmcgMLBA8MDTA5OTAxMjkxODUwMDEwEgYKKwYBBAGCpnIDHQQEDAJO
+bzAWBgorBgEEAYKmcgMEBAgMBkdSQU5KQTAaBgorBgEEAYKmcgMIBAwMCjA5Nzk4NDU4MDUwDQYJ
+KoZIhvcNAQELBQADggIBAB8twUz7fpRYkZiMoAec4AuGcZqF9c9FOusYxRG8Z+CH4jLjNOk/mKcy
+6lMDdYEZLtwWWb67KjHmY6OPnScfX6qJN07xX9iwailox/orJEeFMln9lUnmSGOhtTK8dnHwuhEt
+nr7/d+ATTGBvWxLH2Uhi1cWOSiFAffTjTSc+2SvA25Zhx+bR0JQZVkj+Ysso2gSRvawZBu7pw56/
+QrToe9xyTtwaPXRKRP9vJn1Vz06ki3Frb6/ESxkXxy9i42Pt6ce5B4ESrM9fJXBj7mYGVMAuW3G3
+XEri0Z5bphkwLYC+GzlNL6jVsQdpjFF7erw0v0v0MQw/pCOQGOZkpCamGwf1q5aRDUWBkaraWGET
+gpDuW/Dh3RdislhWGZuj0+I7WDD5iLxav2Kxt/WVkRZ6XEPNTg4tYhJykGL2sjph7pcdco7Z088m
+Zchkqy+dZYTqxqcBiI72UR2uhmEw3GjzrnzqOIg+Fw3blKiWgPNn5WdNO3jvrErVYF7iCrQr4jme
+QCkFcoSz9yUXF3WdkKMtfe+03Kb/w6qVZJXEJNUDTROq8t97QV+PbHKzty1OKXAr8aUF1f7QtKGv
+Z5v/CgQa8NA+4TBHxR0NuGIMeUq1fdMDpOi5Hy75rnniFJtgnq0D0O54RVe+KTTXwzgAKVBEN8Ik
+1dhfhQltnSRveUKd7liC
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+liovoHjmIBmxbQSLAGlHfr0f1mEAQ9hEnFnCcvG1lWXnUFSKtz00lOa3/CNSFr101ED3drSMFZBp
+enaeLbG+EC4LTaxSaFFWo+VBzpYXbhHHaJHoyIe7ECkQ5oUGvr1/fP730gkjuEdIDKFUoS7aVMgz
+6lbKjxZ7bLR970q93IKR7FZXaSaRfgWulWhR/Q3gL31ohjxzjNEUnWlW3Aij7lF5wo1btFB27nm6
+/NQaCzCPJlj4I+jcbnFfUpAMIMQ1wHgZF3kCwPNa1r4igG9EOjJBpfJ+K9vfOtEpFfm7lAhOab5q
+vqnI6hdSgsCrNhd5axwHiDrEbHn0EWeZ2yQMQQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature1044434-Object739970"><etsi:QualifyingProperties Target="#Signature1044434"><etsi:SignedProperties Id="Signature1044434-SignedProperties267674"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T16:46:15-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>JxS9HbLZxsTB1yoKdjcg5Lqyg6U=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1138719104</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-562100"><etsi:Description>comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

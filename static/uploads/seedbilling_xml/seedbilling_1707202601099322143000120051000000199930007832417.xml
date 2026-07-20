@@ -1,0 +1,95 @@
+<factura id="comprobante" version="1.1.0">
+     <infoTributaria>
+          <ambiente>2</ambiente>
+          <tipoEmision>1</tipoEmision>
+          <razonSocial>PISCINAS ACUAMAIN ACUAIG SA</razonSocial>
+          <nombreComercial>PISCINAS ACUAMAIN ACUAIG SA</nombreComercial>
+          <ruc>0993221430001</ruc>
+          <claveAcceso>1707202601099322143000120051000000199930007832417</claveAcceso>
+          <codDoc>01</codDoc>
+          <estab>005</estab>
+          <ptoEmi>100</ptoEmi>
+          <secuencial>000019993</secuencial>
+          <dirMatriz>MIRAFLORES 115 Y CALLE SEGUNDA</dirMatriz>
+          <agenteRetencion>1</agenteRetencion>
+     </infoTributaria>
+     <infoFactura>
+          <fechaEmision>17/07/2026</fechaEmision>
+          <dirEstablecimiento>AV. LEON FEBRES CORDERO KM 11  C.C. AVALON PLAZA II LOCAL 5</dirEstablecimiento>
+          <obligadoContabilidad>SI</obligadoContabilidad>
+          <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+          <razonSocialComprador>QUIMPAC</razonSocialComprador>
+          <identificacionComprador>0990344760001</identificacionComprador>
+          <direccionComprador>KM 16.5 VIA DAULE</direccionComprador>
+          <totalSinImpuestos>5.70</totalSinImpuestos>
+          <totalDescuento>0.00</totalDescuento>
+          <totalConImpuestos>
+               <totalImpuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>0</codigoPorcentaje>
+                    <baseImponible>0.00</baseImponible>
+                    <valor>0.00</valor>
+               </totalImpuesto>
+               <totalImpuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>6</codigoPorcentaje>
+                    <baseImponible>0.00</baseImponible>
+                    <valor>0.00</valor>
+               </totalImpuesto>
+               <totalImpuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <baseImponible>5.70</baseImponible>
+                    <valor>0.86</valor>
+               </totalImpuesto>
+          </totalConImpuestos>
+          <propina>0.00</propina>
+          <importeTotal>6.56</importeTotal>
+          <moneda>DOLAR</moneda>
+          <pagos>
+               <pago>
+                    <formaPago>19</formaPago>
+                    <total>6.56</total>
+                    <plazo>1</plazo>
+                    <unidadTiempo>días</unidadTiempo>
+               </pago>
+          </pagos>
+     </infoFactura>
+     <detalles>
+          <detalle>
+               <codigoPrincipal>2308</codigoPrincipal>
+               <codigoAuxiliar>2308</codigoAuxiliar>
+               <descripcion>PASTILLAS DE CLORO 90%</descripcion>
+               <cantidad>10.000000</cantidad>
+               <precioUnitario>0.570000</precioUnitario>
+               <descuento>0.00</descuento>
+               <precioTotalSinImpuesto>5.70</precioTotalSinImpuesto>
+               <detallesAdicionales>
+                    <detAdicional nombre="Varios" valor="UN||||||||||||||" />
+                    <detAdicional nombre="Porcentaje" valor="0.00||0.00||0.00||0.00" />
+               </detallesAdicionales>
+               <impuestos>
+                    <impuesto>
+                         <codigo>2</codigo>
+                         <codigoPorcentaje>4</codigoPorcentaje>
+                         <tarifa>15.00</tarifa>
+                         <baseImponible>5.70</baseImponible>
+                         <valor>0.86</valor>
+                    </impuesto>
+               </impuestos>
+          </detalle>
+     </detalles>
+     <infoAdicional>
+          <campoAdicional nombre="Código Cliente">0990344760</campoAdicional>
+          <campoAdicional nombre="Nombre Comercial">QUIMPAC</campoAdicional>
+          <campoAdicional nombre="Direccion">KM 16.5 VIA DAULE</campoAdicional>
+          <campoAdicional nombre="Email">compras.electronica@quimpac.com.ec</campoAdicional>
+          <campoAdicional nombre="Teléfono">0997428038</campoAdicional>
+          <campoAdicional nombre="Celular">0997428038</campoAdicional>
+          <campoAdicional nombre="Vendedor">403-Erick</campoAdicional>
+          <campoAdicional nombre="Provincia">GUAYAS</campoAdicional>
+          <campoAdicional nombre="Ciudad">GUAYAQUIL</campoAdicional>
+          <campoAdicional nombre="Condición de Pago">11-TARJETA DE CREDITO</campoAdicional>
+          <campoAdicional nombre="CondicionDetalle">2026-07-18;;6.56</campoAdicional>
+     </infoAdicional>
+<ds:Signature Id="Signature542146" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#"><ds:SignedInfo Id="Signature-SignedInfo917105"><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><ds:Reference Id="SignedPropertiesID52720" URI="#Signature542146-SignedProperties247382" Type="http://uri.etsi.org/01903#SignedProperties"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>tqsX97baXpaqv+yYmJ5kX7WyO1w=</ds:DigestValue></ds:Reference><ds:Reference URI="#Certificate723768"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>1xJDleRXYmJEfEMEBoY3OHEW1Sc=</ds:DigestValue></ds:Reference><ds:Reference Id="Reference-ID-950181" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>27OeM+bePG01Cn+GMItFaDGRh9Q=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>tl2LF1DjdJN/pIgjTviGSe+WaBWvbezrPJkfIDjFFqf013ANflPNXC3SyhVhTPhmP75TvKG2y4H1fdnz8BQBQM3QUevMk9BQu7POtvRbFJIiCXIYnpxtpeJhySjNfj1SwDCXjWFxshRSJkH6c7AejlYVb7IcpdVmoOwpbr1GZtl5UOl6mSTCer75ilWVpc8/CS5QGBTG3mW9B+Jt/5mXBrHk8exk4Lr8KoDipAOxB/f3rybd2EdpiHcV0Djl8vsppdvlR/FbebF+ZH+MPh7Jqy8REzjGclr77ETwIstOS29qanU8oOlShRXCM313vZTDhU0aJ04sPLMGxpXjrqsq8Q==</ds:SignatureValue><ds:KeyInfo Id="Certificate723768"><ds:X509Data><ds:X509Certificate>MIIMGTCCCgGgAwIBAgIENMd6ZzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA2MTkxOTI1MjRaFw0yNzA2MTkxOTI1MjRaMIGnMSUwIwYDVQQDDBxEQVZJRCBEQU5JRUwgVkFTUVVFWiBHVUVWQVJBMSAwHgYDVQQFExcwOTE2MjQ5NTY4LTE5MDYyNDE0MzUxNTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC4oIyUnzWCezLVhmkqMwn4uUT5FxUYXIDMHjzIn2UpBm0dMaoAACRstM4sfRElldhG21SS5y1jSqHeQgY4fzLSma4ORJvwW2qK3ftVGMZEARjb7E3/ouE+z5SD+wffMEP1stqjapkksWpqr/6IzxDZYF1JxDK3yZWhdRnF9S//gy8MsM6FsCFSwzgvNLJLWoUaKK9BKueNQi3i6n0gNTZ+aHGgnl41AP8oLmi2/4lQ9WzoMhlj6x2699utCMbzwRpeVYcRCYEPchCXtE32GoxLWTjPPoTqHTsr+iVbLUYUmmPdy9YKHrtXIkBMUAn4zVnBLDv/tpwx6s5UpvVxYvH9AgMBAAGjggdXMIIHUzAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2NhdGlvbkxpc3Q/YmFzZTAgBgNVHREEGTAXgRVhY3VhY29yYWxzYUB5YWhvby5jb20wggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjCCAqIGA1UdHwSCApkwggKVMIHloEGgP4Y9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCBx6CBxKCBwYaBvmxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2UwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUWbk78koWlGOdRGyjHR2uqkfVArkwKwYDVR0QBCQwIoAPMjAyNDA2MTkxOTI1MjRagQ8yMDI3MDYxOTE5MjUyNFowCwYDVR0PBAQDAgXgMB8GCisGAQQBgqZyAwUEEQwPR0VSRU5URSBHRU5FUkFMMBoGCisGAQQBgqZyAwEEDAwKMDkxNjI0OTU2ODAZBgorBgEEAYKmcgMJBAsMCVBBU0NVQUxFUzARBgorBgEEAYKmcgMiBAMMAS4wNQYKKwYBBAGCpnIDBwQnDCVEUiBIT05PUkFUTyBWQVNRVUVaIFMgTiBZIFFVSU5RVUVMTEFTMBwGCisGAQQBgqZyAwIEDgwMREFWSUQgREFOSUVMMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAwNTk4NTQ4MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAXBgorBgEEAYKmcgMDBAkMB1ZBU1FVRVowLAYKKwYBBAGCpnIDCgQeDBxQSVNDSU5BUyBBQ1VBTUFJTiBBQ1VBSUcgUyBBMB0GCisGAQQBgqZyAwsEDwwNMDk5MzIyMTQzMDAwMTARBgorBgEEAYKmcgMdBAMMAS4wFwYKKwYBBAGCpnIDBAQJDAdHVUVWQVJBMBoGCisGAQQBgqZyAwgEDAwKMDk5NDU3MjYzMDANBgkqhkiG9w0BAQsFAAOCAgEAWkWCjfgkki3TmpkhQxFfQzvTO10Ux0lNsOnVt7jAfMjal4zM4Bmv5cxlRj++HkH1ZJs2hmn68T8MOzg0N9SD1BkuK9Nmly2YjBeuI5UerQSgDiWncPx8ozHu/4/LYS6QMp1ilYtbLaKyt0tkEaOxr8aI9rkK7CTVCB5xb2ngTx9qwKdAYQibRSUfJldGquKGX9uS4EyJeISjK93ue5BZ+Ecya+uyVqJE9l0cSHj/5J7vrOXw6wQ5uLujmMFSbqSJAuHu8qnao+WADBQcOHAKOdR0tp9T/jEu5wEHKwXubnXSV8sWMAnUQf+VRMBx25qj/0E5TDEw+QYroUhSh+sCA29YCl2D3+NpTepUp2igBwx9G4CcxyH69g/YW5E/WKPb0SQXx4Fsk5QYj/QIhCDplP8xcrpEPwlwlDB1AI7otGXnpBoyT9xB8CU1wC7kZFr4V6AymZxwQkj41gmNh4DG3+a/NgXBt0Ak7IhzZtJr27Faht523m+VOgSo9IVkKbF+qLh5gfOKbImQUO0fiIekdVt6L6zQVgW7ZudNZg2qLhFXPmgbChmBAU8ySl/PYIm0UXVQmHVC/49z50uLm9LMosUZiiBCsFiWcff+XRZQEggw5933JbWRWyUpN07zzQtcrIJNT1UFRNh1aDSjVCU+v6Ld4iaNLXEsmbyaEuv2o2A=</ds:X509Certificate></ds:X509Data><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>uKCMlJ81gnsy1YZpKjMJ+LlE+RcVGFyAzB48yJ9lKQZtHTGqAAAkbLTOLH0RJZXYRttUkuctY0qh3kIGOH8y0pmuDkSb8Ftqit37VRjGRAEY2+xN/6LhPs+Ug/sH3zBD9bLao2qZJLFqaq/+iM8Q2WBdScQyt8mVoXUZxfUv/4MvDLDOhbAhUsM4LzSyS1qFGiivQSrnjUIt4up9IDU2fmhxoJ5eNQD/KC5otv+JUPVs6DIZY+sduvfbrQjG88EaXlWHEQmBD3IQl7RN9hqMS1k4zz6E6h07K/olWy1GFJpj3cvWCh67VyJATFAJ+M1ZwSw7/7acMerOVKb1cWLx/Q==</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue></ds:KeyInfo><ds:Object Id="Signature542146-Object470135"><etsi:QualifyingProperties Target="#Signature542146"><etsi:SignedProperties Id="Signature542146-SignedProperties247382"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T17:05:05Z</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>2PG6Wqdo2TNWoLQo3rgRNmXhEIk=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC</ds:X509IssuerName><ds:X509SerialNumber>885488231</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-950181"><etsi:Description>comprobante electronico</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

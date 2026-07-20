@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Editar preferencias{% endblock %}
+{% block content %}
+<h1 class="h5 mb-3">Editar preferencias — {{ row.username }}</h1>
+<form method="post" class="row g-3">
+  <div class="col-12">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" name="email_on"
+             {% if row and row.email_on %}checked{% endif %}>
+      <label class="form-check-label">Email</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" name="inapp_on"
+             {% if row and row.inapp_on %}checked{% endif %}>
+      <label class="form-check-label">In-app</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" name="slack_on"
+             {% if row and row.slack_on %}checked{% endif %}>
+      <label class="form-check-label">Slack</label>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Slack webhook (opcional)</label>
+    <input name="slack_webhook" class="form-control"
+           value="{{ row.slack_webhook or '' }}">
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Silencio desde (HH:MM)</label>
+    <input name="quiet_start" class="form-control" placeholder="22:00"
+           value="{{ row.quiet_start or '' }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Silencio hasta (HH:MM)</label>
+    <input name="quiet_end" class="form-control" placeholder="07:00"
+           value="{{ row.quiet_end or '' }}">
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Hora diaria (HH:MM)</label>
+    <input name="daily_time" class="form-control" placeholder="09:00"
+           value="{{ row.daily_time or '' }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Día semanal (1=lun..7=dom)</label>
+    <input name="weekly_dow" class="form-control" placeholder="1"
+           value="{{ row.weekly_dow or '' }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Hora semanal (HH:MM)</label>
+    <input name="weekly_time" class="form-control" placeholder="09:00"
+           value="{{ row.weekly_time or '' }}">
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Guardar</button>
+    <a class="btn btn-outline-secondary"
+       href="{{ url_for('notifications.prefs_list') }}">Volver</a>
+  </div>
+</form>
+{% endblock %}

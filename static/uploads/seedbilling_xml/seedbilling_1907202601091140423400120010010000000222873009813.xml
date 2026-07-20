@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>JAIME AMAYA DOMITILA DEL PILAR</razonSocial>
+        <ruc>0911404234001</ruc>
+        <claveAcceso>1907202601091140423400120010010000000222873009813</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>001</ptoEmi>
+        <secuencial>000000022</secuencial>
+        <dirMatriz>Barrio: GUASMO NORTE Calle: COOPERATIVA CASITAS DEL GUASMO Numero: SOLAR 9 Interseccion: SN Manzana: 13 </dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>19/07/2026</fechaEmision>
+        <dirEstablecimiento>Barrio: GUASMO NORTE Calle: COOPERATIVA CASITAS DEL GUASMO Numero: SOLAR 9 Interseccion: SN Manzana: 13 </dirEstablecimiento>
+        <obligadoContabilidad>NO</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <totalSinImpuestos>1140.00</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>1140.00</baseImponible>
+                <valor>171.00</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0</propina>
+        <importeTotal>1311.00</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>1311.00</total>
+                <unidadTiempo>Dias</unidadTiempo>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>001</codigoPrincipal>
+            <descripcion>MANTENIMIENTO DE AIRES ACONDICIONADOS DEL EDIFICIO ADMINISTRATIVO</descripcion>
+            <cantidad>26.00</cantidad>
+            <precioUnitario>30</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>780.00</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>780.00</baseImponible>
+                    <valor>117.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>5</codigoPrincipal>
+            <descripcion>MANTENIMIENTO CENTRAL TIPO CASSETE 36000 BTU</descripcion>
+            <cantidad>3.00</cantidad>
+            <precioUnitario>60</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>180.00</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>180.00</baseImponible>
+                    <valor>27.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>18</codigoPrincipal>
+            <descripcion>MANTENIMIENTOS DE AIRES ACONDICIONADOS DE 60 000 BTU AUDITORIO, CENTRAL PLANTA ALTA 60 000 BTU, CENTRAL PLANTA BAJA DE 36 000 BTU EDIFICIO ADMINISTRATIVO</descripcion>
+            <cantidad>3.00</cantidad>
+            <precioUnitario>60</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>180.00</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>180.00</baseImponible>
+                    <valor>27.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Email">recepcion@quimpac.com.ec</campoAdicional>
+        <campoAdicional nombre="OS-7500056515 ACEPTACION1001649468">OS-7500056515 ACEPTACION1001649468</campoAdicional>
+        <campoAdicional nombre="OS-7500056515 ACEPTACION1001649468">OS-7500056515 ACEPTACION1001649468</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-dcfb99c7-ad1f-4cae-bf34-2087960b3143"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-dcfb99c7-ad1f-4cae-bf34-2087960b3143-ref0" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>7SSTp40piszGxReVsLdT3L0QrAjgvBb1Ctc8dkXBOWY=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-dcfb99c7-ad1f-4cae-bf34-2087960b3143-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>AKHaHp2C0kGtKThK2195QtHg9UrPrRhVbAglOuFYsoc=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-dcfb99c7-ad1f-4cae-bf34-2087960b3143-sigvalue">drvRSwyvFXJksSSZxoctq9w0JLculv2iMqCvh14zKJJ/COAXJP2CBPQgFPPsUNhdt04X//MtgPDeADlT/S3SBsl9pKjYcMNyvncYksXfQ7JqAdGs/HR7yqpto8y4hRvZlRrKDpgsWjzrNSsFieGRZp8p6dEOmmE/bNW9vLJJp1e8N5ZTmDeli9T38s5onR3Lu1RRkLt0CMn8SD+B/KqeSONcjo+2TDF78ZuFIW0feFBrG0K+r4AA+1lCGSY3Nh/3apSsiObek8yPDiFnrMUXURz97a3/ktlcgilx589xropFniEsqdDCpYPAdi0lAaenj9bKpcZLxeB452zreakWyA==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIKrTCCCJWgAwIBAgIIRG3tgwx6yfUwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwNjA5MDAzOTE3WhcNMjgwNjA4MDAzOTE3WjCBqTEnMCUGA1UEAwweRE9NSVRJTEEgREVMIFBJTEFSIEpBSU1FIEFNQVlBMSAwHgYDVQQFExcwOTExNDA0MjM0LTA4MDYyNjE5NDkwOTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIboHbhXR25MtEOkutdH1VRGL0YKJ1zcIu14rQJuRFDtTMWVx6f1r/IauXvihJoAycwA6Q1PHFt/2BIhYxtepr42HOvFgomOvSbkDIQIHmweT2pjvECHGdqxtpCldSUC/7soVZ0nhsO9vWFCkqY3uXA7/oaZcRdmJerqN48fEScA9ZrYXikzTi3/BLvwOGK+0Td1wMk8FgR8nwXkvwM6sl3BjCuaMO0Aug6hrE0QwVXOwRhUYb1UTxELDWgyq056jJqqRc33mqRYikSwjvwZpkQbTZ+F71Jv8d/PpMLzkGuW4QcxtUUhaefPD+uDJB2jN5Esa5o9tcxHsDs7RmhpM5AgMBAAGjggXlMIIF4TAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAgBgNVHREEGTAXgRVkb21pamFpbWVAaG90bWFpbC5jb20wggEGBgNVHSAEgf4wgfswWgYKKwYBBAGCpnICBzBMMEoGCCsGAQUFBwICMD4ePABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABQAGUAcgBzAG8AbgBhACAATgBhAHQAdQByAGEAbDCBnAYKKwYBBAGCpnICATCBjTCBigYIKwYBBQUHAgEWfmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUGVyc29uYSBOYXR1cmFsLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB3qA6oDiGNmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxlLmNybKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqgOIY2aHR0cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3JsMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFGIsV6bGYU5kC3wYZDJXEexU6qYiMCsGA1UdEAQkMCKADzIwMjYwNjA5MDAzOTE3WoEPMjAyODA2MDgwMDM5MTdaMAsGA1UdDwQEAwIF4DAaBgorBgEEAYKmcgMBBAwMCjA5MTE0MDQyMzQwFgYKKwYBBAGCpnIDCQQIDAZYSU1FTkEwEQYKKwYBBAGCpnIDIgQDDAEuMDsGCisGAQQBgqZyAwcELQwrQ09PUEVSQVRJVkEgQ0FTSVRBUyBERUwgR1VBU01PIFNPTEFSIDkgWSBTTjAiBgorBgEEAYKmcgMCBBQMEkRPTUlUSUxBIERFTCBQSUxBUjAfBgorBgEEAYKmcgMgBBEMDzAwOTAwMTAwMDAxMjU0NzARBgorBgEEAYKmcgMjBAMMAS4wEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBUGCisGAQQBgqZyAwMEBwwFSkFJTUUwGAYKKwYBBAGCpnIDHgQKDAhNQUdJU1RFUjAdBgorBgEEAYKmcgMLBA8MDTA5MTE0MDQyMzQwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBUGCisGAQQBgqZyAwQEBwwFQU1BWUEwGgYKKwYBBAGCpnIDCAQMDAowOTgzODczOTU1MA0GCSqGSIb3DQEBCwUAA4ICAQBfGSFN05003kZQgawdbypdPLb7ju+g2hT4u3Zpix8M9W+zg8KFoQDncTi4n5wGGsplpEDU+vxPMytKpM5dC6g8nAict/eleKqb3fNKSXaEjOqoH+F1uMVISVpHCmCLaNYPqqDI0puUn4UOAPNr80iqhoh4rvadJxfrYNG2moWeiMLqXb62WKJrSkr26xTrrmcUEfiWGWkoxFaytEpXjyjmtAWLIUDedQvrn4uxrydqsEUjx4ZpuqcdUF78OdUeMtd2ShSrXkMTedYD5Ape0qpPMYjWanI3g8cnxABc7vcCsUZQlCu39MCCogq5jEzMsY+wDvrqzy3KAcCuJyTiRgwOKnVvAKgQ0d6FO3521r7LTjRtqpKBECQJ1mq6txnaqoVHMwQBMi0y2mA+M49zU3fnILynUXX/mlmSh4VnDiAs1lM82u6NQTUq/su0vhEOLuKNCfk67sGyz1IkNzWi+ua60oRBFz+6ulp+FWcUg4N78MoNFsOVVruOy1I5EDvCbC9Lr2Sd71HnBKoeyvaL87DvqXpi/nWW7QK079hp/ObLtpA+dmuOpFDVxbKtbSf8fLHbwI4fR5I2IwXyCWyVp+ECz0NTtROtuUJnluLFbAjnRb1CbSFHmmFDlKAUbrurlGbzMTFJY0HJNb7CGnqtB0NwcyyQ+dC04yqdyUNBBEbiSA==</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-dcfb99c7-ad1f-4cae-bf34-2087960b3143"><xades:SignedProperties Id="xmldsig-dcfb99c7-ad1f-4cae-bf34-2087960b3143-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-07-19T16:19:26.479-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>ygnsnyjlCOvnFNST8x35O4kEzTYAyooafA5VGU4GMSs=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>4930858314146433525</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-dcfb99c7-ad1f-4cae-bf34-2087960b3143-ref0"><xades:Description>FIRMA DIGITAL SRI</xades:Description><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>

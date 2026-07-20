@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Editar área{% endblock %}
+{% block content %}
+<div class="container mt-3" style="max-width:600px">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <a href="{{ url_for('areas') }}" class="btn btn-outline-secondary btn-sm">← Volver</a>
+    <h4 class="mb-0">Editar área</h4>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}{% for category, message in messages %}
+  <div class="alert alert-{{ category }}">{{ message }}</div>
+  {% endfor %}{% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-3">
+      <label class="form-label">Nombre del área</label>
+      <input type="text" name="nombre" class="form-control" value="{{ area['nombre'] }}" required autofocus>
+    </div>
+    <button class="btn btn-primary">Guardar cambios</button>
+    <a href="{{ url_for('areas') }}" class="btn btn-light ms-2">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

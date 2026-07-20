@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitácora - Nueva contraseña</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login/nueva_contrasena.css') }}">
+</head>
+
+<body>
+  <div class="newpass-card">
+    <div class="text-center mb-3">
+      <i class="bi bi-key-fill icon"></i>
+    </div>
+
+    <h4 class="text-center mb-3">Nueva contraseña</h4>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('establecer_clave') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="mb-3">
+        <label class="form-label">Nueva contraseña</label>
+        <input type="password" name="password" class="form-control" placeholder="Ingrese nueva contraseña" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Confirmar contraseña</label>
+        <input type="password" name="confirm" class="form-control" placeholder="Confirme nueva contraseña" required>
+      </div>
+
+      <button class="btn btn-primary w-100" type="submit">Guardar nueva clave</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <a href="{{ url_for('login') }}">Cancelar</a>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/login/nueva_contrasena.js') }}"></script>
+</body>
+
+</html>

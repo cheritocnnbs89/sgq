@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Editar puesto{% endblock %}
+{% block content %}
+<h4 class="mb-3">Editar puesto</h4>
+<form method="POST" class="card p-3">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="mb-2">
+    <label class="form-label">Código</label>
+    <input name="codigo" class="form-control" value="{{ p['codigo'] }}">
+  </div>
+  <div class="mb-2">
+    <label class="form-label">Nombre</label>
+    <input name="nombre" class="form-control" value="{{ p['nombre'] }}" required>
+  </div>
+  <div class="mb-2">
+    <label class="form-label">Descripción</label>
+    <input name="descripcion" class="form-control" value="{{ p['descripcion'] }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Activo</label>
+    <select name="activo" class="form-select">
+      <option value="1" {% if p['activo'] %}selected{% endif %}>Sí</option>
+      <option value="0" {% if not p['activo'] %}selected{% endif %}>No</option>
+    </select>
+  </div>
+  <button class="btn btn-primary">Guardar</button>
+  <a class="btn btn-light" href="{{ url_for('puestos') }}">Cancelar</a>
+</form>
+{% endblock %}

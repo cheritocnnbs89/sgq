@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Políticas de seguridad{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">Políticas de seguridad</h4>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="content-container">
+    <h5 class="mb-3">Usuario</h5> 
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Longitud mínima de Nombre de usuario</label>
+        <input type="number" name="username_min_length" class="form-control" min="1" value="{{ config['username_min_length'] }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Número máximo de intentos en iniciar sesión</label>
+        <input type="number" name="login_max_attempts" class="form-control" min="1" value="{{ config['login_max_attempts'] }}">
+      </div>
+    </div>
+    <h5 class="mb-3">Contraseña</h5>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Longitud mínima de contraseña</label>
+        <input type="number" name="password_min_length" class="form-control" min="1" value="{{ config['password_min_length'] }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Longitud máxima de contraseña</label>
+        <input type="number" name="password_max_length" class="form-control" min="1" value="{{ config['password_max_length'] }}">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Días de recordatorio antes de cambio de contraseña</label>
+        <input type="number" name="password_reminder_days" class="form-control" min="0" value="{{ config['password_reminder_days'] }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Días de vigencia de contraseña</label>
+        <input type="number" name="password_validity_days" class="form-control" min="0" value="{{ config['password_validity_days'] }}">
+      </div>
+    </div>
+    <h5 class="mb-3">Complejidad</h5>
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="allowSymbols" name="password_allow_symbols" {% if config['password_allow_symbols'] == '1' %}checked{% endif %}>
+          <label class="form-check-label" for="allowSymbols">Permitir símbolos</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="allowNumbers" name="password_allow_numbers" {% if config['password_allow_numbers'] == '1' %}checked{% endif %}>
+          <label class="form-check-label" for="allowNumbers">Permitir números</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="allowLower" name="password_allow_lowercase" {% if config['password_allow_lowercase'] == '1' %}checked{% endif %}>
+          <label class="form-check-label" for="allowLower">Permitir minúsculas</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="allowUpper" name="password_allow_uppercase" {% if config['password_allow_uppercase'] == '1' %}checked{% endif %}>
+          <label class="form-check-label" for="allowUpper">Permitir mayúsculas</label>
+        </div>
+      </div>
+    </div>
+    <button type="submit" name="save" class="btn btn-primary">Guardar</button>
+  </div>
+</form>
+
+{# Toast de confirmación #}
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+  <div id="securityToast" class="toast text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        Políticas de seguridad guardadas correctamente.
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+    </div>
+  </div>
+</div>
+
+{% block scripts_extra %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const showSaved = {{ show_saved|tojson }};
+  if (showSaved) {
+    var toastEl = document.getElementById('securityToast');
+    var toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+    toast.show();
+  }
+});
+</script>
+{% endblock %}
+
+{% endblock %}

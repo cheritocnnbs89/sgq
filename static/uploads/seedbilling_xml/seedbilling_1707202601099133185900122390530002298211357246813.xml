@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="2.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>ATIMASA S.A.</razonSocial>
+    <nombreComercial>ATIMASA S.A.</nombreComercial>
+    <ruc>0991331859001</ruc>
+    <claveAcceso>1707202601099133185900122390530002298211357246813</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>239</estab>
+    <ptoEmi>053</ptoEmi>
+    <secuencial>000229821</secuencial>
+    <dirMatriz>AV. DE LAS AMERICAS 406-GUAYAQUIL</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>17/07/2026</fechaEmision>
+    <dirEstablecimiento>AV CIUDAD CELESTE # A-2-3 DIAGONAL URB VEREDA DEL RIO VEREDA DEL RIO</dirEstablecimiento>
+    <contribuyenteEspecial>01477</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>.</direccionComprador>
+    <totalSinImpuestos>28.71</totalSinImpuestos>
+    <totalSubsidio>0.07</totalSubsidio>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>0</codigoPorcentaje>
+        <baseImponible>0.00</baseImponible>
+        <valor>0.00</valor>
+      </totalImpuesto>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>28.71</baseImponible>
+        <valor>4.31</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>33.02</importeTotal>
+    <moneda>DOLAR</moneda>
+    <placa>PDH1244</placa>
+    <pagos>
+      <pago>
+        <formaPago>19</formaPago>
+        <total>33.02</total>
+        <plazo>0</plazo>
+        <unidadTiempo>DIAS</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>000000000040002144</codigoPrincipal>
+      <codigoAuxiliar>000000000040002144</codigoAuxiliar>
+      <descripcion>EXTRA CON ETANOL</descripcion>
+      <cantidad>10.114</cantidad>
+      <precioUnitario>2.83900</precioUnitario>
+      <precioSinSubsidio>2.84600</precioSinSubsidio>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>28.71</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>28.71</baseImponible>
+          <valor>4.31</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Gran Contribuyente">NAC-GCFOIOC21-00001241-E</campoAdicional>
+    <campoAdicional nombre="Mail Cliente">eligucrv@hotmail.com</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature760403">
+<ds:SignedInfo Id="Signature-SignedInfo354340">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID593352" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature760403-SignedProperties440094">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>2RztA3OOsMWDeswpGRlc4ltAA/M=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate245636">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>smvEjDm1EBusuOlvqRYgbiJ+K5E=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-765506" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>yAwSfQGHmCxxWs1xBh4ejZl15PM=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue952267">
+A0IyW9g3fqmhDTsuYtCG4c41u8fNhORo7k5tNzkc+Llk/rtaAbzTybDd2NAjhZinrfTbo+uMoVpX
+FXIfyDSy6XS3AIUbSeeUpVV/fXh5vyPrMG7yieoWbHhJABpptNYNkrYJU3Lp/pHAVW4Ms1V6/Uo3
+JYsJtDplvMRvLdtwS+AvoinUpIm88NtmEm0h3NgMnyNCEjNsPAfg0HXxLOZbNjdTk8PDxD6Qm3yr
+hRLAWTkhuWROa3ufUw0CFPQURLOAVvs48UEZgZjUm5XVilY3v3T6lApHuezh15ppvJRlmWoGlZzO
+i1LESzSQj7iQr2w4xVnPVfVz+axhtiadrf/7vQ==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate245636">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJOTCCByGgAwIBAgIKd7y6Q/6sk2zNNTANBgkqhkiG9w0BAQsFADCBmzELMAkGA1UEBhMCRUMx
+HzAdBgNVBAoMFkNPUlBORVdCRVNUIENJQS4gTFREQS4xMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VS
+VElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklD
+QUNJT04gU1VCQ0EtMUVGIENPUlBORVdCRVNUMB4XDTI2MDYwMTIyNTk0MVoXDTI5MDUzMTIyNTk0
+MFowgYMxCzAJBgNVBAYTAkVDMR4wHAYDVQQKDBVDT1JQTkVXQkVTVCBDSUEuIExUREExMDAuBgNV
+BAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEiMCAGA1UEAwwZQ0FN
+UE9TIEJVRU5PIFRJVE8gRUxJRUNFUjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJQv
+9Vwzd03LFY0p+JV0fVvYtrnzMqwLbpIO7IZAoUvNbzhaz+z/Q+BTGjS96J0t0BMPC5EqTQ3Irmxx
+IXtkZA2AgJ8/1cayJzn8fIGpwQRrSnoYZ9yOr/QrBypArVvuS0js5EYNa/YWgTJMIGtWKlhUMnX9
+eD88lDAmSc7j72VTK3KR9shsfJU9WMIfoU4TqD7AOs6d/xAszHkCbXyVNvsLGWlq1vKtIqwVBKrl
+Knceu3l13Zct+8kd+nGrddY9vUVokNUeHHLHqBQlZNsNxcET3NpwZqNTpQUYVjvHfuEH3Tkih1K8
+SDbrBVjEXI+7PdnwWA3r40eCSrr/Z3nteuUCAwEAAaOCBJMwggSPMAwGA1UdEwEB/wQCMAAwHwYD
+VR0jBBgwFoAUaZUPhTiZVIha5cn2GnVziP9K9J4wUwYIKwYBBQUHAQEERzBFMEMGCCsGAQUFBzAB
+hjdodHRwOi8vZWpiY2FlZS5uZXdiZXN0LnRlY2gvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3Nw
+MIHtBgNVHS4EgeUwgeIwgd+ggdyggdmGgdZodHRwOi8vZWpiY2FlZS5uZXdiZXN0LnRlY2gvZWpi
+Y2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q04lM0RBVVRPUklE
+QUQrREUrQ0VSVElGSUNBQ0lPTitTVUJDQS0xRUYrQ09SUE5FV0JFU1QlMkNPVSUzREVOVElEQUQr
+REUrQ0VSVElGSUNBQ0lPTitERStJTkZPUk1BQ0lPTiUyQ08lM0RDT1JQTkVXQkVTVCtDSUEuK0xU
+REEuJTJDQyUzREVDMIGMBgNVHSAEgYQwgYEwcQYKKwYBBAGCjEwBCTBjMGEGCCsGAQUFBwIBFlVo
+dHRwczovL3d3dy5uZXdiZXN0Lm5ldC9uZXdzaWduYXBpL2Rvd25sb2Fkcy9ub3JtYXRpdmEvcG9s
+aXRpY2FzX3BlcnNvbmFfanVyaWRpY2EucGRmMAwGCisGAQQBgoxMAggwge0GA1UdHwSB5TCB4jCB
+36CB3KCB2YaB1mh0dHA6Ly9lamJjYWVlLm5ld2Jlc3QudGVjaC9lamJjYS9wdWJsaWN3ZWIvd2Vi
+ZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTiUzREFVVE9SSURBRCtERStDRVJUSUZJQ0FD
+SU9OK1NVQkNBLTFFRitDT1JQTkVXQkVTVCUyQ09VJTNERU5USURBRCtERStDRVJUSUZJQ0FDSU9O
+K0RFK0lORk9STUFDSU9OJTJDTyUzRENPUlBORVdCRVNUK0NJQS4rTFREQS4lMkNDJTNERUMwHQYD
+VR0OBBYEFDt4yt/jfRFrQFzeT+YX9/g2xSh9MCsGA1UdEAQkMCKADzIwMjYwNjAxMjI1OTQxWoEP
+MjAyOTA1MzEyMjU5NDBaMA4GA1UdDwEB/wQEAwIF4DAfBgorBgEEAYKMTAMFBBEMD0dlcmVudGUg
+Z2VuZXJhbDAaBgorBgEEAYKMTAMBBAwMCjA5MTk2NjAzMTYwGQYKKwYBBAGCjEwDCQQLDAlHVUFZ
+QVFVSUwwLgYKKwYBBAGCjEwDBwQgDB5BVkVOSURBIERFIExBUyBBTUVSSUNBUyA0MDYgTkEwHAYK
+KwYBBAGCjEwDAgQODAxUSVRPIEVMSUVDRVIwEgYKKwYBBAGCjEwDDAQEDAJFQzAWBgorBgEEAYKM
+TAMDBAgMBkNBTVBPUzAaBgorBgEEAYKMTAMKBAwMCkFUSU1BU0EgU0EwHQYKKwYBBAGCjEwDCwQP
+DA0wOTkxMzMxODU5MDAxMBUGCisGAQQBgoxMAwQEBwwFQlVFTk8wGgYKKwYBBAGCjEwDCAQMDAow
+OTg3OTAxNDcwMA0GCSqGSIb3DQEBCwUAA4ICAQCnSI4iOkXyFMV5bIxUl7We+v5QY7yH+WAVAIEo
+WB5lhX17kILMwv7IRxdBB3bFohdpcfSmVORG8hpSGmhitu2nS5XZAfrJ9wXIUX8xuytNH1tm7uIy
+K+je/Ru6YWfN7mvY3nPIGZ8MU+Cd5ls/moJjAYsxLLMgsFp3NxoIHW/0HJrSeRxQrTwH66OzTqOA
+1ypDC7EAmVwYIlbL0tf0yEBNlKO4TEDM2ZqghDG/oyZl8aKQpSE4iXfeQeiZa4Fw4tf1VGLn3OWg
+XOBCmWPk/ZLbZY+3mXxyL6EDalfoPnodVU5ll1s9ydC4bnjZfZ39Gxxued/QxXhyzEq3Nd8w0Io6
+n+uGq5Cdk3B1maZ0Qa5SUgi9wr6hJ3eYxnDRN2vQXNFedfdvoclvOGmOAPITF3YQCX0n7RfpqWdW
+op9bb3rB+LqSF1VMhdZETZs5ZFFjDP/UI8sLyI2xmStluD8S9K+t4Tv3ChsS9k3b9hLm+/gPMRWF
+z6WgipGo25irEBW9FTQ/F0TwJk2gKdmE9vtgRxXwuxoPRQC23KyBgrHoY6x3orqYcEUE5yPLtH9r
+gCcG3sg3cbjaiwfpIiMTn2bJV/71ivwY+Z7JIEZ0Rc8N0BEJU7WbAW6PKN9ZmNIDA1BIuunOGdk6
+/nDMrSS5OqbT2jskpeecqeka9fJs9zRSXUhk3w==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+lC/1XDN3TcsVjSn4lXR9W9i2ufMyrAtukg7shkChS81vOFrP7P9D4FMaNL3onS3QEw8LkSpNDciu
+bHEhe2RkDYCAnz/VxrInOfx8ganBBGtKehhn3I6v9CsHKkCtW+5LSOzkRg1r9haBMkwga1YqWFQy
+df14PzyUMCZJzuPvZVMrcpH2yGx8lT1Ywh+hThOoPsA6zp3/ECzMeQJtfJU2+wsZaWrW8q0irBUE
+quUqdx67eXXdly37yR36cat11j29RWiQ1R4ccseoFCVk2w3FwRPc2nBmo1OlBRhWO8d+4QfdOSKH
+UrxINusFWMRcj7s92fBYDevjR4JKuv9nee165Q==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature760403-Object970091"><etsi:QualifyingProperties Target="#Signature760403"><etsi:SignedProperties Id="Signature760403-SignedProperties440094"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T15:10:36-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>GgNI6JsCCY7DNWtItU/1ViBp+5k=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-1EF CORPNEWBEST,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=CORPNEWBEST CIA. LTDA.,C=EC</ds:X509IssuerName><ds:X509SerialNumber>565443021198676831554869</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-765506"><etsi:Description>Comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

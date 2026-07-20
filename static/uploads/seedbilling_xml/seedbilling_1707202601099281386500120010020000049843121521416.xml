@@ -1,0 +1,204 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<factura version="2.1.0" id="comprobante">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>TROCETTI SA</razonSocial>
+    <nombreComercial>TROCETTI SA</nombreComercial>
+    <ruc>0992813865001</ruc>
+    <claveAcceso>1707202601099281386500120010020000049843121521416</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>002</ptoEmi>
+    <secuencial>000004984</secuencial>
+    <dirMatriz>TERCER PASAJE 38E NO S/N</dirMatriz>
+    <agenteRetencion>00000001</agenteRetencion>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>17/07/2026</fechaEmision>
+    <dirEstablecimiento>TERCER PASAJE 38E NO S/N</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR SA QUIMPACSA </razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>Via  Daule  16.5/N</direccionComprador>
+    <totalSinImpuestos>2101.000000</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>2101.000000</baseImponible>
+        <tarifa>15.000000</tarifa>
+        <valor>315.15</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <importeTotal>2416.15</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>2416.15</total>
+        <plazo>30</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>1AVA01-1601020</codigoPrincipal>
+      <descripcion>[1AVA01-1601020] VÁLVULA DE BOLA PVC TIPO 21 (2, PVC, PEGABLE/ROSCABLE, EPDM)</descripcion>
+      <cantidad>15.000000</cantidad>
+      <precioUnitario>101.920000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1528.80</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.000000</tarifa>
+          <baseImponible>1528.800000</baseImponible>
+          <valor>229.32</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>1TA3-817-005</codigoPrincipal>
+      <descripcion>[1TA3-817-005] CODO 45 PVC SCH80  (1/2, PEGABLE)</descripcion>
+      <cantidad>20.000000</cantidad>
+      <precioUnitario>2.910000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>58.20</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.000000</tarifa>
+          <baseImponible>58.200000</baseImponible>
+          <valor>8.73</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>1VA1-1257020</codigoPrincipal>
+      <descripcion>[1VA1-1257020] FILTRO Y (2, PEGABLE/ROSCABLE, EPDM)</descripcion>
+      <cantidad>2.000000</cantidad>
+      <precioUnitario>257.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>514.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.000000</tarifa>
+          <baseImponible>514.000000</baseImponible>
+          <valor>77.10</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Referencia">Fact 001-002-000004984</campoAdicional>
+    <campoAdicional nombre="Vendedor">Allan Aguilera</campoAdicional>
+    <campoAdicional nombre="E-mail">ventas2@trocetti.com</campoAdicional>
+    <campoAdicional nombre="Valor">2416.15</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signaturee49170d4-9c4d-4b8d-889e-d1a9ffc1c267">
+<ds:SignedInfo>
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" Id="SignedPropertiesIDe3980b86-d605-4d2e-9830-65da8980ad6b" URI="#Signaturee49170d4-9c4d-4b8d-889e-d1a9ffc1c267-SignedPropertiesID2f4ee5a1-e8a1-42c3-9e27-c3521a55d4b3">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>2PVOQau8mZf3WczW6cTpyEEG544=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificatea77f367c-1ecb-4934-b73c-021203ebcdab">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>mAjoEG615jCOp/v+wzQr+O5BNXc=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#comprobante" Id="Reference-ID-3f54bf33-706d-4f6e-96f1-7e23350767de">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>ah47M0lqLxzyNOyUnmbW73W9UWc=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue>geIVaBezl5h+IA5O1wIl+ONgxik1JDNsFNCjCX5Kd6G/QBrzjBOzOH3LrtQX6FScik2+0RISIvHH
+lysa1xsNNdjrf6UwT6BowlO6zIvSMojMiQoSvBYWqbsNfiVKKfTgAQ3du9X6DAnVEOuEG0A1ojVL
+IPIilsC62l0tAPvCwhL2sLlPMF2oCsNcGR8uIh63D+zORGRpvAhpRk+pdeeSI05Fb1eNVRW5NH/G
+jMvOedxDzGUXAYl6Aqv/djY+SBoiWg6+z9otUluPuJK0+tjEF1ZV7iAo0oe+kxYaN+OVRO2yMosy
+lN+TgJRdF/uCkjQ9i+YuVWvnEQNpWIPv73QIIg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificatea77f367c-1ecb-4934-b73c-021203ebcdab">
+<ds:X509Data>
+<ds:X509Certificate>MIIMKDCCChCgAwIBAgIEcQfoQTANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTAxMjQyMTQyMTRaFw0yNzAxMjQyMTQyMTRaMIGkMSIw
+IAYDVQQDDBlNQVJDTyBBTEFOIEFHVUlMRVJBIEFQT0xPMSAwHgYDVQQFExcwNzAzMjY3OTYzLTI0
+MDEyNTE2NTIwNzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFD
+SU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIjp3/nhCsZsUTTVeR6anNemnZH4o6l0gxrZcgFnG8s9pi
+jZ+F59d95lyEoASXAPWCfYcvG0UojMXzBEqmBPrspyysBXQf5Xskwc+BpoGbfHBPQ/Tp1+RmF3ZA
+iiDeFwEIQ4yxw0lo2VjGgoUo7QV7/zY7gi7cyZu1QSHmgtsDn1NV6pBaV+QL495WDrsoHn3y7EKW
+YhwE6DxXwdRv6tc/ouklmuJZlGc9UiTyMFAfTiEwzcj7FEU4+2yM3djq0zbuMZCuEkkWIjL9uxMW
+z8iSrkET0d4AWbWSdXkParzWK/RdVi1vhYH/n+fI/VoOkwfkBDcrNiGuw8/6kOESqo/9AgMBAAGj
+ggdpMIIHZTAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkG
+CCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0
+LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4
+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJU
+SUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2Nh
+dGlvbkxpc3Q/YmFzZTAgBgNVHREEGTAXgRVnZXJlbmNpYUB0cm9jZXR0aS5jb20wggEVBgNVHSAE
+ggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBh
+AGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisG
+AQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5l
+Yy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0
+aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjAdBgNVHSUEFjAUBggr
+BgEFBQcDAgYIKwYBBQUHAwQwggKiBgNVHR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cu
+c2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkx
+OTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFU
+QTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYD
+VQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8v
+bGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJ
+T04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0
+aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5
+ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1
+ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9V
+PUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEg
+Uy5BLiAyLEM9RUMwHQYDVR0OBBYEFPh90lUyQMgtBHsNsLJovyQP0soxMCsGA1UdEAQkMCKADzIw
+MjUwMTI0MjE0MjE0WoEPMjAyNzAxMjQyMTQyMTRaMAsGA1UdDwQEAwIF4DAfBgorBgEEAYKmcgMF
+BBEMD0dFUkVOVEUgR0VORVJBTDAaBgorBgEEAYKmcgMBBAwMCjA3MDMyNjc5NjMwFgYKKwYBBAGC
+pnIDCQQIDAZUQVJRVUkwEQYKKwYBBAGCpnIDIgQDDAEuMEgGCisGAQQBgqZyAwcEOgw4VEVSQ0VS
+IFBBU0FKRSAzOEUgTk8gUyBOIFkgQVYgTUFOVUVMIElHTkFDSU8gR09NRVogTElOQ0UwGgYKKwYB
+BAGCpnIDAgQMDApNQVJDTyBBTEFOMB8GCisGAQQBgqZyAyAEEQwPMDA4MDAxMDAwMDExOTA4MBMG
+CisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAYBgorBgEEAYKmcgMD
+BAoMCEFHVUlMRVJBMBwGCisGAQQBgqZyAwoEDgwMVFJPQ0VUVEkgUyBBMB0GCisGAQQBgqZyAwsE
+DwwNMDk5MjgxMzg2NTAwMTARBgorBgEEAYKmcgMdBAMMAS4wFQYKKwYBBAGCpnIDBAQHDAVBUE9M
+TzAQBgorBgEEAYKmcgMIBAIMADANBgkqhkiG9w0BAQsFAAOCAgEAaP7yz1kV1KcrAidDehFkHd7j
+FMTfrmlXuIxytr/D0w7kpSS8lcxRxwV2a1z52MYzpDiEA1cwItslEGMSmSkppODs30UpI+7dbgcg
+xzmscq6RdIEMWk/IsylJpKz9RMJh+WOe/HMVQ2SFeZOVqs69KajAq3wqzrBZA5XS0qGyXy7ggBZT
+ZfhfpPkCFYdWv6vBw/aYN5XP7uEdOeX+GEIhvV8xCx/UDQCX8FvOZ66XuKxu2MI9AnMSBwHWBCFI
+hUB8kXH4rRH3avtLgk+U7HrCUUfMPiKXjnQAjTa04oLwZYFBzWjP/PErfhKpp/hmJ60Ihj3ZHf3H
+JnLvWecf8IOCVQiWLwYzTzKX1r98qSCMNgncDqEzXXc7aN7CapA76OAYA23HqHdohGgeqbNcHxHX
+Ff+6nXCmpdzRhMJ2oGrKHZ5cnHmDzlG1ZCTIKGrSpQ8dftedRwjDzsRPKTvaoQX1ywhxSwZHFpsN
+AAuG1rGq9iUGT8rCg8QL8fSSdrjoSHRY4QRgSHtN5vha6zDtKNgcuNVFlQlLBTHVdP4OZ2w0Vays
+L3wPAbEWZbNbo4gWtp3dNHAkmnRQMQyH42wtFobUQrlw1VlTUwKrD6RaEK2fL42+d3ty6LlIB2jS
+BT+bIHg7cM+mTG6wqJOYOLrxq/Cv4b4NEjtyOkczmeB0SPIByWA=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>yI6d/54QrGbFE01XkempzXpp2R+KOpdIMa2XIBZxvLPaYo2fhefXfeZchKAElwD1gn2HLxtFKIzF
+8wRKpgT67KcsrAV0H+V7JMHPgaaBm3xwT0P06dfkZhd2QIog3hcBCEOMscNJaNlYxoKFKO0Fe/82
+O4Iu3MmbtUEh5oLbA59TVeqQWlfkC+PeVg67KB598uxClmIcBOg8V8HUb+rXP6LpJZriWZRnPVIk
+8jBQH04hMM3I+xRFOPtsjN3Y6tM27jGQrhJJFiIy/bsTFs/Ikq5BE9HeAFm1knV5D2q81iv0XVYt
+b4WB/5/nyP1aDpMH5AQ3KzYhrsPP+pDhEqqP/Q==
+</ds:Modulus>
+<ds:Exponent>AQAB
+</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object><etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Target="#Signaturee49170d4-9c4d-4b8d-889e-d1a9ffc1c267" Id="Signaturee49170d4-9c4d-4b8d-889e-d1a9ffc1c267"><etsi:SignedProperties Id="Signaturee49170d4-9c4d-4b8d-889e-d1a9ffc1c267-SignedPropertiesID2f4ee5a1-e8a1-42c3-9e27-c3521a55d4b3"><etsi:SignedSignatureProperties><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>YlzfhiYdwzF4LFQUMJgenXZ4gW8=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1896343617</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate><etsi:SignaturePolicyIdentifier><etsi:SignaturePolicyImplied/></etsi:SignaturePolicyIdentifier></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-3f54bf33-706d-4f6e-96f1-7e23350767de"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

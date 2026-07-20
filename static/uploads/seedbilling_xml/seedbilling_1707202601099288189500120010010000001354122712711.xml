@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>ICENGI INGENIERIA INSTRUMENTACION Y CONTROL CIA.LTDA</razonSocial>
+	    <nombreComercial>ICENGI INGENIERIA INSTRUMENTACION Y CONTROL CIA.LTDA</nombreComercial>
+	    <ruc>0992881895001</ruc>
+	    <claveAcceso>1707202601099288189500120010010000001354122712711</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>001</ptoEmi>
+	    <secuencial>000000135</secuencial>
+	    <dirMatriz>Cdla IETEL 2da Peatonal y Av. Hermano Miguel Mz 7 Solar 10.</dirMatriz>
+		
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>17/07/2026</fechaEmision>
+		
+			<dirEstablecimiento>Cdla IETEL 2da Peatonal y Av. Hermano Miguel Mz 7 Solar 10.</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE</direccionComprador>
+	    
+	    <totalSinImpuestos>840.00000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>840.00</baseImponible>
+				<valor>126.00000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>966.00000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>966.00</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>TPVDF</codigoPrincipal>
+		<codigoAuxiliar>TPVDF</codigoAuxiliar>
+      	<descripcion>TRANSMISOR 15PSI SELLO PVDF/DIAFRAG BUNA</descripcion>
+      
+      <cantidad>2.000000</cantidad>
+      <precioUnitario>420.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>840.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>840.00000</baseImponible>
+          <valor>126.00</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">SEGUN ORDEN 1000623023 Código de ingreso:  5000178122</campoAdicional>
+    		
+    	
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature334898">
+<ds:SignedInfo Id="Signature-SignedInfo82655">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID27862" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature334898-SignedProperties418313">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>M8nFNjRENrE1vW6dEIA2wJP4Qns=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate794959">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>lwmy14591OkVC/CC9m0hI+LBWbM=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-993587" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>zR+IL/1tN9O5Q7ofy0Y9QqsrZY0=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue408840">
+CfUB+guP+Gye3dGF9DsBkblNccvKKin2Vil6y2k+Q7lh13nzaBfG/Yyn0s4f771GvTPI2wlaLKK0
+tEky6nEvfrFdAddxBNfstb8QBPOVIS+23gPUewXDVsfuQ5Lf79/xHAl3E9G07v5A2BkKuIL4ZHsl
+tS58IAW4exclDh8H96ThSmnZzrdmbAQecEsNLurdtpRxiNh8gX8VUkS7WMHzig/ovZ3kMFS91euM
+X75eQ80z08MRV4/VD7GgriwjoS1jBRh+ivfbT34MDK+RMRILcQjfnU/KJjMbeAwARZCt53PfTmyg
+WRmcsm/wsq1Hr3mbBpm5uVDyi0rj0Dx8cCjdwg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate794959">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIK7DCCCNSgAwIBAgIIJ+qKySXlHycwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwNjA0MDMyMTI5WhcNMjkwNjAzMDMyMTI5WjCB
+pzElMCMGA1UEAwwcV0VORFkgVkFORVNTQSBBQkFEIFJPRFJJR1VFWjEgMB4GA1UEBRMXMDkxODU4
+OTQ2Ni0wMzA2MjYyMjMxMTgxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIB
+IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiU1SAoAMBwzZIJyAY+QPazPN5SuWLoZVeKRK
+lG1KxKAERQouNiOy4OurRMm+Iz1BceugrSMFE28evEnlsytzA+SYvjpVU5TVD3DNhvbgS5vtMg9/
+qxth+upNu9uWeYDLPKF8t3DNgHO8EW4SsOMcfvL3MTSiv15CFDSW0ZHSvZyVhd4ghLKTDwioPjcU
+4hIyol+67LINiRhDTZqjrhrXesIV3DIvvQCODARfkSbLZXAnIWt6FXFifyCoUhFdH3HkO/gnX9Gj
+eZD8GFwOQ8JTeKJAn63NDVUlkOR/JWNpDslW/Iwu3NLfAm9nKOaPzrZODJSY66iergaq+ZRUdPfU
+UwIDAQABo4IGJjCCBiIwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42u
+Yt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlk
+YXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwHAYDVR0RBBUwE4ERaWNlbmdp
+QGljZW5naS5jb20wggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIw
+Rh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0
+AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93
+d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1Bf
+ZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExl
+Z2FsLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB
+3qA6oDiGNmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxl
+LmNybKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0Et
+MiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5G
+T1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqg
+OIY2aHR0cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3Js
+MIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMv
+ZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJ
+REFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMw
+HQYDVR0OBBYEFLcwpdlBFnGw6cR8NF3aiqKjUjcfMCsGA1UdEAQkMCKADzIwMjYwNjA0MDMyMTI5
+WoEPMjAyOTA2MDMwMzIxMjlaMAsGA1UdDwQEAwIF4DAfBgorBgEEAYKmcgMFBBEMD0dFUkVOVEUg
+R0VORVJBTDAaBgorBgEEAYKmcgMBBAwMCjA5MTg1ODk0NjYwFgYKKwYBBAGCpnIDCQQIDAZUQVJR
+VUkwEQYKKwYBBAGCpnIDIgQDDAEuMDkGCisGAQQBgqZyAwcEKwwpMkRBIFBFQVRPTkFMIFNPTEFS
+IDEwIFkgQVYgSEVSTUFOTyBNSUdVRUwwHQYKKwYBBAGCpnIDAgQPDA1XRU5EWSBWQU5FU1NBMB8G
+CisGAQQBgqZyAyAEEQwPMDAxMDAyMDAxMTU3ODQ5MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisG
+AQQBgqZyAwwECQwHRUNVQURPUjAUBgorBgEEAYKmcgMDBAYMBEFCQUQwRAYKKwYBBAGCpnIDCgQ2
+DDRJQ0VOR0kgSU5HRU5JRVJJQSBJTlNUUlVNRU5UQUNJT04gWSBDT05UUk9MIENJQSBMVERBMB0G
+CisGAQQBgqZyAwsEDwwNMDk5Mjg4MTg5NTAwMTARBgorBgEEAYKmcgMdBAMMAS4wGQYKKwYBBAGC
+pnIDBAQLDAlST0RSSUdVRVowGgYKKwYBBAGCpnIDCAQMDAowOTk2MjM2NTY0MA0GCSqGSIb3DQEB
+CwUAA4ICAQCZ+1MfIRAwKgok1YR1kXP/frkebr18V2e/sAV3LdXrj0/NZ470NQcAyRU8XX6b5f35
+tpjMey8mvmEJvBBUnbXqHimgsJlRd8QBt47KXWaHtURFl0b+mQ0NNJxVu6tzVjkf2XFTwcc0fsdL
+Et93goWRRM0o9GgbStuQ0XuTJxwFizSRCM43AexR3vNBISclJNfpjWxbWmkNmO3ap3sKMUYRCGDf
+2h36eUzCtGqc61GiBmBKVwDGrc6i3cWFsiAQFR7ihCP+0fbXc6fNj0ZgNCQfwMug2dhFZcDWFpzM
+UarOHL2PM2fpRuZ7PUDvZY2yfWUSu5ZtHxoCWgaQrjc4mBeBnJohXHiiAmCNc+iW/O7SxsMx5Dki
+/KPrAhLPuhzutX425JcizndVZ8AVFwhqowBi4XU3QAHQnXpFNLHmOdj+xMHoRkd0lJr5sQtp3FwM
+34CABwE1AGPEOiiB1sH5popLqFiISKPeti9RhI9X5jN7kBKYIlSMYd92LBxnCc3OZgz+LiohtQgq
+JjgQpkbZ8xmEph/B5Ji1iew156CnmAzx4iQCYmvK5GZXzPLKf3XrIIK1mYHdyQqHvwRS8R32VWZl
+qSzYKeijO+5nYloA2qCH6WWD0b753A2+hYIKG0FaUnYKa7dyvPtvbJW/TJ9yBqSfJws3saWifqgK
+SwkMVdVESA==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+iU1SAoAMBwzZIJyAY+QPazPN5SuWLoZVeKRKlG1KxKAERQouNiOy4OurRMm+Iz1BceugrSMFE28e
+vEnlsytzA+SYvjpVU5TVD3DNhvbgS5vtMg9/qxth+upNu9uWeYDLPKF8t3DNgHO8EW4SsOMcfvL3
+MTSiv15CFDSW0ZHSvZyVhd4ghLKTDwioPjcU4hIyol+67LINiRhDTZqjrhrXesIV3DIvvQCODARf
+kSbLZXAnIWt6FXFifyCoUhFdH3HkO/gnX9GjeZD8GFwOQ8JTeKJAn63NDVUlkOR/JWNpDslW/Iwu
+3NLfAm9nKOaPzrZODJSY66iergaq+ZRUdPfUUw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature334898-Object889452"><etsi:QualifyingProperties Target="#Signature334898"><etsi:SignedProperties Id="Signature334898-SignedProperties418313"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T12:48:06-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>J6N6vnb8EojJ6WtyE79J5dI8uGU=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION</ds:X509IssuerName><ds:X509SerialNumber>2876263908558315303</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

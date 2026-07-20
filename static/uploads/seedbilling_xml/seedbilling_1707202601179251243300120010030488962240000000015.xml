@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<factura id="comprobante" version="2.1.0">
+   <infoTributaria>
+      <ambiente>2</ambiente>
+      <tipoEmision>1</tipoEmision>
+      <razonSocial>DELIVERY HERO DH E-COMMERCE ECUADOR S.A.S.</razonSocial>
+      <nombreComercial>DELIVERY HERO DH E-COMMERCE ECUADOR S.A.S.</nombreComercial>
+      <ruc>1792512433001</ruc>
+      <claveAcceso>1707202601179251243300120010030488962240000000015</claveAcceso>
+      <codDoc>01</codDoc>
+      <estab>001</estab>
+      <ptoEmi>003</ptoEmi>
+      <secuencial>048896224</secuencial>
+      <dirMatriz>Catalina aldas y Portugal, Edificio Recoleta piso 6. Oficina 65</dirMatriz>
+   </infoTributaria>
+   <infoFactura>
+      <fechaEmision>17/07/2026</fechaEmision>
+      <dirEstablecimiento>Catalina aldas y Portugal, Edificio Recoleta piso 6. Oficina 65</dirEstablecimiento>
+      <contribuyenteEspecial>051</contribuyenteEspecial>
+      <obligadoContabilidad>SI</obligadoContabilidad>
+      <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+      <razonSocialComprador>Quimpac Ecuador</razonSocialComprador>
+      <identificacionComprador>0990344760001</identificacionComprador>
+      <totalSinImpuestos>2.09</totalSinImpuestos>
+      <totalDescuento>0.00</totalDescuento>
+      <totalConImpuestos>
+         <totalImpuesto>
+            <codigo>2</codigo>
+            <codigoPorcentaje>4</codigoPorcentaje>
+            <baseImponible>2.09</baseImponible>
+            <tarifa>15.00</tarifa>
+            <valor>0.31</valor>
+         </totalImpuesto>
+      </totalConImpuestos>
+      <propina>0.00</propina>
+      <importeTotal>2.40</importeTotal>
+      <moneda>USD</moneda>
+      <pagos>
+         <pago>
+            <formaPago>20</formaPago>
+            <total>2.40</total>
+            <plazo>30</plazo>
+            <unidadTiempo>DIAS</unidadTiempo>
+         </pago>
+      </pagos>
+      <valorRetRenta>0.31</valorRetRenta>
+   </infoFactura>
+   <detalles>
+      <detalle>
+         <codigoPrincipal>DELIVERY-FEE-EC</codigoPrincipal>
+         <descripcion>Servicio Logistico</descripcion>
+         <unidadMedida>UND</unidadMedida>
+         <cantidad>1.00</cantidad>
+         <precioUnitario>1.64</precioUnitario>
+         <descuento>0.00</descuento>
+         <precioTotalSinImpuesto>1.64</precioTotalSinImpuesto>
+         <impuestos>
+            <impuesto>
+               <codigo>2</codigo>
+               <codigoPorcentaje>4</codigoPorcentaje>
+               <tarifa>15</tarifa>
+               <baseImponible>1.64</baseImponible>
+               <valor>0.25</valor>
+            </impuesto>
+         </impuestos>
+      </detalle>
+      <detalle>
+         <codigoPrincipal>SERVICE-FEE-EC</codigoPrincipal>
+         <descripcion>Tarifa de servicio</descripcion>
+         <unidadMedida>UND</unidadMedida>
+         <cantidad>1.00</cantidad>
+         <precioUnitario>0.44</precioUnitario>
+         <descuento>0.00</descuento>
+         <precioTotalSinImpuesto>0.44</precioTotalSinImpuesto>
+         <impuestos>
+            <impuesto>
+               <codigo>2</codigo>
+               <codigoPorcentaje>4</codigoPorcentaje>
+               <tarifa>15</tarifa>
+               <baseImponible>0.44</baseImponible>
+               <valor>0.07</valor>
+            </impuesto>
+         </impuestos>
+      </detalle>
+   </detalles>
+   <infoAdicional>
+      <campoAdicional nombre="Email">fiorellaemen@gmail.com</campoAdicional>
+   </infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-2076302595"><ds:SignedInfo Id="Signature-SignedInfo-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb"><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><ds:Reference URI="#KeyInfoId-Signature-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>lH9jy1fK1QNTVv9z8Pvnh4RvqEw=</ds:DigestValue></ds:Reference><ds:Reference Id="Reference-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>CcA9EZJU0q6EFdIGpL17x6ZW4Pg=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignedProperties-Signature-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>E5mnsS1c352/lvsjkhy+53kzliY=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="SignatureValue-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb">CHBltFKSOauByToQzatR0dhUdu2nOmE9ASu1aHfYU3T/Qb9MMnVNmAq3bn6F0ay+M8RT0sWOPWMd5qhtw4xWinUIhlCFgYKiJpqnP5ipjYshCS97wXCR02mPHYU2gX8lCRpkJSjtdQ2IRbsmub+UgyGw8N/yyM1XZJCCPtaIXktTVd+k4FnYD49H4odWZPkZBpdbFJa4AFeJIR7dH/ibhDAQhw8DF6rTPBEDuLudDnNsyRY82Mu59yQo/NKIZC2nvOYFizF+3pLNeegJ9wWQTW0gACZXt66Rou3pfR4RBoqlSpjJri31xbXJxp0+AF6UShApIMkzxPDXd6DJ86VXZw==</ds:SignatureValue><ds:KeyInfo Id="KeyInfoId-Signature-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb"><ds:X509Data><ds:X509Certificate>MIIMczCCClugAwIBAgIEDj0e8DANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA3MzEwMzU0MzVaFw0yNzA3MzEwMzU0MzVaMIGlMSMwIQYDVQQDDBpNQU5VRUwgS0FLQUJBRFNFIEVTVFVQSU5BTjEgMB4GA1UEBRMXMTcxNTA2MDQ2MS0zMDA3MjQyMzA0MjIxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3C4kAv96byNMQeJxhd/Uv/8xwRSCx56kKNenvuM9WLeI+IOCt/einp8QR5IUy0FkxP+Qpf3Adxf824JkbMB1wMM5jWv0sPSrLAjDwHV+eQc86UzJNKzSLsdSvbMcChUerSZsfDXVY2tXgrm2MvVqqsyUiofsTqmvHKyZSHyVVVp+bu3B7Utm9mb6tpj5/ezUY/59ZHTKoCidOx1aJ1qmQVultx8wT93bi0zCtNSzXTnCzknSlXk+98CUEKnwkbsv59XbgwbrX9J4mBGpaIW3vEHW4w80vPGEdROHvo9AAHU4N4c2UC1WKWRVROIEUnGRGYQKmi2hPlcW++B16pQY1wIDAQABo4IHszCCB68wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3Awgc8GA1UdLgSBxzCBxDCBwaCBvqCBu4aBuGxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9kZWx0YVJldm9jYXRpb25MaXN0P2Jhc2UwHwYDVR0RBBgwFoEUbWtha2FiYWRzZUBnbWFpbC5jb20wggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjCCAqIGA1UdHwSCApkwggKVMIHloEGgP4Y9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCBx6CBxKCBwYaBvmxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2UwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUHBMQ0oGH6FkYOFYd498QS/l3n10wKwYDVR0QBCQwIoAPMjAyNDA3MzEwMzU0MzVagQ8yMDI3MDczMTAzNTQzNVowCwYDVR0PBAQDAgXgMB8GCisGAQQBgqZyAwUEEQwPR0VSRU5URSBHRU5FUkFMMBoGCisGAQQBgqZyAwEEDAwKMTcxNTA2MDQ2MTBvBgorBgEEAYKmcgMJBGEMX1FVSVRPIERJU1RSSVRPIE1FVFJPUE9MSVRBTk8gQ0FCRUNFUkEgQ0FOVE9OQUwgQ0FQSVRBTCBQUk9WSU5DSUFMIFkgREUgTEEgUkVQVUJMSUNBIERFTCBFQ1VBRE9SMBEGCisGAQQBgqZyAyIEAwwBLjAxBgorBgEEAYKmcgMHBCMMIUFWIENPUlVOQSBOMjggMTQgWSBNQU5VRUwgSVRVUlJFWTAWBgorBgEEAYKmcgMCBAgMBk1BTlVFTDAfBgorBgEEAYKmcgMgBBEMDzAwMjAwMTAwMDg0ODg4MDATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwGQYKKwYBBAGCpnIDAwQLDAlLQUtBQkFEU0UwOQYKKwYBBAGCpnIDCgQrDClERUxJVkVSWSBIRVJPIERIIEUgQ09NTUVSQ0UgRUNVQURPUiBTIEEgUzAdBgorBgEEAYKmcgMLBA8MDTE3OTI1MTI0MzMwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBkGCisGAQQBgqZyAwQECwwJRVNUVVBJTkFOMBoGCisGAQQBgqZyAwgEDAwKMDk5NTU1ODM4NTANBgkqhkiG9w0BAQsFAAOCAgEAj9/kMBcI1ASN6VnX3vOp1HA7sujU1ZyLSxsmDqc1u6SbZxqj4k3/CzvHP2/y9pZY4IfkI1B7YErqbBgwtT9lpOlhbpHtF8mj2UqYVBOlGd4/Ba0+aruOHNXPFNIqTk2R9k2aiOhv1NH5l1d0xd8Q4/dTUohWvXHr7e938CuRXC66EYHEB/HiK5JaZFQykuHAfDWtdqgj3vrjgnwsniCHUUJAwGIx3drbKrEWzGOV1nATXFuvWw/3dCkiIrMEMbxzr5MRs1/UrzWb+uxgRpVO/5YOE8yccuLbS+nq8IA+7xQnz464o9pS4DE3AoPWamYYfyV17nVkWHtnRBN7AoGgVUwXQPMMjy6oR0+Ycp2QCD64kSdAYDvC6bWXx9Zu6xaN32C3pTC7YiQY+jPHKrlBbCDMx5ppQ6qj3bxZB34BK1iU//OmQBczRFE7J1H1UFTL/t9QFMI0tB+f0RKOFjON+fJsFyx2r/IEMwRce0mzwPdsc4yP8Z5tWE9cUgK4CDAW8cKa4Qe9nPeYdJKikAO7l3+Cm59ZqC5OPOE0RibahODKw04N+dNnUnNb9fhfFZCGbJWRrTZcn30yRBx5LdxJAGv/ZNNPJKw/NTY4eWBHCuaESoR9GUbRBS70U2UO8m6s0nHBci4vF9gHtOAWAMwL6CLAV2WUESzjMegbvoaRmQQ=</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb"><etsi:SignedProperties Id="SignedProperties-Signature-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T20:35:27.810Z</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>eGO//OyySge9HZ027CZUoHvG/jI=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC</ds:X509IssuerName><ds:X509SerialNumber>238886640</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate><etsi:SignaturePolicyIdentifier><etsi:SignaturePolicyImplied /></etsi:SignaturePolicyIdentifier></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="Reference-4d2fcaf1-6e9b-4ad2-a633-15cd57d3ebdb"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature>
+</factura>

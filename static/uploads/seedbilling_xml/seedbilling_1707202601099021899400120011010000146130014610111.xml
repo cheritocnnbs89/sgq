@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>QC TERMINALES ECUADOR</razonSocial>
+    <nombreComercial>QC Terminales Ecuador S.A</nombreComercial>
+    <ruc>0990218994001</ruc>
+    <claveAcceso>1707202601099021899400120011010000146130014610111</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>101</ptoEmi>
+    <secuencial>000014613</secuencial>
+    <dirMatriz>GUASMO NORTE, CALLE BARCELONA S/N</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>17/07/2026</fechaEmision>
+    <dirEstablecimiento>AV. BARCELONA S/N</dirEstablecimiento>
+    <contribuyenteEspecial>6925</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>KM 16.5 VIA A DAULE GUAYAQUIL</direccionComprador>
+    <totalSinImpuestos>26666.67</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>26666.67</baseImponible>
+        <tarifa>15.00</tarifa>
+        <valor>4000.00</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>30666.67</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>30666.67</total>
+        <plazo>30</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>18000371</codigoPrincipal>
+      <descripcion>Almacenaje Simple Contrato Spot Químico</descripcion>
+      <cantidad>1250.000</cantidad>
+      <precioUnitario>20.380000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>25475.00</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Unidad Medida" valor="M3M"></detAdicional>
+        <detAdicional nombre="Detalle Servicio" valor="MN BOCHEM LUXEMBURG ABRIL 12.2026"></detAdicional>
+        <detAdicional nombre="Detalle Servicio" valor="PERIODO: JULIO 12 AL 11 DE AGOSTO.2026"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>25475.00</baseImponible>
+          <valor>3821.24</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>18000372</codigoPrincipal>
+      <descripcion>Despacho - Químicos</descripcion>
+      <cantidad>409.550</cantidad>
+      <precioUnitario>1.630000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>667.57</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Unidad Medida" valor="T"></detAdicional>
+        <detAdicional nombre="Detalle Servicio" valor="PRODUCTO: ACIDO"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>667.57</baseImponible>
+          <valor>100.14</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>18000373</codigoPrincipal>
+      <descripcion>Pesaje - Químicos</descripcion>
+      <cantidad>409.550</cantidad>
+      <precioUnitario>0.220000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>90.10</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Unidad Medida" valor="T"></detAdicional>
+        <detAdicional nombre="Detalle Servicio" valor="PRODUCTO: ACIDO"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>90.10</baseImponible>
+          <valor>13.52</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>18000293</codigoPrincipal>
+      <descripcion>T-HAB Habilitacion de terminal - S.D. Qu</descripcion>
+      <cantidad>4.000</cantidad>
+      <precioUnitario>108.500000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>434.00</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="Unidad Medida" valor="HRA"></detAdicional>
+        <detAdicional nombre="Detalle Servicio" valor="SÁBADO 11 DE JULIO"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>434.00</baseImponible>
+          <valor>65.10</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Doc. SAP">3300015396</campoAdicional>
+    <campoAdicional nombre="Cod. Cliente">100938</campoAdicional>
+    <campoAdicional nombre="Condición de Pago">Factura a 30 días</campoAdicional>
+    <campoAdicional nombre="Contrato">QC-2026-25</campoAdicional>
+    <campoAdicional nombre="No.de Liquidación">4088 001 101 000014613</campoAdicional>
+    <campoAdicional nombre="Forma de Pago">Con Util.Sist.Financ</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature244917">
+<ds:SignedInfo Id="Signature-SignedInfo533050">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID885652" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature244917-SignedProperties885970">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>lySEoapleR9P3L3uItIea+YHIok=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1824298">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>e7GPAoKpK3C1GqhnP7HiMtQIzb4=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-659358" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>Qrbzi2+VbBhMWh330ZC7lAOE4ww=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue812987">
+B6merAZICejjIOG1r/Bxdz8VH/MYQ5xvSYW4HBJseXQ4HU4kUFzGlFQzTI7pXZzHto4ddTU3Q/bs
+3/RiySKXl+06ktfAUorkXb9EzNJa5APDYK1DEze2xq0Is5RX3K59ffYBiA0Y/TSGl4Buyk2IvkOl
+wA88t6G3d6Ob0mXKzCTbYv4RyCr1U08y6x7pNrG5xuXp6M1c0/XRnG2PCAktTJDBYSGhDLzutCPk
+BSVJYP4eUBVzSM9sEUq1j2uuyyFMGP+ppdphXVe1jPiaqm37AQMjtCPx30TVz6DJU5IhzkvA7h1O
+OaEGu8/Llbqh4lX0rkkbQEqQPvLYYWX0bUOczw==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1824298">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIMNjCCCh6gAwIBAgIEORlARDANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA4MDEyMjE4MzhaFw0yNjA4MDEyMjE4MzhaMIGuMSww
+KgYDVQQDDCNKRU5OSUZFUiBMSVNTRVRURSBDSEFOR08gTUFDSEFDSUxMQTEgMB4GA1UEBRMXMDkx
+OTM2OTA0MS0wMTA4MjQxNzI4MjkxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBE
+RSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVD
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjhzTqwScSLmhWgLWiI7btpvP7PHFQqQ9
+omr5FXnjQPIzRbf4C3sCBPe/TUboA2YjGq0tUTOdIok9KNo7vR6SUvyIMjqAlo0P9bJC+X1FpznO
+IHaqLZjRhwkTEZgw3Fy0uTBOeLa3qMJg9GrgqszWeinU8UJ9t82h3B74Cntg9BPQv2nZoBuiASgE
+hBBqORBYnxDbKn3+uZ8J7f3wyPy0y8HrMAMhoYnTUMSZWS9wjJonFqgCfR04K0MzTjhbllP+SnWJ
+it7cJ+ZhNoEzCk8PbZ/xLITKK9zRGyvRCo1fO7n/bMJhXSuCB4BScmNIBQzOQKWderkDzt7f05Bl
+wcPtPQIDAQABo4IHbTCCB2kwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktV
+v42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJp
+dHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3Awgc8GA1UdLgSBxzCBxDCB
+waCBvqCBu4aBuGxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklE
+QUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBD
+RVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9k
+ZWx0YVJldm9jYXRpb25MaXN0P2Jhc2UwJAYDVR0RBB0wG4EZcmVjb3ZlcnkudGF4Y29uQGdtYWls
+LmNvbTCCARIGA1UdIASCAQkwggEFMGAGCisGAQQBgqZyAgowUjBQBggrBgEFBQcCAjBEHkIAQwBl
+AHIAdABpAGYAaQBjAGEAZABvACAAZABlACAATQBpAGUAbQBiAHIAbwAgAGQAZQAgAEUAbQBwAHIA
+ZQBzAGEwgaAGCisGAQQBgqZyAgQwgZEwgY4GCCsGAQUFBwIBFoGBaHR0cHM6Ly93d3cuc2VjdXJp
+dHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlm
+aWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBNaWVtYnJvIGRlIEVtcHJlc2EucGRmMIIC
+ogYDVR0fBIICmTCCApUwgeWgQaA/hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMv
+ZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQg
+REUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQg
+REUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBT
+LkEuIDIxCzAJBgNVBAYTAkVDMIHHoIHEoIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRh
+dGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkg
+REFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklU
+WSBEQVRBIFMuQS4gMixDPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB
+2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1
+YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQW
+BBQNGvieRzTi/EIgEHCrU+XPxR7WOjArBgNVHRAEJDAigA8yMDI0MDgwMTIyMTgzOFqBDzIwMjYw
+ODAxMjIxODM4WjALBgNVHQ8EBAMCBeAwGQYKKwYBBAGCpnIDBQQLDAlDT05UQURPUkEwGgYKKwYB
+BAGCpnIDAQQMDAowOTE5MzY5MDQxMBYGCisGAQQBgqZyAwkECAwGWElNRU5BMBEGCisGAQQBgqZy
+AyIEAwwBLjBKBgorBgEEAYKmcgMHBDwMOlRFUkNFUiBQQVNBSkUgMTRTRSBTT0xBUiAxMyBZIDFF
+UiBQQVNFTyA1MEEgWSBBTlRPTklPIEFOVEUwIQYKKwYBBAGCpnIDAgQTDBFKRU5OSUZFUiBMSVNT
+RVRURTAfBgorBgEEAYKmcgMgBBEMDzAwMTAwMjAwMDYyMzkzMjATBgorBgEEAYKmcgMhBAUMA1BG
+WDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFgYKKwYBBAGCpnIDAwQIDAZDSEFOR08wLgYKKwYB
+BAGCpnIDCgQgDB5RQyBURVJNSU5BTEVTIEVDVUFET1IgUyBBIFFDVEUwHQYKKwYBBAGCpnIDCwQP
+DA0wOTkwMjE4OTk0MDAxMBEGCisGAQQBgqZyAx0EAwwBLjAaBgorBgEEAYKmcgMEBAwMCk1BQ0hB
+Q0lMTEEwGgYKKwYBBAGCpnIDCAQMDAowOTY4NTM1ODY2MA0GCSqGSIb3DQEBCwUAA4ICAQBmVAbu
+5NyIi868OgrsVbHmo32Va+BpjbP7ZIAURMta/dFynjYypYIe2c5VsF4TI48Eb/4+Vi7WjOpZdAWw
+p4Z7amnuJk9vI4vxTN5eSF7kaMdtbwwh7yC6nRlfa2Nc6vxHArcoYOsk/zpOQx5qOu8I2yfTQglv
+mSwSR816hPqq8dPgHFlAkQ1sqHp8ef82HrADItzlF6yMrf/M6/DFWMC3GunWuKBnytvvw33Q3lml
+4dtx0jjmULqRYU5BiASTkuIZmSmxApmi6HUDBRsPXO/93U0HW0yQvMlnyEKzetjVmEfvRhCoyH1G
+rIvZ+GtmivfdidjE48EM91ooFSU93Q3whpZ6rJWkcAI4d4TWyVvwYaFb40vy3jtLEn8TLJnNQ6KW
+K1wEnooDOtBJSfMuT1Rah7ntOKUqDk+eXz78wlvvVabiOn1VA+ESrBvP+M0KfEppEicn2czFdbUh
+76vykYNIKmjobAsgqFYo+xrERaVIcl9u5gvmEcbseSEJPee0smMR2NiOho72LUQyIcK7w3/km7gT
+K1lv7/wB2Jp3f0EV2i9b7peo3EC/jbV3J0rmV0Yc11KdJKsxrbJ6D6b2ffjyofRRun6t1e1GIipw
+OdzOvgc8f1rO3E4hiKv90P2Ac8L44n5u9Oqx7zJ75KVL8x/jXhRYnksjseN2XRk/6CJNwg==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+jhzTqwScSLmhWgLWiI7btpvP7PHFQqQ9omr5FXnjQPIzRbf4C3sCBPe/TUboA2YjGq0tUTOdIok9
+KNo7vR6SUvyIMjqAlo0P9bJC+X1FpznOIHaqLZjRhwkTEZgw3Fy0uTBOeLa3qMJg9GrgqszWeinU
+8UJ9t82h3B74Cntg9BPQv2nZoBuiASgEhBBqORBYnxDbKn3+uZ8J7f3wyPy0y8HrMAMhoYnTUMSZ
+WS9wjJonFqgCfR04K0MzTjhbllP+SnWJit7cJ+ZhNoEzCk8PbZ/xLITKK9zRGyvRCo1fO7n/bMJh
+XSuCB4BScmNIBQzOQKWderkDzt7f05BlwcPtPQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature244917-Object340230"><etsi:QualifyingProperties Target="#Signature244917"><etsi:SignedProperties Id="Signature244917-SignedProperties885970"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T08:43:35-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>+hLKPajQye8S1YrrXKtIrf67mW4=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>957956164</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-659358"><etsi:Description>comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - Consultas{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/obligaciones.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0"><i class="bi bi-clipboard-check"></i> Obligaciones - Consultas</h4>
+    <div class="d-flex gap-2">
+      {% if has_permission('obligaciones_carga_masiva', 'ver') %}
+      <a href="{{ url_for('obligaciones.carga_masiva') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-file-earmark-excel"></i> Carga masiva
+      </a>
+      {% endif %}
+      {% if has_permission('obligaciones_crear', 'ver') %}
+      <a href="{{ url_for('obligaciones.nueva_obligacion') }}" class="btn btn-cta-blue btn-sm">
+        <i class="bi bi-plus-lg"></i> Nueva obligación
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% set filtros_activos = filters.empresa_id or filters.tipo_id or filters.entidad_id or filters.frecuencia_id or filters.fecha_vencimiento or filters.usuario_id %}
+  <button class="btn btn-sm btn-outline-secondary mb-2" type="button" data-bs-toggle="collapse"
+    data-bs-target="#panelFiltrosLista" aria-expanded="{{ 'true' if filtros_activos else 'false' }}"
+    aria-controls="panelFiltrosLista">
+    <i class="bi bi-funnel"></i> Filtros
+  </button>
+
+  <div class="collapse{{ ' show' if filtros_activos else '' }} mb-4" id="panelFiltrosLista">
+  <form class="row g-2 mb-3" method="get" action="{{ url_for('obligaciones.lista_obligaciones') }}">
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="empresa_id">
+        <option value="">-- Empresa --</option>
+        {% for e in combos.empresas %}
+        <option value="{{ e.id }}" {% if filters.empresa_id|string == e.id|string %}selected{% endif %}>{{ e.razon_social }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="tipo_id">
+        <option value="">-- Tipo --</option>
+        {% for t in combos.tipos %}
+        <option value="{{ t.id }}" {% if filters.tipo_id|string == t.id|string %}selected{% endif %}>{{ t.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="entidad_id">
+        <option value="">-- Entidad --</option>
+        {% for en in combos.entidades %}
+        <option value="{{ en.id }}" {% if filters.entidad_id|string == en.id|string %}selected{% endif %}>{{ en.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="frecuencia_id">
+        <option value="">-- Frecuencia --</option>
+        {% for f in combos.frecuencias %}
+        <option value="{{ f.id }}" {% if filters.frecuencia_id|string == f.id|string %}selected{% endif %}>{{ f.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <input type="date" class="form-control form-control-sm" name="fecha_vencimiento" value="{{ filters.fecha_vencimiento }}">
+    </div>
+    {% if usuarios %}
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="usuario_id">
+        <option value="">-- Usuario --</option>
+        {% for u in usuarios %}
+        <option value="{{ u.id }}" {% if filters.usuario_id|string == u.id|string %}selected{% endif %}>{{ u.nombre_completo or u.username }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+    <div class="col-12 d-flex gap-2 mt-1">
+      <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i> Filtrar</button>
+      <a class="btn btn-sm btn-outline-dark" href="{{ url_for('obligaciones.lista_obligaciones') }}"><i class="bi bi-x-circle"></i> Limpiar</a>
+    </div>
+  </form>
+  </div>
+
+  <div class="table-responsive mb-4">
+    <table id="tabla-obligaciones" class="table table-hover table-sm align-middle tablekit oblig-table">
+      <thead class="table-light position-sticky top-0" style="z-index: 1;">
+        <tr>
+          <th>ID</th>
+          <th>Empresa</th>
+          <th>Entidad</th>
+          <th>Descripción</th>
+          <th>Fecha vencimiento</th>
+          <th>Días</th>
+          <th>Estado</th>
+          <th>Frecuencia</th>
+          <th>Tipo</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr data-row="1" class="{{ 'table-danger' if r.estado == 'atrasado' else '' }}">
+          <td>{{ r.id }}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="oblig-avatar">{{ r.empresa_nombre[0]|upper if r.empresa_nombre else '?' }}</div>
+              <span>{{ r.empresa_nombre }}</span>
+            </div>
+          </td>
+          <td>{{ r.entidad_nombre }}</td>
+          <td>{{ r.descripcion }}</td>
+          <td>{{ r.fecha_vencimiento or '-' }}</td>
+          <td>
+            {% if r.dias_restantes is none %}
+            -
+            {% elif r.dias_restantes < 0 %}
+            <span class="text-danger fw-bold">{{ r.dias_restantes }}</span>
+            {% elif r.dias_restantes <= 7 %}
+            <span class="text-danger">{{ r.dias_restantes }}</span>
+            {% elif r.dias_restantes <= 30 %}
+            <span class="text-warning">{{ r.dias_restantes }}</span>
+            {% else %}
+            <span class="text-muted">{{ r.dias_restantes }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% set estado_badge = {'por_presentar': 'bg-secondary', 'atrasado': 'bg-danger', 'cumplido': 'bg-success', 'cumplido_fuera_plazo': 'bg-warning text-dark'} %}
+            <span class="badge {{ estado_badge.get(r.estado, 'bg-secondary') }}">{{ estado_labels.get(r.estado, r.estado) }}</span>
+          </td>
+          <td>{{ r.frecuencia_nombre }}</td>
+          <td>{{ r.tipo_nombre }}</td>
+          <td class="text-end">
+            {% if has_permission('obligaciones', 'ver') %}
+            <a class="btn btn-xs btn-sm btn-outline-success" href="{{ url_for('obligaciones.cumplir_obligacion', oblig_id=r.id) }}" title="Cumplir">
+              <i class="bi bi-check2-square"></i>
+            </a>
+            {% endif %}
+            {% if has_permission('obligaciones_editar', 'ver') %}
+            <a class="btn btn-xs btn-sm btn-outline-primary" href="{{ url_for('obligaciones.editar_obligacion', oblig_id=r.id) }}" title="Editar">
+              <i class="bi bi-pencil-square"></i>
+            </a>
+            <form method="post" action="{{ url_for('obligaciones.eliminar_obligacion', oblig_id=r.id) }}" class="d-inline"
+                  data-confirm="¿Eliminar esta obligación?">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-xs btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="10" class="p-0">
+            <div class="oblig-empty text-center text-muted">
+              <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+              Sin obligaciones pendientes.
+              {% if has_permission('obligaciones_crear', 'ver') %}
+              <br>
+              <a href="{{ url_for('obligaciones.nueva_obligacion') }}" class="btn btn-sm btn-primary mt-2">
+                <i class="bi bi-plus-lg"></i> Crear primera obligación
+              </a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div id="tableInfo" class="text-muted small"></div>
+  <nav id="pagination"></nav>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/obligaciones_lista.js') }}"></script>
+{% endblock %}

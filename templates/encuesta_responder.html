@@ -1,0 +1,87 @@
+{% extends "base_public.html" %}
+
+{% block title %}Encuesta de satisfacción{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/encuestas.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="survey-public survey-public-compact">
+  {% if not ok %}
+    <div class="alert alert-danger">
+      {{ message }}
+    </div>
+  {% else %}
+    <div class="survey-response-card">
+      <div class="survey-response-header">
+        <div>
+          <h1>Encuesta de satisfacción</h1>
+          <p class="survey-ticket">
+            Ticket {{ "%07d"|format(encuesta.tarea_id) }} · {{ encuesta.titulo }}
+          </p>
+        </div>
+      </div>
+
+      {% if encuesta.estado == 'Realizada' %}
+        <div class="alert alert-success mb-0">
+          Esta encuesta ya fue respondida. Gracias por tu opinión.
+        </div>
+      {% else %}
+        <div class="survey-scale-help">
+          <span><strong>1</strong> Muy malo</span>
+          <span><strong>2</strong> Malo</span>
+          <span><strong>3</strong> Regular</span>
+          <span><strong>4</strong> Bueno</span>
+          <span><strong>5</strong> Excelente</span>
+        </div>
+
+        <form method="post" class="survey-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+          {% for pregunta in preguntas %}
+            {% set idx = loop.index %}
+
+            <div class="survey-question">
+              <label class="survey-question-title">
+                {{ idx }}. {{ pregunta }}
+              </label>
+
+              <div class="rating-row">
+                {% for n in range(1, 6) %}
+                  <label class="rating-option">
+                    <input
+                      type="radio"
+                      name="pregunta_{{ idx }}"
+                      value="{{ n }}"
+                      required
+                    >
+                    <span>{{ n }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+
+          <div class="survey-comment">
+            <label class="form-label">Comentario adicional</label>
+            <textarea
+              name="comentario"
+              class="form-control"
+              rows="3"
+              maxlength="1000"
+              placeholder="Escribe un comentario opcional..."
+            ></textarea>
+          </div>
+
+          <div class="survey-submit-row">
+            <button type="submit" class="btn btn-primary">
+              Enviar encuesta
+            </button>
+          </div>
+        </form>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

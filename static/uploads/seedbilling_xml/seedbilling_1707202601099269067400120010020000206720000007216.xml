@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>SAILORPAINT SA</razonSocial>
+    <nombreComercial>SAILORPAINT S A</nombreComercial>
+    <ruc>0992690674001</ruc>
+    <claveAcceso>1707202601099269067400120010020000206720000007216</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>002</ptoEmi>
+    <secuencial>000020672</secuencial>
+    <dirMatriz>PARQ. IND  INMACONSA CALLE PECHICHE No 21 Y TECAS</dirMatriz>
+    <agenteRetencion>1</agenteRetencion>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>17/07/2026</fechaEmision>
+    <dirEstablecimiento>PARQ. IND  INMACONSA CALLE PECHICHE No 21 Y TECAS</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>KM 16.5 VIA A DAULE AV. ROSAVIN Y CALLE COBRE PARQUE INDUSTRIAL ECUATORIANO</direccionComprador>
+    <totalSinImpuestos>1525.00</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>1525.00</baseImponible>
+        <valor>228.75</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>1753.75</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>1753.75</total>
+        <plazo>30</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>ALT01801G</codigoPrincipal>
+      <descripcion>ALUMINIO ALTA TEMPERATURA 700 ALT01801G</descripcion>
+      <cantidad>8.000000</cantidad>
+      <precioUnitario>145.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1160.00</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="talla" valor="A" />
+        <detAdicional nombre="color" valor="A" />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>1160.00</baseImponible>
+          <valor>174.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>PRE01552G</codigoPrincipal>
+      <descripcion>KIT PRIMER EPOXICO GRIS PRE01552G</descripcion>
+      <cantidad>10.000000</cantidad>
+      <precioUnitario>36.500000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>365.00</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="talla" valor="A" />
+        <detAdicional nombre="color" valor="A" />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>365.00</baseImponible>
+          <valor>54.75</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>CAT00001L</codigoPrincipal>
+      <descripcion>CATALIZADOR PRIMER CAT00001L</descripcion>
+      <cantidad>10.000000</cantidad>
+      <precioUnitario>0.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>0.00</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="talla" valor="A" />
+        <detAdicional nombre="color" valor="A" />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>0.00</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Telefono">5000460</campoAdicional>
+    <campoAdicional nombre="Email">mmeza@quimpac.com.ec; adominguez@quimpac.com.ec; dvera@quimpac.com.ec; compras.electronica@quimpac.com.ec</campoAdicional>
+    <campoAdicional nombre="observacion"># 1000626275 / CIB 5000178989  GR # 13933</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-d8e3f31c-ce9c-4038-ae2e-1d1e3d98b6a9"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><ds:Reference Id="Reference-022f4f9e-d89c-4c55-97e4-fca06e1711e6" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>9jXrSJpk12Qx4Hl2532FzoDNml0=</ds:DigestValue></ds:Reference><ds:Reference Id="ReferenceKeyInfo" URI="#KeyInfoId-Signature-d8e3f31c-ce9c-4038-ae2e-1d1e3d98b6a9"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>SHsZfdX6uE3H9FKH6SV+FJFNC5Q=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignedProperties-Signature-d8e3f31c-ce9c-4038-ae2e-1d1e3d98b6a9"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>tCYQxJK5nYbrdIQQ/D2WrsgpFQs=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="SignatureValue-d8e3f31c-ce9c-4038-ae2e-1d1e3d98b6a9">WaeDoqp91mXEV4K7cq1ZWVh2CZbSRX4VgsXXecuVwrRC4OZ5TIqEQCAdWS0LOfyb5S0vPcK5mOL0RRwJfrzHoQQqV6Huqnzgh7vun7Z5L0tm2QEgSQJIrON/WBefutI8bHum2Ueai2+ERIHgSXn/7vpU12R++nLp6wxqBICoBDbEzQ8hJ5bTXZhDNmfkLMTZJsZV9EwGwcLk69dB1Yz3Am5/EVhwjdaDiC16vsXMjlH8AUhicebdat8JGI+wFqawFUtGKsABB+QstDWT1grpWepXE7h2/fW1eLrGGzR91VHyCRAnaRYtR5XbmY4kSHwqCF5MXQGLiFawxUXAAizwog==</ds:SignatureValue><ds:KeyInfo Id="KeyInfoId-Signature-d8e3f31c-ce9c-4038-ae2e-1d1e3d98b6a9"><ds:X509Data><ds:X509Certificate>MIIMDDCCCfSgAwIBAgIEDJ5xVzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTAxMzAxODUzMzRaFw0yODAxMzAxODUzMzRaMIGjMSEwHwYDVQQDDBhMVUlTIEFMQkVSVE8gUExBWkEgVkVMRVoxIDAeBgNVBAUTFzEzMDEwOTcwNDItMzAwMTI1MTQwMzI4MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKouDN+LQAWWabNfTt8Okocr2JwTB44Nbx3Y9vY7rCXuJdUOQBA5vladnQ2hS6hHJZlKdblMuiEytXigZaMCKO1J5Us0DFDCbDCt60oRULPH8MVsKLOKaApMsdoRkPhQcBtFP1QkPFkPS/R0Ca4BhWtdaI5/aetEmEgoOvfjRjzk4fuM2J4NJQtXXW7w210EMNCr2hfkoEMR3tz/kyTyEXXqCcRUQoA1wOPWxnTkDVqFHWth5vFzDuBwuR4Q+QVhCTOM71KBNU7P7xInNrr3AQkm52bndsacFzwK01cmxZtvHkX7lKrgZyt60/ONFvhIFW0gz9M7r0BJGQTS2QSOHRsCAwEAAaOCB04wggdKMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhsZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0aW9uTGlzdD9iYXNlMB4GA1UdEQQXMBWBE2Zpcm1hQGVjdWFieXRlcy5jb20wggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggKiBgNVHR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFKN9+XJNw0VE/fhD5NZzSYEtXfi8MCsGA1UdEAQkMCKADzIwMjUwMTMwMTg1MzM0WoEPMjAyODAxMzAxODUzMzRaMAsGA1UdDwQEAwIF4DAfBgorBgEEAYKmcgMFBBEMD0dFUkVOVEUgR0VORVJBTDAaBgorBgEEAYKmcgMBBAwMCjEzMDEwOTcwNDIwFgYKKwYBBAGCpnIDCQQIDAZUQVJRVUkwEQYKKwYBBAGCpnIDIgQDDAEuMCMGCisGAQQBgqZyAwcEFQwTUEVDSElDSEUgMjEgWSBURUNBUzAcBgorBgEEAYKmcgMCBA4MDExVSVMgQUxCRVJUTzAfBgorBgEEAYKmcgMgBBEMDzAwMTAwMjAwMDcwODQ3NDATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFQYKKwYBBAGCpnIDAwQHDAVQTEFaQTAfBgorBgEEAYKmcgMKBBEMD1NBSUxPUlBBSU5UIFMgQTAdBgorBgEEAYKmcgMLBA8MDTA5OTI2OTA2NzQwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBUGCisGAQQBgqZyAwQEBwwFVkVMRVowGgYKKwYBBAGCpnIDCAQMDAowOTM5MTA3Mzg1MA0GCSqGSIb3DQEBCwUAA4ICAQBIcaGwKDsLkC+VW2YlhVmXWiPHEiic/ZABnl/fORhVBo8ggLCt94pQcToq/XaiScKyBjCtDoQsxP1E8noQ5yfMRgHLc493sD8fcNfXNUE07pBiVNZlvHwDIHpTzLA68T9gvI+O3UcQPTf/nzcJL1aC2j3yasMENxIUIxGizfq9peANiTsEb5KBdkw7thP0/BRpvLKndop+E8MSsQbOTBVcvsnY26piNh0vpFrgNb4ToEihC6+5upa6+P6UoFuDJ00MFTHypkMlopCRNWs9LZ+8HsVzOa8GQfmh/gOvrJUhuS0ngRNQbsWEg/WX1q/7aQ5XLJQqJ5It32QAVSg2qGO4NlUJaNKX4p7oAZqmvew66gPpPt+g6tknIGyt8xWmjXkOkT/STGL9zBqrc74c8FJOcw6Q6lHAw/J/jbbbzw3U15YwPSgRALfQvizkxacXTZvTBHxXwTgbShNwvDNxGmoiw8R0tPcSPgPblZ8NZGeK6Dtim2YZhoyaLGKozEhBPc69+bs3Z6UL3agF5nHLpHbfmuE1o+qCO3mhFUt+Wmt9kHS2j1xriYkxRQS8wyp/Zem5HanbLdZh8o0yD7I6jV5WZFwuBmfp05a7rICpicenZcKeeuKVgTrIfwnoWghcXOZtqyEkOQSnN6oGTupT2KnbRS8GgYsRnNGD4d0YjzcQ6Q==</ds:X509Certificate></ds:X509Data><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>qi4M34tABZZps19O3w6ShyvYnBMHjg1vHdj29jusJe4l1Q5AEDm+Vp2dDaFLqEclmUp1uUy6ITK1eKBlowIo7UnlSzQMUMJsMK3rShFQs8fwxWwos4poCkyx2hGQ+FBwG0U/VCQ8WQ9L9HQJrgGFa11ojn9p60SYSCg69+NGPOTh+4zYng0lC1ddbvDbXQQw0KvaF+SgQxHe3P+TJPIRdeoJxFRCgDXA49bGdOQNWoUda2Hm8XMO4HC5HhD5BWEJM4zvUoE1Ts/vEic2uvcBCSbnZud2xpwXPArTVybFm28eRfuUquBnK3rT840W+EgVbSDP0zuvQEkZBNLZBI4dGw==</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue></ds:KeyInfo><ds:Object Id="XadesObjectId-8eaa0d2f-0900-49cf-99ac-fcba9ddb9dc6"><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="QualifyingProperties-4e4c3ebb-6a71-45cf-b92b-a898e9fcf473" Target="#Signature-d8e3f31c-ce9c-4038-ae2e-1d1e3d98b6a9"><xades:SignedProperties Id="SignedProperties-Signature-d8e3f31c-ce9c-4038-ae2e-1d1e3d98b6a9"><xades:SignedSignatureProperties><xades:SigningTime>2026-07-17T12:33:21-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>9j9vTx3FieFtEw7raURACnbysZI=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>211710295</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#Reference-022f4f9e-d89c-4c55-97e4-fca06e1711e6"><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>

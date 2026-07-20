@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalle de gasto #{{ g['id'] }}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-icons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reembolsos/gasto_ver.css') }}">
+</head>
+
+<body class="gasto-ver-page">
+  <div class="gasto-ver-wrap">
+    <div class="container-fluid gasto-ver-container">
+      <div class="gasto-ver-header">
+        <div>
+          <h1 class="gasto-ver-title">Detalle de gasto #{{ g['id'] }}</h1>
+          <div class="gasto-ver-subtitle">Consulta de cabecera, detalle y adjuntos</div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 gasto-ver-card mb-3">
+        <div class="card-header gasto-ver-card-header">
+          <span class="fw-semibold">Cabecera</span>
+        </div>
+
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-2">
+              <div class="label-lite">Fecha</div>
+              <div class="value-strong">{{ g['fecha'] }}</div>
+            </div>
+
+            <div class="col-12 col-md-3">
+              <div class="label-lite">Identificación</div>
+              <div class="value-strong">{{ g['proveedor_identificacion'] or '' }}</div>
+            </div>
+
+            <div class="col-12 col-md-5">
+              <div class="label-lite">Proveedor</div>
+              <div class="value-strong value-wrap">{{ g['proveedor'] }}</div>
+            </div>
+
+            <div class="col-12 col-md-2">
+              <div class="label-lite"># Factura</div>
+              <div class="value-strong">{{ g['numero_factura'] }}</div>
+            </div>
+
+            <div class="col-12 col-md-8">
+              <div class="label-lite">Detalle</div>
+              <div class="value-strong value-wrap">{{ g['motivo'] }}</div>
+            </div>
+
+            <div class="col-12 col-md-2">
+              <div class="label-lite">CCB</div>
+              <div class="value-strong">
+                {% if (g['ccb']|default(0))|int == 1 %}
+                <span class="badge text-bg-warning">SI</span>
+                {% else %}
+                <span class="badge text-bg-secondary">NO</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 gasto-ver-card mb-3">
+        <div class="card-header gasto-ver-card-header">
+          <span class="fw-semibold">Detalle</span>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle mb-0 gasto-ver-table">
+              <thead>
+                <tr>
+                  <th class="col-obs">Obs.</th>
+                  <th class="col-motivo">Motivo</th>
+                  <th class="col-centro">Centro</th>
+                  <th class="col-ind">Ind.</th>
+                  <th class="text-end col-num">Con IVA</th>
+                  <th class="text-end col-num">Sin IVA</th>
+                  <th class="text-end col-num">IVA</th>
+                  <th class="text-end col-num">Total</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for d in detalles %}
+                <tr>
+                  <td>{{ d['observacion'] or '' }}</td>
+
+                  <td>
+                    <div>{{ d['motivo_nombre'] or d['motivo'] or '' }}</div>
+                    {% if d['motivo_nombre'] and d['motivo'] %}
+                    <div class="text-muted small">{{ d['motivo'] }}</div>
+                    {% endif %}
+                  </td>
+
+                  <td>
+                    <div>{{ d['centro_nombre'] or d['centro_costo'] or '' }}</div>
+                    {% if d['centro_nombre'] and d['centro_costo'] %}
+                    <div class="text-muted small">{{ d['centro_costo'] }}</div>
+                    {% endif %}
+                  </td>
+
+                  <td>{{ d['indicador'] or '' }}</td>
+                  <td class="text-end text-nowrap">{{ '{:,.2f}'.format(d['con_soporte']|default(0,true)) }}</td>
+                  <td class="text-end text-nowrap">{{ '{:,.2f}'.format(d['sin_soporte']|default(0,true)) }}</td>
+                  <td class="text-end text-nowrap">{{ '{:,.2f}'.format(d['iva']|default(0,true)) }}</td>
+                  <td class="text-end text-nowrap fw-semibold">{{ '{:,.2f}'.format(d['total_con_iva']|default(0,true)) }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="8" class="text-center py-4 text-muted">Sin detalle.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 gasto-ver-card mb-3">
+        <div class="card-header gasto-ver-card-header">
+          <span class="fw-semibold">Adjuntos</span>
+        </div>
+
+        <div class="card-body">
+          {% if adjuntos and adjuntos|length > 0 %}
+          <div class="list-group gasto-ver-adjuntos">
+            {% for a in adjuntos %}
+            {% set fname = a.split('/')[-1] %}
+            <a
+              class="list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-3"
+              href="{{ url_for('static', filename='uploads/' + a) }}"
+              target="_blank"
+              rel="noopener"
+            >
+              <span class="text-truncate adjunto-texto">
+                <i class="bi bi-paperclip me-2"></i>{{ fname }}
+              </span>
+              <span class="badge text-bg-primary rounded-pill">Abrir</span>
+            </a>
+            {% endfor %}
+          </div>
+
+          <small class="text-muted d-block mt-2">
+            Se abrirán en una nueva pestaña.
+          </small>
+          {% else %}
+          <div class="text-muted">Sin adjuntos.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/reembolsos/gasto_ver.js') }}"></script>
+</body>
+
+</html>

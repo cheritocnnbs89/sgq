@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.0.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>EXPRESS CARGO LINE DEL ECUADOR EXPRESSLINE S.A.</razonSocial>
+    <nombreComercial>ECL</nombreComercial>
+    <ruc>0991426000001</ruc>
+    <claveAcceso>1707202601099142600000120010030000187711234567810</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>003</ptoEmi>
+    <secuencial>000018771</secuencial>
+    <dirMatriz>KENNEDY NORTE, CALLE VICTOR HUGO ESCALA Y JOSé CASTILLO MZ. 804 SOLARES 3 Y 4 EDIFICIO SAI BABA SEGUNDO PISO OF.# 206 GUAYAQUIL - ECUADOR</dirMatriz>
+    <agenteRetencion>1</agenteRetencion>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>17/07/2026</fechaEmision>
+    <dirEstablecimiento>KENNEDY NORTE, CALLE VICTOR HUGO ESCALA Y JOSé CASTILLO MZ. 804 SOLARES 3 Y 4 EDIFICIO SAI BABA SEGUNDO PISO OF.# 206 GUAYAQUIL - ECUADOR</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>VIA A DAULE KM 16.5 ROSAVIN LOTE 1 Y COBRE GUAYAQUIL - ECUADOR</direccionComprador>
+    <totalSinImpuestos>417.00</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>417.00</baseImponible>
+        <valor>62.55</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>479.55</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>479.55</total>
+        <plazo>28</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>R1192</codigoPrincipal>
+      <codigoAuxiliar>0</codigoAuxiliar>
+      <descripcion>FUEL</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>72.00</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>72.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>72.00</baseImponible>
+          <valor>10.80</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>R1192</codigoPrincipal>
+      <codigoAuxiliar>0</codigoAuxiliar>
+      <descripcion>NACIONALIZACIÓN</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>135.00</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>135.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>135.00</baseImponible>
+          <valor>20.25</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>R1192</codigoPrincipal>
+      <codigoAuxiliar>0</codigoAuxiliar>
+      <descripcion>FLETE COURIER</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>210.00</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>210.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>210.00</baseImponible>
+          <valor>31.50</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="ORDEN">ECL30305</campoAdicional>
+    <campoAdicional nombre="PEDIDO">OC 2000031288</campoAdicional>
+    <campoAdicional nombre="ETD">2026-07-15 22:28:00</campoAdicional>
+    <campoAdicional nombre="ETA">2026-07-15 22:28:00</campoAdicional>
+    <campoAdicional nombre="EMBARCADOR">IN EXPRESS COURIER S.A.</campoAdicional>
+    <campoAdicional nombre="P. DESTINO">GUAYAQUIL</campoAdicional>
+    <campoAdicional nombre="T. OPERACIóN">IMPORTACIóN</campoAdicional>
+    <campoAdicional nombre="DESCRIPCIóN">FACTURA POR SERVICIOS DE ORDEN #ECL30305 | QUIMPAC ECUADOR S.A QUIMPACSA</campoAdicional>
+    <campoAdicional nombre="DIR.">VIA A DAULE KM 16.5 ROSAVIN LOTE 1 Y COBRE GUAYAQUIL - ECUADOR</campoAdicional>
+    <campoAdicional nombre="CONTACTO">593 4 216 2660 | ACORDOVA@QUIMPAC.COM.EC</campoAdicional>
+    <campoAdicional nombre="COMENTARIO">AGENTE DE RETENCION CON RESOLUCION NO. NAC-DNCRASC20-00000001</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature640552">
+<ds:SignedInfo Id="Signature-SignedInfo728178">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID914609" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature640552-SignedProperties947860">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>g/wPrqQ0CO6/5ru3os2t38H8zPs=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate11034436">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>eboJ1Rz+4knqTBXYS/aHu5zZVAI=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-71257" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>WxpvkK4WUBVZd9u+B+h2PARaT7E=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue230613">
+Ax8rOpDyfaDTE/w+I8MBwFtAVLhZhe2A4xhtSZ+IwdpCbdfw76LanKsr8saAVOHqR2hoHEdoNWa2
+Taczv3NCdBma17QOisW9lEqJTPn+Eyw+xKxEgSsMc9yIUZ3ZUXGo2d+vLILmdU02VQ2XkJnUq28C
+GSS8Su5f+dRsWyiSgAkndf7Psa1a7kQqItegj5eTLoiWk/pkFPHQjj1cvegPJN5cLExdOGfQTDPA
+jIz/SqynVmygRyaQPO9o2wlUAj2rU2IsiORT5ODPtRWO9PJ9WL3SK134g7z/EEiq6auCA0LDaQuJ
+qHN2sDZxoO/BjOiObWIYDNz0vAZAMwpWkKwItg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate11034436">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIMIDCCCgigAwIBAgIEZGAHsTANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMzEyMjkxNDIzMjFaFw0yODEyMjgxNDIzMjFaMIGXMSAw
+HgYDVQQDDBdKVUFOIENBUkxPUyBEQUdFUiBQQVJSQTEVMBMGA1UEBRMMMjkxMjIzMDkzMzA3MTAw
+LgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoM
+FFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEBBQADggEP
+ADCCAQoCggEBAMhlhQ6jnXG6SAwwyQuBNEfYIKZp4ehg8oND9danYJFNB1Bpvs3J6Wdklx3gJLV0
+w5QP4wj/E646eyIidPnWVPkzzrGSYIX3AZLBn8fsZkQRomxCV9aMsIiqPqiFSB/KzTnF2Po+0cwx
+qNFckI/uFHM06jiOTowR3mHhNokBUvbk92BU19NuU6KE8AciqPJIBzFsEc9xKTJGq1poKdF/1P9a
+Y84rn5AnJyT7fhLtFXxfhq5rdbxUVZpiNesQTUjc5OeeBBvT08vtjtNAMZdHrilwDMTY4PoX+dTO
+M5L5c3eyi7HeQ1BRsGji2A7TVaKdpHxvogTKpIeasjrhwtUqTq0CAwEAAaOCB24wggdqMAwGA1Ud
+EwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUHAQEETTBL
+MEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVi
+bGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhsZGFwOi8vbGRhcHNk
+Y2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VC
+Q0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1B
+Q0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0aW9uTGlzdD9iYXNl
+MCIGA1UdEQQbMBmBF2NvbnRhYmlsaWRhZEBlY2wuY29tLmVjMIIBFQYDVR0gBIIBDDCCAQgwYgYK
+KwYBBAGCpnICCTBUMFIGCCsGAQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUA
+IABSAGUAcAByAGUAcwBlAG4AdABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGS
+MIGPBggrBgEFBQcCARaBgmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVu
+dC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2Vy
+dGlmaWNhZG8gUmVwcmVzZW50YW50ZSBMZWdhbC5wZGYwggKiBgNVHR8EggKZMIIClTCB5aBBoD+G
+PWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVz
+L29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNB
+LTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceg
+gcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFE
+IERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VS
+VElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2Vy
+dGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3Bl
+cmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRp
+c3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBT
+RUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixP
+PVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFIgvmS0tZW1/CivTcQV5sC1DCmR/
+MCsGA1UdEAQkMCKADzIwMjMxMjI5MTQyMzIxWoEPMjAyODEyMjgxNDIzMjFaMAsGA1UdDwQEAwIF
+4DAfBgorBgEEAYKmcgMFBBEMD0dFUkVOVEUgR0VORVJBTDAaBgorBgEEAYKmcgMBBAwMCjA5MTI4
+NTk1MDEwGQYKKwYBBAGCpnIDCQQLDAlHVUFZQVFVSUwwEQYKKwYBBAGCpnIDIgQDDAEuMDwGCisG
+AQQBgqZyAwcELgwsVklDVE9SIEhVR08gRVNDQUxBIFNPTEFSIDMgNCBZIEpPU0UgQ0FTVElMTE8w
+GwYKKwYBBAGCpnIDAgQNDAtKVUFOIENBUkxPUzAfBgorBgEEAYKmcgMgBBEMDzAwMTAwMjAwMDUw
+NTg0OTATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFQYKKwYB
+BAGCpnIDAwQHDAVEQUdFUjA+BgorBgEEAYKmcgMKBDAMLkVYUFJFU1MgQ0FSR08gTElORSBERUwg
+RUNVQURPUiBFWFBSRVNTTElORSBTIEEwHQYKKwYBBAGCpnIDCwQPDA0wOTkxNDI2MDAwMDAxMBIG
+CisGAQQBgqZyAx0EBAwCTm8wFQYKKwYBBAGCpnIDBAQHDAVQQVJSQTAaBgorBgEEAYKmcgMIBAwM
+CjA5ODMzODM5MjUwDQYJKoZIhvcNAQELBQADggIBAAC3cr1WdVJk8kIj8sj9zJ7sMxeH8sdeq1oS
+0HVgpM1M1UUIGNOf7LZvqkhmJ0vOb1XTbq5XcDllY8xstYoxEUvKEhVrCnP6fYRRCzVI6vAP4UuJ
+xoalXVS05vXkvdrIewRCgB814HV2EszPyD3/s3ng71TucuC7sQ4NjzcD8KMYh17mgmr/dusQYt9a
+saQmlt3Uecq5DRSadLJ4Do4mqneR2l66oH9LNdCa/srQvx2pB7sRHEl5T5kcKtQINdcDTnbVRD+Z
+gRfN88KgqPEXosqK7MOK5Co9qOGkY/D9TKipajgkInZEWeNf2j7hdMLjSY8Z2YrwTWjtv1DMvD/U
+OYjjAmYDCrabxwYUvDU7v1WrTQu2Tl4EcWAn4jRNBlsnO1RSBHvOOW+MXirEtVTzM4fuRohwJojz
+duq9c65/CldrwetGgoHAvdoww7e1PEAPD4jjiGd+53rda4fZLt5dph+AHFfUiHxDHuEf8Vikil9L
+5CfKReDW0EO1UkCdGUtCAv4KpWcJ6ciRsgmU08FOkS7ygnj+ke0d4HZznljodYpOkRMy8+y/qori
+ndvcusWQxkVkfPFhqCuruw606tzamblO2WH+TPHuLlHnsObwU0pdjxkgGz4fPgHwH8jaodk8T0Op
+Psfwww7ngGMHlXaWk6C2VbytIQGNDRyBExFuahkP
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+yGWFDqOdcbpIDDDJC4E0R9ggpmnh6GDyg0P11qdgkU0HUGm+zcnpZ2SXHeAktXTDlA/jCP8Trjp7
+IiJ0+dZU+TPOsZJghfcBksGfx+xmRBGibEJX1oywiKo+qIVIH8rNOcXY+j7RzDGo0VyQj+4UczTq
+OI5OjBHeYeE2iQFS9uT3YFTX025TooTwByKo8kgHMWwRz3EpMkarWmgp0X/U/1pjziufkCcnJPt+
+Eu0VfF+Grmt1vFRVmmI16xBNSNzk554EG9PTy+2O00Axl0euKXAMxNjg+hf51M4zkvlzd7KLsd5D
+UFGwaOLYDtNVop2kfG+iBMqkh5qyOuHC1SpOrQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature640552-Object995302"><etsi:QualifyingProperties Target="#Signature640552"><etsi:SignedProperties Id="Signature640552-SignedProperties947860"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T22:32:34+00:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>UvTQZkKe40CWq8p07b3V84iyR6M=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1684015025</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-71257"><etsi:Description>loga</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

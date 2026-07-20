@@ -1,0 +1,596 @@
+{% extends 'base.html' %}
+{% block title %}Panel de tareas{% endblock %}
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+{% block content %}
+
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h4 class="mb-0">Panel de tareas</h4>
+    <small class="text-muted">Hola, {{ usuario }} <span class="badge bg-info text-dark text-capitalize">{{ rol
+        }}</span></small>
+  </div>
+</div>
+<div class="page-toolbar d-flex flex-wrap align-items-end gap-2 mb-3">
+  <div>
+    <label class="form-label mb-1">Rango de fechas</label>
+    <div class="d-flex gap-1">
+      <input type="date" id="fDesde" class="form-control form-control-sm" value="{{ fecha_desde or '' }}">
+      <input type="date" id="fHasta" class="form-control form-control-sm" value="{{ fecha_hasta or '' }}">
+    </div>
+  </div>
+
+  <div>
+    <label class="form-label mb-1">Departamento</label>
+    <select id="fDepto" class="form-select form-select-sm">
+      <option value="">Todos</option>
+      {% for d in deptos %}
+      <option value="{{ d }}" {{ 'selected' if d == depto_sel else '' }}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="d-flex align-items-end gap-2">
+    <button class="btn btn-outline-secondary btn-sm" id="btnFiltrarTareas" type="button">
+      <i class="bi bi-funnel"></i> Aplicar
+    </button>
+
+    <button class="btn btn-outline-secondary btn-sm" id="btnResetTareas" type="button">
+      <i class="bi bi-arrow-counterclockwise"></i>
+    </button>
+  </div>
+</div>
+
+{# ===== KPIs principales ===== #}
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-lg-3">
+    <a href="{{ url_for('listar_tareas') }}?due=overdue" class="kpi-link">
+      <div class="section kpi-card">
+        <div class="section-header"><i class="bi bi-alarm-fill"></i> Tareas atrasadas</div>
+        <div class="d-flex justify-content-between align-items-end">
+          <div class="kpi-value text-danger">{{ overdue_tasks|length }}</div>
+          <div class="kpi-label text-end">Con fecha compromiso vencida</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <a href="{{ url_for('listar_tareas') }}?due=today" class="kpi-link">
+      <div class="section kpi-card">
+        <div class="section-header"><i class="bi bi-calendar-day"></i> Vencen hoy</div>
+        <div class="d-flex justify-content-between align-items-end">
+          <div class="kpi-value text-warning">{{ today_tasks|length }}</div>
+          <div class="kpi-label text-end">Compromiso hoy</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <a href="{{ url_for('listar_tareas') }}?due=week" class="kpi-link">
+      <div class="section kpi-card">
+        <div class="section-header"><i class="bi bi-calendar-week"></i> Resto de la semana</div>
+        <div class="d-flex justify-content-between align-items-end">
+          <div class="kpi-value text-primary">{{ week_tasks|length }}</div>
+          <div class="kpi-label text-end">De mañana al domingo</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <a href="{{ url_for('listar_tareas') }}?due=nodue" class="kpi-link">
+      <div class="section kpi-card">
+        <div class="section-header"><i class="bi bi-list-check"></i> Sin fecha compromiso</div>
+        <div class="d-flex justify-content-between align-items-end">
+          <div class="kpi-value text-secondary">{{ no_due_tasks|length }}</div>
+          <div class="kpi-label text-end">No tienen fecha objetivo</div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+{# ===== Tarjetas por estado ===== #}
+{# ===== Tarjetas por estado ===== #}
+<div class="mb-3">
+  <div class="state-pills">
+    {% for estado in estados %}
+    <a href="{{ url_for('listar_tareas') }}?estado={{ estado | urlencode }}" class="kpi-link state-pill">
+      <div class="card card-custom kpi-card">
+        <div class="card-body py-2 d-flex justify-content-between align-items-center">
+          <span class="small">{{ estado }}</span>
+          <span class="badge bg-primary">{{ conteos.get(estado, 0) }}</span>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  <div class="mt-2 small text-muted">
+    Total de tareas: <strong>{{ total }}</strong>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+
+  {# ── Horas por usuario: gráfico de barras horizontales ── #}
+  <div class="col-md-5">
+    <div class="section h-100">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-person-lines-fill me-1"></i>Horas por técnico</span>
+        <div class="chart-toolbar" data-for="chartHorasUsuario">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box" style="height:280px;"><canvas id="chartHorasUsuario"></canvas></div>
+    </div>
+  </div>
+
+  {# ── Horas por departamento: donut ── #}
+  <div class="col-md-3">
+    <div class="section h-100">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-building me-1"></i>Horas por departamento</span>
+        <div class="chart-toolbar" data-for="chartHorasDepto">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box" style="height:280px;"><canvas id="chartHorasDepto"></canvas></div>
+    </div>
+  </div>
+
+  {# ── Ranking detallado con métricas ── #}
+  <div class="col-md-4">
+    <div class="section h-100">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-clock-history me-1"></i>Ranking de horas
+          <small class="text-muted fw-normal ms-1">(inicio → fin)</small>
+        </span>
+        {% if horas_cerradas_por_usuario %}
+        <span class="badge bg-secondary">{{ horas_cerradas_por_usuario|length }}</span>
+        {% endif %}
+      </div>
+
+      {% if horas_cerradas_por_usuario %}
+        {% set max_h = horas_cerradas_por_usuario[0].horas if horas_cerradas_por_usuario[0].horas > 0 else 1 %}
+        <div class="horas-ranking">
+
+          {% for r in horas_cerradas_por_usuario %}
+            {% set pct = [[((r.horas / max_h) * 100)|int, 4]|max, 100]|min %}
+            <div class="horas-row">
+
+              {# Medalla / número de ranking #}
+              <div class="horas-rank">
+                {% if loop.index == 1 %}🥇
+                {% elif loop.index == 2 %}🥈
+                {% elif loop.index == 3 %}🥉
+                {% else %}<span class="rank-num">{{ loop.index }}</span>
+                {% endif %}
+              </div>
+
+              {# Nombre del técnico #}
+              <div class="horas-name" title="{{ r.usuario }}">{{ r.usuario }}</div>
+
+              {# Barra de progreso proporcional #}
+              <div class="horas-bar-wrap">
+                <div class="horas-bar {% if pct > 66 %}bar-high{% elif pct > 33 %}bar-mid{% else %}bar-low{% endif %}"
+                     style="width:{{ pct }}%"></div>
+              </div>
+
+              {# Métricas: horas, tareas, promedio #}
+              <div class="horas-meta">
+                <span class="horas-val">{{ "%.1f"|format(r.horas) }}h</span>
+                <span class="badge bg-light text-dark border" title="Tareas cerradas">
+                  {{ r.tareas }} tarea{{ 's' if r.tareas != 1 else '' }}
+                </span>
+                {% if r.tareas > 0 %}
+                <span class="text-muted small">~{{ "%.1f"|format(r.horas_por_tarea) }}h/tarea</span>
+                {% endif %}
+              </div>
+
+            </div>
+          {% endfor %}
+
+          {# Fila de totales #}
+          {% set total_horas  = namespace(val=0) %}
+          {% set total_tareas = namespace(val=0) %}
+          {% for r in horas_cerradas_por_usuario %}
+            {% set total_horas.val  = total_horas.val  + r.horas  %}
+            {% set total_tareas.val = total_tareas.val + r.tareas %}
+          {% endfor %}
+          <div class="horas-total-row">
+            <strong>Total</strong>
+            <span>
+              <strong>{{ "%.1f"|format(total_horas.val) }} h</strong>
+              en {{ total_tareas.val }} tarea(s)
+              {% if total_tareas.val > 0 %}
+              · promedio <strong>{{ "%.1f"|format(total_horas.val / total_tareas.val) }}h</strong>/tarea
+              {% endif %}
+            </span>
+          </div>
+
+        </div>
+      {% else %}
+        <p class="text-muted text-center small py-3">
+          <i class="bi bi-inbox me-1"></i>Sin horas reportadas.
+        </p>
+      {% endif %}
+    </div>{# /section ranking #}
+  </div>{# /col ranking #}
+
+  {# ── Tabla resumen horas por departamento ── #}
+  {% if horas_por_depto %}
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header"><i class="bi bi-table me-1"></i>Resumen horas por departamento</div>
+      <div class="table-responsive">
+        <table class="table table-sm table-striped mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Departamento</th>
+              <th class="text-end">Horas totales</th>
+              <th style="min-width:120px;">Distribución</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% set total_h_depto = namespace(val=0) %}
+            {% for d in horas_por_depto %}{% set total_h_depto.val = total_h_depto.val + d.horas %}{% endfor %}
+            {% for d in horas_por_depto %}
+              {% set pct = ((d.horas / total_h_depto.val * 100)|int) if total_h_depto.val > 0 else 0 %}
+            <tr>
+              <td class="text-muted small">{{ loop.index }}</td>
+              <td>{{ d.departamento }}</td>
+              <td class="text-end fw-bold">{{ "%.1f"|format(d.horas) }}h</td>
+              <td>
+                <div style="background:var(--surface-2);border-radius:999px;height:8px;overflow:hidden;">
+                  <div style="width:{{ pct }}%;height:100%;background:#3b82f6;border-radius:999px;"></div>
+                </div>
+                <small class="text-muted">{{ pct }}%</small>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>{# /row horas #}
+
+{# ===== Gráficos nuevos ===== #}
+<div class="row g-3 mb-3">
+
+  {# Horas de atención por día #}
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-graph-up me-1"></i> Horas de atención por día
+          <small class="text-muted fw-normal ms-1">(tareas cerradas · suma diaria)</small>
+        </span>
+        <div class="chart-toolbar" data-for="chartHorasDia">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box" style="height:200px;"><canvas id="chartHorasDia"></canvas></div>
+    </div>
+  </div>
+
+  {# Tareas por departamento por mes #}
+  <div class="col-md-8">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-bar-chart-steps me-1"></i> Tareas por departamento / mes
+          <small class="text-muted fw-normal ms-1">(top 7 departamentos)</small>
+        </span>
+        <div class="chart-toolbar" data-for="chartDeptoMes">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartDeptoMes"></canvas></div>
+    </div>
+  </div>
+
+  {# Cumplimiento mensual #}
+  <div class="col-md-4">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-patch-check me-1"></i> Cumplimiento mensual
+          <small class="text-muted fw-normal ms-1">(a tiempo vs tardías)</small>
+        </span>
+        <div class="chart-toolbar" data-for="chartCumplimiento">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartCumplimiento"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+{# ===== Gráficos principales ===== #}
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-pie-chart"></i> Tareas por estado</span>
+        <div class="chart-toolbar" data-for="chartStatus">
+          <button class="btn btn-light btn-sm ct-full" title="Pantalla completa"><i
+              class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png" title="PNG"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv" title="CSV"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartStatus"></canvas></div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-person-badge"></i> Tareas atrasadas por usuario</span>
+        <div class="chart-toolbar" data-for="chartOverUser">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartOverUser"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-building"></i> Tareas atrasadas por departamento</span>
+        <div class="chart-toolbar" data-for="chartOverDept">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartOverDept"></canvas></div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-calendar3"></i> Distribución por fecha compromiso</span>
+        <div class="chart-toolbar" data-for="chartTimeline">
+          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
+          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
+          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="chartTimeline"></canvas></div>
+    </div>
+  </div>
+</div>
+
+{# ===== Agregados ===== #}
+{% if rol in ['admin', 'jefe'] %}
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <div class="section">
+      <div class="section-header"><i class="bi bi-people"></i> Atrasadas por usuario</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th class="text-end">Tareas atrasadas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in overdue_by_user %}
+            <tr>
+              <td>{{ r.usuario }}</td>
+              <td class="text-end">{{ r.total }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="2" class="text-muted text-center small">Sin tareas atrasadas.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="section">
+      <div class="section-header"><i class="bi bi-building"></i> Atrasadas por departamento</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Departamento</th>
+              <th class="text-end">Tareas atrasadas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in overdue_by_depto %}
+            <tr>
+              <td>{{ r.departamento }}</td>
+              <td class="text-end">{{ r.total }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="2" class="text-muted text-center small">Sin tareas atrasadas.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{# ===== Listados detallados ===== #}
+<div class="row g-3">
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-exclamation-triangle"></i> Tareas atrasadas</span>
+        <small class="text-muted">Ordenadas por fecha compromiso</small>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Propietario</th>
+              <th>Departamento</th>
+              <th>Fecha compromiso</th>
+              <th class="text-end">Días atraso</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in overdue_tasks %}
+            <tr>
+              <td>{{ t.id }}</td>
+              <td>{{ t.titulo }}</td>
+              <td>{{ t.propietario }}</td>
+              <td>{{ t.departamento or '—' }}</td>
+              <td>{{ t.fecha_compromiso_fmt or t.fecha_compromiso or '—' }}</td>
+              <td class="text-end">{{ t.dias_atraso }}</td>
+              <td>{{ t.estado }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="7" class="text-muted text-center small">No tienes tareas atrasadas 🎉</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="section">
+      <div class="section-header"><i class="bi bi-calendar-day"></i> Tareas que vencen hoy</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Propietario</th>
+              <th>Departamento</th>
+              <th>Fecha compromiso</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in today_tasks %}
+            <tr>
+              <td>{{ t.id }}</td>
+              <td>{{ t.titulo }}</td>
+              <td>{{ t.propietario }}</td>
+              <td>{{ t.departamento or '—' }}</td>
+              <td>{{ t.fecha_compromiso_fmt or t.fecha_compromiso or '—' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5" class="text-muted text-center small">Sin tareas para hoy.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="section">
+      <div class="section-header"><i class="bi bi-calendar-week"></i> Tareas que vencen esta semana</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Propietario</th>
+              <th>Departamento</th>
+              <th>Fecha compromiso</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in week_tasks %}
+            <tr>
+              <td>{{ t.id }}</td>
+              <td>{{ t.titulo }}</td>
+              <td>{{ t.propietario }}</td>
+              <td>{{ t.departamento or '—' }}</td>
+              <td>{{ t.fecha_compromiso_fmt or t.fecha_compromiso or '—' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5" class="text-muted text-center small">Sin tareas pendientes para esta semana.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header"><i class="bi bi-calendar-x"></i> Tareas sin fecha compromiso</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Propietario</th>
+              <th>Departamento</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in no_due_tasks %}
+            <tr>
+              <td>{{ t.id }}</td>
+              <td>{{ t.titulo }}</td>
+              <td>{{ t.propietario }}</td>
+              <td>{{ t.departamento or '—' }}</td>
+              <td>{{ t.estado }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5" class="text-muted text-center small">Todas las tareas tienen fecha compromiso 👍</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script id="chart-data" type="application/json">{{ chart|tojson }}</script>
+<script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - {% if item %}Editar{% else %}Nuevo{% endif %}{% endblock %}
+{% block content %}
+<h4 class="mb-3">Dashboard - {% if item %}Editar{% else %}Nuevo{% endif %}</h4>
+<form method="post" class="row g-3">
+  <div class="col-md-4">
+    <label class="form-label">Campo 1</label>
+    <input name="campo1" class="form-control" value="{{ item.campo1 if item else '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Campo 2</label>
+    <input name="campo2" class="form-control" value="{{ item.campo2 if item else '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Campo 3</label>
+    <input name="campo3" class="form-control" value="{{ item.campo3 if item else '' }}">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Email 1</label>
+    <input name="email1" type="email" class="form-control" value="{{ item.email1 if item else '' }}">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Email 2</label>
+    <input name="email2" type="email" class="form-control" value="{{ item.email2 if item else '' }}">
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Guardar</button>
+    <a href="{{ url_for('planilla_mensual_planilla_dashboard') }}" class="btn btn-outline-secondary">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

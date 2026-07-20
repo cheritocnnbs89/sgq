@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Editar valor{% endblock %}
+
+{% block content %}
+<h4 class="mb-3">Editar valor de {{ item['grupo_nombre'] }}</h4>
+
+<div class="card card-custom shadow-sm">
+  <div class="card-body">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input type="text"
+               name="nombre"
+               class="form-control"
+               value="{{ item['nombre'] }}"
+               required>
+        <div class="form-text">
+          Para RECL_PROCESO_SPONSOR, aquí va el ID del usuario.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Valor</label>
+        {% if item['grupo_nombre'] == grupo_frecuencias and item['parent_id'] is none %}
+        <select name="valor" class="form-control">
+          {% for label, val in frecuencias_opciones %}
+          <option value="{{ val }}" {% if item['valor'] == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <div class="form-text">
+          Frecuencia de recálculo de esta obligación.
+        </div>
+        {% else %}
+        <input type="text"
+               name="valor"
+               class="form-control"
+               value="{{ item['valor'] or '' }}">
+        <div class="form-text">
+          Ejemplo: PRINCIPAL, BACKUP o el nombre del proceso.
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Depende de (Parent)</label>
+        <select name="parent_id" class="form-control">
+          <option value="">-- Ninguno (este valor es padre) --</option>
+          {% for p in padres %}
+          <option value="{{ p.id }}" {% if item['parent_id'] == p.id %}selected{% endif %}>{{ p.nombre }} (id {{ p.id }})</option>
+          {% endfor %}
+        </select>
+        <div class="form-text">
+          Elegí de qué valor "padre" depende este (ej. una regla de alerta cuelga de su frecuencia).
+          Dejalo en "Ninguno" si este valor es el padre.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Orden</label>
+        <input type="number"
+               name="orden"
+               class="form-control"
+               value="{{ item['orden'] if item['orden'] is not none else 1 }}">
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input"
+               type="checkbox"
+               name="activo"
+               value="1"
+               id="activo"
+               {% if item['activo'] %}checked{% endif %}>
+        <label class="form-check-label" for="activo">
+          Activo
+        </label>
+      </div>
+
+      <button class="btn btn-primary">Guardar cambios</button>
+      <a href="{{ url_for('parametro_items', group_id=item['group_id']) }}" class="btn btn-secondary">
+        Cancelar
+      </a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - Frecuencias{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/obligaciones.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 title-blue"><i class="bi bi-calendar2-week"></i> Obligaciones - Frecuencias</h4>
+    {% if has_permission('obligaciones_editar', 'editar') %}
+    <a href="{{ url_for('obligaciones.nueva_frecuencia') }}" class="btn-cta-blue">
+      <i class="bi bi-plus-lg"></i> Nueva frecuencia
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="oblig-section-hero mb-3">
+    <p class="text-muted small mb-0">
+      Cada frecuencia define cómo se recalcula la fecha de vencimiento al cumplir una obligación
+      y hasta 5 notificaciones (con sus propios destinatarios) que avisan antes del vencimiento.
+    </p>
+  </div>
+
+  <div class="table-responsive">
+    <table id="tabla-frecuencias" class="table table-hover table-sm align-middle tablekit oblig-table">
+      <thead class="table-light">
+        <tr>
+          <th>Nombre</th>
+          <th>Recálculo</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in frecuencias %}
+        <tr data-row="1">
+          <td><i class="bi bi-calendar-event text-primary"></i> {{ f.nombre }}</td>
+          <td>
+            {% if f.recalculo_tipo == 'NINGUNA' %}
+              <span class="btn-chip">No recalcula</span>
+            {% elif f.recalculo_tipo == 'M' %}
+              <span class="btn-chip btn-chip-amber">Meses</span> Se repite cada {{ f.recalculo_cantidad }} mes(es)
+            {% elif f.recalculo_tipo == 'A' %}
+              <span class="btn-chip">Años</span> Se repite cada {{ f.recalculo_cantidad }} año(s)
+            {% elif f.recalculo_tipo == 'D' %}
+              <span class="btn-chip btn-chip-red">Días</span> Se repite cada {{ f.recalculo_cantidad }} día(s)
+            {% endif %}
+          </td>
+          <td class="text-end">
+            {% if has_permission('obligaciones_editar', 'editar') %}
+            <a class="btn btn-xs btn-sm btn-outline-primary" href="{{ url_for('obligaciones.editar_frecuencia', frecuencia_id=f.id) }}" title="Editar">
+              <i class="bi bi-pencil-square"></i>
+            </a>
+            <form method="post" action="{{ url_for('obligaciones.eliminar_frecuencia', frecuencia_id=f.id) }}" class="d-inline"
+                  data-confirm="¿Eliminar esta frecuencia? Las obligaciones que ya la usan no se ven afectadas.">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-xs btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-muted py-4">Sin frecuencias configuradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,114 @@
+/* Estilos exclusivos del módulo Obligaciones — no afecta otros módulos de SGQ.
+   Mismo patrón de CSS scoped por módulo que planilla_mensual.css / planificador.css.
+   Reutiliza variables ya definidas en base.css (--brand-*, --accent-*, --shadow-soft). */
+
+/* ===== Chips de color extendidos (más allá de .btn-chip/-amber/-red de base.css) ===== */
+.oblig-chip-blue {
+  background: var(--brand-100);
+  color: var(--brand-600);
+  border: 1px solid var(--brand-500);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.oblig-chip-teal {
+  background: #ccfbf1;
+  color: #0f766e;
+  border: 1px solid #5eead4;
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.oblig-chip-gray {
+  background: var(--surface-2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* ===== Avatar circular con inicial (empresa/entidad) ===== */
+.oblig-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--grad-hero);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* ===== Filas con hover más vivo (tablas Obligaciones) ===== */
+.oblig-table tbody tr {
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+.oblig-table tbody tr:hover {
+  background-color: var(--brand-100);
+}
+
+/* ===== Card con hover-lift (usada en vistas tipo tarjeta) ===== */
+.oblig-card-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.oblig-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.12);
+}
+
+/* ===== Dropzone de archivo (Cumplir / Carga masiva) ===== */
+.oblig-dropzone {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--surface-2);
+  transition: border-color 0.15s, background 0.15s;
+  cursor: pointer;
+}
+
+.oblig-dropzone:hover,
+.oblig-dropzone.is-dragover {
+  border-color: var(--brand-500);
+  background: var(--brand-100);
+}
+
+.oblig-dropzone .bi {
+  font-size: 2rem;
+  color: var(--brand-600);
+}
+
+/* ===== Empty state con fondo suave ===== */
+.oblig-empty {
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 3rem 1.5rem;
+}
+
+/* ===== Header de sección con degradado sutil (alternativa a .section-header plano) ===== */
+.oblig-section-hero {
+  background: linear-gradient(135deg, var(--brand-100) 0%, #fff 100%);
+  border-radius: 12px;
+  border: 1px solid var(--brand-100);
+  padding: 1rem 1.25rem;
+}

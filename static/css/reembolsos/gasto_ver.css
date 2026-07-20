@@ -1,0 +1,152 @@
+:root {
+  --gv-bg: #f8fafc;
+  --gv-card: #ffffff;
+  --gv-ink: #111827;
+  --gv-muted: #6b7280;
+  --gv-line: #e5e7eb;
+  --gv-head: #f3f4f6;
+  --gv-accent: #2563eb;
+  --gv-accent-2: #1d4ed8;
+  --gv-shadow: 0 8px 24px rgba(15, 23, 42, .08);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.gasto-ver-page {
+  background: var(--gv-bg);
+  color: var(--gv-ink);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.gasto-ver-wrap {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, .08), transparent 32%),
+    radial-gradient(circle at top left, rgba(29, 78, 216, .06), transparent 28%),
+    var(--gv-bg);
+}
+
+.gasto-ver-container {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.gasto-ver-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.gasto-ver-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--gv-accent-2);
+}
+
+.gasto-ver-subtitle {
+  margin-top: .2rem;
+  font-size: .9rem;
+  color: var(--gv-muted);
+}
+
+.gasto-ver-card {
+  background: var(--gv-card);
+  border: 1px solid var(--gv-line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--gv-shadow);
+}
+
+.gasto-ver-card-header {
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border-bottom: 1px solid var(--gv-line);
+  color: var(--gv-ink);
+  padding: .9rem 1rem;
+}
+
+.label-lite {
+  font-size: .8rem;
+  color: var(--gv-muted);
+  margin-bottom: .15rem;
+}
+
+.value-strong {
+  font-weight: 600;
+  color: var(--gv-ink);
+}
+
+.value-wrap {
+  word-break: break-word;
+}
+
+.gasto-ver-table {
+  margin: 0;
+}
+
+.gasto-ver-table thead th {
+  background: var(--gv-head);
+  color: var(--gv-ink);
+  border-bottom: 1px solid var(--gv-line);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.gasto-ver-table tbody td {
+  vertical-align: top;
+  border-color: var(--gv-line);
+}
+
+.gasto-ver-table tbody tr:hover {
+  background: rgba(37, 99, 235, .04);
+}
+
+.col-obs {
+  min-width: 140px;
+}
+
+.col-motivo {
+  min-width: 220px;
+}
+
+.col-centro {
+  min-width: 220px;
+}
+
+.col-ind {
+  min-width: 70px;
+}
+
+.col-num {
+  min-width: 110px;
+}
+
+.gasto-ver-adjuntos .list-group-item {
+  border-color: var(--gv-line);
+}
+
+.gasto-ver-adjuntos .list-group-item:hover {
+  background: rgba(37, 99, 235, .04);
+}
+
+.adjunto-texto {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 767.98px) {
+  .gasto-ver-container {
+    padding-left: .75rem;
+    padding-right: .75rem;
+  }
+
+  .gasto-ver-title {
+    font-size: 1.15rem;
+  }
+}

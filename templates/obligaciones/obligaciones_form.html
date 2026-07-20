@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Nueva obligación' if mode == 'new' else 'Editar obligación' }}{% endblock %}
+
+{% block content %}
+<div class="container container-max-900">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0">{{ 'Nueva obligación' if mode == 'new' else 'Editar obligación #' ~ oblig_id }}</h4>
+    <a href="{{ url_for('obligaciones.lista_obligaciones') }}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  <form method="post" class="card shadow-sm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Tipo *</label>
+          <select name="tipo_id" class="form-select" required>
+            <option value="">-- Seleccionar --</option>
+            {% for t in combos.tipos %}
+            <option value="{{ t.id }}" {% if data.get('tipo_id')|int == t.id %}selected{% endif %}>{{ t.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Empresa *</label>
+          <select name="empresa_id" class="form-select" required>
+            <option value="">-- Seleccionar --</option>
+            {% for e in combos.empresas %}
+            <option value="{{ e.id }}" {% if data.get('empresa_id')|int == e.id %}selected{% endif %}>{{ e.razon_social }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Entidad reguladora *</label>
+          <select name="entidad_id" class="form-select" required>
+            <option value="">-- Seleccionar --</option>
+            {% for en in combos.entidades %}
+            <option value="{{ en.id }}" {% if data.get('entidad_id')|int == en.id %}selected{% endif %}>{{ en.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Descripción *</label>
+          <textarea name="descripcion" class="form-control" rows="2" required maxlength="500">{{ data.get('descripcion', '') }}</textarea>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Frecuencia *</label>
+          <select name="frecuencia_id" id="frecuencia_id" class="form-select" required>
+            <option value="">-- Seleccionar --</option>
+            {% for f in combos.frecuencias %}
+            <option value="{{ f.id }}" data-recalculo="{{ f.recalculo_tipo }}"
+              {% if data.get('frecuencia_id')|int == f.id %}selected{% endif %}>{{ f.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Fecha de vencimiento</label>
+          <input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control"
+                 value="{{ data.get('fecha_vencimiento') or '' }}">
+          <small class="text-muted">No obligatoria si la frecuencia es Manual o Sin fecha fin.</small>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Comentario</label>
+          <textarea name="comentario" class="form-control" rows="2" maxlength="1000">{{ data.get('comentario') or '' }}</textarea>
+        </div>
+      </div>
+
+      <hr>
+      <p class="text-muted small mb-0">
+        <i class="bi bi-info-circle"></i>
+        Usuario, departamento y cargo se completan automáticamente con el perfil de la persona que crea la obligación.
+      </p>
+    </div>
+
+    <div class="card-footer d-flex justify-content-end gap-2">
+      <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Guardar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('obligaciones.lista_obligaciones') }}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/obligaciones_form.js') }}"></script>
+{% endblock %}

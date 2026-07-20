@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="2.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>CAMARA DE INDUSTRIAS Y PRODUCCION</razonSocial><nombreComercial>CAMARA DE INDUSTRIAS Y PRODUCCION</nombreComercial><ruc>1790901793001</ruc><claveAcceso>1707202601179090179300120010020000686160001106518</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>002</ptoEmi><secuencial>000068616</secuencial><dirMatriz>Las Cámaras, Av Amazonas 170135  Av. de la República </dirMatriz><agenteRetencion>1</agenteRetencion></infoTributaria><infoFactura><fechaEmision>17/07/2026</fechaEmision><dirEstablecimiento>Las Cámaras, Av Amazonas 170135  Av. de la República </dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>ROSAVIN LOTE 1 Y COBRE   </direccionComprador><totalSinImpuestos>2232.95</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>2232.95</baseImponible><valor>334.94</valor></totalImpuesto></totalConImpuestos><propina>0</propina><importeTotal>2567.89</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>2567.89</total><plazo>30</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>CUOTA_ORDIVA</codigoPrincipal><descripcion>Cuota Ordinaria IVA  --  CUOTA JULIO - AGOSTO 2026</descripcion><cantidad>1.000000</cantidad><precioUnitario>2232.950000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>2232.95</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Unidad" valor="Unidad"/><detAdicional nombre="PorcentajeDescuento" valor="0.0000"/></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>2232.95</baseImponible><valor>334.94</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Descripcion">CUOTA JULIO - AGOSTO 2026 </campoAdicional><campoAdicional nombre="Direccion">ROSAVIN LOTE 1 Y COBRE   ~GUAYAQUIL </campoAdicional><campoAdicional nombre="Email">atorres@quimpac.com.ec;irugel@quimpac.com.ec;gecheverria@quimpac.com.ec</campoAdicional><campoAdicional nombre="FechaVencimiento">16/08/2026</campoAdicional><campoAdicional nombre="Ciudad">GUAYAQUIL</campoAdicional><campoAdicional nombre="CondPago">30 dias</campoAdicional></infoAdicional><ds:Signature Id="Signature461471" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo538446">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID406869" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature461471-SignedProperties187386">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>aXXfLwsZgqSnrIY5VerR0M2DAgU=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1800791">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>kq3sfOPQoRV4VXwf6o/OStJuBHk=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-846141" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>zublZj+j+br9dW1MS+i6Aaad0vE=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue463051">
+iN8DJ8r0KScsLX58vaTKVrCIyaKWO0HCztMEoStYLAhGObzWFFWUgCPhts7bqW/XsLzIXXcvGMAW
+nGD9vKbgwUjv303z21v+myUXTgmx22Wt1YE0txAZzVJCxNZfANe8pbZhX+wtrfH5h+iwOKK04Tlg
+2yag6IwFSnLpMDFT8Q27hFGkEiimnLZ19rm5O4+8rBl+wQ7xTe4O1VTMUN87rcb1871oTcVq7NC1
+avR3a0SOpYEWV9e3zqRON+MLqVfq+2ywlrRhozAaHuVzjTtKIH+tKxi81n2zH9GAXvDhmdJyky9j
+vVeJluZhBgHOCdfFyyRpBrFXvLLrDlZKSOZF6Q==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1800791">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIMmzCCCoOgAwIBAgIEYom1tzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDEyMjAyMTEzNDlaFw0yNjEyMjAyMTEzNDlaMIGoMSYw
+JAYDVQQDDB1NQVJJQSBERSBMQSBQQVogSkVSVklTIFBBU1RPUjEgMB4GA1UEBRMXMTcwNzc0MjEy
+Ni0yMDEyMjQxNjIzNDYxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZP
+Uk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmbsoUB6pJPEOmDoo5tuCyH1R527awevWokwdbfOC
+fBlN4SFAuVdYqJN3J2fcKBp7dqE9CbcCGBsr5pnrcRdq5OrZ0s8RiFNLfM94Oi/QrNyvJaBxFPvF
+s4vdWcMFYBxYvt9hpYVKDHKAtiTHwRgOwe/lL/MQPRJVr86nAqYU3Nqxbi0xI1nNnFz5wnNsYI8t
+v6t8qBkqG8QORf1QcgSMjCvzwM+QXKGYO0qDtQUC8boz2QlBCSgEHQXw0nSaSrZYKgWXricRyD50
+Drro++J5DfGJGcYOQtBMnKkvIHpOjywv2woS3lVxzeTBxo3adPwOkyr3oN/4qMmd8bE1HRGdqQID
+AQABo4IH2DCCB9QwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29
+jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRh
+Lm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3Awgc8GA1UdLgSBxzCBxDCBwaCBvqCB
+u4aBuGxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9kZWx0YVJl
+dm9jYXRpb25MaXN0P2Jhc2UwHgYDVR0RBBcwFYETZG1hbmNlcm9AY2lwLm9yZy5lYzCCARUGA1Ud
+IASCAQwwggEIMGIGCisGAQQBgqZyAgkwVDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBj
+AGEAZABvACAAZABlACAAUgBlAHAAcgBlAHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYK
+KwYBBAGCpnICAzCBkjCBjwYIKwYBBQUHAgEWgYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0
+LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9s
+aXRpY2FzIGRlIENlcnRpZmljYWRvIFJlcHJlc2VudGFudGUgTGVnYWwucGRmMB0GA1UdJQQWMBQG
+CCsGAQUFBwMCBggrBgEFBQcDBDCCAqIGA1UdHwSCApkwggKVMIHloEGgP4Y9aHR0cDovL29jc3Bn
+dy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcKKBn6SBnDCB
+mTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBE
+QVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAb
+BgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCBx6CBxKCBwYaBvmxkYXA6
+Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNB
+Q0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERF
+IElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9jZXJ0aWZpY2F0ZVJldm9j
+YXRpb25MaXN0P2Jhc2UwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJp
+dHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlz
+c3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEs
+T1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFU
+QSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUHvMLqYIWxNpZ5tF6eIAz1L5PmnIwKwYDVR0QBCQwIoAP
+MjAyNDEyMjAyMTEzNDlagQ8yMDI2MTIyMDIxMTM0OVowCwYDVR0PBAQDAgXgMCQGCisGAQQBgqZy
+AwUEFgwUUFJFU0lERU5UQSBFSkVDVVRJVkEwGgYKKwYBBAGCpnIDAQQMDAoxNzA3NzQyMTI2MG8G
+CisGAQQBgqZyAwkEYQxfUVVJVE8gRElTVFJJVE8gTUVUUk9QT0xJVEFOTyBDQUJFQ0VSQSBDQU5U
+T05BTCBDQVBJVEFMIFBST1ZJTkNJQUwgWSBERSBMQSBSRVBVQkxJQ0EgREVMIEVDVUFET1IwEQYK
+KwYBBAGCpnIDIgQDDAEuMDgGCisGAQQBgqZyAwcEKgwoQVYgUklPIEFNQVpPTkFTIFMgTiBZIEFW
+IERFIExBIFJFUFVCTElDQTAfBgorBgEEAYKmcgMCBBEMD01BUklBIERFIExBIFBBWjAfBgorBgEE
+AYKmcgMgBBEMDzAwMjAwMTAwMDkyNDA2NjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKm
+cgMMBAkMB0VDVUFET1IwFgYKKwYBBAGCpnIDAwQIDAZKRVJWSVMwMQYKKwYBBAGCpnIDCgQjDCFD
+QU1BUkEgREUgSU5EVVNUUklBUyBZIFBST0RVQ0NJT04wHQYKKwYBBAGCpnIDCwQPDA0xNzkwOTAx
+NzkzMDAxMBEGCisGAQQBgqZyAx0EAwwBLjAWBgorBgEEAYKmcgMEBAgMBlBBU1RPUjAaBgorBgEE
+AYKmcgMIBAwMCjA5OTk4MDg2NDgwDQYJKoZIhvcNAQELBQADggIBACAOklEMydTSO3qiB/7+OUw+
+gNn3hfm/949gFQK+nC/ZlfBPRdq0ptc1F5BlfNdYvrG6jaI+dXnTlip6/o+fHZPTjetGmGy0S3Rd
+zDIxIESE6uT1m62aHuG8sMyNwkImYiy4KHMCM3NlSkuGyCCeci77S3J4Sh9nNuWYRhVdgDcPk6wn
+gUd4JdfQwt9+FJZsJm/WtXpM72N3Dd9oobOvEENGRQs4NcSo4+NfktygGQ0fmjc8oOdoO8EjDfYh
+0ABNbCQEpCfVYVu9ELOnipV3/5v+31g5QLx3kO0iur16Uk2hycbsg/6//zqQWmR6efN10pBf2Vpy
+IMw8GWfvJBvv7xdFWgUJZqaj8ojq6ikSg+4abbJdR8eIzuV6RiUXCStdaiEcwEGutx773kB0FY5/
+FLsEthh5hnFQ6kB+pO54jdSdt/6E8+vbtm7gIjLjHeK1vI/YCBIifjQOYITMFc7ArxXOvjiXZfKS
+KfrpG5yWPDvxilUpRjoszh3J65tNL4ThdBIdTB5abYFu9mKERGziTN89e+oKPsXgNmodydqmvPmr
+FVg3fWXPqQZQLtVB/wP6a7zpSkotsHNutET+REpPu0EMOTiyCF5kSOmjezOht76Cr6p57lXWoKzL
+gxIX/S9lt5gMqy45MVDeZgx2+GhYR0ANvq11BHUe3Kwylauu30m8
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+mbsoUB6pJPEOmDoo5tuCyH1R527awevWokwdbfOCfBlN4SFAuVdYqJN3J2fcKBp7dqE9CbcCGBsr
+5pnrcRdq5OrZ0s8RiFNLfM94Oi/QrNyvJaBxFPvFs4vdWcMFYBxYvt9hpYVKDHKAtiTHwRgOwe/l
+L/MQPRJVr86nAqYU3Nqxbi0xI1nNnFz5wnNsYI8tv6t8qBkqG8QORf1QcgSMjCvzwM+QXKGYO0qD
+tQUC8boz2QlBCSgEHQXw0nSaSrZYKgWXricRyD50Drro++J5DfGJGcYOQtBMnKkvIHpOjywv2woS
+3lVxzeTBxo3adPwOkyr3oN/4qMmd8bE1HRGdqQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature461471-Object363332"><etsi:QualifyingProperties Target="#Signature461471"><etsi:SignedProperties Id="Signature461471-SignedProperties187386"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T11:25:25-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>+GrOSwo7fzl6dBOX+Vm8pJ67aA4=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1653192119</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-846141"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

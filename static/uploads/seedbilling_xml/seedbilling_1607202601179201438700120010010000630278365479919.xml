@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+<infoTributaria>
+<ambiente>2</ambiente>
+<tipoEmision>1</tipoEmision>
+<razonSocial>CENTRO DE SOLUCIONES ANALITICAS INTEGRALES CENTROCESAL CIA LTDA</razonSocial>
+<nombreComercial>CENTRO DE SOLUCIONES ANALITICAS INTEGRALES CENTROCESAL CIA LTDA</nombreComercial>
+<ruc>1792014387001</ruc>
+<claveAcceso>1607202601179201438700120010010000630278365479919</claveAcceso>
+<codDoc>01</codDoc>
+<estab>001</estab>
+<ptoEmi>001</ptoEmi>
+<secuencial>000063027</secuencial>
+<dirMatriz>IGNACIO DE ASIN N52-208 Y GONZALO VALDIVIESO</dirMatriz>
+<agenteRetencion>1</agenteRetencion>
+</infoTributaria>
+<infoFactura>
+<fechaEmision>16/07/2026</fechaEmision>
+<obligadoContabilidad>SI</obligadoContabilidad>
+<tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+<razonSocialComprador>QUIMPAC ECUADOR S. A. QUIMPACSA</razonSocialComprador>
+<identificacionComprador>0990344760001</identificacionComprador>
+<direccionComprador>ROSAVIN LOTE 1 Y COBRE</direccionComprador>
+<totalSinImpuestos>112.50</totalSinImpuestos>
+<totalDescuento>0.00</totalDescuento>
+<totalConImpuestos>
+<totalImpuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<baseImponible>112.50</baseImponible>
+<valor>16.88</valor>
+</totalImpuesto>
+</totalConImpuestos>
+<propina>0.00</propina>
+<importeTotal>129.38</importeTotal>
+<moneda>DOLAR</moneda>
+<pagos>
+<pago>
+<formaPago>20</formaPago>
+<total>       129.38</total>
+<plazo>30</plazo>
+<unidadTiempo>dias</unidadTiempo>
+</pago>
+</pagos>
+<valorRetIva>          .00</valorRetIva>
+<valorRetRenta>          .00</valorRetRenta>
+</infoFactura> 
+<detalles>
+<detalle>
+<codigoPrincipal>7.137</codigoPrincipal>
+<codigoAuxiliar>7.137</codigoAuxiliar>
+<descripcion>DENSIDAD(*)</descripcion>
+<cantidad>1.000000</cantidad>
+<precioUnitario>15.000000</precioUnitario>
+<descuento>0.00</descuento>
+<precioTotalSinImpuesto>15.00</precioTotalSinImpuesto>
+<detallesAdicionales>
+<detAdicional nombre="comentario" valor="LOTE: 20251118"></detAdicional>
+<detAdicional nombre="comentario" valor="CARACTERISTICA: PAC SÓLIDO"></detAdicional>
+</detallesAdicionales>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15</tarifa>
+<baseImponible>15.00</baseImponible>
+<valor>2.25</valor>
+</impuesto>
+</impuestos>
+</detalle>
+<detalle>
+<codigoPrincipal>7.4</codigoPrincipal>
+<codigoAuxiliar>7.4</codigoAuxiliar>
+<descripcion>Acido Clorhídrico(*)</descripcion>
+<cantidad>1.000000</cantidad>
+<precioUnitario>60.000000</precioUnitario>
+<descuento>0.00</descuento>
+<precioTotalSinImpuesto>60.00</precioTotalSinImpuesto>
+<detallesAdicionales>
+<detAdicional nombre="comentario" valor="LOTE: 9 JN 25 1303"></detAdicional>
+<detAdicional nombre="comentario" valor="CARACTERISTICA: REGULADOR DE PH - ACIDO MURIATICO ( ÁCIDO CLORHIDRICO)"></detAdicional>
+</detallesAdicionales>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15</tarifa>
+<baseImponible>60.00</baseImponible>
+<valor>9.00</valor>
+</impuesto>
+</impuestos>
+</detalle>
+<detalle>
+<codigoPrincipal>7.178</codigoPrincipal>
+<codigoAuxiliar>7.178</codigoAuxiliar>
+<descripcion>DENSIDAD(*)</descripcion>
+<cantidad>1.000000</cantidad>
+<precioUnitario>15.000000</precioUnitario>
+<descuento>0.00</descuento>
+<precioTotalSinImpuesto>15.00</precioTotalSinImpuesto>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15</tarifa>
+<baseImponible>15.00</baseImponible>
+<valor>2.25</valor>
+</impuesto>
+</impuestos>
+</detalle>
+<detalle>
+<codigoPrincipal>9.5</codigoPrincipal>
+<codigoAuxiliar>9.5</codigoAuxiliar>
+<descripcion>RECARGO POR INFORMES ANTES DEL TIEMPO</descripcion>
+<cantidad>1.000000</cantidad>
+<precioUnitario>22.500000</precioUnitario>
+<descuento>0.00</descuento>
+<precioTotalSinImpuesto>22.50</precioTotalSinImpuesto>
+<detallesAdicionales>
+<detAdicional nombre="comentario" valor="COT 12965 / PEDIDO 7500056362"></detAdicional>
+<detAdicional nombre="comentario" valor="Cod. Aceptación 1001646439"></detAdicional>
+</detallesAdicionales>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15</tarifa>
+<baseImponible>22.50</baseImponible>
+<valor>3.38</valor>
+</impuesto>
+</impuestos>
+</detalle>
+</detalles>
+<infoAdicional>
+<campoAdicional nombre="direccion">ROSAVIN LOTE 1 Y COBRE</campoAdicional>
+<campoAdicional nombre="correo">mcenteno@quimpac.com.ec; compras.electronica@quimpac.com.ec; pgallegos@quimpac.com.ec; dvera@quimpac.com.ec; facturacion@centrocesal.com</campoAdicional>
+<campoAdicional nombre="telefono">045000460</campoAdicional>
+<campoAdicional nombre="Envío retenciones:">contabilidad@centrocesal.com</campoAdicional>
+<campoAdicional nombre="Pagos por transferencia:">CTA. AHORROS - 4294059000 - Banco Pichincha</campoAdicional>
+<campoAdicional nombre="Pagos por transferencia:">CTA. CTE. - 02168000756 - Produbanco</campoAdicional>
+<campoAdicional nombre="Pagos por transferencia:">CTA. CTE. - 019037849609 - Banco Procredit</campoAdicional>
+<campoAdicional nombre="Pagos por transferencia:">CTA. CTE. - 8084092 - Banco Pacifico</campoAdicional>
+<campoAdicional nombre="Telefono Cesal:">02 5003838</campoAdicional>
+<campoAdicional nombre="NOTA (*):">" El ensayo citado en esta factura no está cubierto por la acreditación otorgada por el SAE"</campoAdicional>
+<campoAdicional nombre="RETENCIONES SERVICIOS:">Retencion impuesto a la renta 303A - 5%</campoAdicional>
+<campoAdicional nombre="Notificación pagos:">contabilidad@centrocesal.com</campoAdicional>
+<campoAdicional nombre="pedido">P001001000067729</campoAdicional>
+<campoAdicional nombre="descarga">www.portal-sacierp.com</campoAdicional>
+<campoAdicional nombre="elaborado_por">SaciERP</campoAdicional>
+</infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature481744">
+<ds:SignedInfo Id="Signature-SignedInfo297791">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID234204" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature481744-SignedProperties668292">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>X7mvR/8BVqseC1EfkyNXSLfTv0o=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1586700">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>AJEplbP7fBScUf0Djg0x+e3C6sM=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-642036" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>t6/VpteDysMei3OQ2qJYfNd7zWA=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue731517">
+d1tk0qM+h6aDFvsp6H+uOtXmTWHPbbu3iEfqKfRuLl4anrVEbmVC5zLHjWxFnc28n2wodUl6c2bR
+D2WgtVnC7Fwft0vbqFtwBUNPXQZ6Kk0Mrm07P5hw4Dp+IwrPNYsZI0JRLxxoLCrBGTHW1iy+OZpy
+/1GHXNzEjZ9QJE7dDC2zWUCaAdKqLZmyWJz2l6DdtVPYVdwun7Pe/F0jsQscj3Y/XqF97rTa5dpy
+SLW5oZvj5Sznn37yuiwR6ny6A0vQJNF0+TZ8g9mUm6mXa53h+E2DSLWDHwOru7qJ2Ct7tcH/SgS5
+SEEZilBj6l8A3VW5/WxV/64N+gD2frrEpbrtGQ==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1586700">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIMZzCCCk+gAwIBAgIEPjLq7zANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTAxMDYyMjQwMzRaFw0yODAxMDYyMjQwMzRaMIGnMSUw
+IwYDVQQDDBxDQVJMT1MgQU5JQkFMIExPUEVaIE1PTlRFUk9TMSAwHgYDVQQFExcxNzA5MjU1MTky
+LTA2MDEyNTE3NTAyOTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9S
+TUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDH8h5WCpPA3ifGpQewiOVbgM4ySqy0YGGo7rtDuatO
+BHAUFgi6OZEI/xKNNjotSwqA6gUptb3vSETacvy3NNwGdnXTsN/QyO2tJJ4DmT9blv4iyAGAMWDH
+hI0NvvDdX1PiCCTdJvndSG9SRrp9JY4HX8Ocy1MsNYsvBLlHJ579G8Ag+U5lAaS0jNz7ln0pXDVS
+LpNLKD1tV8y+KMrW9MD9CTRitW4jz4KNa61mcxQLbwBkOsYBwhLWJcB78Vmgadk84rYCUgBDGXMX
+kNoHfAk6rCDqe7rRmfGen1HUfGJZEHjgS+mCTMzN61r3GWdGteSl7kMhaH1jfqLYvsKJBUuBAgMB
+AAGjggelMIIHoTAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2P
+MFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7
+hoG4bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2
+b2NhdGlvbkxpc3Q/YmFzZTAnBgNVHREEIDAegRxjYXJsb3NfbG9wZXpAY2VudHJvY2VzYWwuY29t
+MIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsGAQUFBwICMEYeRABDAGUAcgB0
+AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4AdABhAG4AdABlACAATABlAGcA
+YQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0dHBzOi8vd3d3LnNlY3VyaXR5
+ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmlj
+YWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50YW50ZSBMZWdhbC5wZGYwHQYD
+VR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICogYDVR0fBIICmTCCApUwgeWgQaA/hj1odHRw
+Oi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3Nw
+ooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNF
+Q1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1B
+Q0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIHHoIHEoIHB
+hoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2NlcnRpZmlj
+YXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9y
+Mi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2Nt
+ZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJ
+VFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNV
+UklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBRJcaKi+tn0MHlTcCqxyGNi9LL2eTArBgNV
+HRAEJDAigA8yMDI1MDEwNjIyNDAzNFqBDzIwMjgwMTA2MjI0MDM0WjALBgNVHQ8EBAMCBeAwHwYK
+KwYBBAGCpnIDBQQRDA9HRVJFTlRFIEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQMDAoxNzA5MjU1MTky
+MBoGCisGAQQBgqZyAwkEDAwKQ09DSEFQQU1CQTARBgorBgEEAYKmcgMiBAMMAS4wOQYKKwYBBAGC
+pnIDBwQrDClJR05BQ0lPIEFTSU4gTjUyIDIwOCBZIEdPTlpBTE8gVkFMRElWSUVTTzAdBgorBgEE
+AYKmcgMCBA8MDUNBUkxPUyBBTklCQUwwHwYKKwYBBAGCpnIDIAQRDA8wMDMwMDEwMDAwNTEwMjEw
+EwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBUGCisGAQQBgqZy
+AwMEBwwFTE9QRVowTwYKKwYBBAGCpnIDCgRBDD9DRU5UUk8gREUgU09MVUNJT05FUyBBTkFMSVRJ
+Q0FTIElOVEVHUkFMRVMgQ0VOVFJPQ0VTQUwgQ0lBIExUREEwHQYKKwYBBAGCpnIDCwQPDA0xNzky
+MDE0Mzg3MDAxMBEGCisGAQQBgqZyAx0EAwwBLjAYBgorBgEEAYKmcgMEBAoMCE1PTlRFUk9TMBoG
+CisGAQQBgqZyAwgEDAwKMDk5NzYwNjgwMTANBgkqhkiG9w0BAQsFAAOCAgEARV3SQfdmWYIjdmU1
++oYM7O2wDtRho4oXMwRXaNvsC6+WMZcPDS4TCvyDomGOTPF/PfjA84Pmb6SNNxXR5slaQFu27nEr
+i/+9xFmoauDdLaBcQRQbbkuwRPgoQa+PlLtqdgoHg2sOxGGtpa+wYPtsPOfxaPEjtFeaIwa9TaeS
+2z9KKhYBccCL7FbVEED61/fEMbA8KPoLP7SVFwEQUrfGSb4WQSillOTmMRBib28hhZApIB1d00bU
+2+3lZ85w/C2qMzu6pmjEVYT3XCMffLAb9oTKzaYoRzdLtIWsREb89eLMgDqkfXQ11Dfdj7xAzEC8
+vEW/D1VeUKLwGPwMuw1lZjUBqZBiQ9JkgQdVe7rB4git9nJfC+GJxqJqdcsxiK3/aWIBgsbUcuN/
+WKETDKJQxg2dlWdgTl4k4m+BV6NA9igcCyOB2N13OWeP5wJz95y2ScSwB09h3pOAeMXDdOAG/vZw
+N4yndgaY9YsVHEMMdkWOoS+/jDpGklG4hQrRPjcGzFCCPsBrJAn3jpXBi1qau3L72zjOEYFaTclj
+vY0ccWIhzLp4U0jOqdtEgmW8CPn9EtCa5ere7CzJg/fZ0N9xtXSLiCWfpo75k2iYNu4zAtTmxc4i
+A+cWhE0Fy1CiZZymmLrvjmcIxGq//JepbXm+ScP7s1JFaiavOs38muCMTvQ=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+x/IeVgqTwN4nxqUHsIjlW4DOMkqstGBhqO67Q7mrTgRwFBYIujmRCP8SjTY6LUsKgOoFKbW970hE
+2nL8tzTcBnZ107Df0MjtrSSeA5k/W5b+IsgBgDFgx4SNDb7w3V9T4ggk3Sb53UhvUka6fSWOB1/D
+nMtTLDWLLwS5Ryee/RvAIPlOZQGktIzc+5Z9KVw1Ui6TSyg9bVfMvijK1vTA/Qk0YrVuI8+CjWut
+ZnMUC28AZDrGAcIS1iXAe/FZoGnZPOK2AlIAQxlzF5DaB3wJOqwg6nu60Znxnp9R1HxiWRB44Evp
+gkzMzeta9xlnRrXkpe5DIWh9Y36i2L7CiQVLgQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature481744-Object282106"><etsi:QualifyingProperties Target="#Signature481744"><etsi:SignedProperties Id="Signature481744-SignedProperties668292"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-16T11:28:58-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>JfVxv35r/iRk9ZoleiPuJQHaO9c=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1043524335</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-642036"><etsi:Description>Documento de ejemplo</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

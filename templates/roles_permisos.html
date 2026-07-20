@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Roles y permisos{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/roles/roles_permisos.css') }}">
+
+<div id="roles-permisos-config"
+  data-show-saved='{{ (show_saved|default(false))|tojson }}'>
+</div>
+
+<h4 class="mb-4">Roles y permisos</h4>
+
+{# --- Selector de rol (GET) --- #}
+<div class="mb-3">
+  <label class="form-label">Seleccione un rol:</label>
+  <form method="get" action="{{ url_for('roles_permisos') }}" class="d-inline">
+<select name="rol" id="rolSelector" class="form-select w-auto d-inline">
+  {% for r in roles %}
+  <option value="{{ r }}" {% if r==selected_role %}selected{% endif %}>{{ r|capitalize }}</option>
+  {% endfor %}
+</select>
+  </form>
+</div>
+
+{# --- Tabla de permisos (POST para guardar) --- #}
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="rol" value="{{ selected_role }}">
+
+  <div class="perm-table-wrapper mb-3">
+    <table id="tabla-permisos" class="table table-sm table-striped table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th id="th-opcion" class="sorted-asc">
+            <span class="th-sortable">
+              Opción <i class="bi bi-arrow-down-up ms-1"></i>
+            </span>
+          </th>
+          <th class="text-center">Ver</th>
+          <th class="text-center">Crear</th>
+          <th class="text-center">Editar</th>
+          <th class="text-center">Eliminar</th>
+          <th class="text-center">Exportar</th>
+          <th class="text-center">Aprobar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for op, perms in permisos.items() %}
+        <tr>
+          <td class="text-capitalize">{{ op.replace('_',' ') }}</td>
+          {% for accion in ['ver','crear','editar','eliminar','exportar','aprobar'] %}
+          <td class="text-center">
+            <input type="checkbox" name="{{ op }}_{{ accion }}" {% if perms[accion] %}checked{% endif %}>
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <button type="submit" name="save" class="btn btn-primary">Guardar cambios</button>
+</form>
+
+{# Toast de confirmación #}
+<div class="position-fixed top-0 end-0 p-3 roles-toast-wrap">
+  <div id="saveToast" class="toast text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true"
+    data-bs-delay="4000">
+    <div class="d-flex">
+      <div class="toast-body">Los permisos se han guardado correctamente.</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+        aria-label="Cerrar"></button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/roles/roles_permisos.js') }}"></script>
+{% endblock %}

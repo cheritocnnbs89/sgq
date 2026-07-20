@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Nueva empresa' if mode=='new' else 'Editar empresa' }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 980px;">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0">{{ 'Nueva empresa' if mode=='new' else 'Editar empresa' }}</h4>
+    <a href="{{ url_for('empresas.lista_empresas') }}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  <form method="post" class="card shadow-sm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="card-body">
+      <h6 class="text-muted">Datos de identificación y contacto</h6>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-8">
+          <label class="form-label">Razón social *</label>
+          <input type="text" name="razon_social" class="form-control" required
+                 value="{{ (data.razon_social or '') if data else '' }}">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">RUC/RFC/Identificación fiscal *</label>
+          <input type="text" name="ruc" class="form-control" required
+                 value="{{ (data.ruc or '') if data else '' }}">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Dirección</label>
+          <input type="text" name="direccion" class="form-control"
+                 value="{{ (data.direccion or '') if data else '' }}">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Teléfono</label>
+          <input type="text" name="telefono" class="form-control"
+                 value="{{ (data.telefono or '') if data else '' }}">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Correo electrónico</label>
+          <input type="email" name="email" class="form-control"
+                 value="{{ (data.email or '') if data else '' }}">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Sitio web</label>
+          <input type="url" name="sitio_web" class="form-control"
+                 value="{{ (data.sitio_web or '') if data else '' }}">
+        </div>
+      </div>
+
+      <h6 class="text-muted">Representante legal / contacto principal</h6>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Nombre completo</label>
+          <input type="text" name="rep_nombre" class="form-control"
+                 value="{{ (data.rep_nombre or '') if data else '' }}">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Identificación</label>
+          <input type="text" name="rep_identificacion" class="form-control"
+                 value="{{ (data.rep_identificacion or '') if data else '' }}">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Sociedad SAP</label>
+          <input type="text" name="rep_nacionalidad" class="form-control"
+                 placeholder="Ej: EC20"
+                 value="{{ (data.rep_nacionalidad or '') if data else '' }}">
+          <small class="text-muted">Código de sociedad que se enviará a SAP.</small>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Usuario SAP</label>
+          <input type="text" name="usuario_sap" class="form-control"
+                 placeholder="Ej: QEANLAP1"
+                 value="{{ (data.usuario_sap or '') if data else '' }}">
+          <small class="text-muted">Usuario SAP que se enviará en la trama.</small>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-check mt-4">
+            <input class="form-check-input" type="checkbox" name="activo" id="activo"
+                   {% if (data and data.activo) or (mode=='new') %}checked{% endif %}>
+            <label for="activo" class="form-check-label">Activo</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer d-flex justify-content-end gap-2">
+      <button class="btn btn-primary" type="submit">
+        <i class="bi bi-save"></i> Guardar
+      </button>
+
+      <a class="btn btn-outline-secondary" href="{{ url_for('empresas.lista_empresas') }}">
+        Cancelar
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

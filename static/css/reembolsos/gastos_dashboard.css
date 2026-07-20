@@ -1,0 +1,31 @@
+.tabla-motivos {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.tabla-motivos th:nth-child(1),
+.tabla-motivos td:nth-child(1) {
+  width: 72%;
+}
+
+.tabla-motivos th:nth-child(2),
+.tabla-motivos td:nth-child(2) {
+  width: 28%;
+  white-space: nowrap;
+}
+
+.motivo-cell {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.chart-320 {
+  height: 320px;
+}
+
+.chart-360 {
+  height: 360px;
+}

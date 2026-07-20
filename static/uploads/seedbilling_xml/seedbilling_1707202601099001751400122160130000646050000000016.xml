@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><factura xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" id="comprobante" version="2.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>TIENDAS INDUSTRIALES ASOCIADAS (TIA) S.A.</razonSocial><nombreComercial>TIENDAS INDUSTRIALES ASOCIADAS (TIA) S.A.</nombreComercial><ruc>0990017514001</ruc><claveAcceso>1707202601099001751400122160130000646050000000016</claveAcceso><codDoc>01</codDoc><estab>216</estab><ptoEmi>013</ptoEmi><secuencial>000064605</secuencial><dirMatriz>CHIMBORAZO 217 Y LUQUE</dirMatriz></infoTributaria><infoFactura><fechaEmision>17/07/2026</fechaEmision><dirEstablecimiento>Cdla. Ciudad Celeste La Marina Mz. 16 Sl. 2</dirEstablecimiento><contribuyenteEspecial>6925</contribuyenteEspecial><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR SA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>NA</direccionComprador><totalSinImpuestos>9.58</totalSinImpuestos><totalDescuento>0</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>1.21</baseImponible><tarifa>15</tarifa><valor>0.18</valor></totalImpuesto><totalImpuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><baseImponible>8.37</baseImponible><tarifa>0</tarifa><valor>0</valor></totalImpuesto></totalConImpuestos><propina>0</propina><importeTotal>9.76</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>19</formaPago><total>9.76</total><plazo>0</plazo><unidadTiempo>Dias</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>310429000</codigoPrincipal><codigoAuxiliar>786210190393</codigoAuxiliar><descripcion>LECHUGA CRIOLLA FUNDA</descripcion><cantidad>1</cantidad><precioUnitario>0.69</precioUnitario><descuento>0</descuento><precioTotalSinImpuesto>0.69</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><tarifa>0</tarifa><baseImponible>0.69</baseImponible><valor>0</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>270997003</codigoPrincipal><codigoAuxiliar>786113861170</codigoAuxiliar><descripcion>YOGURT GRIEGO ZEUS 120 G NATURAL</descripcion><cantidad>1</cantidad><precioUnitario>1.27</precioUnitario><descuento>0</descuento><precioTotalSinImpuesto>1.27</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><tarifa>0</tarifa><baseImponible>1.27</baseImponible><valor>0</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>300989000</codigoPrincipal><codigoAuxiliar>786102170411</codigoAuxiliar><descripcion>TOCINETA REBANADA LA EUROPEA 100 G</descripcion><cantidad>2</cantidad><precioUnitario>1.21</precioUnitario><descuento>0</descuento><precioTotalSinImpuesto>2.42</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><tarifa>0</tarifa><baseImponible>2.42</baseImponible><valor>0</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>235701000</codigoPrincipal><codigoAuxiliar>786115390580</codigoAuxiliar><descripcion>ALIMENTO COCIDO P/PERRO PRIME PET TACO 1 KG RES POLLO Y CERDO</descripcion><cantidad>1</cantidad><precioUnitario>3.99</precioUnitario><descuento>0</descuento><precioTotalSinImpuesto>3.99</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><tarifa>0</tarifa><baseImponible>3.99</baseImponible><valor>0</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>251149000</codigoPrincipal><codigoAuxiliar>786100124964</codigoAuxiliar><descripcion>MAYONESA MAGGI DOYPACK 170 G LIMON</descripcion><cantidad>1</cantidad><precioUnitario>1.21</precioUnitario><descuento>0</descuento><precioTotalSinImpuesto>1.21</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>1.21</baseImponible><valor>0.18</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Correo 1">xtoala@quimpac.com.ec</campoAdicional><campoAdicional nombre="Gran Contribuyente">Gran Contribuyente Resolucion No NAC-GCFOIOC21-00000872-E</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature12441">
+<ds:SignedInfo Id="Signature-SignedInfo888662">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID286077" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature12441-SignedProperties366469">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>WMfOQ55urdzNRKdojst4pwsAcms=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1659123">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>SmDXzAR7PBXXNJ7hwKGQGJqqoQQ=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-600927" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>+ynt/ljWp3ZlgdO0Yc3ZbuosYC0=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue837483">
+dgtMYcaY8r/KgFYrHXnKQhpiS3ZK96FPrXVKF9JDwhkhynZ2gTRd6sS8+UIM3Oatx5Aedtg8AlpA
+P5Bbje0YXfvTgBGIMWpRq3qWGu+VpsLqOQhGK4y16xcDsupDs+7gtQaNEBbcHqL7YXcjitMQmjRj
+ytcP2mYV4EuWtxxNzAvt26RfQb497IchA3jXx5alzgP9vJrEH4/wVUQVu8jKiaccvbolPeek2hOn
+wPOBtwc1G1eKH917KLV4g0THIP5nFdz1Zh7SdI8q5CXIlHQ33muZaFTi9V7ef6XPdJ4emZtVdX1A
+PbdsgqNFhYTIaAq07RgCwo/VusC+HXGSnycD1A==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1659123">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIK2zCCCMOgAwIBAgIIBSbwDB7p8AUwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwMzI3MjAwMDIwWhcNMjcwMzI3MjAwMDIwWjCB
+ozEhMB8GA1UEAwwYSk9TRSBFRFVBUkRPIEZBQkFSQSBWRVJBMSAwHgYDVQQFExcxNzA1Mjk2MTY2
+LTI3MDMyNjE1MTAxMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9S
+TUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDACtZj1PXCfdkaBefYHlIrQpK+Uzdyt0B9N87L7S2C
+NfVcbnmb3Qksl8CSqCG/3TDor8D5Dig9hEzrq1NWxu9dXeH3MgKug2GdxUsNXn2fHIwWcp6ividQ
+J1V5FfjDcPjY0kjG/vblXYYZspNOeg0iwiRBevyATw8KYLJ48O+JO6zuSKth4Xnpxxew3dAD2vsx
+C5BNt/3PuJxB+2x2b2K2lXTtldblu7DFMPpcJwVGhP1BVJAYK1jU9XSk5chGe32V3wIZVQam3ZMc
+QyiRCLE6beFQhO3BlutEbSVp6aJoOu3zaP28LfmZMn6Gsx4EG30yDfahpeV84fASjB4lgPZjAgMB
+AAGjggYZMIIGFTAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2P
+MFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAnBgNVHREEIDAegRxnY2hhcnJvQGJ1
+c3RhbWFudGVmYWJhcmEuY29tMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsG
+AQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4A
+dABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0
+dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0
+aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50
+YW50ZSBMZWdhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIIC
+BjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEv
+Y3JsZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9O
+IFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9O
+IERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMC
+RUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxm
+aWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNO
+PUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4g
+MixDPUVDMB0GA1UdDgQWBBRmZnkVY5DyeytMp7MHN1m52/xsmDArBgNVHRAEJDAigA8yMDI2MDMy
+NzIwMDAyMFqBDzIwMjcwMzI3MjAwMDIwWjALBgNVHQ8EBAMCBeAwIgYKKwYBBAGCpnIDBQQUDBJE
+SVJFQ1RPUiBQUklOQ0lQQUwwGgYKKwYBBAGCpnIDAQQMDAoxNzA1Mjk2MTY2MBoGCisGAQQBgqZy
+AwkEDAwKUk9DQUZVRVJURTARBgorBgEEAYKmcgMiBAMMAS4wLAYKKwYBBAGCpnIDBwQeDBxDSElN
+Qk9SQVpPIDIxNyBZIExVUVVFIFZFTEVaMBwGCisGAQQBgqZyAwIEDgwMSk9TRSBFRFVBUkRPMB8G
+CisGAQQBgqZyAyAEEQwPMDAyMDAxMDAxMTg0NjgwMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisG
+AQQBgqZyAwwECQwHRUNVQURPUjAWBgorBgEEAYKmcgMDBAgMBkZBQkFSQTA2BgorBgEEAYKmcgMK
+BCgMJlRJRU5EQVMgSU5EVVNUUklBTEVTIEFTT0NJQURBUyBUSUEgUyBBMB0GCisGAQQBgqZyAwsE
+DwwNMDk5MDAxNzUxNDAwMTARBgorBgEEAYKmcgMdBAMMAS4wFAYKKwYBBAGCpnIDBAQGDARWRVJB
+MBoGCisGAQQBgqZyAwgEDAwKMDk5NTA5MDA1NDANBgkqhkiG9w0BAQsFAAOCAgEALEMirGqB/lwU
+5699DA262HkS2zy7rzCRGAC6stZHj2DAIducEbLZo8RpJU8GmG7pVud+pFc6V4rmaFs0sVTXNymN
+GvHK6N+q64gsmG35oUTIvOSaXho7IFck4xduURPOv/rHtf20FfnA07dW2mtnru44eyk7eQFiSpJO
+GZkpDuVtj95VqDLs9zARhKcKic2sgwPZO/Aiu7w9+541jkSH3zsnPSAdzgYUzySYzwRZxbIbIwni
+j2dSlBPmRn7cdbW276pQmxFte6Nd3o7BF5cGMFn86nxgsslnPlEyojB9e1VHZCIlWT77WWR7Ph3E
+KhVPYGyLpqi07hTEDZ5P5AKQd6FUNiTmPTTZ11A6aCnaNuPfUHCnUlV3EuLbCDLHVTWbRq9Sz2s+
+Iec/qguhHR9H3PzUxgEKjsmog1bRSim8S2LWjCWjssaEiPX2BCXoCZaQlqVYr0YALb+ot0Z5eqhU
+8D/hfjwvOSHZFOKIQH2w6jL7wr9lpvs7Sit/hb52UXLI3nOTDNRsHh+7U+dfoM5PAsZV6yG0yv6j
+r/IQybc0uf/Cjn1dVr+yDwvp7J0Fxbk4lgQ+K0LLjnBgA4hYbD84W3qx3ucgYfQIn4ANmdCvLQ8L
+4tfA+L/egoIgVFxthjNZDfWT8l5wPebzKrbcF9ndvTQxF95Qfgw5yBN8bABwU7U=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+wArWY9T1wn3ZGgXn2B5SK0KSvlM3crdAfTfOy+0tgjX1XG55m90JLJfAkqghv90w6K/A+Q4oPYRM
+66tTVsbvXV3h9zICroNhncVLDV59nxyMFnKeor4nUCdVeRX4w3D42NJIxv725V2GGbKTTnoNIsIk
+QXr8gE8PCmCyePDviTus7kirYeF56ccXsN3QA9r7MQuQTbf9z7icQftsdm9itpV07ZXW5buwxTD6
+XCcFRoT9QVSQGCtY1PV0pOXIRnt9ld8CGVUGpt2THEMokQixOm3hUITtwZbrRG0laemiaDrt82j9
+vC35mTJ+hrMeBBt9Mg32oaXlfOHwEoweJYD2Yw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature12441-Object419699"><etsi:QualifyingProperties Target="#Signature12441"><etsi:SignedProperties Id="Signature12441-SignedProperties366469"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-17T12:42:02-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>CDBd28hfL+1XvllVfaJ7IfSxhgM=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>371247954153566213</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-600927"><etsi:Description>comprobateFirma</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

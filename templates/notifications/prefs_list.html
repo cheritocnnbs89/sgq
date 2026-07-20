@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Preferencias de notificaciones{% endblock %}
+{% block content %}
+<h1 class="h5 mb-3">Preferencias de notificaciones</h1>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Email</th>
+        <th>In-app</th>
+        <th>Slack</th>
+        <th>Silencio</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for r in rows %}
+      <tr>
+        <td>{{ r.username }}</td>
+        <td>{{ r.email_on and 'Sí' or 'No' }}</td>
+        <td>{{ r.inapp_on and 'Sí' or 'No' }}</td>
+        <td>{{ r.slack_on and 'Sí' or 'No' }}</td>
+        <td>
+          {% if r.quiet_start or r.quiet_end %}
+            {{ r.quiet_start or '—' }} – {{ r.quiet_end or '—' }}
+          {% else %}—{% endif %}
+        </td>
+        <td class="text-end">
+          <a class="btn btn-sm btn-primary"
+             href="{{ url_for('notifications.prefs_edit', user_id=r.id) }}">Editar</a>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="text-muted">Sin usuarios</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

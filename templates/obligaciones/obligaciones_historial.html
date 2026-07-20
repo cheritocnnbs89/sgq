@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - Historial{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0"><i class="bi bi-archive"></i> Obligaciones - Historial</h4>
+    {% if has_permission('obligaciones_exportar', 'ver') %}
+    <a href="{{ url_for('obligaciones.exportar_historial', **filters) }}" class="btn btn-success">
+      <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+    </a>
+    {% endif %}
+  </div>
+
+  <form class="row g-2 mb-3" method="get" action="{{ url_for('obligaciones.historial_obligaciones') }}">
+    <div class="col-md-1">
+      <input type="text" class="form-control form-control-sm" name="id" placeholder="ID" value="{{ filters.id }}">
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="empresa_id">
+        <option value="">-- Empresa --</option>
+        {% for e in combos.empresas %}
+        <option value="{{ e.id }}" {% if filters.empresa_id|string == e.id|string %}selected{% endif %}>{{ e.razon_social }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="tipo_id">
+        <option value="">-- Tipo --</option>
+        {% for t in combos.tipos %}
+        <option value="{{ t.id }}" {% if filters.tipo_id|string == t.id|string %}selected{% endif %}>{{ t.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="entidad_id">
+        <option value="">-- Entidad --</option>
+        {% for en in combos.entidades %}
+        <option value="{{ en.id }}" {% if filters.entidad_id|string == en.id|string %}selected{% endif %}>{{ en.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="frecuencia_id">
+        <option value="">-- Frecuencia --</option>
+        {% for f in combos.frecuencias %}
+        <option value="{{ f.id }}" {% if filters.frecuencia_id|string == f.id|string %}selected{% endif %}>{{ f.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-1">
+      <input type="number" class="form-control form-control-sm" name="anio" placeholder="Año" value="{{ filters.anio }}">
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="estado">
+        <option value="">-- Estado --</option>
+        {% for valor, label in estado_labels.items() %}
+          {% if valor in ('cumplido', 'cumplido_fuera_plazo') %}
+          <option value="{{ valor }}" {% if filters.estado == valor %}selected{% endif %}>{{ label }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    {% if usuarios %}
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="usuario_id">
+        <option value="">-- Usuario --</option>
+        {% for u in usuarios %}
+        <option value="{{ u.id }}" {% if filters.usuario_id|string == u.id|string %}selected{% endif %}>{{ u.nombre_completo or u.username }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+    <div class="col-12 d-flex gap-2 mt-1">
+      <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i> Filtrar</button>
+      <a class="btn btn-sm btn-outline-dark" href="{{ url_for('obligaciones.historial_obligaciones') }}"><i class="bi bi-x-circle"></i> Limpiar</a>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table id="tabla-historial" class="table table-hover table-sm align-middle tablekit">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Empresa</th>
+          <th>Entidad</th>
+          <th>Tipo</th>
+          <th>Descripción</th>
+          <th>Frecuencia</th>
+          <th>Fecha creación</th>
+          <th>Fecha vencimiento</th>
+          <th>Estado</th>
+          <th>Evidencia</th>
+          <th>Usuario</th>
+          <th>Departamento</th>
+          <th>Cargo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr data-row="1">
+          <td>{{ r.id }}</td>
+          <td>{{ r.empresa_nombre }}</td>
+          <td>{{ r.entidad_nombre }}</td>
+          <td>{{ r.tipo_nombre }}</td>
+          <td>{{ r.descripcion }}</td>
+          <td>{{ r.frecuencia_nombre }}</td>
+          <td>{{ r.creado_en }}</td>
+          <td>{{ r.fecha_vencimiento or '-' }}</td>
+          <td>
+            {% if r.estado == 'cumplido_fuera_plazo' %}
+            <span class="badge bg-warning text-dark">{{ estado_labels.get(r.estado, r.estado) }}</span>
+            {% else %}
+            <span class="badge bg-success">{{ estado_labels.get(r.estado, r.estado) }}</span>
+            {% endif %}
+          </td>
+          <td>{{ r.evidencias or '-' }}</td>
+          <td>{{ r.usuario_nombre or r.usuario_username }}</td>
+          <td>{{ r.departamento_nombre or '-' }}</td>
+          <td>{{ r.puesto_nombre or '-' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="13" class="text-center text-muted py-4">Sin registros en el historial.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div id="tableInfoHist" class="text-muted small"></div>
+  <nav id="paginationHist"></nav>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/obligaciones_historial.js') }}"></script>
+{% endblock %}

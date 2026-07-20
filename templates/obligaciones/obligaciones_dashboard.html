@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h4 class="mb-3 title-blue"><i class="bi bi-bar-chart-line"></i> Obligaciones - Dashboard</h4>
+
+  {% if data.kpis.total_atrasadas > 0 %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert"
+       id="alertObligacionesAtrasadas"
+       data-alert-key="obligaciones_atrasadas::{{ data.kpis.total_atrasadas }}">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    Hay {{ data.kpis.total_atrasadas }} obligación{{ 'es' if data.kpis.total_atrasadas != 1 else '' }} atrasada{{ 's' if data.kpis.total_atrasadas != 1 else '' }}.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+  </div>
+  {% endif %}
+
+  {% set filtros_activos = filters.empresa_id or filters.tipo_id or filters.entidad_id or filters.fecha_desde or filters.fecha_hasta %}
+  <button class="btn btn-sm btn-outline-secondary mb-2" type="button" data-bs-toggle="collapse"
+    data-bs-target="#panelFiltrosDashboard" aria-expanded="{{ 'true' if filtros_activos else 'false' }}"
+    aria-controls="panelFiltrosDashboard">
+    <i class="bi bi-funnel"></i> Filtros
+  </button>
+
+  <div class="collapse{{ ' show' if filtros_activos else '' }} mb-4" id="panelFiltrosDashboard">
+  <form class="row g-2 mb-3" method="get" action="{{ url_for('obligaciones.dashboard_obligaciones') }}">
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="empresa_id">
+        <option value="">-- Empresa --</option>
+        {% for e in combos.empresas %}
+        <option value="{{ e.id }}" {% if filters.empresa_id|string == e.id|string %}selected{% endif %}>{{ e.razon_social }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="tipo_id">
+        <option value="">-- Tipo --</option>
+        {% for t in combos.tipos %}
+        <option value="{{ t.id }}" {% if filters.tipo_id|string == t.id|string %}selected{% endif %}>{{ t.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="entidad_id">
+        <option value="">-- Entidad --</option>
+        {% for en in combos.entidades %}
+        <option value="{{ en.id }}" {% if filters.entidad_id|string == en.id|string %}selected{% endif %}>{{ en.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <input type="date" class="form-control form-control-sm" name="fecha_desde" value="{{ filters.fecha_desde }}" placeholder="Desde">
+    </div>
+    <div class="col-md-2">
+      <input type="date" class="form-control form-control-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}" placeholder="Hasta">
+    </div>
+    <div class="col-md-2 d-flex gap-2">
+      <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i> Filtrar</button>
+      <a class="btn btn-sm btn-outline-dark" href="{{ url_for('obligaciones.dashboard_obligaciones') }}"><i class="bi bi-x-circle"></i></a>
+    </div>
+  </form>
+  </div>
+
+  <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+    <div class="col">
+      <div class="section">
+        <div class="section-header small text-uppercase"><i class="bi bi-collection"></i> Total obligaciones</div>
+        <div class="fs-2 fw-bold">{{ data.kpis.total_obligaciones }}</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header small text-uppercase"><i class="bi bi-list-check"></i> Total activas</div>
+        <div class="fs-2 fw-bold">{{ data.kpis.total_activas }}</div>
+      </div>
+    </div>
+    <div class="col">
+      <a class="text-decoration-none" href="{{ url_for('obligaciones.lista_obligaciones', estado='atrasado') }}">
+        <div class="section section-danger">
+          <div class="section-header small text-uppercase"><i class="bi bi-exclamation-triangle-fill"></i> Atrasadas</div>
+          <div class="fs-2 fw-bold text-danger">{{ data.kpis.total_atrasadas }}</div>
+        </div>
+      </a>
+    </div>
+    <div class="col">
+      <div class="section section-warning">
+        <div class="section-header small text-uppercase"><i class="bi bi-calendar-x"></i> Próximas a vencer (30 días)</div>
+        <div class="fs-2 fw-bold">{{ data.kpis.proximas_vencer }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="section section-success">
+        <div class="section-header"><i class="bi bi-check-circle-fill"></i> Cumplidas a tiempo vs. fuera de plazo</div>
+        <div class="chart-box">
+          <canvas id="chartCumplimiento"></canvas>
+          <div style="position: absolute; left: 0; right: 0; bottom: 0; text-align: center;">
+            <span class="fs-2 fw-bold">{{ data.pct_a_tiempo }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="section">
+        <div class="section-header"><i class="bi bi-stoplights-fill"></i> Por estado</div>
+        <div class="chart-box"><canvas id="chartEstado"></canvas></div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="section">
+        <div class="section-header"><i class="bi bi-bar-chart-fill"></i> Por tipo</div>
+        <div class="chart-box"><canvas id="chartTipo"></canvas></div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="section">
+        <div class="section-header"><i class="bi bi-calendar-week"></i> Por frecuencia</div>
+        <div class="chart-box"><canvas id="chartFrecuencia"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  {% if es_admin %}
+  <div class="row g-3 mt-1">
+    <div class="col-md-12">
+      <div class="section">
+        <div class="section-header"><i class="bi bi-building"></i> Por empresa (por estado)</div>
+        <div class="chart-box tall"><canvas id="chartEmpresa"></canvas></div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <p class="text-muted small mt-3">
+    <i class="bi bi-info-circle"></i> Este dashboard es un complemento visual — no reemplaza el Excel exportable del Historial.
+  </p>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script id="dashboard-data" type="application/json">
+{{ {
+  "por_estado": data.por_estado,
+  "por_tipo": data.por_tipo,
+  "por_empresa_estado": data.por_empresa_estado,
+  "por_frecuencia": data.por_frecuencia,
+  "pct_a_tiempo": data.pct_a_tiempo
+} | tojson }}
+</script>
+<script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/obligaciones_dashboard.js') }}"></script>
+{% endblock %}

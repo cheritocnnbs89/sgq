@@ -1,0 +1,545 @@
+[2026-07-15 20:33:52,626] ERROR in app_routes: Fallo register_user_routes: View function mapping is overwriting an existing endpoint function: areas
+Traceback (most recent call last):
+  File "C:\Proyectos\V2 Proyecto Claude Code\PROYECTO MATIAS SGQ\Sili\Sili\Sili\modules\app_core\app_routes.py", line 178, in register_all_routes
+    register_user_routes(app)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Proyectos\V2 Proyecto Claude Code\PROYECTO MATIAS SGQ\Sili\Sili\Sili\modules\users\user_http.py", line 1000, in register_user_routes
+    @app.route("/areas", methods=["GET", "POST"], endpoint="areas")
+     ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mgissel\AppData\Roaming\Python\Python314\site-packages\flask\sansio\scaffold.py", line 362, in decorator
+    self.add_url_rule(rule, endpoint, f, **options)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mgissel\AppData\Roaming\Python\Python314\site-packages\flask\sansio\scaffold.py", line 47, in wrapper_func
+    return f(self, *args, **kwargs)
+  File "C:\Users\mgissel\AppData\Roaming\Python\Python314\site-packages\flask\sansio\app.py", line 657, in add_url_rule
+    raise AssertionError(
+    ...<2 lines>...
+    )
+AssertionError: View function mapping is overwriting an existing endpoint function: areas
+[2026-07-15 20:33:54,138] INFO in app_logging: RUTA: _home -> /
+[2026-07-15 20:33:54,140] INFO in app_logging: RUTA: accion_tarea_ajax -> /tareas/<int:task_id>/accion-ajax
+[2026-07-15 20:33:54,141] INFO in app_logging: RUTA: api_facturas_xml_search -> /api/facturas-xml/search
+[2026-07-15 20:33:54,142] INFO in app_logging: RUTA: api_get_equipo_acciones -> /reclamos/equipo/<int:equipo_id>/acciones
+[2026-07-15 20:33:54,143] INFO in app_logging: RUTA: api_inbound_email_create_task -> /api/inbound/email
+[2026-07-15 20:33:54,144] INFO in app_logging: RUTA: api_next_caja_chica_factura -> /api/secuencias/caja-chica/next
+[2026-07-15 20:33:54,145] INFO in app_logging: RUTA: api_om_analizar_descripcion -> /api/om/analizar-descripcion
+[2026-07-15 20:33:54,146] INFO in app_logging: RUTA: api_om_chat -> /api/om-chat
+[2026-07-15 20:33:54,147] INFO in app_logging: RUTA: api_om_chat_debug_sponsor -> /api/om-chat/debug-sponsor
+[2026-07-15 20:33:54,148] INFO in app_logging: RUTA: api_om_chat_reset -> /api/om-chat/reset
+[2026-07-15 20:33:54,149] INFO in app_logging: RUTA: api_om_mejorar_descripcion -> /api/om/mejorar-descripcion
+[2026-07-15 20:33:54,150] INFO in app_logging: RUTA: api_param_centros -> /api/param/centros/search
+[2026-07-15 20:33:54,151] INFO in app_logging: RUTA: api_param_centros_alias -> /api/param/centros
+[2026-07-15 20:33:54,152] INFO in app_logging: RUTA: api_param_motivos -> /api/param/motivos/search
+[2026-07-15 20:33:54,153] INFO in app_logging: RUTA: api_param_search -> /api/param/grupo/<int:group_id>/search
+[2026-07-15 20:33:54,154] INFO in app_logging: RUTA: api_proveedores_search -> /api/proveedores/search
+[2026-07-15 20:33:54,155] INFO in app_logging: RUTA: api_reclamos_clientes -> /api/reclamos/clientes
+[2026-07-15 20:33:54,156] INFO in app_logging: RUTA: api_save_equipo_acciones -> /reclamos/equipo/<int:equipo_id>/acciones
+[2026-07-15 20:33:54,157] INFO in app_logging: RUTA: api_sugerencias_proveedor -> /api/gastos/sugerencias-proveedor
+[2026-07-15 20:33:54,158] INFO in app_logging: RUTA: api_tareas_mejorar_comentario -> /api/tareas/mejorar-comentario
+[2026-07-15 20:33:54,159] INFO in app_logging: RUTA: aprobar_gasto -> /reembolsos/gastos/<int:gasto_id>/aprobar
+[2026-07-15 20:33:54,160] INFO in app_logging: RUTA: aprobar_gasto_masivo -> /reembolsos/gastos/aprobar-masivo
+[2026-07-15 20:33:54,160] INFO in app_logging: RUTA: areas -> /areas
+[2026-07-15 20:33:54,161] INFO in app_logging: RUTA: areas -> /areas
+[2026-07-15 20:33:54,162] INFO in app_logging: RUTA: bandeja_asignar -> /tareas/bandeja-soporte/<int:inbox_id>/asignar
+[2026-07-15 20:33:54,163] INFO in app_logging: RUTA: bandeja_attachments_list -> /tareas/bandeja-soporte/attachments/<path:message_id>.json
+[2026-07-15 20:33:54,164] INFO in app_logging: RUTA: bandeja_body -> /tareas/bandeja-soporte/<int:inbox_id>/body
+[2026-07-15 20:33:54,166] INFO in app_logging: RUTA: bandeja_descartar -> /tareas/bandeja-soporte/<int:inbox_id>/descartar
+[2026-07-15 20:33:54,166] INFO in app_logging: RUTA: bandeja_diagnostico -> /tareas/bandeja-soporte/diagnostico
+[2026-07-15 20:33:54,167] INFO in app_logging: RUTA: bandeja_img -> /tareas/bandeja-soporte/img/<path:message_id>/<attachment_id>
+[2026-07-15 20:33:54,168] INFO in app_logging: RUTA: bandeja_replies -> /tareas/bandeja-soporte/<int:inbox_id>/replies.json
+[2026-07-15 20:33:54,169] INFO in app_logging: RUTA: bandeja_soporte -> /tareas/bandeja-soporte
+[2026-07-15 20:33:54,170] INFO in app_logging: RUTA: cambiar_clave -> /cambiar_clave
+[2026-07-15 20:33:54,171] INFO in app_logging: RUTA: clientes -> /config/clientes
+[2026-07-15 20:33:54,172] INFO in app_logging: RUTA: clientes_carga_masiva -> /terceros/clientes/carga-masiva
+[2026-07-15 20:33:54,173] INFO in app_logging: RUTA: config -> /config
+[2026-07-15 20:33:54,174] INFO in app_logging: RUTA: contratos.actualizar_finanzas_contrato -> /contratos/compras/<int:contrato_id>/finanzas
+[2026-07-15 20:33:54,174] INFO in app_logging: RUTA: contratos.aprobacion -> /contratos/aprobacion
+[2026-07-15 20:33:54,175] INFO in app_logging: RUTA: contratos.compras_archivos_fragment -> /contratos/compras/<int:contrato_id>/archivos/fragment
+[2026-07-15 20:33:54,176] INFO in app_logging: RUTA: contratos.compras_editar -> /contratos/compras/<int:contrato_id>/editar
+[2026-07-15 20:33:54,177] INFO in app_logging: RUTA: contratos.compras_eliminar -> /contratos/compras/<int:contrato_id>/eliminar
+[2026-07-15 20:33:54,178] INFO in app_logging: RUTA: contratos.compras_lista -> /contratos/compras
+[2026-07-15 20:33:54,179] INFO in app_logging: RUTA: contratos.compras_nuevo -> /contratos/ingresar
+[2026-07-15 20:33:54,180] INFO in app_logging: RUTA: contratos.contab_editar -> /contratos/contab/<int:garantia_id>/editar
+[2026-07-15 20:33:54,181] INFO in app_logging: RUTA: contratos.contab_eliminar -> /contratos/contab/<int:garantia_id>/eliminar
+[2026-07-15 20:33:54,182] INFO in app_logging: RUTA: contratos.contab_lista -> /contratos/contab
+[2026-07-15 20:33:54,183] INFO in app_logging: RUTA: contratos.contab_nuevo -> /contratos/contab/nuevo
+[2026-07-15 20:33:54,183] INFO in app_logging: RUTA: contratos.descargar_archivo_contrato -> /contratos/archivo/<int:archivo_id>/descargar
+[2026-07-15 20:33:54,184] INFO in app_logging: RUTA: contratos.encolar_vencimientos_contratos -> /contratos/compras/encolar-vencimientos-contratos
+[2026-07-15 20:33:54,185] INFO in app_logging: RUTA: contratos.encolar_vencimientos_garantias -> /contratos/contab/encolar-vencimientos
+[2026-07-15 20:33:54,186] INFO in app_logging: RUTA: contratos.encolar_vencimientos_garantias_multi -> /contratos/contab/encolar-vencimientos-multi
+[2026-07-15 20:33:54,187] INFO in app_logging: RUTA: contratos.exportar_contratos_compras -> /contratos/compras/exportar
+[2026-07-15 20:33:54,188] INFO in app_logging: RUTA: contratos.exportar_garantias_contab -> /contratos/contab/exportar
+[2026-07-15 20:33:54,189] INFO in app_logging: RUTA: contratos.notificar_vencimientos_garantias -> /contratos/contab/notificar-vencimientos
+[2026-07-15 20:33:54,190] INFO in app_logging: RUTA: contratos.toggle_aprobacion_gf -> /contratos/aprobacion/toggle_gf
+[2026-07-15 20:33:54,191] INFO in app_logging: RUTA: contratos.toggle_aprobacion_jefe -> /contratos/compras/<int:contrato_id>/aprobj/toggle
+[2026-07-15 20:33:54,192] INFO in app_logging: RUTA: contratos.toggle_aprobacion_jefe_garantia -> /contratos/contab/<int:garantia_id>/aprobj/toggle
+[2026-07-15 20:33:54,193] INFO in app_logging: RUTA: contratos.toggle_aprobar_contrato -> /contratos/aprobacion/contrato/<int:contrato_id>/toggle
+[2026-07-15 20:33:54,194] INFO in app_logging: RUTA: contratos.toggle_aprobar_garantia -> /contratos/aprobacion/garantia/<int:garantia_id>/toggle
+[2026-07-15 20:33:54,195] INFO in app_logging: RUTA: contratos.ver_archivo_contrato -> /contratos/archivo/<int:archivo_id>/ver
+[2026-07-15 20:33:54,196] INFO in app_logging: RUTA: contratos.ver_contrato -> /contratos/ver/contrato/<int:contrato_id>
+[2026-07-15 20:33:54,197] INFO in app_logging: RUTA: contratos.ver_contrato_fragment -> /contratos/ver/contrato/<int:contrato_id>/fragment
+[2026-07-15 20:33:54,198] INFO in app_logging: RUTA: contratos.ver_contrato_full -> /contratos/ver/contrato/<int:contrato_id>/full
+[2026-07-15 20:33:54,199] INFO in app_logging: RUTA: contratos.ver_garantia -> /contratos/ver/garantia/<int:garantia_id>
+[2026-07-15 20:33:54,200] INFO in app_logging: RUTA: contratos.ver_garantia_fragment -> /contratos/ver/garantia/<int:garantia_id>/fragment
+[2026-07-15 20:33:54,202] INFO in app_logging: RUTA: dashboard -> /dashboard
+[2026-07-15 20:33:54,203] INFO in app_logging: RUTA: departamentos -> /departamentos
+[2026-07-15 20:33:54,204] INFO in app_logging: RUTA: departamentos_bulk -> /departamentos/bulk
+[2026-07-15 20:33:54,205] INFO in app_logging: RUTA: departamentos_bulk_template -> /departamentos/bulk/template
+[2026-07-15 20:33:54,206] INFO in app_logging: RUTA: descargar_evidencia_equipo_accion -> /reclamos/equipo-acciones/evidencias/<int:evidencia_id>/download
+[2026-07-15 20:33:54,206] INFO in app_logging: RUTA: editar_area -> /areas/<int:area_id>/editar
+[2026-07-15 20:33:54,207] INFO in app_logging: RUTA: editar_departamento -> /departamentos/<int:dep_id>/editar
+[2026-07-15 20:33:54,208] INFO in app_logging: RUTA: editar_gasto -> /reembolsos/gastos/<int:gasto_id>/editar
+[2026-07-15 20:33:54,209] INFO in app_logging: RUTA: editar_parametro -> /parametros/generales/<int:group_id>/editar
+[2026-07-15 20:33:54,210] INFO in app_logging: RUTA: editar_puesto -> /puestos/<int:pid>/editar
+[2026-07-15 20:33:54,211] INFO in app_logging: RUTA: editar_tarea -> /tareas/<int:task_id>/editar
+[2026-07-15 20:33:54,212] INFO in app_logging: RUTA: editar_tarea_ajax -> /tareas/<int:task_id>/editar-ajax
+[2026-07-15 20:33:54,213] INFO in app_logging: RUTA: editar_usuario -> /usuarios/<int:user_id>/editar
+[2026-07-15 20:33:54,213] INFO in app_logging: RUTA: editar_valor -> /parametros/generales/<int:group_id>/items/<int:item_id>/editar
+[2026-07-15 20:33:54,214] INFO in app_logging: RUTA: eliminar_area -> /areas/<int:area_id>/eliminar
+[2026-07-15 20:33:54,215] INFO in app_logging: RUTA: eliminar_departamento -> /departamentos/<int:dep_id>/eliminar
+[2026-07-15 20:33:54,216] INFO in app_logging: RUTA: eliminar_gasto -> /reembolsos/gastos/<int:gasto_id>/eliminar
+[2026-07-15 20:33:54,217] INFO in app_logging: RUTA: eliminar_gasto -> /reembolsos/gastos/<int:gid>/eliminar
+[2026-07-15 20:33:54,218] INFO in app_logging: RUTA: eliminar_parametro -> /parametros/generales/<int:group_id>/eliminar
+[2026-07-15 20:33:54,219] INFO in app_logging: RUTA: eliminar_tarea -> /tareas/<int:task_id>/eliminar
+[2026-07-15 20:33:54,220] INFO in app_logging: RUTA: eliminar_valor -> /parametros/generales/<int:group_id>/items/<int:item_id>/eliminar
+[2026-07-15 20:33:54,221] INFO in app_logging: RUTA: empresas.editar_empresa -> /empresas/<int:empresa_id>/editar
+[2026-07-15 20:33:54,222] INFO in app_logging: RUTA: empresas.eliminar_empresa -> /empresas/<int:empresa_id>/eliminar
+[2026-07-15 20:33:54,223] INFO in app_logging: RUTA: empresas.lista_empresas -> /empresas/
+[2026-07-15 20:33:54,224] INFO in app_logging: RUTA: empresas.nueva_empresa -> /empresas/nueva
+[2026-07-15 20:33:54,225] INFO in app_logging: RUTA: encuesta_diagnostico -> /encuestas/diagnostico/<int:task_id>
+[2026-07-15 20:33:54,226] INFO in app_logging: RUTA: encuesta_reenviar -> /encuestas/reenviar/<int:task_id>
+[2026-07-15 20:33:54,227] INFO in app_logging: RUTA: enviar_gasto_sap -> /reembolsos/gastos/<int:gasto_id>/enviar-sap
+[2026-07-15 20:33:54,228] INFO in app_logging: RUTA: enviar_gasto_sap_masivo -> /reembolsos/gastos/enviar-sap-masivo
+[2026-07-15 20:33:54,229] INFO in app_logging: RUTA: equipo_respuestas_add -> /reclamos/<int:reclamo_id>/equipo-respuestas/add
+[2026-07-15 20:33:54,310] INFO in app_logging: RUTA: equipo_respuestas_aprobar -> /reclamos/<int:reclamo_id>/equipo-respuestas/aprobar
+[2026-07-15 20:33:54,312] INFO in app_logging: RUTA: equipo_respuestas_guardar -> /reclamos/<int:reclamo_id>/equipo-respuestas/guardar
+[2026-07-15 20:33:54,313] INFO in app_logging: RUTA: equipo_respuestas_json -> /reclamos/<int:reclamo_id>/equipo-respuestas/json
+[2026-07-15 20:33:54,314] INFO in app_logging: RUTA: equipo_respuestas_rechazar -> /reclamos/<int:reclamo_id>/equipo-respuestas/rechazar
+[2026-07-15 20:33:54,315] INFO in app_logging: RUTA: equipo_respuestas_usuarios -> /reclamos/<int:reclamo_id>/equipo-respuestas/usuarios
+[2026-07-15 20:33:54,316] INFO in app_logging: RUTA: equipo_respuestas_ver_aporte -> /reclamos/<int:reclamo_id>/equipo-respuestas/aporte
+[2026-07-15 20:33:54,317] INFO in app_logging: RUTA: establecer_clave -> /establecer_clave
+[2026-07-15 20:33:54,318] INFO in app_logging: RUTA: export_gastos_csv -> /reembolsos/gastos/export/csv
+[2026-07-15 20:33:54,319] INFO in app_logging: RUTA: export_gastos_excel -> /reembolsos/gastos/export/excel
+[2026-07-15 20:33:54,320] INFO in app_logging: RUTA: export_gastos_pdf -> /reembolsos/gastos/export/pdf
+[2026-07-15 20:33:54,321] INFO in app_logging: RUTA: export_gastos_reporte_excel -> /reembolsos/gastos/export/reporte.xlsx
+[2026-07-15 20:33:54,322] INFO in app_logging: RUTA: exportar_tareas_excel -> /tareas/reporte/excel
+[2026-07-15 20:33:54,323] INFO in app_logging: RUTA: factura_xml_detalle -> /reembolsos/xml/<int:fid>
+[2026-07-15 20:33:54,324] INFO in app_logging: RUTA: factura_xml_eliminar -> /reembolsos/facturas-xml/<int:fid>/eliminar
+[2026-07-15 20:33:54,325] INFO in app_logging: RUTA: factura_xml_estado -> /reembolsos/xml/<int:fid>/estado
+[2026-07-15 20:33:54,326] INFO in app_logging: RUTA: factura_xml_resumen -> /reembolsos/api/factura_xml/<int:fid>/resumen
+[2026-07-15 20:33:54,327] INFO in app_logging: RUTA: facturas_xml_list -> /reembolsos/xml
+[2026-07-15 20:33:54,328] INFO in app_logging: RUTA: facturas_xml_procesar_carpeta -> /reembolsos/xml/procesar-carpeta
+[2026-07-15 20:33:54,329] INFO in app_logging: RUTA: facturas_xml_seedbilling_consumir -> /reembolsos/xml/seedbilling-consumir
+[2026-07-15 20:33:54,330] INFO in app_logging: RUTA: finalizar_accion -> /tareas/accion/<int:accion_id>/finalizar
+[2026-07-15 20:33:54,331] INFO in app_logging: RUTA: forgot_password -> /forgot_password
+[2026-07-15 20:33:54,332] INFO in app_logging: RUTA: gastos_dashboard -> /reembolsos/dashboard
+[2026-07-15 20:33:54,333] INFO in app_logging: RUTA: gastos_pendientes_aprobacion -> /reembolsos/gastos/pendientes-aprobacion
+[2026-07-15 20:33:54,334] INFO in app_logging: RUTA: gastos_tarjeta -> /gastos_tarjeta
+[2026-07-15 20:33:54,335] INFO in app_logging: RUTA: gateway_disp -> /g/<token>
+[2026-07-15 20:33:54,336] INFO in app_logging: RUTA: lista_gastos -> /reembolsos/gastos
+[2026-07-15 20:33:54,337] INFO in app_logging: RUTA: listar_encuestas -> /encuestas
+[2026-07-15 20:33:54,338] INFO in app_logging: RUTA: listar_tareas -> /tareas
+[2026-07-15 20:33:54,339] INFO in app_logging: RUTA: login -> /
+[2026-07-15 20:33:54,340] INFO in app_logging: RUTA: logout -> /logout
+[2026-07-15 20:33:54,341] INFO in app_logging: RUTA: menu.menu_admin -> /config/menu
+[2026-07-15 20:33:54,342] INFO in app_logging: RUTA: menu.menu_delete -> /config/menu/<int:item_id>/delete
+[2026-07-15 20:33:54,343] INFO in app_logging: RUTA: menu.menu_edit -> /config/menu/<int:item_id>/edit
+[2026-07-15 20:33:54,344] INFO in app_logging: RUTA: menu.menu_new -> /config/menu/new
+[2026-07-15 20:33:54,345] INFO in app_logging: RUTA: nueva_area -> /areas/nueva
+[2026-07-15 20:33:54,346] INFO in app_logging: RUTA: nueva_tarea -> /tareas/nueva
+[2026-07-15 20:33:54,347] INFO in app_logging: RUTA: nuevo_departamento -> /departamentos/nuevo
+[2026-07-15 20:33:54,348] INFO in app_logging: RUTA: nuevo_gasto -> /reembolsos/gastos/nuevo
+[2026-07-15 20:33:54,349] INFO in app_logging: RUTA: nuevo_parametro -> /parametros/generales/nuevo
+[2026-07-15 20:33:54,350] INFO in app_logging: RUTA: nuevo_usuario -> /usuarios/nuevo
+[2026-07-15 20:33:54,351] INFO in app_logging: RUTA: nuevo_valor -> /parametros/generales/<int:group_id>/items/nuevo
+[2026-07-15 20:33:54,352] INFO in app_logging: RUTA: obligaciones.carga_masiva -> /obligaciones/carga-masiva
+[2026-07-15 20:33:54,353] INFO in app_logging: RUTA: obligaciones.carga_masiva_confirmar -> /obligaciones/carga-masiva/confirmar
+[2026-07-15 20:33:54,354] INFO in app_logging: RUTA: obligaciones.cumplir_obligacion -> /obligaciones/<int:oblig_id>/cumplir
+[2026-07-15 20:33:54,355] INFO in app_logging: RUTA: obligaciones.dashboard_obligaciones -> /obligaciones/dashboard
+[2026-07-15 20:33:54,356] INFO in app_logging: RUTA: obligaciones.descargar_evidencia -> /obligaciones/<int:oblig_id>/evidencia/<int:evidencia_id>
+[2026-07-15 20:33:54,357] INFO in app_logging: RUTA: obligaciones.editar_frecuencia -> /obligaciones/frecuencias/<int:frecuencia_id>/editar
+[2026-07-15 20:33:54,358] INFO in app_logging: RUTA: obligaciones.editar_obligacion -> /obligaciones/<int:oblig_id>/editar
+[2026-07-15 20:33:54,360] INFO in app_logging: RUTA: obligaciones.eliminar_frecuencia -> /obligaciones/frecuencias/<int:frecuencia_id>/eliminar
+[2026-07-15 20:33:54,361] INFO in app_logging: RUTA: obligaciones.eliminar_obligacion -> /obligaciones/<int:oblig_id>/eliminar
+[2026-07-15 20:33:54,362] INFO in app_logging: RUTA: obligaciones.exportar_historial -> /obligaciones/historial/exportar
+[2026-07-15 20:33:54,363] INFO in app_logging: RUTA: obligaciones.historial_obligaciones -> /obligaciones/historial
+[2026-07-15 20:33:54,364] INFO in app_logging: RUTA: obligaciones.lista_frecuencias -> /obligaciones/frecuencias
+[2026-07-15 20:33:54,365] INFO in app_logging: RUTA: obligaciones.lista_obligaciones -> /obligaciones/
+[2026-07-15 20:33:54,366] INFO in app_logging: RUTA: obligaciones.nueva_frecuencia -> /obligaciones/frecuencias/nueva
+[2026-07-15 20:33:54,367] INFO in app_logging: RUTA: obligaciones.nueva_obligacion -> /obligaciones/nueva
+[2026-07-15 20:33:54,368] INFO in app_logging: RUTA: organigrama -> /organigrama
+[2026-07-15 20:33:54,369] INFO in app_logging: RUTA: param_carga_masiva -> /config/parametros/carga-masiva
+[2026-07-15 20:33:54,370] INFO in app_logging: RUTA: param_carga_plantilla -> /config/parametros/carga-masiva/plantilla
+[2026-07-15 20:33:54,370] INFO in app_logging: RUTA: parametro_items -> /parametros/generales/<int:group_id>/items
+[2026-07-15 20:33:54,371] INFO in app_logging: RUTA: parametros -> /parametros
+[2026-07-15 20:33:54,373] INFO in app_logging: RUTA: parametros_generales -> /parametros/generales
+[2026-07-15 20:33:54,374] INFO in app_logging: RUTA: parametros_generales_alias -> /parametros_generales
+[2026-07-15 20:33:54,375] INFO in app_logging: RUTA: planificador.planificador_aprobar -> /planificador/solicitudes/<int:sid>/aprobar
+[2026-07-15 20:33:54,376] INFO in app_logging: RUTA: planificador.planificador_aprobar_gerente -> /planificador/solicitudes/<int:sid>/aprobar-gerente
+[2026-07-15 20:33:54,377] INFO in app_logging: RUTA: planificador.planificador_aprobar_grupo -> /planificador/solicitudes/grupo/<int:grupo_id>/aprobar
+[2026-07-15 20:33:54,378] INFO in app_logging: RUTA: planificador.planificador_completar -> /planificador/solicitudes/<int:sid>/completar
+[2026-07-15 20:33:54,379] INFO in app_logging: RUTA: planificador.planificador_config_eliminar -> /planificador/configuracion/<int:cid>/eliminar
+[2026-07-15 20:33:54,380] INFO in app_logging: RUTA: planificador.planificador_configuracion -> /planificador/configuracion
+[2026-07-15 20:33:54,381] INFO in app_logging: RUTA: planificador.planificador_coordinar -> /planificador/solicitudes/<int:sid>/coordinar
+[2026-07-15 20:33:54,381] INFO in app_logging: RUTA: planificador.planificador_crear -> /planificador/solicitudes/crear
+[2026-07-15 20:33:54,382] INFO in app_logging: RUTA: planificador.planificador_detalle -> /planificador/solicitudes/<int:sid>/detalle
+[2026-07-15 20:33:54,383] INFO in app_logging: RUTA: planificador.planificador_eliminar -> /planificador/solicitudes/<int:sid>/eliminar
+[2026-07-15 20:33:54,384] INFO in app_logging: RUTA: planificador.planificador_pendientes_mismo_tipo -> /planificador/solicitudes/<int:sid>/pendientes-mismo-tipo
+[2026-07-15 20:33:54,385] INFO in app_logging: RUTA: planificador.planificador_reagendar -> /planificador/solicitudes/<int:sid>/reagendar
+[2026-07-15 20:33:54,386] INFO in app_logging: RUTA: planificador.planificador_rechazar -> /planificador/solicitudes/<int:sid>/rechazar
+[2026-07-15 20:33:54,387] INFO in app_logging: RUTA: planificador.planificador_rechazar_gerente -> /planificador/solicitudes/<int:sid>/rechazar-gerente
+[2026-07-15 20:33:54,388] INFO in app_logging: RUTA: planificador.planificador_reporte -> /planificador/solicitudes/reporte
+[2026-07-15 20:33:54,389] INFO in app_logging: RUTA: planificador.planificador_reporte_excel -> /planificador/solicitudes/reporte.xlsx
+[2026-07-15 20:33:54,390] INFO in app_logging: RUTA: planificador.planificador_reverse_geocode -> /planificador/reverse-geocode
+[2026-07-15 20:33:54,391] INFO in app_logging: RUTA: planificador.planificador_set_telegram_chat_id -> /planificador/configuracion/telegram-chat-id
+[2026-07-15 20:33:54,392] INFO in app_logging: RUTA: planificador.planificador_solicitudes -> /planificador/solicitudes
+[2026-07-15 20:33:54,393] INFO in app_logging: RUTA: planificador.planificador_tipo_flags -> /planificador/configuracion/tipo-flags
+[2026-07-15 20:33:54,394] INFO in app_logging: RUTA: planilla_mensual.admin_send_weekly_report -> /planilla-mensual/admin/send-weekly-report
+[2026-07-15 20:33:54,395] INFO in app_logging: RUTA: planilla_mensual.api_add_feriado -> /planilla-mensual/api/feriados
+[2026-07-15 20:33:54,396] INFO in app_logging: RUTA: planilla_mensual.api_delete_feriado -> /planilla-mensual/api/feriados/<int:fid>
+[2026-07-15 20:33:54,397] INFO in app_logging: RUTA: planilla_mensual.api_list_feriados -> /planilla-mensual/api/feriados
+[2026-07-15 20:33:54,398] INFO in app_logging: RUTA: planilla_mensual.api_okrs_create -> /planilla-mensual/api/okrs
+[2026-07-15 20:33:54,399] INFO in app_logging: RUTA: planilla_mensual.api_okrs_list -> /planilla-mensual/api/okrs
+[2026-07-15 20:33:54,400] INFO in app_logging: RUTA: planilla_mensual.api_resultados_clave_create -> /planilla-mensual/api/resultados-clave
+[2026-07-15 20:33:54,401] INFO in app_logging: RUTA: planilla_mensual.api_resultados_clave_list -> /planilla-mensual/api/okrs/<int:okr_id>/resultados-clave
+[2026-07-15 20:33:54,402] INFO in app_logging: RUTA: planilla_mensual.api_usuarios_by_dep -> /planilla-mensual/api/usuarios/by-dep/<int:depid>
+[2026-07-15 20:33:54,403] INFO in app_logging: RUTA: planilla_mensual.dept_cfg -> /planilla-mensual/config/departamento
+[2026-07-15 20:33:54,404] INFO in app_logging: RUTA: planilla_mensual.evidence_get -> /planilla-mensual/evidencia/<int:tarea_id>/<fecha>
+[2026-07-15 20:33:54,405] INFO in app_logging: RUTA: planilla_mensual.evidence_meta -> /planilla-mensual/evidencia/meta/<int:tarea_id>/<fecha>
+[2026-07-15 20:33:54,406] INFO in app_logging: RUTA: planilla_mensual.evidence_post -> /planilla-mensual/evidencia
+[2026-07-15 20:33:54,407] INFO in app_logging: RUTA: planilla_mensual.mail_template -> /planilla-mensual/config/plantilla
+[2026-07-15 20:33:54,408] INFO in app_logging: RUTA: planilla_mensual.planilla -> /planilla-mensual/
+[2026-07-15 20:33:54,409] INFO in app_logging: RUTA: planilla_mensual.planilla_dashboard -> /planilla-mensual/dashboard
+[2026-07-15 20:33:54,410] INFO in app_logging: RUTA: planilla_mensual.tareas_delete -> /planilla-mensual/tareas/<int:tid>/eliminar
+[2026-07-15 20:33:54,411] INFO in app_logging: RUTA: planilla_mensual.tareas_edit -> /planilla-mensual/tareas/<int:tid>/editar
+[2026-07-15 20:33:54,412] INFO in app_logging: RUTA: planilla_mensual.tareas_list -> /planilla-mensual/tareas
+[2026-07-15 20:33:54,414] INFO in app_logging: RUTA: planilla_mensual.tareas_new -> /planilla-mensual/tareas/nueva
+[2026-07-15 20:33:54,501] INFO in app_logging: RUTA: planilla_mensual.toggle_check -> /planilla-mensual/check
+[2026-07-15 20:33:54,503] INFO in app_logging: RUTA: planilla_mensual.toggle_evidence_mode -> /planilla-mensual/config/evidence-mode
+[2026-07-15 20:33:54,504] INFO in app_logging: RUTA: politicas_seguridad -> /politicas_seguridad
+[2026-07-15 20:33:54,505] INFO in app_logging: RUTA: proveedores -> /config/proveedores
+[2026-07-15 20:33:54,505] INFO in app_logging: RUTA: proveedores_carga_masiva -> /terceros/proveedores/carga-masiva
+[2026-07-15 20:33:54,506] INFO in app_logging: RUTA: proveedores_carga_plantilla -> /terceros/proveedores/carga-masiva/plantilla
+[2026-07-15 20:33:54,507] INFO in app_logging: RUTA: puestos -> /puestos
+[2026-07-15 20:33:54,508] INFO in app_logging: RUTA: puestos_import -> /puestos/import
+[2026-07-15 20:33:54,509] INFO in app_logging: RUTA: rechazar_gasto_notificar_gerente -> /reembolsos/gastos/<int:gasto_id>/rechazar-notificar
+[2026-07-15 20:33:54,510] INFO in app_logging: RUTA: reclamo_detalle_json -> /reclamos/<int:reclamo_id>/detalle-json
+[2026-07-15 20:33:54,511] INFO in app_logging: RUTA: reclamo_equipo_accion_cumplir -> /reclamos/equipo-acciones/<int:accion_id>/cumplir
+[2026-07-15 20:33:54,512] INFO in app_logging: RUTA: reclamo_equipo_accion_evidencia_download -> /reclamos/equipo-acciones/evidencias/<int:evidencia_id>/download
+[2026-07-15 20:33:54,512] INFO in app_logging: RUTA: reclamo_equipo_accion_evidencia_eliminar -> /reclamos/equipo-acciones/evidencias/<int:evidencia_id>/eliminar
+[2026-07-15 20:33:54,513] INFO in app_logging: RUTA: reclamo_equipo_accion_guardar_observacion -> /reclamos/equipo-acciones/<int:accion_id>/observacion
+[2026-07-15 20:33:54,514] INFO in app_logging: RUTA: reclamo_equipo_accion_subir_evidencia -> /reclamos/equipo-acciones/<int:accion_id>/evidencia
+[2026-07-15 20:33:54,515] INFO in app_logging: RUTA: reclamo_equipo_acciones_seguimiento -> /reclamos/equipo-acciones/<int:respuesta_id>/seguimiento
+[2026-07-15 20:33:54,516] INFO in app_logging: RUTA: reclamo_equipo_respuestas_eliminar -> /reclamos/<int:reclamo_id>/equipo-respuestas/<int:er_id>/eliminar
+[2026-07-15 20:33:54,517] INFO in app_logging: RUTA: reclamo_imputacion_respuesta_detalle -> /reclamos/imputacion/<int:imp_id>/respuesta-detalle
+[2026-07-15 20:33:54,517] INFO in app_logging: RUTA: reclamo_imputado_accion_cumplir -> /reclamos/imputado-acciones/<int:accion_id>/cumplir
+[2026-07-15 20:33:54,518] INFO in app_logging: RUTA: reclamo_imputado_accion_evidencia -> /reclamos/imputado-acciones/<int:accion_id>/evidencia
+[2026-07-15 20:33:54,519] INFO in app_logging: RUTA: reclamo_imputado_accion_evidencia_download -> /reclamos/imputado-acciones/evidencias/<int:evidencia_id>/download
+[2026-07-15 20:33:54,520] INFO in app_logging: RUTA: reclamo_imputado_accion_evidencia_eliminar -> /reclamos/imputado-acciones/evidencias/<int:evidencia_id>/eliminar
+[2026-07-15 20:33:54,521] INFO in app_logging: RUTA: reclamo_imputado_accion_observacion -> /reclamos/imputado-acciones/<int:accion_id>/observacion
+[2026-07-15 20:33:54,522] INFO in app_logging: RUTA: reclamo_responder_equipo -> /reclamos/imputacion/<int:imputacion_id>/responder_equipo
+[2026-07-15 20:33:54,523] INFO in app_logging: RUTA: reclamo_respuestas_equipo_json -> /reclamos/imputacion/<int:imputacion_id>/respuestas_equipo/json
+[2026-07-15 20:33:54,524] INFO in app_logging: RUTA: reclamos -> /reclamos
+[2026-07-15 20:33:54,525] INFO in app_logging: RUTA: reclamos_acciones_pendientes_evidencia -> /reclamos/<int:reclamo_id>/acciones-pendientes-evidencia
+[2026-07-15 20:33:54,526] INFO in app_logging: RUTA: reclamos_add_adjuntos -> /reclamos/<int:reclamo_id>/adjuntos
+[2026-07-15 20:33:54,526] INFO in app_logging: RUTA: reclamos_api_adjuntos -> /reclamos/api/<int:reclamo_id>/adjuntos
+[2026-07-15 20:33:54,527] INFO in app_logging: RUTA: reclamos_api_cantones -> /reclamos/api/cantones
+[2026-07-15 20:33:54,528] INFO in app_logging: RUTA: reclamos_api_dashboard_clientes_procesos -> /api/dashboard/clientes_procesos
+[2026-07-15 20:33:54,529] INFO in app_logging: RUTA: reclamos_api_dashboard_departamentos -> /api/dashboard/departamentos
+[2026-07-15 20:33:54,530] INFO in app_logging: RUTA: reclamos_api_dashboard_estados -> /api/dashboard/estados
+[2026-07-15 20:33:54,531] INFO in app_logging: RUTA: reclamos_api_dashboard_imputados -> /api/dashboard/imputados
+[2026-07-15 20:33:54,532] INFO in app_logging: RUTA: reclamos_api_dashboard_resumen -> /api/dashboard/resumen
+[2026-07-15 20:33:54,532] INFO in app_logging: RUTA: reclamos_api_dashboard_sla -> /api/dashboard/sla
+[2026-07-15 20:33:54,533] INFO in app_logging: RUTA: reclamos_api_materiales_nuevo -> /reclamos/api/materiales/nuevo
+[2026-07-15 20:33:54,534] INFO in app_logging: RUTA: reclamos_api_proceso_sponsor_principal -> /reclamos/api/proceso/<int:proceso_id>/sponsor-principal
+[2026-07-15 20:33:54,535] INFO in app_logging: RUTA: reclamos_api_proceso_sponsors -> /reclamos/api/proceso/<int:proceso_id>/sponsors
+[2026-07-15 20:33:54,536] INFO in app_logging: RUTA: reclamos_api_provincias -> /reclamos/api/provincias
+[2026-07-15 20:33:54,537] INFO in app_logging: RUTA: reclamos_api_respuestas -> /reclamos/api/<int:reclamo_id>/respuestas
+[2026-07-15 20:33:54,538] INFO in app_logging: RUTA: reclamos_api_respuestas_detalle -> /reclamos/api/<int:reclamo_id>/respuestas-detalle
+[2026-07-15 20:33:54,539] INFO in app_logging: RUTA: reclamos_api_subtipos -> /reclamos/api/subtipos
+[2026-07-15 20:33:54,540] INFO in app_logging: RUTA: reclamos_aprobar_imputacion -> /reclamos/imputacion/<int:imp_id>/aprobar
+[2026-07-15 20:33:54,540] INFO in app_logging: RUTA: reclamos_dashboard -> /reclamos/dashboard
+[2026-07-15 20:33:54,541] INFO in app_logging: RUTA: reclamos_delete_adjunto -> /reclamos/adjunto/<int:adj_id>/delete
+[2026-07-15 20:33:54,542] INFO in app_logging: RUTA: reclamos_download_adjunto -> /reclamos/adjunto/<int:adj_id>/download
+[2026-07-15 20:33:54,543] INFO in app_logging: RUTA: reclamos_editar_proceso -> /reclamos/<int:reclamo_id>/editar-proceso
+[2026-07-15 20:33:54,544] INFO in app_logging: RUTA: reclamos_eliminar -> /reclamos/<int:reclamo_id>/eliminar
+[2026-07-15 20:33:54,545] INFO in app_logging: RUTA: reclamos_equipo_aprobar -> /reclamos/equipo/<int:eq_id>/aprobar
+[2026-07-15 20:33:54,546] INFO in app_logging: RUTA: reclamos_equipo_asignar -> /reclamos/<int:reclamo_id>/equipo/asignar
+[2026-07-15 20:33:54,546] INFO in app_logging: RUTA: reclamos_equipo_responder -> /reclamos/equipo/<int:eq_id>/responder
+[2026-07-15 20:33:54,547] INFO in app_logging: RUTA: reclamos_export_mis -> /reclamos/export/mis
+[2026-07-15 20:33:54,548] INFO in app_logging: RUTA: reclamos_generar_carta_pdf -> /reclamos/<int:reclamo_id>/generar-carta-pdf
+[2026-07-15 20:33:54,549] INFO in app_logging: RUTA: reclamos_ia_mejorar_respuesta -> /reclamos/ia/mejorar_respuesta
+[2026-07-15 20:33:54,550] INFO in app_logging: RUTA: reclamos_nuevo -> /reclamos/nuevo
+[2026-07-15 20:33:54,551] INFO in app_logging: RUTA: reclamos_responder_imputado -> /reclamos/imputacion/<int:imp_id>/responder
+[2026-07-15 20:33:54,551] INFO in app_logging: RUTA: reclamos_subir_carta_cliente -> /reclamos/<int:reclamo_id>/carta-cliente
+[2026-07-15 20:33:54,552] INFO in app_logging: RUTA: reclamos_usuario_por_cedula -> /reclamos/api/usuario_por_cedula/<cedula>
+[2026-07-15 20:33:54,553] INFO in app_logging: RUTA: reclamos_validar_creador -> /reclamos/<int:reclamo_id>/validar-creador
+[2026-07-15 20:33:54,554] INFO in app_logging: RUTA: reclamos_validar_respuesta -> /reclamos/imputacion/<int:imp_id>/validar_respuesta
+[2026-07-15 20:33:54,555] INFO in app_logging: RUTA: reembolsos -> /reembolsos
+[2026-07-15 20:33:54,556] INFO in app_logging: RUTA: reembolsos_efectivo -> /reembolsos_efectivo
+[2026-07-15 20:33:54,556] INFO in app_logging: RUTA: reenviar_observacion -> /tareas/reenviar-accion/<int:accion_id>
+[2026-07-15 20:33:54,557] INFO in app_logging: RUTA: reporte_gastos -> /reembolsos/gastos/reporte
+[2026-07-15 20:33:54,558] INFO in app_logging: RUTA: responder_encuesta -> /encuestas/responder/<token>
+[2026-07-15 20:33:54,559] INFO in app_logging: RUTA: responder_encuesta_desde_bandeja -> /encuestas/tarea/<int:task_id>/responder
+[2026-07-15 20:33:54,560] INFO in app_logging: RUTA: roles_permisos -> /roles-permisos
+[2026-07-15 20:33:54,561] INFO in app_logging: RUTA: scheduler_admin.scheduler_admin_view -> /admin/scheduler
+[2026-07-15 20:33:54,562] INFO in app_logging: RUTA: scheduler_admin.scheduler_run_now -> /admin/scheduler/<job_key>/run
+[2026-07-15 20:33:54,563] INFO in app_logging: RUTA: scheduler_admin.scheduler_toggle -> /admin/scheduler/<job_key>/toggle
+[2026-07-15 20:33:54,563] INFO in app_logging: RUTA: scheduler_admin.scheduler_update_config -> /admin/scheduler/<job_key>/config
+[2026-07-15 20:33:54,564] INFO in app_logging: RUTA: seguridad -> /seguridad
+[2026-07-15 20:33:54,565] INFO in app_logging: RUTA: static -> /static/<path:filename>
+[2026-07-15 20:33:54,566] INFO in app_logging: RUTA: tarea_detalle_json -> /tareas/<int:task_id>/detalle-json
+[2026-07-15 20:33:54,567] INFO in app_logging: RUTA: tarea_json -> /tareas/<int:task_id>/json
+[2026-07-15 20:33:54,568] INFO in app_logging: RUTA: tareas -> /tareas
+[2026-07-15 20:33:54,569] INFO in app_logging: RUTA: telegram.telegram_setup_webhook -> /telegram/setup-webhook
+[2026-07-15 20:33:54,569] INFO in app_logging: RUTA: telegram.telegram_status -> /telegram/status
+[2026-07-15 20:33:54,570] INFO in app_logging: RUTA: telegram.telegram_webhook -> /telegram/webhook
+[2026-07-15 20:33:54,571] INFO in app_logging: RUTA: tercero_editar -> /config/terceros/<int:tid>/editar
+[2026-07-15 20:33:54,572] INFO in app_logging: RUTA: tercero_eliminar -> /config/terceros/<int:tid>/eliminar
+[2026-07-15 20:33:54,573] INFO in app_logging: RUTA: tercero_nuevo -> /config/terceros/nuevo/<tipo>
+[2026-07-15 20:33:54,573] INFO in app_logging: RUTA: toggle_puesto -> /puestos/<int:pid>/toggle
+[2026-07-15 20:33:54,574] INFO in app_logging: RUTA: usuarios -> /usuarios
+[2026-07-15 20:33:54,575] INFO in app_logging: RUTA: usuarios_asignar_jefe -> /usuarios/asignar-jefe
+[2026-07-15 20:33:54,576] INFO in app_logging: RUTA: usuarios_bulk_template -> /usuarios/plantilla.csv
+[2026-07-15 20:33:54,576] INFO in app_logging: RUTA: usuarios_bulk_upload -> /usuarios/bulk
+[2026-07-15 20:33:54,577] INFO in app_logging: RUTA: usuarios_eliminar -> /usuarios/<int:user_id>/eliminar
+[2026-07-15 20:33:54,578] INFO in app_logging: RUTA: usuarios_reporte_csv -> /usuarios/reporte.csv
+[2026-07-15 20:33:54,579] INFO in app_logging: RUTA: ver_gasto -> /reembolsos/gastos/<int:gid>/ver
+[2026-07-15 20:33:54,580] INFO in app_logging: RUTA: ver_gasto2 -> /reembolsos/gastos/<int:gid>/ver
+[2026-07-15 20:33:54,580] INFO in app_logging: RUTA: ver_gasto_adjuntos -> /reembolsos/gastos/<int:gid>/adjuntos
+[2026-07-15 20:33:54,581] INFO in app_logging: RUTA: ver_tarea -> /tareas/<int:task_id>/ver
+[2026-07-15 20:33:54,582] INFO in app_logging: RUTA: verificar_codigo -> /verificar_codigo
+[2026-07-15 20:33:54,583] INFO in app_logging: RUTA: verificar_login_codigo -> /verificar_login_codigo
+[2026-07-15 20:33:54,584] INFO in app_logging: RUTA: whatsapp.recibir_mensaje -> /whatsapp/webhook
+[2026-07-15 20:33:54,585] INFO in app_logging: RUTA: whatsapp.verify -> /whatsapp/webhook
+[2026-07-15 20:33:54,586] INFO in app_logging: RUTA: xml.api_parse -> /xml/api/parse
+[2026-07-15 20:33:54,586] INFO in app_logging: RUTA: xml.index -> /xml/
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.31.39:5000
+Press CTRL+C to quit
+[2026-07-15 20:35:36,767] INFO in app_perf: PERF GET / -> 200 | 791.61 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:35:36] "GET / HTTP/1.1" 200 -
+[2026-07-15 20:35:36,910] INFO in app_perf: PERF GET /static/css/bootstrap-icons.css -> 200 | 23.87 ms | sql=0 (0.00 ms)
+[2026-07-15 20:35:36,912] INFO in app_perf: PERF GET /static/css/bootstrap.min.css -> 200 | 17.26 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:35:36] "GET /static/css/bootstrap-icons.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:35:36] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+[2026-07-15 20:35:37,207] INFO in app_perf: PERF GET /static/css/login/login.css -> 200 | 7.63 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:35:37] "GET /static/css/login/login.css HTTP/1.1" 200 -
+[2026-07-15 20:35:37,216] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js -> 200 | 11.00 ms | sql=0 (0.00 ms)
+[2026-07-15 20:35:37,241] INFO in app_perf: PERF GET /static/js/login/login.js -> 200 | 26.76 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:35:37] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:35:37] "GET /static/js/login/login.js HTTP/1.1" 200 -
+[2026-07-15 20:35:37,718] INFO in app_perf: PERF GET /static/css/fonts/bootstrap-icons.woff2 -> 200 | 5.12 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:35:37] "GET /static/css/fonts/bootstrap-icons.woff2?e34853135f9e39acf64315236852cd5a HTTP/1.1" 200 -
+[2026-07-15 20:35:43,175] INFO in app_perf: PERF GET /favicon.ico -> 404 | 2.35 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:35:43] "GET /favicon.ico HTTP/1.1" 404 -
+[2026-07-15 20:35:59,707] INFO in auth_services: MFA token insert tomó 0.088 s
+[2026-07-15 20:35:59,723] INFO in auth_services: MFA email tomó 0.014 s
+[2026-07-15 20:36:00,012] INFO in app_perf: PERF POST / -> 302 | 2984.15 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:36:00] "POST / HTTP/1.1" 302 -
+[2026-07-15 20:36:01,085] INFO in app_perf: PERF GET /verificar_login_codigo -> 200 | 979.00 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:36:01] "GET /verificar_login_codigo HTTP/1.1" 200 -
+[2026-07-15 20:36:01,400] INFO in app_perf: PERF GET /static/css/bootstrap.min.css -> 200 | 3.17 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:36:01] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+[2026-07-15 20:36:01,807] INFO in app_perf: PERF GET /static/css/bootstrap-icons.css -> 200 | 2.90 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:36:01] "GET /static/css/bootstrap-icons.css HTTP/1.1" 200 -
+[2026-07-15 20:36:01,892] INFO in app_perf: PERF GET /static/css/login/verificar_login_codigo.css -> 200 | 4.20 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:36:01] "GET /static/css/login/verificar_login_codigo.css HTTP/1.1" 200 -
+[2026-07-15 20:36:01,952] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js -> 200 | 2.37 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:36:01] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+[2026-07-15 20:36:02,180] INFO in app_perf: PERF GET /static/js/login/verificar_login_codigo.js -> 200 | 8.02 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:36:02] "GET /static/js/login/verificar_login_codigo.js HTTP/1.1" 200 -
+[2026-07-15 20:36:03,737] INFO in app_perf: PERF GET /static/css/fonts/bootstrap-icons.woff2 -> 200 | 2.25 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:36:03] "GET /static/css/fonts/bootstrap-icons.woff2?e34853135f9e39acf64315236852cd5a HTTP/1.1" 200 -
+[2026-07-15 20:37:11,440] INFO in app_perf: PERF POST /verificar_login_codigo -> 302 | 2707.39 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:11] "POST /verificar_login_codigo HTTP/1.1" 302 -
+[2026-07-15 20:37:11,704] INFO in app_perf: PERF GET /reclamos/dashboard -> 302 | 7.55 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:11] "GET /reclamos/dashboard HTTP/1.1" 302 -
+[2026-07-15 20:37:11,888] WARNING in app_gateway: GATEWAY data={'p': '/reclamos/dashboard'}
+[2026-07-15 20:37:11,890] WARNING in app_gateway: GATEWAY raw_path=/reclamos/dashboard
+[2026-07-15 20:37:11,891] WARNING in app_gateway: GATEWAY request.path=/g/eyJwIjoiL3JlY2xhbW9zL2Rhc2hib2FyZCJ9.hRayqeLZGrE1aMDHAwmn-n0Z1qw
+[2026-07-15 20:37:11,892] WARNING in app_gateway: GATEWAY request.method=GET
+[2026-07-15 20:37:11,893] WARNING in app_gateway: GATEWAY parts.path=/reclamos/dashboard
+[2026-07-15 20:37:11,894] WARNING in app_gateway: GATEWAY parts.query=
+[2026-07-15 20:37:11,896] WARNING in app_gateway: GATEWAY forward_qs=
+[2026-07-15 20:37:11,897] WARNING in app_gateway: GATEWAY match=('reclamos_dashboard', {})
+[2026-07-15 20:37:12,274] WARNING in app_gateway: GATEWAY despachando interno path=/reclamos/dashboard method=GET qs=
+CSP debt detected in response: style attribute inline | path=/reclamos/dashboard
+[2026-07-15 20:37:16,241] WARNING in app_gateway: GATEWAY response type=<class 'flask.wrappers.Response'> status=200 OK
+[2026-07-15 20:37:16,242] INFO in app_perf: PERF GET /reclamos/dashboard -> 200 | 3945.02 ms | sql=0 (0.00 ms)
+CSP debt detected in response: style attribute inline | path=/g/eyJwIjoiL3JlY2xhbW9zL2Rhc2hib2FyZCJ9.hRayqeLZGrE1aMDHAwmn-n0Z1qw
+[2026-07-15 20:37:16,259] INFO in app_perf: PERF GET /g/eyJwIjoiL3JlY2xhbW9zL2Rhc2hib2FyZCJ9.hRayqeLZGrE1aMDHAwmn-n0Z1qw -> 200 | 3961.56 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:16] "GET /g/eyJwIjoiL3JlY2xhbW9zL2Rhc2hib2FyZCJ9.hRayqeLZGrE1aMDHAwmn-n0Z1qw HTTP/1.1" 200 -
+[2026-07-15 20:37:16,774] INFO in app_perf: PERF GET /static/css/bootstrap.min.css -> 200 | 4.35 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:16] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+[2026-07-15 20:37:16,807] INFO in app_perf: PERF GET /static/css/bootstrap-icons.css -> 200 | 4.55 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:16] "GET /static/css/bootstrap-icons.css HTTP/1.1" 200 -
+[2026-07-15 20:37:16,884] INFO in app_perf: PERF GET /static/css/base.css -> 200 | 5.26 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:16] "GET /static/css/base.css HTTP/1.1" 200 -
+[2026-07-15 20:37:17,213] INFO in app_perf: PERF GET /static/css/planilla_mensual.css -> 200 | 140.81 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:17] "GET /static/css/planilla_mensual.css HTTP/1.1" 200 -
+[2026-07-15 20:37:17,269] INFO in app_perf: PERF GET /static/css/reclamos/reclamos_dashboard.css -> 200 | 49.60 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:17] "GET /static/css/reclamos/reclamos_dashboard.css HTTP/1.1" 200 -
+[2026-07-15 20:37:17,300] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js -> 200 | 23.83 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:17] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+[2026-07-15 20:37:17,832] INFO in app_perf: PERF GET /static/js/base.js -> 200 | 31.67 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:17] "GET /static/js/base.js HTTP/1.1" 200 -
+[2026-07-15 20:37:18,294] INFO in app_perf: PERF GET /static/css/fonts/bootstrap-icons.woff2 -> 200 | 67.97 ms | sql=0 (0.00 ms)
+[2026-07-15 20:37:18,304] INFO in app_perf: PERF GET /static/js/chart.umd.min.js -> 200 | 76.39 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:18] "GET /static/css/fonts/bootstrap-icons.woff2?e34853135f9e39acf64315236852cd5a HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:37:18] "GET /static/js/chart.umd.min.js HTTP/1.1" 200 -
+[2026-07-15 20:37:18,351] INFO in app_perf: PERF GET /static/js/reclamos/reclamos_dashboard.js -> 200 | 32.15 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:18] "GET /static/js/reclamos/reclamos_dashboard.js HTTP/1.1" 200 -
+[2026-07-15 20:37:40,065] INFO in app_perf: PERF GET /static/css/bootstrap.min.css -> 200 | 25.27 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:40] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+[2026-07-15 20:37:40,125] INFO in app_perf: PERF GET /static/css/bootstrap-icons.css -> 200 | 18.33 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:40] "GET /static/css/bootstrap-icons.css HTTP/1.1" 200 -
+[2026-07-15 20:37:40,219] INFO in app_perf: PERF GET /static/css/base.css -> 200 | 44.69 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:40] "GET /static/css/base.css HTTP/1.1" 200 -
+[2026-07-15 20:37:40,314] INFO in app_perf: PERF GET /static/css/planilla_mensual.css -> 200 | 13.40 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:40] "GET /static/css/planilla_mensual.css HTTP/1.1" 200 -
+[2026-07-15 20:37:40,396] INFO in app_perf: PERF GET /static/css/reclamos/reclamos_dashboard.css -> 200 | 17.36 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:40] "GET /static/css/reclamos/reclamos_dashboard.css HTTP/1.1" 200 -
+[2026-07-15 20:37:40,728] INFO in app_perf: PERF GET /.well-known/appspecific/com.chrome.devtools.json -> 404 | 18.60 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:40] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+[2026-07-15 20:37:48,429] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js.map -> 200 | 63.00 ms | sql=0 (0.00 ms)
+[2026-07-15 20:37:48,432] INFO in app_perf: PERF GET /static/js/chart.umd.min.js.map -> 404 | 19.92 ms | sql=0 (0.00 ms)
+[2026-07-15 20:37:48,434] INFO in app_perf: PERF GET /obligaciones/dashboard -> 302 | 11.64 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:48] "GET /static/js/bootstrap.bundle.min.js.map HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:37:48] "GET /static/js/chart.umd.min.js.map HTTP/1.1" 404 -
+127.0.0.1 - - [15/Jul/2026 20:37:48] "GET /obligaciones/dashboard HTTP/1.1" 302 -
+[2026-07-15 20:37:48,681] WARNING in app_gateway: GATEWAY data={'p': '/obligaciones/dashboard'}
+[2026-07-15 20:37:48,683] WARNING in app_gateway: GATEWAY raw_path=/obligaciones/dashboard
+[2026-07-15 20:37:48,684] WARNING in app_gateway: GATEWAY request.path=/g/eyJwIjoiL29ibGlnYWNpb25lcy9kYXNoYm9hcmQifQ.wdfiG0RVeC9iLao_O9N_io_Nk50
+[2026-07-15 20:37:48,687] WARNING in app_gateway: GATEWAY request.method=GET
+[2026-07-15 20:37:48,689] WARNING in app_gateway: GATEWAY parts.path=/obligaciones/dashboard
+[2026-07-15 20:37:48,690] WARNING in app_gateway: GATEWAY parts.query=
+[2026-07-15 20:37:48,692] WARNING in app_gateway: GATEWAY forward_qs=
+[2026-07-15 20:37:48,693] WARNING in app_gateway: GATEWAY match=('obligaciones.dashboard_obligaciones', {})
+[2026-07-15 20:37:48,698] WARNING in app_gateway: GATEWAY despachando interno path=/obligaciones/dashboard method=GET qs=
+[2026-07-15 20:37:48,947] INFO in app_perf: PERF GET /static/css/bootstrap.min.css.map -> 200 | 12.68 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:48] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+[2026-07-15 20:37:52,192] WARNING in app_gateway: GATEWAY response type=<class 'flask.wrappers.Response'> status=200 OK
+[2026-07-15 20:37:52,194] INFO in app_perf: PERF GET /obligaciones/dashboard -> 200 | 3248.50 ms | sql=0 (0.00 ms)
+[2026-07-15 20:37:53,095] INFO in app_perf: PERF GET /g/eyJwIjoiL29ibGlnYWNpb25lcy9kYXNoYm9hcmQifQ.wdfiG0RVeC9iLao_O9N_io_Nk50 -> 200 | 4149.64 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:53] "GET /g/eyJwIjoiL29ibGlnYWNpb25lcy9kYXNoYm9hcmQifQ.wdfiG0RVeC9iLao_O9N_io_Nk50 HTTP/1.1" 200 -
+[2026-07-15 20:37:53,794] INFO in app_perf: PERF GET /static/css/bootstrap.min.css -> 200 | 20.59 ms | sql=0 (0.00 ms)
+[2026-07-15 20:37:53,810] INFO in app_perf: PERF GET /static/css/bootstrap-icons.css -> 200 | 12.54 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:53] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:37:53] "GET /static/css/bootstrap-icons.css HTTP/1.1" 200 -
+[2026-07-15 20:37:53,948] INFO in app_perf: PERF GET /static/css/base.css -> 200 | 50.90 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:53] "GET /static/css/base.css HTTP/1.1" 200 -
+[2026-07-15 20:37:53,996] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js -> 200 | 20.69 ms | sql=0 (0.00 ms)
+[2026-07-15 20:37:54,006] INFO in app_perf: PERF GET /static/js/base.js -> 200 | 22.17 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:54] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:37:54] "GET /static/js/base.js HTTP/1.1" 200 -
+[2026-07-15 20:37:54,287] INFO in app_perf: PERF GET /static/js/obligaciones_dashboard.js -> 200 | 8.55 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:54] "GET /static/js/obligaciones_dashboard.js HTTP/1.1" 200 -
+[2026-07-15 20:37:54,313] INFO in app_perf: PERF GET /static/js/chart.umd.min.js -> 200 | 216.04 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:54] "GET /static/js/chart.umd.min.js HTTP/1.1" 200 -
+[2026-07-15 20:37:54,584] INFO in app_perf: PERF GET /.well-known/appspecific/com.chrome.devtools.json -> 404 | 12.24 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:54] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+[2026-07-15 20:37:54,924] INFO in app_perf: PERF GET /static/css/bootstrap.min.css.map -> 200 | 50.20 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:54] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+[2026-07-15 20:37:55,053] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js.map -> 200 | 9.24 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:55] "GET /static/js/bootstrap.bundle.min.js.map HTTP/1.1" 200 -
+[2026-07-15 20:37:55,074] INFO in app_perf: PERF GET /static/css/fonts/bootstrap-icons.woff2 -> 200 | 83.34 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:55] "GET /static/css/fonts/bootstrap-icons.woff2?e34853135f9e39acf64315236852cd5a HTTP/1.1" 200 -
+[2026-07-15 20:37:55,107] INFO in app_perf: PERF GET /static/js/chart.umd.min.js.map -> 404 | 1.83 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:37:55] "GET /static/js/chart.umd.min.js.map HTTP/1.1" 404 -
+[2026-07-15 20:38:06,656] INFO in app_perf: PERF GET /obligaciones/ -> 302 | 6.80 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:06] "GET /obligaciones/ HTTP/1.1" 302 -
+[2026-07-15 20:38:06,740] WARNING in app_gateway: GATEWAY data={'p': '/obligaciones/'}
+[2026-07-15 20:38:06,742] WARNING in app_gateway: GATEWAY raw_path=/obligaciones/
+[2026-07-15 20:38:06,744] WARNING in app_gateway: GATEWAY request.path=/g/eyJwIjoiL29ibGlnYWNpb25lcy8ifQ.1U28Zf8aBG8Y168AH0eqy4vN9cE
+[2026-07-15 20:38:06,745] WARNING in app_gateway: GATEWAY request.method=GET
+[2026-07-15 20:38:06,746] WARNING in app_gateway: GATEWAY parts.path=/obligaciones/
+[2026-07-15 20:38:06,747] WARNING in app_gateway: GATEWAY parts.query=
+[2026-07-15 20:38:06,747] WARNING in app_gateway: GATEWAY forward_qs=
+[2026-07-15 20:38:06,749] WARNING in app_gateway: GATEWAY match=('obligaciones.lista_obligaciones', {})
+[2026-07-15 20:38:06,753] WARNING in app_gateway: GATEWAY despachando interno path=/obligaciones/ method=GET qs=
+CSP debt detected in response: inline event handler | path=/obligaciones/
+[2026-07-15 20:38:07,607] WARNING in app_gateway: GATEWAY response type=<class 'flask.wrappers.Response'> status=200 OK
+[2026-07-15 20:38:07,609] INFO in app_perf: PERF GET /obligaciones/ -> 200 | 842.34 ms | sql=0 (0.00 ms)
+CSP debt detected in response: inline event handler | path=/g/eyJwIjoiL29ibGlnYWNpb25lcy8ifQ.1U28Zf8aBG8Y168AH0eqy4vN9cE
+[2026-07-15 20:38:07,696] INFO in app_perf: PERF GET /g/eyJwIjoiL29ibGlnYWNpb25lcy8ifQ.1U28Zf8aBG8Y168AH0eqy4vN9cE -> 200 | 929.32 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:07] "GET /g/eyJwIjoiL29ibGlnYWNpb25lcy8ifQ.1U28Zf8aBG8Y168AH0eqy4vN9cE HTTP/1.1" 200 -
+[2026-07-15 20:38:08,003] INFO in app_perf: PERF GET /.well-known/appspecific/com.chrome.devtools.json -> 404 | 5.52 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:08] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+[2026-07-15 20:38:08,302] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js -> 200 | 5.76 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:08,305] INFO in app_perf: PERF GET /static/css/bootstrap.min.css -> 200 | 10.16 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:08] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:38:08] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+[2026-07-15 20:38:08,307] INFO in app_perf: PERF GET /static/css/base.css -> 200 | 14.42 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:08] "GET /static/css/base.css HTTP/1.1" 200 -
+[2026-07-15 20:38:08,314] INFO in app_perf: PERF GET /static/css/bootstrap-icons.css -> 200 | 13.53 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:08,320] INFO in app_perf: PERF GET /static/js/base.js -> 200 | 7.11 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:08] "GET /static/js/base.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:38:08] "GET /static/css/bootstrap-icons.css HTTP/1.1" 200 -
+[2026-07-15 20:38:08,396] INFO in app_perf: PERF GET /static/js/obligaciones_lista.js -> 200 | 9.24 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:08] "GET /static/js/obligaciones_lista.js HTTP/1.1" 200 -
+[2026-07-15 20:38:09,190] INFO in app_perf: PERF GET /static/css/fonts/bootstrap-icons.woff2 -> 200 | 6.23 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:09,193] INFO in app_perf: PERF GET /static/css/bootstrap.min.css.map -> 200 | 3.52 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:09] "GET /static/css/fonts/bootstrap-icons.woff2?e34853135f9e39acf64315236852cd5a HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:38:09] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+[2026-07-15 20:38:09,229] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js.map -> 200 | 4.69 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:09] "GET /static/js/bootstrap.bundle.min.js.map HTTP/1.1" 200 -
+[2026-07-15 20:38:21,650] INFO in app_perf: PERF GET /obligaciones/nueva -> 200 | 2476.49 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:21] "GET /obligaciones/nueva HTTP/1.1" 200 -
+[2026-07-15 20:38:22,141] INFO in app_perf: PERF GET /static/css/bootstrap.min.css -> 200 | 32.43 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:22] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+[2026-07-15 20:38:22,459] INFO in app_perf: PERF GET /static/css/bootstrap-icons.css -> 200 | 7.98 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:22] "GET /static/css/bootstrap-icons.css HTTP/1.1" 200 -
+[2026-07-15 20:38:22,482] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js -> 200 | 3.42 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:22] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+[2026-07-15 20:38:22,500] INFO in app_perf: PERF GET /static/css/base.css -> 200 | 26.40 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:22,507] INFO in app_perf: PERF GET /static/js/base.js -> 200 | 17.13 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:22] "GET /static/css/base.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:38:22] "GET /static/js/base.js HTTP/1.1" 200 -
+[2026-07-15 20:38:22,571] INFO in app_perf: PERF GET /static/js/obligaciones_form.js -> 200 | 13.34 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:22] "GET /static/js/obligaciones_form.js HTTP/1.1" 200 -
+[2026-07-15 20:38:22,636] INFO in app_perf: PERF GET /.well-known/appspecific/com.chrome.devtools.json -> 404 | 11.33 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:22] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+[2026-07-15 20:38:23,252] INFO in app_perf: PERF GET /static/css/fonts/bootstrap-icons.woff2 -> 200 | 7.08 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:23] "GET /static/css/fonts/bootstrap-icons.woff2?e34853135f9e39acf64315236852cd5a HTTP/1.1" 200 -
+[2026-07-15 20:38:23,255] INFO in app_perf: PERF GET /static/css/bootstrap.min.css.map -> 200 | 4.63 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:23] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+[2026-07-15 20:38:23,294] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js.map -> 200 | 14.77 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:23] "GET /static/js/bootstrap.bundle.min.js.map HTTP/1.1" 200 -
+[2026-07-15 20:38:31,168] INFO in app_perf: PERF GET /obligaciones/historial -> 302 | 6.55 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:31] "GET /obligaciones/historial HTTP/1.1" 302 -
+[2026-07-15 20:38:31,448] WARNING in app_gateway: GATEWAY data={'p': '/obligaciones/historial'}
+[2026-07-15 20:38:31,453] WARNING in app_gateway: GATEWAY raw_path=/obligaciones/historial
+[2026-07-15 20:38:31,454] WARNING in app_gateway: GATEWAY request.path=/g/eyJwIjoiL29ibGlnYWNpb25lcy9oaXN0b3JpYWwifQ.TROLW7_VLst7bv7YJO2L6Kx4GgY
+[2026-07-15 20:38:31,455] WARNING in app_gateway: GATEWAY request.method=GET
+[2026-07-15 20:38:31,456] WARNING in app_gateway: GATEWAY parts.path=/obligaciones/historial
+[2026-07-15 20:38:31,457] WARNING in app_gateway: GATEWAY parts.query=
+[2026-07-15 20:38:31,458] WARNING in app_gateway: GATEWAY forward_qs=
+[2026-07-15 20:38:31,459] WARNING in app_gateway: GATEWAY match=('obligaciones.historial_obligaciones', {})
+[2026-07-15 20:38:31,462] WARNING in app_gateway: GATEWAY despachando interno path=/obligaciones/historial method=GET qs=
+[2026-07-15 20:38:32,446] WARNING in app_gateway: GATEWAY response type=<class 'flask.wrappers.Response'> status=200 OK
+[2026-07-15 20:38:32,455] INFO in app_perf: PERF GET /obligaciones/historial -> 200 | 980.67 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:32,521] INFO in app_perf: PERF GET /g/eyJwIjoiL29ibGlnYWNpb25lcy9oaXN0b3JpYWwifQ.TROLW7_VLst7bv7YJO2L6Kx4GgY -> 200 | 1046.26 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:32] "GET /g/eyJwIjoiL29ibGlnYWNpb25lcy9oaXN0b3JpYWwifQ.TROLW7_VLst7bv7YJO2L6Kx4GgY HTTP/1.1" 200 -
+[2026-07-15 20:38:33,144] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js -> 200 | 10.79 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:33,145] INFO in app_perf: PERF GET /static/css/bootstrap.min.css -> 200 | 15.90 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:33,146] INFO in app_perf: PERF GET /static/css/bootstrap-icons.css -> 200 | 11.90 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:33,147] INFO in app_perf: PERF GET /static/js/obligaciones_historial.js -> 200 | 5.98 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+[2026-07-15 20:38:33,148] INFO in app_perf: PERF GET /static/css/base.css -> 200 | 7.90 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/css/bootstrap-icons.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+[2026-07-15 20:38:33,149] INFO in app_perf: PERF GET /static/js/base.js -> 200 | 6.81 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/js/obligaciones_historial.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/css/base.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/js/base.js HTTP/1.1" 200 -
+[2026-07-15 20:38:33,469] INFO in app_perf: PERF GET /static/css/fonts/bootstrap-icons.woff2 -> 200 | 1.89 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/css/fonts/bootstrap-icons.woff2?e34853135f9e39acf64315236852cd5a HTTP/1.1" 200 -
+[2026-07-15 20:38:33,665] INFO in app_perf: PERF GET /static/css/bootstrap.min.css.map -> 200 | 2.02 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+[2026-07-15 20:38:33,679] INFO in app_perf: PERF GET /.well-known/appspecific/com.chrome.devtools.json -> 404 | 4.18 ms | sql=0 (0.00 ms)
+[2026-07-15 20:38:33,682] INFO in app_perf: PERF GET /static/js/bootstrap.bundle.min.js.map -> 200 | 3.44 ms | sql=0 (0.00 ms)
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /static/js/bootstrap.bundle.min.js.map HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 20:38:33] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -

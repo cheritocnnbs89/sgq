@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - Carga masiva{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/obligaciones.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 title-blue"><i class="bi bi-file-earmark-excel"></i> Carga masiva de obligaciones</h4>
+    <a href="{{ url_for('obligaciones.lista_obligaciones') }}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  {% if not preview %}
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <p class="text-muted">
+        Formato del Excel (8 columnas, con encabezado en la fila 1):
+        Tipo · Empresa · Descripción · Entidad · Usuario (login) · Fecha Vencimiento (DD/MM/YYYY) · Frecuencia · Estado.
+      </p>
+      <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-3">
+          <label class="form-label">Archivo Excel (.xlsx) *</label>
+          <div class="oblig-dropzone" id="dropzoneExcel">
+            <i class="bi bi-file-earmark-excel d-block mb-2"></i>
+            Arrastra tu archivo Excel aquí o hacé clic para seleccionar
+          </div>
+          <input type="file" name="archivo" id="archivoExcel" class="d-none" accept=".xlsx" required>
+          <div id="previewArchivoExcel" class="mt-2"></div>
+        </div>
+        <button class="btn-cta-blue"><i class="bi bi-upload"></i> Ver previsualización</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <div class="row g-3 mb-3">
+    <div class="col-md-4">
+      <div class="section section-warning mb-0 h-100">
+        <div class="section-header"><i class="bi bi-list-ul"></i> Total leídas</div>
+        <div class="fs-2 fw-bold">{{ preview.total }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="section section-success mb-0 h-100">
+        <div class="section-header"><i class="bi bi-check-circle-fill"></i> Válidas para importar</div>
+        <div class="fs-2 fw-bold text-success">{{ preview.validas }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="section section-danger mb-0 h-100">
+        <div class="section-header"><i class="bi bi-x-circle-fill"></i> Con errores (omitidas)</div>
+        <div class="fs-2 fw-bold text-danger">{{ preview.invalidas }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive mb-3">
+    <table class="table table-sm table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Fila</th><th>Tipo</th><th>Empresa</th><th>Descripción</th><th>Entidad</th>
+          <th>Usuario</th><th>Fecha venc.</th><th>Frecuencia</th><th>Estado</th><th>Errores</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in preview.filas %}
+        <tr class="{{ 'table-danger' if not f.valido else 'table-success' }}">
+          <td>{{ f.excel_row }}</td>
+          <td>{{ f.tipo_raw }}</td>
+          <td>{{ f.empresa_raw }}</td>
+          <td>{{ f.descripcion }}</td>
+          <td>{{ f.entidad_raw }}</td>
+          <td>{{ f.usuario_raw }}</td>
+          <td>{{ f.fecha_vencimiento or '-' }}</td>
+          <td>{{ f.frecuencia_raw }}</td>
+          <td>{{ f.estado_raw or '(por presentar)' }}</td>
+          <td>
+            {% if f.errores %}
+            <span class="text-danger small">{{ f.errores|join('; ') }}</span>
+            {% else %}
+            <i class="bi bi-check-circle text-success"></i>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if preview.token %}
+  <form method="post" action="{{ url_for('obligaciones.carga_masiva_confirmar') }}" class="d-inline">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="token" value="{{ preview.token }}">
+    <button class="btn btn-success"><i class="bi bi-check2-circle"></i> Confirmar importación de {{ preview.validas }} fila(s) válida(s)</button>
+  </form>
+  {% else %}
+  <p class="text-muted">No hay filas válidas para importar.</p>
+  {% endif %}
+  <a href="{{ url_for('obligaciones.carga_masiva') }}" class="btn btn-outline-secondary">Cancelar / subir otro archivo</a>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/obligaciones_carga_masiva.js') }}"></script>
+{% endblock %}

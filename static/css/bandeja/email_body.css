@@ -1,0 +1,96 @@
+/* static/css/bandeja/email_body.css
+   Estilos para el iframe del cuerpo del correo.
+   Archivo externo requerido por CSP style-src 'self'.
+*/
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body.email-body {
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #212529;
+  background: #fff;
+  margin: 14px 18px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Estructura básica del correo */
+p   { margin: 0 0 10px; }
+br  { line-height: 1.65; }
+div { max-width: 100%; }
+
+/* Imágenes */
+img { max-width: 100%; height: auto; display: inline-block; }
+
+/* Links */
+a { color: #0d6efd; text-decoration: underline; }
+a:hover { color: #0a58ca; }
+
+/* Tablas de layout de correo */
+table {
+  max-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-break: break-word;
+}
+td, th { padding: 3px 6px; vertical-align: top; }
+
+/* Citas / respuestas anteriores */
+blockquote {
+  margin: 8px 0 8px 12px;
+  padding: 4px 10px;
+  border-left: 3px solid #ced4da;
+  color: #6c757d;
+}
+
+/* Texto preformateado */
+pre, code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+/* Texto plano (fallback cuando no hay HTML) */
+pre.email-plain {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #212529;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Encabezados ocasionales en correos */
+h1, h2, h3, h4 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 12px 0 6px;
+  color: #212529;
+}
+h1 { font-size: 18px; }
+h2 { font-size: 16px; }
+h3 { font-size: 14px; }
+h4 { font-size: 13px; }
+
+/* Listas */
+ul, ol { padding-left: 22px; margin: 6px 0; }
+li { margin-bottom: 3px; }
+
+/* Firma típica de correo */
+.signature, .gmail_signature, .mso-signature {
+  color: #6c757d;
+  font-size: 12px;
+  border-top: 1px solid #dee2e6;
+  margin-top: 16px;
+  padding-top: 8px;
+}

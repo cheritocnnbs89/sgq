@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Plantilla de correo — Evidencia{% endblock %}
+{% block content %}
+<h5 class="mb-3">Plantilla de correo para evidencias</h5>
+<form method="post" class="row g-3">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="col-12">
+    <label class="form-label">Asunto</label>
+    <input class="form-control" name="subject" required value="{{ tpl and tpl['subject'] or '' }}">
+  </div>
+  <div class="col-12">
+    <label class="form-label">Cuerpo (HTML)</label>
+    <textarea class="form-control" name="html" rows="10" required>{{ tpl and tpl['html'] or '' }}</textarea>
+    <div class="form-text">
+      Placeholders disponibles: <code>{{'{{ tarea }}'}}</code>, <code>{{'{{ fecha }}'}}</code>,
+      <code>{{'{{ responsable }}'}}</code>, <code>{{'{{ departamento }}'}}</code>,
+      <code>{{'{{ observacion }}'}}</code>, <code>{{'{{ app_url }}'}}</code>.
+    </div>
+  </div>
+  <div class="col-12">
+    <label class="form-label">Cuerpo (texto plano, opcional)</label>
+    <textarea class="form-control" name="text" rows="5">{{ tpl and tpl['text'] or '' }}</textarea>
+  </div>
+  <div class="col-12">
+    <button class="btn btn-primary" type="submit">Guardar plantilla</button>
+  </div>
+</form>
+{% endblock %}

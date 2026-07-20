@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+{% block title %}Planilla Mensual{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planilla/planilla_mensual.css') }}">
+<script src="{{ url_for('static', filename='js/planilla/planilla_mensual.js') }}" defer></script>
+
+<div id="planillaRoot"
+  data-today="{{ today_iso|default('') }}"
+  data-evidence-mode="{{ evidence_mode | default(false) | int }}"
+  data-toggle-check-url="{{ url_for('planilla_mensual.toggle_check') }}"
+  data-toggle-evidence-mode-url="{{ url_for('planilla_mensual.toggle_evidence_mode') }}"
+  data-evidence-post-url="{{ url_for('planilla_mensual.evidence_post') }}"
+  data-planilla-base-url="{{ url_for('planilla_mensual.planilla') }}"
+  data-weekly-report-url="{{ url_for('planilla_mensual.admin_send_weekly_report') }}">
+
+  <!-- ===== TOOLBAR ===== -->
+  <div class="pm-toolbar mb-3">
+    <div class="pm-toolbar-left">
+      <i class="bi bi-table pm-toolbar-icon"></i>
+      <span class="pm-toolbar-title">Planilla Mensual</span>
+      <span class="pm-toolbar-sep"></span>
+      <a class="pm-nav-btn"
+         href="{{ url_for('planilla_mensual.planilla', year=prev_y, month=prev_m, responsable_id=rid, frecuencia=freq, departamento_id=depid) }}">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+      <span class="pm-toolbar-month">{{ ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][m-1] }} {{ y }}</span>
+      <a class="pm-nav-btn"
+         href="{{ url_for('planilla_mensual.planilla', year=next_y, month=next_m, responsable_id=rid, frecuencia=freq, departamento_id=depid) }}">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </div>
+
+    <form id="filtrosForm" class="pm-toolbar-filters" method="get">
+      <div class="pm-filter-group">
+        <i class="bi bi-person pm-filter-icon"></i>
+        <select id="f_res" name="responsable_id" class="pm-select">
+          <option value="" {{ ''==rid and 'selected' or '' }}>Todos</option>
+          {% for r in responsables %}
+          <option value="{{r.id}}" {{ (rid|string)==(r.id|string) and 'selected' or '' }}>{{r.nombre}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="pm-filter-group">
+        <i class="bi bi-calendar2-range pm-filter-icon"></i>
+        <select id="f_freq" name="frecuencia" class="pm-select">
+          <option value="" {{ ''==freq and 'selected' or '' }}>Todas</option>
+          {% for f in ['Diario','Semanal','Mensual','Anual'] %}
+          <option value="{{f}}" {{ (freq|string)==f and 'selected' or '' }}>{{f}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="pm-filter-group">
+        <i class="bi bi-building pm-filter-icon"></i>
+        <select id="f_dep" name="departamento_id" class="pm-select">
+          <option value="" {{ ''==depid and 'selected' or '' }}>Todos</option>
+          {% for d in departamentos %}
+          <option value="{{ d.id }}" {{ (depid|string)==(d.id|string) and 'selected' or '' }}>{{ d.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <input type="hidden" id="month" value="{{'%04d-%02d'|format(y, m)}}">
+      <button id="btnFiltrar" class="pm-btn-primary" type="submit">
+        <i class="bi bi-funnel-fill"></i> Filtrar
+      </button>
+    </form>
+
+    <div class="pm-toolbar-right">
+      {% if is_admin %}
+      <div class="pm-evidence-toggle">
+        <input class="pm-toggle-input" type="checkbox" id="evidenceModeSwitch"
+               {{ 'checked' if evidence_mode else '' }}>
+        <label class="pm-toggle-label" for="evidenceModeSwitch">
+          <i class="bi bi-paperclip"></i> Evidencia
+        </label>
+      </div>
+      <button type="button" id="btnSendWeeklyReport" class="pm-btn-secondary"
+              title="Envía el reporte semanal">
+        <i class="bi bi-envelope-paper-fill"></i> Reporte
+      </button>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ===== LEYENDA ===== -->
+  <div class="pm-legend mb-2">
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-done"></span> Cumplido</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-empty"></span> Pendiente</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-overdue"></span> Vencido</span>
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-today"></span> Día actual</span>
+    {% if evidence_mode %}
+    <span class="pm-legend-item"><span class="pm-dot pm-dot-evi"></span> Sin evidencia</span>
+    {% endif %}
+  </div>
+
+  <!-- ===== TABLA PLANILLA ===== -->
+  <div class="planilla-wrap table-responsive cosy">
+    <table id="planillaTable"
+           class="table table-sm table-bordered table-hover align-middle planilla table-compact">
+      <colgroup>
+        <col class="planilla-col-act">
+        <col class="planilla-col-fre">
+        <col class="planilla-col-res">
+        {% for _ in dias %}<col class="planilla-col-day">{% endfor %}
+      </colgroup>
+
+      <!-- Cabecera agrupada por semanas -->
+      <thead class="table-light sticky-top soft-shadow thead-group">
+        {% set ns = namespace(weeks=[], current_week=None, span=0) %}
+        {% for d in dias %}
+          {% set iso = d.isocalendar() %}
+          {% if ns.current_week is none %}
+            {% set ns.current_week = iso.week %}
+            {% set ns.span = 1 %}
+          {% elif iso.week == ns.current_week %}
+            {% set ns.span = ns.span + 1 %}
+          {% else %}
+            {% set _ = ns.weeks.append({'week': ns.current_week, 'span': ns.span}) %}
+            {% set ns.current_week = iso.week %}
+            {% set ns.span = 1 %}
+          {% endif %}
+          {% if loop.last %}
+            {% set _ = ns.weeks.append({'week': ns.current_week, 'span': ns.span}) %}
+          {% endif %}
+        {% endfor %}
+
+        <tr class="head-row-1">
+          <th class="col-act sticky-1" rowspan="2" title="Detalle de la actividad">
+            <i class="bi bi-list-check me-1"></i> Actividades Clave
+          </th>
+          <th class="col-fre sticky-2 text-center" rowspan="2" title="Frecuencia de la actividad">
+            <i class="bi bi-calendar2-range me-1"></i> Frecuencia
+          </th>
+          <th class="col-res sticky-3" rowspan="2" title="Responsable asignado">
+            <i class="bi bi-person-badge me-1"></i> Responsable
+          </th>
+          {% for w in ns.weeks %}
+          <th class="text-center week-head" colspan="{{ w.span }}">
+            S{{ "%02d"|format(w.week) }}
+          </th>
+          {% endfor %}
+        </tr>
+
+        <tr class="head-row-2">
+          {% for d in dias %}
+          {% set dow = ['Lu','Ma','Mi','Ju','Vi','Sa','Do'][d.isoweekday()-1] %}
+          <th class="text-center day-col"
+              data-col="{{ loop.index }}"
+              data-date="{{ d.isoformat() }}">
+            <div class="day-head">
+              <div class="day-num">{{ "%02d"|format(d.day) }}</div>
+              <div class="day-dow">{{ dow }}</div>
+            </div>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for t in tareas %}
+        {% set _keys = t.keys() %}
+        <tr data-id="{{t.id}}">
+          <td class="sticky-1 text-wrap">
+            <div class="act-title {% if 'critica' in _keys and t['critica'] %}is-critical{% endif %}">
+              <div class="act-text clamp-2">{{ t['nombre'] }}</div>
+              {% if t['nombre']|length > 80 %}
+              <button type="button" class="act-ver-mas"
+                      data-nombre="{{ t['nombre']|e }}"
+                      data-freq="{{ t['frecuencia'] }}"
+                      data-resp="{{ t['responsable_nombre']|e }}">
+                Ver detalle
+              </button>
+              {% endif %}
+            </div>
+          </td>
+          <td class="sticky-2 text-center">
+            {% set f = t['frecuencia']|lower %}
+            <span class="badge freq-{{ f }}">{{ t['frecuencia'] }}</span>
+          </td>
+          <td class="sticky-3">
+            <span class="chip">
+              <i class="bi bi-person"></i>
+              <span class="chip-text">{{ t['responsable_nombre'] }}</span>
+            </span>
+          </td>
+          {% for d in dias %}
+          {% set iso = d.isocalendar() %}
+          {% set key = t['id']|string + '-' + d.isoformat() %}
+          {% set ev  = evidencias.get(key) %}
+          {% if d.isoformat() in t.get('scheduled_dates', []) %}
+          <td class="text-center day-cell"
+              data-week="{{ iso.week }}"
+              data-dow="{{ iso.weekday }}"
+              data-col="{{ loop.index }}">
+            <input type="checkbox" class="tick"
+                   data-date="{{ d.isoformat() }}"
+                   {% if checks.get(key) %}checked{% endif %}>
+            {% if ev %}
+            <button type="button" class="ev-clip-btn"
+                    title="Ver evidencia"
+                    data-tarea="{{ t['id'] }}"
+                    data-fecha="{{ d.isoformat() }}"
+                    data-obs="{{ (ev.obs or '')|e }}"
+                    data-file="{{ (ev.file_name or '')|e }}"
+                    data-hasfile="{{ '1' if ev.file_name else '0' }}">
+              <i class="bi bi-paperclip"></i>
+            </button>
+            {% endif %}
+          </td>
+          {% else %}
+          <td class="day-cell day-na"
+              data-week="{{ iso.week }}"
+              data-dow="{{ iso.weekday }}"
+              data-col="{{ loop.index }}"></td>
+          {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== MODAL DE EVIDENCIA ===== -->
+  <div class="modal fade" id="evidenceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="evidenceForm"
+            enctype="multipart/form-data" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar observación y evidencia</h5>
+          <button type="button" class="btn-close"
+                  data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="tarea_id" id="ev_tarea">
+          <input type="hidden" name="fecha"    id="ev_fecha">
+          <div class="mb-3">
+            <label class="form-label">Observación <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="obs" rows="3"
+                      placeholder="Comentario breve…"></textarea>
+            <div class="invalid-feedback" id="obs_error">La observación es obligatoria.</div>
+          </div>
+          <div class="mb-1">
+            <label class="form-label">Evidencia (PDF o imagen)</label>
+            <div class="ev-drop-zone" id="ev_drop_zone">
+              <input class="form-control" type="file" name="file" id="ev_file_input"
+                     accept="application/pdf,image/*">
+              <div class="ev-drop-hint">
+                <span class="ev-drop-icon">📎</span>
+                <span id="ev_drop_label">Selecciona, arrastra o pega una imagen/PDF (Ctrl+V)</span>
+                <span class="ev-drop-sub">Máx. 10 MB · PDF, PNG, JPG, WEBP</span>
+              </div>
+            </div>
+          </div>
+          <div id="ev_info" class="form-text mt-1"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button"
+                  data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-primary" type="submit"
+                  id="evGuardarBtn">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL VER EVIDENCIA ===== -->
+  <div class="modal fade" id="verEvidenciaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background:#f0fdf4;border-bottom:1px solid #bbf7d0;">
+          <h6 class="modal-title text-success">
+            <i class="bi bi-paperclip me-2"></i>Evidencia registrada
+          </h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-1" style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;">
+            <i class="bi bi-calendar3 me-1"></i><span id="vev-fecha"></span>
+          </p>
+          <div class="mb-3">
+            <div class="fw-semibold mb-1" style="font-size:13px;">Observación</div>
+            <div id="vev-obs" class="p-2 rounded" style="background:#f8fafc;border:1px solid #e2e8f0;font-size:13px;white-space:pre-wrap;min-height:40px;"></div>
+          </div>
+          <div id="vev-file-wrap">
+            <div class="fw-semibold mb-1" style="font-size:13px;">Archivo adjunto</div>
+            <a id="vev-file-link" href="#" target="_blank" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-file-earmark-arrow-down me-1"></i><span id="vev-file-name"></span>
+            </a>
+          </div>
+          <div id="vev-nofile" class="text-muted" style="font-size:12px;">Sin archivo adjunto.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL DETALLE ACTIVIDAD ===== -->
+  <div class="modal fade" id="actDetalleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content act-detalle-content">
+        <div class="modal-header act-detalle-header">
+          <h6 class="modal-title"><i class="bi bi-info-circle me-2"></i>Detalle de actividad</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="act-detalle-nombre" id="actDetalleNombre"></p>
+          <div class="act-detalle-meta">
+            <span><i class="bi bi-calendar2-range me-1"></i><span id="actDetalleFreq"></span></span>
+            <span><i class="bi bi-person me-1"></i><span id="actDetalleResp"></span></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>{# /planillaRoot #}
+{% endblock %}

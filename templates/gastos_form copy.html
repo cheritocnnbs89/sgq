@@ -1,0 +1,2129 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Nuevo' if modo=='nuevo' else 'Editar' }} reembolso de gasto{% endblock %}
+{% block content %}
+
+<style>
+  /* Por defecto: TODO visible */
+  .hide-soporte .col-hide-soporte {
+    display: none !important;
+  }
+
+  .hide-soporte .only-soporte {
+    display: none !important;
+  }
+
+  .hide-subtotal-fac .col-subtotal-fac {
+    display: none !important;
+  }
+
+  /* ===== Detalle: alineación limpia ===== */
+  #det-body td {
+    vertical-align: top;
+    min-height: 38px;
+  }
+
+  #det-body input,
+  #det-body textarea,
+  #det-body select {
+    min-height: 36px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+
+  #det-body textarea {
+    height: 34px;
+    resize: none;
+  }
+
+  /* Estado inválido sin texto debajo */
+  #det-body input.is-invalid,
+  #det-body textarea.is-invalid,
+  #det-body select.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 .12rem rgba(220, 53, 69, .15) !important;
+    background-image: none !important;
+  }
+</style>
+
+<script>
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+  window.__lastFacturaXMLPayload = null;
+
+  window.__applyFacturaXMLPayload = function (payload) {
+    const body = document.getElementById('det-body');
+    if (!payload || !body || typeof window.gastosPrefillFromFacturaXML !== 'function') {
+      window.__lastFacturaXMLPayload = payload || null;
+      return;
+    }
+    window.gastosPrefillFromFacturaXML(payload);
+    window.__lastFacturaXMLPayload = null;
+  };
+
+  if (window.__lastFacturaXMLPayload) {
+    window.__applyFacturaXMLPayload(window.__lastFacturaXMLPayload);
+  }
+</script>
+
+<!-- Prefill de fecha -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const today = new Date();
+    const a = document.querySelector('input[name="anio"]');
+    const m = document.querySelector('input[name="mes"]');
+    const d = document.querySelector('input[name="dia"]');
+    if (a && !a.value) a.value = today.getFullYear();
+    if (m && !m.value) m.value = today.getMonth() + 1;
+    if (d && !d.value) d.value = today.getDate();
+  });
+</script>
+
+<!-- Centros de costo (datalist, 3 opciones máx) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const $dl = document.getElementById('dl-centros');
+    const $tbody = document.getElementById('det-body');
+    if (!$dl) return;
+
+    const MIN_CHARS = 2, MAX_RESULTS = 3;
+    const debounce = (fn, ms = 220) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+    const fill = (list) => {
+      $dl.innerHTML = '';
+      (list || []).slice(0, MAX_RESULTS).forEach(x => {
+        const opt = document.createElement('option');
+        opt.value = x.valor || '';
+        opt.label = x.nombre ? `${x.nombre} (${x.valor || ''})` : (x.valor || '');
+        $dl.appendChild(opt);
+      });
+    };
+
+    const fetchCentros = debounce((q = '') => {
+      const u = new URL('{{ url_for("api_param_centros") }}', window.location.origin);
+      u.searchParams.set('padre', '7');
+      if ((q || '').length >= MIN_CHARS) u.searchParams.set('q', q);
+      fetch(u, { credentials: 'same-origin' })
+        .then(r => r.json()).then(fill).catch(() => { });
+    }, 220);
+
+    fetchCentros('');
+
+    if ($tbody) {
+      $tbody.addEventListener('input', (ev) => {
+        const el = ev.target;
+        if (el && el.name === 'det_centro_costo') {
+          el.setAttribute('list', 'dl-centros');
+          fetchCentros(el.value || '');
+        }
+      });
+    }
+  });
+</script>
+
+<div class="container mt-4">
+  <h3><i class="bi bi-credit-card me-2"></i>{{ 'Nuevo' if modo=='nuevo' else 'Editar' }} reembolso de gasto</h3>
+  <form id="frmGasto" method="post" enctype="multipart/form-data" class="row g-3 mt-1" novalidate>
+    <!-- 🔐 CSRF TOKEN (OBLIGATORIO) -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <!-- 🟦 CABECERA -->
+    <div class="section section-danger mb-4">
+      <h5 class="mb-3 text-primary"><i class="bi bi-info-circle me-1"></i> Cabecera</h5>
+      <div class="row g-3">
+        <div class="col-md-2">
+          <label class="form-label">Año*</label>
+          <input type="number" readonly class="form-control" name="anio" min="2000" max="2100"
+            value="{{ form.get('anio','') if form else '' }}" required>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Mes*</label>
+          <input type="number" readonly class="form-control" name="mes" min="1" max="12"
+            value="{{ form.get('mes','') if form else '' }}" required>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Día*</label>
+          <input type="number" class="form-control" name="dia" min="1" max="31"
+            value="{{ form.get('dia','') if form else '' }}" required>
+        </div>
+
+        <!-- Descripción general (antes "Motivo del gasto") -->
+        <div class="col-md-4">
+          <label class="form-label">Detalle *</label>
+          <input type="text" class="form-control" id="descripcion_input" name="descripcion" autocomplete="off"
+            value="{{ form.get('descripcion', form.get('motivo','')) if form else '' }}"
+            placeholder="Descripción general" required>
+          <div class="invalid-feedback">La descripción es obligatoria.</div>
+        </div>
+
+        <!-- 🆕 CCB -->
+        <div class="col-md-2 d-flex flex-column justify-content-end">
+          {% if tiene_caja_chica %}
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="checkbox" id="reembolso_vendedor" name="reembolso_vendedor" checked
+              onclick="return false;">
+            <label class="form-check-label fw-bold" for="reembolso_vendedor">
+              Modo: Caja Chica
+              <br>
+              <span class="badge bg-warning text-dark mt-1">
+                <i class="bi bi-safe-fill"></i> Fondo Fijo Asignado
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="reembolso_vendedor" value="1">
+          <input type="hidden" name="tipo_registro" value="caja_chica">
+
+          {% elif es_comercial_qp %}
+          <input type="hidden" name="tipo_registro" value="reembolso">
+
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="checkbox" id="reembolso_vendedor" name="reembolso_vendedor" checked
+              onclick="return false;">
+            <label class="form-check-label fw-bold" for="reembolso_vendedor">
+              Reembolso de Vendedor
+              <br>
+              <span class="badge bg-info text-dark mt-1">
+                <i class="bi bi-patch-check-fill"></i> Autodetectado
+              </span>
+            </label>
+          </div>
+          <input type="hidden" name="reembolso_vendedor" value="1">
+
+          {% else %}
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="ccb" name="ccb" {% if form and (form.get('ccb') in
+              ['1','on',1,true]) %}checked{% elif g and g.get('ccb') %}checked{% endif %}>
+            <label class="form-check-label" for="ccb">Con cargo a bono (CCB)</label>
+          </div>
+          {% endif %}
+          {% if not (tiene_caja_chica or es_comercial_qp) %}
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="tarjeta_sin_soporte" name="tarjeta_sin_soporte" {% if
+              form and (form.get('tarjeta_sin_soporte') in ['1','on',1,true]) %}checked {% elif g and
+              g.get('tarjeta_sin_soporte') %}checked{% endif %}>
+            <label class="form-check-label" for="tarjeta_sin_soporte">
+              Tarjeta sin soporte
+            </label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="boletos_aereos" name="boletos_aereos" {% if form and
+              (form.get('boletos_aereos') in ['1','on',1,true]) %}checked {% elif g and g.get('boletos_aereos')
+              %}checked{% endif %}>
+            <label class="form-check-label" for="boletos_aereos">
+              Boletos aéreos
+            </label>
+          </div>
+          {% endif %}
+        </div>
+
+        {% if es_comercial_qp %}
+        <input type="hidden" name="reembolso_vendedor" value="1">
+        {% endif %}
+      </div>
+
+      <!-- 🆕 Buscar factura en facturas_xml -->
+      <div class="col-md-6">
+        <label class="form-label">Buscar factura XML (SRI)</label>
+        <input type="text" class="form-control" id="factura_xml_search" list="dl-facturas-xml" autocomplete="off"
+          value="{{ form.get('numero_factura','') if form else (g['numero_factura'] if g and g.get('numero_factura') else '') }}"
+          placeholder="Escriba parte del número de factura o clave de acceso…">
+        <datalist id="dl-facturas-xml"></datalist>
+
+        <input type="hidden" id="factura_xml_id" name="factura_xml_id" value="{% if form and form.get('factura_xml_id') %}{{ form.get('factura_xml_id') }}
+                   {% elif g and g.get('factura_xml_id') %}{{ g['factura_xml_id'] }}{% endif %}">
+
+        <small class="text-muted">
+          Selecciona una factura ya cargada desde XML.
+        </small>
+      </div>
+
+      <div class="col-md-3">
+        <label for="proveedor_identificacion" class="form-label">Identificación proveedor</label>
+        <input type="text" class="form-control" id="proveedor_identificacion" name="proveedor_identificacion"
+          value="{{ form.get('proveedor_identificacion','') if form else (g['proveedor_identificacion'] if g and g.get('proveedor_identificacion') else '') }}"
+          {% if not (tiene_caja_chica or es_comercial_qp or (form and (form.get('tarjeta_sin_soporte') in
+          ['1','on',1,true])) or (g and g.get('tarjeta_sin_soporte'))) %} readonly {% endif %}>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Proveedor</label>
+        <input type="text" class="form-control" id="proveedor_nombre" name="proveedor_nombre" list="dl-proveedores"
+          autocomplete="off"
+          value="{% if form %}{{ form.get('proveedor') or '' }}{% elif g %}{{ g['proveedor'] or '' }}{% else %}{% endif %}"
+          placeholder="Escribe para buscar…">
+        <datalist id="dl-proveedores"></datalist>
+
+        <input type="hidden" id="proveedor_id" name="proveedor_id" value="{% if form and form.get('proveedor_id') %}{{ form.get('proveedor_id') }}
+                   {% elif g and g['proveedor_id'] %}{{ g['proveedor_id'] }}{% endif %}">
+        <input type="hidden" id="proveedor" name="proveedor"
+          value="{% if form %}{{ form.get('proveedor') or '' }}{% elif g %}{{ g['proveedor'] or '' }}{% endif %}">
+
+        <div class="invalid-feedback">Seleccione un proveedor válido de la lista.</div>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">N° factura</label>
+
+        <div class="input-group">
+          <input type="text" class="form-control" id="numero_factura" name="numero_factura"
+            value="{{ form.get('numero_factura','') if form else (g['numero_factura'] if g and g.get('numero_factura') else '') }}"
+            placeholder="Ej: 001-001-000123456">
+
+          <button type="button" class="btn btn-outline-secondary" id="btnGenSec"
+            title="Generar consecutivo (Caja Chica)">
+            <i class="bi bi-shuffle"></i>
+          </button>
+
+          <div class="invalid-feedback">El N° de factura es obligatorio.</div>
+        </div>
+
+        <small class="text-muted d-block mt-1">
+          Para Caja Chica si no tienes número de factura.
+        </small>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">N° Orden de compra</label>
+        <input type="text" class="form-control" id="orden_compra" name="orden_compra"
+          value="{{ form.get('orden_compra','') if form else (g['orden_compra'] if g and g.get('orden_compra') else '') }}"
+          placeholder="Número de OC (opcional)" autocomplete="off">
+      </div>
+
+      {% block scripts_extra %}
+      {{ super() }}
+
+      <script>
+        (function () {
+          const $ = (sel) => document.querySelector(sel);
+          const setVal = (sel, v) => { const el = $(sel); if (el) el.value = v || ''; };
+          const ymd = (s) => {
+            if (!s) return '';
+            let m = s.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
+            if (m) return `${m[3]}-${m[2]}-${m[1]}`;
+            m = s.match(/^(\d{4})[\/\-](\d{2})[\/\-](\d{2})$/);
+            if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+            return s;
+          };
+
+          let xmlWin = null;
+          const btn = document.getElementById('btnCargarXml');
+          if (btn) {
+            btn.addEventListener('click', (e) => {
+              e.preventDefault();
+              xmlWin = window.open(
+                '{{ url_for("xml.index") }}', 'sri_xml',
+                'width=980,height=700,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes'
+              );
+            });
+          }
+
+          async function fillFromXml(p) {
+            setVal('#proveedor_nombre', p.proveedorNombre);
+            setVal('#proveedor', p.proveedorNombre);
+            const ruc =
+              p.proveedorRuc ||
+              p.rucEmisor ||
+              p.ruc_emisor ||
+              p.ruc ||
+              p.identificacion_emisor ||
+              p.identificacion ||
+              '';
+            setVal('#proveedor_identificacion', ruc);
+
+            try {
+              if (window.intentarResolverProveedorId) {
+                await window.intentarResolverProveedorId(p.proveedorNombre, ruc);
+              }
+            } catch (_) { }
+
+            setVal('#numero_factura', p.serie || '');
+            setVal('#fecha_autorizacion', ymd(p.fechaAut || ''));
+            setVal('#clave_autorizacion', p.clave || '');
+            if (xmlWin && !xmlWin.closed) xmlWin.close();
+          }
+
+          window.addEventListener('message', (ev) => {
+            if (ev.origin !== location.origin) return;
+            if (ev.data && ev.data.type === 'sri-invoice') fillFromXml(ev.data.payload);
+          });
+          if ('BroadcastChannel' in window) {
+            const bc = new BroadcastChannel('sri-xml');
+            bc.addEventListener('message', (ev) => {
+              if (ev.data && ev.data.type === 'sri-invoice') fillFromXml(ev.data.payload);
+            });
+          }
+        })();
+      </script>
+
+      <script>
+        (function () {
+          const $search = document.getElementById('factura_xml_search');
+          const $dl = document.getElementById('dl-facturas-xml');
+          const $idField = document.getElementById('factura_xml_id');
+          const $numero = document.getElementById('numero_factura');
+          const $fechaAut = document.getElementById('fecha_autorizacion');
+          const $clave = document.getElementById('clave_autorizacion');
+
+          const $provNombre = document.getElementById('proveedor_nombre');
+          const $provTxt = document.getElementById('proveedor');
+          const $provId = document.getElementById('proveedor_id');
+          const $provIdent = document.getElementById('proveedor_identificacion');
+
+          if (!$search || !$dl || !$idField) return;
+
+          const MIN_CHARS = 2;
+          const MAX = 3;
+          let t = null;
+
+          function normalizeDateForInput(s) {
+            if (!s) return '';
+            s = String(s).trim();
+            if (s.length > 10 && /^\d{4}-\d{2}-\d{2}/.test(s)) {
+              return s.slice(0, 10);
+            }
+            let m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (m) return s;
+            m = s.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
+            if (m) return `${m[3]}-${m[2]}-${m[1]}`;
+            return '';
+          }
+
+          function fillList(list) {
+            $dl.innerHTML = '';
+            (list || []).slice(0, MAX).forEach(item => {
+              const opt = document.createElement('option');
+              const numero = item.numero || '';
+              const emisor = item.razon_social_emisor || item.proveedorNombre || '';
+
+              const rawFecha =
+                item.fecha_autorizacion ||
+                item.fecha_emision ||
+                '';
+
+              const fechaNorm = normalizeDateForInput(rawFecha);
+
+              opt.value = numero;
+              opt.label = `${numero} — ${emisor} — ${rawFecha || ''}`;
+              opt.dataset.id = item.id || '';
+              opt.dataset.fecha_autorizacion = fechaNorm;
+              opt.dataset.clave = item.clave_acceso || '';
+              opt.dataset.proveedor_nombre = emisor;
+
+              opt.dataset.proveedor_ruc =
+                item.ruc_emisor ||
+                item.rucEmisor ||
+                item.proveedorRuc ||
+                item.ruc ||
+                item.emisor_ruc ||
+                item.identificacion_emisor ||
+                item.identificacion ||
+                '';
+
+              $dl.appendChild(opt);
+            });
+          }
+
+          function fetchFacturas(q) {
+            const url = new URL('{{ url_for("api_facturas_xml_search") }}', window.location.origin);
+            if ((q || '').length >= MIN_CHARS) {
+              url.searchParams.set('q', q);
+            }
+            url.searchParams.set('limit', String(MAX));
+            fetch(url, {
+              credentials: 'same-origin',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            })
+              .then(r => r.json())
+              .then(fillList)
+              .catch(() => { });
+          }
+
+          window.intentarResolverProveedorId = async function (nombreProveedor, identificacion) {
+            if (!$provId) return;
+
+            if (($provId.value || '').trim() && $provIdent && ($provIdent.value || '').trim()) {
+              return;
+            }
+
+            try {
+              let url;
+
+              if (identificacion && identificacion.trim()) {
+                url = new URL('{{ url_for("api_proveedores_search") }}', window.location.origin);
+                url.searchParams.set('identificacion', identificacion.trim());
+                url.searchParams.set('limit', '5');
+              } else if (nombreProveedor && nombreProveedor.trim()) {
+                url = new URL('{{ url_for("api_proveedores_search") }}', window.location.origin);
+                url.searchParams.set('q', nombreProveedor.trim());
+                url.searchParams.set('limit', '5');
+              } else {
+                return;
+              }
+
+              const r = await fetch(url, {
+                credentials: 'same-origin',
+                 headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+              });
+              const list = await r.json();
+              if (!Array.isArray(list) || !list.length) return;
+ 
+              const match =
+                (identificacion &&
+                  list.find(x =>
+                    (x.identificacion || '').replace(/\s+/g, '') === identificacion.replace(/\s+/g, '')
+                  )) ||
+                list.find(x => (x.nombre || '').toLowerCase().includes((nombreProveedor || '').toLowerCase())) ||
+                list[0];
+
+              if (match && match.id) {
+                $provId.value = match.id;
+
+                if ($provNombre && !($provNombre.value || '').trim()) {
+                  $provNombre.value = match.nombre || nombreProveedor || '';
+                }
+                if ($provTxt && !($provTxt.value || '').trim()) {
+                  $provTxt.value = $provNombre.value;
+                }
+
+                if ($provIdent) {
+                  const ident =
+                    match.identificacion ||
+                    match.ruc ||
+                    match.ruc_emisor ||
+                    match.rucEmisor ||
+                    match.proveedorRuc ||
+                    match.identificacion_emisor ||
+                    ($provIdent.value || '');
+                  $provIdent.value = ident;
+                }
+              }
+            } catch (e) { }
+          };
+
+          function syncSelection() {
+            const val = ($search.value || '').trim();
+            if (!val) {
+              $idField.value = '';
+              return;
+            }
+            const match = Array.from($dl.options)
+              .find(o => (o.value || '').toLowerCase() === val.toLowerCase());
+            if (!match) {
+              $idField.value = '';
+              return;
+            }
+
+            $idField.value = match.dataset.id || '';
+
+            if ($numero && !$numero.value) {
+              $numero.value = match.value || '';
+            }
+            if ($fechaAut && match.dataset.fecha_autorizacion) {
+              $fechaAut.value = match.dataset.fecha_autorizacion;
+            }
+            if ($clave && match.dataset.clave) {
+              $clave.value = match.dataset.clave;
+            }
+
+            const provNombre = match.dataset.proveedor_nombre || '';
+            const provRuc = match.dataset.proveedor_ruc || '';
+
+            if (provNombre) {
+              if ($provNombre) $provNombre.value = provNombre;
+              if ($provTxt) $provTxt.value = provNombre;
+            }
+
+            if (provRuc && $provIdent) {
+              $provIdent.value = provRuc;
+            }
+
+            const fid = match.dataset.id;
+            if (!fid) return;
+
+            const url = new URL(`/reembolsos/api/factura_xml/${fid}/resumen`, window.location.origin);
+
+            console.log('➡ Fetch resumen XML:', url.toString());
+
+            fetch(url, {
+              credentials: 'same-origin',
+               headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            })
+              .then(r => {
+                console.log('⬅ Status resumen XML:', r.status);
+                return r.json();
+              })
+              .then(data => {
+                console.log('RAW data /factura_xml/resumen:', data);
+                if (!data) return;
+
+                let payload = null;
+
+                if (data.payload) payload = data.payload;
+                else if (data.resumen) payload = data.resumen;
+                else if (data.factura) payload = data.factura;
+                else payload = data;
+
+                if (data.ok === false) {
+                  console.warn('API devolvió ok=false');
+                  return;
+                }
+
+                console.log('Payload para prefill:', payload);
+
+                if ($provIdent) {
+                  const ruc =
+                    payload.proveedorRuc ||
+                    payload.rucEmisor ||
+                    payload.ruc_emisor ||
+                    payload.ruc ||
+                    payload.identificacion_emisor ||
+                    payload.identificacion ||
+                    ($provIdent.value || '');
+                  if (ruc) $provIdent.value = ruc;
+                }
+
+                if (window.intentarResolverProveedorId) {
+                  window.intentarResolverProveedorId(
+                    payload.proveedorNombre || provNombre,
+                    $provIdent ? $provIdent.value : ''
+                  );
+                }
+
+                if (window.__applyFacturaXMLPayload) {
+                  window.__applyFacturaXMLPayload(payload);
+                } else if (window.gastosPrefillFromFacturaXML) {
+                  window.gastosPrefillFromFacturaXML(payload);
+                }
+
+              })
+              .catch(err => {
+                console.error('Error fetch resumen XML:', err);
+              });
+          }
+
+          fetchFacturas('');
+
+          $search.addEventListener('input', (e) => {
+            const q = e.target.value || '';
+            clearTimeout(t);
+            t = setTimeout(() => fetchFacturas(q), 220);
+          });
+
+          $search.addEventListener('change', syncSelection);
+          $search.addEventListener('blur', syncSelection);
+        })();
+      </script>
+
+      {% endblock %}
+    </div>
+
+    <!-- 🟨 DETALLE -->
+    <div class="section section-danger mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="mb-0 text-warning"><i class="bi bi-calculator me-1"></i> Detalle</h5>
+        <button type="button" id="btnAddDet" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-plus-lg me-1"></i>Agregar línea
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <datalist id="dl-centros"></datalist>
+        <datalist id="dl-motivos"></datalist>
+
+        <table class="table table-sm table-striped align-middle">
+          <thead>
+            <tr>
+              <th style="min-width: 200px;">Observación</th>
+              <th style="min-width: 180px;">Motivo gasto</th>
+              <th style="min-width: 180px;">Centro de costo</th>
+              <th style="min-width: 90px;">Indicador</th>
+              <th class="text-end col-hide-soporte">Con Iva</th>
+              <th class="text-end">Sin Iva</th>
+              <th class="text-end col-subtotal-fac">Subtotal fac.</th>
+              <th class="text-end col-hide-soporte">Serv./prop.</th>
+              <th class="text-end col-hide-soporte">Subtotal sin IVA</th>
+              <th class="text-end">IVA</th>
+              <th class="text-end">Total con IVA</th>
+              <th style="min-width: 160px;">Descripción</th>
+              <th style="width:1%;"></th>
+            </tr>
+          </thead>
+          <tbody id="det-body"></tbody>
+        </table>
+      </div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-4 only-soporte">
+          <label class="form-label">Gastos con soporte</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_con_soporte" value="0" readonly>
+        </div>
+
+        <div class="col-md-4 only-soporte">
+          <label class="form-label">Gastos sin soporte</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_sin_soporte" value="0" readonly>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Subtotal factura</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_subtotal_factura" value="0" readonly>
+        </div>
+        <div class="col-md-4 col-hide-soporte">
+          <label class="form-label">Servicios y propinas</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_servicios_10" value="0" readonly>
+        </div>
+
+        <div class="col-md-4 col-hide-soporte">
+          <label class="form-label">Subtotal sin IVA</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_subtotal_sin_iva" value="0" readonly>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">IVA</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_iva" value="0" readonly>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Total</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_total_con_iva" value="0" readonly>
+          <div id="totInvalid" class="invalid-feedback">
+            El Total (Total con IVA) debe ser mayor a cero.
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" name="sum_sin_soporte" id="h_sum_sin_soporte"
+        value="{{ form.get('sum_sin_soporte','0') if form else (g.get('sin_soporte') or 0) }}">
+      <input type="hidden" name="subtotal_factura" id="h_subtotal_factura"
+        value="{{ form.get('subtotal_factura','0') if form else (g.get('subtotal_factura') or 0) }}">
+      <input type="hidden" name="iva" id="h_iva" value="{{ form.get('iva','0') if form else (g.get('iva') or 0) }}">
+      <input type="hidden" name="total_con_iva" id="h_total_con_iva"
+        value="{{ form.get('total_con_iva','0') if form else (g.get('total_con_iva') or 0) }}">
+    </div>
+
+    <script>
+      (function () {
+        const $body = document.getElementById('det-body');
+        if (!$body) return;
+
+        const $btnAdd = document.getElementById('btnAddDet');
+
+        const sumIds = {
+          'det_con_soporte': 'sum_con_soporte',
+          'det_sin_soporte': 'sum_sin_soporte',
+          'det_subtotal_factura': 'sum_subtotal_factura',
+          'det_servicios_10': 'sum_servicios_10',
+          'det_subtotal_sin_iva': 'sum_subtotal_sin_iva',
+          'det_iva': 'sum_iva',
+          'det_total_con_iva': 'sum_total_con_iva'
+        };
+
+        const toNum = (v) => {
+          if (v == null) return 0;
+          const s = String(v).trim().replace(/\s+/g, '').replace(',', '.');
+          const n = parseFloat(s);
+          return Number.isFinite(n) ? n : 0;
+        };
+
+        function sumByName(name) {
+          return Array.from($body.querySelectorAll(`input[name="${name}"]`))
+            .reduce((acc, el) => acc + toNum(el.value), 0);
+        }
+
+        function recalcTotals() {
+          const totals = {};
+
+          for (const [name, id] of Object.entries(sumIds)) {
+            const total = sumByName(name);
+            totals[id] = total;
+
+            const $sum = document.getElementById(id);
+            if ($sum) $sum.value = total.toFixed(2);
+          }
+
+          const $hSin = document.getElementById('h_sum_sin_soporte');
+          if ($hSin) $hSin.value = (totals['sum_sin_soporte'] ?? 0).toFixed(2);
+
+          const $hSub = document.getElementById('h_subtotal_factura');
+          if ($hSub) $hSub.value = (totals['sum_subtotal_factura'] ?? 0).toFixed(2);
+
+          const $hIva = document.getElementById('h_iva');
+          if ($hIva) $hIva.value = (totals['sum_iva'] ?? 0).toFixed(2);
+
+          const $hTot = document.getElementById('h_total_con_iva');
+          if ($hTot) $hTot.value = (totals['sum_total_con_iva'] ?? 0).toFixed(2);
+        }
+
+        function computeRow($tr) {
+          const $con = $tr.querySelector('input[name="det_con_soporte"]');
+          const $sin = $tr.querySelector('input[name="det_sin_soporte"]');
+          const $subf = $tr.querySelector('input[name="det_subtotal_factura"]');
+          const $s10 = $tr.querySelector('input[name="det_servicios_10"]');
+          const $ssi = $tr.querySelector('input[name="det_subtotal_sin_iva"]');
+          const $iva = $tr.querySelector('input[name="det_iva"]');
+          const $tot = $tr.querySelector('input[name="det_total_con_iva"]');
+          const $ind = $tr.querySelector('input[name="det_indicador"]');
+
+          const con = toNum($con?.value);
+          const sin = toNum($sin?.value);
+          const ssi = toNum($ssi?.value);
+
+          const subfVal = con + sin;
+          if ($subf) $subf.value = subfVal.toFixed(2);
+
+          if ($ind) {
+            const tipo = (document.querySelector('input[name="tipo_registro"]')?.value || '').trim().toLowerCase();
+            const esReembolso = (tipo === 'caja_chica' || tipo === 'reembolso');
+            const esTarjetaSinSoporte = !!document.getElementById('tarjeta_sin_soporte')?.checked;
+            const esModoSinSoporteUI = esReembolso || esTarjetaSinSoporte;
+
+            const cur = (($ind.value || '')).toUpperCase().trim();
+            const yaEsValido = ['CE', 'CH', 'C0'].includes(cur);
+
+            if (esModoSinSoporteUI) {
+              $ind.value = 'C0';
+            } else if (!yaEsValido) {
+              if (sin > 0 && con === 0) {
+                $ind.value = 'C0';
+              }
+              else if (con > 0 && sin === 0) {
+                const ivaVal = toNum($iva?.value);
+                let pct = 0;
+                if (con > 0 && ivaVal > 0) pct = Math.round((ivaVal / con) * 100);
+
+                if (pct === 8) $ind.value = 'CH';
+                else if (pct === 15) $ind.value = 'CE';
+                else $ind.value = '';
+              } else {
+                $ind.value = '';
+              }
+            }
+          }
+
+          if ($iva && ssi <= 0) {
+            const ind = (($ind?.value || '')).toUpperCase().trim();
+            const rate = (ind === 'CH') ? 0.08 : (ind === 'CE') ? 0.15 : 0.00;
+            $iva.value = (con * rate).toFixed(2);
+          }
+
+          const iva = toNum($iva?.value);
+          const s10 = toNum($s10?.value);
+
+          const total = subfVal + iva + ssi + s10;
+          if ($tot) $tot.value = total.toFixed(2);
+        }
+
+        function bindRowEvents($tr) {
+          const inputs = $tr.querySelectorAll('input,textarea');
+          inputs.forEach(inp => {
+            inp.addEventListener('input', () => { computeRow($tr); recalcTotals(); });
+            inp.addEventListener('change', () => { computeRow($tr); recalcTotals(); });
+          });
+
+          const btnDel = $tr.querySelector('.btn-remove-row');
+          if (btnDel) {
+            btnDel.addEventListener('click', () => {
+              if ($body.children.length <= 1) return;
+              $tr.remove();
+              recalcTotals();
+            });
+          }
+          computeRow($tr);
+        }
+
+        function esc(v = '') {
+          return String(v).replace(/"/g, '&quot;').replace(/</g, '&lt;');
+        }
+
+        function addRow(data = {}) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+          <td>
+            <textarea name="det_observacion" class="form-control" rows="1">${esc(data.observacion || '')}</textarea>
+          </td>
+
+          <td>
+            <input
+              name="det_motivo"
+              class="form-control"
+              list="dl-motivos"
+              required
+              placeholder="Motivo"
+              value="${esc(data.motivo || '')}"
+              title="">
+            <input type="hidden" name="det_motivo_valido" value="${esc(data.motivo || '')}">
+          </td>
+
+          <td>
+            <input
+              name="det_centro_costo"
+              class="form-control"
+              required
+              list="dl-centros"
+              placeholder="Centro de costo"
+              value="${esc(data.centro_costo || '')}"
+              title="">
+            <input type="hidden" name="det_centro_costo_valido" value="${esc(data.centro_costo || '')}">
+          </td>
+
+          <td><input name="det_indicador" class="form-control" maxlength="2" required placeholder="C0/CE" value="${esc(data.indicador || '')}"></td>
+          <td class="col-hide-soporte"><input type="number" step="0.01" min="0" name="det_con_soporte" class="form-control text-end" value="${data.con_soporte ?? 0}"></td>
+          <td><input type="number" step="0.01" min="0" name="det_sin_soporte" class="form-control text-end" value="${data.sin_soporte ?? 0}"></td>
+          <td class="col-subtotal-fac"><input type="number" step="0.01" min="0" name="det_subtotal_factura" class="form-control text-end" value="${data.subtotal_factura ?? 0}"></td>
+          <td class="col-hide-soporte">
+            <input type="number" step="0.01" min="0" name="det_servicios_10" class="form-control text-end" value="${data.servicios_10 ?? 0}">
+          </td>
+          <td class="col-hide-soporte">
+            <input type="number" step="0.01" min="0" name="det_subtotal_sin_iva" class="form-control text-end" value="${data.subtotal_sin_iva ?? 0}">
+          </td>
+          <td><input type="number" step="0.01" min="0" name="det_iva" class="form-control text-end" value="${data.iva ?? 0}"></td>
+          <td><input type="number" step="0.01" min="0" name="det_total_con_iva" class="form-control text-end" value="${data.total_con_iva ?? 0}"></td>
+          <td><input name="det_descripcion" class="form-control" value="${esc(data.descripcion || '')}"></td>
+
+          <td class="text-end">
+            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        `;
+          $body.appendChild(tr);
+          bindRowEvents($tr = tr);
+          recalcTotals();
+        }
+
+        function pickNum(obj, keys) {
+          for (const k of keys) {
+            if (obj && obj[k] != null && String(obj[k]).trim() !== '') {
+              const n = toNum(obj[k]);
+              if (n || n === 0) return n;
+            }
+          }
+          return 0;
+        }
+
+        function getInfo(payload) {
+          return payload?.infoFactura || payload?.info_factura || payload || {};
+        }
+
+        function normalizeTotalConImpuestos(payload) {
+          const info = getInfo(payload);
+
+          const tci =
+            payload?.totalConImpuestos ||
+            payload?.total_con_impuestos ||
+            info?.totalConImpuestos ||
+            info?.total_con_impuestos ||
+            null;
+
+          if (Array.isArray(tci)) return tci;
+
+          if (tci && Array.isArray(tci.totalImpuesto)) return tci.totalImpuesto;
+          if (tci && Array.isArray(tci.total_impuesto)) return tci.total_impuesto;
+
+          return [];
+        }
+
+        function extractIvaBaseValor(payload) {
+          const items = normalizeTotalConImpuestos(payload);
+
+          const ivaItems = items.filter(it => String(it?.codigo ?? it?.codigo_impuesto ?? '') === '2');
+
+          let chosen = null;
+          for (const it of ivaItems) {
+            const val = toNum(it?.valor ?? it?.valor_impuesto ?? it?.iva ?? it?.totalImpuesto);
+            if (val > 0 && (!chosen || val > toNum(chosen?.valor ?? chosen?.valor_impuesto ?? chosen?.iva))) {
+              chosen = it;
+            }
+          }
+
+          if (!chosen) chosen = ivaItems[0] || null;
+
+          const base = toNum(
+            chosen?.baseImponible ??
+            chosen?.base_imponible ??
+            chosen?.baseIva ??
+            chosen?.base_iva ??
+            0
+          );
+
+          const valor = toNum(
+            chosen?.valor ??
+            chosen?.valor_impuesto ??
+            chosen?.iva ??
+            0
+          );
+
+          let pct = 0;
+
+          const tarifaDirecta = toNum(
+            chosen?.tarifa ??
+            chosen?.porcentaje ??
+            chosen?.rate ??
+            chosen?.pct ??
+            chosen?.porc ??
+            0
+          );
+
+          if (tarifaDirecta > 0) {
+            pct = Math.round(tarifaDirecta);
+          } else if (base > 0 && valor > 0) {
+            pct = Math.round((valor / base) * 100);
+          }
+
+          if (pct === 8) pct = 8;
+          else if (pct === 15) pct = 15;
+          else if (pct === 0) pct = 0;
+          else {
+            if (Math.abs(pct - 8) <= 1) pct = 8;
+            else if (Math.abs(pct - 15) <= 1) pct = 15;
+            else pct = 0;
+          }
+
+          return { base, valor, pct };
+        }
+
+        function prefillDetalleDesdeXML(payload = {}) {
+          const info = getInfo(payload);
+
+          const baseIvaFlat = pickNum(payload, ['base_iva', 'baseIva', 'subtotal_15']);
+          const sub0Flat = pickNum(payload, ['subtotal_0', 'base_0']);
+
+          let subtotal = (
+            pickNum(info, [
+              'totalSinImpuestos',
+              'total_sin_impuestos',
+              'subtotalSinImpuestos',
+              'subtotal_sin_impuestos',
+              'subtotal',
+              'subtotal_factura'
+            ]) ||
+            pickNum(payload, [
+              'subtotal',
+              'subtotal_factura',
+              'total_sin_impuestos',
+              'totalSinImpuestos'
+            ])
+          );
+
+          if (!subtotal && (baseIvaFlat > 0 || sub0Flat > 0)) {
+            subtotal = baseIvaFlat + sub0Flat;
+          }
+
+          const total = (
+            pickNum(info, ['importeTotal', 'importe_total']) ||
+            pickNum(payload, ['total', 'importeTotal', 'importe_total'])
+          );
+
+          const propina = (
+            pickNum(info, ['propina']) ||
+            pickNum(payload, ['propina', 'servicios_10'])
+          );
+
+          let { base, valor, pct } = extractIvaBaseValor(payload);
+
+          const tarifaPlana =
+            pickNum(payload, ['iva_tarifa', 'tarifa_iva', 'tarifa']) ||
+            pickNum(info, ['iva_tarifa', 'tarifa_iva', 'tarifa']) ||
+            0;
+
+          const pctSRI = (pct === 8 || pct === 15 || pct === 0) ? pct : 0;
+          let tarifaPct = (tarifaPlana > 0) ? tarifaPlana : (pctSRI > 0 ? pctSRI : 15);
+
+          if (!base && baseIvaFlat > 0) base = baseIvaFlat;
+
+          if (!valor) {
+            valor =
+              pickNum(info, ['iva', 'total_iva', 'iva_total', 'valor_iva']) ||
+              pickNum(payload, ['iva', 'total_iva', 'iva_total', 'valor_iva']);
+          }
+
+          if (!valor && base > 0) {
+            valor = base * (tarifaPct / 100);
+          }
+
+          if (!base && valor > 0) {
+            base = valor / (tarifaPct / 100);
+          }
+
+          const sub = (subtotal > 0)
+            ? subtotal
+            : (total > 0 ? Math.max(total - valor - propina, 0) : 0);
+
+          const con = Math.max(base, 0);
+
+          const sin = (sub0Flat > 0)
+            ? sub0Flat
+            : Math.max(sub - con, 0);
+
+          $body.innerHTML = '';
+          if (con > 0) {
+            const pctNorm = Math.round(toNum(tarifaPct));
+            const ind = (pctNorm === 8) ? 'CH' : 'CE';
+            const rate = (ind === 'CH') ? 0.08 : 0.15;
+            const ivaCalc = +(con * rate).toFixed(2);
+
+            addRow({
+              descripcion: payload.descripcion || '',
+              observacion: '',
+              centro_costo: '',
+              motivo: '',
+              indicador: ind,
+              con_soporte: con,
+              sin_soporte: 0,
+              servicios_10: propina,
+              subtotal_sin_iva: 0,
+              iva: ivaCalc,
+              total_con_iva: +(con + ivaCalc + propina).toFixed(2)
+            });
+          }
+
+          if (sin > 0) {
+            addRow({
+              descripcion: payload.descripcion || '',
+              observacion: '',
+              centro_costo: '',
+              motivo: '',
+              indicador: 'C0',
+              con_soporte: 0,
+              sin_soporte: sin,
+              servicios_10: propina,
+              subtotal_sin_iva: 0,
+              iva: 0
+            });
+          }
+
+          if ($body.children.length === 0) addRow();
+
+          recalcTotals();
+        }
+
+        window.gastosPrefillFromFacturaXML = function (payload) {
+          try {
+            prefillDetalleDesdeXML(payload);
+          } catch (e) {
+            console.error('Error en gastosPrefillFromFacturaXML:', e);
+          }
+        };
+
+        if ($btnAdd) {
+          $btnAdd.addEventListener('click', () => addRow());
+        }
+
+        const PREDET = {{ (detalles or[]) | tojson | safe
+      }};
+      if (Array.isArray(PREDET) && PREDET.length) {
+        PREDET.forEach(r => addRow(r));
+      } else {
+        addRow();
+      }
+
+      }) ();
+    </script>
+
+    <!-- Motivos (detalle) como LISTA -->
+    <script>
+      (function () {
+        const $tbody = document.getElementById('det-body');
+        const $dlMot = document.getElementById('dl-motivos');
+        if (!$tbody || !$dlMot) return;
+
+        const MAX_MOTIVOS = 3, MIN_CHARS = 2;
+        let t = null;
+
+        function fillMotivos(list) {
+          $dlMot.innerHTML = '';
+          (list || []).slice(0, MAX_MOTIVOS).forEach(x => {
+            const opt = document.createElement('option');
+            opt.value = x.valor || '';
+            opt.label = x.nombre ? `${x.nombre} (${x.valor || ''})` : (x.valor || '');
+            $dlMot.appendChild(opt);
+          });
+        }
+
+        function fetchMotivos(q) {
+          const url = new URL('{{ url_for("api_param_motivos") }}', location.origin);
+          if ((q || '').length >= MIN_CHARS) url.searchParams.set('q', q);
+          url.searchParams.set('limit', String(MAX_MOTIVOS));
+          fetch(url, { credentials: 'same-origin' })
+            .then(r => r.json())
+            .then(fillMotivos)
+            .catch(() => { });
+        }
+
+        fetchMotivos('');
+        $tbody.addEventListener('input', (e) => {
+          const el = e.target;
+          if (el && el.name === 'det_motivo') {
+            el.setAttribute('list', 'dl-motivos');
+            clearTimeout(t);
+            t = setTimeout(() => fetchMotivos(el.value || ''), 220);
+          }
+        });
+      })();
+    </script>
+
+    <!-- Validación exacta contra datalist de Motivo y Centro -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const tbody = document.getElementById('det-body');
+        const dlMotivos = document.getElementById('dl-motivos');
+        const dlCentros = document.getElementById('dl-centros');
+
+        if (!tbody) return;
+
+        function findExactOption(datalist, value) {
+          const v = (value || '').trim().toLowerCase();
+          if (!v || !datalist) return null;
+
+          return Array.from(datalist.options).find(opt =>
+            ((opt.value || '').trim().toLowerCase() === v)
+          ) || null;
+        }
+
+        function setFieldFeedback(inputEl, ok, msg) {
+          if (!inputEl) return;
+          inputEl.classList.toggle('is-invalid', !ok);
+
+          if (ok) {
+            inputEl.removeAttribute('title');
+            inputEl.dataset.errmsg = '';
+          } else {
+            inputEl.setAttribute('title', msg || 'Campo inválido');
+            inputEl.dataset.errmsg = msg || 'Campo inválido';
+          }
+        }
+
+        function validateInputAgainstDatalist(inputEl, datalistEl, hiddenName, message) {
+          const tr = inputEl.closest('tr');
+          if (!tr) return false;
+
+          const hidden = tr.querySelector(`input[name="${hiddenName}"]`);
+          if (!hidden) return false;
+
+          const match = findExactOption(datalistEl, inputEl.value);
+
+          if (match) {
+            hidden.value = match.value || '';
+            setFieldFeedback(inputEl, true, message);
+            return true;
+          } else {
+            hidden.value = '';
+            setFieldFeedback(inputEl, false, message);
+            return false;
+          }
+        }
+
+        tbody.addEventListener('input', function (e) {
+          const el = e.target;
+          if (!el) return;
+
+          if (el.name === 'det_motivo') {
+            const tr = el.closest('tr');
+            const hidden = tr?.querySelector('input[name="det_motivo_valido"]');
+            if (hidden) hidden.value = '';
+            setFieldFeedback(el, true, 'Debe seleccionar un motivo válido de la lista.');
+          }
+
+          if (el.name === 'det_centro_costo') {
+            const tr = el.closest('tr');
+            const hidden = tr?.querySelector('input[name="det_centro_costo_valido"]');
+            if (hidden) hidden.value = '';
+            setFieldFeedback(el, true, 'Debe seleccionar un centro de costo válido de la lista.');
+          }
+        });
+
+        tbody.addEventListener('change', function (e) {
+          const el = e.target;
+          if (!el) return;
+
+          if (el.name === 'det_motivo') {
+            validateInputAgainstDatalist(
+              el,
+              dlMotivos,
+              'det_motivo_valido',
+              'Debe seleccionar un motivo válido de la lista.'
+            );
+          }
+
+          if (el.name === 'det_centro_costo') {
+            validateInputAgainstDatalist(
+              el,
+              dlCentros,
+              'det_centro_costo_valido',
+              'Debe seleccionar un centro de costo válido de la lista.'
+            );
+          }
+        });
+      });
+    </script>
+
+    <!-- 🟩 ADJUNTO -->
+    <div class="section section-danger mb-4">
+      <h5 class="mb-3 text-success"><i class="bi bi-paperclip me-1"></i> Adjuntar archivos</h5>
+      <label for="archivo" class="form-label">Documentos (PDF, Word, Excel, Imagen)</label>
+
+      {% set lista_adj = (adjuntos if adjuntos is defined and adjuntos else []) %}
+      {% set adj_count = lista_adj|length %}
+
+      <input type="hidden" id="adj_count" value="{{ adj_count }}">
+
+      <input type="file" class="form-control" id="archivo" name="archivo" multiple
+        accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif">
+      <div id="archivoInvalid" class="invalid-feedback">
+        Debe adjuntar al menos un archivo para guardar.
+      </div>
+
+      <small class="text-muted d-block mt-1">
+        Puedes seleccionar uno o varios archivos.
+      </small>
+
+      <ul id="selectedFiles" class="mt-2 small"></ul>
+
+      {% set lista_adj = (adjuntos if adjuntos is defined and adjuntos else []) %}
+      {% if lista_adj %}
+      <div class="mt-2">
+        <span class="text-white">Archivos actuales:</span>
+        <ul class="mb-0">
+          {% for a in lista_adj %}
+          {% set fname = a.filename if a is mapping else a %}
+          <li>
+            <a href="{{ url_for('static', filename='uploads/' ~ fname) }}" target="_blank">{{ fname }}</a>
+            {% if a is mapping and a.uploaded_at %}
+            <small class="text-muted">({{ a.uploaded_at }})</small>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% elif archivo %}
+      <div class="mt-2">
+        <span class="text-white">Archivo actual:</span>
+        <a href="{{ url_for('static', filename='uploads/' ~ archivo) }}" target="_blank">{{ archivo }}</a>
+      </div>
+      {% endif %}
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          (function () {
+            const $input = document.getElementById('proveedor_nombre');
+            const $dl = document.getElementById('dl-proveedores');
+            const $idField = document.getElementById('proveedor_id');
+            const $txtBack = document.getElementById('proveedor');
+            const $identField = document.getElementById('proveedor_identificacion');
+
+            if (!$input || !$dl || !$idField || !$txtBack) return;
+
+            $input.setAttribute('autocomplete', 'new-password');
+            $input.setAttribute('autocorrect', 'off');
+            $input.setAttribute('autocapitalize', 'none');
+            $input.setAttribute('spellcheck', 'false');
+
+            $input.dataset.initialName = ($input.value || '').trim();
+            $idField.dataset.initialId = ($idField.value || '').trim();
+
+            const isNumericOnly = s => /^\d+$/.test((s || '').trim());
+
+            function seedCurrentOption() {
+              const name = ($input.value || '').trim();
+              const id = ($idField.value || '').trim();
+              if (!name || !id) return;
+              const exists = Array.from($dl.options).some(
+                o => o.value === name && (o.dataset.id || '') === id
+              );
+              if (!exists) {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.label = name;
+                opt.dataset.id = id;
+                opt.dataset.identificacion = ($identField && $identField.value) ? $identField.value : '';
+                opt.dataset.seed = '1';
+                $dl.appendChild(opt);
+              }
+            }
+
+            let t = null;
+            const MAX = 5;
+
+            const fetchList = (q) => {
+              const url = new URL('{{ url_for("api_proveedores_search") }}', window.location.origin);
+              url.searchParams.set('limit', String(MAX));
+              if ((q || '').length >= 1) url.searchParams.set('q', q);
+
+              fetch(url, {
+                credentials: 'same-origin',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': csrfToken,
+                  'X-Requested-With': 'XMLHttpRequest'
+                }
+              })
+                .then(r => r.json())
+                .then(list => {
+                  $dl.innerHTML = '';
+                  seedCurrentOption();
+                  (list || [])
+                    .filter(it => !isNumericOnly(it.nombre))
+                    .slice(0, MAX)
+                    .forEach(item => {
+                      const opt = document.createElement('option');
+                      opt.value = item.nombre || '';
+                      opt.label = item.nombre || '';
+                      opt.dataset.id = item.id || '';
+                      opt.dataset.identificacion =
+                        item.identificacion ||
+                        item.ruc ||
+                        item.ruc_emisor ||
+                        item.rucEmisor ||
+                        item.proveedorRuc ||
+                        item.identificacion_emisor ||
+                        '';
+                      $dl.appendChild(opt);
+                    });
+                })
+                .catch(() => { });
+            };
+
+            function findMatchInDatalist(q) {
+              const qLower = (q || '').trim().toLowerCase();
+              if (!qLower) return null;
+              return Array.from($dl.options)
+                .find(o =>
+                  (o.value || '').toLowerCase() === qLower ||
+                  (o.label || '').toLowerCase() === qLower
+                );
+            }
+
+            function applyMatch(match) {
+              if (!match) return false;
+
+              $idField.value = match.dataset.id || '';
+
+              if ($identField) {
+                $identField.value = match.dataset.identificacion || '';
+              }
+
+              return !!($idField.value || '').trim();
+            }
+
+            async function ensureProveedorResuelto() {
+              const q = ($input.value || '').trim();
+              $txtBack.value = q;
+
+              if (!q) {
+                $idField.value = '';
+                if ($identField) $identField.value = '';
+                return false;
+              }
+
+              const match = findMatchInDatalist(q);
+              if (applyMatch(match)) {
+                return true;
+              }
+
+              if (window.intentarResolverProveedorId) {
+                await window.intentarResolverProveedorId(q, '');
+              }
+
+              const match2 = findMatchInDatalist(q);
+              if (applyMatch(match2)) {
+                return true;
+              }
+
+              return !!($idField.value || '').trim();
+            }
+            seedCurrentOption();
+            fetchList('');
+
+            $input.addEventListener('input', (e) => {
+              const q = e.target.value || '';
+              clearTimeout(t);
+              t = setTimeout(() => fetchList(q), 220);
+            });
+
+            $input.addEventListener('change', () => {
+              ensureProveedorResuelto();
+            });
+
+            const $form = document.getElementById('frmGasto');
+            const $alert = document.getElementById('provAlert');
+            if (!$form) return;
+
+          })();
+        });
+      </script>
+
+      <div class="col-12 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-save me-1"></i>Guardar
+        </button>
+        <a href="{{ url_for('lista_gastos') }}" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+
+      <div class="modal fade" id="busyModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              <div class="spinner-border" role="status" aria-hidden="true"></div>
+              <div class="mt-2 fw-semibold">Procesando…</div>
+              <div id="busyMsg" class="small text-muted"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        #busyModal {
+          z-index: 2055;
+        }
+      </style>
+
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('frmGasto');
+    const fileInput = document.getElementById('archivo');
+    const adjCountEl = document.getElementById('adj_count');
+    const invalidMsg = document.getElementById('archivoInvalid');
+
+    if (!form || !fileInput) return;
+
+    function setInvalid(on) {
+      if (on) {
+        fileInput.classList.add('is-invalid');
+        invalidMsg?.classList.add('d-block');
+      } else {
+        fileInput.classList.remove('is-invalid');
+        invalidMsg?.classList.remove('d-block');
+      }
+    }
+
+    fileInput.addEventListener('change', () => setInvalid(false));
+  });
+</script>
+
+<script>
+  const Busy = (() => {
+    let modal, el, msgEl;
+    function ensure() {
+      el = el || document.getElementById('busyModal');
+      if (!el) return null;
+      modal = bootstrap.Modal.getOrCreateInstance(el);
+      msgEl = msgEl || document.getElementById('busyMsg');
+      return modal;
+    }
+    return {
+      show(msg = 'Por favor, espera…') {
+        if (!ensure()) return;
+        if (msgEl) msgEl.textContent = msg || '';
+        modal.show();
+      },
+      hide() {
+        try { modal?.hide(); } catch (e) { }
+      }
+    };
+  })();
+
+  async function withBusy(promiseOrFn, msg) {
+    Busy.show(msg);
+    try {
+      const p = (typeof promiseOrFn === 'function') ? promiseOrFn() : promiseOrFn;
+      return await p;
+    } finally {
+      Busy.hide();
+    }
+  }
+
+  function lockButton(btn, text = 'Procesando…') {
+    if (!btn) return () => { };
+    const html = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `${text} <span class="spinner-border spinner-border-sm ms-2" aria-hidden="true"></span>`;
+    return () => {
+      btn.disabled = false;
+      btn.innerHTML = html;
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('frmGasto');
+    if (!form) return;
+
+    const btnSubmit = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', function (e) {
+      if (e.defaultPrevented) return;
+      Busy.show('Guardando gasto…');
+      if (btnSubmit) btnSubmit.disabled = true;
+    });
+  });
+</script>
+
+<script>
+  function applyTipoGastoUI() {
+    const tipo = (document.querySelector('input[name="tipo_registro"]')?.value || '').trim().toLowerCase();
+    const esReembolso = (tipo === 'caja_chica' || tipo === 'reembolso');
+    const chk = document.getElementById('tarjeta_sin_soporte');
+    const esTarjetaSinSoporte = !!(chk && chk.checked);
+    const esModoSinSoporteUI = esReembolso || esTarjetaSinSoporte;
+
+    document.body.classList.toggle('hide-subtotal-fac', esModoSinSoporteUI);
+    document.body.classList.toggle('hide-soporte', esModoSinSoporteUI);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    applyTipoGastoUI();
+    const chk = document.getElementById('tarjeta_sin_soporte');
+    if (chk) chk.addEventListener('change', applyTipoGastoUI);
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const $detalle = document.getElementById('descripcion_input');
+    const $tbody = document.getElementById('det-body');
+    if (!$detalle) return;
+
+    let lastSynced = '';
+
+    function upperKeepCaret(el, nextVal) {
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      el.value = nextVal;
+      try { el.setSelectionRange(start, end); } catch (_) { }
+    }
+
+    function syncObservaciones(valUpper) {
+      const areas = document.querySelectorAll('textarea[name="det_observacion"]');
+      areas.forEach(a => {
+        const cur = (a.value || '').trim();
+        if (!cur || cur === lastSynced) {
+          a.value = valUpper;
+        }
+      });
+      lastSynced = valUpper;
+    }
+
+    $detalle.addEventListener('input', function () {
+      const raw = $detalle.value || '';
+      const up = raw.toUpperCase();
+
+      if (raw !== up) upperKeepCaret($detalle, up);
+
+      syncObservaciones(up.trim());
+    });
+
+    if ($tbody) {
+      const obs = new MutationObserver(() => {
+        const up = ($detalle.value || '').toUpperCase().trim();
+        if (up) syncObservaciones(up);
+      });
+      obs.observe($tbody, { childList: true });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const chk = document.getElementById('tarjeta_sin_soporte');
+    const $provNombre = document.getElementById('proveedor_nombre');
+    const $provId = document.getElementById('proveedor_id');
+    const $provIdent = document.getElementById('proveedor_identificacion');
+    const $alert = document.getElementById('provAlert');
+
+    if (!chk || !$provNombre || !$provIdent) return;
+
+    function applyTarjetaSinSoporteUI() {
+      const on = !!chk.checked;
+
+      if (on) {
+        $provIdent.removeAttribute('readonly');
+        $provNombre.removeAttribute('list');
+        if ($provId) $provId.value = '';
+        if ($alert) $alert.classList.add('d-none');
+      } else {
+        $provIdent.setAttribute('readonly', 'readonly');
+        $provNombre.setAttribute('list', 'dl-proveedores');
+      }
+    }
+
+    chk.addEventListener('change', applyTarjetaSinSoporteUI);
+    applyTarjetaSinSoporteUI();
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('btnGenSec');
+    const inp = document.getElementById('numero_factura');
+    if (!btn || !inp) return;
+
+    function getTipoRegistro() {
+      return (document.querySelector('input[name="tipo_registro"]')?.value || '').trim().toLowerCase();
+    }
+
+    function isTarjetaSinSoporteChecked() {
+      const chk = document.getElementById('tarjeta_sin_soporte');
+      return !!(chk && chk.checked);
+    }
+
+    function puedeGenerarSecuencia() {
+      const tipo = getTipoRegistro();
+      const esCajaChica = (tipo === 'caja_chica');
+      const esReembolso = (tipo === 'reembolso');
+      const esTarjetaSinSoporte = isTarjetaSinSoporteChecked();
+      return esCajaChica || esReembolso || esTarjetaSinSoporte;
+    }
+
+    function setBusy(on) {
+      btn.disabled = !!on;
+    }
+
+    function refresh() {
+      btn.style.display = puedeGenerarSecuencia() ? '' : 'none';
+      btn.title = puedeGenerarSecuencia()
+        ? 'Generar consecutivo'
+        : 'No aplica para este tipo de gasto';
+    }
+
+    refresh();
+
+    const chk = document.getElementById('tarjeta_sin_soporte');
+    if (chk) chk.addEventListener('change', refresh);
+
+    btn.addEventListener('click', async function () {
+      if (!puedeGenerarSecuencia()) {
+        alert('La secuencia automática solo aplica para Caja Chica, Reembolso de vendedor o Tarjeta sin soporte.');
+        return;
+      }
+
+      if ((inp.value || '').trim()) {
+        const ok = confirm('Ya existe un N° factura. ¿Deseas reemplazarlo por un consecutivo?');
+        if (!ok) return;
+      }
+
+      setBusy(true);
+      try {
+        const r = await fetch('{{ url_for("api_next_caja_chica_factura") }}', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({})
+        });
+
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok || !data.ok) throw new Error(data.msg || ('HTTP ' + r.status));
+
+        inp.value = data.numero || '';
+        inp.focus();
+      } catch (e) {
+        alert('No se pudo generar el consecutivo: ' + e.message);
+      } finally {
+        setBusy(false);
+      }
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('descripcion_input');
+    if (!el) return;
+
+    el.addEventListener('input', () => {
+      const up = (el.value || '').toUpperCase();
+      if (el.value !== up) el.value = up;
+    });
+
+    el.addEventListener('invalid', () => {
+      el.classList.add('is-invalid');
+    }, true);
+
+    el.addEventListener('input', () => {
+      if (el.checkValidity()) el.classList.remove('is-invalid');
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const inp = document.getElementById('numero_factura');
+    if (!inp) return;
+
+    function getTipoRegistro() {
+      return (document.querySelector('input[name="tipo_registro"]')?.value || '').trim().toLowerCase();
+    }
+    function isTarjetaSinSoporteChecked() {
+      const chk = document.getElementById('tarjeta_sin_soporte');
+      return !!(chk && chk.checked);
+    }
+
+    function aplicaRequiredFactura() {
+      return true;
+    }
+
+    function refreshFacturaRequired() {
+      const must = aplicaRequiredFactura();
+      if (must) {
+        inp.setAttribute('required', 'required');
+      } else {
+        inp.removeAttribute('required');
+        inp.classList.remove('is-invalid');
+      }
+    }
+
+    inp.addEventListener('invalid', () => {
+      inp.classList.add('is-invalid');
+    }, true);
+
+    inp.addEventListener('input', () => {
+      if (inp.checkValidity()) inp.classList.remove('is-invalid');
+    });
+
+    refreshFacturaRequired();
+
+    const chk = document.getElementById('tarjeta_sin_soporte');
+    if (chk) chk.addEventListener('change', refreshFacturaRequired);
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('frmGasto');
+    if (!form) return;
+
+    const $totVis = document.getElementById('sum_total_con_iva');
+    const $totHid = document.getElementById('h_total_con_iva');
+    const $msg = document.getElementById('totInvalid');
+
+    function toNum(v) {
+      if (v == null) return 0;
+      const s = String(v).trim().replace(/\s+/g, '').replace(',', '.');
+      const n = parseFloat(s);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function getTotal() {
+      const v = ($totHid && $totHid.value != null) ? $totHid.value : ($totVis ? $totVis.value : '0');
+      return toNum(v);
+    }
+
+    function setInvalid(on) {
+      if (!$totVis) return;
+
+      if (on) {
+        $totVis.classList.add('is-invalid');
+        $msg?.classList.add('d-block');
+        try { $totVis.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (_) { }
+      } else {
+        $totVis.classList.remove('is-invalid');
+        $msg?.classList.remove('d-block');
+      }
+    }
+
+    function validateTotal() {
+      const total = getTotal();
+      const bad = (total <= 0);
+      setInvalid(bad);
+      return !bad;
+    }
+
+    document.getElementById('det-body')?.addEventListener('input', validateTotal);
+    document.getElementById('det-body')?.addEventListener('change', validateTotal);
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('frmGasto');
+    if (!form) return;
+
+    function focusErr(el) {
+      if (!el) return;
+      try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (_) { }
+      try { el.focus({ preventScroll: true }); } catch (_) { try { el.focus(); } catch (__) { } }
+    }
+    function markInvalid(el, on) {
+      if (!el) return;
+      el.classList.toggle('is-invalid', !!on);
+    }
+
+    function setInlineFeedback(inputEl, ok, msg) {
+      if (!inputEl) return;
+      inputEl.classList.toggle('is-invalid', !ok);
+
+      if (ok) {
+        inputEl.removeAttribute('title');
+        inputEl.dataset.errmsg = '';
+      } else {
+        inputEl.setAttribute('title', msg || 'Campo inválido');
+        inputEl.dataset.errmsg = msg || 'Campo inválido';
+      }
+    }
+
+    window.__validateDetalleRequired = function () {
+      const tbody = document.getElementById('det-body');
+      if (!tbody) return { ok: true };
+
+      const skipCentro = isReembolsoVendedor();
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+
+      for (const tr of rows) {
+        const motivo = tr.querySelector('input[name="det_motivo"]');
+        const motivoValido = tr.querySelector('input[name="det_motivo_valido"]');
+
+        const centro = tr.querySelector('input[name="det_centro_costo"]');
+        const centroValido = tr.querySelector('input[name="det_centro_costo_valido"]');
+
+        const indicador = tr.querySelector('input[name="det_indicador"]');
+
+        if (motivo) {
+          const v = (motivo.value || '').trim();
+          if (!v) {
+            setInlineFeedback(motivo, false, 'Debe ingresar Motivo.');
+            motivo.setCustomValidity('Debe ingresar Motivo.');
+            motivo.reportValidity();
+            motivo.setCustomValidity('');
+            return { ok: false, el: motivo };
+          }
+
+          if (!(motivoValido && (motivoValido.value || '').trim())) {
+            setInlineFeedback(motivo, false, 'Debe seleccionar un motivo válido de la lista.');
+            motivo.setCustomValidity('Debe seleccionar un motivo válido de la lista.');
+            motivo.reportValidity();
+            motivo.setCustomValidity('');
+            return { ok: false, el: motivo };
+          }
+
+          setInlineFeedback(motivo, true, '');
+        }
+
+        if (!skipCentro && centro) {
+          const v = (centro.value || '').trim();
+          if (!v) {
+            setInlineFeedback(centro, false, 'Debe ingresar Centro de costo.');
+            centro.setCustomValidity('Debe ingresar Centro de costo.');
+            centro.reportValidity();
+            centro.setCustomValidity('');
+            return { ok: false, el: centro };
+          }
+
+          if (!(centroValido && (centroValido.value || '').trim())) {
+            setInlineFeedback(centro, false, 'Debe seleccionar un centro de costo válido de la lista.');
+            centro.setCustomValidity('Debe seleccionar un centro de costo válido de la lista.');
+            centro.reportValidity();
+            centro.setCustomValidity('');
+            return { ok: false, el: centro };
+          }
+
+          setInlineFeedback(centro, true, '');
+        }
+
+        if (indicador) {
+          const v = (indicador.value || '').trim();
+          if (!v) {
+            indicador.classList.add('is-invalid');
+            indicador.setCustomValidity('Debe ingresar Indicador.');
+            indicador.reportValidity();
+            indicador.setCustomValidity('');
+            return { ok: false, el: indicador };
+          }
+          indicador.classList.remove('is-invalid');
+        }
+      }
+
+      return { ok: true };
+    };
+
+    window.__validateProveedor = async function () {
+      const $input = document.getElementById('proveedor_nombre');
+      const $idField = document.getElementById('proveedor_id');
+      const $identField = document.getElementById('proveedor_identificacion');
+
+      const tipo = (document.querySelector('input[name="tipo_registro"]')?.value || '').trim().toLowerCase();
+      const esReembolso = (tipo === 'caja_chica' || tipo === 'reembolso') ||
+        (!!document.getElementById('reembolso_vendedor')?.checked);
+      const esTarjetaSinSoporte = !!document.getElementById('tarjeta_sin_soporte')?.checked;
+
+      if (esReembolso || esTarjetaSinSoporte) {
+        const nombre = ($input?.value || '').trim();
+        const ruc = ($identField?.value || '').trim();
+        if (!nombre) return { ok: false, el: $input, msg: 'Debe ingresar Proveedor.' };
+        if (!ruc) return { ok: false, el: $identField, msg: 'Debe ingresar RUC.' };
+        return { ok: true };
+      }
+
+      const nombre = ($input?.value || '').trim();
+      if (!nombre) return { ok: false, el: $input, msg: 'Debe seleccionar un Proveedor.' };
+
+      if (($idField?.value || '').trim()) return { ok: true };
+
+      if (window.intentarResolverProveedorId) {
+        await window.intentarResolverProveedorId(nombre, ($identField?.value || '').trim());
+      }
+
+      if (($idField?.value || '').trim()) return { ok: true };
+      return { ok: false, el: $input, msg: 'Debe seleccionar un proveedor válido de la lista.' };
+    };
+
+    window.__validateTotal = function () {
+      const $totVis = document.getElementById('sum_total_con_iva');
+      const $totHid = document.getElementById('h_total_con_iva');
+      const $msg = document.getElementById('totInvalid');
+
+      const toNum = (v) => {
+        if (v == null) return 0;
+        const s = String(v).trim().replace(/\s+/g, '').replace(',', '.');
+        const n = parseFloat(s);
+        return Number.isFinite(n) ? n : 0;
+      };
+
+      const v = ($totHid && $totHid.value != null) ? $totHid.value : ($totVis ? $totVis.value : '0');
+      const total = toNum(v);
+
+      const bad = (total <= 0);
+
+      if ($totVis) $totVis.classList.toggle('is-invalid', bad);
+      if ($msg) $msg.classList.toggle('d-block', bad);
+
+      if (bad) return { ok: false, el: $totVis, msg: 'El Total (Total con IVA) debe ser mayor a cero.' };
+      return { ok: true };
+    };
+
+    window.__validateAdjuntos = function () {
+      const fileInput = document.getElementById('archivo');
+      const adjCountEl = document.getElementById('adj_count');
+      const invalidMsg = document.getElementById('archivoInvalid');
+
+      const already = parseInt((adjCountEl?.value || '0'), 10) || 0;
+      const selected = (fileInput?.files && fileInput.files.length > 0);
+
+      const bad = (already <= 0 && !selected);
+
+      if (fileInput) fileInput.classList.toggle('is-invalid', bad);
+      if (invalidMsg) invalidMsg.classList.toggle('d-block', bad);
+
+      if (bad) return { ok: false, el: fileInput, msg: 'Debe adjuntar al menos un archivo para guardar.' };
+      return { ok: true };
+    };
+
+    form.addEventListener('submit', async (e) => {
+      if (e.defaultPrevented) return;
+
+      const det = document.getElementById('descripcion_input');
+      if (det && !(det.value || '').trim()) {
+        e.preventDefault(); e.stopPropagation();
+        det.setCustomValidity('La descripción es obligatoria.');
+        det.reportValidity();
+        det.setCustomValidity('');
+        markInvalid(det, true);
+        focusErr(det);
+        return;
+      }
+      markInvalid(det, false);
+
+      const pr = (typeof window.__validateProveedor === 'function')
+        ? await window.__validateProveedor()
+        : { ok: true };
+
+      if (!pr.ok) {
+        e.preventDefault(); e.stopPropagation();
+        markInvalid(pr.el, true);
+        focusErr(pr.el);
+        return;
+      }
+
+      const nf = document.getElementById('numero_factura');
+      if (nf && nf.hasAttribute('required') && !(nf.value || '').trim()) {
+        e.preventDefault(); e.stopPropagation();
+        nf.setCustomValidity('El N° de factura es obligatorio.');
+        nf.reportValidity();
+        nf.setCustomValidity('');
+        markInvalid(nf, true);
+        focusErr(nf);
+        return;
+      }
+      if (nf) markInvalid(nf, false);
+
+      const det2 = (typeof window.__validateDetalleRequired === 'function')
+        ? window.__validateDetalleRequired()
+        : { ok: true };
+
+      if (!det2.ok) {
+        e.preventDefault(); e.stopPropagation();
+        focusErr(det2.el);
+        return;
+      }
+
+      const tt = (typeof window.__validateTotal === 'function')
+        ? window.__validateTotal()
+        : { ok: true };
+
+      if (!tt.ok) {
+        e.preventDefault(); e.stopPropagation();
+        focusErr(tt.el);
+        return;
+      }
+
+      const ad = (typeof window.__validateAdjuntos === 'function')
+        ? window.__validateAdjuntos()
+        : { ok: true };
+
+      if (!ad.ok) {
+        e.preventDefault(); e.stopPropagation();
+        focusErr(ad.el);
+        return;
+      }
+    }, true);
+  });
+</script>
+
+<script>
+  function isReembolsoVendedor() {
+    const tipo = (document.querySelector('input[name="tipo_registro"]')?.value || '').trim().toLowerCase();
+    const chkVend = document.getElementById('reembolso_vendedor');
+    const esChkVend = !!(chkVend && chkVend.checked);
+    return (tipo === 'reembolso') || esChkVend;
+  }
+
+  function applyCentroCostoRequiredRule() {
+    const tbody = document.getElementById('det-body');
+    if (!tbody) return;
+
+    const skip = isReembolsoVendedor();
+
+    const centros = tbody.querySelectorAll('input[name="det_centro_costo"]');
+    centros.forEach(el => {
+      if (skip) {
+        el.removeAttribute('required');
+        el.classList.remove('is-invalid');
+      } else {
+        el.setAttribute('required', 'required');
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyCentroCostoRequiredRule();
+
+    const tbody = document.getElementById('det-body');
+    if (tbody) {
+      const obs = new MutationObserver(() => applyCentroCostoRequiredRule());
+      obs.observe(tbody, { childList: true, subtree: true });
+    }
+  });
+</script>
+
+{% endblock %}

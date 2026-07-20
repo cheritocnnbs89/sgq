@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - {{ 'Editar' if mode == 'edit' else 'Nueva' }} frecuencia{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h4 class="mb-3"><i class="bi bi-calendar2-week"></i> {{ 'Editar' if mode == 'edit' else 'Nueva' }} frecuencia</h4>
+
+  <form method="post" action="{{ url_for('obligaciones.editar_frecuencia', frecuencia_id=frecuencia_id) if mode == 'edit' else url_for('obligaciones.nueva_frecuencia') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="card mb-3">
+      <div class="card-header">Datos generales</div>
+      <div class="card-body row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Nombre *</label>
+          <input type="text" name="nombre" class="form-control" maxlength="100" required
+                 value="{{ frecuencia.get('nombre', '') }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Recálculo *</label>
+          <select name="recalculo_tipo" id="recalculo_tipo" class="form-select">
+            {% set recalculo_actual = frecuencia.get('recalculo_tipo', 'NINGUNA') %}
+            {% for codigo, label in recalculo_labels.items() %}
+            <option value="{{ codigo }}" {% if recalculo_actual == codigo %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Cantidad</label>
+          <input type="number" min="1" name="recalculo_cantidad" id="recalculo_cantidad" class="form-control"
+                 value="{{ frecuencia.get('recalculo_cantidad') or '' }}">
+          <small class="text-muted">Ej. Meses=6 -> se repite cada 6 meses.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">
+        Notificaciones (hasta {{ max_notif }})
+        <small class="text-muted">-- cada una avisa por correo a los usuarios que elijas</small>
+      </div>
+      <div class="card-body">
+        {% for i in range(1, max_notif + 1) %}
+        {% set n = notif_map.get(i) %}
+        <div class="border rounded p-3 mb-3 notif-block" data-notif-index="{{ i }}">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label class="form-label">Notificación {{ i }}</label>
+              <select name="notif_{{ i }}_tipo_trigger" class="form-select notif-tipo-trigger">
+                <option value="">-- No usar --</option>
+                {% for codigo, label in trigger_labels.items() %}
+                <option value="{{ codigo }}" {% if n and n.tipo_trigger == codigo %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-3 notif-dias-antes-wrap">
+              <label class="form-label">Días antes del vencimiento</label>
+              <input type="number" min="1" max="365" name="notif_{{ i }}_dias_antes" class="form-control"
+                     value="{{ (n.dias_antes if n else '') or '' }}">
+            </div>
+            <div class="col-md-3 notif-dia-fijo-wrap">
+              <label class="form-label">Día del mes (1-31)</label>
+              <input type="number" min="1" max="31" name="notif_{{ i }}_dia_fijo_mes" class="form-control"
+                     value="{{ (n.dia_fijo_mes if n else '') or '' }}">
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label class="form-label mb-1">Destinatarios</label>
+            <input type="text" class="form-control form-control-sm mb-2 notif-usuario-filtro"
+                   placeholder="Buscar usuario...">
+            <div class="notif-usuarios-lista border rounded p-2">
+              {% for u in usuarios %}
+              <div class="form-check notif-usuario-item">
+                <input class="form-check-input" type="checkbox" name="notif_{{ i }}_destinatarios" value="{{ u.id }}"
+                       id="notif_{{ i }}_dest_{{ u.id }}"
+                       {% if n and u.id in n.destinatario_ids %}checked{% endif %}>
+                <label class="form-check-label notif-usuario-label" for="notif_{{ i }}_dest_{{ u.id }}">
+                  {{ u.nombre_completo or u.username }}
+                </label>
+              </div>
+              {% else %}
+              <span class="text-muted small">Sin usuarios disponibles.</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Guardar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('obligaciones.lista_frecuencias') }}">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/obligaciones_frecuencias.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>DIAZ MORI VICTOR ALEXANDER</razonSocial>
+    <nombreComercial>LA ESQUINA PERUANA</nombreComercial>
+    <ruc>0965263130001</ruc>
+    <claveAcceso>1907202601096526313000120020010000505340000007213</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>002</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000050534</secuencial>
+    <dirMatriz>AVALON PLAZA LOCAL 17  LA AURORA</dirMatriz>
+    <agenteRetencion>1</agenteRetencion>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>19/07/2026</fechaEmision>
+    <dirEstablecimiento>AVALON PLAZA LOCAL 17  LA AURORA</dirEstablecimiento>
+    <obligadoContabilidad>NO</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <totalSinImpuestos>56.00</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>56.00</baseImponible>
+        <valor>8.40</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>5.60</propina>
+    <importeTotal>70.00</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>19</formaPago>
+        <total>70.00</total>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>l6y6r26t1l2d39pxlzpl5knrm</codigoPrincipal>
+      <descripcion>TACU TACU EN SALSAS DE MARISCOS</descripcion>
+      <cantidad>2.000000</cantidad>
+      <precioUnitario>13.043500</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>26.09</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>26.09</baseImponible>
+          <valor>3.91</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>l6y6w1j5yhtbo756z6oypc2z6</codigoPrincipal>
+      <descripcion>SUDADO DE PESCADO(ROBALO)</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>11.304300</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>11.30</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>11.30</baseImponible>
+          <valor>1.70</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>l6y6t5vniqa4ltx3aswqduwvf</codigoPrincipal>
+      <descripcion>FILETE DE PESCADO</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>11.304300</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>11.30</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>11.30</baseImponible>
+          <valor>1.70</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>l6y9hdxvlnw9sxxg91iwex2iv</codigoPrincipal>
+      <descripcion>COCA COLA CERO</descripcion>
+      <cantidad>2.000000</cantidad>
+      <precioUnitario>1.652200</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>3.30</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>3.30</baseImponible>
+          <valor>0.50</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>l6y6xmv16avhri1lxbokn772t</codigoPrincipal>
+      <descripcion>VASO DE CHICHA MORADA</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.173900</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.17</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2.17</baseImponible>
+          <valor>0.33</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>l6y71h1gval5xkoxhe7ru33dl</codigoPrincipal>
+      <descripcion>AGUA MINERAL</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>1.739100</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1.74</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1.74</baseImponible>
+          <valor>0.26</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>j3v7vi</codigoPrincipal>
+      <descripcion>SHOT DE LIMON</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>0.087000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>0.09</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>0.09</baseImponible>
+          <valor>0.01</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Email">dudleyc24@yahoo.es</campoAdicional>
+  </infoAdicional>
+<ds:Signature Id="Signature164589" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo911861">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID398688" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature164589-SignedProperties917933">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>GgpvmSIdpfHEjKO+PFNnHBErY+8=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate11018028">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>pOaYy1vftwr/wGQMrpkZSWulnAo=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-93312" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>wF36KPpFVbync26fCjVg1Q2J+9k=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue976476">
+Bey8prTZlVNuSYzlLdXH7fAVsqgt9jFQLyy48cZh8naN/yAAX/QHCrWhvefIriEPbmSz1BZxz2hE
+L+n3N77WfkMNkdesTa7gJ351S+ScW6Vxqk08T3nqU4/Rz+skjXgU1+ViNmOGwhLwphqsPlTzVfSN
+Y+Oa4OMf7KFf4AcjyslLQQtVdIIjvEfgCrTV3MhZ37BNFwJMUFIkqkQRXAGY6rFPFd0HEshSR7dp
+tY/o1vejK5Wl7Qrbzh6p8amzbsqfS2lYddvD+jO7xmJoAOBtHaZOIitniq6GSFqklJJ4MIvS9uES
+aB6CfOvEWb19kVLdaKplvPmegcPQlgCcHLIMiw==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate11018028">
+<ds:X509Data>
+<ds:X509Certificate>
+MIILKzCCCROgAwIBAgIMAzjGCch+NFkPbQirMA0GCSqGSIb3DQEBCwUAMIG5MRYwFAYDVQQFEw0x
+NzkyNjAxMjE1MDAxMQswCQYDVQQGEwJFQzE2MDQGA1UEChMtQU5GQUMgQVVUT1JJREFEIERFIENF
+UlRJRklDQUNJT04gRUNVQURPUiBDLkEuMSUwIwYDVQQLExxBTkYgQXV0b3JpZGFkIGludGVybWVk
+aWEgIEVDMTMwMQYDVQQDEypBTkYgSGlnaCBBc3N1cmFuY2UgRWN1YWRvciBJbnRlcm1lZGlhdGUg
+Q0EwHhcNMjUwNzE0MjAyNTA2WhcNMjcwNzE0MjAyNTA2WjCCAdkxIzAhBgNVBAoMGkRJQVogTU9S
+SSBWSUNUT1IgQUxFWEFOREVSMRowGAYKKwYBBAGCpEIKBAwKMDk2NTI2MzEzMDErMCkGA1UECwwi
+Q2VydGlmaWNhZG8gUGVyc29uYSBOYXR1cmFsIFJVQyBFQzEZMBcGA1UEKgwQVklDVE9SIEFMRVhB
+TkRFUjEWMBQGA1UEYRMNMDk2NTI2MzEzMDAwMTELMAkGA1UEBhMCRUMxEzARBgNVBAUTCjA5NjUy
+NjMxMzAxEjAQBgNVBAQMCURJQVogTU9SSTEuMCwGA1UEAwwlMDk2NTI2MzEzMCBWSUNUT1IgQUxF
+WEFOREVSIERJQVogTU9SSTEgMB4GA1UEDAwXQWRtaW5pc3RyYWRvciBzb2xpZGFyaW8xKzApBgkq
+hkiG9w0BCQEWHGxhZXNxdWluYXBlcnVhbmExOUBnbWFpbC5jb20xgYAwfgYDVQQNDHdSZWcuIFB1
+Yi46YSBJbnNjcmlwY2nDs246IGEsIFRvbW8gYSwgTGlicm8gMSwgRm9saW8gYSwgSG9qYSBhIENh
+cmdvOkFkbWluaXN0cmFkb3Igc29saWRhcmlvIE5vdGFyaW86YSBOw7ptLiBQcm90b2NvbG86YTCC
+ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAK69+AC2Yi+bf133imwXic2wWY9qII3N3FhY
+QpzRahpCXpZKYB0eA0DD+krqevaNvs5STerjuObcyH4X2RZU+pxox46zPC6gSFQ/aMGnIKTdE/+i
+WtQygwgsv67OnjQpE+cu+d4jSmRrH6HXUk5VKz/+RI3iOE+LUIPMYWdt1qarIBPV40VRx3z/Q3WM
+MUud+CVUkgq4vOHoDjVpffug9d2t16xibQEy+iBzVarJz4Gr1lNXOjxxj47sR3/JzfW3HAfHYzSl
+OQfOpHhSkpul6g0J6repGy4kulXo8lFBf3ehKeh0WBDO+3yXf+6xaHsz2IhynVpceOxk+ZKrT969
+9csCAwEAAaOCBQ4wggUKMB8GA1UdIwQYMBaAFJKu1MuCtJnG0XsRbGXqxU1oIfmsMB0GA1UdDgQW
+BBSfE/kTwYQOekQYLDCs/jTbWL55zTCBtAYDVR0RBIGsMIGpgRxsYWVzcXVpbmFwZXJ1YW5hMTlA
+Z21haWwuY29tpIGIMIGFMSAwHgYKKwYBBAGCpEIKAQwQVklDVE9SIEFMRVhBTkRFUjEUMBIGCisG
+AQQBgqRCCgIMBERJQVoxFDASBgorBgEEAYKkQgoDDARNT1JJMRowGAYKKwYBBAGCpEIKBAwKMDk2
+NTI2MzEzMDEZMBcGCSsGAQQBgY8cAQwKQS0xNDA3MjAyNTAOBgNVHQ8BAf8EBAMCBsAwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwuYW5m
+LmVzL2NybC9BTkZIaWdoQXNzdXJhbmNlRWN1YWRvckludGVybWVkaWF0ZUNBLmNybDCCAQ0GA1Ud
+IASCAQQwggEAMIHnBgwrBgEEAYKkQgIFAQMwgdYwMAYIKwYBBQUHAgEWJGh0dHBzOi8vYW5mLmVz
+L2VjL3JlcG9zaXRvcmlvLWxlZ2FsLzCBoQYIKwYBBQUHAgIwgZQMgZFDZXJ0aWZpY2FkbyBjb25m
+b3JtZSBhIGxhIGxlZ2lzbGFjacOzbiBkZSBmaXJtYSBlbGVjdHLDs25pY2EuIEFudGVzIGRlIGFj
+ZXB0YXJsbyBjb21wcnVlYmUgaW50ZWdyaWRhZCwgbGltaXRhY2lvbmVzLCB2aWdlbmNpYSB5IHVz
+b3MgYXV0b3JpemFkb3MuMAkGBwQAi+xAAQEwCQYHYIVUAQMFCDCBmwYIKwYBBQUHAQEEgY4wgYsw
+JwYIKwYBBQUHMAGGG2h0dHA6Ly9vY3NwLmFuZi5lcy9zcGFpbi9BVjBgBggrBgEFBQcwAoZUaHR0
+cDovL3d3dy5hbmYuZXMvZXMvY2VydGlmaWNhdGVzLWRvd25sb2FkL0FORkhpZ2hBc3N1cmFuY2VF
+Y3VhZG9ySW50ZXJtZWRpYXRlQ0EuY2VyMAwGA1UdEwEB/wQCMAAwKAYJKwYBBAGBjxwTBBsMGTY0
+NTMwODA5NjEzMC01ODMzMjI2MjY0MjMwHQYKKwYBBAGBjxwTAgQPDA0wOTY1MjYzMTMwMDAxMCkG
+CisGAQQBgqRCEwEEGwwZNTgzMzIyNjI2NDIzLTUzOTEwNDQ0Njc1NDAaBgorBgEEAYKkQgMBBAwM
+CjA5NjUyNjMxMzAwKgYKKwYBBAGCpEIDCgQcDBpESUFaIE1PUkkgVklDVE9SIEFMRVhBTkRFUjAd
+BgorBgEEAYKkQgMLBA8MDTA5NjUyNjMxMzAwMDEwEgYKKwYBBAGCpEIDDAQEDAJFQzAgBgorBgEE
+AYKkQgMCBBIMEFZJQ1RPUiBBTEVYQU5ERVIwGQYKKwYBBAGCpEIDAwQLDAlESUFaIE1PUkkwJwYK
+KwYBBAGCpEIDBQQZDBdBZG1pbmlzdHJhZG9yIHNvbGlkYXJpbzAXBgorBgEEAYKkQioBBAkMB1VJ
+Ty0wNDEwEwYKKwYBBAGCpEIuAQQFDAM3MzAwUAYKKwYBBAGCpEIvAQRCDEBhZWE4NDQyM2NhZTYz
+Yzk4ZDg2ODUyZWJiODQ1NGYyMTlhZTMzOWZhMmJjYWIwOWM0ZWI1MDc0NzkyZTRmZWYzMA0GCSqG
+SIb3DQEBCwUAA4ICAQBVUvcvGc7r0mcDoF/VQnTAJlAsN6cB0Yv32Wa1erCSqa7LLm9xhxyDfIBd
+zypgUFowpoRzDLs+CsAnXcjz9zKAXn6+6aHNThT232dwxi/3FtlYgVCGPOPIK4vy1dIJ9+b2WZwo
+OTbRwk7PLwTwja+eXoa/ybKgro+OfjP/joAmr+144BX6SRqpDUMSNkLjWZ0I95iBkqOikNZ6BnRU
+KoapM548o9Gx7ejpg/4i+KoeBr1BI3Do1Og/QyVcyczhDmSgDtywSIE5dCUYOem37v8wc4UdB8k6
+Gc9flg5lEO1mp5GWlY07OYYsyHUR01B+hrvMoM/h6CXASxDodLnjysWfDWX/kgnr6W4LCugPJsC/
+O0qozcnuOlEz5tspQ4V3Zvi1r4NKWYOAoZayijGWTRqKSGHs0E1Uf2o4tq71JWU5flzaai9l5l+Q
+1zt2aZoFqc72OA3K1r0r4AEtbb521VUHbiZ8uY48/G6PambpY/GEZBxedABloW8WuKEXmZY48wad
+6H9WPAlQeMSQhX0hSqamq9a/mC5NnDvzBKsRABX1HfKAH4xNkqI6p7e+9dzAwNelnyl2t9k2ud8i
+9XBsxoClSvCNhwJCT3RUp6dtYLt5ZR6th0b4/yL/+faRspHEKLNWL9ex8E+AeUdmDUGmyWr8tcn0
+jnsuz/IefCZl1NWKkg==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+rr34ALZiL5t/XfeKbBeJzbBZj2ogjc3cWFhCnNFqGkJelkpgHR4DQMP6Sup69o2+zlJN6uO45tzI
+fhfZFlT6nGjHjrM8LqBIVD9owacgpN0T/6Ja1DKDCCy/rs6eNCkT5y753iNKZGsfoddSTlUrP/5E
+jeI4T4tQg8xhZ23WpqsgE9XjRVHHfP9DdYwxS534JVSSCri84egONWl9+6D13a3XrGJtATL6IHNV
+qsnPgavWU1c6PHGPjuxHf8nN9bccB8djNKU5B86keFKSm6XqDQnqt6kbLiS6VejyUUF/d6Ep6HRY
+EM77fJd/7rFoezPYiHKdWlx47GT5kqtP3r31yw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature164589-Object494514"><etsi:QualifyingProperties Target="#Signature164589"><etsi:SignedProperties Id="Signature164589-SignedProperties917933"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-19T12:47:53-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>sdHpkf6HSw2l4JYXocAyQNDWwe8=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=ANF High Assurance Ecuador Intermediate CA,OU=ANF Autoridad intermedia  EC,O=ANFAC AUTORIDAD DE CERTIFICACION ECUADOR C.A.,C=EC,2.5.4.5=#130d31373932363031323135303031</ds:X509IssuerName><ds:X509SerialNumber>997090084393801504862832811</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-93312"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

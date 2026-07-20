@@ -1,0 +1,502 @@
+/* Tabla fija por columnas del <colgroup> */
+.planilla{ table-layout: fixed; border-collapse: collapse; }
+.planilla th, .planilla td{ box-sizing: border-box; white-space: nowrap; }
+
+/* Columnas pegajosas usando las mismas vars del <colgroup> */
+.planilla .sticky-1, .planilla .sticky-2, .planilla .sticky-3{
+  position: sticky; background:#fff; z-index:5;
+}
+
+/* Actividades */
+.planilla .sticky-1{
+  left:0;
+  width:var(--w1); min-width:var(--w1); max-width:var(--w1);
+}
+/* Permite envolver texto dentro del ancho fijo de la 1ª columna */
+.planilla .sticky-1, .planilla .sticky-1 *{ white-space: normal; word-break: break-word; }
+
+/* Frecuencia */
+.planilla .sticky-2{
+  left:var(--w1);
+  width:var(--w2);
+  text-align:center;
+}
+
+/* Responsable */
+.planilla .sticky-3{
+  left:calc(var(--w1) + var(--w2));
+  width:var(--w3);
+}
+
+/* Días: el <colgroup> ya fija el ancho; no hace falta extra */
+.cell-flex{ display:flex; gap:6px; align-items:center; justify-content:center; }
+.planilla input[type="checkbox"]{ width:18px; height:18px; }
+.planilla a.evi{ text-decoration:none; font-size:16px; line-height:1; }
+/* ===== Barra de filtros (solo estética) ===== */
+.filter-bar .form-control,
+.filter-bar .form-select { min-width: 180px; }
+.filter-bar { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: .75rem; }
+
+/* ===== Leyenda ===== */
+.legend { display:flex; align-items:center; gap:14px; color:#6b7280; font-size: .875rem; }
+.legend .legend-item { display:inline-flex; align-items:center; gap:8px; }
+.legend .dot{ width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid #d1d5db; }
+.legend .dot-empty{ background:#fff; }
+.legend .dot-done{ background:#dcfce7; border-color:#86efac; }
+
+/* ===== Tabla ===== */
+.planilla-wrap{
+  background:#fff;
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:12px;
+  box-shadow: 0 6px 18px rgba(16,24,40,.06);
+  padding: .5rem .5rem 0 .5rem;
+}
+
+/* Cabecera fija con sombra sutil al hacer scroll */
+.soft-shadow { box-shadow: 0 6px 10px -8px rgba(0,0,0,.25); }
+.planilla thead th{ position: sticky; top: 0; z-index: 5; }
+
+/* Columnas pegajosas (ya definidas en HTML) */
+.sticky-1{ position: sticky; left: 0; z-index: 6; background: #fff; }
+.sticky-2{ position: sticky; left: var(--w1); z-index: 6; background: #fff; }
+.sticky-3{ position: sticky; left: calc(var(--w1) + var(--w2)); z-index: 6; background: #fff; }
+
+/* Zebra + compactación */
+.table-compact> :not(caption)>*>*{ padding: .45rem .5rem; }
+.planilla tbody tr:nth-child(even){ background: #fafafa; }
+
+/* Títulos de actividad con jerarquía visual */
+.act-title{ font-weight: 600; color:#0f172a; }
+
+/* Chip de responsable */
+.chip{
+  display:inline-flex; align-items:center; gap:.4rem;
+  background:#f3f4f6; color:#111827; border:1px solid #e5e7eb;
+  padding:.15rem .5rem; border-radius: 999px; font-size:.875rem;
+}
+.chip .bi{ opacity:.8; }
+
+/* Badges de frecuencia */
+.badge{ font-weight:600; border-radius: 999px; padding:.35rem .6rem; }
+.freq-diario  { background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe; }
+.freq-semanal { background:#dcfce7; color:#065f46; border:1px solid #bbf7d0; }
+.freq-mensual { background:#fee2e2; color:#7f1d1d; border:1px solid #fecaca; }
+
+/* Columnas de días */
+.day-col{ font-weight:600; color:#334155; }
+
+/* Estados visuales con :has() – sin JS ni lógica extra */
+.day-cell{ transition: background .12s ease, box-shadow .12s ease; }
+.day-cell:has(.tick:checked){
+  background:#e8fff3;           /* verde muy suave */
+  box-shadow: inset 0 0 0 1px #86efac;
+}
+.day-cell:hover{ background:#f5faff; }
+
+/* Checkboxes más visibles */
+.tick{
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Borde de tabla sutil */
+.planilla{ border-color:#eef2f7 !important; }
+.planilla th, .planilla td{ border-color:#eef2f7 !important; }
+
+/* Indicador de scroll horizontal (decorativo) */
+.planilla-wrap::after{
+  content:"";
+  position:absolute; right: 8px; bottom: 6px;
+  width: 40px; height: 6px; border-radius: 6px;
+  background: linear-gradient(90deg, #e5e7eb, #cbd5e1);
+  opacity:.55;
+}
+
+/* Responsive: oculta número de día si la pantalla es muy estrecha (solo óptica) */
+@media (max-width: 768px){
+  .day-col{ font-size: 0; }
+  .day-col::after{ content: "D"; font-size: .8rem; }
+}
+
+
+/* ===== Cabeceras mejoradas ===== */
+.thead-group .head-row-1 th{
+  background:#f8fafc !important;
+  border-bottom: 0 !important;
+  font-weight: 700;
+  color:#0f172a;
+}
+.thead-group .week-head{
+  font-size:.85rem;
+  letter-spacing:.02em;
+  color:#334155;
+  border-left:1px solid #e5e7eb !important;
+  border-right:1px solid #e5e7eb !important;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%) !important;
+}
+
+.thead-group .head-row-2 th{
+  background:#ffffff !important;
+  border-top: 0 !important;
+}
+.day-head{
+  display:flex; flex-direction:column; align-items:center; line-height:1;
+  padding: .15rem 0 .25rem;
+}
+.day-num{ font-weight:700; color:#0f172a; }
+.day-dow{ font-size:.70rem; color:#64748b; margin-top:2px; }
+
+/* Sombras laterales para columnas pegajosas (mejora de lectura) */
+.sticky-1{ box-shadow: 8px 0 10px -10px rgba(0,0,0,.18); }
+.sticky-2{ box-shadow: 8px 0 10px -12px rgba(0,0,0,.15); }
+.sticky-3{ box-shadow: 8px 0 10px -12px rgba(0,0,0,.12); }
+
+/* Hover del encabezado y celdas para mejor feedback visual */
+.planilla thead th.week-head:hover{ background:#eef2ff !important; color:#1e3a8a; }
+.planilla tbody td.day-cell:hover .tick{ transform: scale(1.06); }
+
+/* Opcional: resaltar “hoy” (si algún día añades la clase .is-today en el th/td) */
+.day-col.is-today .day-num{ color:#1d4ed8; }
+.day-col.is-today{ box-shadow: inset 0 -3px 0 0 #1d4ed8; }
+/* === Legibilidad del texto de Actividad === */
+.planilla td.sticky-1 .act-title{
+  line-height: 1.28;
+  color: #1f2937;                 /* gris oscuro, no negro */
+  letter-spacing: .1px;
+  overflow-wrap: anywhere;        /* rompe palabras largas */
+  word-break: break-word;
+  hyphens: auto;                  /* habilita guionado si el navegador lo soporta */
+}
+
+/* === Tarjeta sutil dentro de la celda === */
+.planilla td.sticky-1 .act-title{
+  position: relative;
+  background: #fbfdff;            /* fondo muy suave */
+  border: 1px solid #e6ecf2;      /* borde claro */
+  border-radius: 10px;
+  padding: 10px 12px 10px 14px;
+}
+.planilla td.sticky-1 .act-title::before{
+  content: "";
+  position: absolute; left: 0; top: 8px; bottom: 8px;
+  width: 4px; border-radius: 6px;
+  background: #c7d2fe;            /* azul clarito como acento */
+}
+.planilla tbody tr:hover td.sticky-1 .act-title{
+  box-shadow: 0 4px 10px rgba(17,24,39,.06); /* un toque al pasar el mouse */
+}
+
+/* === Suavizar la sombra de la columna pegajosa === */
+.sticky-1{ box-shadow: 6px 0 10px -12px rgba(0,0,0,.10); } /* antes era más fuerte */
+/* === Resaltado sutil para actividades críticas === */
+/* Se aplica a la "tarjeta" que ya envuelve el texto ( .act-title ) */
+.act-title.is-critical{
+  background: #fffbeb;                 /* ámbar muy suave */
+  border-color: #fde68a;               /* borde ámbar claro */
+}
+.act-title.is-critical::before{
+  background: #f59e0b;                 /* barra de acento ámbar */
+}
+.act-title.is-critical::after{
+  content: "Crítica";
+  position: absolute; top: 6px; right: 10px;
+  font-size: .70rem; line-height: 1;
+  padding: .22rem .4rem;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* Hover un poco más notorio en críticas */
+tbody tr:hover td.sticky-1 .act-title.is-critical{
+  box-shadow: 0 6px 14px rgba(245, 158, 11, .12);
+}
+
+/* (Opcional) variantes si luego quieres otros niveles */
+.act-title.is-high     { background:#fef2f2; border-color:#fecaca; }
+.act-title.is-high::before { background:#ef4444; }
+.act-title.is-high::after  { content:"Alta"; background:#fee2e2; color:#7f1d1d; border-color:#fecaca; }
+
+.act-title.is-medium   { background:#f0f9ff; border-color:#bae6fd; }
+.act-title.is-medium::before { background:#0ea5e9; }
+.act-title.is-medium::after  { content:"Media"; background:#e0f2fe; color:#0c4a6e; border-color:#bae6fd; }
+
+/* ===== Barra de filtros ===== */
+.filter-bar .form-control,
+.filter-bar .form-select { min-width: 180px; }
+.filter-bar { background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:.75rem; }
+
+/* ===== Leyenda ===== */
+.legend{ display:flex; align-items:center; gap:14px; color:#6b7280; font-size:.875rem; }
+.legend .legend-item{ display:inline-flex; align-items:center; gap:8px; }
+.legend .dot{ width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid #d1d5db; }
+.legend .dot-empty{ background:#fff; }
+.legend .dot-done{ background:#dcfce7; border-color:#86efac; }
+
+/* ===== Contenedor tabla ===== */
+.planilla-wrap{
+  position:relative; background:#fff; border:1px solid rgba(0,0,0,.06);
+  border-radius:12px; box-shadow:0 6px 18px rgba(16,24,40,.06);
+  padding:.5rem .5rem 0 .5rem;
+}
+
+/* ===== Tabla ===== */
+.planilla{ border-color:#eef2f7 !important; --hover-col:-1; }
+.planilla th, .planilla td{ border-color:#eef2f7 !important; }
+
+/* Cabecera sticky con sombra */
+.soft-shadow{ box-shadow:0 6px 10px -8px rgba(0,0,0,.25); }
+.planilla thead th{ position:sticky; top:0; z-index:5; }
+
+/* Columnas sticky */
+.sticky-1{ position:sticky; left:0; background:#fff; z-index:6; box-shadow:6px 0 10px -12px rgba(0,0,0,.10); }
+.sticky-2{ position:sticky; left:var(--w1); background:#fff; z-index:6; box-shadow:6px 0 10px -12px rgba(0,0,0,.08); }
+.sticky-3{ position:sticky; left:calc(var(--w1) + var(--w2)); background:#fff; z-index:6; box-shadow:6px 0 10px -12px rgba(0,0,0,.06); }
+
+/* Compactación */
+.table-compact> :not(caption)>*>*{ padding:.5rem .6rem; }
+
+/* Zebra ligera */
+.planilla tbody tr:nth-child(even){ background:#fafafa; }
+
+/* ===== Cabeceras mejoradas ===== */
+.thead-group .head-row-1 th{
+  background:#f8fafc !important; border-bottom:0 !important;
+  font-weight:700; color:#0f172a;
+}
+.thead-group .week-head{
+  font-size:.85rem; letter-spacing:.02em; color:#334155;
+  border-left:1px solid #e5e7eb !important; border-right:1px solid #e5e7eb !important;
+  background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%) !important;
+}
+.thead-group .head-row-2 th{ background:#ffffff !important; border-top:0 !important; }
+.day-head{ display:flex; flex-direction:column; align-items:center; line-height:1; padding:.15rem 0 .25rem; }
+.day-num{ font-weight:700; color:#0f172a; }
+.day-dow{ font-size:.70rem; color:#64748b; margin-top:2px; }
+
+/* ===== Badges y chips ===== */
+.badge{ font-weight:600; border-radius:999px; padding:.35rem .6rem; }
+.freq-diario  { background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe; }
+.freq-semanal { background:#dcfce7; color:#065f46; border:1px solid #bbf7d0; }
+.freq-mensual { background:#fee2e2; color:#7f1d1d; border:1px solid #fecaca; }
+.chip{
+  display:inline-flex; align-items:center; gap:.4rem; background:#f3f4f6; color:#111827;
+  border:1px solid #e5e7eb; padding:.15rem .5rem; border-radius:999px; font-size:.875rem;
+}
+.chip .bi{ opacity:.8; }
+
+/* ===== Celdas de días ===== */
+.day-col{ font-weight:600; color:#334155; }
+.day-cell{ transition:background .12s ease, box-shadow .12s ease; }
+.day-cell:hover{ background:#f5faff; }
+.day-cell:has(.tick:checked){ background:#e8fff3; box-shadow:inset 0 0 0 1px #86efac; }
+.tick{ width:18px; height:18px; border-radius:4px; cursor:pointer; }
+
+/* ===== Texto actividad como tarjeta ===== */
+.planilla td.sticky-1 .act-title{
+  position:relative; line-height:1.28; color:#1f2937; letter-spacing:.1px;
+  overflow-wrap:anywhere; word-break:break-word; hyphens:auto;
+  background:#fbfdff; border:1px solid #e6ecf2; border-radius:10px; padding:10px 12px 10px 14px;
+}
+.planilla td.sticky-1 .act-title::before{
+  content:""; position:absolute; left:0; top:8px; bottom:8px; width:4px; border-radius:6px; background:#c7d2fe;
+}
+tbody tr:hover td.sticky-1 .act-title{ box-shadow:0 4px 10px rgba(17,24,39,.06); }
+
+/* Críticas */
+.act-title.is-critical{ background:#fffbeb; border-color:#fde68a; }
+.act-title.is-critical::before{ background:#f59e0b; }
+.act-title.is-critical::after{
+  content:"Crítica"; position:absolute; top:6px; right:10px; font-size:.70rem; line-height:1;
+  padding:.22rem .4rem; border-radius:999px; background:#fef3c7; color:#92400e; border:1px solid #fde68a;
+}
+
+/* ===== Progreso por fila ===== */
+.row-meta{ margin-top:8px; display:flex; align-items:center; gap:8px; justify-content:flex-start; }
+.row-progress{ --p:0%; min-width:120px; height:8px; border-radius:6px; background:#eef2f7; position:relative; overflow:hidden; border:1px solid #e5e7eb; }
+.row-progress::after{ content:""; position:absolute; inset:0 100% 0 0; width:var(--p); background:linear-gradient(90deg,#4ade80,#22c55e); }
+.row-pct{ font-size:.75rem; color:#475569; font-weight:600; }
+
+/* ===== Clamp / expand ===== */
+.clamp-3{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.act-title.expanded .clamp-3{ -webkit-line-clamp:unset; }
+.act-title .expander{ font-size:.75rem; color:#2563eb; cursor:pointer; user-select:none; margin-top:6px; display:inline-block; }
+
+/* ===== Column highlight ===== */
+.planilla[data-hover-col] td[data-col], .planilla[data-hover-col] th[data-col]{ transition:background .08s ease; }
+.planilla[data-hover-col] td[data-col="var(--hover-col)"], .planilla[data-hover-col] th[data-col="var(--hover-col)"]{ background:#f1f5ff !important; }
+
+/* ===== Hoy ===== */
+.day-col.is-today{ box-shadow: inset 0 -3px 0 #2563eb; }
+.day-col.is-today .day-num{ color:#1d4ed8; }
+td.day-cell.is-today{ background:#f8fbff; }
+
+/* ===== Bandas por semana (sutiles, por fila) ===== */
+.week-band-odd td.day-cell{ background:#fcfcfd; }
+.week-band-even td.day-cell{ background:#ffffff; }
+
+/* ===== Densidad ===== */
+.planilla-wrap.compact .table-compact> :not(caption)>*>*{ padding:.35rem .45rem; }
+.planilla-wrap.cosy    .table-compact> :not(caption)>*>*{ padding:.5rem  .65rem; }
+.planilla-wrap.comfy   .table-compact> :not(caption)>*>*{ padding:.75rem .85rem; }
+
+/* ===== Print ===== */
+@media print {
+  body{ background:#fff; }
+  .sidebar, .filter-bar, .legend, .btn, .sidebar-scrim{ display:none !important; }
+  .content{ padding:0; }
+  .planilla-wrap{ box-shadow:none; border:none; }
+  .row-meta{ display:none; }
+  .day-cell{ border-color:#d1d5db !important; }
+}
+
+/* Evita que el adorno del contenedor intercepte clics */
+.planilla-wrap::after { pointer-events: none; }
+
+/* Garantiza que el check sea clickeable aún con sombras/fondos */
+.day-cell { position: relative; }
+.day-cell .tick { position: relative; z-index: 1; }
+
+/* Por si algún decorador del título se extiende demasiado en celdas pegajosas */
+.planilla td.sticky-1 .act-title,
+.planilla td.sticky-2,
+.planilla td.sticky-3 { pointer-events: auto; }
+
+
+
+/* ===== Barra de filtros ===== */
+.filter-bar .form-control, .filter-bar .form-select{ min-width:180px; }
+.filter-bar{ background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:.75rem; }
+
+/* ===== Leyenda y Toolbar ===== */
+.legend{ display:flex; align-items:center; gap:14px; color:#6b7280; font-size:.875rem; }
+.legend .legend-item{ display:inline-flex; align-items:center; gap:8px; }
+.legend .dot{ width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid #d1d5db; }
+.legend .dot-empty{ background:#fff; }
+.legend .dot-done{ background:#dcfce7; border-color:#86efac; }
+
+.toolbar .toolbar-search{ min-width: 320px; }
+.kpi-pill{
+  background:#eef2ff; color:#1e3a8a; border:1px solid #e0e7ff;
+  padding:.25rem .5rem; border-radius:999px; font-weight:600; font-size:.8rem;
+}
+.kpi-pill.kpi-muted{ background:#f3f4f6; color:#374151; border-color:#e5e7eb; }
+
+/* ===== Contenedor tabla ===== */
+.planilla-wrap{
+  position:relative; background:#fff; border:1px solid rgba(0,0,0,.06);
+  border-radius:12px; box-shadow:0 6px 18px rgba(16,24,40,.06);
+  padding:.5rem .5rem 0 .5rem;
+}
+.planilla-wrap::after{ pointer-events:none; }
+
+/* ===== Tabla ===== */
+.planilla{ border-color:#eef2f7 !important; --hover-col:-1; }
+.planilla th, .planilla td{ border-color:#eef2f7 !important; }
+.soft-shadow{ box-shadow:0 6px 10px -8px rgba(0,0,0,.25); }
+.planilla thead th{ position:sticky; top:0; z-index:5; }
+
+/* Sticky columns */
+.sticky-1{ position:sticky; left:0; background:#fff; z-index:6; box-shadow:6px 0 10px -12px rgba(0,0,0,.10); }
+.sticky-2{ position:sticky; left:var(--w1); background:#fff; z-index:6; box-shadow:6px 0 10px -12px rgba(0,0,0,.08); }
+.sticky-3{ position:sticky; left:calc(var(--w1) + var(--w2)); background:#fff; z-index:6; box-shadow:6px 0 10px -12px rgba(0,0,0,.06); }
+
+/* Compact */
+.table-compact> :not(caption)>*>*{ padding:.5rem .6rem; }
+
+/* Zebra */
+.planilla tbody tr:nth-child(even){ background:#fafafa; }
+
+/* ===== Cabeceras ===== */
+.thead-group .head-row-1 th{
+  background:#f8fafc !important; border-bottom:0 !important; font-weight:700; color:#0f172a;
+}
+.thead-group .week-head{
+  font-size:.85rem; letter-spacing:.02em; color:#334155;
+  border-left:1px solid #e5e7eb !important; border-right:1px solid #e5e7eb !important;
+  background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%) !important;
+}
+.thead-group .head-row-2 th{ background:#ffffff !important; border-top:0 !important; }
+.day-head{ display:flex; flex-direction:column; align-items:center; line-height:1; padding:.15rem 0 .25rem; }
+.day-num{ font-weight:700; color:#0f172a; }
+.day-dow{ font-size:.70rem; color:#64748b; margin-top:2px; }
+.js-col-toggle{ cursor:pointer; user-select:none; }
+
+/* Badges y chips */
+.badge{ font-weight:600; border-radius:999px; padding:.35rem .6rem; }
+.freq-diario  { background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe; }
+.freq-semanal { background:#dcfce7; color:#065f46; border:1px solid #bbf7d0; }
+.freq-mensual { background:#fee2e2; color:#7f1d1d; border:1px solid #fecaca; }
+.chip{
+  display:inline-flex; align-items:center; gap:.4rem; background:#f3f4f6; color:#111827;
+  border:1px solid #e5e7eb; padding:.15rem .5rem; border-radius:999px; font-size:.875rem;
+}
+.chip .bi{ opacity:.8; }
+
+/* Días */
+.day-col{ font-weight:600; color:#334155; }
+.day-cell{ transition:background .12s ease, box-shadow .12s ease; position:relative; }
+.day-cell:hover{ background:#f5faff; }
+.day-cell:has(.tick:checked){ background:#e8fff3; box-shadow:inset 0 0 0 1px #86efac; }
+.tick{ width:18px; height:18px; border-radius:4px; cursor:pointer; position:relative; z-index:1; }
+
+/* Texto actividad como tarjeta */
+.planilla td.sticky-1 .act-title{
+  position:relative; line-height:1.28; color:#1f2937; letter-spacing:.1px;
+  overflow-wrap:anywhere; word-break:break-word; hyphens:auto;
+  background:#fbfdff; border:1px solid #e6ecf2; border-radius:10px; padding:10px 12px 10px 14px;
+}
+.planilla td.sticky-1 .act-title::before{
+  content:""; position:absolute; left:0; top:8px; bottom:8px; width:4px; border-radius:6px; background:#c7d2fe;
+}
+tbody tr:hover td.sticky-1 .act-title{ box-shadow:0 4px 10px rgba(17,24,39,.06); }
+
+/* Críticas */
+.act-title.is-critical{ background:#fffbeb; border-color:#fde68a; }
+.act-title.is-critical::before{ background:#f59e0b; }
+.act-title.is-critical::after{
+  content:"Crítica"; position:absolute; top:6px; right:10px; font-size:.70rem; line-height:1;
+  padding:.22rem .4rem; border-radius:999px; background:#fef3c7; color:#92400e; border:1px solid #fde68a;
+}
+
+/* Progreso por fila */
+.row-meta{ margin-top:8px; display:flex; align-items:center; gap:8px; justify-content:flex-start; }
+.row-progress{ --p:0%; min-width:120px; height:8px; border-radius:6px; background:#eef2f7; position:relative; overflow:hidden; border:1px solid #e5e7eb; }
+.row-progress::after{ content:""; position:absolute; inset:0 100% 0 0; width:var(--p); background:linear-gradient(90deg,#4ade80,#22c55e); }
+.row-pct{ font-size:.75rem; color:#475569; font-weight:600; }
+
+/* Clamp / expand */
+.clamp-3{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.act-title.expanded .clamp-3{ -webkit-line-clamp:unset; }
+.act-title .expander{ font-size:.75rem; color:#2563eb; cursor:pointer; user-select:none; margin-top:6px; display:inline-block; }
+
+/* Column highlight */
+.planilla[data-hover-col] td[data-col], .planilla[data-hover-col] th[data-col]{ transition:background .08s ease; }
+.planilla[data-hover-col] td[data-col="var(--hover-col)"], .planilla[data-hover-col] th[data-col="var(--hover-col)"]{ background:#f1f5ff !important; }
+
+/* Hoy */
+.day-col.is-today{ box-shadow: inset 0 -3px 0 #2563eb; }
+.day-col.is-today .day-num{ color:#1d4ed8; }
+td.day-cell.is-today{ background:#f8fbff; }
+
+/* Bandas por semana (por fila) */
+.week-band-odd td.day-cell{ background:#fcfcfd; }
+.week-band-even td.day-cell{ background:#ffffff; }
+
+/* Densidad */
+.planilla-wrap.compact .table-compact> :not(caption)>*>*{ padding:.35rem .45rem; }
+.planilla-wrap.cosy    .table-compact> :not(caption)>*>*{ padding:.5rem  .65rem; }
+.planilla-wrap.comfy   .table-compact> :not(caption)>*>*{ padding:.75rem .85rem; }
+
+/* Print */
+@media print{
+  body{ background:#fff; }
+  .sidebar, .filter-bar, .legend, .toolbar, .btn, .sidebar-scrim{ display:none!important; }
+  .content{ padding:0; }
+  .planilla-wrap{ box-shadow:none; border:none; }
+  .row-meta{ display:none; }
+  .day-cell{ border-color:#d1d5db!important; }
+}

@@ -1,0 +1,595 @@
+{% extends 'base.html' %}
+{% block title %}Tareas{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/tareas.css') }}">
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=18" defer></script>
+
+<div class="container tasks-page mt-3" data-vista="{{ vista }}">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+      <h4 class="mb-1">Tareas a realizar</h4>
+    </div>
+    <div class="d-flex align-items-center gap-2 no-print">
+      <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-moon-stars me-1"></i>Tema
+      </button>
+      {% if es_sistemas_qp %}
+      <a href="{{ url_for('bandeja_soporte') }}" class="btn btn-outline-primary btn-sm position-relative">
+        <i class="bi bi-inbox me-1"></i>Bandeja Soporte
+        {% if bandeja_pendientes > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger bs-bandeja-badge">
+          {{ bandeja_pendientes }}
+        </span>
+        {% endif %}
+      </a>
+      {% endif %}
+      {% if permissions.get('tareas', {}).get('crear') %}
+      {% if vista == 'mis' %}
+      <a href="{{ url_for('nueva_tarea', modo='asignar') }}" class="btn btn-cta-blue btn-sm">
+        Nueva asignación
+      </a>
+      {% else %}
+      <a href="{{ url_for('nueva_tarea', modo='para_mi') }}" class="btn btn-cta-blue btn-sm">
+        Nueva tarea
+      </a>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Token CSRF para peticiones AJAX del modal -->
+  <span id="td-csrf-token" class="d-none" data-token="{{ csrf_token() }}"></span>
+
+  <!-- Pestañas activas / terminadas -->
+  <div class="td-status-tabs mb-2 no-print">
+    <a class="td-status-tab {% if tab == 'activas' %}active{% endif %}"
+       href="{{ url_for('listar_tareas', vista=vista, tab='activas') }}">
+      <i class="bi bi-list-task"></i> Activas
+      {% if conteo_activas > 0 %}
+      <span class="td-tab-badge">{{ conteo_activas }}</span>
+      {% endif %}
+    </a>
+    <a class="td-status-tab {% if tab == 'terminadas' %}active{% endif %}"
+       href="{{ url_for('listar_tareas', vista=vista, tab='terminadas') }}">
+      <i class="bi bi-check-circle-fill"></i> Terminadas
+      {% if conteo_terminadas > 0 %}
+      <span class="td-tab-badge verde">{{ conteo_terminadas }}</span>
+      {% endif %}
+    </a>
+  </div>
+
+  <!-- Botón para mostrar / ocultar búsqueda avanzada -->
+  <button id="btnAdv" class="btn btn-outline-secondary btn-sm mb-2 no-print">
+    🔍 Búsqueda avanzada
+  </button>
+
+  <!-- Caja de búsqueda avanzada -->
+  <!-- Caja de búsqueda avanzada -->
+  <div id="advBox" class="toolbar-box advanced-box no-print mb-2">
+    <form method="get" action="{{ url_for('listar_tareas') }}" class="d-flex flex-wrap align-items-end gap-2">
+      <input type="hidden" name="vista" value="{{ vista }}">
+      <input type="hidden" name="tab" value="{{ tab }}">
+
+      <div class="input-group input-group-sm tareas-maxw-280">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input id="liveFilter" name="q" class="form-control" value="{{ request.args.get('q','') }}"
+          placeholder="Buscar en la tabla">
+      </div>
+
+      {% set _estado = request.args.get('estado','') %}
+      <select id="fEstado" name="estado" class="form-select form-select-sm tareas-maxw-220">
+        <option value="" {{ ''==_estado and 'selected' or '' }}>Estado: Todos</option>
+        <option {{ 'Por iniciar'==_estado and 'selected' or '' }}>Por iniciar</option>
+        <option {{ 'En desarrollo'==_estado and 'selected' or '' }}>En desarrollo</option>
+        <option {{ 'Atrasada'==_estado and 'selected' or '' }}>Atrasada</option>
+        <option {{ 'Terminado'==_estado and 'selected' or '' }}>Terminado</option>
+        <option {{ 'Cerrado por sistema'==_estado and 'selected' or '' }}>Cerrado por sistema</option>
+      </select>
+
+      <!-- fTipo: opciones pobladas por JS desde las filas del DOM -->
+      <select id="fTipo" name="tipo" class="form-select form-select-sm tareas-maxw-180">
+        <option value="">Tipo: Todos</option>
+      </select>
+
+      <input id="fProp" name="prop" class="form-control form-control-sm tareas-maxw-180"
+        value="{{ request.args.get('prop','') }}" placeholder="Responsable">
+
+      <!-- fDepto: opciones pobladas por JS desde las filas del DOM -->
+      <select id="fDepto" name="depto" class="form-select form-select-sm tareas-maxw-180">
+        <option value="">Departamento: Todos</option>
+      </select>
+
+      <input type="date" name="fecha_desde" class="form-control form-control-sm tareas-date"
+        value="{{ request.args.get('fecha_desde','') }}" title="Desde">
+
+      <input type="date" name="fecha_hasta" class="form-control form-control-sm tareas-date"
+        value="{{ request.args.get('fecha_hasta','') }}" title="Hasta">
+
+      <button class="btn btn-outline-secondary btn-sm" type="submit">
+        <i class="bi bi-search me-1"></i>Buscar
+      </button>
+
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('listar_tareas', vista=vista) }}">
+        <i class="bi bi-x-circle me-1"></i>Limpiar
+      </a>
+
+      <div class="ms-auto small tareas-muted">
+        <span id="countTotal">0</span> tareas •
+        <span id="countVisibles">0</span> visibles
+      </div>
+    </form>
+  </div>
+  <!-- Toggle de densidad + Quitar filtros -->
+  <div class="d-flex align-items-center gap-2 mb-2 no-print">
+    <div class="btn-group btn-group-sm" aria-label="Densidad de filas">
+      <button class="btn btn-outline-secondary" id="densityCompact" type="button">Compacta</button>
+      <button class="btn btn-outline-primary" id="btnGerencial" type="button">Vista Gerencial</button>
+    </div>
+    <button id="btnLimpiarTodo" class="btn btn-outline-secondary btn-sm">
+      Quitar filtros
+    </button>
+    <div class="btn-group btn-group-sm">
+      <button class="btn btn-outline-secondary" type="submit">
+        <i class="bi bi-search me-1"></i>Buscar
+      </button>
+      {# BOTÓN DE EXCEL #}
+      <a class="btn btn-outline-success" id="btnExportarExcel" href="#">
+        <i class="bi bi-file-earmark-excel me-1"></i>Exportar Excel
+      </a>
+      <a class="btn btn-outline-secondary" href="{{ url_for('listar_tareas', vista=vista) }}">
+        <i class="bi bi-x-circle me-1"></i>Limpiar
+      </a>
+    </div>
+  </div>
+
+  <div class="card card-custom">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table id="tabla-tareas" class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <!-- Código -->
+              <th class="th-filter">
+                <span class="hdr">
+
+                  <span class="label">Código</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="id"
+                      data-sort-dir="asc" title="Ascendente (menor → mayor)">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="id"
+                      data-sort-dir="desc" title="Descendente (mayor → menor)">▼</button>
+                  </span>
+                </span>
+              </th>
+
+              <!-- Título -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Título</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="titulo"
+                      data-sort-dir="asc" title="Alfabético (A → Z)">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="titulo"
+                      data-sort-dir="desc" title="Alfabético (Z → A)">▼</button>
+                  </span>
+                </span>
+              </th>
+
+
+              <th>Descripción</th>
+              <th>Tipo</th>
+              <!-- Estado -->
+              <th>Estado</th>
+
+              {% if tab != 'terminadas' %}
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Avance</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="avance"
+                      data-sort-dir="asc" title="Ascendente (menor → mayor)">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="avance"
+                      data-sort-dir="desc" title="Descendente (mayor → menor)">▼</button>
+                  </span>
+                </span>
+              </th>
+              {% endif %}
+
+
+              <!-- Inicio -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Inicio</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio"
+                      data-sort-dir="asc">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio"
+                      data-sort-dir="desc">▼</button>
+                  </span>
+                </span>
+              </th>
+              <!-- Inicio -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Inicio Real</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio Real"
+                      data-sort-dir="asc">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio Real"
+                      data-sort-dir="desc">▼</button>
+                  </span>
+                </span>
+              </th>
+              <!-- Fin -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Fin</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="fin"
+                      data-sort-dir="asc">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="fin"
+                      data-sort-dir="desc">▼</button>
+                  </span>
+                </span>
+              </th>
+
+              <!-- Fin -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label">Fin Real</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="Fin Real"
+                      data-sort-dir="asc">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="Fin Real"
+                      data-sort-dir="desc">▼</button>
+                  </span>
+                </span>
+              </th>
+
+              <!-- Horas de atención -->
+              <th class="th-filter">
+                <span class="hdr">
+                  <span class="label" title="Fecha fin − Fecha inicio">Horas</span>
+                  <span class="col-sort">
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="horas"
+                      data-sort-dir="asc" title="Menor a mayor">▲</button>
+                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="horas"
+                      data-sort-dir="desc" title="Mayor a menor">▼</button>
+                  </span>
+                </span>
+              </th>
+
+              <th>Empresa</th>
+              <th>Solicitante</th>
+
+              <!-- Responsable -->
+              <th>Responsable</th>
+
+
+
+              <!-- Departamento -->
+              <th>Departamento</th>
+
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for t in tareas %}
+            <tr data-row="1">
+
+              <td data-th="Código">
+                {{ "%08d"|format(t['id']) }}
+                {% if t.get('inbox_id') %}
+                <div class="small text-muted mt-1">
+                  <i class="bi bi-envelope-fill" title="Ticket bandeja soporte"></i>
+                  #{{ t['inbox_id'] }}
+                </div>
+                {% endif %}
+              </td>
+              <td data-th="Título">{{ t['titulo'] }}</td>
+              <td data-th="Descripción">
+                <div class="tk-body">{{ t['descripcion'] or '' }}</div>
+                {% if t['descripcion'] %}
+                <div class="tk-actions-secondary">
+                  <button type="button" class="btn-ver-detalle js-tarea-detalle"
+                    data-tarea-id="{{ '%08d'|format(t['id']) }}"
+                    data-tarea-titulo="{{ t['titulo']|e }}"
+                    data-tarea-desc="{{ (t['descripcion'] or '')|e }}"
+                    data-tarea-estado="{{ (t['estado'] or '')|e }}"
+                    data-tarea-tipo="{{ (t['tipo_tarea_nombre'] or 'N/A')|e }}"
+                    data-tarea-avance="{{ t['porcentaje_avance']|int }}%"
+                    data-tarea-responsable="{{ ((t['propietario_nombre'] or '') ~ ' (' ~ (t['propietario'] or '') ~ ')')|e }}"
+                    data-tarea-solicitante="{{ (t['solicitante_nombre'] or t['solicitante_username'] or 'N/A')|e }}"
+                    data-tarea-empresa="{{ (t['empresa_nombre'] or 'Interno')|e }}"
+                    data-tarea-depto="{{ (t['departamento_nombre'] or 'N/A')|e }}"
+                    data-tarea-inicio="{{ (t['fecha_inicio'] or '')[:10] }}"
+                    data-tarea-fin="{{ (t['fecha_fin'] or '')[:10] }}"
+                    data-tarea-url-ver="{{ url_for('ver_tarea', task_id=t['id']) }}"
+                    data-tarea-url-editar="{{ url_for('editar_tarea', task_id=t['id']) if permissions.get('tareas', {}).get('editar') and (rol == 'admin' or t['editable']) else '' }}">
+                    <i class="bi bi-eye"></i> Ver detalle
+                  </button>
+                </div>
+                {% endif %}
+              </td>
+              <td data-th="Tipo">
+                {% set t_nombre = (t['tipo_tarea_nombre'] or '') | lower %}
+                <span class="badge-tipo 
+        {% if 'proyecto' in t_nombre %}tipo-proyecto
+        {% elif 'soporte' in t_nombre %}tipo-soporte
+        {% elif 'incidencia' in t_nombre or 'error' in t_nombre %}tipo-incidencia
+        {% else %}tipo-default{% endif %}">
+                  {{ t['tipo_tarea_nombre'] or 'N/A' }}
+                </span>
+              </td>
+              <td data-th="Estado">
+                {% set estado = t['estado'] %}
+                <span class="chip
+                  {% if estado == 'Terminado' %}
+                    chip-done
+                  {% elif estado == 'En desarrollo' %}
+                    chip-dev
+                  {% elif estado == 'Atrasada' %}
+                    chip-block
+                  {% elif estado == 'Cerrado por sistema' %}
+                    chip-pend
+                  {% else %}
+                    chip-pend
+                  {% endif %}
+                ">{{ estado }}</span>
+              </td>
+
+
+
+              {% if tab != 'terminadas' %}
+              <td data-th="Avance">
+                <div class="d-flex flex-column avance-cell">
+                  {% set avance = t['porcentaje_avance'] %}
+
+                  {% if avance is none %}
+                  <small class="text-danger avance-error">Campo no encontrado en SQL</small>
+                  {% else %}
+                  <div class="d-flex align-items-center">
+                    <div class="wrap-bar flex-grow-1">
+                      <div class="progress progress-avance">
+                        <div
+                          class="progress-bar js-progress-bar avance-w-{{ avance|int }} {% if avance|int == 100 %}bg-success{% else %}bg-primary{% endif %}"
+                          role="progressbar" aria-valuenow="{{ avance|int }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                      </div>
+                    </div>
+
+                    <span class="wrap-pct ms-2 fw-bold avance-pct">
+                      {{ avance|int }}%
+                    </span>
+                  </div>
+                  {% endif %}
+                </div>
+              </td>
+              {% endif %}
+
+              <td data-th="Inicio">
+                {% set fi = t['fecha_inicio'] %}
+                {% if fi %}
+                <span class="dt-date">{{ fi[:10] }}</span>
+                <span class="dt-time">{{ fi[11:16] }}</span>
+                {% endif %}
+              </td>
+              <td data-th="Inicio Real">
+                {% set fi = t['fecha_compromiso'] %}
+                {% if fi %}
+                <span class="dt-date">{{ fi[:10] }}</span>
+                <span class="dt-time">{{ fi[11:16] }}</span>
+                {% endif %}
+              </td>
+              <td data-th="Fin">
+                {% set ff = t['fecha_fin'] %}
+                {% if ff %}
+                <span class="dt-date">{{ ff[:10] }}</span>
+                <span class="dt-time">{{ ff[11:16] }}</span>
+                {% endif %}
+              </td>
+              <td data-th="Fin Real">
+                {% set ff = t['fecha_cierre_real'] %}
+                {% if ff %}
+                <span class="dt-date">{{ ff[:10] }}</span>
+                <span class="dt-time">{{ ff[11:16] }}</span>
+                {% endif %}
+              </td>
+
+              <td data-th="Horas">
+                {% if t.horas_atencion is not none %}
+                  {% set h = t.horas_atencion %}
+                  {% if h < 1 %}
+                    <span class="badge bg-success bg-opacity-75 text-white">{{ "%.0f"|format(h * 60) }}min</span>
+                  {% elif h < 8 %}
+                    <span class="badge bg-primary bg-opacity-75 text-white">{{ "%.1f"|format(h) }}h</span>
+                  {% elif h < 24 %}
+                    <span class="badge bg-warning text-dark">{{ "%.1f"|format(h) }}h</span>
+                  {% else %}
+                    <span class="badge bg-danger bg-opacity-75 text-white">{{ "%.1f"|format(h) }}h</span>
+                  {% endif %}
+                {% else %}
+                  <span class="text-muted small">—</span>
+                {% endif %}
+              </td>
+
+              <td data-th="Empresa">
+                {% if t['empresa_nombre'] %}
+                <div class="text-primary small empresa-text">
+                  <i class="bi bi-building"></i> {{ t['empresa_nombre'] }}
+                </div>
+                {% else %}
+                <div class="text-muted small empresa-text">
+                  <i class="bi bi-person-workspace"></i> Interno
+                </div>
+                {% endif %}
+              </td>
+
+
+
+              <td data-th="Solicitante">
+                {% if t['solicitante_nombre'] %}
+                {{ t['solicitante_nombre'] }} ({{ t['solicitante_username'] }})
+                {% else %}
+                {{ t['solicitante_username'] or 'N/A' }}
+                {% endif %}
+              </td>
+
+
+
+              <td data-th="Responsable">
+                {% if t['propietario_nombre'] %}
+                {{ t['propietario_nombre'] }} ({{ t['propietario'] }})
+                {% else %}
+                {{ t['propietario'] }}
+                {% endif %}
+              </td>
+              <td data-th="Departamento">{{ t['departamento_nombre'] or 'N/A' }}</td>
+
+              <td data-th="Acciones">
+                <!-- Ver detalle / avances — abre popup -->
+                <button type="button" class="btn btn-sm btn-info me-1 js-abrir-detalle-modal"
+                  data-task-id="{{ t['id'] }}"
+                  title="Ver detalle y avances">
+                  <i class="bi bi-eye"></i>
+                </button>
+
+                {% if (permissions|default({})).get('tareas', {}).get('eliminar') and tab != 'terminadas' %}
+                <form method="post" action="{{ url_for('eliminar_tarea', task_id=t['id']) }}"
+                  class="form-inline-delete js-delete-tarea-form">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-sm btn-danger" title="Eliminar tarea">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+                {% endif %}
+              </td>
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay resultados -->
+  <div id="noResults" class="text-center py-3 tareas-muted d-none">
+    <b>No se encontraron resultados</b>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-between mt-2">
+    <div id="tableInfo" class="small tareas-muted">Mostrando 0 a 0 de 0</div>
+    <nav class="no-print">
+      <ul id="pagination" class="pagination pagination-sm mb-0"></ul>
+    </nav>
+  </div>
+</div>
+
+<!-- ── Modal detalle tarea (mismo patrón que bandeja soporte) ── -->
+<div class="bs-modal-backdrop" id="tdModalBackdrop" aria-hidden="true">
+  <div class="bs-modal" role="dialog" aria-modal="true" aria-labelledby="tdModalTitulo">
+
+    <div class="bs-modal-header">
+      <div class="bs-modal-ticket" id="tdModalCodigo"></div>
+      <h5 class="bs-modal-title" id="tdModalTitulo"></h5>
+      <button type="button" class="bs-modal-close" id="tdModalClose" aria-label="Cerrar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="bs-modal-meta" id="tdModalMeta"></div>
+
+    <div class="bs-modal-body">
+
+      <div class="bs-modal-section-label">
+        <i class="bi bi-card-text"></i> Descripción
+      </div>
+      <div class="td-modal-desc" id="tdModalDesc"></div>
+
+      <div class="bs-modal-section-label">
+        <i class="bi bi-people"></i> Personas
+      </div>
+      <div class="td-modal-grid" id="tdModalPersonas"></div>
+
+      <div class="bs-modal-section-label">
+        <i class="bi bi-calendar3"></i> Fechas
+      </div>
+      <div class="td-modal-grid" id="tdModalFechas"></div>
+
+      <div class="td-modal-footer-btns">
+        <a href="#" id="tdBtnVer" class="btn-ver-detalle">
+          <i class="bi bi-eye"></i> Ver detalle completo
+        </a>
+        <a href="#" id="tdBtnEditar" class="btn-ver-detalle td-btn-edit d-none">
+          <i class="bi bi-pencil-square"></i> Editar
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal detalle completo con historial y agregar acción ── -->
+<div class="td-detalle-backdrop" id="tdDetalleBackdrop" aria-hidden="true">
+  <div class="td-detalle-modal" role="dialog" aria-modal="true" aria-labelledby="tdDetTitulo">
+
+    <div class="bs-modal-header">
+      <div class="bs-modal-ticket" id="tdDetCodigo"></div>
+      <h5 class="bs-modal-title" id="tdDetTitulo"></h5>
+      <button type="button" class="bs-modal-close" id="tdDetClose" aria-label="Cerrar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div id="tdDetLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <div class="mt-2 text-muted small">Cargando tarea...</div>
+    </div>
+
+    <div id="tdDetContent" class="td-detalle-body d-none">
+
+      <div id="tdDetInfo" class="td-det-card mb-3"></div>
+
+      <div class="td-det-card mb-3">
+        <div class="td-det-card-title">
+          <i class="bi bi-clock-history"></i> Historial de acciones / pasos
+        </div>
+        <div id="tdDetHistorial"></div>
+      </div>
+
+      <div id="tdDetFormCard" class="td-det-card td-det-card-primary d-none">
+        <div class="td-det-card-title text-primary">
+          <i class="bi bi-plus-circle"></i> Agregar avance / acción
+        </div>
+        <form id="tdDetForm" novalidate>
+          <input type="hidden" name="csrf_token" id="tdDetCsrf">
+          <input type="hidden" name="estado_accion" value="En proceso">
+          <div class="mb-2">
+            <label class="td-edit-label">Detalle de Actividad <span class="text-danger">*</span></label>
+            <textarea name="detalles" id="tdDetDetalles" class="form-control form-control-sm" rows="4" required></textarea>
+            <input type="hidden" name="observacion" id="tdDetObservacion">
+          </div>
+          <div id="tdDetIaMejoraPanel" class="d-none mb-2 p-2 border rounded bg-light td-fecha-val"></div>
+          <div id="tdDetFormMsg" class="d-none mt-2 alert py-2 td-fecha-val"></div>
+          <div class="mt-2 d-flex align-items-center gap-2 flex-wrap">
+            <button type="submit" class="btn btn-primary btn-sm" id="tdDetBtnGuardar">
+              <i class="bi bi-check-circle me-1"></i>Guardar avance
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="tdDetBtnMejorarIA">
+              <i class="bi bi-stars me-1"></i>Mejorar texto
+            </button>
+            <button type="button" class="btn btn-success btn-sm ms-auto" id="tdDetBtnCerrar">
+              <i class="bi bi-flag-fill me-1"></i>Cerrar tarea
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

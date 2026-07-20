@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "C:\Proyectos\V2 Proyecto Claude Code\PROYECTO MATIAS SGQ\Sili\Sili\Sili\app.py", line 206, in <module>
+    app = create_app()
+  File "C:\Proyectos\V2 Proyecto Claude Code\PROYECTO MATIAS SGQ\Sili\Sili\Sili\app.py", line 94, in create_app
+    run_startup_tasks(app)
+    ~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Proyectos\V2 Proyecto Claude Code\PROYECTO MATIAS SGQ\Sili\Sili\Sili\modules\app_core\app_startup.py", line 8, in run_startup_tasks
+    conn = get_db()
+  File "C:\Proyectos\V2 Proyecto Claude Code\PROYECTO MATIAS SGQ\Sili\Sili\Sili\modules\db.py", line 166, in get_db
+    g.db = _connect()
+           ~~~~~~~~^^
+  File "C:\Proyectos\V2 Proyecto Claude Code\PROYECTO MATIAS SGQ\Sili\Sili\Sili\modules\db.py", line 149, in _connect
+    raw =pyodbc.connect(_build_conn_str(database=database), timeout=30)
+pyodbc.InterfaceError: ('28000', '[28000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Login failed for user \'sa\'. (18456) (SQLDriverConnect); [28000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot open database "SGQ_BITACORA" requested by the login. The login failed. (4060); [28000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Login failed for user \'sa\'. (18456); [28000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot open database "SGQ_BITACORA" requested by the login. The login failed. (4060)')
