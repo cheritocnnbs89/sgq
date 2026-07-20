@@ -1362,6 +1362,7 @@ def register_gastos_routes(app):
                     LEFT JOIN terceros t ON t.id = g.proveedor_id
                     LEFT JOIN usuarios u ON u.id = g.usuario_id
                     LEFT JOIN gastos_tarjeta_detalle d ON d.gasto_id = g.id
+                    LEFT JOIN facturas_xml fx ON fx.id = g.factura_xml_id
                 """
 
                 select_cols = """
@@ -1374,7 +1375,7 @@ def register_gastos_routes(app):
                     COALESCE(t.nombre, g.proveedor, '') AS proveedor_nombre,
                     COALESCE(g.numero_factura, '') AS numero_factura,
                     COALESCE(g.orden_compra, '') AS orden_compra,
-                    COALESCE(g.clave_autorizacion, '') AS clave_autorizacion,
+                    COALESCE(fx.clave_acceso, '') AS clave_autorizacion,
 
                     COALESCE(g.subtotal_factura, 0) AS subtotal_factura,
                     COALESCE(g.servicios_10, 0) AS servicios_10,
