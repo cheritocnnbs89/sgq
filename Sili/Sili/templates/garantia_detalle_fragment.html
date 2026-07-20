@@ -131,4 +131,32 @@
     </div>
   </div>
 
+  {% if archivos %}
+  <div class="col-12">
+    <div class="detail-card">
+      <div class="detail-head"><i class="bi bi-paperclip"></i> Adjuntos del contrato</div>
+      <div class="detail-body">
+        <ul class="mb-0">
+          {% for a in archivos %}
+          <li>
+            {{ a.original_name or a.filename }}
+            <small class="text-muted">({{ a.uploaded_at or '' }})</small>
+            &nbsp;·&nbsp;
+            <a href="{{ url_for('contratos.ver_archivo_contrato', archivo_id=a.id) }}"
+               target="_blank"
+               rel="noopener noreferrer">
+              Ver
+            </a>
+            &nbsp;·&nbsp;
+            <a href="{{ url_for('contratos.descargar_archivo_contrato', archivo_id=a.id) }}">
+              Descargar
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
 </div>
