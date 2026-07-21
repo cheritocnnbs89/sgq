@@ -124,10 +124,13 @@ ORDER BY username
 """
 
 SQL_LIST_USUARIOS_COMBO = f"""
-SELECT id, username, nombre_completo
-FROM {TABLA_USUARIOS}
-WHERE COALESCE(disabled, 0) = 0
-ORDER BY username
+SELECT DISTINCT u.id, u.username, u.nombre_completo
+FROM {TABLA_USUARIOS} u
+JOIN roles r ON LOWER(r.nombre) = LOWER(u.rol)
+JOIN roles_permisos rp ON rp.rol_id = r.id
+JOIN opciones o ON o.id = rp.opcion_id AND o.nombre = 'obligaciones'
+WHERE COALESCE(u.disabled, 0) = 0 AND rp.ver = 1
+ORDER BY u.username
 """
 
 # ------------------------------------------------------------
@@ -182,7 +185,7 @@ ORDER BY orden, nombre
 SQL_LIST_ENTIDADES_ACTIVAS = f"""
 SELECT id, nombre
 FROM {TABLA_TERCEROS}
-WHERE COALESCE(activo, 1) = 1
+WHERE COALESCE(activo, 1) = 1 AND tipo = 'E'
 ORDER BY nombre
 """
 
