@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% set titulo = ('Nuevo ' if not item else 'Editar ') + ('cliente' if tipo=='C' else 'proveedor' if tipo=='P' else 'entidad reguladora') %}
+{% set titulo = ('Nuevo ' if not item else 'Editar ') + ('cliente' if tipo=='C' else 'proveedor') %}
 {% block title %}{{ titulo|capitalize }}{% endblock %}
 
 {% block content %}
@@ -53,7 +53,7 @@
 
   <div class="col-12">
     <button class="btn btn-primary" type="submit">Guardar</button>
-    <a href="{{ url_for('clientes' if tipo=='C' else 'proveedores' if tipo=='P' else 'entidades_reguladoras') }}" class="btn btn-outline-secondary">Cancelar</a>
+    <a href="{{ url_for('clientes' if tipo=='C' else 'proveedores') }}" class="btn btn-outline-secondary">Cancelar</a>
   </div>
 </form>
 {% endblock %}

@@ -79,16 +79,6 @@ def _row_val(row, key, idx=None, default=None):
     return default
 
 
-def _endpoint_for_tipo(tipo):
-    """Endpoint (== active_page) segun tipo de tercero. Mismo valor sirve para
-    url_for() y active_page porque los endpoints se llaman igual que el slug."""
-    if tipo == 'C':
-        return 'clientes'
-    if tipo == 'P':
-        return 'proveedores'
-    return 'entidades_reguladoras'
-
-
 def register_terceros_routes(app):
 
     # -------- LISTADOS --------
@@ -97,12 +87,6 @@ def register_terceros_routes(app):
     @require_permission('terceros', 'ver')
     def clientes():
         return _listar('C')
-
-    @app.route('/config/entidades-reguladoras', methods=['GET'], endpoint='entidades_reguladoras')
-    @require_login
-    @require_permission('terceros', 'ver')
-    def entidades_reguladoras():
-        return _listar('E')
 
     @app.get('/terceros/proveedores/carga-masiva/plantilla', endpoint='proveedores_carga_plantilla')
     @require_login
@@ -537,7 +521,7 @@ def register_terceros_routes(app):
         rows = cur.fetchall()
         conn.close()
 
-        active = _endpoint_for_tipo(tipo)
+        active = 'clientes' if tipo == 'C' else 'proveedores'
         return render_template(
             'terceros_list.html',
             tipo=tipo,
@@ -552,7 +536,7 @@ def register_terceros_routes(app):
     @require_login
     @require_permission('terceros', 'crear')
     def tercero_nuevo(tipo):
-        if tipo not in ('C', 'P', 'E'):
+        if tipo not in ('C', 'P'):
             flash('Tipo inválido.', 'warning')
             return redirect(url_for('clientes'))
 
@@ -599,7 +583,7 @@ def register_terceros_routes(app):
                 finally:
                     conn.close()
 
-                return redirect(url_for(_endpoint_for_tipo(tipo)))
+                return redirect(url_for('clientes' if tipo == 'C' else 'proveedores'))
 
         return render_template(
             'tercero_form.html',
@@ -607,7 +591,7 @@ def register_terceros_routes(app):
             item=None,
             usuario=session.get('usuario'),
             rol=session.get('rol'),
-            active_page=_endpoint_for_tipo(tipo)
+            active_page=('clientes' if tipo == 'C' else 'proveedores')
         )
 
     # -------- EDITAR --------
@@ -667,7 +651,7 @@ def register_terceros_routes(app):
                 finally:
                     conn.close()
 
-                return redirect(url_for(_endpoint_for_tipo(tipo)))
+                return redirect(url_for('clientes' if tipo == 'C' else 'proveedores'))
 
         conn.close()
         return render_template(
@@ -676,7 +660,7 @@ def register_terceros_routes(app):
             item=item,
             usuario=session.get('usuario'),
             rol=session.get('rol'),
-            active_page=_endpoint_for_tipo(tipo)
+            active_page=('clientes' if tipo == 'C' else 'proveedores')
         )
 
     # -------- ELIMINAR --------
@@ -710,4 +694,4 @@ def register_terceros_routes(app):
         finally:
             conn.close()
 
-        return redirect(url_for(_endpoint_for_tipo(tipo)))
+        return redirect(url_for('clientes' if tipo == 'C' else 'proveedores'))

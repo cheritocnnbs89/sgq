@@ -80,7 +80,6 @@ def seed_menu_if_empty(conn):
     ter_id = insert_menu_group_child(conn, cfg_id, "Clientes / Proveedores", "bi bi-people-fill", 1, 1, 9)
     insert_menu_subchild(conn, ter_id, "Clientes", "clientes", "terceros", "clientes", 1)
     insert_menu_subchild(conn, ter_id, "Proveedores", "proveedores", "terceros", "proveedores", 2)
-    insert_menu_subchild(conn, ter_id, "Entidades reguladoras", "entidades_reguladoras", "terceros", "entidades_reguladoras", 3)
 
     conn.commit()
 
