@@ -94,7 +94,8 @@
   {% if s.get('penalizacion') and s.penalizacion|float > 0 %}
   <div class="detail-box"><span>Penalización reagenda</span><strong class="text-danger">${{ '%.2f'|format(s.penalizacion|float) }}</strong></div>
   {% if s.get('datos_ticket') %}
-  <div class="detail-box"><span>Total con penalización</span><strong>${{ '%.2f'|format((s.datos_ticket|float) + (s.penalizacion|float)) }}</strong></div>
+  {% set _hospedaje = s.cotizacion_hospedaje|float if s.get('cotizacion_hospedaje') else 0 %}
+  <div class="detail-box"><span>Total con penalización</span><strong>${{ '%.2f'|format((s.datos_ticket|float) + _hospedaje + (s.penalizacion|float)) }}</strong></div>
   {% endif %}
   {% endif %}
   {% if s.detalle_direccion and s.tipo != 'Voucher' %}
