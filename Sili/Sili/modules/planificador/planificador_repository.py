@@ -9,8 +9,9 @@ las constantes de dominio en planificador_constants.py.
 from modules.db import get_db
 from .planificador_constants import (
     PARAM_GROUP_TIPOS, TIPOS_SOLICITUD_DEFAULT,
-    ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROLES_GERENTE,
+    ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO, ROLES_GERENTE,
     PARAM_GROUP_TIPOS_GASTO, TIPOS_GASTO_DEFAULT, SEMAFORO_AMARILLO_PCT,
+    PARAM_GROUP_MOTIVOS_VUELO, MOTIVOS_VUELO_DEFAULT,
 )
 from .planificador_querys import (
     SQL_GET_ALL_SOLICITUDES,
@@ -45,10 +46,20 @@ from .planificador_querys import (
     SQL_GET_TIPO_FLAGS,
     SQL_GET_ALL_TIPO_FLAGS,
     SQL_UPSERT_TIPO_FLAGS,
+    SQL_GET_VUELO_FLAGS,
+    SQL_GET_VUELOS_PARA_AUTO_CONFIRMAR,
+    SQL_GET_VUELOS_PARA_AUTO_LIQUIDAR,
+    SQL_SET_COTIZACION_HOSPEDAJE,
+    SQL_GET_ALL_ROL_FLAGS,
+    SQL_GET_ROLES_AUTOAPROBAR_JEFE_VUELO,
+    SQL_UPSERT_ROL_FLAGS,
     SQL_GET_USUARIOS_FOR_SELECT,
     SQL_GET_DEPARTAMENTOS,
     SQL_GET_USUARIO_DEPARTAMENTO,
     SQL_GET_EMAIL_BY_USUARIO_ID,
+    SQL_GET_ROL_USUARIO,
+    SQL_SET_PENALIZACION,
+    SQL_CHECK_DUPLICADO_SOLICITUD,
     SQL_GET_CIUDAD_USUARIO,
     SQL_GET_JEFE_USUARIO,
     SQL_GET_JEFE_NOMBRE_BATCH,
@@ -62,9 +73,11 @@ from .planificador_querys import (
     SQL_GET_SOLICITUD_LOGS,
     SQL_INSERT_NOTIFY_INAPP,
     SQL_VUELO_APROBAR_JEFE_OK,
-    SQL_VUELO_APROBAR_JEFE_GG,
+    SQL_VUELO_COTIZAR,
     SQL_VUELO_APROBAR_GG,
+    SQL_VUELO_RECHAZAR_GG,
     SQL_VUELO_COMPLETAR,
+    SQL_GET_MOTIVOS_VUELO,
     SQL_GET_SOLICITUDES_PENDIENTE_JEFE,
     SQL_GET_SOLICITUDES_PENDIENTE_GG_VUELO,
     SQL_UPDATE_COORDINAR_VUELO,
@@ -81,6 +94,17 @@ from .planificador_querys import (
     SQL_EJECUTAR_PRESUPUESTO_VUELO,
     SQL_GET_EMPRESA_BY_USUARIO,
     SQL_GET_VUELOS_COORDINADAS_SIN_LIQUIDAR,
+    SQL_VOUCHER_APROBAR_JEFE_OK,
+    SQL_VOUCHER_ITEM_INSERT,
+    SQL_VOUCHER_ITEMS_BY_SOLICITUD,
+    SQL_VOUCHER_ITEM_BY_ID,
+    SQL_VOUCHER_ITEM_ENTREGAR,
+    SQL_VOUCHER_ITEM_CONFIRMAR,
+    SQL_VOUCHER_ITEM_LIQUIDAR,
+    SQL_VOUCHER_SOLICITUD_A_CONFIRMACION,
+    SQL_VOUCHER_SOLICITUD_A_LIQUIDACION,
+    SQL_VOUCHER_SOLICITUD_COMPLETAR,
+    SQL_CREATE_VOUCHER_ITEMS_TABLE,
 )
 
 
@@ -245,7 +269,14 @@ def get_solicitudes_del_grupo(grupo_id: int):
     return rows
 
 
-def get_solicitudes_para_reporte(filters=None):
+def get_solicitudes_para_reporte(filters=None, usuario_id=None, ctx=None):
+    """
+    ctx (de get_user_context) acota qué filas puede descargar cada usuario:
+    - admin: todas.
+    - coordinador/aprobador/motorizado/gerente de presupuesto de un tipo: todas
+      las solicitudes de ese tipo (no solo las pendientes de su acción).
+    - usuario normal: solo sus propias solicitudes.
+    """
     filters = filters or {}
     conn = get_db()
     cur = conn.cursor()
@@ -263,6 +294,21 @@ def get_solicitudes_para_reporte(filters=None):
     if filters.get("fecha_hasta"):
         where.append("s.fecha <= ?")
         params.append(filters["fecha_hasta"])
+
+    if ctx is not None and not ctx.get("es_admin"):
+        tipos_gestionados = list(dict.fromkeys(
+            ctx.get("tipos_coordinador", []) + ctx.get("tipos_aprobador", []) +
+            ctx.get("tipos_motorizado", [])  + ctx.get("tipos_gg_vuelo", [])
+        ))
+        scope_parts = ["s.solicitante_id = ?"]
+        scope_params = [usuario_id]
+        if tipos_gestionados:
+            placeholders = ",".join("?" * len(tipos_gestionados))
+            scope_parts.append(f"s.tipo IN ({placeholders})")
+            scope_params += tipos_gestionados
+        where.append("(" + " OR ".join(scope_parts) + ")")
+        params += scope_params
+
     sql = SQL_GET_SOLICITUDES_PARA_REPORTE.format(where=" AND ".join(where))
     cur.execute(sql, params)
     rows = cur.fetchall()
@@ -311,6 +357,8 @@ def crear_solicitud(data):
         data.get("requiere_aprobacion_presupuesto", 0),
         data.get("gerente_id"),
         data.get("gerente_nombre"),
+        data.get("motivo_vuelo"),
+        data.get("numero_vouchers"),
     ))
     row = cur.fetchone()
     conn.commit()
@@ -339,16 +387,13 @@ def reagendar_solicitud(solicitud_id: int, nueva_fecha: str,
     )
 
 
-def aprobar_jefe_vuelo(solicitud_id: int, jefe_id: int, jefe_nombre: str,
-                       obs: str, requiere_gg: bool) -> None:
+def aprobar_jefe_vuelo(solicitud_id: int, jefe_id: int, jefe_nombre: str, obs: str) -> None:
     conn = get_db()
     cur = conn.cursor()
-    sql = SQL_VUELO_APROBAR_JEFE_GG if requiere_gg else SQL_VUELO_APROBAR_JEFE_OK
-    cur.execute(sql, (jefe_id, jefe_nombre, obs or "", solicitud_id))
+    cur.execute(SQL_VUELO_APROBAR_JEFE_OK, (jefe_id, jefe_nombre, obs or "", solicitud_id))
     conn.commit()
-    accion = "APROBADA_JEFE_GG" if requiere_gg else "APROBADA_JEFE"
-    insert_solicitud_log(solicitud_id, accion, jefe_id, jefe_nombre,
-                         f"Jefe aprueba vuelo.{' Requiere aprobación GG (sin presupuesto).' if requiere_gg else ''}")
+    insert_solicitud_log(solicitud_id, "APROBADA_JEFE", jefe_id, jefe_nombre,
+                         "Jefe aprueba vuelo. Pasa al coordinador para cotizar.")
 
 
 def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs: str) -> None:
@@ -360,13 +405,35 @@ def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs:
                          f"Solicitud rechazada. Motivo: {obs or '—'}")
 
 
+def cotizar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
+                  valor_cotizado: str, obs: str = "") -> None:
+    """Coordinador ingresa el valor cotizado del pasaje → pasa a aprobación GG."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VUELO_COTIZAR,
+               (valor_cotizado, obs or "", coordinador_id, coordinador_nombre, solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COTIZADA", coordinador_id, coordinador_nombre,
+                         f"Coordinador cotiza el pasaje: {valor_cotizado}. Pasa a aprobación del Gerente General.")
+
+
 def aprobar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -> None:
     conn = get_db()
     cur = conn.cursor()
-    cur.execute(SQL_VUELO_APROBAR_GG, (solicitud_id,))
+    cur.execute(SQL_VUELO_APROBAR_GG, (gg_id, gg_nombre, obs or "", solicitud_id))
     conn.commit()
     insert_solicitud_log(solicitud_id, "APROBADA_GG", gg_id, gg_nombre,
-                         f"GG aprueba vuelo sin presupuesto. {obs or ''}")
+                         f"GG aprueba la cotización del vuelo. Pasa al coordinador para info del vuelo. {obs or ''}")
+
+
+def rechazar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -> None:
+    """GG rechaza la cotización → vuelve al coordinador para recotizar (no es rechazo final)."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VUELO_RECHAZAR_GG, (gg_id, gg_nombre, obs or "", solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COTIZACION_RECHAZADA_GG", gg_id, gg_nombre,
+                         f"GG rechaza la cotización del vuelo. Vuelve al coordinador. Motivo: {obs or '—'}")
 
 
 def completar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
@@ -431,6 +498,127 @@ def deducir_presupuesto_vuelo(empresa_id: int, cc_id: int, tipo_gasto: str,
                  empresa_id, cc_id, tipo_gasto, anio, mes,
                  empresa_id, cc_id, tipo_gasto, anio, mes, costo))
     conn.commit()
+
+
+def aprobar_jefe_voucher(solicitud_id: int, jefe_id: int, jefe_nombre: str, obs: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_APROBAR_JEFE_OK, (jefe_id, jefe_nombre, obs or "", solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "APROBADA_JEFE", jefe_id, jefe_nombre,
+                         "Jefe aprueba voucher. El coordinador debe entregar los vouchers con su secuencial.")
+
+
+def rechazar_jefe_voucher(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_UPDATE_RECHAZAR, (usuario_id, usuario_nombre, obs or "", solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "RECHAZADA", usuario_id, usuario_nombre,
+                         f"Solicitud de voucher rechazada. Motivo: {obs or '—'}")
+
+
+def ensure_voucher_items_schema() -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_CREATE_VOUCHER_ITEMS_TABLE)
+    conn.commit()
+    conn.close()
+
+
+def crear_voucher_items(solicitud_id: int, numero_vouchers: int) -> list[int]:
+    """Crea un item por cada voucher solicitado (numero 1..N). Devuelve los ids creados."""
+    conn = get_db()
+    cur = conn.cursor()
+    ids = []
+    for n in range(1, int(numero_vouchers or 1) + 1):
+        cur.execute(SQL_VOUCHER_ITEM_INSERT, (solicitud_id, n))
+        row = cur.fetchone()
+        if row:
+            ids.append(row[0])
+    conn.commit()
+    return ids
+
+
+def get_voucher_items(solicitud_id: int) -> list:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEMS_BY_SOLICITUD, (solicitud_id,))
+    return [dict(r) for r in cur.fetchall()]
+
+
+def get_voucher_item_by_id(item_id: int) -> dict | None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEM_BY_ID, (item_id,))
+    row = cur.fetchone()
+    return dict(row) if row else None
+
+
+def entregar_voucher_items(solicitud_id: int, secuenciales: dict,
+                            coordinador_id: int, coordinador_nombre: str) -> None:
+    """secuenciales: {item_id: secuencial}. Registra el secuencial de cada item y
+    pasa la solicitud a PENDIENTE_CONFIRMACION_VOUCHER."""
+    conn = get_db()
+    cur = conn.cursor()
+    for item_id, secuencial in secuenciales.items():
+        cur.execute(SQL_VOUCHER_ITEM_ENTREGAR,
+                   (secuencial, coordinador_id, coordinador_nombre, item_id))
+    cur.execute(SQL_VOUCHER_SOLICITUD_A_CONFIRMACION,
+               (coordinador_id, coordinador_nombre, solicitud_id))
+    conn.commit()
+    insert_solicitud_log(
+        solicitud_id, "PENDIENTE_CONFIRMACION_VOUCHER", coordinador_id, coordinador_nombre,
+        f"Coordinador entregó {len(secuenciales)} voucher(s) con sus secuenciales."
+    )
+
+
+def confirmar_voucher_item(item_id: int, solicitud_id: int, usuario_id: int, usuario_nombre: str,
+                           adjunto_original: str, adjunto_guardado: str, adjunto_tamano: int,
+                           observacion: str) -> bool:
+    """Confirma un item individual. Si con este ya quedan todos confirmados,
+    pasa la solicitud a PENDIENTE_LIQUIDACION_VOUCHER. Devuelve True si la
+    solicitud completa quedó lista para liquidar."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEM_CONFIRMAR,
+               (adjunto_original, adjunto_guardado, adjunto_tamano, observacion or "", item_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "VOUCHER_ITEM_CONFIRMADO", usuario_id, usuario_nombre,
+                         f"Solicitante confirmó voucher item #{item_id} (secuencial adjunto).")
+
+    items = get_voucher_items(solicitud_id)
+    todos_confirmados = bool(items) and all(i.get("confirmado_usuario") for i in items)
+    if todos_confirmados:
+        cur.execute(SQL_VOUCHER_SOLICITUD_A_LIQUIDACION, (solicitud_id,))
+        conn.commit()
+        insert_solicitud_log(solicitud_id, "PENDIENTE_LIQUIDACION_VOUCHER", usuario_id, usuario_nombre,
+                             "Todos los vouchers fueron confirmados. Pendiente liquidación del coordinador.")
+    return todos_confirmados
+
+
+def liquidar_voucher_item(item_id: int, solicitud_id: int, coordinador_id: int,
+                          coordinador_nombre: str, costo: float) -> tuple[bool, float]:
+    """Liquida un item individual. Si con este ya quedan todos liquidados,
+    completa la solicitud y devuelve (True, costo_total_sumado)."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEM_LIQUIDAR, (costo, coordinador_id, coordinador_nombre, item_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "VOUCHER_ITEM_LIQUIDADO", coordinador_id, coordinador_nombre,
+                         f"Coordinador liquidó voucher item #{item_id}: ${costo:.2f}")
+
+    items = get_voucher_items(solicitud_id)
+    todos_liquidados = bool(items) and all(i.get("costo") is not None for i in items)
+    if not todos_liquidados:
+        return False, 0.0
+
+    costo_total = round(sum(float(i["costo"]) for i in items), 2)
+    cur.execute(SQL_VOUCHER_SOLICITUD_COMPLETAR, (costo_total, solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COMPLETADA", coordinador_id, coordinador_nombre,
+                         f"Todos los vouchers liquidados. Costo total: ${costo_total:.2f}")
+    return True, costo_total
 
 
 def get_vuelos_coordinadas_sin_liquidar() -> list:
@@ -508,17 +696,18 @@ def coordinar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: 
                          f"Hotel: {'Sí' if datos_hotel else 'No'}.")
 
 
-def reagendar_vuelo_a_jefe(solicitud_id: int, nueva_fecha: str,
+def reagendar_vuelo_a_jefe(solicitud_id: int, nueva_fecha: str, nueva_fecha_retorno: str | None,
                             coordinador_id: int, coordinador_nombre: str, motivo: str) -> None:
     conn = get_db()
     cur = conn.cursor()
     cur.execute(SQL_GET_FECHA_SOLICITUD, (solicitud_id,))
     row_prev = cur.fetchone()
     fecha_anterior = str(row_prev[0]) if row_prev else "—"
-    cur.execute(SQL_REAGENDAR_VUELO_A_JEFE, (nueva_fecha, solicitud_id))
+    cur.execute(SQL_REAGENDAR_VUELO_A_JEFE, (nueva_fecha, nueva_fecha_retorno, solicitud_id))
     conn.commit()
     insert_solicitud_log(solicitud_id, "REPROGRAMADA_VUELO", coordinador_id, coordinador_nombre,
-                         f"Fecha anterior: {fecha_anterior} → Nueva: {nueva_fecha}. "
+                         f"Fecha anterior: {fecha_anterior} → Nueva: {nueva_fecha}"
+                         f"{' / regreso ' + nueva_fecha_retorno if nueva_fecha_retorno else ''}. "
                          f"Motivo: {motivo or '—'}. Vuelve a aprobación del jefe.")
 
 
@@ -684,15 +873,17 @@ def get_roles_para_tipo(tipo: str) -> dict:
     cur.execute(SQL_GET_ROLES_PARA_TIPO, (tipo,))
     rows = cur.fetchall()
     conn.close()
-    coordinadores, aprobadores, motorizados = [], [], []
+    coordinadores, aprobadores, motorizados, gerentes_presupuesto = [], [], [], []
     for r in rows:
         entry = {"id": r[0], "nombre": r[1], "email": r[3]}
-        if   r[2] == ROL_COORDINADOR: coordinadores.append(entry)
-        elif r[2] == ROL_APROBADOR:   aprobadores.append(entry)
-        elif r[2] == ROL_MOTORIZADO:  motorizados.append(entry)
-    return {"coordinadores": coordinadores,
-            "aprobadores":   aprobadores,
-            "motorizados":   motorizados}
+        if   r[2] == ROL_COORDINADOR:         coordinadores.append(entry)
+        elif r[2] == ROL_APROBADOR:           aprobadores.append(entry)
+        elif r[2] == ROL_MOTORIZADO:          motorizados.append(entry)
+        elif r[2] == ROL_GERENTE_PRESUPUESTO: gerentes_presupuesto.append(entry)
+    return {"coordinadores":        coordinadores,
+            "aprobadores":          aprobadores,
+            "motorizados":          motorizados,
+            "gerentes_presupuesto": gerentes_presupuesto}
 
 
 def get_coordinadores_aprobadores_para_tipo(tipo):
@@ -703,6 +894,11 @@ def get_coordinadores_aprobadores_para_tipo(tipo):
 
 def get_motorizados_para_tipo(tipo: str):
     return get_roles_para_tipo(tipo)["motorizados"]
+
+
+def get_gerentes_presupuesto_para_tipo(tipo: str):
+    """Usuarios configurados con rol GERENTE_PRESUPUESTO para el tipo (ej. Vuelo)."""
+    return get_roles_para_tipo(tipo)["gerentes_presupuesto"]
 
 
 # ──────────────────────────────────────────────
@@ -719,6 +915,16 @@ def get_tipos_solicitud():
     return tipos if tipos else list(TIPOS_SOLICITUD_DEFAULT)
 
 
+def get_motivos_vuelo():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_MOTIVOS_VUELO, (PARAM_GROUP_MOTIVOS_VUELO,))
+    rows = cur.fetchall()
+    conn.close()
+    motivos = [r[0] for r in rows if r[0]]
+    return motivos if motivos else list(MOTIVOS_VUELO_DEFAULT)
+
+
 def get_tipo_flags(tipo: str) -> dict:
     try:
         conn = get_db()
@@ -727,10 +933,14 @@ def get_tipo_flags(tipo: str) -> dict:
         row = cur.fetchone()
         conn.close()
         if row:
-            return {"requiere_aprobacion_gerente": bool(row[0])}
+            return {
+                "requiere_aprobacion_gerente": bool(row[0]),
+                "auto_confirmar_vuelo":        bool(row[1]),
+                "auto_liquidar_vuelo":         bool(row[2]),
+            }
     except Exception:
         pass
-    return {"requiere_aprobacion_gerente": False}
+    return {"requiere_aprobacion_gerente": False, "auto_confirmar_vuelo": False, "auto_liquidar_vuelo": False}
 
 
 def get_all_tipo_flags() -> dict:
@@ -740,17 +950,100 @@ def get_all_tipo_flags() -> dict:
         cur.execute(SQL_GET_ALL_TIPO_FLAGS)
         rows = cur.fetchall()
         conn.close()
-        return {r[0]: {"requiere_aprobacion_gerente": bool(r[1])} for r in rows}
+        return {r[0]: {
+            "requiere_aprobacion_gerente": bool(r[1]),
+            "auto_confirmar_vuelo":        bool(r[2]),
+            "auto_liquidar_vuelo":         bool(r[3]),
+        } for r in rows}
     except Exception:
         return {}
 
 
-def set_tipo_flags(tipo: str, requiere_aprobacion_gerente: bool) -> None:
+def set_tipo_flags(tipo: str, requiere_aprobacion_gerente: bool,
+                   auto_confirmar_vuelo: bool = False,
+                   auto_liquidar_vuelo: bool = False) -> None:
     conn = get_db()
     cur = conn.cursor()
-    cur.execute(SQL_UPSERT_TIPO_FLAGS,
-                (tipo, 1 if requiere_aprobacion_gerente else 0, tipo,
-                 tipo, 1 if requiere_aprobacion_gerente else 0))
+    b = lambda v: 1 if v else 0
+    cur.execute(SQL_UPSERT_TIPO_FLAGS, (
+        tipo, b(requiere_aprobacion_gerente), b(auto_confirmar_vuelo), b(auto_liquidar_vuelo), tipo,
+        tipo, b(requiere_aprobacion_gerente), b(auto_confirmar_vuelo), b(auto_liquidar_vuelo),
+    ))
+    conn.commit()
+    conn.close()
+
+
+def get_vuelo_flags() -> dict:
+    """Flags globales del tipo Vuelo (auto_confirmar, auto_liquidar)."""
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(SQL_GET_VUELO_FLAGS)
+        row = cur.fetchone()
+        conn.close()
+        if row:
+            return {"auto_confirmar_vuelo": bool(row[0]), "auto_liquidar_vuelo": bool(row[1])}
+    except Exception:
+        pass
+    return {"auto_confirmar_vuelo": False, "auto_liquidar_vuelo": False}
+
+
+def get_vuelos_para_auto_confirmar() -> list:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_VUELOS_PARA_AUTO_CONFIRMAR)
+    rows = cur.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
+def get_vuelos_para_auto_liquidar() -> list:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_VUELOS_PARA_AUTO_LIQUIDAR)
+    rows = cur.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
+def set_cotizacion_hospedaje(solicitud_id: int, valor: float) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_SET_COTIZACION_HOSPEDAJE, (valor, solicitud_id))
+    conn.commit()
+
+
+def get_all_rol_flags() -> dict:
+    """rol -> True/False (autoaprueba_jefe_vuelo)."""
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(SQL_GET_ALL_ROL_FLAGS)
+        rows = cur.fetchall()
+        conn.close()
+        return {r[0]: bool(r[1]) for r in rows}
+    except Exception:
+        return {}
+
+
+def get_roles_autoaprobar_jefe_vuelo() -> list:
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(SQL_GET_ROLES_AUTOAPROBAR_JEFE_VUELO)
+        rows = cur.fetchall()
+        conn.close()
+        return [r[0] for r in rows]
+    except Exception:
+        return []
+
+
+def set_rol_flags(rol: str, autoaprueba_jefe_vuelo: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_UPSERT_ROL_FLAGS,
+                (rol, 1 if autoaprueba_jefe_vuelo else 0, rol,
+                 rol, 1 if autoaprueba_jefe_vuelo else 0))
     conn.commit()
     conn.close()
 
@@ -794,6 +1087,34 @@ def get_email_by_usuario_id(usuario_id):
     conn = get_db()
     cur = conn.cursor()
     cur.execute(SQL_GET_EMAIL_BY_USUARIO_ID, (usuario_id,))
+    row = cur.fetchone()
+    conn.close()
+    return row[0] if row else None
+
+
+def set_penalizacion(solicitud_id: int, penalizacion: float) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_SET_PENALIZACION, (penalizacion, solicitud_id))
+    conn.commit()
+
+
+def check_solicitud_duplicada(usuario_id: int, tipo: str, fecha: str, fecha_retorno: str | None):
+    """Devuelve el dict de la solicitud conflictiva o None si no hay duplicado."""
+    fecha_fin = fecha_retorno or fecha
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_CHECK_DUPLICADO_SOLICITUD, (usuario_id, tipo, fecha_fin, fecha))
+    row = cur.fetchone()
+    return dict(row) if row else None
+
+
+def get_rol_usuario(usuario_id: int) -> str | None:
+    if not usuario_id:
+        return None
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_ROL_USUARIO, (usuario_id,))
     row = cur.fetchone()
     conn.close()
     return row[0] if row else None

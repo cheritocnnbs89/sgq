@@ -19,83 +19,119 @@
 
   {# ── Hero ── #}
   <div class="planner-hero">
-    <div>
-      <h1><i class="bi bi-calendar-check me-1"></i>Planificador de Solicitudes</h1>
+    <div class="planner-hero-left">
+      <h1><i class="bi bi-calendar-check me-2"></i>Planificador de Solicitudes</h1>
       <p>Gestione recorridos, vouchers y vuelos · Lunes a viernes, 08:00 – 17:00</p>
     </div>
-    <div class="d-flex flex-column align-items-end gap-2">
-      <div class="d-flex align-items-center gap-2 text-muted small">
-        <span class="badge bg-light text-dark border">
-          <i class="bi bi-person-circle me-1"></i>
-          {{ session.get('usuario') or '—' }}
-        </span>
-        <span class="badge bg-light text-dark border">
-          <i class="bi bi-shield-lock me-1"></i>
-          {{ session.get('rol') or '—' }}
-        </span>
-      </div>
-      <div class="d-flex gap-2 flex-wrap">
+    <div class="planner-hero-actions">
+      <span class="planner-user-chip">
+        <i class="bi bi-person-circle"></i>{{ session.get('usuario') or '—' }}
+      </span>
+      <span class="planner-user-chip planner-user-chip--role">
+        <i class="bi bi-shield-lock"></i>{{ session.get('rol') or '—' }}
+      </span>
       {% if ctx.es_admin or ctx.tipos_coordinador or ctx.tipos_aprobador %}
-      <a href="{{ url_for('planificador.planificador_reporte') }}"
-         class="btn btn-outline-secondary btn-sm">
+      <a href="{{ url_for('planificador.planificador_reporte') }}" class="btn btn-sm btn-light border">
         <i class="bi bi-filetype-csv"></i> CSV
       </a>
-      <a href="{{ url_for('planificador.planificador_reporte_excel') }}"
-         class="btn btn-outline-success btn-sm">
+      <a href="{{ url_for('planificador.planificador_reporte_excel') }}" class="btn btn-sm btn-light border text-success">
         <i class="bi bi-file-earmark-excel"></i> Excel
       </a>
       {% endif %}
       {% if has_permission('planificador.solicitudes','crear') %}
       <button type="button" class="btn btn-primary btn-sm" data-open-modal="modalNueva">
-        <i class="bi bi-plus-lg"></i> Nueva solicitud
+        <i class="bi bi-plus-lg me-1"></i>Nueva solicitud
       </button>
       {% endif %}
-      </div>
+    </div>
+  </div>
+
+  {# ── KPI strip ── #}
+  {% set n_reservadas = reservadas|length %}
+  <div class="planner-kpi-strip">
+    <div class="planner-kpi {% if n_reservadas > 0 %}planner-kpi--alert{% endif %}">
+      <span class="planner-kpi-num">{{ n_reservadas }}</span>
+      <span class="planner-kpi-label">
+        {% if n_reservadas > 0 %}<i class="bi bi-exclamation-circle-fill me-1"></i>{% endif %}
+        Necesitan coordinación
+      </span>
+    </div>
+    <div class="planner-kpi-sep"></div>
+    <div class="planner-kpi">
+      <span class="planner-kpi-num">{{ rows|selectattr('estado','eq','PENDIENTE_APROBACION')|list|length }}</span>
+      <span class="planner-kpi-label">Pend. aprobación</span>
+    </div>
+    <div class="planner-kpi-sep"></div>
+    <div class="planner-kpi">
+      <span class="planner-kpi-num planner-kpi-num--green">{{ rows|selectattr('estado','eq','APROBADA')|list|length }}</span>
+      <span class="planner-kpi-label">Aprobadas</span>
+    </div>
+    <div class="planner-kpi-sep"></div>
+    <div class="planner-kpi">
+      <span class="planner-kpi-num planner-kpi-num--muted">{{ rows|selectattr('estado','eq','COMPLETADA')|list|length }}</span>
+      <span class="planner-kpi-label">Completadas</span>
+    </div>
+    <div class="planner-kpi-sep"></div>
+    <div class="planner-kpi">
+      <span class="planner-kpi-num planner-kpi-num--muted">{{ rows|length }}</span>
+      <span class="planner-kpi-label">Total visibles</span>
     </div>
   </div>
 
   {# ── Filtros ── #}
-  <form class="row g-2 mb-3" method="get" action="{{ url_for('planificador.planificador_solicitudes') }}">
-    <div class="col-6 col-md-3 col-lg-2">
+  <div class="planner-filters-bar">
+    <form class="planner-filters-form" method="get" action="{{ url_for('planificador.planificador_solicitudes') }}">
       <select class="form-select form-select-sm" name="tipo">
         <option value="">Todos los tipos</option>
         {% for t in tipos %}<option value="{{ t }}" {{ 'selected' if filters.tipo==t }}>{{ t }}</option>{% endfor %}
       </select>
-    </div>
-    <div class="col-6 col-md-3 col-lg-2">
       <select class="form-select form-select-sm" name="estado">
         <option value="">Todos los estados</option>
         {% for k,v in estados.items() %}<option value="{{ k }}" {{ 'selected' if filters.estado==k }}>{{ v }}</option>{% endfor %}
       </select>
-    </div>
-    <div class="col-6 col-md-2 col-lg-2">
-      <input type="date" class="form-control form-select-sm" name="fecha_desde" value="{{ filters.fecha_desde }}" title="Desde">
-    </div>
-    <div class="col-6 col-md-2 col-lg-2">
-      <input type="date" class="form-control form-select-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}" title="Hasta">
-    </div>
-    <div class="col-12 col-md-2 d-flex gap-2">
-      <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search"></i> Filtrar</button>
-      <a class="btn btn-outline-dark btn-sm" href="{{ url_for('planificador.planificador_solicitudes') }}"><i class="bi bi-x-circle"></i></a>
-    </div>
-  </form>
+      <input type="date" class="form-control form-control-sm" name="fecha_desde" value="{{ filters.fecha_desde }}" title="Desde">
+      <input type="date" class="form-control form-control-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}" title="Hasta">
+      <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search me-1"></i>Filtrar</button>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('planificador.planificador_solicitudes') }}"><i class="bi bi-x-lg"></i></a>
+    </form>
+  </div>
 
-  {# ── Layout principal ── #}
-  <div class="planner-layout">
+  {# ── Contenido principal (columna única) ── #}
+  <div class="planner-main">
 
-    {# Columna izquierda: calendario + tabla #}
+    {# Calendario + tabla #}
     <div>
-      <div class="rec-card">
-        <div class="rec-card-header">
-          <h2 id="weekTitle">Agenda semanal</h2>
-          <div class="week-controls">
+      {# Conteo de eventos cargados por tipo #}
+      {% set n_vuelo     = cal_events | selectattr('tipo','equalto','Vuelo')                  | list | length %}
+      {% set n_recorrido = cal_events | selectattr('tipo','equalto','Recorrido / Motorizado') | list | length %}
+      {% set n_voucher   = cal_events | selectattr('tipo','equalto','Voucher')                | list | length %}
+      {% set n_total     = cal_events | list | length %}
+
+      <div class="rec-card calendar-accordion-card" id="calendarAccordionCard">
+        <button type="button" class="calendar-accordion-toggle" id="calendarAccordionHeader" aria-expanded="false" data-calendar-toggle="calendarAccordionBody">
+          <span class="calendar-accordion-label">
+            <i class="bi bi-calendar3 cal-icon-base"></i>
+            <span class="cal-toggle-title">
+              <span class="cal-toggle-heading">Agenda semanal</span>
+              <span class="cal-toggle-sub" id="weekTitle">Cargando semana…</span>
+            </span>
+          </span>
+          <span class="cal-type-pills">
+            <span class="cal-pill cal-pill--vuelo"><i class="bi bi-airplane-fill"></i></span>
+            <span class="cal-pill cal-pill--recorrido"><i class="bi bi-taxi-front-fill"></i></span>
+            <span class="cal-pill cal-pill--voucher"><i class="bi bi-ticket-perforated-fill"></i></span>
+            <span class="cal-expand-hint">Ver agenda <i class="bi bi-chevron-down calendar-chevron"></i></span>
+          </span>
+        </button>
+        <div id="calendarAccordionBody" class="calendar-accordion-body" hidden>
+          <div class="calendar-accordion-controls" id="calendarWeekControls">
             <button type="button" class="btn btn-light btn-sm" data-week-dir="-1">&#8592;</button>
             <button type="button" class="btn btn-light btn-sm" data-week-today="1">Hoy</button>
             <button type="button" class="btn btn-light btn-sm" data-week-dir="1">&#8594;</button>
           </div>
-        </div>
-        <div class="calendar-scroll">
-          <div class="calendar-grid" id="calendarGrid"></div>
+          <div class="calendar-scroll">
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
         </div>
       </div>
 
@@ -103,8 +139,9 @@
       <div class="rec-card mt-3">
 
         {# Nav tabs #}
+        {% set tab_default = 'tab-por-aprobar' if por_aprobar else 'tab-reservadas' %}
         <div class="planner-tabs-nav">
-          <button class="planner-tab active" data-tab="tab-reservadas">
+          <button class="planner-tab {% if tab_default == 'tab-reservadas' %}active{% endif %}" data-tab="tab-reservadas">
             <i class="bi bi-calendar-plus me-1"></i>Reservadas
             <span class="badge bg-warning text-dark ms-1">{{ reservadas|length }}</span>
           </button>
@@ -113,7 +150,7 @@
             <span class="badge bg-info text-dark ms-1">{{ coordinadas|length }}</span>
           </button>
           {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
-          <button class="planner-tab {% if por_aprobar %}planner-tab-alert{% endif %}" data-tab="tab-por-aprobar">
+          <button class="planner-tab {% if tab_default == 'tab-por-aprobar' %}active{% endif %} {% if por_aprobar %}planner-tab-alert{% endif %}" data-tab="tab-por-aprobar">
             <i class="bi bi-person-check me-1"></i>Por aprobar
             {% if por_aprobar %}
             <span class="badge bg-primary ms-1">{{ por_aprobar|length }}</span>
@@ -131,21 +168,27 @@
         </div>
 
         {# Macro tabla interna #}
-        {% macro tabla_tab(section_rows, empty_msg, show_ciudad=true) %}
+        {% macro tabla_tab(section_rows, empty_msg) %}
         <div class="table-responsive" data-paginated-table>
           <table class="table table-hover align-middle mb-0 table-sm">
             <thead class="table-light">
               <tr>
-                <th>#</th><th>Tipo</th><th>Área</th>{% if show_ciudad %}<th>Ciudad</th>{% endif %}
-                <th>Fecha</th><th>Horario</th><th>Prioridad</th>
-                <th>Estado</th><th>Solicitante</th><th>Jefe</th>
+                <th data-sort="num"><span class="th-sortable">#<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Tipo<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Área<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="date"><span class="th-sortable">Fecha<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Horario<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Prioridad<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Estado<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Solicitante<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Jefe<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th class="text-end">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {% for r in section_rows %}
               <tr>
-                <td class="text-muted small">
+                <td class="text-muted small" data-sort-value="{{ r.id }}">
                   {{ r.id }}
                   {% if r.grupo_id %}
                   <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
@@ -153,7 +196,6 @@
                 </td>
                 <td>{{ r.tipo }}</td>
                 <td>{{ r.area_solicitante }}</td>
-                {% if show_ciudad %}<td class="text-muted small">{{ r.ciudad or '—' }}</td>{% endif %}
                 <td class="text-nowrap">{{ r.fecha_str }}</td>
                 <td class="text-nowrap">
                   {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
@@ -167,7 +209,7 @@
                 <td><span class="badge {{ r.estado_class }}">{{ r.estado_label }}</span></td>
                 <td class="small">{{ r.solicitante_nombre }}</td>
                 <td class="small text-muted">
-                  {% if r.tipo == 'Vuelo' %}{{ r.get('jefe_nombre') or '—' }}{% else %}—{% endif %}
+                  {% if r.tipo in ('Vuelo', 'Voucher') %}{{ r.get('jefe_nombre') or '—' }}{% else %}—{% endif %}
                 </td>
                 <td class="text-end text-nowrap">
                   <button type="button" class="btn btn-sm btn-outline-secondary"
@@ -257,14 +299,14 @@
         {% endmacro %}
 
         {# Contenido de cada tab #}
-        <div class="planner-tab-content active" id="tab-reservadas">
+        <div class="planner-tab-content {% if tab_default == 'tab-reservadas' %}active{% endif %}" id="tab-reservadas">
           {{ tabla_tab(reservadas, "Sin solicitudes pendientes de coordinación") }}
         </div>
         <div class="planner-tab-content" id="tab-coordinadas">
-          {{ tabla_tab(coordinadas, "Sin solicitudes en proceso", show_ciudad=false) }}
+          {{ tabla_tab(coordinadas, "Sin solicitudes en proceso") }}
         </div>
         {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
-        <div class="planner-tab-content" id="tab-por-aprobar">
+        <div class="planner-tab-content {% if tab_default == 'tab-por-aprobar' %}active{% endif %}" id="tab-por-aprobar">
           {% set vuelo_aprobables_jefe = por_aprobar | selectattr('puede_aprobar_jefe_vuelo') | list %}
           {% set vuelo_aprobables_gg   = por_aprobar | selectattr('puede_aprobar_gg_vuelo')   | list %}
           {% set tiene_checks = vuelo_aprobables_jefe or vuelo_aprobables_gg %}
@@ -304,9 +346,14 @@
               <thead class="table-light">
                 <tr>
                   {% if tiene_checks %}<th><input type="checkbox" id="check-all-aprobar" title="Seleccionar todas"></th>{% endif %}
-                  <th>#</th><th>Tipo</th><th>Área</th><th>Ciudad</th>
-                  <th>Fecha</th><th>Horario</th><th>Prioridad</th>
-                  <th>Estado</th><th>Solicitante</th>
+                  <th data-sort="num"><span class="th-sortable">#<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Tipo<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Área<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="date"><span class="th-sortable">Fecha<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Horario<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Prioridad<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Estado<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Solicitante<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                   <th class="text-end">Acciones</th>
                 </tr>
               </thead>
@@ -322,7 +369,7 @@
                     {% endif %}
                   </td>
                   {% endif %}
-                  <td class="text-muted small">
+                  <td class="text-muted small" data-sort-value="{{ r.id }}">
                     {{ r.id }}
                     {% if r.grupo_id %}
                     <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
@@ -330,7 +377,6 @@
                   </td>
                   <td>{{ r.tipo }}</td>
                   <td>{{ r.area_solicitante }}</td>
-                  <td class="text-muted small">{{ r.ciudad or '—' }}</td>
                   <td class="text-nowrap">{{ r.fecha_str }}</td>
                   <td class="text-nowrap">
                     {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
@@ -440,58 +486,7 @@
       </div>{# /rec-card tabs #}
     </div>
 
-    {# Panel derecho #}
-    <aside class="right-panel">
-
-      <div class="rec-card">
-        <div class="rec-card-header"><h3>Indicadores</h3></div>
-        <div class="stats-grid">
-          {% set n_reservadas = reservadas|length %}
-          <div class="stat-box {% if n_reservadas > 0 %}stat-box-alert{% endif %}">
-            <div class="stat-number">{{ n_reservadas }}</div>
-            <div class="stat-label">
-              {% if n_reservadas > 0 %}<i class="bi bi-exclamation-circle-fill text-warning me-1"></i>{% endif %}
-              Necesitan coordinación
-            </div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number">{{ rows|selectattr('estado','eq','PENDIENTE_APROBACION')|list|length }}</div>
-            <div class="stat-label">Pend. aprobación</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number">{{ rows|selectattr('estado','eq','APROBADA')|list|length }}</div>
-            <div class="stat-label">Aprobadas</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number">{{ rows|selectattr('estado','eq','COMPLETADA')|list|length }}</div>
-            <div class="stat-label">Completadas</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number">{{ rows|length }}</div>
-            <div class="stat-label">Total visibles</div>
-          </div>
-        </div>
-      </div>
-
-      {% if ctx.es_admin or ctx.tipos_coordinador or ctx.tipos_aprobador %}
-      <div class="rec-card">
-        <div class="rec-card-header"><h3>Mi rol en el planificador</h3></div>
-        <div class="rol-panel">
-          {% if ctx.es_admin %}
-          <div><i class="bi bi-shield-fill text-primary me-1"></i><strong>Administrador</strong></div>
-          {% endif %}
-          {% for t in ctx.tipos_coordinador %}
-          <div><i class="bi bi-pencil-square text-warning me-1"></i>Coordinador · {{ t }}</div>
-          {% endfor %}
-          {% for t in ctx.tipos_aprobador %}
-          <div><i class="bi bi-check2-circle text-success me-1"></i>Aprobador · {{ t }}</div>
-          {% endfor %}
-        </div>
-      </div>
-      {% endif %}
-
-    </aside>
-  </div>
+  </div>{# /planner-main #}
 
 </div>{# /recorrido-page #}
 
@@ -534,13 +529,25 @@
             <label class="form-label">Fecha *</label>
             <input class="form-control" type="date" name="fecha" id="nfecha" required>
           </div>
-          <div>
+          <div id="campoPrioridadDiv">
             <label class="form-label">Prioridad</label>
             <select class="form-select" name="prioridad">
               {% for p in prioridades %}<option>{{ p }}</option>{% endfor %}
             </select>
           </div>
-          <div>
+          <div class="campo-voucher d-none" id="campoNumeroVouchersDiv">
+            <label class="form-label">N° de vouchers solicitados *</label>
+            <input class="form-control" type="number" name="numero_vouchers" id="campoNumeroVouchers"
+                   min="1" step="1" value="1">
+          </div>
+          <div class="full campo-vuelo" id="campoMotivoVueloDiv">
+            <label class="form-label">Motivo *</label>
+            <select class="form-select" name="motivo_vuelo" id="campoMotivoVuelo">
+              <option value="">Seleccione...</option>
+              {% for m in motivos_vuelo %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+            </select>
+          </div>
+          <div id="campoLugarDiv">
             <label class="form-label">Lugar / destino *</label>
             <div class="lugar-input-group">
               <input class="form-control" name="lugar_destino" id="nlugar" required
@@ -594,6 +601,10 @@
             <div class="form-text text-danger d-none" id="errorFechaVuelo">
               La fecha de regreso no puede ser anterior a la de salida.
             </div>
+            <div class="alert alert-warning py-2 mt-2 d-none" id="alertaDuplicadoVuelo" role="alert">
+              <i class="bi bi-exclamation-triangle-fill me-1"></i>
+              Ya tienes una solicitud activa de Vuelo en la fecha seleccionada. No podrás guardar hasta que la anterior sea completada o rechazada.
+            </div>
           </div>
           <div class="campo-vuelo" id="campoPuntoSalidaDiv">
             <label class="form-label">Punto de salida *</label>
@@ -606,8 +617,8 @@
                    placeholder="Ej: Guayaquil (GYE)">
           </div>
           <div class="full">
-            <label class="form-label">Descripción de la actividad *</label>
-            <textarea class="form-control textarea-desc" name="descripcion" required
+            <label class="form-label" id="lblDescripcion">Descripción de la actividad *</label>
+            <textarea class="form-control textarea-desc" name="descripcion" id="campoDescripcion" required
                       placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
           </div>
           <div class="campo-vuelo" id="campoOrdenServicioDiv">
@@ -624,16 +635,17 @@
               </label>
             </div>
           </div>
-          <div class="full campo-vuelo" id="campoPptoBaseDiv">
-            <label class="form-label">Presupuesto Base Cero *</label>
-            <input class="form-control" type="number" name="presupuesto_base_cero"
-                   id="campoPptoBase" min="0" step="0.01"
-                   placeholder="Ej: 1500.00">
-          </div>
           <div class="full campo-vuelo" id="campoSaldoPresupDiv">
             <div class="vuelo-presup-ind" id="indicadorPresup">
               <span class="vuelo-presup-dot"></span>
               <span class="vuelo-presup-label"></span>
+            </div>
+          </div>
+          <div class="full campo-vuelo" id="alertSinCCVuelo">
+            <div class="alert alert-danger py-2 px-3 small mb-0">
+              <i class="bi bi-exclamation-triangle-fill me-1"></i>
+              No tienes un centro de costo configurado, por lo que no puedes crear solicitudes de tipo Vuelo.
+              Selecciona otro tipo de solicitud o contacta a Talento Humano/Sistemas para que te asignen uno.
             </div>
           </div>
         </div>
@@ -645,8 +657,14 @@
           </span>
           <span id="recNoticeVuelo" class="d-none">
             La solicitud de vuelo pasará primero a <strong>aprobación de su jefe directo</strong>.<br>
-            Si no hay presupuesto disponible, requerirá además aprobación del <strong>Gerente General de Vuelos</strong>.
-            Una vez aprobada, el coordinador gestionará los pasajes y cargará los documentos correspondientes.
+            Al aprobar, se notificará al <strong>coordinador de vuelos</strong> para que ingrese el valor cotizado del pasaje.<br>
+            Luego pasará a aprobación del <strong>Gerente General</strong> y, una vez aprobada, el coordinador
+            registrará la información del vuelo y cargará los documentos correspondientes.
+          </span>
+          <span id="recNoticeVoucher" class="d-none">
+            La solicitud pasará primero a <strong>aprobación de su jefe directo</strong> (salvo auto-aprobación por rol).<br>
+            Una vez aprobada, cuando termines de usar el/los voucher(s) deberás <strong>finalizar la solicitud</strong>
+            subiendo tu respaldo y una observación. El coordinador registrará el costo para completarla.
           </span>
         </div>
       </div>
@@ -682,6 +700,11 @@
           <div>
             <label class="form-label">Nueva fecha *</label>
             <input class="form-control" type="date" name="nueva_fecha" required>
+          </div>
+          <div>
+            <label class="form-label">Penalización ($)</label>
+            <input class="form-control" type="number" name="penalizacion" min="0" step="0.01"
+                   placeholder="0.00" value="0">
           </div>
           <div class="full">
             <label class="form-label">Motivo de la reagenda *</label>
@@ -842,6 +865,11 @@
         <div class="mb-2">
           <label class="form-label">Nueva fecha *</label>
           <input class="form-control" type="date" name="nueva_fecha" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Penalización ($)</label>
+          <input class="form-control" type="number" name="penalizacion" min="0" step="0.01"
+                 placeholder="0.00" value="0">
         </div>
         <div class="mb-2">
           <label class="form-label">Motivo de la reprogramación *</label>

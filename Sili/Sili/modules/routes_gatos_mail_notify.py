@@ -911,6 +911,105 @@ def notify_gasto_created(app, gasto_id: int, by_user_id: int | None):
     return sent_any
 
 
+def _coordinador_gastos_email(conn) -> str:
+    coord = gh.get_coordinador_gastos()
+    if not coord:
+        return ""
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT email FROM usuarios WHERE id = ? AND COALESCE(disabled,0) = 0",
+        (coord["usuario_id"],)
+    )
+    row = cur.fetchone()
+    return ((row["email"] if row else "") or "").strip()
+
+
+def _send_coordinador_gasto_pending(app, g: dict, coordinador_email: str):
+    coordinador_email = (coordinador_email or "").strip()
+    if not coordinador_email:
+        return False
+
+    fecha_fmt = _fmt_fecha_ddmmyyyy(g.get("fecha"))
+    usuario = g.get("usuario_username") or ""
+
+    rows = (
+        _row_blue("ID", f"#{g['id']}") +
+        _row_blue("Fecha", fecha_fmt) +
+        _row_blue("Total con IVA", f"${_money(g.get('total_con_iva'))}") +
+        _row_blue("Creador", usuario)
+    )
+
+    titulo = f"Revisión requerida – Gasto #{g['id']}"
+    saludo = f"El usuario {usuario} registró un gasto de tarjeta que requiere tu revisión antes de enviarlo a gerencia."
+
+    link = _link_ver_gasto(g["id"])
+    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Revisar gasto", link)
+
+    subject = f"[Gastos] 🔍 Revisión requerida – Gasto #{g['id']}"
+    text = (
+        f"El usuario {usuario} registró el gasto #{g['id']}, pendiente de tu revisión.\n"
+        f"Fecha: {fecha_fmt}\n"
+        f"Motivo: {g.get('motivo')}\n"
+        f"Total con IVA: {_money(g.get('total_con_iva'))}\n"
+        f"Ingresa a revisarlo y enviarlo a gerencia: {link}\n"
+    )
+
+    return _send_mail_safe(coordinador_email, subject, text, html_body=html_body)
+
+
+def notify_gasto_pending_coordinador(app, gasto_id: int, by_user_id: int | None):
+    """
+    Gastos tipo tarjeta (incluye boletos aéreos y tarjeta online): en vez de
+    notificar directo al gerente, se avisa al coordinador configurado para que
+    revise los datos antes de enviarlo a gerencia (notify_gasto_created se
+    dispara luego, cuando el coordinador da "Enviar a Gerencia").
+    """
+    g = _gasto_meta(gasto_id)
+    if not g:
+        return False
+
+    conn = get_db()
+    coordinador_email = _coordinador_gastos_email(conn)
+    creator_email = (g.get("usuario_email") or "").strip()
+
+    app.logger.info(
+        "[GASTOS][MAIL] Gasto tarjeta pendiente de coordinador=%s creator=%r coordinador=%r",
+        gasto_id, creator_email, coordinador_email
+    )
+
+    sent_any = False
+    # Si el creador y el coordinador son la misma persona (ej. el propio
+    # coordinador registró un gasto), prioriza el correo de revisión —
+    # es el accionable — y omite el de confirmación genérica para no
+    # perder ese aviso en un correo redundante.
+    mismo_destinatario = bool(coordinador_email) and coordinador_email == creator_email
+
+    try:
+        if creator_email and not mismo_destinatario:
+            sent_any = _send_creator_gasto_created(app, g) or sent_any
+    except Exception:
+        app.logger.exception("[GASTOS][MAIL] Error correo creador")
+
+    try:
+        if coordinador_email:
+            sent_any = _send_coordinador_gasto_pending(app, g, coordinador_email) or sent_any
+    except Exception:
+        app.logger.exception("[GASTOS][MAIL] Error correo coordinador")
+
+    if not coordinador_email:
+        app.logger.warning(
+            "[GASTOS][MAIL] Sin coordinador configurado — gasto=%s queda sin revisor.",
+            gasto_id
+        )
+
+    try:
+        conn.close()
+    except Exception:
+        pass
+
+    return sent_any
+
+
 def notify_gasto_deleted(app, snapshot: Dict[str, Any], by_user_id: int | None):
     if not snapshot:
         return False

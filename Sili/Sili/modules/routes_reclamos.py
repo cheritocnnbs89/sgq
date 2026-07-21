@@ -40,8 +40,8 @@ from .security import (
     require_login,
     require_permission,
 )
-from .routes_reclamos_querys import *
-from .routes_reclamos_constants import *
+from .reclamos.routes_reclamos_querys import *
+from .reclamos.routes_reclamos_constants import *
 
 # =========================================================
 # Helpers internos
@@ -204,26 +204,6 @@ def _col_names(conn, table: str) -> set[str]:
     except Exception:
         return set()
 
-def _ensure_column(conn, table, column, decl_sql):
-    # En SQL Server no alteramos esquema desde runtime
-    if _is_sqlserver_conn(conn):
-        return
-
-    cur = conn.execute(f"PRAGMA table_info({table})")
-    cols = {row["name"] for row in cur.fetchall()}
-    if column not in cols:
-        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl_sql}")
-        conn.commit()
-
-def _run_reclamos_bootstrap_if_needed(conn):
-    if _is_sqlserver_conn(conn):
-        return
-
-    #ensure_reclamos_schema(conn)
-    #ensure_reclamos_catalogos(conn)
-    #ensure_geo_schema(conn)
-    #_ensure_reclamo_imputados_extra_cols(conn)
-    
 def _can_export_all_reclamos(conn, uid: int | None) -> bool:
     """
     Puede exportar TODO:
@@ -397,230 +377,6 @@ def _es_miembro_equipo_reclamo(reclamo_id, user_id):
 
     return row is not None
 
-def _notify_sponsor_respuesta_equipo(conn, imputacion_id: int, miembro_id: int, reclamo_codigo: str):
-    cur = conn.cursor()
-
-    # =========================================================
-    # 1) Obtener datos base de la imputación / reclamo
-    # =========================================================
-    cur.execute(SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_1, (miembro_id, miembro_id, miembro_id, imputacion_id))
-
-    base = cur.fetchone()
-
-    if not base:
-        return
-
-    reclamo_id = base["reclamo_id"]
-    proceso_id = base["proceso_id"]
-    miembro_nombre = (
-        base["miembro_nombre"]
-        or base["miembro_username"]
-        or f"UID {miembro_id}"
-    )
-
-    # =========================================================
-    # 2) Obtener destinatarios: PRINCIPAL + BACKUP del proceso
-    #    No desde reclamo_imputados, porque ahí solo existe principal.
-    # =========================================================
-    sponsor_rows = []
-
-    if proceso_id:
-        cur.execute(SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_2, (proceso_id,))
-
-        sponsor_rows = cur.fetchall()
-
-    # =========================================================
-    # 3) Fallback de seguridad:
-    #    Si por algún motivo no encuentra sponsors por proceso,
-    #    notifica al imputado principal de reclamo_imputados.
-    # =========================================================
-    if not sponsor_rows:
-        cur.execute(SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_3, (imputacion_id,))
-
-        sponsor_rows = cur.fetchall()
-
-    if not sponsor_rows:
-        return
-
-    try:
-        link_sponsor = url_for("reclamos", _external=True) + "?tab=imputado"
-    except Exception:
-        link_sponsor = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=imputado"
-
-    subject = f"[Oportunidad de Mejora] Respuesta registrada por miembro de equipo en {reclamo_codigo}"
-
-    def _parse_dt(v):
-        if not v:
-            return None
-
-        if isinstance(v, datetime):
-            return v
-
-        s = str(v).strip()
-
-        for fmt in (
-            "%Y-%m-%d %H:%M:%S",
-            "%Y-%m-%d %H:%M",
-            "%Y-%m-%d",
-            "%Y-%m-%dT%H:%M:%S"
-        ):
-            try:
-                return datetime.strptime(s[:19], fmt)
-            except Exception:
-                pass
-
-        return None
-
-    def _dias_respuesta(row):
-        f_asig = _parse_dt(row["fecha_asignacion_miembro"])
-        f_resp = _parse_dt(row["fecha_respuesta_miembro"])
-
-        if not f_asig and not f_resp:
-            return "Sin fechas registradas"
-
-        if not f_asig:
-            return "Sin fecha de asignación"
-
-        if not f_resp:
-            return "Sin fecha de respuesta"
-
-        dias = (f_resp.date() - f_asig.date()).days
-
-        if dias <= 0:
-            return "Mismo día"
-
-        return f"{dias} día(s)"
-
-    def _row_mail(lbl, val):
-        val = "" if val is None else str(val)
-        val = val.replace("\n", "<br>")
-
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#ffedd5;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;color:#374151;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;color:#374151;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    tiempo_respuesta = _dias_respuesta(base)
-    enviados = set()
-
-    # =========================================================
-    # 4) Enviar a principal + backup, sin duplicar por correo
-    # =========================================================
-    for s in sponsor_rows:
-        sponsor_email = (s["sponsor_email"] or "").strip().lower()
-
-        if not sponsor_email or sponsor_email in enviados:
-            continue
-
-        enviados.add(sponsor_email)
-
-        sponsor_nombre = (
-            s["sponsor_nombre"]
-            or s["sponsor_username"]
-            or "Usuario"
-        )
-
-        tipo_sponsor = (s["tipo_sponsor"] or "").strip().upper()
-
-        text_body = f"""Hola {sponsor_nombre},
-
-El miembro de equipo {miembro_nombre} registró su respuesta de apoyo para la Oportunidad de Mejora {reclamo_codigo}.
-
-Resumen:
-- Cliente: {base["cliente_nombre"] or ""}
-- Tipo de OM: {base["tipo_reclamo"] or ""}
-- Tipo de trámite: {base["tipo_tramite"] or ""}
-- Proceso: {base["proceso_text"] or ""}
-- Rol sponsor: {tipo_sponsor}
-- Tiempo de respuesta: {tiempo_respuesta}
-
-Por favor ingresa al sistema y revisa el aporte en la pestaña "Soy Sponsor".
-
-Ir al sistema: {link_sponsor}
-
-Este es un mensaje automático.
-"""
-
-        html_body = f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-            <tr>
-              <td style="background:#f59e0b;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.95;">
-                  Oportunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Respuesta registrada por miembro de equipo
-                </div>
-                <div style="font-size:12px;opacity:.95;margin-top:6px;">
-                  Hola {sponsor_nombre}, el usuario <strong>{miembro_nombre}</strong> ya registró su aporte para la OM {reclamo_codigo}.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row_mail('Código', base['codigo'])}
-                  {_row_mail('Miembro que respondió', miembro_nombre)}
-                  {_row_mail('Rol sponsor', tipo_sponsor)}
-                  {_row_mail('Cliente', base['cliente_nombre'])}
-                  {_row_mail('Tipo de OM', base['tipo_reclamo'])}
-                  {_row_mail('Proceso', base['proceso_text'])}
-                  {_row_mail('Antecedente', base['antecedente'])}
-                  {_row_mail('Observación', base['observacion'])}
-                </table>
-
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link_sponsor}"
-                     style="display:inline-block;background:#f59e0b;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Revisar aporte del equipo
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  Ingresa al módulo de reclamos y revisa la pestaña <strong>“Soy Sponsor”</strong>.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-"""
-
-        _send_mail_safe(
-            sponsor_email,
-            subject,
-            text_body,
-            html_body=html_body
-        )
-
 
 def _now_iso() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -694,50 +450,6 @@ def _is_admin_like() -> bool:
     return rol in ("admin", "coordinador")
 
 
-def _notify_reclamo_adjuntos_change(conn, reclamo_id: int, actor_id: int | None,
-                                    accion: str, filenames: list[str]):
-    """
-    accion: 'agregados' o 'eliminados'
-    filenames: lista de nombres originales afectados
-    """
-    cur = conn.cursor()
-    cur.execute(SQL__NOTIFY_RECLAMO_ADJUNTOS_CHANGE_SEL_1, (reclamo_id,))
-    r = cur.fetchone()
-    if not r:
-        return
-
-    codigo = r["codigo"]
-    creador_id = r["creado_por"]
-
-    creador = _get_user_basic(conn, creador_id)
-    actor = _get_user_basic(conn, actor_id) if actor_id else None
-
-    if not creador or ("email" not in creador.keys()) or not creador["email"]:
-        return
- 
-    actor_name = (
-        actor["nombre_completo"]
-        if actor and "nombre_completo" in actor.keys() and actor["nombre_completo"]
-        else (actor["username"] if actor else "Sistema")
-    )
-
-    lista = "\n".join(f"- {fn}" for fn in filenames) or "(sin detalle)"
-
-    subject = f"[Oportunidad de Mejora] Adjuntos {accion} en {codigo}"
-    text_body = f"""Hola {creador['username']},
-
-Se han {accion} archivos en la Oportunidad de Mejora {codigo}.
-
-Acción realizada por: {actor_name}
-
-Archivos:
-{lista}
-
-Este es un mensaje automático.
-"""
-
-    _send_mail_safe(creador["email"], subject, text_body)
-
 # =========================================================
 #   ESQUEMA DE BD
 # =========================================================
@@ -749,20 +461,6 @@ def _col_names(conn, table: str) -> set[str]:
         return {r["name"] for r in cur.fetchall()}
     except sqlite3.OperationalError:
         return set()
-
-def ensure_reclamos_schema(conn):
-    """
-    No-op en SQL Server.
-    El esquema de reclamos ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
-def ensure_reclamo_imputado_acciones_schema(conn: sqlite3.Connection):
-    """
-    No-op en SQL Server.
-    El esquema de reclamos ya debe existir y mantenerse fuera del backend.
-    """
-    return
 
 
 def _save_respuesta_equipo_acciones(
@@ -826,71 +524,6 @@ def _save_respuesta_equipo_acciones(
  
 
 
-
-def ensure_reclamo_respuesta_equipo_acciones_schema(conn: sqlite3.Connection):
-    cur = conn.cursor()
-
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_1)
-
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_2)
-
-    cur.execute("PRAGMA table_info(reclamo_respuesta_equipo_acciones)")
-    cols = {r[1] for r in cur.fetchall()}
-
-    required_cols = {
-        "respuesta_equipo_id": "INTEGER NOT NULL DEFAULT 0",
-        "reclamo_id": "INTEGER NOT NULL DEFAULT 0",
-        "imputacion_id": "INTEGER NOT NULL DEFAULT 0",
-        "miembro_id": "INTEGER NOT NULL DEFAULT 0",
-        "tipo": "TEXT NOT NULL DEFAULT ''",
-        "descripcion": "TEXT NOT NULL DEFAULT ''",
-        "fecha_compromiso": "TEXT",
-        "orden": "INTEGER NOT NULL DEFAULT 1",
-        "requiere_evidencia": "INTEGER NOT NULL DEFAULT 0",
-        "cumplido": "INTEGER NOT NULL DEFAULT 0",
-        "fecha_cumplimiento": "TEXT",
-        "reminder_3d_sent": "INTEGER NOT NULL DEFAULT 0",
-        "reminder_2d_sent": "INTEGER NOT NULL DEFAULT 0",
-        "reminder_1d_sent": "INTEGER NOT NULL DEFAULT 0",
-        "escalado_jefe": "INTEGER NOT NULL DEFAULT 0",
-        "activo": "INTEGER NOT NULL DEFAULT 1",
-        "created_at": "TEXT",
-        "created_by": "INTEGER",
-        "updated_at": "TEXT",
-        "updated_by": "INTEGER",
-    }
-
-    for col, ddl in required_cols.items():
-        if col not in cols:
-            cur.execute(f"ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN {col} {ddl}")
-
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_3)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_4)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_5)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_6)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_7)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_8)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_9)
-
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_10)
-    cur.execute(SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_11)
-
-
-
-    cur.execute("PRAGMA table_info(reclamo_respuesta_equipo_acciones)")
-    cols = {r[1] for r in cur.fetchall()}
-
-    if "observacion_cumplimiento" not in cols:
-        cur.execute("ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN observacion_cumplimiento TEXT")
-
-    if "updated_at" not in cols:
-        cur.execute("ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN updated_at TEXT")
-
-    if "updated_by" not in cols:
-        cur.execute("ALTER TABLE reclamo_respuesta_equipo_acciones ADD COLUMN updated_by INTEGER")
-
-    conn.commit()
- 
 
 def _get_respuesta_equipo_acciones(conn: sqlite3.Connection, respuesta_equipo_id: int):
     cur = conn.cursor()
@@ -1068,35 +701,6 @@ def _puede_ver_equipo(reclamo_id: int, user_id: int | None = None) -> bool:
     return fila is not None
 
 
-def _ensure_column(conn, table, column, decl_sql):
-    """
-    No-op en SQL Server.
-    El esquema ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
-def ensure_reclamo_imputados_fishbone(conn):
-    """
-    No-op en SQL Server.
-    El esquema ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
-def ensure_reclamo_respuestas_equipo_schema(conn: sqlite3.Connection):
-    """
-    No-op en SQL Server.
-    El esquema ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
-
-def ensure_reclamo_adjuntos_schema(conn: sqlite3.Connection):
-    """
-    No-op en SQL Server.
-    El esquema ya debe existir y mantenerse fuera del backend.
-    """
-    return
-
 # =========================================================
 #   CATÁLOGOS param_groups / param_values
 # =========================================================
@@ -1107,32 +711,6 @@ def fetch_productos(conn):
     return cur.fetchall()
 
 
-def _ensure_param_tables(conn: sqlite3.Connection):
-    """
-    Adapta los catálogos a tu esquema actual:
-
-        param_groups(id, nombre)
-        param_values(id, group_id, nombre, valor)
-
-    y, si hace falta, añade columnas 'activo' y 'orden'
-    a param_values (no rompe nada existente).
-    """
-    cur = conn.cursor()
-
-    cur.execute(SQL__ENSURE_PARAM_TABLES_DDL_1)
-
-    cur.execute(SQL__ENSURE_PARAM_TABLES_DDL_2)
-
-    cur.execute("PRAGMA table_info(param_values)")
-    cols = {r[1] for r in cur.fetchall()}
-    if "activo" not in cols:
-        cur.execute("ALTER TABLE param_values ADD COLUMN activo INTEGER NOT NULL DEFAULT 1")
-    if "orden" not in cols:
-        cur.execute("ALTER TABLE param_values ADD COLUMN orden  INTEGER NOT NULL DEFAULT 1")
-
-    conn.commit()
-
- 
 def _ensure_param_group(conn, nombre: str, descripcion: str | None = None):
     """
     En SQL Server no crea grupos en runtime.
@@ -1176,7 +754,6 @@ def _fetch_param_values(conn: sqlite3.Connection, group_codigo: str):
     Cada row tendrá:
         id, nombre (clave), valor (etiqueta), orden
     """
-    #_ensure_param_tables(conn)
     cur = conn.cursor()
     cur.execute(SQL__FETCH_PARAM_VALUES_SEL_1, (group_codigo,))
     return cur.fetchall()
@@ -1217,26 +794,6 @@ def _can_edit_equipo(equipo_id: int) -> bool:
     colaborador_id = row["colaborador_id"] if hasattr(row, "keys") else row[1]
 
     return int(user_id) in {int(responsable_id), int(colaborador_id)}
-
-
-def ensure_reclamos_catalogos(conn):
-    """
-    No-op en SQL Server.
-    Los catálogos ya deben existir y mantenerse fuera del backend.
-    """
-    return
-# =========================================================
-#   CATÁLOGOS GEO
-# =========================================================
- 
-
-
-def ensure_geo_schema(conn):
-    """
-    No-op en SQL Server.
-    Las tablas geográficas ya deben existir y mantenerse fuera del backend.
-    """
-    return
 
 
 def fetch_regiones(conn: sqlite3.Connection):
@@ -1421,7 +978,7 @@ def fetch_usuarios_imputables2(conn, empresa_ids=None):
     Devuelve usuarios imputables con:
       - id
       - username
-      - nombre_completo
+      - nombre_completo este
       - departamento_nombre
       - jefe_nombre  (primer usuario del mismo dpto con rol en BOSS_ROLES)
     Opcionalmente filtra por empresa_id (lista de ints).
@@ -1477,21 +1034,7 @@ def fetch_usuarios_imputables(conn, empresa_ids=None):
     """
     cur = conn.cursor()
 
-    sql = """
-        SELECT
-            u.id,
-            u.username,
-            COALESCE(u.nombre_completo, u.username) AS nombre_completo,
-            d.nombre AS departamento_nombre,
-            COALESCE(j.nombre_completo, j.username) AS jefe_nombre,
-            u.empresa_id,
-            u.jefe_id
-        FROM usuarios u
-        LEFT JOIN departamentos d ON d.id = u.departamento_id
-        LEFT JOIN usuarios j ON j.id = u.jefe_id          -- 👈 jefe desde la misma tabla
-        WHERE COALESCE(u.disabled, 0) = 0
-        and u.identificacion not in ('40623','0911946630','0923577688','0929626729','1307590834'   ,'40736','0902507805','1714868211')
-    """
+    sql = SQL_FETCH_USUARIOS_IMPUTABLES_SEL_1
     params = []
 
     if empresa_ids:
@@ -1511,410 +1054,6 @@ def _get_user_basic(conn: sqlite3.Connection, uid: int | None):
     cur = conn.cursor()
     cur.execute(SQL__GET_USER_BASIC_SEL_1, (uid,))
     return cur.fetchone()
-
-
-def _notify_colaborador_asignado(
-    conn,
-    colaborador_id: int,
-    reclamo_codigo: str,
-    responsable_username: str
-):
-    u = _get_user_basic(conn, colaborador_id)
-    if not u or ("email" not in u.keys()) or not u["email"]:
-        return
-
-    # --- Datos del reclamo (por codigo) ---
-    cur = conn.cursor()
-    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-    r = cur.fetchone()
-
-    # Imputados (si aplica)
-    imputados = ""
-    if r:
-        if _is_sqlserver_conn(conn):
-            cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_2, (r["id"],))
-        else:
-            if _is_sqlserver_conn(conn):
-                cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_2, (r["id"],))
-            else:
-                cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_3, (r["id"],))
-            row = cur.fetchone()
-            if row and row["lista"]:
-                imputados = row["lista"]
-        row = cur.fetchone()
-        if row and row["lista"]:
-            imputados = row["lista"]
-
-    # Link directo a tab "Soy Sponsor"
-    try:
-        link_sponsor = url_for("reclamos", _external=True) + "?tab=sponsor"
-    except Exception:
-        link_sponsor = "https://tu-sistema/reclamos?tab=sponsor"
-
-    nombre = (u["nombre_completo"] or "").strip() if "nombre_completo" in u.keys() else ""
-    if not nombre:
-        nombre = u["username"]
-
-    subject = f"[Oportunidad de Mejora] Aporte requerido en {reclamo_codigo}"
-
-    # Texto plano (fallback)
-    text_body = f"""Hola {nombre},
-
-El responsable {responsable_username} te ha solicitado apoyo para la
-Oportunidad de Mejora {reclamo_codigo}.
-
-Por favor ingresa al sistema, pestaña "Soy Sponsor" y registra tu aporte
-(causa, acción preventiva y acción correctiva).
-
-Ir al sistema: {link_sponsor}
-
-Este aporte no es la respuesta oficial, pero ayudará al responsable a
-construir la respuesta final.
-
-Este es un mensaje automático.
-"""
-
-    # ---------- HTML mejorado (mismo estilo que aprobador) ----------
-    def _row(lbl, val):
-        val = (val or "")
-        val = str(val).replace("\n", "<br>")
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#fee2e2;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    html_body = f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;
-               font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-            <!-- Encabezado -->
-            <tr>
-              <td style="background:#b91c1c;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;
-                            letter-spacing:.08em;opacity:.9;">
-                  Oportunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Aporte requerido {reclamo_codigo}
-                </div>
-                <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {nombre}, el responsable <strong>{responsable_username}</strong> solicitó tu apoyo.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Cuerpo -->
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row('Código', reclamo_codigo)}
-                  {_row('Responsable', responsable_username)}
-                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
-                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
-                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
-                  { _row('Cliente', r['cliente_nombre']) if r else '' }
-                  { _row('Proceso', r['proceso_text']) if r else '' }
-                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
-                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
-                  { _row('Factura', r['factura']) if r else '' }
-                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
-                  { _row('Imputados', imputados) if imputados else '' }
-                  { _row('Antecedente', r['antecedente']) if r else '' }
-                  { _row('Observación', r['observacion']) if r else '' }
-                </table>
-
-                <div style="margin-top:14px;font-size:12px;color:#374151;">
-                  Por favor ingresa a la pestaña <strong>“Soy Sponsor”</strong> y registra tu aporte:
-                  <strong>causa</strong>, <strong>acción preventiva</strong> y <strong>acción correctiva</strong>.
-                  <br>
-                  <span style="color:#6b7280;">
-                    Este aporte no es la respuesta oficial, pero ayudará al responsable a construir la respuesta final.
-                  </span>
-                </div>
-
-                <!-- Botón CTA -->
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link_sponsor}"
-                     style="display:inline-block;background:#2563eb;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Registrar aporte (Soy Sponsor)
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  También puedes ingresar al módulo de reclamos desde el sistema
-                  y abrir la bandeja <strong>“Soy Sponsor”</strong>.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Pie -->
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-"""
-
-    _send_mail_safe(u["email"], subject, text_body, html_body=html_body)
-
-def _notify_responsable_aporte_listo(conn, responsable_id: int, reclamo_codigo: str, colaborador_username: str):
-    r = _get_user_basic(conn, responsable_id)
-    if not r or ("email" not in r.keys()) or not r["email"]:
-        return
-
-    nombre = r["nombre_completo"] if r.get("nombre_completo") else r["username"]
-
-    subject = f"[Oportunidad de Mejora] Aporte recibido en {reclamo_codigo}"
-    text_body = f"""Hola {nombre},
-
-El usuario {colaborador_username} registró su aporte técnico en la
-Oportunidad de Mejora {reclamo_codigo}.
-
-Puedes revisarlo en la sección "Soy Sponsor" y, si lo consideras adecuado,
-aprovecharlo para tu respuesta final como responsable.
-
-Este es un mensaje automático.
-"""
-    _send_mail_safe(r["email"], subject, text_body)
-
-def _notify_colaborador_aporte_rechazado(conn, colaborador_id: int, reclamo_codigo: str, motivo: str):
-    """
-    Notifica rechazo de aporte de equipo a:
-    - miembro/colaborador que registró el aporte
-    - sponsor principal y backup del proceso
-    - usuarios de Servicio al Cliente
-
-    Reutiliza:
-    - _get_user_basic
-    - _get_sponsor_emails_by_reclamo
-    - _send_mail_safe
-    """
-
-    colaborador = _get_user_basic(conn, colaborador_id)
-
-    colaborador_email = ""
-    colaborador_nombre = "Miembro de equipo"
-
-    if colaborador:
-        colaborador_email = (colaborador["email"] or "").strip()
-        colaborador_nombre = (
-            colaborador["nombre_completo"]
-            if "nombre_completo" in colaborador.keys() and colaborador["nombre_completo"]
-            else colaborador["username"]
-        )
-
-    motivo_txt = (motivo or "Sin detalle").strip()
-
-    cur = conn.cursor()
-
-    # =========================================================
-    # Datos base de la OM
-    # =========================================================
-    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-
-    r = cur.fetchone()
-
-    try:
-        link_sistema = url_for("reclamos", _external=True) + "?tab=sponsor"
-    except Exception:
-        link_sistema = "https://tu-sistema/reclamos?tab=sponsor"
-
-    subject = f"[Oportunidad de Mejora] Aporte de equipo rechazado {reclamo_codigo}"
-
-    def _row(lbl, val):
-        val = "" if val is None else str(val)
-        val = val.replace("\n", "<br>")
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#fef3c7;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    # =========================================================
-    # Destinatarios
-    # =========================================================
-    destinatarios = []
-
-    # 1) Miembro/colaborador
-    if colaborador_email:
-        destinatarios.append({
-            "email": colaborador_email,
-            "nombre": colaborador_nombre,
-            "rol_notificacion": "MIEMBRO DE EQUIPO"
-        })
-
-    # 2) Sponsor principal + backup
-    try:
-        for s in _get_sponsor_emails_by_reclamo(conn, reclamo_codigo):
-            destinatarios.append({
-                "email": s["email"],
-                "nombre": s["nombre"] or s["username"] or "Usuario",
-                "rol_notificacion": s["tipo_sponsor"] or "SPONSOR"
-            })
-    except Exception:
-        current_app.logger.exception(
-            "No se pudo obtener sponsor principal/backup para OM %s",
-            reclamo_codigo
-        )
-
-    # 3) Servicio al Cliente
-    cur.execute(SQL__NOTIFY_COLABORADOR_APORTE_RECHAZADO_SEL_1)
-
-    for sc in cur.fetchall():
-        destinatarios.append({
-            "email": sc["email"],
-            "nombre": sc["nombre"] or sc["username"] or "Servicio al Cliente",
-            "rol_notificacion": "SERVICIO AL CLIENTE"
-        })
-
-    # =========================================================
-    # Enviar sin duplicar correos
-    # =========================================================
-    enviados = set()
-
-    for d in destinatarios:
-        email = (d.get("email") or "").strip().lower()
-
-        if not email or email in enviados:
-            continue
-
-        enviados.add(email)
-
-        nombre_destinatario = d.get("nombre") or "Usuario"
-        rol_notificacion = d.get("rol_notificacion") or ""
-
-        text_body = f"""Hola {nombre_destinatario},
-
-El aporte técnico registrado por {colaborador_nombre} para la Oportunidad de Mejora {reclamo_codigo} fue RECHAZADO.
-
-Rol de notificación:
-{rol_notificacion}
-
-Motivo del rechazo:
-{motivo_txt}
-
-Por favor ingresa al sistema para revisar el detalle de la OM.
-
-Ir al sistema:
-{link_sistema}
-
-Este es un mensaje automático.
-"""
-
-        html_body = f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;
-               font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-
-            <tr>
-              <td style="background:#b45309;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;
-                            letter-spacing:.08em;opacity:.9;">
-                  Oportunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Aporte de equipo rechazado {reclamo_codigo}
-                </div>
-                <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {nombre_destinatario}, se rechazó un aporte de equipo y requiere seguimiento.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row('Código', reclamo_codigo)}
-                  {_row('Miembro de equipo', colaborador_nombre)}
-                  {_row('Rol de notificación', rol_notificacion)}
-                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
-                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
-                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
-                  { _row('Cliente', r['cliente_nombre']) if r else '' }
-                  { _row('Proceso', r['proceso_text']) if r else '' }
-                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
-                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
-                  { _row('Factura', r['factura']) if r else '' }
-                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
-                  { _row('Antecedente', r['antecedente']) if r else '' }
-                  { _row('Observación', r['observacion']) if r else '' }
-                  {_row('Motivo del rechazo', motivo_txt)}
-                </table>
-
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link_sistema}"
-                     style="display:inline-block;background:#f97316;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Revisar OM en el sistema
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  Este correo fue enviado al miembro de equipo, sponsor principal,
-                  backup y Servicio al Cliente.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-"""
-
-        _send_mail_safe(
-            email,
-            subject,
-            text_body,
-            html_body=html_body
-        )
 
 
 MAX_FILES_PER_RECLAMO = 5
@@ -1945,7 +1084,6 @@ def _save_adjuntos_for_reclamo(conn: sqlite3.Connection,
       - None si todo OK
       - Mensaje de error (str) si algo no cumple las reglas
     """
-    #ensure_reclamo_adjuntos_schema(conn)
     cur = conn.cursor()
 
     # Cuántos adjuntos ya tiene esta OM
@@ -1999,662 +1137,6 @@ def _save_adjuntos_for_reclamo(conn: sqlite3.Connection,
     return None
 
 
-from flask import url_for
-
-def _notify_aprobador_imputacion(conn, aprobador_id, reclamo_codigo, imputado_username):
-    jefe = _get_user_basic(conn, aprobador_id)
-    if not jefe or ("email" not in jefe.keys()) or not jefe["email"]:
-        return
-
-    # --- Datos del reclamo (por codigo) ---
-    cur = conn.cursor()
-    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-    r = cur.fetchone()
-
-    # Imputados del caso (por si hay más de uno)
-    imputados = imputado_username or ""
-    if r:
-        cur.execute(SQL__NOTIFY_APROBADOR_IMPUTACION_SEL_1, (r["id"],))
-        row = cur.fetchone()
-        if row and row["lista"]:
-            imputados = row["lista"]
-
-    # Link directo al tab "Por aprobar (Jefe)"
-    try:
-        link_aprobar = url_for("reclamos", _external=True) + "?tab=aprobar"
-    except Exception:
-        link_aprobar = "https://tu-sistema/reclamos?tab=aprobar"
-
-    nombre = (
-        jefe['nombre_completo']
-        if 'nombre_completo' in jefe.keys() and jefe['nombre_completo']
-        else jefe['username']
-    )
-
-    subject = f"[Oportunida de Mejora] Aprobación pendiente {reclamo_codigo}"
-
-    text_body = f"""Hola {nombre},
-
-Hay un reclamo {reclamo_codigo} con imputación pendiente para: {imputados}.
-Por favor revísalo y aprueba/rechaza la imputación.
-
-Ir al sistema: {link_aprobar}
-
-Este es un mensaje automático.
-"""
-
-    def _row(lbl, val):
-        val = (val or "").replace("\n", "<br>")
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#fee2e2;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    html_body = f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;
-               font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-            <tr>
-              <td style="background:#b91c1c;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;
-                            letter-spacing:.08em;opacity:.9;">
-                  Oprotunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Aprobación pendiente {reclamo_codigo}
-                </div>
-                <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {nombre}, tienes una imputación pendiente de revisión.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row('Código', reclamo_codigo)}
-                  {_row('Fecha OM', r['fecha_reclamo']) if r else ''}
-                  {_row('Tipo de OM', r['tipo_reclamo']) if r else ''}
-                  {_row('Tipo de Trámite', r['tipo_tramite']) if r else ''}
-                  {_row('Cliente', r['cliente_nombre']) if r else ''}
-                  {_row('Proceso', r['proceso_text']) if r else ''}
-                  {_row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else ''}
-                  {_row('Fecha de Pedido', r['fecha_pedido']) if r else ''}
-                  {_row('Factura', r['factura']) if r else ''}
-                  {_row('Guía Remisión', r['guia_remision']) if r else ''}
-                  {_row('Imputados', imputados)}
-                  {_row('Antecedente', r['antecedente']) if r else ''}
-                  {_row('Observación', r['observacion']) if r else ''}
-                </table>
-
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link_aprobar}"
-                     style="display:inline-block;background:#2563eb;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Revisar y aprobar imputación
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  También puedes ingresar al módulo de reclamos desde el sistema
-                  y abrir la bandeja <strong>“Por aprobar (Jefe)”</strong>.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-"""
-
-    _send_mail_safe(jefe["email"], subject, text_body, html_body=html_body)
-
-def _notify_creador_rechazo_asignacion(conn, creador_id, reclamo_codigo, imputado_username, motivo):
-    c = _get_user_basic(conn, creador_id)
-    if not c:
-        return
-    subject = f"[Oportunidad de Mejora] Imputación rechazada en {reclamo_codigo}"
-    body = (
-        f"Hola {c['username']},\n\n"
-        f"El reclamo {reclamo_codigo} fue RECHAZADO para el usuario {imputado_username}.\n"
-        f"Motivo del rechazo:\n{motivo or 'Sin motivo informado.'}\n\n"
-        "Este es un mensaje automático."
-    )
-    _send_mail_safe(c["email"], subject, body)
-
-
-def _notify_imputado_aprobado(conn, imputado_id, reclamo_codigo):
-    u = _get_user_basic(conn, imputado_id)
-    if not u or ("email" not in u.keys()) or not u["email"]:
-        return
-
-    # --- Datos del reclamo (por código) ---
-    cur = conn.cursor()
-    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-    r = cur.fetchone()
-
-    # Link directo al tab "Soy responsable"
-    try:
-        link_responder = url_for("reclamos", _external=True) + "?tab=imputado"
-    except Exception:
-        link_responder = "https://tu-sistema/reclamos?tab=imputado"
-
-    nombre = (
-        u['nombre_completo']
-        if 'nombre_completo' in u.keys() and u['nombre_completo']
-        else u['username']
-    )
-
-    subject = f"[Oportunidad de Mejora] Nueva OM asignada ({reclamo_codigo})"
-
-    # Texto plano (fallback)
-    text_body = f"""Hola {nombre},
-
-Se te ha asignado la Oportunidad de Mejora {reclamo_codigo}.
-Por favor ingresa al sistema, revisa el detalle y registra:
-
-- Causa raíz
-- Acción preventiva
-- Acción correctiva
-
-Ir al sistema: {link_responder}
-
-Este es un mensaje automático.
-"""
-
-    # ---------- HTML similar al del aprobador ----------
-    def _row(lbl, val):
-        val = (val or "").replace("\n", "<br>")
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#dbeafe;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    html_body = f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;
-               font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-            <!-- Encabezado -->
-            <tr>
-              <td style="background:#2563eb;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;
-                            letter-spacing:.08em;opacity:.9;">
-                  Oportunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Nueva OM asignada {reclamo_codigo}
-                </div>
-                <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {nombre}, se te ha asignado esta OM para análisis y respuesta técnica.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Cuerpo -->
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row('Código', reclamo_codigo)}
-                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
-                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
-                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
-                  { _row('Cliente', r['cliente_nombre']) if r else '' }
-                  { _row('Proceso', r['proceso_text']) if r else '' }
-                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
-                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
-                  { _row('Factura', r['factura']) if r else '' }
-                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
-                  { _row('Antecedente', r['antecedente']) if r else '' }
-                  { _row('Observación', r['observacion']) if r else '' }
-                </table>
-
-                <!-- Botón CTA -->
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link_responder}"
-                     style="display:inline-block;background:#2563eb;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Ingresar y responder medidas
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  Una vez completes la causa, acción preventiva y correctiva,
-                  tu jefe revisará y aprobará la respuesta técnica.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Pie -->
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-"""
-
-    _send_mail_safe(u["email"], subject, text_body, html_body=html_body)
-
-def _notify_jefe_respuesta_listo(conn, aprobador_id, reclamo_codigo, imputado_username):
-    jefe = _get_user_basic(conn, aprobador_id)
-    if not jefe or ("email" not in jefe.keys()) or not jefe["email"]:
-        return
-
-    # --- Datos del reclamo (por código) ---
-    cur = conn.cursor()
-    if _is_sqlserver_conn(conn):
-        cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-    else:
-        cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-    r = cur.fetchone()
- 
-    # Imputados del caso (por si hay más de uno)
-    imputados = imputado_username or ""
-    if r:
-        cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_3, (r["id"],))
-        row = cur.fetchone()
-        if row and row["lista"]:
-            imputados = row["lista"]
-
-    # Link directo al tab "Por aprobar (Jefe)" para validar la respuesta técnica
-    try:
-        link_validar = url_for("reclamos", _external=True) + "?tab=aprobar"
-    except Exception:
-        link_validar = "https://tu-sistema/reclamos?tab=aprobar"
-
-    nombre = (
-        jefe['nombre_completo']
-        if 'nombre_completo' in jefe.keys() and jefe['nombre_completo']
-        else jefe['username']
-    )
-
-    subject = f"[Oportunidad de Mejora] Validar respuesta técnica {reclamo_codigo}"
-
-    # Texto plano (fallback)
-    text_body = f"""Hola {nombre},
-
-El usuario {imputado_username} ha registrado la respuesta técnica para la
-Oportunidad de Mejora {reclamo_codigo}.
-
-Por favor revisa las medidas propuestas (causa, acción preventiva y correctiva)
-y aprueba o rechaza la respuesta.
-
-Ir al sistema: {link_validar}
-
-Este es un mensaje automático.
-"""
-
-    # ---------- HTML mejorado ----------
-    def _row(lbl, val):
-        val = (val or "").replace("\n", "<br>")
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#fee2e2;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    html_body = f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;
-               font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-            <!-- Encabezado -->
-            <tr>
-              <td style="background:#1d4ed8;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;
-                            letter-spacing:.08em;opacity:.9;">
-                  Oportunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Validar respuesta técnica {reclamo_codigo}
-                </div>
-                <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {nombre}, el usuario {imputado_username} ha registrado su respuesta
-                  y está pendiente de tu aprobación.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Cuerpo -->
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row('Código', reclamo_codigo)}
-                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
-                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
-                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
-                  { _row('Cliente', r['cliente_nombre']) if r else '' }
-                  { _row('Proceso', r['proceso_text']) if r else '' }
-                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
-                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
-                  { _row('Factura', r['factura']) if r else '' }
-                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
-                  {_row('Imputados', imputados)}
-                  { _row('Antecedente', r['antecedente']) if r else '' }
-                  { _row('Observación', r['observacion']) if r else '' }
-                </table>
-
-                <!-- Botón CTA -->
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link_validar}"
-                     style="display:inline-block;background:#2563eb;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Revisar y validar respuesta técnica
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  También puedes ingresar al módulo de reclamos desde el sistema
-                  y abrir la bandeja <strong>“Por aprobar (Jefe)”</strong> para validar las respuestas.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Pie -->
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-"""
-
-    _send_mail_safe(jefe["email"], subject, text_body, html_body=html_body)
-
-def _notify_imputado_respuesta_rechazada(conn, imputado_id, reclamo_codigo, motivo):
-    """
-    Notifica rechazo de respuesta técnica a:
-    - imputado/responsable que debe corregir
-    - sponsor principal y backup del proceso
-    - usuarios de Servicio al Cliente
-
-    Reutiliza:
-    - _get_user_basic
-    - _get_sponsor_emails_by_reclamo
-    - _send_mail_safe
-    """
-
-    u = _get_user_basic(conn, imputado_id)
-    if not u or ("email" not in u.keys()) or not u["email"]:
-        imputado_email = None
-        imputado_nombre = "Responsable técnico"
-    else:
-        imputado_email = (u["email"] or "").strip()
-        imputado_nombre = (
-            u["nombre_completo"]
-            if "nombre_completo" in u.keys() and u["nombre_completo"]
-            else u["username"]
-        )
-
-    cur = conn.cursor()
-
-    # =========================================================
-    # Datos del reclamo
-    # =========================================================
-    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-
-    r = cur.fetchone()
-
-    try:
-        link_responder = url_for("reclamos", _external=True) + "?tab=imputado"
-    except Exception:
-        link_responder = "https://tu-sistema/reclamos?tab=imputado"
-
-    motivo_txt = (motivo or "Sin detalle").strip()
-
-    subject = f"[Oportunidad de Mejora] Ajuste requerido en respuesta {reclamo_codigo}"
-
-    # =========================================================
-    # Helper visual para correo HTML
-    # =========================================================
-    def _row(lbl, val):
-        val = "" if val is None else str(val)
-        val = val.replace("\n", "<br>")
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#fef3c7;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    # =========================================================
-    # Servicio al Cliente
-    # No existe actualmente una función que devuelva la lista.
-    # Se reutiliza la misma regla ya usada en _can_view_all_reclamos:
-    # departamento Servicio al Cliente o puesto que contenga Servicio al Cliente.
-    # =========================================================
-    cur.execute(SQL__NOTIFY_COLABORADOR_APORTE_RECHAZADO_SEL_1)
-
-    servicio_cliente_rows = cur.fetchall()
-
-    # =========================================================
-    # Destinatarios
-    # =========================================================
-    destinatarios = []
-
-    # 1) Imputado / responsable que debe corregir
-    if imputado_email:
-        destinatarios.append({
-            "email": imputado_email,
-            "nombre": imputado_nombre,
-            "rol_notificacion": "RESPONSABLE"
-        })
-
-    # 2) Sponsor principal + backup
-    # Reutiliza función existente.
-    try:
-        for s in _get_sponsor_emails_by_reclamo(conn, reclamo_codigo):
-            destinatarios.append({
-                "email": s["email"],
-                "nombre": s["nombre"] or s["username"] or "Usuario",
-                "rol_notificacion": s["tipo_sponsor"] or "SPONSOR"
-            })
-    except Exception:
-        current_app.logger.exception(
-            "No se pudo obtener sponsor principal/backup para reclamo %s",
-            reclamo_codigo
-        )
-
-    # 3) Servicio al Cliente
-    for sc in servicio_cliente_rows:
-        destinatarios.append({
-            "email": sc["email"],
-            "nombre": sc["nombre"] or sc["username"] or "Servicio al Cliente",
-            "rol_notificacion": "SERVICIO AL CLIENTE"
-        })
-
-    enviados = set()
-
-    for d in destinatarios:
-        email = (d.get("email") or "").strip().lower()
-        if not email or email in enviados:
-            continue
-
-        enviados.add(email)
-
-        nombre_destinatario = d.get("nombre") or "Usuario"
-        rol_notificacion = d.get("rol_notificacion") or ""
-
-        text_body = f"""Hola {nombre_destinatario},
-
-La respuesta técnica de la Oportunidad de Mejora {reclamo_codigo} fue RECHAZADA y requiere ajustes.
-
-Responsable técnico:
-{imputado_nombre}
-
-Rol de notificación:
-{rol_notificacion}
-
-Motivo del rechazo:
-{motivo_txt or 'Sin detalle'}
-
-El responsable debe actualizar la causa, acción de control y acción correctiva en el sistema.
-
-Ir al sistema:
-{link_responder}
-
-Este es un mensaje automático.
-"""
-
-        html_body = f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;
-               font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-
-            <tr>
-              <td style="background:#b45309;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;
-                            letter-spacing:.08em;opacity:.9;">
-                  Oportunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Ajuste requerido en respuesta {reclamo_codigo}
-                </div>
-                <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {nombre_destinatario}, se rechazó la respuesta técnica y requiere seguimiento.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row('Código', reclamo_codigo)}
-                  {_row('Responsable técnico', imputado_nombre)}
-                  {_row('Rol de notificación', rol_notificacion)}
-                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
-                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
-                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
-                  { _row('Cliente', r['cliente_nombre']) if r else '' }
-                  { _row('Proceso', r['proceso_text']) if r else '' }
-                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
-                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
-                  { _row('Factura', r['factura']) if r else '' }
-                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
-                  { _row('Antecedente', r['antecedente']) if r else '' }
-                  { _row('Observación', r['observacion']) if r else '' }
-                  {_row('Motivo del rechazo', motivo_txt or 'Sin detalle')}
-                </table>
-
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link_responder}"
-                     style="display:inline-block;background:#f97316;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Revisar respuesta técnica
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  El responsable debe ingresar al módulo de reclamos, pestaña
-                  <strong>“Soy responsable”</strong>, seleccionar la OM y actualizar
-                  la causa raíz, acción de control y acción correctiva.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-"""
-
-        _send_mail_safe(
-            email,
-            subject,
-            text_body,
-            html_body=html_body
-        )
-
- 
 def _get_sponsor_emails_by_reclamo(conn, reclamo_codigo: str):
     cur = conn.cursor()
     cur.execute(SQL__GET_SPONSOR_EMAILS_BY_RECLAMO_SEL_1, (reclamo_codigo,))
@@ -2662,325 +1144,20 @@ def _get_sponsor_emails_by_reclamo(conn, reclamo_codigo: str):
     return cur.fetchall()
 
 
-def _notify_creador_respuesta_aprobada(conn, creador_id, reclamo_codigo, imputado_username):
-    c = _get_user_basic(conn, creador_id)
-    if not c or ("email" not in c.keys()) or not c["email"]:
-        return
-
-    # --- Datos del reclamo (por código) ---
-    cur = conn.cursor()
-    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-    r = cur.fetchone()
-
-    # Link directo a "Mis reclamos"
-    try:
-        link_mis_reclamos = url_for("reclamos", _external=True) + "?tab=mios"
-    except Exception:
-        link_mis_reclamos = "https://tu-sistema/reclamos?tab=mios"
-
-    nombre = (
-        c['nombre_completo']
-        if 'nombre_completo' in c.keys() and c['nombre_completo']
-        else c['username']
-    )
-
-    responsable = imputado_username or "Responsable técnico"
-
-    subject = f"[Oportunidad de Mejora] Respuesta final aprobada {reclamo_codigo}"
-
-    # Texto plano (fallback)
-    text_body = f"""Hola {nombre},
-
-El responsable {responsable} registró y su jefe aprobó la respuesta técnica
-de la Oportunidad de Mejora {reclamo_codigo}.
-
-Ya puedes consultarla en el sistema.
-
-Ir al sistema: {link_mis_reclamos}
-
-Este es un mensaje automático.
-"""
-
-    # ---------- HTML mejorado ----------
-    def _row(lbl, val):
-        val = (val or "").replace("\n", "<br>")
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#dcfce7;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    html_body = f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;
-               font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-            <!-- Encabezado -->
-            <tr>
-              <td style="background:#15803d;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;
-                            letter-spacing:.08em;opacity:.9;">
-                  Oportunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Respuesta final aprobada {reclamo_codigo}
-                </div>
-                <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {nombre}, la respuesta técnica de esta OM fue aprobada por el jefe del responsable.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Cuerpo -->
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row('Código', reclamo_codigo)}
-                  {_row('Responsable', responsable)}
-                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
-                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
-                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
-                  { _row('Cliente', r['cliente_nombre']) if r else '' }
-                  { _row('Proceso', r['proceso_text']) if r else '' }
-                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
-                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
-                  { _row('Factura', r['factura']) if r else '' }
-                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
-                  { _row('Antecedente', r['antecedente']) if r else '' }
-                  { _row('Observación', r['observacion']) if r else '' }
-                </table>
-
-                <!-- Botón CTA -->
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link_mis_reclamos}"
-                     style="display:inline-block;background:#16a34a;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Ver respuesta técnica
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  También puedes ingresar al módulo de reclamos y abrir la pestaña
-                  <strong>“Mis reclamos”</strong> para revisar el detalle completo de la OM.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Pie -->
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-"""
-
-    destinatarios = []
-
-    # creador de la OM
-    if c["email"]:
-        destinatarios.append({
-            "email": c["email"],
-            "nombre": nombre
-        })
-
-    # principal + backup del proceso
-    for s in _get_sponsor_emails_by_reclamo(conn, reclamo_codigo):
-        destinatarios.append({
-            "email": s["email"],
-            "nombre": s["nombre"] or s["username"] or "Usuario"
-        })
-
-    enviados = set()
-
-    for d in destinatarios:
-        email = (d["email"] or "").strip().lower()
-        if not email or email in enviados:
-            continue
-
-        enviados.add(email)
-
-        # opcional: personalizar saludo por destinatario
-        html_final = html_body.replace(f"Hola {nombre}", f"Hola {d['nombre']}")
-        text_final = text_body.replace(f"Hola {nombre}", f"Hola {d['nombre']}")
-
-        _send_mail_safe(email, subject, text_final, html_body=html_final)
-
-
-def _notify_creador_rechazo_validacion(conn, reclamo_id: int, reclamo_codigo: str,
-                                        creador_nombre: str, motivo: str):
-    """
-    Notifica a sponsors (principal+backup), Servicio al Cliente y miembros de
-    equipo cuando el creador de la OM rechaza la respuesta técnica.
-    """
-    cur = conn.cursor()
-
-    # Datos completos de la OM
-    cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
-    r = cur.fetchone()
-
-    try:
-        link = url_for("reclamos", _external=True) + "?tab=imputado"
-    except Exception:
-        link = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=imputado"
-
-    subject = f"[Oportunidad de Mejora] Respuesta rechazada por el creador — {reclamo_codigo}"
-
-    motivo_visible = motivo.strip() if motivo else "Sin motivo especificado."
-
-    def _row(lbl, val):
-        val = (val or "").replace("\n", "<br>")
-        return (
-            "<tr>"
-            f"<td style='width:210px;background:#fee2e2;font-weight:600;"
-            "padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{lbl}</td>"
-            f"<td style='padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:13px;'>"
-            f"{val}</td>"
-            "</tr>"
-        )
-
-    def _html(dest_nombre):
-        return f"""\
-<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f3f4f6;
-               font-family:Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-           style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="720" cellpadding="0" cellspacing="0"
-                 style="max-width:720px;background:#ffffff;border-radius:8px;
-                        border:1px solid #e5e7eb;overflow:hidden;">
-            <!-- Encabezado -->
-            <tr>
-              <td style="background:#dc2626;padding:16px 20px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;
-                            letter-spacing:.08em;opacity:.9;">
-                  Oportunidad de Mejora
-                </div>
-                <div style="font-size:18px;font-weight:700;margin-top:4px;">
-                  Respuesta rechazada — {reclamo_codigo}
-                </div>
-                <div style="font-size:12px;opacity:.9;margin-top:6px;">
-                  Hola {dest_nombre}, el creador <strong>{creador_nombre}</strong>
-                  rechazó la respuesta técnica de esta OM.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Cuerpo -->
-            <tr>
-              <td style="padding:18px 20px 10px 20px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-                       style="border-collapse:collapse;">
-                  {_row('Código', reclamo_codigo)}
-                  { _row('Fecha OM', r['fecha_reclamo']) if r else '' }
-                  { _row('Tipo de OM', r['tipo_reclamo']) if r else '' }
-                  { _row('Tipo de Trámite', r['tipo_tramite']) if r else '' }
-                  { _row('Cliente', r['cliente_nombre']) if r else '' }
-                  { _row('Proceso', r['proceso_text']) if r else '' }
-                  { _row('Material', r['material_desc']) if (r and 'material_desc' in r.keys()) else '' }
-                  { _row('Fecha de Pedido', r['fecha_pedido']) if r else '' }
-                  { _row('Factura', r['factura']) if r else '' }
-                  { _row('Guía Remisión', r['guia_remision']) if r else '' }
-                  { _row('Observación', r['observacion']) if r else '' }
-                  {_row('Rechazado por', creador_nombre)}
-                  {_row('Motivo del rechazo', motivo_visible)}
-                </table>
-
-                <!-- Botón CTA -->
-                <div style="margin-top:18px;margin-bottom:6px;text-align:left;">
-                  <a href="{link}"
-                     style="display:inline-block;background:#dc2626;color:#ffffff;
-                            text-decoration:none;padding:10px 18px;border-radius:6px;
-                            font-weight:600;font-size:13px;">
-                    Ingresar y registrar nueva respuesta
-                  </a>
-                </div>
-
-                <div style="font-size:11px;color:#6b7280;margin-top:8px;">
-                  La OM ha vuelto a estado <strong>Abierto</strong>.
-                  Se requiere registrar una nueva respuesta técnica.
-                </div>
-              </td>
-            </tr>
-
-            <!-- Pie -->
-            <tr>
-              <td style="padding:10px 20px 14px 20px;border-top:1px solid #e5e7eb;
-                         font-size:11px;color:#9ca3af;">
-                Este es un mensaje automático. No responda a este correo.
-              </td>
-            </tr>
-
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>"""
-
-    enviados = set()
-
-    def _enviar(email, nombre):
-        email = (email or "").strip().lower()
-        if not email or email in enviados:
-            return
-        enviados.add(email)
-        txt = (
-            f"Hola {nombre},\n\n"
-            f"El creador {creador_nombre} rechazó la respuesta de la OM {reclamo_codigo}.\n\n"
-            f"Motivo: {motivo_visible}\n\n"
-            f"La OM volvió a estado Abierto. Por favor ingresa al sistema y "
-            f"registra una nueva respuesta técnica.\n\n"
-            f"Ir al sistema: {link}\n\nEste es un mensaje automático."
-        )
-        _send_mail_safe(email, subject, txt, html_body=_html(nombre))
-
-    # 1. Sponsors PRINCIPAL + BACKUP de cada proceso de la OM
-    cur.execute(SQL_VALIDAR_CREADOR_SEL_BASE, (reclamo_id,))
-    row_om = cur.fetchone()
-    if row_om and row_om["proceso_id"]:
-        cur.execute(SQL_VALIDAR_CREADOR_SEL_SPONSORS, (row_om["proceso_id"],))
-        for s in cur.fetchall():
-            _enviar(s["sponsor_email"], s["sponsor_nombre"])
-
-    # 2. Imputados directos del reclamo
-    cur.execute(SQL_VALIDAR_CREADOR_SEL_IMPUTADOS, (reclamo_id,))
-    for row in cur.fetchall():
-        _enviar(row["imputado_email"], row["imputado_nombre"])
-
-    # 3. Servicio al Cliente
-    cur.execute(SQL_VALIDAR_CREADOR_SEL_SAC)
-    for row in cur.fetchall():
-        _enviar(row["email"], row["nombre"])
-
-    # 4. Miembros de equipo
-    cur.execute(SQL_VALIDAR_CREADOR_SEL_EQUIPO, (reclamo_id,))
-    for row in cur.fetchall():
-        _enviar(row["miembro_email"], row["miembro_nombre"])
+from .reclamos.routes_reclamos_notify import (
+    _notify_sponsor_respuesta_equipo,
+    _notify_reclamo_adjuntos_change,
+    _notify_colaborador_asignado,
+    _notify_responsable_aporte_listo,
+    _notify_colaborador_aporte_rechazado,
+    _notify_aprobador_imputacion,
+    _notify_creador_rechazo_asignacion,
+    _notify_imputado_aprobado,
+    _notify_jefe_respuesta_listo,
+    _notify_imputado_respuesta_rechazada,
+    _notify_creador_respuesta_aprobada,
+    _notify_creador_rechazo_validacion,
+)
 
 
 import re
@@ -3256,7 +1433,6 @@ def register_reclamos_routes(app):
         conn = get_db()
 
         # ✅ CAMBIO CLAVE: asegurar esquema SIEMPRE antes de usar la tabla v2
-        #ensure_reclamos_catalogos(conn)
 
         cur = conn.cursor()
 
@@ -3284,7 +1460,6 @@ def register_reclamos_routes(app):
 
     import re
     from flask import jsonify, abort, request, session
-    # asumiendo que ya tienes: get_db, require_login, _can_edit_equipo, ensure_reclamos_catalogos
 
     def _row_get(row, key, idx, default=""):
         """Soporta sqlite Row (dict-like) o tupla."""
@@ -3345,7 +1520,6 @@ def register_reclamos_routes(app):
         conn = get_db()
 
         # ✅ Asegura que exista la tabla v2 antes de consultar
-        #ensure_reclamos_catalogos(conn)
 
         cur = conn.cursor()
 
@@ -3395,8 +1569,6 @@ def register_reclamos_routes(app):
         uid = _current_user_id()
 
         db = get_db()
-        #ensure_reclamos_schema(db)
-        #ensure_reclamo_respuestas_equipo_schema(db)
         
 
         # ✅ Solo responsable aprobado, miembros, creador o admin/coordinador
@@ -4200,7 +2372,6 @@ def register_reclamos_routes(app):
             return jsonify({"ok": False, "error": "No tienes permiso para modificar el equipo de respuestas."}), 403
 
         db = get_db()
-        #ensure_reclamos_schema(db)
 
         cur = db.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_34, (er_id, reclamo_id))
         db.commit()
@@ -4253,7 +2424,6 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, msg="Debe indicar al menos un colaborador"), 400
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         
         cur = conn.cursor()
 
@@ -4373,7 +2543,6 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, msg="Todos los campos del aporte son obligatorios"), 400
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         
         cur = conn.cursor()
 
@@ -4422,7 +2591,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_api_respuestas(reclamo_id):
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_44, (reclamo_id,))
@@ -4771,8 +2939,6 @@ def register_reclamos_routes(app):
         uid = _current_user_id()
 
         conn = get_db()
-        # Ya no crear/alterar esquema desde backend en SQL Server
-        # _run_reclamos_bootstrap_if_needed(conn)
 
         productos = fetch_productos(conn)
         cur = conn.cursor()
@@ -5680,263 +3846,9 @@ def register_reclamos_routes(app):
 
         f_sql, f_params = _build_where_export("r")
 
-        sql_ctes = """
-            WITH
-            stats_respuesta_sponsor AS (
-                SELECT
-                    ri.reclamo_id,
-                    ri.id AS imputacion_id,
-                    AVG(
-                        CASE
-                            WHEN TRY_CONVERT(date, ri.fecha_respuesta_imputado) IS NOT NULL
-                            AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
-                            THEN DATEDIFF(
-                                DAY,
-                                TRY_CONVERT(date, r.fecha_reclamo),
-                                TRY_CONVERT(date, ri.fecha_respuesta_imputado)
-                            )
-                        END
-                    ) AS dias_promedio_respuesta_sponsor
-                FROM reclamo_imputados ri
-                JOIN reclamos r ON r.id = ri.reclamo_id
-                GROUP BY ri.reclamo_id, ri.id
-            ),
+        sql_ctes = SQL__RECLAMOS_EXPORT_MIS_CTES
 
-            equipo_asignacion_detalle AS (
-                SELECT
-                    eq.reclamo_id,
-                    eq.imputacion_id,
-                    eq.usuario_id AS miembro_id,
-                    ISNULL(u.nombre_completo, u.username) AS miembro_nombre,
-                    eq.creado_at AS fecha_asignacion_miembro,
-                    CASE
-                        WHEN TRY_CONVERT(date, eq.creado_at) IS NOT NULL
-                        AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
-                        THEN DATEDIFF(
-                            DAY,
-                            TRY_CONVERT(date, r.fecha_reclamo),
-                            TRY_CONVERT(date, eq.creado_at)
-                        )
-                    END AS dias_asignacion_miembro
-                FROM reclamo_equipo_respuestas eq
-                JOIN reclamos r ON r.id = eq.reclamo_id
-                JOIN usuarios u ON u.id = eq.usuario_id
-                WHERE ISNULL(eq.activo, 1) = 1
-            ),
-
-            equipo_respuesta_detalle AS (
-                SELECT
-                    ead.reclamo_id,
-                    ead.imputacion_id,
-                    ead.miembro_id,
-                    ead.miembro_nombre,
-                    ead.fecha_asignacion_miembro,
-                    ead.dias_asignacion_miembro,
-
-                    ISNULL(rre.revision_at, rre.created_at) AS fecha_respuesta_miembro,
-
-                    CASE
-                        WHEN TRY_CONVERT(date, ead.fecha_asignacion_miembro) IS NOT NULL
-                        AND TRY_CONVERT(date, ISNULL(rre.revision_at, rre.created_at)) IS NOT NULL
-                        THEN DATEDIFF(
-                            DAY,
-                            TRY_CONVERT(date, ead.fecha_asignacion_miembro),
-                            TRY_CONVERT(date, ISNULL(rre.revision_at, rre.created_at))
-                        )
-                    END AS dias_respuesta_miembro,
-
-                    CASE
-                        WHEN TRY_CONVERT(date, ead.fecha_asignacion_miembro) IS NOT NULL
-                        AND ISNULL(rre.revision_at, rre.created_at) IS NULL
-                        THEN DATEDIFF(
-                            DAY,
-                            TRY_CONVERT(date, ead.fecha_asignacion_miembro),
-                            CAST(GETDATE() AS date)
-                        )
-                        ELSE 0
-                    END AS dias_sin_respuesta_miembro
-                FROM equipo_asignacion_detalle ead
-                LEFT JOIN reclamo_respuestas_equipo rre
-                    ON rre.id = (
-                        SELECT MAX(rre2.id)
-                        FROM reclamo_respuestas_equipo rre2
-                        WHERE rre2.reclamo_id = ead.reclamo_id
-                        AND rre2.imputacion_id = ead.imputacion_id
-                        AND rre2.miembro_id = ead.miembro_id
-                        AND ISNULL(rre2.activo, 1) = 1
-                    )
-            ),
-
-            stats_asignacion_equipo AS (
-                SELECT
-                    x.reclamo_id,
-                    x.imputacion_id,
-                    STRING_AGG(x.miembro_nombre, ', ') AS miembros_equipo,
-                    COUNT(DISTINCT x.miembro_id) AS total_miembros_equipo,
-                    MIN(x.fecha_asignacion_miembro) AS fecha_primera_asignacion_equipo,
-                    AVG(CAST(x.dias_asignacion_miembro AS decimal(18,2))) AS dias_promedio_asignacion_equipo
-                FROM (
-                    SELECT DISTINCT
-                        reclamo_id,
-                        imputacion_id,
-                        miembro_id,
-                        miembro_nombre,
-                        fecha_asignacion_miembro,
-                        dias_asignacion_miembro
-                    FROM equipo_asignacion_detalle
-                ) x
-                GROUP BY x.reclamo_id, x.imputacion_id
-            ),
-
-            stats_respuesta_equipo AS (
-                SELECT
-                    erd.reclamo_id,
-                    erd.imputacion_id,
-
-                    STRING_AGG(
-                        CASE
-                            WHEN erd.fecha_respuesta_miembro IS NOT NULL
-                            THEN erd.miembro_nombre
-                        END,
-                        ', '
-                    ) AS miembros_equipo_respondieron,
-
-                    STRING_AGG(
-                        CASE
-                            WHEN erd.fecha_respuesta_miembro IS NULL
-                            THEN erd.miembro_nombre
-                        END,
-                        ', '
-                    ) AS miembros_equipo_pendientes,
-
-                    MIN(erd.fecha_respuesta_miembro) AS fecha_primera_respuesta_equipo,
-                    AVG(CAST(erd.dias_respuesta_miembro AS decimal(18,2))) AS dias_promedio_respuesta_equipo,
-
-                    AVG(
-                        CAST(
-                            CASE
-                                WHEN erd.fecha_respuesta_miembro IS NULL
-                                THEN erd.dias_sin_respuesta_miembro
-                            END AS decimal(18,2)
-                        )
-                    ) AS dias_promedio_sin_respuesta_equipo,
-
-                    MAX(erd.dias_sin_respuesta_miembro) AS dias_max_sin_respuesta_equipo
-                FROM equipo_respuesta_detalle erd
-                GROUP BY erd.reclamo_id, erd.imputacion_id
-            )
-        """
-
-        sql_select = """
-            SELECT
-                r.codigo AS codigo_om,
-                r.fecha_reclamo,
-                r.fecha_creacion,
-
-                ucr.username AS creador_username,
-                ISNULL(ucr.nombre_completo, ucr.username) AS creador_nombre,
-
-                tr.valor AS tipo_om,
-                tt.valor AS tipo_tramite,
-                r.proceso_text,
-                r.cliente_nombre,
-                r.cliente_identificacion,
-                r.cliente_contacto,
-                r.cliente_email,
-                r.cliente_telefono,
-                r.material_desc,
-                c.nombre AS ciudad,
-                r.observacion,
-                r.tipo_reclamo AS motivo,
-                r.antecedente AS submotivo,
-                r.procede,
-                r.estado_global,
-
-                ri.id AS imputacion_id,
-                ui.username AS imputado_username,
-                ISNULL(ui.nombre_completo, ui.username) AS imputado_nombre,
-                uj.username AS jefe_username,
-                ISNULL(uj.nombre_completo, uj.username) AS jefe_nombre,
-
-                ri.estado_asignacion,
-                ri.fecha_aprobacion_asignacion,
-                ri.fecha_rechazo_asignacion,
-                ri.motivo_rechazo_asignacion,
-
-                ri.respuesta_causa,
-                ri.respuesta_preventiva,
-                ri.respuesta_correctiva,
-                ISNULL(ri.fecha_causa, '') AS fecha_causa,
-                ISNULL(ri.fecha_preventiva, '') AS fecha_preventiva,
-                ISNULL(ri.fecha_correctiva, '') AS fecha_correctiva,
-                ri.fecha_respuesta_imputado,
-
-                CASE
-                    WHEN TRY_CONVERT(date, ri.fecha_respuesta_imputado) IS NOT NULL
-                    AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
-                    THEN DATEDIFF(
-                        DAY,
-                        TRY_CONVERT(date, r.fecha_reclamo),
-                        TRY_CONVERT(date, ri.fecha_respuesta_imputado)
-                    )
-                END AS dias_respuesta_sponsor,
-
-                CASE
-                    WHEN ri.fecha_respuesta_imputado IS NULL
-                    AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
-                    THEN DATEDIFF(
-                        DAY,
-                        TRY_CONVERT(date, r.fecha_reclamo),
-                        CAST(GETDATE() AS date)
-                    )
-                    ELSE 0
-                END AS dias_sin_respuesta_sponsor,
-
-                ISNULL(sae.miembros_equipo, '') AS miembros_equipo,
-                ISNULL(sae.total_miembros_equipo, 0) AS total_miembros_equipo,
-                ISNULL(CONVERT(varchar(19), sae.fecha_primera_asignacion_equipo, 120), '') AS fecha_primera_asignacion_equipo,
-                ISNULL(sae.dias_promedio_asignacion_equipo, 0) AS dias_promedio_asignacion_equipo,
-
-                ISNULL(sre.miembros_equipo_respondieron, '') AS miembros_equipo_respondieron,
-                ISNULL(sre.miembros_equipo_pendientes, '') AS miembros_equipo_pendientes,
-                ISNULL(CONVERT(varchar(19), sre.fecha_primera_respuesta_equipo, 120), '') AS fecha_primera_respuesta_equipo,
-                ISNULL(sre.dias_promedio_respuesta_equipo, 0) AS dias_promedio_respuesta_equipo,
-                ISNULL(sre.dias_promedio_sin_respuesta_equipo, 0) AS dias_promedio_sin_respuesta_equipo,
-                ISNULL(sre.dias_max_sin_respuesta_equipo, 0) AS dias_max_sin_respuesta_equipo,
-
-                ri.estado_respuesta,
-                ri.fecha_aprobacion_respuesta,
-                ri.fecha_rechazo_respuesta,
-                ri.motivo_rechazo_respuesta
-
-            FROM reclamos r
-            LEFT JOIN reclamo_imputados ri ON ri.reclamo_id = r.id
-            LEFT JOIN usuarios ui ON ui.id = ri.imputado_id
-            LEFT JOIN usuarios uj ON uj.id = ri.aprobador_id
-            LEFT JOIN usuarios ucr ON ucr.id = r.creado_por
-            LEFT JOIN cantones c ON c.id = r.canton_id
-
-            LEFT JOIN stats_respuesta_sponsor srs
-                ON srs.reclamo_id = r.id
-            AND srs.imputacion_id = ri.id
-
-            LEFT JOIN stats_asignacion_equipo sae
-                ON sae.reclamo_id = r.id
-            AND sae.imputacion_id = ri.id
-
-            LEFT JOIN stats_respuesta_equipo sre
-                ON sre.reclamo_id = r.id
-            AND sre.imputacion_id = ri.id
-
-            LEFT JOIN param_groups gtr ON gtr.nombre = 'RECL_TIPO'
-            LEFT JOIN param_values tr ON tr.group_id = gtr.id AND tr.nombre = r.tipo_reclamo
-
-            LEFT JOIN param_groups gtt ON gtt.nombre = 'RECL_TRAMITE'
-            LEFT JOIN param_values tt ON tt.group_id = gtt.id AND tt.nombre = r.tipo_tramite
-
-            {where_clause}
-            ORDER BY r.id DESC, ri.id DESC
-        """
+        sql_select = SQL__RECLAMOS_EXPORT_MIS_SELECT
 
         if export_all:
             where_clause = f"""
@@ -5950,24 +3862,7 @@ def register_reclamos_routes(app):
                 WHERE r.id IN (SELECT id FROM mis_reclamos)
                 {f_sql}
             """
-            sql = sql_ctes + """
-                , mis_reclamos AS (
-                    SELECT DISTINCT r.id
-                    FROM reclamos r
-                    LEFT JOIN reclamo_imputados ri ON ri.reclamo_id = r.id
-                    LEFT JOIN reclamo_equipo_respuestas eq
-                        ON eq.reclamo_id = r.id
-                    AND ISNULL(eq.activo, 1) = 1
-                    LEFT JOIN reclamo_respuestas_equipo rre
-                        ON rre.reclamo_id = r.id
-                    AND ISNULL(rre.activo, 1) = 1
-                    WHERE r.creado_por = ?
-                    OR ri.imputado_id = ?
-                    OR ri.aprobador_id = ?
-                    OR eq.usuario_id = ?
-                    OR rre.miembro_id = ?
-                )
-            """ + sql_select.format(where_clause=where_clause)
+            sql = sql_ctes + SQL__RECLAMOS_EXPORT_MIS_MIS_RECLAMOS_CTE + sql_select.format(where_clause=where_clause)
 
             cur.execute(sql, (uid, uid, uid, uid, uid, *f_params))
 
@@ -5982,32 +3877,32 @@ def register_reclamos_routes(app):
             "Código OM",
             "Fecha OM",
             "Fecha creación (sistema)",
-            "Creador OM (usuario)",
+            #"Creador OM (usuario)",
             "Creador OM (nombre)",
             "Tipo OM",
-            "Tipo trámite",
+            #"Tipo trámite",
             "Proceso",
             "Cliente",
-            "Identificación cliente",
-            "Contacto cliente",
-            "Correo cliente",
-            "Teléfono cliente",
-            "Ciudad",
+            #"Identificación cliente",
+            #"Contacto cliente",
+            #"Correo cliente",
+            #"Teléfono cliente",
+            #"Ciudad",
             "Material",
             "Observación",
             "Motivo",
             "Sub Motivo",
-            "Procede",
+           #"Procede",
             "Estado global",
-            "ID imputación",
-            "Sponsor / Responsable (usuario)",
+            #"ID imputación",
+            #"Sponsor / Responsable (usuario)",
             "Sponsor / Responsable (nombre)",
-            "Jefe/aprobador (usuario)",
+            #"Jefe/aprobador (usuario)",
             "Jefe/aprobador (nombre)",
-            "Estado imputación",
-            "Fecha aprobación imputación",
-            "Fecha rechazo imputación",
-            "Motivo rechazo imputación",
+            #"Estado imputación",
+            #"Fecha aprobación imputación",
+            #"Fecha rechazo imputación",
+            #"Motivo rechazo imputación",
             "Respuesta sponsor - Causa",
             "Respuesta sponsor - Acción preventiva",
             "Respuesta sponsor - Acción correctiva",
@@ -6026,7 +3921,7 @@ def register_reclamos_routes(app):
             "Fecha primera respuesta equipo",
             "Días promedio respuesta equipo",
             "Días promedio sin respuesta equipo",
-            "Días máximo sin respuesta equipo",
+            "Días  sin respuesta equipo",
             "Estado respuesta sponsor",
             "Fecha aprobación respuesta sponsor",
             "Fecha rechazo respuesta sponsor",
@@ -6052,32 +3947,32 @@ def register_reclamos_routes(app):
                 r["codigo_om"],
                 r["fecha_reclamo"],
                 r["fecha_creacion"],
-                r["creador_username"],
+            #    r["creador_username"],
                 r["creador_nombre"],
                 r["tipo_om"],
-                r["tipo_tramite"],
+             #   r["tipo_tramite"],
                 r["proceso_text"],
                 r["cliente_nombre"],
-                r["cliente_identificacion"],
-                r["cliente_contacto"],
-                r["cliente_email"],
-                r["cliente_telefono"],
-                r["ciudad"],
+             #   r["cliente_identificacion"],
+             #   r["cliente_contacto"],
+             #   r["cliente_email"],
+             #   r["cliente_telefono"],
+             #   r["ciudad"],
                 r["material_desc"],
                 r["observacion"],
                 r["motivo"],
                 r["submotivo"],
-                r["procede"],
+            #   r["procede"],
                 r["estado_global"],
-                r["imputacion_id"],
-                r["imputado_username"],
+            #   r["imputacion_id"],
+            #    r["imputado_username"],
                 r["imputado_nombre"],
-                r["jefe_username"],
+            #    r["jefe_username"],
                 r["jefe_nombre"],
-                r["estado_asignacion"],
-                r["fecha_aprobacion_asignacion"],
-                r["fecha_rechazo_asignacion"],
-                r["motivo_rechazo_asignacion"],
+            #    r["estado_asignacion"],
+            #    r["fecha_aprobacion_asignacion"],
+            #    r["fecha_rechazo_asignacion"],
+            #    r["motivo_rechazo_asignacion"],
                 r["respuesta_causa"],
                 r["respuesta_preventiva"],
                 r["respuesta_correctiva"],
@@ -6141,7 +4036,6 @@ def register_reclamos_routes(app):
         region_id = request.args.get('region_id', type=int)
 
         conn = get_db()
-        #ensure_geo_schema(conn)
         rows = fetch_provincias(conn, region_id)
         conn.close()
 
@@ -6160,8 +4054,6 @@ def register_reclamos_routes(app):
 
         uid = _current_user_id()
         conn = get_db()
-        #ensure_reclamos_schema(conn)
-        #ensure_reclamos_catalogos(conn)
         cur = conn.cursor()
 
         # Permisos:
@@ -6209,7 +4101,6 @@ def register_reclamos_routes(app):
         provincia_id = request.args.get('provincia_id', type=int)
 
         conn = get_db()
-        #ensure_geo_schema(conn)
         rows = fetch_cantones(conn, provincia_id)
         conn.close()
 
@@ -6231,7 +4122,6 @@ def register_reclamos_routes(app):
             return redirect(url_for('reclamos'))
 
         conn = get_db()
-        # ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         fecha_reclamo = (request.form.get('fecha_reclamo') or '').strip()
@@ -6521,7 +4411,6 @@ def register_reclamos_routes(app):
         motivo = (data.get("motivo") or "").strip()
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_60, (imp_id,))
@@ -6616,8 +4505,6 @@ def register_reclamos_routes(app):
             return jsonify(ok=False, msg="No se cargó ningún archivo."), 400
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
-        #ensure_reclamo_adjuntos_schema(conn)
         cur = conn.cursor()
 
         # Validar que exista la OM
@@ -6659,7 +4546,6 @@ def register_reclamos_routes(app):
         uid = _current_user_id()
 
         conn = get_db()
-        #ensure_reclamo_adjuntos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_63, (adj_id,))
@@ -6716,7 +4602,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_download_adjunto(adj_id):
         conn = get_db()
-        #ensure_reclamo_adjuntos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_65, (adj_id,))
@@ -6830,9 +4715,7 @@ def register_reclamos_routes(app):
         fish_medicion   = _safe_str(data.get("fish_medicion"))
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         _ensure_reclamo_imputados_extra_cols(conn)
-        #ensure_reclamo_imputado_acciones_schema(conn)
 
         cur = conn.cursor()
 
@@ -6972,9 +4855,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamos_eliminar(reclamo_id):
         conn = get_db()
-        #ensure_reclamos_schema(conn)
-        #ensure_reclamo_adjuntos_schema(conn)
-        #ensure_reclamo_respuestas_equipo_schema(conn)
 
         uid = session.get("usuario_id") or session.get("user_id") or session.get("id")
         role = (session.get('rol') or '').strip().lower()
@@ -7034,7 +4914,7 @@ def register_reclamos_routes(app):
             if proceso_ids:
                 textos = []
                 for pid in proceso_ids:
-                    cur.execute("SELECT valor FROM param_values WHERE id = ?", (pid,))
+                    cur.execute(SQL__RECLAMOS_EDITAR_PROCESO_SEL_1, (pid,))
                     row_p = cur.fetchone()
                     if row_p and row_p['valor']:
                         textos.append(row_p['valor'].strip())
@@ -7044,14 +4924,14 @@ def register_reclamos_routes(app):
                 return jsonify(ok=False, msg='Debe seleccionar al menos un proceso'), 400
 
             cur.execute(
-                "SELECT id, codigo FROM reclamos WHERE id = ?", (reclamo_id,)
+                SQL__RECLAMOS_EDITAR_PROCESO_SEL_2, (reclamo_id,)
             )
             row = cur.fetchone()
             if not row:
                 return jsonify(ok=False, msg='OM no encontrada'), 404
 
             cur.execute(
-                "UPDATE reclamos SET proceso_id = ?, proceso_text = ? WHERE id = ?",
+                SQL__RECLAMOS_EDITAR_PROCESO_UPD_3,
                 (proceso_id, proceso_text, reclamo_id)
             )
 
@@ -7062,36 +4942,19 @@ def register_reclamos_routes(app):
             sponsors_restantes = set()
             for pid in proceso_ids:
                 cur2.execute(
-                    """SELECT u.id AS usuario_id
-                       FROM param_values pv
-                       JOIN param_groups pg ON pg.id = pv.group_id
-                       JOIN usuarios u ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
-                       WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
-                         AND COALESCE(pv.activo, 1) = 1
-                         AND pv.parent_id = ?
-                         AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
-                         AND COALESCE(u.disabled, 0) = 0""",
+                    SQL__RECLAMOS_EDITAR_PROCESO_SEL_4,
                     (pid,)
                 )
                 for row_s in cur2.fetchall():
                     sponsors_restantes.add(int(row_s['usuario_id']))
 
             # TODOS los sponsors configurados en cualquier proceso
-            cur2.execute(
-                """SELECT DISTINCT u.id AS usuario_id
-                   FROM param_values pv
-                   JOIN param_groups pg ON pg.id = pv.group_id
-                   JOIN usuarios u ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
-                   WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
-                     AND COALESCE(pv.activo, 1) = 1
-                     AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
-                     AND COALESCE(u.disabled, 0) = 0"""
-            )
+            cur2.execute(SQL__RECLAMOS_EDITAR_PROCESO_SEL_5)
             todos_los_sponsors = {int(r['usuario_id']) for r in cur2.fetchall()}
 
             # Imputados actuales de esta OM que son sponsors de algún proceso
             cur2.execute(
-                "SELECT imputado_id FROM reclamo_imputados WHERE reclamo_id = ? AND COALESCE(activo, 1) = 1",
+                SQL__RECLAMOS_EDITAR_PROCESO_SEL_6,
                 (reclamo_id,)
             )
             imputados_actuales = {int(r['imputado_id']) for r in cur2.fetchall() if r['imputado_id']}
@@ -7107,11 +4970,7 @@ def register_reclamos_routes(app):
             if sponsors_a_eliminar:
                 placeholders = ','.join('?' * len(sponsors_a_eliminar))
                 cur2.execute(
-                    f"""UPDATE reclamo_imputados
-                        SET activo = 0
-                        WHERE reclamo_id = ?
-                          AND imputado_id IN ({placeholders})
-                          AND COALESCE(activo, 1) = 1""",
+                    SQL__RECLAMOS_EDITAR_PROCESO_UPD_7.format(placeholders=placeholders),
                     [reclamo_id] + list(sponsors_a_eliminar)
                 )
                 current_app.logger.warning(
@@ -7123,14 +4982,7 @@ def register_reclamos_routes(app):
 
             # Obtener el resumen actualizado de imputados para devolver al frontend
             cur.execute(
-                """SELECT STUFF((
-                       SELECT DISTINCT ', ' + COALESCE(u.username, '')
-                       FROM reclamo_imputados ri
-                       LEFT JOIN usuarios u ON u.id = ri.imputado_id
-                       WHERE ri.reclamo_id = ?
-                         AND COALESCE(ri.activo, 1) = 1
-                       FOR XML PATH(''), TYPE
-                   ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS imputados_resumen""",
+                SQL__RECLAMOS_EDITAR_PROCESO_SEL_8,
                 (reclamo_id,)
             )
             row_imp = cur.fetchone()
@@ -7169,62 +5021,10 @@ def register_reclamos_routes(app):
         try:
             if imputacion_id:
                 # Vista Soy Sponsor: acciones del sponsor (reclamo_imputado_acciones)
-                cur.execute("""
-                    SELECT
-                        a.id,
-                        a.tipo,
-                        a.descripcion,
-                        a.fecha_compromiso,
-                        CASE
-                            WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
-                            ELSE 'proxima'
-                        END AS estado_fecha,
-                        NULL AS miembro_nombre
-                    FROM reclamo_imputado_acciones a
-                    WHERE a.imputacion_id = ?
-                      AND COALESCE(a.activo, 1) = 1
-                      AND a.tipo = 'CORRECTIVA'
-                      AND COALESCE(a.cumplido, 0) = 0
-                      AND a.fecha_compromiso IS NOT NULL
-                      AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
-                      AND NOT EXISTS (
-                          SELECT 1 FROM reclamo_accion_evidencias e
-                          WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
-                      )
-                    ORDER BY a.fecha_compromiso ASC
-                """, (imputacion_id,))
+                cur.execute(SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_1, (imputacion_id,))
             else:
                 # Vista general: acciones del equipo (reclamo_respuesta_equipo_acciones)
-                cur.execute("""
-                    SELECT
-                        a.id,
-                        a.tipo,
-                        a.descripcion,
-                        a.fecha_compromiso,
-                        CASE
-                            WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
-                            ELSE 'proxima'
-                        END AS estado_fecha,
-                        u_m.nombre_completo AS miembro_nombre
-                    FROM reclamo_respuesta_equipo_acciones a
-                    LEFT JOIN reclamo_respuestas_equipo re ON re.id = a.respuesta_equipo_id
-                    LEFT JOIN usuarios u_m ON u_m.id = re.miembro_id
-                    WHERE a.reclamo_id = ?
-                      AND COALESCE(a.activo, 1) = 1
-                      AND a.tipo = 'CORRECTIVA'
-                      AND COALESCE(a.cumplido, 0) = 0
-                      AND a.fecha_compromiso IS NOT NULL
-                      AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
-                      AND NOT EXISTS (
-                          SELECT 1 FROM reclamo_respuesta_equipo_accion_evidencias e
-                          WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
-                      )
-                      AND NOT EXISTS (
-                          SELECT 1 FROM reclamo_accion_evidencias e2
-                          WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
-                      )
-                    ORDER BY a.fecha_compromiso ASC
-                """, (reclamo_id,))
+                cur.execute(SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_2, (reclamo_id,))
             rows = cur.fetchall()
             acciones = [dict(r) for r in rows]
             return jsonify(ok=True, acciones=acciones)
@@ -7247,7 +5047,6 @@ def register_reclamos_routes(app):
         motivo = (data.get("motivo") or "").strip()
 
         conn = get_db()
-        #ensure_reclamos_schema(conn)
         cur = conn.cursor()
 
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_60, (imp_id,))
@@ -8925,8 +6724,6 @@ def register_reclamos_routes(app):
         db = get_db()
         uid = _current_user_id()
 
-        #ensure_reclamo_respuesta_equipo_acciones_schema(db)
-
         data = request.get_json(silent=True) or {}
         observacion = (data.get("observacion") or "").strip()
 
@@ -8973,8 +6770,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamo_imputacion_respuesta_detalle(imp_id):
         conn = get_db()
-        #ensure_reclamos_schema(conn)
-        #ensure_reclamo_imputado_acciones_schema(conn)
 
         cur = conn.cursor()
         cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_SEL_99, (imp_id,))
@@ -8998,8 +6793,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamo_imputado_accion_observacion(accion_id):
         db = get_db()
-        #ensure_reclamos_schema(db)
-        #ensure_reclamo_imputado_acciones_schema(db)
 
         uid = _current_user_id()
         permitido, row = _puede_gestionar_imputado_accion(accion_id, uid)
@@ -9028,8 +6821,6 @@ def register_reclamos_routes(app):
     @require_login
     def reclamo_imputado_accion_cumplir(accion_id):
         db = get_db()
-        #ensure_reclamos_schema(db)
-        #ensure_reclamo_imputado_acciones_schema(db)
 
         uid = _current_user_id()
         permitido, row = _puede_gestionar_imputado_accion(accion_id, uid)
@@ -9899,7 +7690,7 @@ Responde SOLO con JSON:
             return jsonify(ok=False, msg="No autorizado para generar la carta al cliente."), 403
 
         try:
-            from modules.routes_reclamos_pdf import generar_carta_cliente_pdf
+            from modules.reclamos.routes_reclamos_pdf import generar_carta_cliente_pdf
             pdf_bytes, filename = generar_carta_cliente_pdf(conn, reclamo_id, uid)
             return send_file(
                 io.BytesIO(pdf_bytes),

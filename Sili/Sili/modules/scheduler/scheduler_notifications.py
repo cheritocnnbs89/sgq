@@ -13,6 +13,7 @@ from typing import Optional
 
 from flask import current_app
 
+from modules import gastos_helpers as gh
 from .scheduler_security import _exec_retry, _log
 from .scheduler_repository import (
     ensure_notify_schema,
@@ -860,10 +861,10 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
 
     area_key = (area or "").lower().strip()
     if area_key == "ga":
-        next_roles = ("gerente general",)
+        next_roles = (gh.rol_gg(),)
         template_next = TPL_GASTO_NEXT_GG
     elif area_key == "gg":
-        next_roles = ("gerente financiero",)
+        next_roles = (gh.rol_gf(),)
         template_next = TPL_GASTO_NEXT_GF
     elif area_key == "gf":
         next_roles = ("coordinador", "admin")
@@ -896,7 +897,7 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
     scheduled_at = datetime.now() + timedelta(minutes=5)
     fecha_obj = date.today()
     canal = CANAL_EMAIL
-    estado = "PENDIENTE"
+    estado = "pending"
 
     # 1) Notificación al creador del gasto
     event_key_user = f"{int(gasto_id)}:{area_key}:user"
@@ -1033,7 +1034,10 @@ def enqueue_gasto_rejected_gg(conn, gasto_id: int, by_user_id: int, comentario: 
         motivo = row[3] or ""
         fecha = row[4] or ""
 
-    gerente_id = _get_ultimo_jefe_id(conn, gasto_usuario_id, fallback_to_self=False)
+    # Si el usuario que registró el gasto no tiene jefe configurado (por
+    # ejemplo, es él mismo un gerente sin jefe directo), se le notifica a
+    # él mismo el rechazo en vez de fallar por "sin gerente configurado".
+    gerente_id = _get_ultimo_jefe_id(conn, gasto_usuario_id, fallback_to_self=True)
     if not gerente_id:
         raise RuntimeError("No se encontró gerente para el gasto")
 
@@ -1068,8 +1072,8 @@ def enqueue_gasto_rejected_gg(conn, gasto_id: int, by_user_id: int, comentario: 
     tarea_id = int(gasto_id)
     area = "gg"
     canal = "email"
-    template_key = "gasto_rejected_gg"
-    estado = "PENDIENTE"
+    template_key = TPL_GASTO_RECHAZO_GG
+    estado = "pending"
     fecha_obj = date.today()
     scheduled_at = datetime.now()
 

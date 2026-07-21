@@ -1,20 +1,22 @@
-# modules/routes_reclamos_querys.py
+# modules/reclamos/routes_reclamos_querys.py
 # -*- coding: utf-8 -*-
 """
 Sentencias SQL para el modulo de reclamos/oportunidades de mejora.
 Cada constante corresponde a un execute() en routes_reclamos.py.
 """
 
+from .routes_reclamos_constants import *
+
 
 # -- _GET_SPONSORS_BY_PROCESO --
-SQL__GET_SPONSORS_BY_PROCESO_SEL_1 = """
+SQL__GET_SPONSORS_BY_PROCESO_SEL_1 = f"""
 
         SELECT
             u.id AS usuario_id,
             UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) AS tipo_sponsor
-        FROM param_values pv
-        JOIN param_groups pg ON pg.id = pv.group_id
-        JOIN usuarios u
+        FROM {T_PARAM_VALUES} pv
+        JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
+        JOIN {T_USUARIOS} u
           ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
         WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
           AND COALESCE(pv.activo, 1) = 1
@@ -33,28 +35,28 @@ SQL__GET_SPONSORS_BY_PROCESO_SEL_1 = """
 
 
 # -- _CAN_UPLOAD_CARTA_CLIENTE --
-SQL__CAN_UPLOAD_CARTA_CLIENTE_SEL_1 = """
+SQL__CAN_UPLOAD_CARTA_CLIENTE_SEL_1 = f"""
 
         SELECT TOP 1
             COALESCE(d.nombre, '') AS departamento_nombre,
             COALESCE(p.nombre, '') AS puesto_nombre
-        FROM usuarios u
-        LEFT JOIN departamentos d
+        FROM {T_USUARIOS} u
+        LEFT JOIN {T_DEPARTAMENTOS} d
           ON d.id = u.departamento_id
-        LEFT JOIN puestos p
+        LEFT JOIN {T_PUESTOS} p
           ON p.id = u.puesto_id
         WHERE u.id = ?
 """
 
 
 # -- _USUARIO_ES_SPONSOR_DEL_PROCESO --
-SQL__USUARIO_ES_SPONSOR_DEL_PROCESO_SEL_1 = """
+SQL__USUARIO_ES_SPONSOR_DEL_PROCESO_SEL_1 = f"""
 
         SELECT TOP 1 1 AS ok
-        FROM param_values pv
-        JOIN param_groups pg
+        FROM {T_PARAM_VALUES} pv
+        JOIN {T_PARAM_GROUPS} pg
           ON pg.id = pv.group_id
-        JOIN usuarios u
+        JOIN {T_USUARIOS} u
           ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
         WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
           AND COALESCE(pv.activo, 1) = 1
@@ -66,15 +68,15 @@ SQL__USUARIO_ES_SPONSOR_DEL_PROCESO_SEL_1 = """
 
 
 # -- _FETCH_RECL_PROCESOS --
-SQL__FETCH_RECL_PROCESOS_SEL_1 = """
+SQL__FETCH_RECL_PROCESOS_SEL_1 = f"""
 
         SELECT
             pv.id,
             pv.nombre,
             pv.valor,
             pv.orden
-        FROM param_values pv
-        JOIN param_groups pg ON pg.id = pv.group_id
+        FROM {T_PARAM_VALUES} pv
+        JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
         WHERE pg.nombre = 'RECL_PROCESO'
           AND COALESCE(pv.activo, 1) = 1
           AND pv.parent_id IS NULL
@@ -83,13 +85,13 @@ SQL__FETCH_RECL_PROCESOS_SEL_1 = """
 
 
 # -- _GET_SPONSOR_PRINCIPAL_BY_PROCESO --
-SQL__GET_SPONSOR_PRINCIPAL_BY_PROCESO_SEL_1 = """
+SQL__GET_SPONSOR_PRINCIPAL_BY_PROCESO_SEL_1 = f"""
 
         SELECT TOP 1
             u.id AS usuario_id
-        FROM param_values pv
-        JOIN param_groups pg ON pg.id = pv.group_id
-        JOIN usuarios u
+        FROM {T_PARAM_VALUES} pv
+        JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
+        JOIN {T_USUARIOS} u
           ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
         WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
           AND COALESCE(pv.activo, 1) = 1
@@ -126,27 +128,27 @@ SQL__COL_NAMES_SEL_1 = """
 
 
 # -- _CAN_EXPORT_ALL_RECLAMOS --
-SQL__CAN_EXPORT_ALL_RECLAMOS_SEL_1 = """
+SQL__CAN_EXPORT_ALL_RECLAMOS_SEL_1 = f"""
 
             SELECT TOP 1
                 UPPER(LTRIM(RTRIM(COALESCE(p.nombre,'')))) AS puesto_nombre
-            FROM usuarios u
-            LEFT JOIN puestos p ON p.id = u.puesto_id
+            FROM {T_USUARIOS} u
+            LEFT JOIN {T_PUESTOS} p ON p.id = u.puesto_id
             WHERE u.id = ?
 """
 
-SQL__CAN_EXPORT_ALL_RECLAMOS_SEL_2 = """
+SQL__CAN_EXPORT_ALL_RECLAMOS_SEL_2 = f"""
 
             SELECT TOP 1
                 UPPER(TRIM(COALESCE(p.nombre,''))) AS puesto_nombre
-            FROM usuarios u
-            LEFT JOIN puestos p ON p.id = u.puesto_id
+            FROM {T_USUARIOS} u
+            LEFT JOIN {T_PUESTOS} p ON p.id = u.puesto_id
             WHERE u.id = ?
 """
 
 
 # -- _PUEDE_GESTIONAR_IMPUTADO_ACCION --
-SQL__PUEDE_GESTIONAR_IMPUTADO_ACCION_SEL_1 = """
+SQL__PUEDE_GESTIONAR_IMPUTADO_ACCION_SEL_1 = f"""
 
             SELECT TOP 1
                 a.id,
@@ -157,57 +159,57 @@ SQL__PUEDE_GESTIONAR_IMPUTADO_ACCION_SEL_1 = """
                 COALESCE(a.cumplido, 0) AS cumplido,
                 ri.imputado_id,
                 COALESCE(ri.estado_asignacion, '') AS estado_asignacion
-            FROM reclamo_imputado_acciones a
-            JOIN reclamo_imputados ri
+            FROM {T_RECLAMO_IMPUTADO_ACCIONES} a
+            JOIN {T_RECLAMO_IMPUTADOS} ri
               ON ri.id = a.imputacion_id
             WHERE a.id = ?
 """
 
 
 # -- _CAN_VIEW_ALL_RECLAMOS --
-SQL__CAN_VIEW_ALL_RECLAMOS_SEL_1 = """
+SQL__CAN_VIEW_ALL_RECLAMOS_SEL_1 = f"""
 
                 SELECT TOP 1
                     d.nombre AS departamento_nombre,
                     p.nombre AS puesto_nombre
-                FROM usuarios u
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
-                LEFT JOIN puestos p ON p.id = u.puesto_id
+                FROM {T_USUARIOS} u
+                LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
+                LEFT JOIN {T_PUESTOS} p ON p.id = u.puesto_id
                 WHERE u.id = ?
 """
 
-SQL__CAN_VIEW_ALL_RECLAMOS_SEL_2 = """
+SQL__CAN_VIEW_ALL_RECLAMOS_SEL_2 = f"""
 
                 SELECT
                     d.nombre AS departamento_nombre,
                     p.nombre AS puesto_nombre
-                FROM usuarios u
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
-                LEFT JOIN puestos p ON p.id = u.puesto_id
+                FROM {T_USUARIOS} u
+                LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
+                LEFT JOIN {T_PUESTOS} p ON p.id = u.puesto_id
                 WHERE u.id = ?
                 LIMIT 1
 """
 
 
 # -- _CAN_VIEW_ALL_RECLAMOS_SN_SPONSOR --
-SQL__CAN_VIEW_ALL_RECLAMOS_SN_SPONSOR_SEL_1 = """
+SQL__CAN_VIEW_ALL_RECLAMOS_SN_SPONSOR_SEL_1 = f"""
 
                 SELECT
                     COALESCE(d.nombre, '') AS departamento_nombre,
                     COALESCE(p.nombre, '') AS puesto_nombre
-                FROM usuarios u
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
-                LEFT JOIN puestos p ON p.id = u.puesto_id
+                FROM {T_USUARIOS} u
+                LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
+                LEFT JOIN {T_PUESTOS} p ON p.id = u.puesto_id
                 WHERE u.id = ?
                 LIMIT 1
 """
 
 
 # -- _ES_MIEMBRO_EQUIPO_RECLAMO --
-SQL__ES_MIEMBRO_EQUIPO_RECLAMO_SEL_1 = """
+SQL__ES_MIEMBRO_EQUIPO_RECLAMO_SEL_1 = f"""
 
         SELECT TOP 1 1 AS ok
-        FROM reclamo_equipo_respuestas
+        FROM {T_RECLAMO_EQUIPO_RESPUESTAS}
         WHERE reclamo_id = ?
           AND usuario_id = ?
           AND activo = 1
@@ -215,7 +217,7 @@ SQL__ES_MIEMBRO_EQUIPO_RECLAMO_SEL_1 = """
 
 
 # -- _NOTIFY_SPONSOR_RESPUESTA_EQUIPO --
-SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_1 = """
+SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_1 = f"""
 
         SELECT TOP 1
             ri.id AS imputacion_id,
@@ -235,19 +237,19 @@ SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_1 = """
             eq.creado_at AS fecha_asignacion_miembro,
             rre.created_at AS fecha_respuesta_miembro
 
-        FROM reclamo_imputados ri
-        JOIN reclamos r
+        FROM {T_RECLAMO_IMPUTADOS} ri
+        JOIN {T_RECLAMOS} r
           ON r.id = ri.reclamo_id
 
-        LEFT JOIN usuarios um
+        LEFT JOIN {T_USUARIOS} um
           ON um.id = ?
 
-        LEFT JOIN reclamo_equipo_respuestas eq
+        LEFT JOIN {T_RECLAMO_EQUIPO_RESPUESTAS} eq
           ON eq.reclamo_id = ri.reclamo_id
          AND eq.imputacion_id = ri.id
          AND eq.usuario_id = ?
 
-        LEFT JOIN reclamo_respuestas_equipo rre
+        LEFT JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} rre
           ON rre.reclamo_id = ri.reclamo_id
          AND rre.imputacion_id = ri.id
          AND rre.miembro_id = ?
@@ -255,7 +257,7 @@ SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_1 = """
         WHERE ri.id = ?
 """
 
-SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_2 = """
+SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_2 = f"""
 
             SELECT
                 u.id AS sponsor_id,
@@ -263,10 +265,10 @@ SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_2 = """
                 u.username AS sponsor_username,
                 u.email AS sponsor_email,
                 UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) AS tipo_sponsor
-            FROM param_values pv
-            JOIN param_groups pg
+            FROM {T_PARAM_VALUES} pv
+            JOIN {T_PARAM_GROUPS} pg
               ON pg.id = pv.group_id
-            JOIN usuarios u
+            JOIN {T_USUARIOS} u
               ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
             WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
               AND COALESCE(pv.activo, 1) = 1
@@ -285,7 +287,7 @@ SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_2 = """
               pv.id
 """
 
-SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_3 = """
+SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_3 = f"""
 
             SELECT
                 u.id AS sponsor_id,
@@ -293,8 +295,8 @@ SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_3 = """
                 u.username AS sponsor_username,
                 u.email AS sponsor_email,
                 'PRINCIPAL' AS tipo_sponsor
-            FROM reclamo_imputados ri
-            JOIN usuarios u
+            FROM {T_RECLAMO_IMPUTADOS} ri
+            JOIN {T_USUARIOS} u
               ON u.id = ri.imputado_id
             WHERE ri.id = ?
               AND COALESCE(u.disabled, 0) = 0
@@ -304,7 +306,7 @@ SQL__NOTIFY_SPONSOR_RESPUESTA_EQUIPO_SEL_3 = """
 
 
 # -- _GET_RESPUESTA_EQUIPO_ACCIONES_FULL --
-SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_1 = """
+SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_1 = f"""
 
         SELECT
             a.id,
@@ -316,7 +318,7 @@ SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_1 = """
             COALESCE(a.cumplido, 0) AS cumplido,
             COALESCE(a.fecha_cumplimiento, '') AS fecha_cumplimiento,
             COALESCE(a.observacion_cumplimiento, '') AS observacion_cumplimiento
-        FROM reclamo_respuesta_equipo_acciones a
+        FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES} a
         WHERE a.respuesta_equipo_id = ?
           AND COALESCE(a.activo, 1) = 1
         ORDER BY
@@ -330,7 +332,7 @@ SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_1 = """
             a.id
 """
 
-SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_2 = """
+SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_2 = f"""
 
             SELECT
                 e.id,
@@ -339,7 +341,7 @@ SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_2 = """
                 COALESCE(e.content_type, '') AS content_type,
                 COALESCE(e.size_bytes, 0) AS size_bytes,
                 COALESCE(e.created_at, '') AS created_at
-            FROM reclamo_respuesta_equipo_accion_evidencias e
+            FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS} e
             WHERE e.accion_id = ?
               AND COALESCE(e.activo, 1) = 1
             ORDER BY e.id
@@ -347,18 +349,18 @@ SQL__GET_RESPUESTA_EQUIPO_ACCIONES_FULL_SEL_2 = """
 
 
 # -- _NOTIFY_RECLAMO_ADJUNTOS_CHANGE --
-SQL__NOTIFY_RECLAMO_ADJUNTOS_CHANGE_SEL_1 = """
+SQL__NOTIFY_RECLAMO_ADJUNTOS_CHANGE_SEL_1 = f"""
 
         SELECT codigo, creado_por
-        FROM reclamos
+        FROM {T_RECLAMOS}
         WHERE id = ?
 """
 
 
 # -- _SAVE_RESPUESTA_EQUIPO_ACCIONES --
-SQL__SAVE_RESPUESTA_EQUIPO_ACCIONES_UPD_1 = """
+SQL__SAVE_RESPUESTA_EQUIPO_ACCIONES_UPD_1 = f"""
 
-        UPDATE reclamo_respuesta_equipo_acciones
+        UPDATE {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES}
         SET activo = 0,
             updated_at = ?,
             updated_by = ?
@@ -366,9 +368,9 @@ SQL__SAVE_RESPUESTA_EQUIPO_ACCIONES_UPD_1 = """
           AND activo = 1
 """
 
-SQL__SAVE_RESPUESTA_EQUIPO_ACCIONES_INS_2 = """
+SQL__SAVE_RESPUESTA_EQUIPO_ACCIONES_INS_2 = f"""
 
-                INSERT INTO reclamo_respuesta_equipo_acciones (
+                INSERT INTO {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES} (
                     respuesta_equipo_id,
                     reclamo_id,
                     imputacion_id,
@@ -386,124 +388,12 @@ SQL__SAVE_RESPUESTA_EQUIPO_ACCIONES_INS_2 = """
 """
 
 
-# -- ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA --
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_1 = """
-
-        CREATE TABLE IF NOT EXISTS reclamo_respuesta_equipo_acciones (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-            respuesta_equipo_id INTEGER NOT NULL,
-            reclamo_id INTEGER NOT NULL,
-            imputacion_id INTEGER NOT NULL,
-            miembro_id INTEGER NOT NULL,
-
-            tipo TEXT NOT NULL,                 -- CAUSA | CONTROL | CORRECTIVA
-            descripcion TEXT NOT NULL,
-            fecha_compromiso TEXT,              -- YYYY-MM-DD
-            orden INTEGER NOT NULL DEFAULT 1,
-
-            requiere_evidencia INTEGER NOT NULL DEFAULT 0,
-            cumplido INTEGER NOT NULL DEFAULT 0,
-            fecha_cumplimiento TEXT,
-
-            reminder_3d_sent INTEGER NOT NULL DEFAULT 0,
-            reminder_2d_sent INTEGER NOT NULL DEFAULT 0,
-            reminder_1d_sent INTEGER NOT NULL DEFAULT 0,
-            escalado_jefe INTEGER NOT NULL DEFAULT 0,
-
-            activo INTEGER NOT NULL DEFAULT 1,
-            created_at TEXT,
-            created_by INTEGER,
-            updated_at TEXT,
-            updated_by INTEGER,
-
-            FOREIGN KEY (respuesta_equipo_id) REFERENCES reclamo_respuestas_equipo(id),
-            FOREIGN KEY (reclamo_id) REFERENCES reclamos(id),
-            FOREIGN KEY (imputacion_id) REFERENCES reclamo_imputados(id),
-            FOREIGN KEY (miembro_id) REFERENCES usuarios(id)
-        );
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_2 = """
-
-        CREATE TABLE IF NOT EXISTS reclamo_respuesta_equipo_accion_evidencias (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            accion_id INTEGER NOT NULL,
-
-            filename TEXT NOT NULL,
-            original_name TEXT NOT NULL,
-            content_type TEXT,
-            size_bytes INTEGER,
-
-            creado_por INTEGER,
-            created_at TEXT,
-            activo INTEGER NOT NULL DEFAULT 1,
-
-            FOREIGN KEY (accion_id) REFERENCES reclamo_respuesta_equipo_acciones(id)
-        );
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_3 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rrea_respuesta
-        ON reclamo_respuesta_equipo_acciones(respuesta_equipo_id)
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_4 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rrea_reclamo
-        ON reclamo_respuesta_equipo_acciones(reclamo_id)
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_5 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rrea_imputacion
-        ON reclamo_respuesta_equipo_acciones(imputacion_id)
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_6 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rrea_miembro
-        ON reclamo_respuesta_equipo_acciones(miembro_id)
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_7 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rrea_tipo
-        ON reclamo_respuesta_equipo_acciones(tipo)
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_8 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rrea_fecha_compromiso
-        ON reclamo_respuesta_equipo_acciones(fecha_compromiso)
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_9 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rrea_cumplido
-        ON reclamo_respuesta_equipo_acciones(cumplido, activo)
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_10 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rree_accion
-        ON reclamo_respuesta_equipo_accion_evidencias(accion_id)
-"""
-
-SQL_ENSURE_RECLAMO_RESPUESTA_EQUIPO_ACCIONES_SCHEMA_DDL_11 = """
-
-        CREATE INDEX IF NOT EXISTS idx_rree_activo
-        ON reclamo_respuesta_equipo_accion_evidencias(activo)
-"""
-
-
 # -- _GET_RESPUESTA_EQUIPO_ACCIONES --
-SQL__GET_RESPUESTA_EQUIPO_ACCIONES_SEL_1 = """
+SQL__GET_RESPUESTA_EQUIPO_ACCIONES_SEL_1 = f"""
 
         SELECT id, tipo, descripcion, fecha_compromiso, orden,
                requiere_evidencia, cumplido, fecha_cumplimiento
-        FROM reclamo_respuesta_equipo_acciones
+        FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES}
         WHERE respuesta_equipo_id = ?
           AND activo = 1
         ORDER BY tipo, orden, id
@@ -511,7 +401,7 @@ SQL__GET_RESPUESTA_EQUIPO_ACCIONES_SEL_1 = """
 
 
 # -- _GET_IMPUTADO_ACCIONES_FULL --
-SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_1 = """
+SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_1 = f"""
 
         SELECT
             a.id,
@@ -523,7 +413,7 @@ SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_1 = """
             COALESCE(a.cumplido, 0) AS cumplido,
             COALESCE(a.fecha_cumplimiento, '') AS fecha_cumplimiento,
             COALESCE(a.observacion_cumplimiento, '') AS observacion_cumplimiento
-        FROM reclamo_imputado_acciones a
+        FROM {T_RECLAMO_IMPUTADO_ACCIONES} a
         WHERE a.imputacion_id = ?
           AND COALESCE(a.activo, 1) = 1
         ORDER BY
@@ -537,7 +427,7 @@ SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_1 = """
             a.id
 """
 
-SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_2 = """
+SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_2 = f"""
 
             SELECT
                 e.id,
@@ -546,7 +436,7 @@ SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_2 = """
                 COALESCE(e.content_type, '') AS content_type,
                 COALESCE(e.size_bytes, 0) AS size_bytes,
                 COALESCE(e.created_at, '') AS created_at
-            FROM reclamo_accion_evidencias e
+            FROM {T_RECLAMO_ACCION_EVIDENCIAS} e
             WHERE e.accion_id = ?
               AND COALESCE(e.activo, 1) = 1
             ORDER BY e.id
@@ -554,11 +444,11 @@ SQL__GET_IMPUTADO_ACCIONES_FULL_SEL_2 = """
 
 
 # -- _PUEDE_GESTIONAR_EQUIPO --
-SQL__PUEDE_GESTIONAR_EQUIPO_SEL_1 = """
+SQL__PUEDE_GESTIONAR_EQUIPO_SEL_1 = f"""
 
         SELECT TOP 1 1 AS ok
-        FROM reclamos r
-        JOIN reclamo_imputados ri
+        FROM {T_RECLAMOS} r
+        JOIN {T_RECLAMO_IMPUTADOS} ri
           ON ri.reclamo_id = r.id
         WHERE r.id = ?
           AND ri.estado_asignacion = 'aprobado'
@@ -566,10 +456,10 @@ SQL__PUEDE_GESTIONAR_EQUIPO_SEL_1 = """
                 ri.imputado_id = ?
                 OR EXISTS (
                     SELECT 1
-                    FROM param_values pv
-                    JOIN param_groups pg
+                    FROM {T_PARAM_VALUES} pv
+                    JOIN {T_PARAM_GROUPS} pg
                       ON pg.id = pv.group_id
-                    JOIN usuarios u
+                    JOIN {T_USUARIOS} u
                       ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
                     WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
                       AND COALESCE(pv.activo, 1) = 1
@@ -583,96 +473,91 @@ SQL__PUEDE_GESTIONAR_EQUIPO_SEL_1 = """
 
 
 # -- _PUEDE_VER_EQUIPO --
-SQL__PUEDE_VER_EQUIPO_SEL_1 = """
+SQL__PUEDE_VER_EQUIPO_SEL_1 = f"""
 
         SELECT TOP 1 1 AS ok
-        FROM reclamo_equipo_respuestas er
+        FROM {T_RECLAMO_EQUIPO_RESPUESTAS} er
         WHERE er.reclamo_id = ?
           AND er.usuario_id = ?
           AND COALESCE(er.activo, 1) = 1
 """
 
-SQL__PUEDE_VER_EQUIPO_SEL_2 = """
+SQL__PUEDE_VER_EQUIPO_SEL_2 = f"""
 
         SELECT TOP 1 1 AS ok
-        FROM reclamos r
+        FROM {T_RECLAMOS} r
         WHERE r.id = ?
           AND r.creado_por = ?
 """
 
 
 # -- FETCH_PRODUCTOS --
-SQL_FETCH_PRODUCTOS_SEL_1 = """
+SQL_FETCH_PRODUCTOS_SEL_1 = f"""
 
         SELECT id, nombre
-        FROM productos
+        FROM {T_PRODUCTOS}
         WHERE COALESCE(activo, 1) = 1
         ORDER BY nombre
 """
 
 
-# -- _ENSURE_PARAM_TABLES --
-SQL__ENSURE_PARAM_TABLES_DDL_1 = """
-
-        CREATE TABLE IF NOT EXISTS param_groups(
-            id      INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre  TEXT UNIQUE NOT NULL
-        )
-"""
-
-SQL__ENSURE_PARAM_TABLES_DDL_2 = """
-
-        CREATE TABLE IF NOT EXISTS param_values(
-            id       INTEGER PRIMARY KEY AUTOINCREMENT,
-            group_id INTEGER NOT NULL,
-            nombre   TEXT NOT NULL,
-            valor    TEXT,
-            activo   INTEGER NOT NULL DEFAULT 1,
-            orden    INTEGER NOT NULL DEFAULT 1,
-            FOREIGN KEY(group_id) REFERENCES param_groups(id)
-        )
-"""
+# -- FETCH_USUARIOS_IMPUTABLES --
+SQL_FETCH_USUARIOS_IMPUTABLES_SEL_1 = f"""
+        SELECT
+            u.id,
+            u.username,
+            COALESCE(u.nombre_completo, u.username) AS nombre_completo,
+            d.nombre AS departamento_nombre,
+            COALESCE(j.nombre_completo, j.username) AS jefe_nombre,
+            u.empresa_id,
+            u.jefe_id
+        FROM {T_USUARIOS} u
+        LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
+        LEFT JOIN {T_USUARIOS} j ON j.id = u.jefe_id          -- 👈 jefe desde la misma tabla
+        WHERE COALESCE(u.disabled, 0) = 0
+        and u.identificacion not in ('40623','0911946630','0923577688','0929626729','1307590834'   ,'40736','0902507805','1714868211')
+    """
 
 
 # -- _ENSURE_PARAM_GROUP --
-SQL__ENSURE_PARAM_GROUP_SEL_1 = """
+SQL__ENSURE_PARAM_GROUP_SEL_1 = f"""
 
         SELECT TOP 1 id
-        FROM param_groups
+        FROM {T_PARAM_GROUPS}
         WHERE nombre = ?
 """
 
 
 # -- _ENSURE_PARAM_VALUE --
-SQL__ENSURE_PARAM_VALUE_SEL_1 = """
+SQL__ENSURE_PARAM_VALUE_SEL_1 = f"""
 
         SELECT id
-        FROM param_values
+        FROM {T_PARAM_VALUES}
         WHERE group_id = ? AND nombre = ?
 """
 
-SQL__ENSURE_PARAM_VALUE_UPD_2 = """
+SQL__ENSURE_PARAM_VALUE_UPD_2 = f"""
 
-            UPDATE param_values
+            UPDATE {T_PARAM_VALUES}
                SET valor = ?,
                    orden = ?,
                    activo = ?
              WHERE id = ?
 """
 
-SQL__ENSURE_PARAM_VALUE_INS_3 = """
+SQL__ENSURE_PARAM_VALUE_INS_3 = f"""
 
-            INSERT INTO param_values(group_id, nombre, valor, orden, activo)
+            INSERT INTO {T_PARAM_VALUES}(group_id, nombre, valor, orden, activo)
             VALUES (?, ?, ?, ?, ?)
 """
 
 
 # -- _FETCH_PARAM_VALUES --
-SQL__FETCH_PARAM_VALUES_SEL_1 = """
+SQL__FETCH_PARAM_VALUES_SEL_1 = f"""
 
         SELECT pv.id, pv.nombre, pv.valor, pv.orden
-        FROM param_values pv
-        JOIN param_groups pg ON pg.id = pv.group_id
+        FROM {T_PARAM_VALUES} pv
+        JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
         WHERE pg.nombre = ?
           AND COALESCE(pv.activo, 1) = 1
         ORDER BY pv.orden, pv.valor, pv.nombre
@@ -680,145 +565,145 @@ SQL__FETCH_PARAM_VALUES_SEL_1 = """
 
 
 # -- _CAN_EDIT_EQUIPO --
-SQL__CAN_EDIT_EQUIPO_SEL_1 = """
+SQL__CAN_EDIT_EQUIPO_SEL_1 = f"""
 
         SELECT responsable_id, colaborador_id
-        FROM reclamo_equipo
+        FROM {T_RECLAMO_EQUIPO}
         WHERE id = ?
 """
 
 
 # -- FETCH_REGIONES --
-SQL_FETCH_REGIONES_SEL_1 = """
+SQL_FETCH_REGIONES_SEL_1 = f"""
 
         SELECT id, nombre
-        FROM regiones
+        FROM {T_REGIONES}
         WHERE COALESCE(activo,1) = 1
         ORDER BY orden, nombre
 """
 
 
 # -- FETCH_PROVINCIAS --
-SQL_FETCH_PROVINCIAS_SEL_1 = """
+SQL_FETCH_PROVINCIAS_SEL_1 = f"""
 
             SELECT id, nombre
-            FROM provincias
+            FROM {T_PROVINCIAS}
             WHERE region_id = ? AND COALESCE(activo,1)=1
             ORDER BY orden, nombre
 """
 
-SQL_FETCH_PROVINCIAS_SEL_2 = """
+SQL_FETCH_PROVINCIAS_SEL_2 = f"""
 
             SELECT id, nombre
-            FROM provincias
+            FROM {T_PROVINCIAS}
             WHERE COALESCE(activo,1)=1
             ORDER BY orden, nombre
 """
 
 
 # -- FETCH_CANTONES --
-SQL_FETCH_CANTONES_SEL_1 = """
+SQL_FETCH_CANTONES_SEL_1 = f"""
 
             SELECT id, nombre
-            FROM cantones
+            FROM {T_CANTONES}
             WHERE provincia_id = ? AND COALESCE(activo,1)=1
             ORDER BY orden, nombre
 """
 
-SQL_FETCH_CANTONES_SEL_2 = """
+SQL_FETCH_CANTONES_SEL_2 = f"""
 
             SELECT id, nombre
-            FROM cantones
+            FROM {T_CANTONES}
             WHERE COALESCE(activo,1)=1
             ORDER BY orden, nombre
 """
 
 
 # -- _GENERATE_CODIGO_RECLAMO --
-SQL__GENERATE_CODIGO_RECLAMO_SEL_1 = """
+SQL__GENERATE_CODIGO_RECLAMO_SEL_1 = f"""
 
         SELECT TOP 1 codigo 
-                FROM reclamos
+                FROM {T_RECLAMOS}
         WHERE codigo LIKE 'RECL%'
         ORDER BY id DESC
 """
 
 
 # -- _GUESS_APROBADOR_FOR_USER2 --
-SQL__GUESS_APROBADOR_FOR_USER2_SEL_1 = """
+SQL__GUESS_APROBADOR_FOR_USER2_SEL_1 = f"""
 
         SELECT departamento_id, LOWER(rol) AS rol
-        FROM usuarios
+        FROM {T_USUARIOS}
         WHERE id = ?
 """
 
 
 # -- _GUESS_APROBADOR_FOR_USER --
-SQL__GUESS_APROBADOR_FOR_USER_SEL_1 = """
+SQL__GUESS_APROBADOR_FOR_USER_SEL_1 = f"""
 
         SELECT jefe_id, departamento_id
-        FROM usuarios
+        FROM {T_USUARIOS}
         WHERE id = ?
 """
 
-SQL__GUESS_APROBADOR_FOR_USER_SEL_2 = """
+SQL__GUESS_APROBADOR_FOR_USER_SEL_2 = f"""
 
             SELECT id
-            FROM usuarios
+            FROM {T_USUARIOS}
             WHERE id = ?
               AND COALESCE(disabled, 0) = 0
 """
 
 
 # -- _GET_USER_BASIC --
-SQL__GET_USER_BASIC_SEL_1 = """
+SQL__GET_USER_BASIC_SEL_1 = f"""
 
         SELECT id, username, email, rol, departamento_id, nombre_completo
-        FROM usuarios
+        FROM {T_USUARIOS}
         WHERE id = ?
 """
 
 
 # -- _NOTIFY_COLABORADOR_ASIGNADO --
-SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1 = """
+SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1 = f"""
 
         SELECT TOP 1 id, fecha_reclamo, tipo_reclamo, tipo_tramite,
                cliente_nombre, proceso_text, material_desc,
                fecha_pedido, factura, guia_remision,
                antecedente, observacion
-        FROM reclamos
+        FROM {T_RECLAMOS}
         WHERE codigo = ?
 """
 
 
 # -- _get_param_int_by_id (nested, cur2, sqlserver) --
-SQL__GET_PARAM_INT_BY_ID_SEL_SS = """
+SQL__GET_PARAM_INT_BY_ID_SEL_SS = f"""
                     SELECT TOP 1 valor
-                    FROM param_values
+                    FROM {T_PARAM_VALUES}
                     WHERE id = ? AND activo = 1
                 """
 
 # -- _get_param_int_by_id (nested, cur2, sqlite) --
-SQL__GET_PARAM_INT_BY_ID_SEL_SL = """
+SQL__GET_PARAM_INT_BY_ID_SEL_SL = f"""
                     SELECT TOP 1valor
-                    FROM param_values
+                    FROM {T_PARAM_VALUES}
                     WHERE id = ? AND activo = 1
 
                 """
 
 # -- _get_gerente_general_email (nested, cur2, sqlserver) --
-SQL__GET_GERENTE_GENERAL_EMAIL_SEL_SS = """
+SQL__GET_GERENTE_GENERAL_EMAIL_SEL_SS = f"""
                     SELECT TOP 1 email
-                    FROM usuarios
+                    FROM {T_USUARIOS}
                     WHERE LOWER(LTRIM(RTRIM(rol))) = 'gerente general'
                     AND email IS NOT NULL
                     AND LTRIM(RTRIM(email)) <> ''
                 """
 
 # -- _get_gerente_general_email (nested, cur2, sqlite) --
-SQL__GET_GERENTE_GENERAL_EMAIL_SEL_SL = """
+SQL__GET_GERENTE_GENERAL_EMAIL_SEL_SL = f"""
                     SELECT  TOP 1 email
-                    FROM usuarios
+                    FROM {T_USUARIOS}
                     WHERE LOWER(TRIM(rol)) = 'gerente general'
                     AND email IS NOT NULL
                     AND TRIM(email) <> ''
@@ -826,13 +711,13 @@ SQL__GET_GERENTE_GENERAL_EMAIL_SEL_SL = """
                 """
 
 # -- _notify_gg_if_needed (nested, cur2, sqlserver) --
-SQL__NOTIFY_GG_IF_NEEDED_SEL_SS = """
+SQL__NOTIFY_GG_IF_NEEDED_SEL_SS = f"""
                     SELECT r.id, r.codigo, r.fecha_reclamo, COALESCE(r.cliente_nombre,'') AS cliente_nombre
-                    FROM reclamos r
+                    FROM {T_RECLAMOS} r
                     WHERE COALESCE(r.gg_notificado,0) = 0
                     AND r.id IN (
                             SELECT ri.reclamo_id
-                            FROM reclamo_imputados ri
+                            FROM {T_RECLAMO_IMPUTADOS} ri
                             WHERE ri.estado_asignacion = 'aprobado'
                             AND ri.estado_respuesta = 'sin_respuesta'
                     )
@@ -845,13 +730,13 @@ SQL__NOTIFY_GG_IF_NEEDED_SEL_SS = """
                 """
 
 # -- _notify_gg_if_needed (nested, cur2, sqlite) --
-SQL__NOTIFY_GG_IF_NEEDED_SEL_SL = """
+SQL__NOTIFY_GG_IF_NEEDED_SEL_SL = f"""
                     SELECT r.id, r.codigo, r.fecha_reclamo, COALESCE(r.cliente_nombre,'') AS cliente_nombre
-                    FROM reclamos r
+                    FROM {T_RECLAMOS} r
                     WHERE COALESCE(r.gg_notificado,0) = 0
                     AND r.id IN (
                             SELECT ri.reclamo_id
-                            FROM reclamo_imputados ri
+                            FROM {T_RECLAMO_IMPUTADOS} ri
                             WHERE ri.estado_asignacion = 'aprobado'
                             AND ri.estado_respuesta = 'sin_respuesta'
                     )
@@ -861,38 +746,38 @@ SQL__NOTIFY_GG_IF_NEEDED_SEL_SL = """
                     ORDER BY r.id DESC
                 """
 
-SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_2 = """
+SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_2 = f"""
 
                 SELECT STUFF((
                     SELECT ', ' + COALESCE(u.username, '')
-                    FROM reclamo_imputados ri
-                    JOIN usuarios u ON u.id = ri.imputado_id
+                    FROM {T_RECLAMO_IMPUTADOS} ri
+                    JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
                     WHERE ri.reclamo_id = ?
                     FOR XML PATH(''), TYPE
                 ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS lista
 """
 
-SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_3 = """
+SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_3 = f"""
 
                     SELECT GROUP_CONCAT(u.username, ', ') AS lista
-                    FROM reclamo_imputados ri
-                    JOIN usuarios u ON u.id = ri.imputado_id
+                    FROM {T_RECLAMO_IMPUTADOS} ri
+                    JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
                     WHERE ri.reclamo_id = ?
 """
 
 
 # -- _NOTIFY_COLABORADOR_APORTE_RECHAZADO --
-SQL__NOTIFY_COLABORADOR_APORTE_RECHAZADO_SEL_1 = """
+SQL__NOTIFY_COLABORADOR_APORTE_RECHAZADO_SEL_1 = f"""
 
         SELECT DISTINCT
             u.id,
             COALESCE(u.nombre_completo, u.username) AS nombre,
             u.username,
             u.email
-        FROM usuarios u
-        LEFT JOIN departamentos d
+        FROM {T_USUARIOS} u
+        LEFT JOIN {T_DEPARTAMENTOS} d
           ON d.id = u.departamento_id
-        LEFT JOIN puestos p
+        LEFT JOIN {T_PUESTOS} p
           ON p.id = u.puesto_id
         WHERE COALESCE(u.disabled, 0) = 0
           AND u.email IS NOT NULL
@@ -905,16 +790,16 @@ SQL__NOTIFY_COLABORADOR_APORTE_RECHAZADO_SEL_1 = """
 
 
 # -- _SAVE_ADJUNTOS_FOR_RECLAMO --
-SQL__SAVE_ADJUNTOS_FOR_RECLAMO_SEL_1 = """
+SQL__SAVE_ADJUNTOS_FOR_RECLAMO_SEL_1 = f"""
 
         SELECT COUNT(*) AS c
-        FROM reclamo_adjuntos
+        FROM {T_RECLAMO_ADJUNTOS}
         WHERE reclamo_id = ?
 """
 
-SQL__SAVE_ADJUNTOS_FOR_RECLAMO_INS_2 = """
+SQL__SAVE_ADJUNTOS_FOR_RECLAMO_INS_2 = f"""
 
-            INSERT INTO reclamo_adjuntos(
+            INSERT INTO {T_RECLAMO_ADJUNTOS}(
                 reclamo_id, filename, original_name,
                 content_type, size_bytes,
                 creado_por, created_at
@@ -924,17 +809,17 @@ SQL__SAVE_ADJUNTOS_FOR_RECLAMO_INS_2 = """
 
 
 # -- _NOTIFY_APROBADOR_IMPUTACION --
-SQL__NOTIFY_APROBADOR_IMPUTACION_SEL_1 = """
+SQL__NOTIFY_APROBADOR_IMPUTACION_SEL_1 = f"""
 
             SELECT STRING_AGG(CAST(u.username AS VARCHAR(MAX)), ', ') AS lista
-            FROM reclamo_imputados ri
-            JOIN usuarios u ON u.id = ri.imputado_id
+            FROM {T_RECLAMO_IMPUTADOS} ri
+            JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
             WHERE ri.reclamo_id = ?
 """
 
 
 # -- _GET_SPONSOR_EMAILS_BY_RECLAMO --
-SQL__GET_SPONSOR_EMAILS_BY_RECLAMO_SEL_1 = """
+SQL__GET_SPONSOR_EMAILS_BY_RECLAMO_SEL_1 = f"""
 
         SELECT
             x.id,
@@ -964,12 +849,12 @@ SQL__GET_SPONSOR_EMAILS_BY_RECLAMO_SEL_1 = """
                         END,
                         pv.id
                 ) AS rn
-            FROM reclamos r
-            JOIN param_values pv
+            FROM {T_RECLAMOS} r
+            JOIN {T_PARAM_VALUES} pv
               ON pv.parent_id = r.proceso_id
-            JOIN param_groups pg
+            JOIN {T_PARAM_GROUPS} pg
               ON pg.id = pv.group_id
-            JOIN usuarios u
+            JOIN {T_USUARIOS} u
               ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
             WHERE r.codigo = ?
               AND pg.nombre = 'RECL_PROCESO_SPONSOR'
@@ -985,21 +870,21 @@ SQL__GET_SPONSOR_EMAILS_BY_RECLAMO_SEL_1 = """
 
 
 # -- REGISTER_RECLAMOS_ROUTES --
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_1 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_1 = f"""
 
             SELECT TOP 1 id
-            FROM param_groups
+            FROM {T_PARAM_GROUPS}
             WHERE nombre = 'RECL_SUBTIPO'
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_2 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_2 = f"""
 
             SELECT
                 id,
                 nombre,
                 valor,
                 orden
-            FROM param_values
+            FROM {T_PARAM_VALUES}
             WHERE group_id = ?
             AND COALESCE(activo, 1) = 1
             AND COALESCE(parent_id, 0) = ?
@@ -1008,16 +893,16 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_2 = """
             valor
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_3 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_3 = f"""
 
-                    INSERT INTO reclamo_equipo_acciones (
+                    INSERT INTO {T_RECLAMO_EQUIPO_ACCIONES} (
                         equipo_id, tipo, descripcion, fecha_compromiso, created_at, created_by
                     ) VALUES (?, ?, ?, ?, ?, ?)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_4 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_4 = f"""
 
-            UPDATE reclamo_equipo
+            UPDATE {T_RECLAMO_EQUIPO}
             SET
                 respuesta_causa      = ?,
                 respuesta_preventiva = ?,
@@ -1026,30 +911,30 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_4 = """
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_5 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_5 = f"""
 
             SELECT id, tipo, descripcion, fecha_compromiso
-            FROM reclamo_equipo_acciones
+            FROM {T_RECLAMO_EQUIPO_ACCIONES}
             WHERE equipo_id = ?
             ORDER BY id ASC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_6 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_6 = f"""
 
             SELECT TOP 1 respuesta_causa, respuesta_preventiva, respuesta_correctiva
-            FROM reclamo_equipo
+            FROM {T_RECLAMO_EQUIPO}
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_7 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_7 = f"""
 
                 SELECT TOP 1 id
-                FROM reclamo_imputados
+                FROM {T_RECLAMO_IMPUTADOS}
                 WHERE reclamo_id = ?
                 ORDER BY id DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_8 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_8 = f"""
 
                 SELECT
                     er.id AS equipo_id,
@@ -1068,15 +953,15 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_8 = """
                     0 AS tiene_respuesta,
                     NULL AS fecha_respuesta,
                     NULL AS respuesta_id
-                FROM reclamo_equipo_respuestas er
-                JOIN usuarios u ON er.usuario_id = u.id
-                LEFT JOIN departamentos d ON u.departamento_id = d.id
+                FROM {T_RECLAMO_EQUIPO_RESPUESTAS} er
+                JOIN {T_USUARIOS} u ON er.usuario_id = u.id
+                LEFT JOIN {T_DEPARTAMENTOS} d ON u.departamento_id = d.id
                 WHERE er.reclamo_id = ?
                 AND er.activo = 1
                 ORDER BY nombre
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_9 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_9 = f"""
 
                 SELECT
                     er.id AS equipo_id,
@@ -1095,13 +980,13 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_9 = """
                     rre.created_at AS fecha_respuesta,
                     rrmax.id AS respuesta_id
 
-                FROM reclamo_equipo_respuestas er
-                JOIN usuarios u ON u.id = er.usuario_id
-                LEFT JOIN departamentos d ON d.id = u.departamento_id
+                FROM {T_RECLAMO_EQUIPO_RESPUESTAS} er
+                JOIN {T_USUARIOS} u ON u.id = er.usuario_id
+                LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
 
                 LEFT JOIN (
                     SELECT MAX(id) AS id, reclamo_id, imputacion_id, miembro_id
-                    FROM reclamo_respuestas_equipo
+                    FROM {T_RECLAMO_RESPUESTAS_EQUIPO}
                     WHERE activo = 1
                     GROUP BY reclamo_id, imputacion_id, miembro_id
                 ) rrmax
@@ -1109,7 +994,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_9 = """
                 AND rrmax.imputacion_id = er.imputacion_id
                 AND rrmax.miembro_id    = er.usuario_id
 
-                LEFT JOIN reclamo_respuestas_equipo rre
+                LEFT JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} rre
                 ON rre.id = rrmax.id
 
                 WHERE er.reclamo_id = ?
@@ -1119,33 +1004,33 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_9 = """
                 ORDER BY nombre
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_10 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_10 = f"""
 
             SELECT TOP 1 id
-            FROM usuarios
+            FROM {T_USUARIOS}
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_11 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_11 = f"""
 
                 SELECT TOP 1 id
-                FROM reclamo_imputados
+                FROM {T_RECLAMO_IMPUTADOS}
                 WHERE reclamo_id = ?
                 AND imputado_id = ?
                 ORDER BY id DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_12 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_12 = f"""
 
             SELECT TOP 1 1 AS ok
-            FROM reclamo_imputados
+            FROM {T_RECLAMO_IMPUTADOS}
             WHERE id = ?
             AND reclamo_id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_13 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_13 = f"""
 
-            INSERT INTO reclamo_equipo_respuestas (
+            INSERT INTO {T_RECLAMO_EQUIPO_RESPUESTAS} (
                 reclamo_id,
                 imputacion_id,
                 usuario_id,
@@ -1157,36 +1042,36 @@ SQL_REGISTER_RECLAMOS_ROUTES_INS_13 = """
             VALUES (?, ?, ?, 1, 1, ?, ?)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_14 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_14 = f"""
 
                 SELECT TOP 1 codigo
-                FROM reclamos
+                FROM {T_RECLAMOS}
                 WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_15 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_15 = f"""
 
                 SELECT TOP 1
                     username,
                     nombre_completo
-                FROM usuarios
+                FROM {T_USUARIOS}
                 WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_16 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_16 = f"""
 
                 SELECT TOP 1 imputacion_id
-                FROM reclamo_equipo_respuestas
+                FROM {T_RECLAMO_EQUIPO_RESPUESTAS}
                 WHERE reclamo_id = ?
                 AND usuario_id = ?
                 AND activo = 1
                 ORDER BY id DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_17 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_17 = f"""
 
             SELECT TOP 1 1 AS ok
-            FROM reclamo_equipo_respuestas
+            FROM {T_RECLAMO_EQUIPO_RESPUESTAS}
             WHERE reclamo_id = ?
             AND imputacion_id = ?
             AND usuario_id = ?
@@ -1194,10 +1079,10 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_17 = """
             AND puede_responder = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_18 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_18 = f"""
 
             SELECT TOP 1 id
-            FROM reclamo_respuestas_equipo
+            FROM {T_RECLAMO_RESPUESTAS_EQUIPO}
             WHERE reclamo_id = ?
             AND imputacion_id = ?
             AND miembro_id = ?
@@ -1205,9 +1090,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_18 = """
             ORDER BY id DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_19 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_19 = f"""
 
-                UPDATE reclamo_respuestas_equipo
+                UPDATE {T_RECLAMO_RESPUESTAS_EQUIPO}
                 SET metodo_analisis = ?,
                     causa = ?,
                     preventiva = ?,
@@ -1231,9 +1116,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_19 = """
                 WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_20 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_20 = f"""
 
-                INSERT INTO reclamo_respuestas_equipo (
+                INSERT INTO {T_RECLAMO_RESPUESTAS_EQUIPO} (
                     reclamo_id,
                     imputacion_id,
                     miembro_id,
@@ -1263,53 +1148,53 @@ SQL_REGISTER_RECLAMOS_ROUTES_INS_20 = """
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_21 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_21 = f"""
 
             SELECT TOP 1 1 AS ok
-            FROM usuarios
+            FROM {T_USUARIOS}
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_22 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_22 = f"""
 
                 SELECT TOP 1 usuario_id
-                FROM reclamo_equipo_respuestas
+                FROM {T_RECLAMO_EQUIPO_RESPUESTAS}
                 WHERE id = ?
                 AND reclamo_id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_23 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_23 = f"""
 
             SELECT TOP 1
                 r.id AS reclamo_id,
                 r.proceso_id,
                 ri.id AS imputacion_id,
                 ri.imputado_id
-            FROM reclamos r
-            JOIN reclamo_imputados ri
+            FROM {T_RECLAMOS} r
+            JOIN {T_RECLAMO_IMPUTADOS} ri
             ON ri.reclamo_id = r.id
             WHERE r.id = ?
             AND ri.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_24 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_24 = f"""
 
             SELECT TOP 1 1 AS ok
-            FROM reclamo_equipo_respuestas
+            FROM {T_RECLAMO_EQUIPO_RESPUESTAS}
             WHERE reclamo_id = ?
             AND imputacion_id = ?
             AND usuario_id = ?
             AND activo = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_25 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_25 = f"""
 
             SELECT TOP 1
                 rre.*,
                 COALESCE(u.nombre_completo, u.username) AS miembro_nombre,
                 u.username AS miembro_username
-            FROM reclamo_respuestas_equipo rre
-            JOIN usuarios u
+            FROM {T_RECLAMO_RESPUESTAS_EQUIPO} rre
+            JOIN {T_USUARIOS} u
             ON u.id = rre.miembro_id
             WHERE rre.reclamo_id = ?
             AND rre.imputacion_id = ?
@@ -1318,7 +1203,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_25 = """
             ORDER BY rre.id DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_26 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_26 = f"""
 
             SELECT
                 re.id,
@@ -1328,23 +1213,23 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_26 = """
                 re.preventiva,
                 re.correctiva,
                 re.created_at
-            FROM reclamo_respuestas_equipo re
-            JOIN usuarios u
+            FROM {T_RECLAMO_RESPUESTAS_EQUIPO} re
+            JOIN {T_USUARIOS} u
             ON u.id = re.miembro_id
             WHERE re.imputacion_id = ?
             ORDER BY re.created_at DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_27 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_27 = f"""
 
             SELECT TOP 1 reclamo_id
-            FROM reclamo_imputados
+            FROM {T_RECLAMO_IMPUTADOS}
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_28 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_28 = f"""
 
-                UPDATE reclamo_respuestas_equipo
+                UPDATE {T_RECLAMO_RESPUESTAS_EQUIPO}
                 SET
                     metodo_analisis = ?,
                     causa = ?,
@@ -1363,9 +1248,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_28 = """
                 WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_29 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_29 = f"""
 
-                INSERT INTO reclamo_respuestas_equipo (
+                INSERT INTO {T_RECLAMO_RESPUESTAS_EQUIPO} (
                     reclamo_id, imputacion_id, miembro_id,
                     metodo_analisis,
                     causa, preventiva, correctiva,
@@ -1378,17 +1263,17 @@ SQL_REGISTER_RECLAMOS_ROUTES_INS_29 = """
                 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_30 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_30 = f"""
 
                     SELECT TOP 1 id
-                    FROM reclamo_respuestas_equipo
+                    FROM {T_RECLAMO_RESPUESTAS_EQUIPO}
                     WHERE reclamo_id = ?
                     AND imputacion_id = ?
                     AND miembro_id = ?
                     ORDER BY id DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_31 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_31 = f"""
 
             SELECT
                 re.*,
@@ -1396,17 +1281,17 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_31 = """
                 r.proceso_id,
                 r.id AS reclamo_id,
                 u_col.username AS colaborador_username
-            FROM reclamo_equipo re
-            JOIN reclamos r
+            FROM {T_RECLAMO_EQUIPO} re
+            JOIN {T_RECLAMOS} r
             ON r.id = re.reclamo_id
-            LEFT JOIN usuarios u_col
+            LEFT JOIN {T_USUARIOS} u_col
             ON u_col.id = re.colaborador_id
             WHERE re.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_32 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_32 = f"""
 
-                UPDATE reclamo_equipo
+                UPDATE {T_RECLAMO_EQUIPO}
                 SET estado = 'aprobado',
                     fecha_aprobacion = ?,
                     motivo_rechazo = NULL,
@@ -1414,9 +1299,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_32 = """
                 WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_33 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_33 = f"""
 
-                UPDATE reclamo_equipo
+                UPDATE {T_RECLAMO_EQUIPO}
                 SET estado = 'rechazado',
                     fecha_rechazo = ?,
                     motivo_rechazo = ?,
@@ -1424,14 +1309,14 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_33 = """
                 WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_34 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_34 = f"""
 
-            UPDATE reclamo_equipo_respuestas
+            UPDATE {T_RECLAMO_EQUIPO_RESPUESTAS}
             SET activo = 0
             WHERE id = ? AND reclamo_id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_35 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_35 = f"""
 
             SELECT TOP 1
                 u.id,
@@ -1439,36 +1324,36 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_35 = """
                 u.username,
                 d.nombre AS departamento_nombre,
                 j.nombre_completo AS jefe_nombre
-            FROM usuarios u
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
-            LEFT JOIN usuarios j ON j.id = u.jefe_id
+            FROM {T_USUARIOS} u
+            LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
+            LEFT JOIN {T_USUARIOS} j ON j.id = u.jefe_id
             WHERE u.identificacion = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_36 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_36 = f"""
 
             SELECT TOP 1 ri.imputado_id, r.codigo
-            FROM reclamos r
-            LEFT JOIN reclamo_imputados ri ON ri.reclamo_id = r.id
+            FROM {T_RECLAMOS} r
+            LEFT JOIN {T_RECLAMO_IMPUTADOS} ri ON ri.reclamo_id = r.id
             WHERE r.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_37 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_37 = f"""
 
                 SELECT 1
-                FROM reclamo_equipo
+                FROM {T_RECLAMO_EQUIPO}
                 WHERE reclamo_id = ? AND colaborador_id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_38 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_38 = f"""
 
-                INSERT INTO reclamo_equipo(
+                INSERT INTO {T_RECLAMO_EQUIPO}(
                     reclamo_id, responsable_id, colaborador_id,
                     estado, fecha_asignacion
                 ) VALUES (?,?,?,?,?)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_39 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_39 = f"""
 
             SELECT
                 r.id,
@@ -1480,23 +1365,23 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_39 = """
                 r.observacion,
                 r.procede,
                 r.estado_global
-            FROM reclamos r
+            FROM {T_RECLAMOS} r
             WHERE r.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_40 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_40 = f"""
 
             SELECT
                 u.username,
                 ri.respuesta_causa,
                 ri.respuesta_preventiva,
                 ri.respuesta_correctiva
-            FROM reclamo_imputados ri
-            JOIN usuarios u ON u.id = ri.imputado_id
+            FROM {T_RECLAMO_IMPUTADOS} ri
+            JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
             WHERE ri.reclamo_id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_41 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_41 = f"""
 
             SELECT
                 u.id,
@@ -1504,32 +1389,32 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_41 = """
                 u.username,
                 u.rol,
                 d.nombre AS departamento
-            FROM usuarios u
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
+            FROM {T_USUARIOS} u
+            LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
             WHERE COALESCE(u.disabled,0)=0
             AND u.id NOT IN (
                 SELECT usuario_id
-                FROM reclamo_equipo_respuestas
+                FROM {T_RECLAMO_EQUIPO_RESPUESTAS}
                 WHERE reclamo_id = ? AND activo = 1
             )
             ORDER BY nombre
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_42 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_42 = f"""
 
             SELECT re.*, r.codigo,
                    u_resp.username AS responsable_username,
                    u_col.username  AS colaborador_username
-            FROM reclamo_equipo re
-            JOIN reclamos r       ON r.id = re.reclamo_id
-            LEFT JOIN usuarios u_resp ON u_resp.id = re.responsable_id
-            LEFT JOIN usuarios u_col  ON u_col.id  = re.colaborador_id
+            FROM {T_RECLAMO_EQUIPO} re
+            JOIN {T_RECLAMOS} r       ON r.id = re.reclamo_id
+            LEFT JOIN {T_USUARIOS} u_resp ON u_resp.id = re.responsable_id
+            LEFT JOIN {T_USUARIOS} u_col  ON u_col.id  = re.colaborador_id
             WHERE re.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_43 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_43 = f"""
 
-            UPDATE reclamo_equipo
+            UPDATE {T_RECLAMO_EQUIPO}
             SET respuesta_causa      = ?,
                 respuesta_preventiva = ?,
                 respuesta_correctiva = ?,
@@ -1538,7 +1423,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_43 = """
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_44 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_44 = f"""
 
         SELECT
             ri.id AS imputacion_id,
@@ -1578,13 +1463,13 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_44 = """
             COALESCE(ri.fish_entorno,'')          AS fish_entorno,
             COALESCE(ri.fish_medicion,'')         AS fish_medicion
 
-        FROM reclamo_imputados ri
-        LEFT JOIN usuarios u ON u.id = ri.imputado_id
+        FROM {T_RECLAMO_IMPUTADOS} ri
+        LEFT JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
         WHERE ri.reclamo_id = ?
         ORDER BY imputado_nombre, imputado_username
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_45 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_45 = f"""
 
             SELECT
                 'imputado' AS origen,
@@ -1640,13 +1525,13 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_45 = """
                 COALESCE(ri.estado_asignacion, '') AS estado_asignacion_raw,
                 COALESCE(ri.estado_respuesta, '') AS estado_respuesta_raw
 
-            FROM reclamo_imputados ri
-            LEFT JOIN usuarios u ON u.id = ri.imputado_id
+            FROM {T_RECLAMO_IMPUTADOS} ri
+            LEFT JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
             WHERE ri.reclamo_id = ?
             ORDER BY COALESCE(u.nombre_completo, u.username), ri.id
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_46 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_46 = f"""
 
             SELECT
                 'equipo' AS origen,
@@ -1680,16 +1565,16 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_46 = """
                 COALESCE(rre.fecha_preventiva, '') AS fecha_preventiva,
                 COALESCE(rre.fecha_correctiva, '') AS fecha_correctiva
 
-            FROM reclamo_respuestas_equipo rre
-            LEFT JOIN usuarios u ON u.id = rre.miembro_id
+            FROM {T_RECLAMO_RESPUESTAS_EQUIPO} rre
+            LEFT JOIN {T_USUARIOS} u ON u.id = rre.miembro_id
             WHERE rre.reclamo_id = ?
             AND COALESCE(rre.activo, 1) = 1
             ORDER BY COALESCE(u.nombre_completo, u.username), rre.id
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_47 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_47 = f"""
 
-            UPDATE reclamo_respuesta_equipo_acciones
+            UPDATE {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES}
             SET
                 cumplido = ?,
                 fecha_cumplimiento = ?,
@@ -1698,7 +1583,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_47 = """
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_48 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_48 = f"""
 
             SELECT TOP 1
                 e.id,
@@ -1707,11 +1592,11 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_48 = """
                 e.original_name,
                 COALESCE(e.content_type, '') AS content_type,
                 COALESCE(e.activo, 1) AS activo
-            FROM reclamo_respuesta_equipo_accion_evidencias e
+            FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS} e
             WHERE e.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_49 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_49 = f"""
 
             SELECT TOP 1
                 e.id,
@@ -1723,28 +1608,28 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_49 = """
                 rre.reclamo_id,
                 rre.imputacion_id,
                 rre.miembro_id
-            FROM reclamo_respuesta_equipo_accion_evidencias e
-            INNER JOIN reclamo_respuesta_equipo_acciones rea
+            FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS} e
+            INNER JOIN {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES} rea
                 ON rea.id = e.accion_id
-            INNER JOIN reclamo_respuestas_equipo rre
+            INNER JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} rre
                 ON rre.id = rea.respuesta_equipo_id
             WHERE e.id = ?
             AND COALESCE(e.activo, 1) = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_50 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_50 = f"""
 
             SELECT TOP 1 1 AS ok
-            FROM reclamo_imputados
+            FROM {T_RECLAMO_IMPUTADOS}
             WHERE id = ?
             AND reclamo_id = ?
             AND imputado_id = ?
             AND estado_asignacion = 'aprobado'
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_51 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_51 = f"""
 
-            INSERT INTO reclamo_respuesta_equipo_accion_evidencias (
+            INSERT INTO {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS} (
                 accion_id,
                 filename,
                 original_name,
@@ -1756,7 +1641,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_INS_51 = """
             VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_52 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_52 = f"""
 
             SELECT
                 a.id,
@@ -1768,8 +1653,8 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_52 = """
                 a.requiere_evidencia,
 
                 COUNT(e.id) AS evidencias
-            FROM reclamo_respuesta_equipo_acciones a
-            LEFT JOIN reclamo_respuesta_equipo_accion_evidencias e
+            FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES} a
+            LEFT JOIN {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS} e
                 ON e.accion_id = a.id
                 AND e.activo = 1
             WHERE a.respuesta_equipo_id = ?
@@ -1778,48 +1663,48 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_52 = """
             ORDER BY a.orden
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_53 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_53 = f"""
 
                 SELECT p.nombre
-                FROM usuarios u
-                LEFT JOIN puestos p ON p.id = u.puesto_id
+                FROM {T_USUARIOS} u
+                LEFT JOIN {T_PUESTOS} p ON p.id = u.puesto_id
                 WHERE u.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_54 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_54 = f"""
 
                 SELECT 1
-                FROM param_values pv
-                JOIN param_groups pg ON pg.id = pv.group_id
+                FROM {T_PARAM_VALUES} pv
+                JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
                 WHERE pg.nombre = 'RECL_MATERIAL'
                   AND pv.nombre = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_55 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_55 = f"""
 
             SELECT COALESCE(MAX(pv.orden), 0) + 1 AS next_ord
-            FROM param_values pv
-            JOIN param_groups pg ON pg.id = pv.group_id
+            FROM {T_PARAM_VALUES} pv
+            JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
             WHERE pg.nombre = 'RECL_MATERIAL'
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_56 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_56 = f"""
 
-            INSERT INTO param_values (group_id, nombre, valor, activo, orden)
+            INSERT INTO {T_PARAM_VALUES} (group_id, nombre, valor, activo, orden)
             VALUES (?, ?, ?, 1, ?)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_57 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_57 = f"""
 
                 SELECT TOP 1 valor
-                FROM param_values
+                FROM {T_PARAM_VALUES}
                 WHERE id = ?
                 AND COALESCE(activo, 1) = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_58 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_58 = f"""
 
-            INSERT INTO reclamos(
+            INSERT INTO {T_RECLAMOS}(
                 codigo, fecha_reclamo, fecha_creacion,
                 cliente_id, cliente_nombre, cliente_identificacion,
                 cliente_direccion, cliente_contacto, cliente_email, cliente_telefono,
@@ -1841,9 +1726,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_INS_58 = """
             VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_59 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_59 = f"""
 
-                INSERT INTO reclamo_imputados(
+                INSERT INTO {T_RECLAMO_IMPUTADOS}(
                     reclamo_id,
                     imputado_id,
                     aprobador_id,
@@ -1853,21 +1738,21 @@ SQL_REGISTER_RECLAMOS_ROUTES_INS_59 = """
                 VALUES(?,?,?,?,?)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_60 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_60 = f"""
 
             
             SELECT ri.*, r.codigo, r.creado_por, r.proceso_id,
                    u_imp.username AS imputado_username,
                    u_imp.id AS imputado_uid
-            FROM reclamo_imputados ri
-            JOIN reclamos r ON r.id = ri.reclamo_id
-            LEFT JOIN usuarios u_imp ON u_imp.id = ri.imputado_id
+            FROM {T_RECLAMO_IMPUTADOS} ri
+            JOIN {T_RECLAMOS} r ON r.id = ri.reclamo_id
+            LEFT JOIN {T_USUARIOS} u_imp ON u_imp.id = ri.imputado_id
             WHERE ri.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_61 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_61 = f"""
 
-                UPDATE reclamo_imputados
+                UPDATE {T_RECLAMO_IMPUTADOS}
                 SET estado_asignacion='aprobado',
                     fecha_aprobacion_asignacion=?,
                     motivo_rechazo_asignacion=NULL,
@@ -1875,16 +1760,16 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_61 = """
                 WHERE id=?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_62 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_62 = f"""
 
-                UPDATE reclamo_imputados
+                UPDATE {T_RECLAMO_IMPUTADOS}
                 SET estado_asignacion='rechazado',
                     fecha_rechazo_asignacion=?,
                     motivo_rechazo_asignacion=?
                 WHERE id=?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_63 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_63 = f"""
 
             SELECT a.id,
                 a.reclamo_id,
@@ -1892,12 +1777,12 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_63 = """
                 a.original_name,
                 r.codigo,
                 r.creado_por
-            FROM reclamo_adjuntos a
-            JOIN reclamos r ON r.id = a.reclamo_id
+            FROM {T_RECLAMO_ADJUNTOS} a
+            JOIN {T_RECLAMOS} r ON r.id = a.reclamo_id
             WHERE a.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_64 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_64 = f"""
 
             SELECT
                 a.id,
@@ -1907,23 +1792,23 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_64 = """
                 a.created_at,
                 a.creado_por,
                 COALESCE(u.nombre_completo, u.username) AS cargado_por
-            FROM reclamo_adjuntos a
-            LEFT JOIN usuarios u
+            FROM {T_RECLAMO_ADJUNTOS} a
+            LEFT JOIN {T_USUARIOS} u
                 ON u.id = a.creado_por
             WHERE a.reclamo_id = ?
             ORDER BY a.id
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_65 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_65 = f"""
 
             SELECT
                 id, reclamo_id, filename, original_name,
                 content_type
-            FROM reclamo_adjuntos
+            FROM {T_RECLAMO_ADJUNTOS}
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_66 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_66 = f"""
 
             SELECT
                 ri.*,
@@ -1941,17 +1826,17 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_66 = """
                 u_cre.username AS creador_username,
                 u_cre.nombre_completo AS creador_nombre
 
-            FROM reclamo_imputados ri
-            JOIN reclamos r          ON r.id = ri.reclamo_id
-            LEFT JOIN usuarios u_imp ON u_imp.id = ri.imputado_id
-            LEFT JOIN usuarios u_apr ON u_apr.id = ri.aprobador_id
-            LEFT JOIN usuarios u_cre ON u_cre.id = r.creado_por
+            FROM {T_RECLAMO_IMPUTADOS} ri
+            JOIN {T_RECLAMOS} r          ON r.id = ri.reclamo_id
+            LEFT JOIN {T_USUARIOS} u_imp ON u_imp.id = ri.imputado_id
+            LEFT JOIN {T_USUARIOS} u_apr ON u_apr.id = ri.aprobador_id
+            LEFT JOIN {T_USUARIOS} u_cre ON u_cre.id = r.creado_por
             WHERE ri.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_67 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_67 = f"""
 
-            UPDATE reclamo_imputados
+            UPDATE {T_RECLAMO_IMPUTADOS}
             SET metodo_analisis            = ?,
                 respuesta_causa            = ?,
                 fecha_causa                = ?,
@@ -1979,9 +1864,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_67 = """
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_68 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_68 = f"""
 
-            UPDATE reclamo_imputado_acciones
+            UPDATE {T_RECLAMO_IMPUTADO_ACCIONES}
             SET activo = 0,
                 updated_at = ?,
                 updated_by = ?
@@ -1990,9 +1875,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_68 = """
             AND COALESCE(activo,1) = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_69 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_69 = f"""
 
-                    INSERT INTO reclamo_imputado_acciones (
+                    INSERT INTO {T_RECLAMO_IMPUTADO_ACCIONES} (
                         imputacion_id,
                         reclamo_id,
                         tipo,
@@ -2012,40 +1897,40 @@ SQL_REGISTER_RECLAMOS_ROUTES_INS_69 = """
                     VALUES (?, ?, ?, ?, ?, ?, ?, 0, NULL, ?, ?, ?, ?, 1, '')
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_70 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_70 = f"""
 
             SELECT COUNT(*) AS pend
-            FROM reclamo_imputados
+            FROM {T_RECLAMO_IMPUTADOS}
             WHERE reclamo_id = ?
             AND estado_asignacion = 'aprobado'
             AND COALESCE(TRIM(estado_respuesta),'') <> 'aprobada'
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_71 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_71 = f"""
 
-                UPDATE reclamos
+                UPDATE {T_RECLAMOS}
                 SET estado_global = 'cerrado'
                 WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_72 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_72 = f"""
 
             SELECT id, codigo, COALESCE(LOWER(TRIM(estado_global)), '') AS estado_global
-            FROM reclamos
+            FROM {T_RECLAMOS}
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_DEL_73 = """
+SQL_REGISTER_RECLAMOS_ROUTES_DEL_73 = f"""
 
-                DELETE FROM reclamo_equipo_acciones
+                DELETE FROM {T_RECLAMO_EQUIPO_ACCIONES}
                 WHERE equipo_id IN (
-                    SELECT id FROM reclamo_equipo_respuestas WHERE reclamo_id = ?
+                    SELECT id FROM {T_RECLAMO_EQUIPO_RESPUESTAS} WHERE reclamo_id = ?
                 )
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_74 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_74 = f"""
 
-                UPDATE reclamo_imputados
+                UPDATE {T_RECLAMO_IMPUTADOS}
                 SET estado_respuesta='aprobada',
                     fecha_aprobacion_respuesta=?,
                     motivo_rechazo_respuesta=NULL,
@@ -2054,9 +1939,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_74 = """
                 WHERE id=?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_75 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_75 = f"""
 
-                UPDATE reclamo_imputados
+                UPDATE {T_RECLAMO_IMPUTADOS}
                 SET estado_respuesta='rechazada',
                     fecha_rechazo_respuesta=?,
                     motivo_rechazo_respuesta=?,
@@ -2064,7 +1949,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_75 = """
                 WHERE id=?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_76 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_76 = f"""
 
             SELECT
                 COUNT(*) AS total_om,
@@ -2072,31 +1957,31 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_76 = """
                 SUM(CASE WHEN estado_global LIKE 'RECHA%' THEN 1 ELSE 0 END) AS rechazadas,
                 SUM(CASE WHEN estado_global LIKE 'PEND%' THEN 1 ELSE 0 END) AS pendientes,
                 SUM(CASE WHEN estado_global LIKE 'EN RESP%' THEN 1 ELSE 0 END) AS en_respuesta
-            FROM reclamos
+            FROM {T_RECLAMOS}
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_77 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_77 = f"""
 
             SELECT
                 strftime('%Y-%m', fecha_reclamo) AS ym,
                 COUNT(*) AS total_mes
-            FROM reclamos
+            FROM {T_RECLAMOS}
             WHERE fecha_reclamo >= date('now', '-6 months')
             GROUP BY ym
             ORDER BY ym
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_78 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_78 = f"""
 
             SELECT
                 estado_global AS estado,
                 COUNT(*) AS total
-            FROM reclamos
+            FROM {T_RECLAMOS}
             GROUP BY estado_global
             ORDER BY total DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_79 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_79 = f"""
 
                 SELECT
                     COALESCE(tipo_reclamo, 'SIN TIPO') AS tipo_reclamo,
@@ -2110,14 +1995,14 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_79 = """
                         )
                     ) AS dias_promedio,
                     COUNT(*) AS total
-                FROM reclamos
+                FROM {T_RECLAMOS}
                 WHERE TRY_CONVERT(datetime, fecha_reclamo) IS NOT NULL
                 GROUP BY COALESCE(tipo_reclamo, 'SIN TIPO')
                 HAVING COUNT(*) >= 3
                 ORDER BY dias_promedio DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_80 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_80 = f"""
 
                 SELECT
                     tipo_reclamo,
@@ -2126,14 +2011,14 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_80 = """
                         - JULIANDAY(fecha_reclamo)
                     ) AS dias_promedio,
                     COUNT(*) AS total
-                FROM reclamos
+                FROM {T_RECLAMOS}
                 WHERE fecha_reclamo IS NOT NULL
                 GROUP BY tipo_reclamo
                 HAVING total >= 3
                 ORDER BY dias_promedio DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_81 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_81 = f"""
 
                 SELECT TOP 10
                     COALESCE(u.nombre_completo, u.username, 'SIN USUARIO') AS imputado,
@@ -2141,13 +2026,13 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_81 = """
                     SUM(CASE WHEN ri.estado_imputacion LIKE 'CERR%' THEN 1 ELSE 0 END) AS cerradas,
                     SUM(CASE WHEN ri.estado_imputacion LIKE 'APROB%' THEN 1 ELSE 0 END) AS aprobadas,
                     SUM(CASE WHEN ri.estado_imputacion LIKE 'RECHA%' THEN 1 ELSE 0 END) AS rechazadas
-                FROM reclamo_imputados ri
-                JOIN usuarios u ON u.id = ri.imputado_id
+                FROM {T_RECLAMO_IMPUTADOS} ri
+                JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
                 GROUP BY u.id, COALESCE(u.nombre_completo, u.username, 'SIN USUARIO')
                 ORDER BY COUNT(*) DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_82 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_82 = f"""
 
                 SELECT top 10
                     u.nombre_completo AS imputado,
@@ -2155,72 +2040,72 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_82 = """
                     SUM(CASE WHEN ri.estado_imputacion LIKE 'CERR%' THEN 1 ELSE 0 END) AS cerradas,
                     SUM(CASE WHEN ri.estado_imputacion LIKE 'APROB%' THEN 1 ELSE 0 END) AS aprobadas,
                     SUM(CASE WHEN ri.estado_imputacion LIKE 'RECHA%' THEN 1 ELSE 0 END) AS rechazadas
-                FROM reclamo_imputados ri
-                JOIN usuarios u ON u.id = ri.imputado_id
+                FROM {T_RECLAMO_IMPUTADOS} ri
+                JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
                 GROUP BY u.id, u.nombre_completo
                 ORDER BY total_om DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_83 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_83 = f"""
 
                 SELECT TOP 10
                     COALESCE(cliente_nombre, 'SIN CLIENTE') AS cliente,
                     COUNT(*) AS total_om
-                FROM reclamos
+                FROM {T_RECLAMOS}
                 GROUP BY COALESCE(cliente_nombre, 'SIN CLIENTE')
                 ORDER BY COUNT(*) DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_84 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_84 = f"""
 
                 SELECT TOP 10
                     cliente_nombre AS cliente,
                     COUNT(*) AS total_om
-                FROM reclamos
+                FROM {T_RECLAMOS}
                 GROUP BY cliente_nombre
                 ORDER BY total_om DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_85 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_85 = f"""
 
             SELECT
                 COALESCE(proceso_text, 'SIN PROCESO') AS proceso,
                 COUNT(*) AS total_om
-            FROM reclamos
+            FROM {T_RECLAMOS}
             GROUP BY COALESCE(proceso_text, 'SIN PROCESO')
             ORDER BY COUNT(*) DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_86 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_86 = f"""
 
             SELECT
                 COALESCE(d.nombre, 'SIN DEPARTAMENTO') AS departamento,
                 COUNT(DISTINCT r.id) AS total_om,
                 SUM(CASE WHEN r.estado_global LIKE 'CERR%' THEN 1 ELSE 0 END) AS cerradas,
                 SUM(CASE WHEN r.estado_global LIKE 'CERR%' THEN 0 ELSE 1 END) AS abiertas
-            FROM reclamos r
-            LEFT JOIN usuarios u   ON u.id = r.creado_por
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
+            FROM {T_RECLAMOS} r
+            LEFT JOIN {T_USUARIOS} u   ON u.id = r.creado_por
+            LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
             GROUP BY d.nombre
             ORDER BY total_om DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_87 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_87 = f"""
 
             SELECT DISTINCT COALESCE(d.nombre, 'SIN DEPARTAMENTO') AS depto
-            FROM reclamos r
-            LEFT JOIN usuarios u ON u.id = r.creado_por
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
+            FROM {T_RECLAMOS} r
+            LEFT JOIN {T_USUARIOS} u ON u.id = r.creado_por
+            LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
             ORDER BY depto
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_88 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_88 = f"""
 
             SELECT COALESCE(NULLIF(LTRIM(RTRIM(r.proceso_text)), ''), 'SIN PROCESO') AS proceso_text
-            FROM reclamos r
+            FROM {T_RECLAMOS} r
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_89 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_89 = f"""
 
             SELECT TOP 1
                 r.id AS reclamo_id,
@@ -2229,27 +2114,27 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_89 = """
                 ri.id AS imputacion_id,
                 ri.imputado_id,
                 ri.estado_asignacion
-            FROM reclamos r
-            JOIN reclamo_imputados ri
+            FROM {T_RECLAMOS} r
+            JOIN {T_RECLAMO_IMPUTADOS} ri
             ON ri.reclamo_id = r.id
             WHERE r.id = ?
             AND ri.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_90 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_90 = f"""
 
             SELECT TOP 1 1 AS ok
-            FROM reclamo_equipo_respuestas
+            FROM {T_RECLAMO_EQUIPO_RESPUESTAS}
             WHERE reclamo_id = ?
             AND imputacion_id = ?
             AND usuario_id = ?
             AND COALESCE(activo, 1) = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_91 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_91 = f"""
 
             SELECT TOP 1 id
-            FROM reclamo_respuestas_equipo
+            FROM {T_RECLAMO_RESPUESTAS_EQUIPO}
             WHERE reclamo_id = ?
             AND imputacion_id = ?
             AND miembro_id = ?
@@ -2257,9 +2142,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_91 = """
             ORDER BY id DESC
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_92 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_92 = f"""
 
-                UPDATE reclamo_respuestas_equipo
+                UPDATE {T_RECLAMO_RESPUESTAS_EQUIPO}
                 SET estado_revision = 'APROBADA',
                     revision_by = ?,
                     revision_at = ?
@@ -2269,7 +2154,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_92 = """
                 AND COALESCE(activo, 1) = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_93 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_93 = f"""
 
             SELECT TOP 1
                 r.id AS reclamo_id,
@@ -2280,20 +2165,20 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_93 = """
                 ri.estado_asignacion,
                 COALESCE(u_imp.nombre_completo, u_imp.username) AS sponsor_nombre,
                 COALESCE(u_miembro.nombre_completo, u_miembro.username) AS miembro_nombre
-            FROM reclamos r
-            JOIN reclamo_imputados ri
+            FROM {T_RECLAMOS} r
+            JOIN {T_RECLAMO_IMPUTADOS} ri
             ON ri.reclamo_id = r.id
-            LEFT JOIN usuarios u_imp
+            LEFT JOIN {T_USUARIOS} u_imp
             ON u_imp.id = ri.imputado_id
-            LEFT JOIN usuarios u_miembro
+            LEFT JOIN {T_USUARIOS} u_miembro
             ON u_miembro.id = ?
             WHERE r.id = ?
             AND ri.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_94 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_94 = f"""
 
-                UPDATE reclamo_respuestas_equipo
+                UPDATE {T_RECLAMO_RESPUESTAS_EQUIPO}
                 SET estado_revision = 'RECHAZADA',
                     motivo_rechazo = ?,
                     revision_by = ?,
@@ -2304,19 +2189,19 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_94 = """
                 AND COALESCE(activo, 1) = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_95 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_95 = f"""
 
             SELECT TOP 1
                 id,
                 COALESCE(cumplido, 0) AS cumplido
-            FROM reclamo_respuesta_equipo_acciones
+            FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES}
             WHERE id = ?
             AND COALESCE(activo, 1) = 1
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_96 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_96 = f"""
 
-            UPDATE reclamo_respuesta_equipo_acciones
+            UPDATE {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES}
             SET
                 observacion_cumplimiento = ?,
                 updated_at = CURRENT_TIMESTAMP,
@@ -2324,7 +2209,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_96 = """
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_97 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_97 = f"""
 
             SELECT TOP 1
                 e.id,
@@ -2332,20 +2217,20 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_97 = """
                 e.filename,
                 COALESCE(e.activo, 1) AS evidencia_activa,
                 COALESCE(a.cumplido, 0) AS accion_cumplida
-            FROM reclamo_respuesta_equipo_accion_evidencias e
-            JOIN reclamo_respuesta_equipo_acciones a
+            FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS} e
+            JOIN {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES} a
             ON a.id = e.accion_id
             WHERE e.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_98 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_98 = f"""
 
-            UPDATE reclamo_respuesta_equipo_accion_evidencias
+            UPDATE {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS}
             SET activo = 0
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_99 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_99 = f"""
 
             SELECT TOP 1
                 ri.id,
@@ -2355,13 +2240,13 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_99 = """
                 ri.why1, ri.why2, ri.why3, ri.why4, ri.why5,
                 ri.fish_metodo, ri.fish_maquinas, ri.fish_materiales,
                 ri.fish_personas, ri.fish_entorno, ri.fish_medicion
-            FROM reclamo_imputados ri
+            FROM {T_RECLAMO_IMPUTADOS} ri
             WHERE ri.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_100 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_100 = f"""
 
-            UPDATE reclamo_imputado_acciones
+            UPDATE {T_RECLAMO_IMPUTADO_ACCIONES}
             SET
                 observacion_cumplimiento = ?,
                 updated_at = CURRENT_TIMESTAMP,
@@ -2369,9 +2254,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_100 = """
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_101 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_101 = f"""
 
-            UPDATE reclamo_imputado_acciones
+            UPDATE {T_RECLAMO_IMPUTADO_ACCIONES}
             SET
                 cumplido = 1,
                 fecha_cumplimiento = ?,
@@ -2380,9 +2265,9 @@ SQL_REGISTER_RECLAMOS_ROUTES_UPD_101 = """
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_INS_102 = """
+SQL_REGISTER_RECLAMOS_ROUTES_INS_102 = f"""
 
-            INSERT INTO reclamo_accion_evidencias (
+            INSERT INTO {T_RECLAMO_ACCION_EVIDENCIAS} (
                 accion_id,
                 filename,
                 original_name,
@@ -2396,7 +2281,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_INS_102 = """
             VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 1)
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_103 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_103 = f"""
 
             SELECT
                 e.id,
@@ -2406,22 +2291,22 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_103 = """
                 COALESCE(a.cumplido, 0) AS accion_cumplida,
                 a.imputacion_id,
                 a.reclamo_id
-            FROM reclamo_accion_evidencias e
-            JOIN reclamo_imputado_acciones a
+            FROM {T_RECLAMO_ACCION_EVIDENCIAS} e
+            JOIN {T_RECLAMO_IMPUTADO_ACCIONES} a
             ON a.id = e.accion_id
             WHERE e.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_104 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_104 = f"""
 
-            UPDATE reclamo_accion_evidencias
+            UPDATE {T_RECLAMO_ACCION_EVIDENCIAS}
             SET
                 activo = 0,
                 created_at = created_at
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_105 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_105 = f"""
 
             SELECT
                 e.id,
@@ -2431,11 +2316,11 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_105 = """
                 e.content_type,
                 e.size_bytes,
                 COALESCE(e.activo, 1) AS evidencia_activa
-            FROM reclamo_accion_evidencias e
+            FROM {T_RECLAMO_ACCION_EVIDENCIAS} e
             WHERE e.id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_106 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_106 = f"""
 
             SELECT TOP 1
                 u.id,
@@ -2443,12 +2328,12 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_106 = """
                 u.username,
                 COALESCE(d.nombre, '') AS departamento,
                 COALESCE(j.nombre_completo, j.username, '') AS jefe
-            FROM param_values pv
-            JOIN param_groups pg ON pg.id = pv.group_id
-            JOIN usuarios u
+            FROM {T_PARAM_VALUES} pv
+            JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
+            JOIN {T_USUARIOS} u
             ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
-            LEFT JOIN departamentos d ON d.id = u.departamento_id
-            LEFT JOIN usuarios j ON j.id = u.jefe_id
+            LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
+            LEFT JOIN {T_USUARIOS} j ON j.id = u.jefe_id
             WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
             AND COALESCE(pv.activo, 1) = 1
             AND pv.parent_id = ?
@@ -2457,16 +2342,16 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_106 = """
             ORDER BY COALESCE(pv.orden, 0), pv.id
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_107 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_107 = f"""
 
             SELECT
                 u.id,
                 COALESCE(u.nombre_completo, u.username) AS nombre,
                 u.username,
                 pv.valor AS tipo
-            FROM param_values pv
-            JOIN param_groups pg ON pg.id = pv.group_id
-            JOIN usuarios u
+            FROM {T_PARAM_VALUES} pv
+            JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
+            JOIN {T_USUARIOS} u
             ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
             WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
             AND COALESCE(pv.activo, 1) = 1
@@ -2483,7 +2368,7 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_107 = """
             pv.id
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_SEL_108 = """
+SQL_REGISTER_RECLAMOS_ROUTES_SEL_108 = f"""
 
             SELECT TOP 1
                 id,
@@ -2491,20 +2376,20 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_108 = """
                 COALESCE(requiere_carta_cliente, 0) AS requiere_carta_cliente,
                 COALESCE(LOWER(LTRIM(RTRIM(estado_global))), '') AS estado_global,
                 carta_cliente_notif_at
-            FROM reclamos
+            FROM {T_RECLAMOS}
             WHERE id = ?
 """
 
-SQL_REGISTER_RECLAMOS_ROUTES_UPD_109 = """
+SQL_REGISTER_RECLAMOS_ROUTES_UPD_109 = f"""
 
-            UPDATE reclamos
+            UPDATE {T_RECLAMOS}
             SET carta_cliente_notif_at = GETDATE()
             WHERE id = ?
 """
 
 
 # -- validacion_creador --
-SQL_VALIDAR_CREADOR_SEL_BASE = """
+SQL_VALIDAR_CREADOR_SEL_BASE = f"""
     SELECT TOP 1
         r.id,
         r.codigo,
@@ -2513,29 +2398,29 @@ SQL_VALIDAR_CREADOR_SEL_BASE = """
         r.estado_global,
         r.validacion_creador,
         COALESCE(r.proceso_text, '') AS proceso_text
-    FROM reclamos r
+    FROM {T_RECLAMOS} r
     WHERE r.id = ?
 """
 
-SQL_VALIDAR_CREADOR_SEL_IMPUTADOS = """
+SQL_VALIDAR_CREADOR_SEL_IMPUTADOS = f"""
     SELECT
         ri.id        AS imputacion_id,
         ri.imputado_id,
         u.email      AS imputado_email,
         COALESCE(u.nombre_completo, u.username) AS imputado_nombre
-    FROM reclamo_imputados ri
-    JOIN usuarios u ON u.id = ri.imputado_id
+    FROM {T_RECLAMO_IMPUTADOS} ri
+    JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
     WHERE ri.reclamo_id = ?
       AND COALESCE(u.disabled, 0) = 0
 """
 
-SQL_VALIDAR_CREADOR_SEL_EQUIPO = """
+SQL_VALIDAR_CREADOR_SEL_EQUIPO = f"""
     SELECT
         er.usuario_id,
         u.email      AS miembro_email,
         COALESCE(u.nombre_completo, u.username) AS miembro_nombre
-    FROM reclamo_equipo_respuestas er
-    JOIN usuarios u ON u.id = er.usuario_id
+    FROM {T_RECLAMO_EQUIPO_RESPUESTAS} er
+    JOIN {T_USUARIOS} u ON u.id = er.usuario_id
     WHERE er.reclamo_id = ?
       AND COALESCE(er.activo, 1) = 1
       AND COALESCE(u.disabled, 0) = 0
@@ -2543,14 +2428,14 @@ SQL_VALIDAR_CREADOR_SEL_EQUIPO = """
       AND LTRIM(RTRIM(u.email)) <> ''
 """
 
-SQL_VALIDAR_CREADOR_SEL_SAC = """
+SQL_VALIDAR_CREADOR_SEL_SAC = f"""
     SELECT DISTINCT
         u.id AS usuario_id,
         u.email,
         COALESCE(u.nombre_completo, u.username) AS nombre
-    FROM usuarios u
-    LEFT JOIN departamentos d ON d.id = u.departamento_id
-    LEFT JOIN puestos p       ON p.id = u.puesto_id
+    FROM {T_USUARIOS} u
+    LEFT JOIN {T_DEPARTAMENTOS} d ON d.id = u.departamento_id
+    LEFT JOIN {T_PUESTOS} p       ON p.id = u.puesto_id
     WHERE COALESCE(u.disabled, 0) = 0
       AND u.email IS NOT NULL
       AND LTRIM(RTRIM(u.email)) <> ''
@@ -2560,29 +2445,29 @@ SQL_VALIDAR_CREADOR_SEL_SAC = """
       )
 """
 
-SQL_VALIDAR_CREADOR_UPD_ESTADO = """
-    UPDATE reclamos
+SQL_VALIDAR_CREADOR_UPD_ESTADO = f"""
+    UPDATE {T_RECLAMOS}
     SET validacion_creador = ?,
         estado_global      = ?
     WHERE id = ?
 """
 
-SQL_VALIDAR_CREADOR_UPD_IMPUTACION = """
-    UPDATE reclamo_imputados
+SQL_VALIDAR_CREADOR_UPD_IMPUTACION = f"""
+    UPDATE {T_RECLAMO_IMPUTADOS}
     SET estado_respuesta = 'sin_respuesta'
     WHERE reclamo_id = ?
       AND estado_asignacion = 'aprobado'
 """
 
-SQL_VALIDAR_CREADOR_SEL_SPONSORS = """
+SQL_VALIDAR_CREADOR_SEL_SPONSORS = f"""
     SELECT
         u.id          AS sponsor_id,
         COALESCE(u.nombre_completo, u.username) AS sponsor_nombre,
         u.email       AS sponsor_email,
         UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) AS tipo_sponsor
-    FROM param_values pv
-    JOIN param_groups pg  ON pg.id = pv.group_id
-    JOIN usuarios u
+    FROM {T_PARAM_VALUES} pv
+    JOIN {T_PARAM_GROUPS} pg  ON pg.id = pv.group_id
+    JOIN {T_USUARIOS} u
       ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
     WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
       AND COALESCE(pv.activo, 1) = 1
@@ -2593,3 +2478,384 @@ SQL_VALIDAR_CREADOR_SEL_SPONSORS = """
       AND LTRIM(RTRIM(u.email)) <> ''
 """
 
+
+# -- RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA --
+SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_1 = f"""
+                    SELECT
+                        a.id,
+                        a.tipo,
+                        a.descripcion,
+                        a.fecha_compromiso,
+                        CASE
+                            WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
+                            ELSE 'proxima'
+                        END AS estado_fecha,
+                        NULL AS miembro_nombre
+                    FROM {T_RECLAMO_IMPUTADO_ACCIONES} a
+                    WHERE a.imputacion_id = ?
+                      AND COALESCE(a.activo, 1) = 1
+                      AND a.tipo = 'CORRECTIVA'
+                      AND COALESCE(a.cumplido, 0) = 0
+                      AND a.fecha_compromiso IS NOT NULL
+                      AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                      AND NOT EXISTS (
+                          SELECT 1 FROM {T_RECLAMO_ACCION_EVIDENCIAS} e
+                          WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
+                      )
+                    ORDER BY a.fecha_compromiso ASC
+                """
+
+SQL__RECLAMOS_ACCIONES_PENDIENTES_EVIDENCIA_SEL_2 = f"""
+                    SELECT
+                        a.id,
+                        a.tipo,
+                        a.descripcion,
+                        a.fecha_compromiso,
+                        CASE
+                            WHEN a.fecha_compromiso < CAST(GETDATE() AS DATE) THEN 'vencida'
+                            ELSE 'proxima'
+                        END AS estado_fecha,
+                        u_m.nombre_completo AS miembro_nombre
+                    FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCIONES} a
+                    LEFT JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} re ON re.id = a.respuesta_equipo_id
+                    LEFT JOIN {T_USUARIOS} u_m ON u_m.id = re.miembro_id
+                    WHERE a.reclamo_id = ?
+                      AND COALESCE(a.activo, 1) = 1
+                      AND a.tipo = 'CORRECTIVA'
+                      AND COALESCE(a.cumplido, 0) = 0
+                      AND a.fecha_compromiso IS NOT NULL
+                      AND a.fecha_compromiso <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                      AND NOT EXISTS (
+                          SELECT 1 FROM {T_RECLAMO_RESPUESTA_EQUIPO_ACCION_EVIDENCIAS} e
+                          WHERE e.accion_id = a.id AND COALESCE(e.activo, 1) = 1
+                      )
+                      AND NOT EXISTS (
+                          SELECT 1 FROM {T_RECLAMO_ACCION_EVIDENCIAS} e2
+                          WHERE e2.accion_id = a.id AND COALESCE(e2.activo, 1) = 1
+                      )
+                    ORDER BY a.fecha_compromiso ASC
+                """
+
+
+# -- RECLAMOS_EDITAR_PROCESO --
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_1 = f"SELECT valor FROM {T_PARAM_VALUES} WHERE id = ?"
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_2 = f"SELECT id, codigo FROM {T_RECLAMOS} WHERE id = ?"
+
+SQL__RECLAMOS_EDITAR_PROCESO_UPD_3 = f"UPDATE {T_RECLAMOS} SET proceso_id = ?, proceso_text = ? WHERE id = ?"
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_4 = f"""SELECT u.id AS usuario_id
+                       FROM {T_PARAM_VALUES} pv
+                       JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
+                       JOIN {T_USUARIOS} u ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
+                       WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
+                         AND COALESCE(pv.activo, 1) = 1
+                         AND pv.parent_id = ?
+                         AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
+                         AND COALESCE(u.disabled, 0) = 0"""
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_5 = f"""SELECT DISTINCT u.id AS usuario_id
+                   FROM {T_PARAM_VALUES} pv
+                   JOIN {T_PARAM_GROUPS} pg ON pg.id = pv.group_id
+                   JOIN {T_USUARIOS} u ON LTRIM(RTRIM(u.identificacion)) = LTRIM(RTRIM(pv.nombre))
+                   WHERE pg.nombre = 'RECL_PROCESO_SPONSOR'
+                     AND COALESCE(pv.activo, 1) = 1
+                     AND UPPER(LTRIM(RTRIM(COALESCE(pv.valor, '')))) IN ('PRINCIPAL', 'BACKUP')
+                     AND COALESCE(u.disabled, 0) = 0"""
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_6 = f"SELECT imputado_id FROM {T_RECLAMO_IMPUTADOS} WHERE reclamo_id = ? AND COALESCE(activo, 1) = 1"
+
+SQL__RECLAMOS_EDITAR_PROCESO_UPD_7 = f"""UPDATE {T_RECLAMO_IMPUTADOS}
+                        SET activo = 0
+                        WHERE reclamo_id = ?
+                          AND imputado_id IN ({{placeholders}})
+                          AND COALESCE(activo, 1) = 1"""
+
+SQL__RECLAMOS_EDITAR_PROCESO_SEL_8 = f"""SELECT STUFF((
+                       SELECT DISTINCT ', ' + COALESCE(u.username, '')
+                       FROM {T_RECLAMO_IMPUTADOS} ri
+                       LEFT JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
+                       WHERE ri.reclamo_id = ?
+                         AND COALESCE(ri.activo, 1) = 1
+                       FOR XML PATH(''), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS imputados_resumen"""
+
+
+
+# -- RECLAMOS_EXPORT_MIS --
+SQL__RECLAMOS_EXPORT_MIS_CTES = f"""
+            WITH
+            stats_respuesta_sponsor AS (
+                SELECT
+                    ri.reclamo_id,
+                    ri.id AS imputacion_id,
+                    AVG(
+                        CASE
+                            WHEN TRY_CONVERT(date, ri.fecha_respuesta_imputado) IS NOT NULL
+                            AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
+                            THEN DATEDIFF(
+                                DAY,
+                                TRY_CONVERT(date, r.fecha_reclamo),
+                                TRY_CONVERT(date, ri.fecha_respuesta_imputado)
+                            )
+                        END
+                    ) AS dias_promedio_respuesta_sponsor
+                FROM {T_RECLAMO_IMPUTADOS} ri
+                JOIN {T_RECLAMOS} r ON r.id = ri.reclamo_id
+                GROUP BY ri.reclamo_id, ri.id
+            ),
+
+            equipo_asignacion_detalle AS (
+                SELECT
+                    eq.reclamo_id,
+                    eq.imputacion_id,
+                    eq.usuario_id AS miembro_id,
+                    ISNULL(u.nombre_completo, u.username) AS miembro_nombre,
+                    eq.creado_at AS fecha_asignacion_miembro,
+                    CASE
+                        WHEN TRY_CONVERT(date, eq.creado_at) IS NOT NULL
+                        AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
+                        THEN DATEDIFF(
+                            DAY,
+                            TRY_CONVERT(date, r.fecha_reclamo),
+                            TRY_CONVERT(date, eq.creado_at)
+                        )
+                    END AS dias_asignacion_miembro
+                FROM {T_RECLAMO_EQUIPO_RESPUESTAS} eq
+                JOIN {T_RECLAMOS} r ON r.id = eq.reclamo_id
+                JOIN {T_USUARIOS} u ON u.id = eq.usuario_id
+                WHERE ISNULL(eq.activo, 1) = 1
+            ),
+
+            equipo_respuesta_detalle AS (
+                SELECT
+                    ead.reclamo_id,
+                    ead.imputacion_id,
+                    ead.miembro_id,
+                    ead.miembro_nombre,
+                    ead.fecha_asignacion_miembro,
+                    ead.dias_asignacion_miembro,
+
+                    ISNULL(rre.revision_at, rre.created_at) AS fecha_respuesta_miembro,
+
+                    CASE
+                        WHEN TRY_CONVERT(date, ead.fecha_asignacion_miembro) IS NOT NULL
+                        AND TRY_CONVERT(date, ISNULL(rre.revision_at, rre.created_at)) IS NOT NULL
+                        THEN DATEDIFF(
+                            DAY,
+                            TRY_CONVERT(date, ead.fecha_asignacion_miembro),
+                            TRY_CONVERT(date, ISNULL(rre.revision_at, rre.created_at))
+                        )
+                    END AS dias_respuesta_miembro,
+
+                    CASE
+                        WHEN TRY_CONVERT(date, ead.fecha_asignacion_miembro) IS NOT NULL
+                        AND ISNULL(rre.revision_at, rre.created_at) IS NULL
+                        THEN DATEDIFF(
+                            DAY,
+                            TRY_CONVERT(date, ead.fecha_asignacion_miembro),
+                            CAST(GETDATE() AS date)
+                        )
+                        ELSE 0
+                    END AS dias_sin_respuesta_miembro
+                FROM equipo_asignacion_detalle ead
+                LEFT JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} rre
+                    ON rre.id = (
+                        SELECT MAX(rre2.id)
+                        FROM {T_RECLAMO_RESPUESTAS_EQUIPO} rre2
+                        WHERE rre2.reclamo_id = ead.reclamo_id
+                        AND rre2.imputacion_id = ead.imputacion_id
+                        AND rre2.miembro_id = ead.miembro_id
+                        AND ISNULL(rre2.activo, 1) = 1
+                    )
+            ),
+
+            stats_asignacion_equipo AS (
+                SELECT
+                    x.reclamo_id,
+                    x.imputacion_id,
+                    STRING_AGG(x.miembro_nombre, ', ') AS miembros_equipo,
+                    COUNT(DISTINCT x.miembro_id) AS total_miembros_equipo,
+                    MIN(x.fecha_asignacion_miembro) AS fecha_primera_asignacion_equipo,
+                    AVG(CAST(x.dias_asignacion_miembro AS decimal(18,2))) AS dias_promedio_asignacion_equipo
+                FROM (
+                    SELECT DISTINCT
+                        reclamo_id,
+                        imputacion_id,
+                        miembro_id,
+                        miembro_nombre,
+                        fecha_asignacion_miembro,
+                        dias_asignacion_miembro
+                    FROM equipo_asignacion_detalle
+                ) x
+                GROUP BY x.reclamo_id, x.imputacion_id
+            ),
+
+            stats_respuesta_equipo AS (
+                SELECT
+                    erd.reclamo_id,
+                    erd.imputacion_id,
+
+                    STRING_AGG(
+                        CASE
+                            WHEN erd.fecha_respuesta_miembro IS NOT NULL
+                            THEN erd.miembro_nombre
+                        END,
+                        ', '
+                    ) AS miembros_equipo_respondieron,
+
+                    STRING_AGG(
+                        CASE
+                            WHEN erd.fecha_respuesta_miembro IS NULL
+                            THEN erd.miembro_nombre
+                        END,
+                        ', '
+                    ) AS miembros_equipo_pendientes,
+
+                    MIN(erd.fecha_respuesta_miembro) AS fecha_primera_respuesta_equipo,
+                    AVG(CAST(erd.dias_respuesta_miembro AS decimal(18,2))) AS dias_promedio_respuesta_equipo,
+
+                    AVG(
+                        CAST(
+                            CASE
+                                WHEN erd.fecha_respuesta_miembro IS NULL
+                                THEN erd.dias_sin_respuesta_miembro
+                            END AS decimal(18,2)
+                        )
+                    ) AS dias_promedio_sin_respuesta_equipo,
+
+                    MAX(erd.dias_sin_respuesta_miembro) AS dias_max_sin_respuesta_equipo
+                FROM equipo_respuesta_detalle erd
+                GROUP BY erd.reclamo_id, erd.imputacion_id
+            )
+"""
+
+SQL__RECLAMOS_EXPORT_MIS_SELECT = f"""
+            SELECT
+                r.codigo AS codigo_om,
+                r.fecha_reclamo,
+                r.fecha_creacion,
+
+                ucr.username AS creador_username,
+                ISNULL(ucr.nombre_completo, ucr.username) AS creador_nombre,
+
+                tr.valor AS tipo_om,
+                tt.valor AS tipo_tramite,
+                r.proceso_text,
+                r.cliente_nombre,
+                r.cliente_identificacion,
+                r.cliente_contacto,
+                r.cliente_email,
+                r.cliente_telefono,
+                r.material_desc,
+                c.nombre AS ciudad,
+                r.observacion,
+                r.tipo_reclamo AS motivo,
+                r.antecedente AS submotivo,
+                r.procede,
+                r.estado_global,
+
+                ri.id AS imputacion_id,
+                ui.username AS imputado_username,
+                ISNULL(ui.nombre_completo, ui.username) AS imputado_nombre,
+                uj.username AS jefe_username,
+                ISNULL(uj.nombre_completo, uj.username) AS jefe_nombre,
+
+                ri.estado_asignacion,
+                ri.fecha_aprobacion_asignacion,
+                ri.fecha_rechazo_asignacion,
+                ri.motivo_rechazo_asignacion,
+
+                ri.respuesta_causa,
+                ri.respuesta_preventiva,
+                ri.respuesta_correctiva,
+                ISNULL(ri.fecha_causa, '') AS fecha_causa,
+                ISNULL(ri.fecha_preventiva, '') AS fecha_preventiva,
+                ISNULL(ri.fecha_correctiva, '') AS fecha_correctiva,
+                ri.fecha_respuesta_imputado,
+
+                CASE
+                    WHEN TRY_CONVERT(date, ri.fecha_respuesta_imputado) IS NOT NULL
+                    AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
+                    THEN DATEDIFF(
+                        DAY,
+                        TRY_CONVERT(date, r.fecha_reclamo),
+                        TRY_CONVERT(date, ri.fecha_respuesta_imputado)
+                    )
+                END AS dias_respuesta_sponsor,
+
+                CASE
+                    WHEN ri.fecha_respuesta_imputado IS NULL
+                    AND TRY_CONVERT(date, r.fecha_reclamo) IS NOT NULL
+                    THEN DATEDIFF(
+                        DAY,
+                        TRY_CONVERT(date, r.fecha_reclamo),
+                        CAST(GETDATE() AS date)
+                    )
+                    ELSE 0
+                END AS dias_sin_respuesta_sponsor,
+
+                ISNULL(sae.miembros_equipo, '') AS miembros_equipo,
+                ISNULL(sae.total_miembros_equipo, 0) AS total_miembros_equipo,
+                ISNULL(CONVERT(varchar(19), sae.fecha_primera_asignacion_equipo, 120), '') AS fecha_primera_asignacion_equipo,
+                ISNULL(sae.dias_promedio_asignacion_equipo, 0) AS dias_promedio_asignacion_equipo,
+
+                ISNULL(sre.miembros_equipo_respondieron, '') AS miembros_equipo_respondieron,
+                ISNULL(sre.miembros_equipo_pendientes, '') AS miembros_equipo_pendientes,
+                ISNULL(CONVERT(varchar(19), sre.fecha_primera_respuesta_equipo, 120), '') AS fecha_primera_respuesta_equipo,
+                ISNULL(sre.dias_promedio_respuesta_equipo, 0) AS dias_promedio_respuesta_equipo,
+                ISNULL(sre.dias_promedio_sin_respuesta_equipo, 0) AS dias_promedio_sin_respuesta_equipo,
+                ISNULL(sre.dias_max_sin_respuesta_equipo, 0) AS dias_max_sin_respuesta_equipo,
+
+                ri.estado_respuesta,
+                ri.fecha_aprobacion_respuesta,
+                ri.fecha_rechazo_respuesta,
+                ri.motivo_rechazo_respuesta
+
+            FROM {T_RECLAMOS} r
+            LEFT JOIN {T_RECLAMO_IMPUTADOS} ri ON ri.reclamo_id = r.id
+            LEFT JOIN {T_USUARIOS} ui ON ui.id = ri.imputado_id
+            LEFT JOIN {T_USUARIOS} uj ON uj.id = ri.aprobador_id
+            LEFT JOIN {T_USUARIOS} ucr ON ucr.id = r.creado_por
+            LEFT JOIN {T_CANTONES} c ON c.id = r.canton_id
+
+            LEFT JOIN stats_respuesta_sponsor srs
+                ON srs.reclamo_id = r.id
+            AND srs.imputacion_id = ri.id
+
+            LEFT JOIN stats_asignacion_equipo sae
+                ON sae.reclamo_id = r.id
+            AND sae.imputacion_id = ri.id
+
+            LEFT JOIN stats_respuesta_equipo sre
+                ON sre.reclamo_id = r.id
+            AND sre.imputacion_id = ri.id
+
+            LEFT JOIN {T_PARAM_GROUPS} gtr ON gtr.nombre = 'RECL_TIPO'
+            LEFT JOIN {T_PARAM_VALUES} tr ON tr.group_id = gtr.id AND tr.nombre = r.tipo_reclamo
+
+            LEFT JOIN {T_PARAM_GROUPS} gtt ON gtt.nombre = 'RECL_TRAMITE'
+            LEFT JOIN {T_PARAM_VALUES} tt ON tt.group_id = gtt.id AND tt.nombre = r.tipo_tramite
+
+            {{where_clause}}
+            ORDER BY r.id DESC, ri.id DESC
+"""
+
+SQL__RECLAMOS_EXPORT_MIS_MIS_RECLAMOS_CTE = f"""
+                , mis_reclamos AS (
+                    SELECT DISTINCT r.id
+                    FROM {T_RECLAMOS} r
+                    LEFT JOIN {T_RECLAMO_IMPUTADOS} ri ON ri.reclamo_id = r.id
+                    LEFT JOIN {T_RECLAMO_EQUIPO_RESPUESTAS} eq
+                        ON eq.reclamo_id = r.id
+                    AND ISNULL(eq.activo, 1) = 1
+                    LEFT JOIN {T_RECLAMO_RESPUESTAS_EQUIPO} rre
+                        ON rre.reclamo_id = r.id
+                    AND ISNULL(rre.activo, 1) = 1
+                    WHERE r.creado_por = ?
+                    OR ri.imputado_id = ?
+                    OR ri.aprobador_id = ?
+                    OR eq.usuario_id = ?
+                    OR rre.miembro_id = ?
+                )
+"""

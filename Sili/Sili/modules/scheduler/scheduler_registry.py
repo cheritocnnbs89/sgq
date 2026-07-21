@@ -114,6 +114,21 @@ JOB_REGISTRY: dict[str, dict] = {
         "intervalo_min": 30,
         "hora_inicio": None,
     },
+    # ── Planificador Vuelo — automaciones ─────────────────
+    "vuelo_auto_confirmar": {
+        "modulo": "planificador",
+        "descripcion": "Auto-confirma vuelos realizados (fecha retorno pasada, flag activo)",
+        "tipo": "hora_fija",
+        "intervalo_min": None,
+        "hora_inicio": "09:00",
+    },
+    "vuelo_auto_liquidar": {
+        "modulo": "planificador",
+        "descripcion": "Auto-liquida vuelos con valor cotizado (fecha retorno pasada, flag activo)",
+        "tipo": "hora_fija",
+        "intervalo_min": None,
+        "hora_inicio": "09:05",
+    },
     # ── AWS / Sync ────────────────────────────────────────
     "aws_sync": {
         "modulo": "gastos",

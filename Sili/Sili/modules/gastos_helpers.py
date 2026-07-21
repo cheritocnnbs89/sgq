@@ -6,12 +6,336 @@ from datetime import date, timedelta
 from flask import request
 from typing import Dict, Any
 
-from .db import get_db
+from .db import get_db, get_config_value, set_config_values
 from .config import TABLE_GASTOS
 from flask import current_app
 # ---------------- filtros ----------------
 from typing import Dict, Any, Tuple
 from flask import current_app
+
+# ---------------- coordinador del módulo (configurable) ----------------
+CLAVE_COORDINADOR_ID     = "gastos_coordinador_usuario_id"
+CLAVE_COORDINADOR_NOMBRE = "gastos_coordinador_usuario_nombre"
+
+
+def get_coordinador_gastos() -> dict | None:
+    """Usuario configurado como coordinador del módulo de gastos, o None si no hay ninguno."""
+    uid_raw = get_config_value(CLAVE_COORDINADOR_ID)
+    if not uid_raw:
+        return None
+    try:
+        uid = int(uid_raw)
+    except (TypeError, ValueError):
+        return None
+    nombre = get_config_value(CLAVE_COORDINADOR_NOMBRE) or ""
+    return {"usuario_id": uid, "usuario_nombre": nombre}
+
+
+def set_coordinador_gastos(usuario_id: int, usuario_nombre: str) -> None:
+    set_config_values({
+        CLAVE_COORDINADOR_ID:     str(usuario_id),
+        CLAVE_COORDINADOR_NOMBRE: usuario_nombre or "",
+    })
+
+
+def quitar_coordinador_gastos() -> None:
+    set_config_values({
+        CLAVE_COORDINADOR_ID:     "",
+        CLAVE_COORDINADOR_NOMBRE: "",
+    })
+
+
+def es_coordinador_gastos(usuario_id, rol=None) -> bool:
+    """
+    True si el usuario puede actuar como coordinador del módulo de gastos:
+    - Tiene el rol de sistema 'coordinador' (comportamiento actual, no se retira), o
+    - Está asignado explícitamente en la ventana de configuración (nuevo).
+    Sin ninguna de las dos condiciones, no hay coordinador para ese usuario —
+    no existe un tercer camino de respaldo.
+    """
+    if rol and str(rol).strip().lower() == "coordinador":
+        return True
+    if usuario_id is None:
+        return False
+    coord = get_coordinador_gastos()
+    return bool(coord) and int(coord["usuario_id"]) == int(usuario_id)
+
+
+# ---------------- flujo de aprobación GA/GG/GF (configurable) ----------------
+CLAVE_ROL_GG = "gastos_rol_gg"
+CLAVE_ROL_GF = "gastos_rol_gf"
+ROL_GG_DEFAULT = "gerente general"
+ROL_GF_DEFAULT = "gerente financiero"
+
+TBL_FLUJO_REQUERIDO = "gastos_flujo_requerido"
+
+# Comportamiento de hoy, usado como respaldo si la tabla no existe todavía
+# (falta la DDL) o el tipo de gasto no tiene fila propia.
+FLUJO_REQUERIDO_DEFAULT = {
+    "tarjeta":         {"ga": True, "gg": True,  "gf": True},
+    "tarjeta_online":  {"ga": True, "gg": True,  "gf": True},
+    "tarjeta_boletos": {"ga": True, "gg": False, "gf": False},
+    "caja_chica":      {"ga": True, "gg": False, "gf": False},
+    "reembolso":       {"ga": True, "gg": False, "gf": False},
+}
+
+
+def rol_gg() -> str:
+    """Rol de sistema que actúa como GG (Gerente General) en la aprobación de gastos."""
+    return (get_config_value(CLAVE_ROL_GG) or ROL_GG_DEFAULT).strip().lower()
+
+
+def rol_gf() -> str:
+    """Rol de sistema que actúa como GF (Gerente Financiero) en la aprobación de gastos."""
+    return (get_config_value(CLAVE_ROL_GF) or ROL_GF_DEFAULT).strip().lower()
+
+
+def es_rol_gg(rol) -> bool:
+    return (rol or "").strip().lower() == rol_gg()
+
+
+def es_rol_gf(rol) -> bool:
+    return (rol or "").strip().lower() == rol_gf()
+
+
+def set_roles_gg_gf(rol_gg_nombre: str, rol_gf_nombre: str) -> None:
+    set_config_values({
+        CLAVE_ROL_GG: (rol_gg_nombre or ROL_GG_DEFAULT).strip().lower(),
+        CLAVE_ROL_GF: (rol_gf_nombre or ROL_GF_DEFAULT).strip().lower(),
+    })
+
+
+def get_flujo_requerido() -> dict:
+    """
+    {tipo_gasto: {"ga": bool, "gg": bool, "gf": bool}} para los 5 tipos de gasto.
+    Si la tabla gastos_flujo_requerido no existe o no tiene fila para un tipo,
+    ese tipo cae al comportamiento actual (FLUJO_REQUERIDO_DEFAULT).
+    """
+    conn = get_db()
+    cur = conn.cursor()
+    rows = []
+    try:
+        cur.execute(f"""
+            SELECT tipo_gasto, requiere_ga, requiere_gg, requiere_gf
+            FROM {TBL_FLUJO_REQUERIDO}
+        """)
+        rows = cur.fetchall()
+    except Exception:
+        rows = []
+    finally:
+        conn.close()
+
+    resultado = {k: dict(v) for k, v in FLUJO_REQUERIDO_DEFAULT.items()}
+    for r in rows:
+        tipo = (r["tipo_gasto"] or "").strip().lower()
+        if tipo in resultado:
+            resultado[tipo] = {
+                "ga": bool(r["requiere_ga"]),
+                "gg": bool(r["requiere_gg"]),
+                "gf": bool(r["requiere_gf"]),
+            }
+    return resultado
+
+
+def requiere_paso(tipo_gasto: str, paso: str) -> bool:
+    """paso: 'ga' | 'gg' | 'gf'. Devuelve True si ese paso aplica para este tipo."""
+    flujo = get_flujo_requerido()
+    tipo = (tipo_gasto or "").strip().lower()
+    cfg = flujo.get(tipo) or FLUJO_REQUERIDO_DEFAULT.get("tarjeta")
+    return bool(cfg.get((paso or "").strip().lower(), True))
+
+
+def set_flujo_requerido(tipo_gasto: str, requiere_ga: bool, requiere_gg: bool, requiere_gf: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    tipo = (tipo_gasto or "").strip().lower()
+    try:
+        cur.execute(f"SELECT tipo_gasto FROM {TBL_FLUJO_REQUERIDO} WHERE tipo_gasto = ?", (tipo,))
+        if cur.fetchone():
+            cur.execute(f"""
+                UPDATE {TBL_FLUJO_REQUERIDO}
+                SET requiere_ga = ?, requiere_gg = ?, requiere_gf = ?
+                WHERE tipo_gasto = ?
+            """, (int(requiere_ga), int(requiere_gg), int(requiere_gf), tipo))
+        else:
+            cur.execute(f"""
+                INSERT INTO {TBL_FLUJO_REQUERIDO} (tipo_gasto, requiere_ga, requiere_gg, requiere_gf)
+                VALUES (?, ?, ?, ?)
+            """, (tipo, int(requiere_ga), int(requiere_gg), int(requiere_gf)))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+# ---------------- quién puede rechazar (configurable) ----------------
+CLAVE_GA_PUEDE_RECHAZAR = "gastos_ga_puede_rechazar"
+CLAVE_GG_PUEDE_RECHAZAR = "gastos_gg_puede_rechazar"
+CLAVE_GF_PUEDE_RECHAZAR = "gastos_gf_puede_rechazar"
+
+# Comportamiento de hoy: solo GG y GF rechazan, GA no.
+RECHAZO_DEFAULT = {"ga": False, "gg": True, "gf": True}
+
+
+def _bool_config(clave: str, default: bool) -> bool:
+    v = get_config_value(clave)
+    if v is None or v == "":
+        return default
+    return str(v).strip() == "1"
+
+
+def ga_puede_rechazar() -> bool:
+    return _bool_config(CLAVE_GA_PUEDE_RECHAZAR, RECHAZO_DEFAULT["ga"])
+
+
+def gg_puede_rechazar() -> bool:
+    return _bool_config(CLAVE_GG_PUEDE_RECHAZAR, RECHAZO_DEFAULT["gg"])
+
+
+def gf_puede_rechazar() -> bool:
+    return _bool_config(CLAVE_GF_PUEDE_RECHAZAR, RECHAZO_DEFAULT["gf"])
+
+
+def set_rechazo_config(ga: bool, gg: bool, gf: bool) -> None:
+    set_config_values({
+        CLAVE_GA_PUEDE_RECHAZAR: "1" if ga else "0",
+        CLAVE_GG_PUEDE_RECHAZAR: "1" if gg else "0",
+        CLAVE_GF_PUEDE_RECHAZAR: "1" if gf else "0",
+    })
+
+
+# ---------------- roles con rol de GA general (configurable) ----------------
+# No confundir con el GA dinámico por gasto (último jefe en la jerarquía):
+# esto es un gate más amplio, usado para decidir si a un usuario se le
+# muestran en general la columna/botones de GA (p.ej. para que coordinador
+# o cualquier "gerente" vea la columna aunque no sea el jefe de ese gasto puntual).
+CLAVE_ROLES_GA = "gastos_roles_ga"
+ROLES_GA_DEFAULT = ["gerente", "gerente de área", "gerente de area"]
+
+
+def roles_ga() -> list[str]:
+    raw = get_config_value(CLAVE_ROLES_GA)
+    if not raw:
+        return list(ROLES_GA_DEFAULT)
+    roles = [r.strip().lower() for r in raw.split(",") if r.strip()]
+    return roles or list(ROLES_GA_DEFAULT)
+
+
+def es_rol_ga(rol) -> bool:
+    return (rol or "").strip().lower() in roles_ga()
+
+
+def set_roles_ga(roles: list[str]) -> None:
+    limpio = [r.strip().lower() for r in (roles or []) if r and r.strip()]
+    set_config_values({CLAVE_ROLES_GA: ",".join(limpio)})
+
+
+# ---------------- rol con acceso al reporte Excel puntual (configurable) ----------------
+CLAVE_ROL_REPORTE_EXCEL = "gastos_rol_reporte_excel"
+ROL_REPORTE_EXCEL_DEFAULT = "asistente_gerencia"
+
+
+def rol_reporte_excel() -> str:
+    return (get_config_value(CLAVE_ROL_REPORTE_EXCEL) or ROL_REPORTE_EXCEL_DEFAULT).strip().lower()
+
+
+def set_rol_reporte_excel(rol: str) -> None:
+    set_config_values({CLAVE_ROL_REPORTE_EXCEL: (rol or "").strip().lower()})
+
+
+def puede_ver_reporte_excel(rol, is_coord: bool = False) -> bool:
+    role_lower = (rol or "").strip().lower()
+    if role_lower == "admin" or is_coord:
+        return True
+    return role_lower == rol_reporte_excel()
+
+
+# ---------------- auto-registro de facturas recurrentes (configurable) ----------------
+# Reglas para reconocer facturas de facturas_xml (sincronizadas desde seedbilling) que
+# corresponden a un gasto tipo tarjeta recurrente y siempre igual (mismo proveedor, mismo
+# monto), y registrarlas solas sin que nadie las digite a mano.
+TBL_AUTO_REGISTRO_REGLAS = "gastos_auto_registro_reglas"
+
+
+def list_auto_registro_reglas(solo_activas: bool = False) -> list[dict]:
+    """
+    Devuelve [] si la tabla todavía no existe (falta correr la DDL) — igual que
+    get_flujo_requerido(), para no romper la pantalla de configuración ni el job.
+    """
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        sql = f"""
+            SELECT r.id, r.ruc_proveedor, r.monto, r.motivo, r.centro_costo,
+                   r.usuario_id, r.enviar_sap_auto, r.activo,
+                   u.nombre_completo AS usuario_nombre, u.username AS usuario_username
+            FROM {TBL_AUTO_REGISTRO_REGLAS} r
+            LEFT JOIN usuarios u ON u.id = r.usuario_id
+        """
+        if solo_activas:
+            sql += " WHERE COALESCE(r.activo,1) = 1"
+        sql += " ORDER BY r.id"
+        cur.execute(sql)
+        rows = cur.fetchall()
+    except Exception:
+        rows = []
+    finally:
+        conn.close()
+
+    return [
+        {
+            "id": r["id"],
+            "ruc_proveedor": r["ruc_proveedor"],
+            "monto": float(r["monto"] or 0),
+            "motivo": r["motivo"],
+            "centro_costo": r["centro_costo"],
+            "usuario_id": r["usuario_id"],
+            "usuario_nombre": r["usuario_nombre"] or r["usuario_username"] or "",
+            "enviar_sap_auto": bool(r["enviar_sap_auto"]),
+            "activo": bool(r["activo"]),
+        }
+        for r in rows
+    ]
+
+
+def crear_auto_registro_regla(ruc_proveedor: str, monto: float, motivo: str,
+                               centro_costo: str, usuario_id: int,
+                               enviar_sap_auto: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute(f"""
+            INSERT INTO {TBL_AUTO_REGISTRO_REGLAS}
+                (ruc_proveedor, monto, motivo, centro_costo, usuario_id, enviar_sap_auto, activo)
+            VALUES (?, ?, ?, ?, ?, ?, 1)
+        """, (
+            (ruc_proveedor or "").strip(), monto, (motivo or "").strip(),
+            (centro_costo or "").strip(), usuario_id, int(bool(enviar_sap_auto))
+        ))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def eliminar_auto_registro_regla(regla_id: int) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute(f"DELETE FROM {TBL_AUTO_REGISTRO_REGLAS} WHERE id = ?", (regla_id,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def set_auto_registro_regla_activa(regla_id: int, activo: bool) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute(f"UPDATE {TBL_AUTO_REGISTRO_REGLAS} SET activo = ? WHERE id = ?",
+                    (int(bool(activo)), regla_id))
+        conn.commit()
+    finally:
+        conn.close()
+
 
 def collect_gastos_filters2(request, session, privileged_roles=None) -> tuple[dict, list[str], list, bool]:
     if privileged_roles is None:
@@ -388,7 +712,7 @@ def collect_gastos_filters(request, session, privileged_roles=None) -> tuple[dic
             where.append(f"({ga_step_pending_sql}) = 1")
 
     elif pend_mode == "pend_sap":
-        if role_name not in ("coordinador", "admin"):
+        if not es_coordinador_gastos(uid, role_name) and role_name != "admin":
             where.append("1=0")
         else:
             where.append(f"""
@@ -407,7 +731,19 @@ def collect_gastos_filters(request, session, privileged_roles=None) -> tuple[dic
                 )
             """)
 
-    if not is_privileged and pend_mode != "mis_aprobaciones":
+    elif pend_mode == "coord_revision":
+        # Cola de revisión previa del coordinador: gastos tipo tarjeta/boletos/online
+        # que aún no fueron enviados a gerencia.
+        if not es_coordinador_gastos(uid, role_name) and role_name != "admin":
+            where.append("1=0")
+        else:
+            where.append("""
+                COALESCE(g.es_caja_chica,0)=0
+                AND COALESCE(g.reembolso_vendedor,0)=0
+                AND COALESCE(g.coord_revisado,0)=0
+            """)
+
+    if not is_privileged and pend_mode not in ("mis_aprobaciones", "coord_revision"):
         where.append("g.usuario_id = ?")
         args.append(uid or -1)
 
@@ -517,6 +853,18 @@ def collect_gastos_pendientes_aprobacion_filters(request, session, privileged_ro
         where.append("COALESCE(g.ccb,0)=0")
 
     where.append("(g.sap_contabilizacion IS NULL OR LTRIM(RTRIM(COALESCE(g.sap_contabilizacion,'')))='')")
+
+    # Los gastos tipo tarjeta (incluye boletos aéreos y tarjeta online) que aún no
+    # pasaron por la revisión del coordinador no deben aparecer en la aprobación
+    # de gerencia todavía — el admin sí los puede ver para seguimiento.
+    if role_name != 'admin':
+        where.append("""
+            NOT (
+                COALESCE(g.es_caja_chica,0)=0
+                AND COALESCE(g.reembolso_vendedor,0)=0
+                AND COALESCE(g.coord_revisado,0)=0
+            )
+        """)
 
     if not is_privileged:
         where.append("g.usuario_id = ?")

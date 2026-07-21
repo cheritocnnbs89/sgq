@@ -1,7 +1,26 @@
 {# Partial cargado vía AJAX – sin inline scripts ni style= #}
-<div class="detail-grid">
+<button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
+        data-bs-target="#detalleInfoBox{{ s.id }}" aria-expanded="false"
+        aria-controls="detalleInfoBox{{ s.id }}">
+  <span class="detail-accordion-label">
+    <i class="bi bi-info-circle me-1"></i>
+    <span>Información general</span>
+  </span>
+  <span class="detail-accordion-right">
+    {% if s.tipo == 'Vuelo' %}
+    <span class="cal-pill cal-pill--vuelo"><i class="bi bi-airplane-fill"></i></span>
+    {% elif s.tipo == 'Voucher' %}
+    <span class="cal-pill cal-pill--voucher"><i class="bi bi-ticket-perforated-fill"></i></span>
+    {% else %}
+    <span class="cal-pill cal-pill--recorrido"><i class="bi bi-taxi-front-fill"></i></span>
+    {% endif %}
+    <span class="cal-expand-hint">Ver detalle <i class="bi bi-chevron-down detail-accordion-chevron"></i></span>
+  </span>
+</button>
+<div class="detail-grid collapse" id="detalleInfoBox{{ s.id }}">
   <div class="detail-box"><span>Tipo de solicitud</span><strong>{{ s.tipo }}</strong></div>
   <div class="detail-box"><span>Área solicitante</span><strong>{{ s.area_solicitante }}</strong></div>
+  {% if s.tipo != 'Voucher' %}
   <div class="detail-box"><span>Prioridad</span>
     <strong>
       <span class="badge {% if s.prioridad=='Urgente' %}bg-danger{% elif s.prioridad=='Alta' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
@@ -9,18 +28,27 @@
       </span>
     </strong>
   </div>
+  {% endif %}
   {% if not s.puede_completar_vuelo %}
   <div class="detail-box"><span>Estado</span>
     <strong><span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span></strong>
   </div>
   {% endif %}
-  <div class="detail-box"><span>Fecha</span><strong>{{ s.fecha_str }}</strong></div>
+  <div class="detail-box"><span>{{ 'Fecha de salida' if s.tipo == 'Vuelo' else 'Fecha' }}</span><strong>{{ s.fecha_str }}</strong></div>
+  {% if s.tipo == 'Vuelo' %}
+  <div class="detail-box"><span>Fecha de regreso</span><strong>{{ s.get('fecha_retorno') or '—' }}</strong></div>
+  {% endif %}
   <div class="detail-box"><span>Horario asignado</span>
     <strong>
       {% if s.hora_inicio %}{{ s.hora_inicio }} – {{ s.hora_fin }}
       {% else %}<span class="text-muted">Sin asignar</span>{% endif %}
     </strong>
   </div>
+  {% if s.tipo == 'Vuelo' %}
+  {% if aeropuerto_display %}
+  <div class="detail-box"><span>Aeropuerto</span><strong>{{ aeropuerto_display }}</strong></div>
+  {% endif %}
+  {% elif s.tipo != 'Voucher' %}
   <div class="detail-box">
     <span>Lugar / destino</span>
     <strong>{{ s.lugar_destino }}</strong>
@@ -30,8 +58,6 @@
       <i class="bi bi-geo-alt-fill"></i> Ver en mapa
     </a>
   </div>
-  {% if s.ciudad %}
-  <div class="detail-box"><span>Ciudad</span><strong>{{ s.ciudad }}</strong></div>
   {% endif %}
   <div class="detail-box"><span>Solicitante</span><strong>{{ s.solicitante_nombre }}</strong></div>
   {% if s.coordinador_nombre %}
@@ -50,7 +76,28 @@
     </strong>
   </div>
   {% endif %}
-  {% if s.detalle_direccion %}
+  {% if s.tipo == 'Vuelo' and s.motivo_vuelo %}
+  <div class="detail-box"><span>Motivo</span><strong>{{ s.motivo_vuelo }}</strong></div>
+  {% endif %}
+  {% if s.tipo == 'Voucher' %}
+  <div class="detail-box"><span>N° de vouchers</span><strong>{{ s.numero_vouchers or '—' }}</strong></div>
+  {% if s.estado == 'COMPLETADA' and s.costo_real %}
+  <div class="detail-box"><span>Costo total</span><strong>${{ '%.2f'|format(s.costo_real|float) }}</strong></div>
+  {% endif %}
+  {% endif %}
+  {% if s.tipo == 'Vuelo' and s.get('datos_ticket') and not s.puede_cotizar_vuelo %}
+  <div class="detail-box"><span>Pasaje cotizado</span><strong>{{ s.datos_ticket }}</strong></div>
+  {% endif %}
+  {% if s.tipo == 'Vuelo' and s.get('cotizacion_hospedaje') and s.cotizacion_hospedaje|float > 0 %}
+  <div class="detail-box"><span>Hospedaje cotizado</span><strong>${{ '%.2f'|format(s.cotizacion_hospedaje|float) }}</strong></div>
+  {% endif %}
+  {% if s.get('penalizacion') and s.penalizacion|float > 0 %}
+  <div class="detail-box"><span>Penalización reagenda</span><strong class="text-danger">${{ '%.2f'|format(s.penalizacion|float) }}</strong></div>
+  {% if s.get('datos_ticket') %}
+  <div class="detail-box"><span>Total con penalización</span><strong>${{ '%.2f'|format((s.datos_ticket|float) + (s.penalizacion|float)) }}</strong></div>
+  {% endif %}
+  {% endif %}
+  {% if s.detalle_direccion and s.tipo != 'Voucher' %}
   <div class="detail-box detail-full"><span>Detalle de dirección</span><strong>{{ s.detalle_direccion }}</strong></div>
   {% endif %}
   {% if s.observacion_coordinador %}
@@ -115,19 +162,70 @@
 </div>
 {% endif %}
 
-{# ── Vuelo: aprobación Gerente General ── #}
+{# ── Vuelo: coordinador ingresa el valor cotizado del pasaje ── #}
+{% if s.puede_cotizar_vuelo %}
+<div class="action-zone action-zone-green mt-3">
+  <h3><i class="bi bi-cash-coin me-1"></i>Cotización del vuelo</h3>
+  <p class="small text-muted mb-2">
+    Ingresa el valor cotizado para <strong>{{ s.solicitante_nombre }}</strong>.
+    Al guardar, pasará a aprobación del Gerente General.
+  </p>
+  {% if s.get('penalizacion') and s.penalizacion|float > 0 %}
+  <div class="alert alert-warning py-2 px-3 small mb-2">
+    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+    <strong>Penalización por reagenda: ${{ '%.2f'|format(s.penalizacion|float) }}</strong> —
+    este monto se descontará adicionalmente del presupuesto en la liquidación final.
+  </div>
+  {% endif %}
+  <form method="post" action="{{ url_for('planificador.planificador_vuelo_cotizar', sid=s.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-2">
+      <div class="col-sm-6">
+        <label class="form-label">Pasaje aéreo (ticket) *</label>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">$</span>
+          <input class="form-control" type="text" name="valor_cotizado"
+                 placeholder="0.00 — aerolínea, vuelo directo…" required>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label">Hospedaje <span class="text-muted">(si aplica)</span></label>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">$</span>
+          <input class="form-control" type="number" name="cotizacion_hospedaje"
+                 min="0" step="0.01" placeholder="0.00"
+                 value="{{ '%.2f'|format(s.cotizacion_hospedaje|float) if s.get('cotizacion_hospedaje') else '' }}">
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Observación <span class="text-muted">(opcional)</span></label>
+        <textarea class="form-control form-control-sm textarea-obs" name="observacion"
+                  placeholder="Detalle adicional de la cotización."></textarea>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="submit" class="btn btn-success btn-sm">
+        <i class="bi bi-send-check me-1"></i>Enviar a aprobación
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{# ── Vuelo: aprobación Gerente de Presupuesto ── #}
 {% if s.puede_aprobar_gg_vuelo %}
 <div class="action-zone action-zone-blue mt-3">
   <h3><i class="bi bi-building me-1"></i>Aprobación — Gerente General</h3>
   <p class="small text-muted mb-2">
-    {% if not s.get('centro_costo_id') %}
-      Esta solicitud llega a tu aprobación porque <strong>no tiene un centro de costo asignado</strong> (sin presupuesto configurado). Tu autorización es necesaria para continuar.
-    {% elif s.get('requiere_aprobacion_presupuesto') %}
-      Esta solicitud llega a tu aprobación porque <strong>el presupuesto disponible es insuficiente</strong> para cubrir el monto solicitado. Tu autorización es necesaria para continuar.
-    {% else %}
-      Esta solicitud requiere tu autorización como Gerente General para continuar.
-    {% endif %}
+    El coordinador cotizó el pasaje de <strong>{{ s.solicitante_nombre }}</strong>.
+    Revisa el valor y aprueba o rechaza para continuar.
   </p>
+  {% if s.get('datos_ticket') %}
+  <div class="detail-box mb-2"><span>Pasaje cotizado</span><strong>{{ s.datos_ticket }}</strong></div>
+  {% endif %}
+  {% if s.get('penalizacion') and s.penalizacion|float > 0 %}
+  <div class="detail-box mb-2"><span>Penalización reagenda</span><strong class="text-danger">+ ${{ '%.2f'|format(s.penalizacion|float) }}</strong></div>
+  {% endif %}
   <label class="form-label">Observación</label>
   <textarea class="form-control form-control-sm textarea-obs" id="obsGGVuelo{{ s.id }}"
             placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
@@ -249,14 +347,6 @@
                   placeholder="N° de reserva, aerolínea, vuelo, etc." required></textarea>
       </div>
       <div class="col-12">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="chkHotelDetalle">
-          <label class="form-check-label" for="chkHotelDetalle">Incluye reservación de hotel</label>
-        </div>
-        <textarea class="form-control form-control-sm mt-1 d-none" id="txtHotelDetalle"
-                  name="datos_hotel" placeholder="Nombre del hotel, N° reserva, fechas..."></textarea>
-      </div>
-      <div class="col-12">
         <label class="form-label">Adjuntar documento (pasaje/boleto)</label>
         <input class="form-control form-control-sm" type="file" name="adjunto_vuelo"
                accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
@@ -306,15 +396,40 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="row g-2 mb-2">
       {% for tipo in tipos_gasto %}
+      {% set sugerido = '' %}
+      {% if tipo == 'Ticket aéreo' and costo_ticket_sugerido %}{% set sugerido = costo_ticket_sugerido %}{% endif %}
+      {% if tipo == 'Hospedaje' and s.get('cotizacion_hospedaje') and s.cotizacion_hospedaje|float > 0 %}{% set sugerido = '%.2f'|format(s.cotizacion_hospedaje|float) %}{% endif %}
       <div class="col-sm-4">
-        <label class="form-label">{{ tipo }}</label>
+        <label class="form-label">
+          {{ tipo }}
+          {% if sugerido %}<span class="badge bg-light text-secondary border ms-1" style="font-size:.7em;">cotizado</span>{% endif %}
+        </label>
         <div class="input-group input-group-sm">
           <span class="input-group-text">$</span>
           <input class="form-control tipo-costo-input" type="number"
-                 name="tipo_costo_{{ tipo }}" min="0" step="0.01" placeholder="0.00">
+                 name="tipo_costo_{{ tipo }}" min="0" step="0.01" placeholder="0.00"
+                 {% if sugerido %}value="{{ sugerido }}"{% endif %}>
         </div>
+        {% if sugerido %}
+        <div class="form-text text-info"><i class="bi bi-info-circle me-1"></i>Pre-rellenado con valor cotizado</div>
+        {% endif %}
       </div>
       {% endfor %}
+      {% if s.get('penalizacion') and s.penalizacion|float > 0 %}
+      <div class="col-sm-4">
+        <label class="form-label">
+          Penalización reagenda
+          <span class="badge bg-light text-danger border ms-1" style="font-size:.7em;">reagenda</span>
+        </label>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">$</span>
+          <input class="form-control tipo-costo-input" type="number"
+                 name="penalizacion_extra" min="0" step="0.01"
+                 value="{{ '%.2f'|format(s.penalizacion|float) }}" readonly>
+        </div>
+        <div class="form-text text-danger"><i class="bi bi-info-circle me-1"></i>Penalización por cancelación del vuelo anterior</div>
+      </div>
+      {% endif %}
       <div class="col-12 mt-1">
         <div class="d-flex align-items-center gap-2 text-muted small">
           <i class="bi bi-calculator"></i>
@@ -339,6 +454,181 @@
       </button>
     </div>
   </form>
+</div>
+{% endif %}
+
+{# ── Voucher: aprobación jefe directo ── #}
+{% if s.puede_aprobar_jefe_voucher %}
+<div class="action-zone action-zone-orange mt-3">
+  <h3><i class="bi bi-person-check me-1"></i>Aprobación — Jefe directo</h3>
+  <p class="small text-muted mb-2">
+    Solicitud de Voucher de <strong>{{ s.solicitante_nombre }}</strong> pendiente de su aprobación.
+    {% if s.numero_vouchers %}
+    <span class="badge bg-secondary ms-1">{{ s.numero_vouchers }} voucher(s)</span>
+    {% endif %}
+  </p>
+  <label class="form-label">Observación</label>
+  <textarea class="form-control form-control-sm textarea-obs" id="obsJefeVoucher{{ s.id }}"
+            placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
+  <div class="d-flex gap-2 justify-content-end mt-2">
+    <form method="post"
+          action="{{ url_for('planificador.planificador_voucher_rechazar_jefe', sid=s.id) }}"
+          data-confirm="¿Rechazar esta solicitud de voucher?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsJefeRechVoucher{{ s.id }}">
+      <button type="submit" class="btn btn-danger btn-sm"
+              data-sync-obs="obsJefeVoucher{{ s.id }}" data-target-obs="obsJefeRechVoucher{{ s.id }}">
+        <i class="bi bi-x-lg"></i> Rechazar
+      </button>
+    </form>
+    <form method="post"
+          action="{{ url_for('planificador.planificador_voucher_aprobar_jefe', sid=s.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="observacion" id="obsJefeAprobVoucher{{ s.id }}">
+      <button type="submit" class="btn btn-success btn-sm"
+              data-sync-obs="obsJefeVoucher{{ s.id }}" data-target-obs="obsJefeAprobVoucher{{ s.id }}">
+        <i class="bi bi-check2"></i> Aprobar
+      </button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{# ── Voucher: coordinador entrega los vouchers, registra el secuencial de cada uno ── #}
+{% if s.puede_entregar_voucher %}
+<div class="action-zone action-zone-green mt-3">
+  <h3><i class="bi bi-ticket-perforated me-1"></i>Entregar vouchers</h3>
+  <p class="small text-muted mb-2">
+    Registra el secuencial único de cada uno de los {{ voucher_items|length }} voucher(s)
+    entregados a <strong>{{ s.solicitante_nombre }}</strong>.
+  </p>
+  <form method="post" action="{{ url_for('planificador.planificador_voucher_entregar', sid=s.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-2 mb-2">
+      {% for item in voucher_items %}
+      <div class="col-sm-6">
+        <label class="form-label">Secuencial — Voucher #{{ item.numero }} *</label>
+        <input class="form-control form-control-sm" type="text" name="secuencial_{{ item.id }}"
+               placeholder="Ej. 001-2026-00123" required>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="submit" class="btn btn-success btn-sm">
+        <i class="bi bi-check2-circle me-1"></i>Entregar vouchers
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{# ── Voucher: detalle de cada voucher individual (confirmación del usuario / liquidación del coordinador) ── #}
+{% if s.tipo == 'Voucher' and voucher_items %}
+<div class="voucher-list mt-3">
+  <div class="voucher-list-header">
+    <i class="bi bi-ticket-perforated-fill me-1"></i>
+    Vouchers de esta solicitud
+    <span class="voucher-count-badge">{{ voucher_items|length }}</span>
+  </div>
+
+  {% for item in voucher_items %}
+  {% if item.costo is not none %}
+    {% set vstate = 'liquidado' %}
+  {% elif item.confirmado_usuario %}
+    {% set vstate = 'confirmado' %}
+  {% elif item.secuencial %}
+    {% set vstate = 'entregado' %}
+  {% else %}
+    {% set vstate = 'pendiente' %}
+  {% endif %}
+
+  <div class="voucher-item voucher-item--{{ vstate }}" id="voucher-item-{{ item.id }}">
+    <div class="voucher-item-header">
+      <div class="voucher-item-title">
+        <span class="voucher-num">#{{ item.numero }}</span>
+        {% if item.secuencial %}<span class="voucher-seq">SEC {{ item.secuencial }}</span>{% endif %}
+      </div>
+      <div class="voucher-item-badge">
+        {% if vstate == 'liquidado' %}
+        <span class="vbadge vbadge--liquidado"><i class="bi bi-check-circle-fill me-1"></i>Liquidado — ${{ '%.2f'|format(item.costo|float) }}</span>
+        {% elif vstate == 'confirmado' %}
+        <span class="vbadge vbadge--confirmado"><i class="bi bi-hourglass-split me-1"></i>Confirmado, pend. liquidar</span>
+        {% elif vstate == 'entregado' %}
+        <span class="vbadge vbadge--entregado"><i class="bi bi-clock me-1"></i>Entregado, pend. confirmar</span>
+        {% else %}
+        <span class="vbadge vbadge--pendiente"><i class="bi bi-dash-circle me-1"></i>Pend. entrega</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="voucher-item-body">
+      {% if item.observacion_usuario %}
+      <div class="voucher-meta"><span class="vmeta-k">Observación</span><span class="vmeta-v">{{ item.observacion_usuario }}</span></div>
+      {% endif %}
+      {% if item.adjunto_nombre_original %}
+      <div class="voucher-meta voucher-adjunto-row" id="voucher-adjunto-{{ item.id }}">
+        <span class="vmeta-k"><i class="bi bi-paperclip me-1"></i>Respaldo</span>
+        <span class="vmeta-v text-truncate">{{ item.adjunto_nombre_original }}</span>
+      </div>
+      {% else %}
+      <div class="voucher-meta voucher-adjunto-row" id="voucher-adjunto-{{ item.id }}" style="display:none;">
+        <span class="vmeta-k"><i class="bi bi-paperclip me-1"></i>Respaldo</span>
+        <span class="vmeta-v text-truncate"></span>
+      </div>
+      {% endif %}
+
+      {% if item.puede_confirmar %}
+      <form class="voucher-confirmar-form mt-2"
+            data-voucher-form="confirmar"
+            action="{{ url_for('planificador.planificador_voucher_confirmar_item', sid=s.id, item_id=item.id) }}"
+            enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="voucher-form-fields">
+          <div>
+            <label class="form-label form-label-sm">Observación <span class="text-muted">(opcional)</span></label>
+            <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
+                      rows="2" placeholder="Detalle del uso de este voucher…"></textarea>
+          </div>
+          <div>
+            <label class="form-label form-label-sm">Respaldo *</label>
+            <input class="form-control form-control-sm" type="file" name="adjunto_voucher"
+                   accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required>
+            <div class="form-text">Máx. 10 MB · PDF, Word, imagen</div>
+          </div>
+        </div>
+        <div class="voucher-form-footer">
+          <span class="voucher-upload-status"></span>
+          <button type="submit" class="btn btn-success btn-sm">
+            <i class="bi bi-check2-circle me-1"></i>Confirmar este voucher
+          </button>
+        </div>
+      </form>
+      {% endif %}
+
+      {% if item.puede_liquidar %}
+      <form method="post" class="mt-2"
+            action="{{ url_for('planificador.planificador_voucher_liquidar_item', sid=s.id, item_id=item.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="voucher-form-fields voucher-liquidar-row">
+          <div>
+            <label class="form-label form-label-sm">Costo de este voucher *</label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">$</span>
+              <input class="form-control" type="number" name="costo"
+                     min="0" step="0.01" placeholder="0.00" required>
+            </div>
+          </div>
+          <div class="align-self-end">
+            <button type="submit" class="btn btn-primary btn-sm w-100">
+              <i class="bi bi-check2-circle me-1"></i>Liquidar
+            </button>
+          </div>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% endif %}
 
@@ -421,6 +711,49 @@
 {% if s.puede_reagendar %}
 <div class="action-zone action-zone-orange mt-3">
   <h3><i class="bi bi-calendar-event me-1"></i>Reagendar solicitud</h3>
+  {% if s.tipo == 'Vuelo' %}
+  <p class="small text-muted mb-2">
+    Fechas actuales: <strong>{{ s.fecha_str }}</strong> — regreso <strong>{{ s.get('fecha_retorno') or '—' }}</strong>.
+    Cambia las fechas del vuelo. Se reinicia todo el flujo de aprobación (vuelve a aprobación del jefe directo;
+    se pierde la cotización y cualquier rechazo previo). El solicitante y el jefe serán notificados.
+  </p>
+  <form method="post" action="{{ url_for('planificador.planificador_reagendar', sid=s.id) }}"
+        id="formReagendar"
+        data-confirm="¿Reagendar este vuelo? Se restablecerá el estado a Pendiente aprobación del jefe directo y se perderá la cotización registrada.">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-2">
+      <div class="col-6">
+        <label class="form-label">Nueva fecha de salida *</label>
+        <input class="form-control form-control-sm" type="date" name="nueva_fecha"
+               id="inputNuevaFechaDetalle" data-min-today="{{ today_iso }}" required>
+      </div>
+      <div class="col-6">
+        <label class="form-label">Nueva fecha de regreso *</label>
+        <input class="form-control form-control-sm" type="date" name="nueva_fecha_retorno"
+               id="inputNuevaFechaRetornoDetalle" data-min-today="{{ today_iso }}" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Motivo de la reagenda *</label>
+        <textarea class="form-control form-control-sm textarea-obs-sm" name="motivo_reagenda"
+                  placeholder="Explica por qué se reagenda..." required></textarea>
+      </div>
+      <div class="col-6">
+        <label class="form-label">Penalización por cancelación <span class="text-muted">(si aplica)</span></label>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">$</span>
+          <input class="form-control form-control-sm" type="number" name="penalizacion"
+                 min="0" step="0.01" placeholder="0.00" value="0">
+        </div>
+        <div class="form-text">Se descontará en la liquidación final del vuelo.</div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="submit" class="btn btn-warning btn-sm text-dark">
+        <i class="bi bi-calendar-event me-1"></i>Reagendar
+      </button>
+    </div>
+  </form>
+  {% else %}
   <p class="small text-muted mb-2">Cambia la fecha y reinicia el flujo de coordinación. El solicitante será notificado.</p>
   <form method="post" action="{{ url_for('planificador.planificador_reagendar', sid=s.id) }}"
         id="formReagendar"
@@ -444,6 +777,7 @@
       </button>
     </div>
   </form>
+  {% endif %}
 </div>
 {% endif %}
 
@@ -516,16 +850,24 @@
 
 {% if logs %}
 <div class="mt-4">
-  <h6 class="text-muted fw-semibold mb-2"><i class="bi bi-clock-history me-1"></i>Historial de acciones</h6>
-  <div class="log-timeline">
-    {% for log in logs %}
-    <div class="log-item">
-      <span class="log-accion log-{{ log[0]|lower }}">{{ log[0] }}</span>
-      <span class="log-usuario">{{ log[1] }}</span>
-      <span class="log-detalle">{{ log[2] }}</span>
-      <span class="log-fecha text-muted">{{ log[3] }}</span>
+  <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
+          data-bs-target="#detalleLogsBox{{ s.id }}" aria-expanded="false"
+          aria-controls="detalleLogsBox{{ s.id }}">
+    <i class="bi bi-clock-history me-1"></i>Historial de acciones
+    <span class="badge bg-secondary ms-1">{{ logs|length }}</span>
+    <i class="bi bi-chevron-down detail-accordion-chevron"></i>
+  </button>
+  <div class="collapse" id="detalleLogsBox{{ s.id }}">
+    <div class="log-timeline mt-2">
+      {% for log in logs %}
+      <div class="log-item">
+        <span class="log-accion log-{{ log[0]|lower }}">{{ log[0] }}</span>
+        <span class="log-usuario">{{ log[1] }}</span>
+        <span class="log-detalle">{{ log[2] }}</span>
+        <span class="log-fecha text-muted">{{ log[3] }}</span>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 </div>
 {% endif %}

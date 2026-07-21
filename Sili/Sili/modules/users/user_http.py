@@ -18,6 +18,7 @@ from flask import (
 from ..db import get_db, get_config_value
 from ..config import ROLES
 from ..security import require_login, require_permission, check_password_policy
+from ..auth.auth_security import generar_hash_clave
 #from modules.users_schema_helper import     ensure_users_extra_schema
 
 from modules.users.user_repository import (
@@ -261,6 +262,7 @@ def register_user_routes(app):
                         flash(msg, "warning")
                         return redirect(url_for("editar_usuario", user_id=user_id))
 
+                    password = generar_hash_clave(password)
                     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
                     update_usuario_con_password(conn, (
@@ -592,6 +594,7 @@ def register_user_routes(app):
             else:
                 try:
                     ts_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    password = generar_hash_clave(password)
 
                     new_id = insert_usuario(conn, (
                         username,

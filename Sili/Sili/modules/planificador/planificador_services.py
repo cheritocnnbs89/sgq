@@ -11,6 +11,15 @@ from .planificador_constants import (
 )
 
 
+def debe_autoaprobar_jefe_vuelo(rol_usuario, roles_autoaprobar):
+    """True si el rol del solicitante está configurado para saltar la
+    aprobación del jefe directo en solicitudes de Vuelo."""
+    if not rol_usuario or not roles_autoaprobar:
+        return False
+    rol_norm = rol_usuario.strip().lower()
+    return rol_norm in {r.strip().lower() for r in roles_autoaprobar}
+
+
 def get_user_context(usuario_id, rol):
     """
     Devuelve qué tipos puede coordinar/aprobar el usuario actual.
@@ -50,7 +59,9 @@ def get_solicitudes_for_user(usuario_id, rol, filters=None):
     if ctx["tipos_coordinador"]:
         extra += repo.get_solicitudes_by_tipos(
             ctx["tipos_coordinador"],
-            ["PENDIENTE_COORDINACION"],
+            ["PENDIENTE_COORDINACION", "PENDIENTE_INFO_VUELO", "PENDIENTE_LIQUIDACION",
+             "PENDIENTE_ENTREGA_VOUCHER", "PENDIENTE_CONFIRMACION_VOUCHER",
+             "PENDIENTE_LIQUIDACION_VOUCHER"],
             filters
         )
     if ctx["tipos_aprobador"]:
@@ -140,6 +151,8 @@ def puede_completar(solicitud, usuario_id, ctx):
 
 def puede_aprobar_jefe_vuelo(solicitud, usuario_id, ctx):
     """Jefe directo aprueba/rechaza solicitud de Vuelo recién creada."""
+    if solicitud.get("tipo") != "Vuelo":
+        return False
     if solicitud.get("estado") != "PENDIENTE_APROBACION_JEFE":
         return False
     if ctx["es_admin"]:
@@ -156,11 +169,20 @@ def puede_aprobar_gg_vuelo(solicitud, usuario_id, ctx):
     return solicitud.get("tipo") in ctx.get("tipos_gg_vuelo", [])
 
 
-def puede_completar_vuelo(solicitud, usuario_id, ctx):
-    """Coordinador registra gestión de Vuelo (pasa a COORDINADA)."""
+def puede_cotizar_vuelo(solicitud, usuario_id, ctx):
+    """Coordinador ingresa el valor cotizado del pasaje (pasa a aprobación GG)."""
     if solicitud.get("tipo") != "Vuelo":
         return False
     if solicitud.get("estado") != "PENDIENTE_COORDINACION":
+        return False
+    return ctx["es_admin"] or solicitud.get("tipo") in ctx["tipos_coordinador"]
+
+
+def puede_completar_vuelo(solicitud, usuario_id, ctx):
+    """Coordinador registra info del vuelo y adjuntos (pasa a COORDINADA)."""
+    if solicitud.get("tipo") != "Vuelo":
+        return False
+    if solicitud.get("estado") != "PENDIENTE_INFO_VUELO":
         return False
     return ctx["es_admin"] or solicitud.get("tipo") in ctx["tipos_coordinador"]
 
@@ -180,6 +202,51 @@ def puede_liquidar_vuelo(solicitud, usuario_id, ctx):
     if solicitud.get("tipo") != "Vuelo":
         return False
     if solicitud.get("estado") != "PENDIENTE_LIQUIDACION":
+        return False
+    es_coordinador = solicitud.get("tipo") in ctx["tipos_coordinador"]
+    return ctx["es_admin"] or es_coordinador
+
+
+def puede_aprobar_jefe_voucher(solicitud, usuario_id, ctx):
+    """Jefe directo aprueba/rechaza solicitud de Voucher recién creada."""
+    if solicitud.get("tipo") != "Voucher":
+        return False
+    if solicitud.get("estado") != "PENDIENTE_APROBACION_JEFE":
+        return False
+    if ctx["es_admin"]:
+        return True
+    return solicitud.get("gerente_id") == usuario_id
+
+
+def puede_entregar_voucher(solicitud, usuario_id, ctx):
+    """Coordinador registra el secuencial de cada voucher entregado al solicitante."""
+    if solicitud.get("tipo") != "Voucher":
+        return False
+    if solicitud.get("estado") != "PENDIENTE_ENTREGA_VOUCHER":
+        return False
+    es_coordinador = solicitud.get("tipo") in ctx["tipos_coordinador"]
+    return ctx["es_admin"] or es_coordinador
+
+
+def puede_confirmar_voucher_item(solicitud, item, usuario_id, ctx):
+    """El propio solicitante confirma UN voucher (adjunto + observación) tras la entrega."""
+    if solicitud.get("tipo") != "Voucher":
+        return False
+    if solicitud.get("estado") != "PENDIENTE_CONFIRMACION_VOUCHER":
+        return False
+    if item.get("confirmado_usuario"):
+        return False
+    es_solicitante = solicitud.get("solicitante_id") == usuario_id
+    return ctx["es_admin"] or es_solicitante
+
+
+def puede_liquidar_voucher_item(solicitud, item, usuario_id, ctx):
+    """Coordinador ingresa el costo de UN voucher. Sin validar presupuesto."""
+    if solicitud.get("tipo") != "Voucher":
+        return False
+    if solicitud.get("estado") != "PENDIENTE_LIQUIDACION_VOUCHER":
+        return False
+    if item.get("costo") is not None:
         return False
     es_coordinador = solicitud.get("tipo") in ctx["tipos_coordinador"]
     return ctx["es_admin"] or es_coordinador
@@ -208,14 +275,17 @@ def puede_eliminar(solicitud, usuario_id, ctx):
     - COMPLETADA: nadie puede eliminar.
     - COORDINADA / PENDIENTE_LIQUIDACION: solo admin.
     - Admin: puede en cualquier otro estado.
-    - Coordinador: puede si estado NO es APROBADA ni COMPLETADA.
+    - Coordinador: puede si estado NO es APROBADA ni COMPLETADA. Para Voucher, puede eliminar
+      mientras el solicitante no haya terminado de confirmar todos sus vouchers (es decir,
+      hasta antes de PENDIENTE_LIQUIDACION_VOUCHER).
     - Aprobador: puede si estado NO es COMPLETADA.
-    - Solicitante (usuario normal): solo si estado es PENDIENTE_COORDINACION y es su propia solicitud.
+    - Solicitante (usuario normal): solo si estado es PENDIENTE_COORDINACION (o, para Vuelo/Voucher,
+      PENDIENTE_APROBACION_JEFE mientras el jefe aún no aprueba) y es su propia solicitud.
     """
     estado = solicitud["estado"]
     if estado == "COMPLETADA":
         return False
-    if estado in ("COORDINADA", "PENDIENTE_LIQUIDACION"):
+    if estado in ("COORDINADA", "PENDIENTE_LIQUIDACION", "PENDIENTE_LIQUIDACION_VOUCHER"):
         return ctx["es_admin"]
     if ctx["es_admin"]:
         return True
@@ -223,22 +293,33 @@ def puede_eliminar(solicitud, usuario_id, ctx):
         return estado not in ("APROBADA", "COMPLETADA")
     if solicitud["tipo"] in ctx["tipos_aprobador"]:
         return estado != "COMPLETADA"
-    # Usuario normal: solo la propia solicitud en PENDIENTE_COORDINACION
+    # Usuario normal: solo la propia solicitud mientras no ha sido aprobada aún
     if solicitud.get("solicitante_id") == usuario_id:
-        return estado == "PENDIENTE_COORDINACION"
+        return estado in ("PENDIENTE_COORDINACION", "PENDIENTE_APROBACION_JEFE")
     return False
 
 
 def puede_reagendar(solicitud, usuario_id, ctx):
     """El coordinador asignado (o admin) puede reagendar solicitudes activas no iniciadas."""
-    if solicitud["estado"] in ("COMPLETADA", "RECHAZADA", "COORDINADA", "PENDIENTE_LIQUIDACION"):
+    if solicitud["estado"] in ("COMPLETADA", "RECHAZADA", "COORDINADA", "PENDIENTE_LIQUIDACION",
+                                "PENDIENTE_ENTREGA_VOUCHER", "PENDIENTE_CONFIRMACION_VOUCHER",
+                                "PENDIENTE_LIQUIDACION_VOUCHER"):
         return False
     return ctx["es_admin"] or solicitud["tipo"] in ctx["tipos_coordinador"]
 
 
 def agrupar_por_seccion(rows):
     """Divide las filas en cuatro secciones para mostrar en la tabla."""
-    reservadas     = [r for r in rows if r.get("estado") in ESTADOS_RESERVADAS]
+    def _va_en_reservadas(r):
+        if r.get("estado") not in ESTADOS_RESERVADAS:
+            return False
+        # El Gerente de Presupuesto ya la ve (accionable) en "Por aprobar";
+        # no aporta verla también pasivamente en "Reservadas".
+        if r.get("estado") == "PENDIENTE_APROBACION_GG_VUELO" and r.get("puede_aprobar_gg_vuelo"):
+            return False
+        return True
+
+    reservadas     = [r for r in rows if _va_en_reservadas(r)]
     coordinadas    = [r for r in rows if r.get("estado") in ESTADOS_COORDINADAS]
     por_completar  = [r for r in rows if r.get("estado") in ESTADOS_POR_COMPLETAR]
     atendidas      = [r for r in rows if r.get("estado") in ESTADOS_ATENDIDAS]
@@ -259,8 +340,12 @@ def estado_badge_class(estado):
         "PENDIENTE_APROBACION_JEFE":     "bg-warning text-dark",
         "PENDIENTE_APROBACION_GG_VUELO": "bg-orange text-dark",
         "PENDIENTE_COORDINACION":        "bg-warning text-dark",
+        "PENDIENTE_INFO_VUELO":          "bg-warning text-dark",
         "PENDIENTE_APROBACION":          "bg-info text-dark",
         "PENDIENTE_APROBACION_GERENTE":  "bg-primary",
+        "PENDIENTE_ENTREGA_VOUCHER":       "bg-warning text-dark",
+        "PENDIENTE_CONFIRMACION_VOUCHER":  "bg-warning text-dark",
+        "PENDIENTE_LIQUIDACION_VOUCHER":   "bg-info text-dark",
         "APROBADA":                      "bg-success",
         "RECHAZADA":                     "bg-danger",
         "COMPLETADA":                    "bg-dark",
