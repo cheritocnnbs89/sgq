@@ -13,6 +13,7 @@ from .planificador_constants import (
     TBL_LOGS,
     TBL_TIPO_FLAGS,
     TBL_ROL_FLAGS,
+    TBL_VOUCHER_ITEMS,
     TBL_NOTIFY_INAPP,
     TBL_USUARIOS,
     TBL_DEPARTAMENTOS,
@@ -120,6 +121,8 @@ SQL_GET_SOLICITUDES_PARA_REPORTE = f"""
         pres.presupuestado                         AS [Presupuesto Total (Año)],
         pres.ejecutado                             AS [Valor Consumido (Año)],
         s.costo_real                               AS [Gasto Realizado],
+        s.penalizacion                             AS penalizacion,
+        s.cotizacion_hospedaje                     AS cotizacion_hospedaje,
         CONVERT(VARCHAR,s.fecha_creacion,120)      AS [Fecha Creación],
         CONVERT(VARCHAR,s.fecha_actualizacion,120) AS [Última Actualización]
     FROM {TBL_SOLICITUDES} s
@@ -169,11 +172,13 @@ SQL_INSERT_SOLICITUD = f"""
          fecha_retorno, punto_salida, punto_destino,
          requiere_hospedaje, orden_servicio, centro_costo_id,
          requiere_aprobacion_presupuesto,
-         gerente_id, gerente_nombre, motivo_vuelo)
+         gerente_id, gerente_nombre, motivo_vuelo,
+         numero_vouchers)
     OUTPUT INSERTED.id
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?, ?,
-            ?, ?, ?)
+            ?, ?, ?,
+            ?)
 """
 
 SQL_UPDATE_REAGENDAR = f"""
@@ -261,6 +266,117 @@ SQL_VUELO_LIQUIDAR = f"""
         notas_liquidacion    = ?,
         fecha_actualizacion  = GETDATE()
     WHERE id = ? AND activo = 1
+"""
+
+# ── Voucher: aprobación jefe directo → el coordinador debe entregar los vouchers (con secuencial)
+SQL_VOUCHER_APROBAR_JEFE_OK = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado                = 'PENDIENTE_ENTREGA_VOUCHER',
+        aprobador_id          = ?,
+        aprobador_nombre      = ?,
+        observacion_aprobador = ?,
+        fecha_actualizacion   = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+# ── Voucher: jefe rechaza → fin del flujo (reutiliza SQL_UPDATE_RECHAZAR, igual que Vuelo)
+
+# ── Voucher: items individuales (uno por voucher solicitado) ──────────────
+
+SQL_VOUCHER_ITEM_INSERT = f"""
+    INSERT INTO {TBL_VOUCHER_ITEMS} (solicitud_id, numero)
+    OUTPUT INSERTED.id
+    VALUES (?, ?)
+"""
+
+SQL_VOUCHER_ITEMS_BY_SOLICITUD = f"""
+    SELECT * FROM {TBL_VOUCHER_ITEMS}
+    WHERE solicitud_id = ?
+    ORDER BY numero ASC
+"""
+
+SQL_VOUCHER_ITEM_BY_ID = f"""
+    SELECT * FROM {TBL_VOUCHER_ITEMS} WHERE id = ?
+"""
+
+SQL_VOUCHER_ITEM_ENTREGAR = f"""
+    UPDATE {TBL_VOUCHER_ITEMS} SET
+        secuencial            = ?,
+        entregado_at          = GETDATE(),
+        entregado_por_id      = ?,
+        entregado_por_nombre  = ?
+    WHERE id = ?
+"""
+
+SQL_VOUCHER_ITEM_CONFIRMAR = f"""
+    UPDATE {TBL_VOUCHER_ITEMS} SET
+        adjunto_nombre_original = ?,
+        adjunto_nombre_guardado = ?,
+        adjunto_tamano          = ?,
+        observacion_usuario     = ?,
+        confirmado_usuario      = 1,
+        confirmado_at           = GETDATE()
+    WHERE id = ?
+"""
+
+SQL_VOUCHER_ITEM_LIQUIDAR = f"""
+    UPDATE {TBL_VOUCHER_ITEMS} SET
+        costo               = ?,
+        liquidado_at         = GETDATE(),
+        liquidado_por_id     = ?,
+        liquidado_por_nombre = ?
+    WHERE id = ?
+"""
+
+# ── Voucher: transiciones del estado de la solicitud padre ────────────────
+
+SQL_VOUCHER_SOLICITUD_A_CONFIRMACION = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado               = 'PENDIENTE_CONFIRMACION_VOUCHER',
+        coordinador_id        = ?,
+        coordinador_nombre    = ?,
+        fecha_actualizacion   = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_VOUCHER_SOLICITUD_A_LIQUIDACION = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado               = 'PENDIENTE_LIQUIDACION_VOUCHER',
+        fecha_actualizacion  = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_VOUCHER_SOLICITUD_COMPLETAR = f"""
+    UPDATE {TBL_SOLICITUDES} SET
+        estado               = 'COMPLETADA',
+        costo_real           = ?,
+        fecha_actualizacion  = GETDATE()
+    WHERE id = ? AND activo = 1
+"""
+
+SQL_CREATE_VOUCHER_ITEMS_TABLE = f"""
+IF OBJECT_ID('{TBL_VOUCHER_ITEMS}', 'U') IS NULL
+CREATE TABLE {TBL_VOUCHER_ITEMS} (
+    id                       INT IDENTITY(1,1) PRIMARY KEY,
+    solicitud_id             INT NOT NULL,
+    numero                   INT NOT NULL,
+    secuencial               NVARCHAR(100) NULL,
+    entregado_at             DATETIME NULL,
+    entregado_por_id         INT NULL,
+    entregado_por_nombre     NVARCHAR(200) NULL,
+    adjunto_nombre_original  NVARCHAR(300) NULL,
+    adjunto_nombre_guardado  NVARCHAR(300) NULL,
+    adjunto_tamano           INT NULL,
+    observacion_usuario      NVARCHAR(MAX) NULL,
+    confirmado_usuario       BIT NOT NULL DEFAULT 0,
+    confirmado_at            DATETIME NULL,
+    costo                    FLOAT NULL,
+    liquidado_at             DATETIME NULL,
+    liquidado_por_id         INT NULL,
+    liquidado_por_nombre     NVARCHAR(200) NULL,
+    CONSTRAINT FK_voucher_items_solicitud FOREIGN KEY (solicitud_id)
+        REFERENCES {TBL_SOLICITUDES}(id)
+)
 """
 
 SQL_EJECUTAR_PRESUPUESTO_VUELO = f"""
@@ -522,24 +638,60 @@ SQL_GET_MOTIVOS_VUELO = f"""
 # ──────────────────────────────────────────────
 
 SQL_GET_TIPO_FLAGS = f"""
-    SELECT requiere_aprobacion_gerente
+    SELECT requiere_aprobacion_gerente,
+           COALESCE(auto_confirmar_vuelo, 0) AS auto_confirmar_vuelo,
+           COALESCE(auto_liquidar_vuelo,  0) AS auto_liquidar_vuelo
     FROM {TBL_TIPO_FLAGS}
     WHERE tipo = ?
 """
 
 SQL_GET_ALL_TIPO_FLAGS = f"""
-    SELECT tipo, requiere_aprobacion_gerente
+    SELECT tipo,
+           requiere_aprobacion_gerente,
+           COALESCE(auto_confirmar_vuelo, 0) AS auto_confirmar_vuelo,
+           COALESCE(auto_liquidar_vuelo,  0) AS auto_liquidar_vuelo
     FROM {TBL_TIPO_FLAGS}
 """
 
 SQL_UPSERT_TIPO_FLAGS = f"""
     IF EXISTS (SELECT 1 FROM {TBL_TIPO_FLAGS} WHERE tipo = ?)
         UPDATE {TBL_TIPO_FLAGS}
-           SET requiere_aprobacion_gerente = ?
+           SET requiere_aprobacion_gerente = ?,
+               auto_confirmar_vuelo        = ?,
+               auto_liquidar_vuelo         = ?
          WHERE tipo = ?
     ELSE
-        INSERT INTO {TBL_TIPO_FLAGS} (tipo, requiere_aprobacion_gerente)
-        VALUES (?, ?)
+        INSERT INTO {TBL_TIPO_FLAGS} (tipo, requiere_aprobacion_gerente, auto_confirmar_vuelo, auto_liquidar_vuelo)
+        VALUES (?, ?, ?, ?)
+"""
+
+SQL_GET_VUELO_FLAGS = f"""
+    SELECT COALESCE(auto_confirmar_vuelo, 0) AS auto_confirmar_vuelo,
+           COALESCE(auto_liquidar_vuelo,  0) AS auto_liquidar_vuelo
+    FROM {TBL_TIPO_FLAGS}
+    WHERE tipo = 'Vuelo'
+"""
+
+SQL_GET_VUELOS_PARA_AUTO_CONFIRMAR = f"""
+    SELECT id, solicitante_id, solicitante_nombre, coordinador_id, coordinador_nombre,
+           area_solicitante, fecha, datos_ticket, cotizacion_hospedaje
+    FROM {TBL_SOLICITUDES}
+    WHERE tipo = 'Vuelo'
+      AND estado = 'COORDINADA'
+      AND COALESCE(fecha_retorno, fecha) < CAST(GETDATE() AS DATE)
+"""
+
+SQL_GET_VUELOS_PARA_AUTO_LIQUIDAR = f"""
+    SELECT id, solicitante_id, solicitante_nombre, coordinador_id, coordinador_nombre,
+           area_solicitante, fecha, datos_ticket, cotizacion_hospedaje, centro_costo_id
+    FROM {TBL_SOLICITUDES}
+    WHERE tipo = 'Vuelo'
+      AND estado = 'PENDIENTE_LIQUIDACION'
+      AND COALESCE(fecha_retorno, fecha) < CAST(GETDATE() AS DATE)
+"""
+
+SQL_SET_COTIZACION_HOSPEDAJE = f"""
+    UPDATE {TBL_SOLICITUDES} SET cotizacion_hospedaje = ? WHERE id = ?
 """
 
 # ──────────────────────────────────────────────
@@ -595,6 +747,10 @@ SQL_GET_USUARIO_DEPARTAMENTO = f"""
 
 SQL_GET_EMAIL_BY_USUARIO_ID = f"""
     SELECT email FROM {TBL_USUARIOS} WHERE id = ? AND disabled = 0
+"""
+
+SQL_GET_ROL_USUARIO = f"""
+    SELECT rol FROM {TBL_USUARIOS} WHERE id = ?
 """
 
 SQL_GET_CIUDAD_USUARIO = f"""
@@ -805,4 +961,22 @@ SQL_ADD_EJECUTADO = f"""
     UPDATE {TBL_PRESUPUESTO}
        SET monto_ejecutado = monto_ejecutado + ?
      WHERE empresa_id=? AND centro_costo_id=? AND tipo_gasto=? AND anio=? AND mes=?
+"""
+
+SQL_SET_PENALIZACION = f"""
+    UPDATE {TBL_SOLICITUDES} SET penalizacion = ? WHERE id = ?
+"""
+
+SQL_CHECK_DUPLICADO_SOLICITUD = f"""
+    SELECT TOP 1 id, estado, CONVERT(varchar(10), fecha, 23) AS fecha_str,
+                  CONVERT(varchar(10), fecha_retorno, 23) AS fecha_retorno_str
+    FROM {TBL_SOLICITUDES}
+    WHERE solicitante_id = ?
+      AND tipo           = ?
+      AND activo         = 1
+      AND estado NOT IN ('RECHAZADA', 'COMPLETADA')
+      AND (
+            fecha         <= ?
+        AND (fecha_retorno IS NULL OR fecha_retorno >= ?)
+      )
 """

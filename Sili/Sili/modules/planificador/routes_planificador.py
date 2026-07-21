@@ -81,6 +81,8 @@ def solicitudes():
         d["puede_cotizar_vuelo"]      = svc.puede_cotizar_vuelo(s, u["id"], ctx)
         d["puede_aprobar_gg_vuelo"]   = svc.puede_aprobar_gg_vuelo(s, u["id"], ctx)
         d["puede_completar_vuelo"]    = svc.puede_completar_vuelo(s, u["id"], ctx)
+        d["puede_aprobar_jefe_voucher"] = svc.puede_aprobar_jefe_voucher(s, u["id"], ctx)
+        d["puede_entregar_voucher"]     = svc.puede_entregar_voucher(s, u["id"], ctx)
         d["estado_label"]    = svc.estado_label(s["estado"])
         d["estado_class"]    = svc.estado_badge_class(s["estado"])
         d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
@@ -98,16 +100,17 @@ def solicitudes():
     )
     por_aprobar = [r for r in rows if r.get("puede_aprobar_gerente")
                    or r.get("puede_aprobar_jefe_vuelo")
-                   or r.get("puede_aprobar_gg_vuelo")]
+                   or r.get("puede_aprobar_gg_vuelo")
+                   or r.get("puede_aprobar_jefe_voucher")]
 
-    # Enriquecer con jefe_nombre para todas las filas tipo Vuelo
-    vuelo_sol_ids = list({
+    # Enriquecer con jefe_nombre para todas las filas tipo Vuelo o Voucher
+    con_jefe_sol_ids = list({
         r["solicitante_id"] for r in rows
-        if r.get("tipo") == "Vuelo" and r.get("solicitante_id")
+        if r.get("tipo") in ("Vuelo", "Voucher") and r.get("solicitante_id")
     })
-    jefe_map = repo.get_jefe_nombre_batch(vuelo_sol_ids) if vuelo_sol_ids else {}
+    jefe_map = repo.get_jefe_nombre_batch(con_jefe_sol_ids) if con_jefe_sol_ids else {}
     for r in rows:
-        if r.get("tipo") == "Vuelo":
+        if r.get("tipo") in ("Vuelo", "Voucher"):
             r["jefe_nombre"] = jefe_map.get(r.get("solicitante_id"), "")
 
     # Datos de calendario: semana actual ±2 semanas
@@ -197,6 +200,8 @@ def detalle(sid):
     d["puede_completar_vuelo"]         = svc.puede_completar_vuelo(s, u["id"], ctx)
     d["puede_marcar_realizado_vuelo"]  = svc.puede_marcar_realizado_vuelo(s, u["id"], ctx)
     d["puede_liquidar_vuelo"]          = svc.puede_liquidar_vuelo(s, u["id"], ctx)
+    d["puede_aprobar_jefe_voucher"]    = svc.puede_aprobar_jefe_voucher(s, u["id"], ctx)
+    d["puede_entregar_voucher"]        = svc.puede_entregar_voucher(s, u["id"], ctx)
     d["estado_label"]    = svc.estado_label(s["estado"])
     d["estado_class"]    = svc.estado_badge_class(s["estado"])
     d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
@@ -246,6 +251,13 @@ def detalle(sid):
         if m:
             aeropuerto_display = m.group(1)
 
+    voucher_items = []
+    if d.get("tipo") == "Voucher":
+        voucher_items = repo.get_voucher_items(sid)
+        for item in voucher_items:
+            item["puede_confirmar"] = svc.puede_confirmar_voucher_item(s, item, u["id"], ctx)
+            item["puede_liquidar"]  = svc.puede_liquidar_voucher_item(s, item, u["id"], ctx)
+
     return render_template(
         "planificador/_detalle_modal_body.html",
         s=d,
@@ -260,7 +272,30 @@ def detalle(sid):
         tipos_gasto=tipos_gasto,
         aeropuerto_display=aeropuerto_display,
         costo_ticket_sugerido=costo_ticket_sugerido,
+        voucher_items=voucher_items,
     )
+
+
+# ─────────────────────────────────────────────────────────────
+# AJAX: Verificar duplicado antes de guardar
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/check-duplicado", methods=["GET"], endpoint="planificador_check_duplicado")
+@require_login
+def check_duplicado():
+    from flask import jsonify
+    u = _current_user()
+    tipo          = request.args.get("tipo", "").strip()
+    fecha         = request.args.get("fecha", "").strip()
+    fecha_retorno = request.args.get("fecha_retorno", "").strip() or None
+    if not tipo or not fecha:
+        return jsonify({"duplicado": False})
+    conflicto = repo.check_solicitud_duplicada(u["id"], tipo, fecha, fecha_retorno)
+    if conflicto:
+        return jsonify({"duplicado": True, "solicitud_id": conflicto["id"],
+                        "estado": conflicto["estado"], "fecha": conflicto["fecha_str"],
+                        "fecha_retorno": conflicto["fecha_retorno_str"]})
+    return jsonify({"duplicado": False})
 
 
 # ─────────────────────────────────────────────────────────────
@@ -278,7 +313,12 @@ def crear():
     lugar = request.form.get("lugar_destino", "").strip()
     fecha = request.form.get("fecha", "").strip()
 
-    campos_base = [tipo, area, desc, fecha] if tipo == "Vuelo" else [tipo, area, desc, lugar, fecha]
+    if tipo == "Vuelo":
+        campos_base = [tipo, area, desc, fecha]
+    elif tipo == "Voucher":
+        campos_base = [tipo, area, desc, fecha]
+    else:
+        campos_base = [tipo, area, desc, lugar, fecha]
     if not all(campos_base):
         flash("Todos los campos obligatorios deben completarse.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
@@ -294,6 +334,26 @@ def crear():
     cc_id           = None
     requiere_aprov  = 0
     motivo_vuelo    = None
+    numero_vouchers = None
+
+    if tipo == "Voucher":
+        numero_vouchers_raw = request.form.get("numero_vouchers", "").strip()
+        try:
+            numero_vouchers = int(numero_vouchers_raw)
+        except (TypeError, ValueError):
+            numero_vouchers = 0
+        if numero_vouchers < 1:
+            flash("Debe indicar el número de vouchers solicitados (mínimo 1).", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+
+        try:
+            fecha_dt = date.fromisoformat(fecha)
+        except ValueError:
+            flash("Fecha inválida.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+        if fecha_dt < date.today():
+            flash("La fecha de la solicitud de Voucher no puede ser anterior a hoy.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
 
     if tipo == "Vuelo":
         motivo_vuelo = request.form.get("motivo_vuelo", "").strip()
@@ -360,6 +420,37 @@ def crear():
                 )
                 estado_inicial = "PENDIENTE_COORDINACION"
 
+    jefe_id_voucher = None
+    jefe_nombre_voucher = None
+    autoaprobado_por_rol_voucher = False
+    if tipo == "Voucher":
+        roles_autoaprobar = repo.get_roles_autoaprobar_jefe_vuelo()
+        autoaprobado_por_rol_voucher = svc.debe_autoaprobar_jefe_vuelo(u["rol"], roles_autoaprobar)
+        if autoaprobado_por_rol_voucher:
+            current_app.logger.info(
+                "[VOUCHER] usuario_id=%s rol=%s → autoaprobado por configuración de rol",
+                u["id"], u.get("rol")
+            )
+            estado_inicial = "PENDIENTE_ENTREGA_VOUCHER"
+        else:
+            jefe = repo.get_gerente_del_usuario(u["id"])
+            if jefe:
+                jefe_id_voucher     = jefe["id"]
+                jefe_nombre_voucher = jefe["nombre"]
+                estado_inicial      = "PENDIENTE_APROBACION_JEFE"
+            else:
+                current_app.logger.warning(
+                    "[VOUCHER] Sin jefe_id para usuario %s → cae a PENDIENTE_ENTREGA_VOUCHER", u["id"]
+                )
+                estado_inicial = "PENDIENTE_ENTREGA_VOUCHER"
+
+    # Prevenir duplicados: solo para Vuelo (rango de fechas)
+    if tipo == "Vuelo":
+        if repo.check_solicitud_duplicada(u["id"], tipo, fecha, fecha_retorno):
+            flash("Ya tienes una solicitud activa de Vuelo en la fecha seleccionada. "
+                  "No puedes crear una nueva hasta que la anterior sea completada o rechazada.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+
     sid = repo.crear_solicitud({
         "tipo":                           tipo,
         "area_solicitante":               area,
@@ -380,10 +471,18 @@ def crear():
         "orden_servicio":                 orden_servicio,
         "centro_costo_id":                cc_id,
         "requiere_aprobacion_presupuesto": requiere_aprov,
-        "gerente_id":                     jefe_id_vuelo,
-        "gerente_nombre":                 jefe_nombre_vuelo,
+        "gerente_id":                     jefe_id_vuelo or jefe_id_voucher,
+        "gerente_nombre":                 jefe_nombre_vuelo or jefe_nombre_voucher,
         "motivo_vuelo":                   motivo_vuelo,
+        "numero_vouchers":                numero_vouchers,
     })
+
+    if tipo == "Voucher" and sid:
+        try:
+            repo.ensure_voucher_items_schema()
+            repo.crear_voucher_items(sid, numero_vouchers)
+        except Exception:
+            current_app.logger.exception("[VOUCHER] Error creando voucher_items sid=%s", sid)
 
     if tipo == "Vuelo":
         if estado_inicial == "PENDIENTE_APROBACION_JEFE":
@@ -414,6 +513,29 @@ def crear():
                 msg = "Solicitud de Vuelo creada y auto-aprobada según tu rol. Pasa al coordinador para cotizar."
             else:
                 msg = "Solicitud de Vuelo creada. No tiene jefe configurado; pasó a coordinación."
+    elif tipo == "Voucher":
+        if estado_inicial == "PENDIENTE_APROBACION_JEFE":
+            try:
+                notif.notif_voucher_pendiente_jefe(
+                    sid, area, fecha, desc, u["nombre"],
+                    jefe_id_voucher, jefe_nombre_voucher or "—",
+                )
+            except Exception:
+                pass
+            msg = "Solicitud de Voucher creada. Pendiente de aprobación de su jefe directo."
+        else:
+            try:
+                aprobador_txt = (
+                    f"Auto-aprobado (rol {u.get('rol') or '—'})"
+                    if autoaprobado_por_rol_voucher
+                    else "Auto-aprobado (sin jefe directo configurado)"
+                )
+                notif.notif_voucher_aprobada_solicitante(
+                    sid, area, fecha, desc, u["id"], u["nombre"], aprobador_txt,
+                )
+            except Exception:
+                pass
+            msg = "Solicitud de Voucher creada y aprobada. El coordinador debe entregarte los vouchers."
     else:
         try:
             notif.notif_nueva_solicitud(sid, tipo, area, fecha, u["nombre"], solicitante_id=u["id"])
@@ -443,11 +565,15 @@ def presupuesto_saldo_usuario():
     saldo_data = repo.get_saldo_anual_presupuesto(
         cc_info["empresa_id"], cc_info["cc_id"], tipo_gasto, hoy.year
     )
+    saldo = saldo_data["presupuestado"] - saldo_data["ejecutado"]
     return jsonify({
-        "ok":       True,
-        "semaforo": saldo_data["semaforo"],
-        "pct":      saldo_data["pct"],
-        "anio":     hoy.year,
+        "ok":            True,
+        "semaforo":      saldo_data["semaforo"],
+        "pct":           saldo_data["pct"],
+        "anio":          hoy.year,
+        "presupuestado": saldo_data["presupuestado"],
+        "ejecutado":     saldo_data["ejecutado"],
+        "saldo":         round(saldo, 2),
     })
 
 
@@ -807,22 +933,38 @@ def reagendar(sid):
     # Guardar fecha anterior para la notificación
     fecha_anterior = str(s["fecha"]) if s["fecha"] else "—"
 
+    penalizacion_raw = request.form.get("penalizacion", "0").strip()
+    try:
+        penalizacion = float(penalizacion_raw) if penalizacion_raw else 0.0
+    except ValueError:
+        penalizacion = 0.0
+
     if es_vuelo:
         repo.reagendar_vuelo_a_jefe(sid, nueva_fecha, nueva_fecha_retorno, u["id"], u["nombre"], motivo)
-        # Renotificar al jefe para que vuelva a aprobar con la nueva fecha
-        try:
-            jefe_id   = s.get("gerente_id")
-            jefe_nom  = s.get("gerente_nombre", "—")
-            notif.notif_vuelo_pendiente_jefe(
-                sid, s["area_solicitante"], nueva_fecha,
-                s.get("descripcion", ""),
-                s.get("motivo_vuelo") or "—",
-                s["solicitante_nombre"], jefe_id, jefe_nom,
-                es_reagenda=True,
-            )
-        except Exception:
-            pass
-        flash(f"Vuelo reagendado para el {nueva_fecha}. Vuelve a aprobación del jefe directo.", "success")
+        if penalizacion > 0:
+            repo.set_penalizacion(sid, penalizacion)
+        # Verificar si el solicitante tiene rol que auto-aprueba el paso de jefe
+        roles_autoaprobar = repo.get_roles_autoaprobar_jefe_vuelo()
+        sol_rol = repo.get_rol_usuario(s["solicitante_id"])
+        if svc.debe_autoaprobar_jefe_vuelo(sol_rol, roles_autoaprobar):
+            repo.aprobar_jefe_vuelo(sid, s["solicitante_id"], s["solicitante_nombre"],
+                                    "Auto-aprobado (solicitante es gerente)")
+            flash(f"Vuelo reagendado para el {nueva_fecha}. Auto-aprobado por rol del solicitante.", "success")
+        else:
+            # Renotificar al jefe para que vuelva a aprobar con la nueva fecha
+            try:
+                jefe_id   = s.get("gerente_id")
+                jefe_nom  = s.get("gerente_nombre", "—")
+                notif.notif_vuelo_pendiente_jefe(
+                    sid, s["area_solicitante"], nueva_fecha,
+                    s.get("descripcion", ""),
+                    s.get("motivo_vuelo") or "—",
+                    s["solicitante_nombre"], jefe_id, jefe_nom,
+                    es_reagenda=True,
+                )
+            except Exception:
+                pass
+            flash(f"Vuelo reagendado para el {nueva_fecha}. Vuelve a aprobación del jefe directo.", "success")
     else:
         repo.reagendar_solicitud(sid, nueva_fecha, u["id"], u["nombre"], motivo, "PENDIENTE_COORDINACION")
         try:
@@ -973,10 +1115,17 @@ def vuelo_cotizar(sid):
         abort(403)
     valor = request.form.get("valor_cotizado", "").strip()
     obs   = request.form.get("observacion", "").strip()
+    hosp_str = request.form.get("cotizacion_hospedaje", "").strip().replace(",", ".")
     if not valor:
         flash("Debe ingresar el valor cotizado del pasaje.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
     repo.cotizar_vuelo(sid, u["id"], u["nombre"], valor, obs)
+    try:
+        hosp_val = float(hosp_str) if hosp_str else 0.0
+        if hosp_val > 0:
+            repo.set_cotizacion_hospedaje(sid, hosp_val)
+    except (ValueError, Exception):
+        pass
     try:
         gg_lista = repo.get_gerentes_presupuesto_para_tipo("Vuelo")
         for gg in gg_lista:
@@ -988,7 +1137,7 @@ def vuelo_cotizar(sid):
             )
     except Exception:
         pass
-    flash("Cotización registrada. Pasa a aprobación del Gerente de Presupuesto.", "success")
+    flash("Cotización registrada. Pasa a aprobación del Gerente General.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -1103,7 +1252,14 @@ def vuelo_coordinar(sid):
         if not motivo:
             flash("Debe indicar el motivo de la reprogramación.", "warning")
             return redirect(url_for("planificador.planificador_solicitudes"))
+        pen_raw = request.form.get("penalizacion", "0").strip()
+        try:
+            pen_val = float(pen_raw) if pen_raw else 0.0
+        except ValueError:
+            pen_val = 0.0
         repo.reagendar_vuelo_a_jefe(sid, nueva_fecha, u["id"], u["nombre"], motivo)
+        if pen_val > 0:
+            repo.set_penalizacion(sid, pen_val)
         try:
             notif.notif_vuelo_pendiente_jefe(
                 sid, s["area_solicitante"], nueva_fecha,
@@ -1292,6 +1448,21 @@ def vuelo_liquidar(sid):
         flash("Debe ingresar al menos un costo mayor a cero.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
+    # Incluir penalización de reagenda en el costo total
+    penalizacion_extra = 0.0
+    try:
+        pen_raw = request.form.get("penalizacion_extra", "").strip()
+        penalizacion_extra = float(pen_raw) if pen_raw else 0.0
+    except ValueError:
+        penalizacion_extra = 0.0
+    # Si no vino del form (campo readonly puede omitirse), usar el valor guardado en DB
+    if penalizacion_extra <= 0:
+        penalizacion_extra = float(s.get("penalizacion") or 0)
+
+    if penalizacion_extra > 0:
+        costos_por_tipo["Penalización reagenda"] = penalizacion_extra
+        costo_real += penalizacion_extra
+
     desglose = ", ".join(f"{t}: ${v:,.2f}" for t, v in costos_por_tipo.items())
     notas_full = f"{desglose}\n{notas}".strip() if notas else desglose
     repo.liquidar_vuelo(sid, u["id"], u["nombre"], costo_real, notas_full)
@@ -1321,6 +1492,207 @@ def vuelo_liquidar(sid):
         pass
 
     flash("Vuelo completado y costos registrados. El presupuesto fue actualizado.", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Voucher: aprobación jefe directo
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/voucher/aprobar-jefe", methods=["POST"],
+                       endpoint="planificador_voucher_aprobar_jefe")
+@require_login
+def voucher_aprobar_jefe(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_aprobar_jefe_voucher(s, u["id"], ctx):
+        abort(403)
+    obs = request.form.get("observacion", "").strip()
+    repo.aprobar_jefe_voucher(sid, u["id"], u["nombre"], obs)
+    try:
+        notif.notif_voucher_aprobada_solicitante(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            s.get("descripcion", ""), s["solicitante_id"], s["solicitante_nombre"], u["nombre"],
+        )
+    except Exception:
+        pass
+    flash("Voucher aprobado. El solicitante fue notificado.", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+@planificador_bp.route("/solicitudes/<int:sid>/voucher/rechazar-jefe", methods=["POST"],
+                       endpoint="planificador_voucher_rechazar_jefe")
+@require_login
+def voucher_rechazar_jefe(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_aprobar_jefe_voucher(s, u["id"], ctx):
+        abort(403)
+    obs = request.form.get("observacion", "").strip()
+    if not obs:
+        flash("Debe indicar el motivo del rechazo.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+    repo.rechazar_jefe_voucher(sid, u["id"], u["nombre"], obs)
+    try:
+        notif.notif_voucher_rechazada(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            obs, s["solicitante_nombre"], s["solicitante_id"], u["nombre"],
+        )
+    except Exception:
+        pass
+    flash("Solicitud de Voucher rechazada.", "warning")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Voucher: coordinador entrega los vouchers, registra el secuencial de cada uno
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/voucher/entregar", methods=["POST"],
+                       endpoint="planificador_voucher_entregar")
+@require_login
+def voucher_entregar(sid):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    if not s or not svc.puede_entregar_voucher(s, u["id"], ctx):
+        abort(403)
+
+    items = repo.get_voucher_items(sid)
+    if not items:
+        flash("Esta solicitud no tiene vouchers registrados.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    secuenciales = {}
+    for item in items:
+        val = request.form.get(f"secuencial_{item['id']}", "").strip()
+        if not val:
+            flash("Debe indicar el secuencial de todos los vouchers.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+        secuenciales[item["id"]] = val
+
+    repo.entregar_voucher_items(sid, secuenciales, u["id"], u["nombre"])
+    try:
+        notif.notif_voucher_entregado_usuario(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            s["solicitante_id"], s["solicitante_nombre"], len(secuenciales),
+        )
+    except Exception:
+        pass
+    flash("Vouchers entregados con sus secuenciales. Se notificó al solicitante.", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Voucher: el solicitante confirma UN voucher (adjunto + observación)
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/voucher/item/<int:item_id>/confirmar", methods=["POST"],
+                       endpoint="planificador_voucher_confirmar_item")
+@require_login
+def voucher_confirmar_item(sid, item_id):
+    import os, uuid
+    from werkzeug.utils import secure_filename
+
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    item = repo.get_voucher_item_by_id(item_id)
+    if not s or not item or item.get("solicitud_id") != sid:
+        abort(404)
+    if not svc.puede_confirmar_voucher_item(s, item, u["id"], ctx):
+        abort(403)
+
+    obs = request.form.get("observacion", "").strip()
+
+    archivo = request.files.get("adjunto_voucher")
+    if not archivo or not archivo.filename:
+        flash("Debe subir el respaldo de este voucher.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    archivo.seek(0, 2)
+    tamano = archivo.tell()
+    archivo.seek(0)
+    if tamano > 10 * 1024 * 1024:
+        flash("El archivo supera el límite de 10 MB.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    nombre_original = secure_filename(archivo.filename)
+    ext             = os.path.splitext(nombre_original)[1]
+    nombre_guardado = f"{uuid.uuid4().hex}{ext}"
+    carpeta = os.path.join(current_app.config["UPLOAD_FOLDER"], "planificador", str(sid), "vouchers")
+    os.makedirs(carpeta, exist_ok=True)
+    ruta_completa = os.path.join(carpeta, nombre_guardado)
+    archivo.save(ruta_completa)
+
+    todos_confirmados = repo.confirmar_voucher_item(
+        item_id, sid, u["id"], u["nombre"],
+        nombre_original, nombre_guardado, tamano, obs,
+    )
+
+    if todos_confirmados:
+        try:
+            notif.notif_voucher_pendiente_liquidacion(
+                sid, s["area_solicitante"], str(s["fecha"]), s["solicitante_nombre"],
+            )
+        except Exception:
+            pass
+        msg_ok = ("Voucher confirmado. Todos tus vouchers quedaron confirmados — "
+                  "se notificó al coordinador para registrar los costos.")
+    else:
+        msg_ok = "Voucher confirmado. Aún tienes vouchers pendientes de confirmar."
+
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    if is_ajax:
+        from flask import jsonify
+        return jsonify({"ok": True, "todos_confirmados": todos_confirmados,
+                        "adjunto_nombre": nombre_original, "msg": msg_ok})
+    flash(msg_ok, "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Voucher: coordinador liquida UN voucher (sin validar presupuesto)
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/voucher/item/<int:item_id>/liquidar", methods=["POST"],
+                       endpoint="planificador_voucher_liquidar_item")
+@require_login
+def voucher_liquidar_item(sid, item_id):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    item = repo.get_voucher_item_by_id(item_id)
+    if not s or not item or item.get("solicitud_id") != sid:
+        abort(404)
+    if not svc.puede_liquidar_voucher_item(s, item, u["id"], ctx):
+        abort(403)
+
+    costo_str = request.form.get("costo", "").strip().replace(",", ".")
+    try:
+        costo = float(costo_str) if costo_str else 0.0
+    except ValueError:
+        costo = 0.0
+    if costo <= 0:
+        flash("Debe ingresar un costo mayor a cero.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    todos_liquidados, costo_total = repo.liquidar_voucher_item(item_id, sid, u["id"], u["nombre"], costo)
+
+    if todos_liquidados:
+        try:
+            notif.notif_voucher_liquidada(
+                sid, s["area_solicitante"], str(s["fecha"]),
+                s["solicitante_nombre"], s["solicitante_id"],
+                u["nombre"], costo_total,
+            )
+        except Exception:
+            pass
+        flash(f"Voucher liquidado. Todos los vouchers quedaron completados — costo total: ${costo_total:,.2f}.", "success")
+    else:
+        flash("Voucher liquidado. Aún hay vouchers pendientes de liquidar.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -1537,7 +1909,9 @@ def tipo_flags_update():
     for tipo in tipos_validos:
         key = f"req_gerente_{tipo.replace(' ', '_').replace('/', '_')}"
         req_gerente = request.form.get(key) == "1"
-        repo.set_tipo_flags(tipo, req_gerente)
+        auto_confirmar = request.form.get(f"auto_confirmar_{tipo.replace(' ', '_').replace('/', '_')}") == "1"
+        auto_liquidar  = request.form.get(f"auto_liquidar_{tipo.replace(' ', '_').replace('/', '_')}")  == "1"
+        repo.set_tipo_flags(tipo, req_gerente, auto_confirmar, auto_liquidar)
     flash("Configuración de tipos actualizada.", "success")
     return redirect(url_for("planificador.planificador_configuracion"))
 

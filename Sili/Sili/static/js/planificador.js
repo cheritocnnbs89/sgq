@@ -258,6 +258,7 @@
   }
 
   function _setupDetalleBody(container) {
+    _setupVoucherAjax(container);
     /* min=hoy en inputs con data-min-today (evita inline script) */
     container.querySelectorAll('[data-min-today]').forEach(function (el) {
       el.min = el.dataset.minToday;
@@ -896,6 +897,45 @@
     if (noticeVuelo)  noticeVuelo.classList.toggle('d-none', !esVuelo);
   }
 
+  /* ── Campos exclusivos de tipo Voucher (taxi) ── */
+  var TIPO_VOUCHER = 'Voucher';
+
+  function toggleCampoVoucher(tipoVal) {
+    var esVoucher = (tipoVal === TIPO_VOUCHER);
+
+    var divNumVouchers = document.getElementById('campoNumeroVouchersDiv');
+    var inpNumVouchers = document.getElementById('campoNumeroVouchers');
+    if (divNumVouchers) divNumVouchers.classList.toggle('d-none', !esVoucher);
+    if (inpNumVouchers) {
+      inpNumVouchers.required = esVoucher;
+      if (!esVoucher) inpNumVouchers.value = '1';
+    }
+
+    // Fecha >= hoy solo para Voucher (mensajería sigue sin restricción)
+    var nfecha = document.getElementById('nfecha');
+    if (nfecha) nfecha.min = esVoucher ? TODAY_STR : '';
+
+    // Ocultar campos no aplicables a Voucher
+    // Ocultar campos no aplicables a Voucher (sin tocar si el tipo es Vuelo, que los oculta por su cuenta)
+    var tipoActual = (document.querySelector('#modalNueva select[name="tipo"]') || {}).value || '';
+    if (tipoActual !== TIPO_VUELO) {
+      ['campoPrioridadDiv', 'campoContactoDiv', 'campoDetalleDirDiv'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = esVoucher ? 'none' : '';
+      });
+    }
+
+    // Mensaje informativo específico de Voucher (se superpone al de toggleCampoVuelo)
+    var noticeNormal  = document.getElementById('recNoticeTxt');
+    var noticeVoucher = document.getElementById('recNoticeVoucher');
+    if (esVoucher) {
+      if (noticeNormal)  noticeNormal.classList.add('d-none');
+      if (noticeVoucher) noticeVoucher.classList.remove('d-none');
+    } else if (noticeVoucher) {
+      noticeVoucher.classList.add('d-none');
+    }
+  }
+
   function actualizarPlaceholderObservacionPorMotivo() {
     var selMotivo = document.getElementById('campoMotivoVuelo');
     var campoDescripcion = document.getElementById('campoDescripcion');
@@ -917,7 +957,40 @@
     }
     err.classList.add('d-none');
     regreso.setCustomValidity('');
+    _checkDuplicadoVuelo();
     return true;
+  }
+
+  var _dupTimer = null;
+  function _checkDuplicadoVuelo() {
+    var salida  = document.getElementById('nfechaVuelo');
+    var regreso = document.getElementById('campoFechaRetorno');
+    var alerta  = document.getElementById('alertaDuplicadoVuelo');
+    var btnEnviar = document.querySelector('#modalNueva [type="submit"]');
+    if (!salida || !alerta) return;
+    var fecha = salida.value;
+    if (!fecha) { alerta.classList.add('d-none'); return; }
+    var fechaRetorno = (regreso && regreso.value) ? regreso.value : '';
+    clearTimeout(_dupTimer);
+    _dupTimer = setTimeout(function () {
+      var url = '/planificador/solicitudes/check-duplicado?tipo=Vuelo&fecha=' + fecha +
+                (fechaRetorno ? '&fecha_retorno=' + fechaRetorno : '');
+      fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data.duplicado) {
+            alerta.querySelector('span, i').nextSibling.textContent =
+              ' Ya tienes la solicitud #' + data.solicitud_id + ' activa de Vuelo en la fecha seleccionada' +
+              ' (estado: ' + data.estado + '). No podrás guardar hasta que sea completada o rechazada.';
+            alerta.classList.remove('d-none');
+            if (btnEnviar) btnEnviar.disabled = true;
+          } else {
+            alerta.classList.add('d-none');
+            if (btnEnviar) btnEnviar.disabled = false;
+          }
+        })
+        .catch(function () { alerta.classList.add('d-none'); });
+    }, 400);
   }
 
   function _setBloqueoSinCC(bloquear) {
@@ -960,10 +1033,11 @@
           _setBloqueoSinCC(true);
           return;
         }
+        var fmt = function (v) { return '$' + parseFloat(v).toLocaleString('es-EC', {minimumFractionDigits: 2, maximumFractionDigits: 2}); };
         var msgs = {
-          verde:    'Presupuesto disponible',
-          amarillo: 'Presupuesto bajo — verifique con su supervisor',
-          rojo:     'Sin presupuesto disponible — requiere aprobación Gerencia General',
+          verde:    'Presupuesto disponible — saldo ' + fmt(d.saldo) + ' de ' + fmt(d.presupuestado),
+          amarillo: 'Presupuesto bajo — saldo ' + fmt(d.saldo) + ' de ' + fmt(d.presupuestado) + ' — verifique con su supervisor',
+          rojo:     'Sin presupuesto — ejecutado ' + fmt(d.ejecutado) + ' de ' + fmt(d.presupuestado) + ' — requiere aprobación Gerencia General',
         };
         ind.className = 'vuelo-presup-ind vuelo-presup-' + d.semaforo;
         ind.querySelector('.vuelo-presup-label').textContent = msgs[d.semaforo] || '';
@@ -987,6 +1061,11 @@
     if (nfechaVuelo) {
       nfechaVuelo.min = TODAY_STR;
       if (!nfechaVuelo.value) nfechaVuelo.value = TODAY_STR;
+      nfechaVuelo.addEventListener('change', _checkDuplicadoVuelo);
+    }
+    var campoFechaRetorno = document.getElementById('campoFechaRetorno');
+    if (campoFechaRetorno) {
+      campoFechaRetorno.addEventListener('change', _checkDuplicadoVuelo);
     }
 
     /* Mostrar/ocultar campos Vuelo según tipo */
@@ -994,8 +1073,10 @@
     if (selectTipo) {
       selectTipo.addEventListener('change', function () {
         toggleCampoVuelo(this.value);
+        toggleCampoVoucher(this.value);
       });
       toggleCampoVuelo(selectTipo.value);
+      toggleCampoVoucher(selectTipo.value);
     }
 
     /* Motivo de vuelo: pista visual cuando se elige "Otros" */
@@ -1111,6 +1192,79 @@
         checkAll.checked = marked === total;
         actualizarBotones();
       });
+    });
+  });
+
+  // ── Voucher: confirmar sin salir de pantalla (AJAX) ──────────
+  function _setupVoucherAjax(container) {
+    container.querySelectorAll('form[data-voucher-form="confirmar"]').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var fileInput = form.querySelector('[name="adjunto_voucher"]');
+        if (!fileInput || !fileInput.files.length) return;
+
+        var statusEl = form.querySelector('.voucher-upload-status');
+        var btn      = form.querySelector('[type="submit"]');
+        var card     = form.closest('.voucher-item');
+
+        if (statusEl) { statusEl.className = 'voucher-upload-status uploading'; statusEl.textContent = 'Subiendo…'; }
+        if (btn) { btn.disabled = true; }
+
+        var fd = new FormData(form);
+        fetch(form.action, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: fd,
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data.ok) throw new Error(data.msg || 'Error');
+
+          // Actualizar badge del estado
+          var badgeEl = card.querySelector('.voucher-item-badge');
+          if (badgeEl) {
+            badgeEl.innerHTML = '<span class="vbadge vbadge--confirmado">'
+              + '<i class="bi bi-hourglass-split me-1"></i>Confirmado, pend. liquidar</span>';
+          }
+
+          // Actualizar borde de la tarjeta
+          card.classList.remove('voucher-item--entregado', 'voucher-item--pendiente');
+          card.classList.add('voucher-item--confirmado');
+          var hdr = card.querySelector('.voucher-item-header');
+          if (hdr) { hdr.style.background = '#ecfeff'; }
+
+          // Mostrar adjunto subido
+          var adjRow = card.querySelector('.voucher-adjunto-row');
+          if (adjRow) {
+            adjRow.style.display = '';
+            var vv = adjRow.querySelector('.vmeta-v');
+            if (vv) vv.textContent = data.adjunto_nombre || '';
+          }
+
+          // Quitar el formulario y mostrar mensaje inline
+          if (statusEl) { statusEl.className = 'voucher-upload-status ok'; statusEl.textContent = '¡Confirmado!'; }
+          setTimeout(function () { form.remove(); }, 1200);
+        })
+        .catch(function (err) {
+          if (statusEl) { statusEl.className = 'voucher-upload-status err'; statusEl.textContent = err.message || 'Error al subir'; }
+          if (btn) { btn.disabled = false; }
+        });
+      });
+    });
+  }
+
+  // ── Calendario acordeón ──────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function () {
+    var toggle = document.getElementById('calendarAccordionHeader');
+    if (!toggle) return;
+    var body = document.getElementById(toggle.getAttribute('data-calendar-toggle'));
+    if (!body) return;
+
+    toggle.addEventListener('click', function () {
+      var open = !body.hidden;
+      body.hidden = open;
+      toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
     });
   });
 

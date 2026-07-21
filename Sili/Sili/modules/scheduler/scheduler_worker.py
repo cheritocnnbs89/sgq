@@ -452,10 +452,37 @@ def start_scheduler(app=None):
                     except Exception:
                         target_app.logger.exception("Worker: aws_sync falló")
 
+                today_str = now.strftime("%Y-%m-%d")
+
+                # ==================================================
+                # Auto-confirmar vuelos realizados — diario 09:00
+                # ==================================================
+                if now.hour == 9 and now.minute < 10 and globals().get("_last_vuelo_autoconfirmar") != today_str:
+                    try:
+                        from modules.planificador.planificador_auto_jobs import auto_confirmar_vuelos
+                        n = auto_confirmar_vuelos(target_app)
+                        globals()["_last_vuelo_autoconfirmar"] = today_str
+                        if n:
+                            _log("info", "Worker: %d vuelo(s) auto-confirmado(s)", n)
+                    except Exception:
+                        target_app.logger.exception("Worker: auto_confirmar_vuelos falló")
+
+                # ==================================================
+                # Auto-liquidar vuelos — diario 09:05
+                # ==================================================
+                if now.hour == 9 and now.minute >= 5 and now.minute < 15 and globals().get("_last_vuelo_autoliquidar") != today_str:
+                    try:
+                        from modules.planificador.planificador_auto_jobs import auto_liquidar_vuelos
+                        n = auto_liquidar_vuelos(target_app)
+                        globals()["_last_vuelo_autoliquidar"] = today_str
+                        if n:
+                            _log("info", "Worker: %d vuelo(s) auto-liquidado(s)", n)
+                    except Exception:
+                        target_app.logger.exception("Worker: auto_liquidar_vuelos falló")
+
                 # ==================================================
                 # Recordatorio vuelos coordinados sin liquidar - diario a las 08:00
                 # ==================================================
-                today_str = now.strftime("%Y-%m-%d")
                 if now.hour == 8 and globals().get("_last_vuelo_recorda") != today_str:
                     try:
                         from modules.planificador import planificador_repository as _pr
@@ -516,3 +543,6 @@ def start_scheduler(app=None):
     th.start()
     _log("info", "Worker: hilo lanzado correctamente.")
     return th
+
+
+

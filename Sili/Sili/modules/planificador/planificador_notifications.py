@@ -457,7 +457,7 @@ def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
 
 
 # ──────────────────────────────────────────────────────────
-# 8. Vuelo: notificar al Gerente de Presupuesto — coordinador cotizó el pasaje
+# 8. Vuelo: notificar al Gerente General — coordinador cotizó el pasaje
 # ──────────────────────────────────────────────────────────
 
 def notif_vuelo_pendiente_gg(solicitud_id: int, area: str, fecha: str,
@@ -467,7 +467,7 @@ def notif_vuelo_pendiente_gg(solicitud_id: int, area: str, fecha: str,
     if not gg_id:
         return
     subject = f"[Planificador] Vuelo #{solicitud_id} cotizado — requiere su aprobación"
-    titulo  = f"Solicitud de Vuelo #{solicitud_id} — Aprobación Gerente de Presupuesto"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} — Aprobación Gerente General"
     saludo  = (f"Estimado/a <strong>{gg_nombre}</strong>, el coordinador <strong>{coordinador_nombre}</strong> "
                f"cotizó el pasaje de la solicitud de Vuelo de <strong>{solicitante_nombre}</strong>. "
                f"Requiere su autorización para continuar.")
@@ -529,7 +529,7 @@ def notif_vuelo_gg_aprobo_pendiente_info(solicitud_id: int, area: str, fecha: st
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
     subject = f"[Planificador] Vuelo #{solicitud_id} — cotización aprobada"
     titulo  = f"Solicitud de Vuelo #{solicitud_id} — cotización aprobada"
-    saludo  = (f"El Gerente de Presupuesto <strong>{gg_nombre}</strong> aprobó la cotización "
+    saludo  = (f"El Gerente General <strong>{gg_nombre}</strong> aprobó la cotización "
                f"del vuelo de <strong>{solicitante_nombre}</strong>. Ya puedes ingresar la "
                f"información del vuelo y adjuntar los documentos.")
     filas   = [
@@ -560,7 +560,7 @@ def notif_vuelo_gg_rechazo_coordinador(solicitud_id: int, area: str, fecha: str,
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
     subject = f"[Planificador] Vuelo #{solicitud_id} — cotización rechazada"
     titulo  = f"Solicitud de Vuelo #{solicitud_id} — cotización rechazada"
-    saludo  = (f"El Gerente de Presupuesto <strong>{gg_nombre}</strong> rechazó la cotización "
+    saludo  = (f"El Gerente General <strong>{gg_nombre}</strong> rechazó la cotización "
                f"del vuelo de <strong>{solicitante_nombre}</strong>. Por favor reagenda o "
                f"busca mejores precios y vuelve a cotizar.")
     filas   = [
@@ -779,3 +779,164 @@ def notif_vuelo_nueva_gerente(solicitud_id: int, area: str, fecha: str,
            f"Nueva solicitud de Vuelo #{solicitud_id} — {area} — {fecha} registrada por {solicitante_nombre}")
     email_g = repo.get_email_by_usuario_id(gerente_id)
     _email([email_g] if email_g else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Voucher (taxi): nueva solicitud → notificar al jefe directo
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
+                                  descripcion: str, solicitante_nombre: str,
+                                  jefe_id: int | None, jefe_nombre: str) -> None:
+    if not jefe_id:
+        return
+    subject = f"[Planificador] Solicitud de Voucher #{solicitud_id} pendiente de su aprobación"
+    titulo  = f"Solicitud de Voucher #{solicitud_id} — Requiere su aprobación"
+    saludo  = (f"Estimado/a <strong>{jefe_nombre}</strong>, "
+               f"<strong>{solicitante_nombre}</strong> ha registrado una solicitud de "
+               f"tipo <strong>Voucher</strong> que requiere su aprobación.")
+    filas   = [
+        ("N° solicitud",      str(solicitud_id)),
+        ("Área solicitante",  area),
+        ("Fecha solicitada",  fecha),
+        ("Descripción",       descripcion or "—"),
+        ("Solicitante",       solicitante_nombre),
+    ]
+    nota = "Ingresa al SGQ para aprobar o rechazar esta solicitud."
+    html = _email_html("PLANIFICADOR · VOUCHER — APROBACIÓN JEFE", titulo, saludo, filas, nota)
+    _inapp(jefe_id, subject,
+           f"Solicitud de Voucher #{solicitud_id} de {solicitante_nombre} — {fecha} requiere su aprobación")
+    email_j = repo.get_email_by_usuario_id(jefe_id)
+    _email([email_j] if email_j else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Voucher: aprobado (por el jefe o de forma automática) → notificar al solicitante
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_aprobada_solicitante(solicitud_id: int, area: str, fecha: str,
+                                        descripcion: str, solicitante_id: int,
+                                        solicitante_nombre: str, aprobador_nombre: str) -> None:
+    subject = f"[Planificador] Voucher #{solicitud_id} aprobado"
+    titulo  = f"Solicitud de Voucher #{solicitud_id} aprobada"
+    saludo  = (f"Hola <strong>{solicitante_nombre}</strong>, tu solicitud de Voucher fue "
+               f"aprobada por <strong>{aprobador_nombre}</strong>. El coordinador te entregará "
+               f"los vouchers con su secuencial próximamente.")
+    filas   = [
+        ("N° solicitud",    str(solicitud_id)),
+        ("Área solicitante", area),
+        ("Fecha",           fecha),
+        ("Descripción",     descripcion or "—"),
+        ("Aprobado por",    aprobador_nombre),
+    ]
+    nota = "El coordinador te avisará cuando tengas los vouchers listos para retirar."
+    html = _email_html("PLANIFICADOR · VOUCHER — APROBADO", titulo, saludo, filas, nota)
+    _inapp(solicitante_id, subject,
+           f"Tu solicitud de Voucher #{solicitud_id} fue aprobada. El coordinador te entregará los vouchers.")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Voucher: coordinador entregó los vouchers con secuencial → notificar al solicitante
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_entregado_usuario(solicitud_id: int, area: str, fecha: str,
+                                     solicitante_id: int, solicitante_nombre: str,
+                                     cantidad: int) -> None:
+    subject = f"[Planificador] Voucher #{solicitud_id} entregado — confirma su uso"
+    titulo  = f"Voucher #{solicitud_id} — Vouchers entregados"
+    saludo  = (f"Hola <strong>{solicitante_nombre}</strong>, el coordinador registró el "
+               f"secuencial de tus {cantidad} voucher(s). Cuando termines de usar cada uno, "
+               f"ingresa al SGQ y confírmalo subiendo tu respaldo (evidencia) y una observación.")
+    filas   = [
+        ("N° solicitud", str(solicitud_id)),
+        ("Área",         area),
+        ("Fecha",        fecha),
+        ("N° de vouchers", str(cantidad)),
+    ]
+    nota = "Ingresa al SGQ → Planificador y confirma cada voucher por separado con su respaldo."
+    html = _email_html("PLANIFICADOR · VOUCHER — ENTREGADO", titulo, saludo, filas, nota)
+    _inapp(solicitante_id, subject,
+           f"Tus {cantidad} voucher(s) de la solicitud #{solicitud_id} fueron entregados. Confírmalos con su respaldo.")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Voucher: rechazado por el jefe → notificar al solicitante
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_rechazada(solicitud_id: int, area: str, fecha: str,
+                             motivo: str, solicitante_nombre: str,
+                             solicitante_id: int, rechazado_por: str) -> None:
+    subject = f"[Planificador] Solicitud de Voucher #{solicitud_id} rechazada"
+    titulo  = f"Solicitud de Voucher #{solicitud_id} rechazada"
+    saludo  = "Tu solicitud de Voucher no fue aprobada."
+    filas   = [
+        ("N° solicitud",  str(solicitud_id)),
+        ("Área",          area),
+        ("Fecha",         fecha),
+        ("Rechazado por", rechazado_por),
+        ("Motivo",        motivo or "—"),
+    ]
+    html = _email_html("PLANIFICADOR · VOUCHER — RECHAZADO", titulo, saludo, filas)
+    _inapp(solicitante_id, subject,
+           f"Tu solicitud de Voucher #{solicitud_id} fue rechazada. Motivo: {motivo or '—'}")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Voucher: el solicitante confirmó todos sus vouchers → notificar a los coordinadores
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_pendiente_liquidacion(solicitud_id: int, area: str, fecha: str,
+                                         solicitante_nombre: str) -> None:
+    """Avisa a los coordinadores del tipo Voucher que hay una solicitud lista para liquidar."""
+    coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Voucher")
+    subject = f"[Planificador] Voucher #{solicitud_id} confirmado — pendiente ingresar costos"
+    titulo  = f"Voucher #{solicitud_id} — Registrar costos"
+    saludo  = (f"<strong>{solicitante_nombre}</strong> confirmó todos sus vouchers de esta "
+               f"solicitud. Por favor ingresa el costo de cada uno para completarla.")
+    filas   = [
+        ("N° solicitud", str(solicitud_id)),
+        ("Área",         area),
+        ("Fecha",        fecha),
+        ("Solicitante",  solicitante_nombre),
+    ]
+    nota = ("Ingresa al SGQ → Planificador → Por completar, abre la solicitud y "
+            "registra el costo por voucher.")
+    html = _email_html("PLANIFICADOR · VOUCHER — PENDIENTE LIQUIDACIÓN", titulo, saludo, filas, nota)
+    emails = []
+    for c in coordinadores:
+        _inapp(c["id"], subject,
+               f"Voucher #{solicitud_id} de {solicitante_nombre} finalizado — ingresa el costo")
+        if c.get("email"):
+            emails.append(c["email"])
+    _email(emails, subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Voucher: coordinador liquidó el costo → notificar al solicitante que se cerró
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_liquidada(solicitud_id: int, area: str, fecha: str,
+                             solicitante_nombre: str, solicitante_id: int,
+                             liquidador_nombre: str, costo_total: float) -> None:
+    subject = f"[Planificador] Voucher #{solicitud_id} completado y registrado"
+    titulo  = f"Voucher #{solicitud_id} — Solicitud cerrada"
+    saludo  = (f"Hola <strong>{solicitante_nombre}</strong>, tu solicitud de Voucher "
+               f"ha sido completada — todos los vouchers fueron liquidados.")
+    filas   = [
+        ("N° solicitud",   str(solicitud_id)),
+        ("Área",           area),
+        ("Fecha",          fecha),
+        ("Costo total",    f"${costo_total:,.2f}"),
+        ("Registrado por", liquidador_nombre),
+    ]
+    html = _email_html("PLANIFICADOR · VOUCHER — COMPLETADO", titulo, saludo, filas)
+    _inapp(solicitante_id, subject,
+           f"Tu solicitud de Voucher #{solicitud_id} fue completada. Costo total: ${costo_total:,.2f}")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html)
