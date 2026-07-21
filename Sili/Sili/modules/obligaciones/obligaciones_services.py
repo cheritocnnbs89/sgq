@@ -896,9 +896,11 @@ def _por_empresa_estado_a_chart(filas):
 def dashboard_data(user_id, rol, filters):
     kpis = repo.dashboard_kpis(rol, user_id, filters)
 
-    total_cumplidas = kpis["a_tiempo"] + kpis["fuera_plazo"]
-    pct_a_tiempo = round((kpis["a_tiempo"] / total_cumplidas) * 100, 1) if total_cumplidas else 0.0
-    pct_fuera_plazo = round((kpis["fuera_plazo"] / total_cumplidas) * 100, 1) if total_cumplidas else 0.0
+    # Base incluye atrasadas: una obligacion atrasada (aun abierta) cuenta como
+    # incumplimiento para el % de cumplimiento, igual que las cerradas fuera de plazo.
+    total_base = kpis["a_tiempo"] + kpis["fuera_plazo"] + kpis["total_atrasadas"]
+    pct_a_tiempo = round((kpis["a_tiempo"] / total_base) * 100, 1) if total_base else 0.0
+    pct_fuera_plazo = round(((kpis["fuera_plazo"] + kpis["total_atrasadas"]) / total_base) * 100, 1) if total_base else 0.0
 
     es_admin = rol in ROLES_ADMIN
     por_empresa_estado = repo.dashboard_por_empresa_estado(rol, user_id, filters) if es_admin else []

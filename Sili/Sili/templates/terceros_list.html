@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% set titulo = 'Clientes' if tipo=='C' else 'Proveedores' %}
+{% set titulo = 'Clientes' if tipo=='C' else 'Proveedores' if tipo=='P' else 'Entidades reguladoras' %}
 {% block title %}{{ titulo }}{% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
     <div class="d-flex gap-2">
       {% if permissions.get('terceros', {}).get('crear') %}
       <a class="btn btn-cta-blue btn-sm" href="{{ url_for('tercero_nuevo', tipo=tipo) }}">
-        <i class="bi bi-plus-lg"></i><span>Nuevo {{ 'cliente' if tipo=='C' else 'proveedor' }}</span>
+        <i class="bi bi-plus-lg"></i><span>Nuevo {{ 'cliente' if tipo=='C' else 'proveedor' if tipo=='P' else 'entidad reguladora' }}</span>
       </a>
       {% endif %}
 
