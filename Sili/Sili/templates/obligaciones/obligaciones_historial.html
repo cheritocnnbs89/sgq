@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Obligaciones - Historial{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/obligaciones.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
   <div class="d-flex align-items-center justify-content-between mb-3">
@@ -12,11 +16,8 @@
     {% endif %}
   </div>
 
-  <form class="row g-2 mb-3" method="get" action="{{ url_for('obligaciones.historial_obligaciones') }}">
-    <div class="col-md-1">
-      <input type="text" class="form-control form-control-sm" name="id" placeholder="ID" value="{{ filters.id }}">
-    </div>
-    <div class="col-md-2">
+  <form class="row g-2 mb-3 oblig-filtros" method="get" action="{{ url_for('obligaciones.historial_obligaciones') }}">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="empresa_id">
         <option value="">-- Empresa --</option>
         {% for e in combos.empresas %}
@@ -24,7 +25,7 @@
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-2">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="tipo_id">
         <option value="">-- Tipo --</option>
         {% for t in combos.tipos %}
@@ -32,7 +33,7 @@
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-2">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="entidad_id">
         <option value="">-- Entidad --</option>
         {% for en in combos.entidades %}
@@ -40,7 +41,7 @@
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-2">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="frecuencia_id">
         <option value="">-- Frecuencia --</option>
         {% for f in combos.frecuencias %}
@@ -48,10 +49,10 @@
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-1">
-      <input type="number" class="form-control form-control-sm" name="anio" placeholder="Año" value="{{ filters.anio }}">
+    <div class="col-6 col-md-auto">
+      <input type="month" class="form-control form-control-sm" name="fecha_vencimiento" value="{{ filters.fecha_vencimiento }}" title="Mes de vencimiento">
     </div>
-    <div class="col-md-2">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="estado">
         <option value="">-- Estado --</option>
         {% for valor, label in estado_labels.items() %}
@@ -62,7 +63,7 @@
       </select>
     </div>
     {% if usuarios %}
-    <div class="col-md-2">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="usuario_id">
         <option value="">-- Usuario --</option>
         {% for u in usuarios %}
@@ -81,10 +82,8 @@
     <table id="tabla-historial" class="table table-hover table-sm align-middle tablekit">
       <thead class="table-light">
         <tr>
-          <th>ID</th>
           <th>Empresa</th>
           <th>Entidad</th>
-          <th>Tipo</th>
           <th>Descripción</th>
           <th>Frecuencia</th>
           <th>Fecha creación</th>
@@ -92,35 +91,39 @@
           <th>Estado</th>
           <th>Evidencia</th>
           <th>Usuario</th>
-          <th>Departamento</th>
-          <th>Cargo</th>
         </tr>
       </thead>
       <tbody>
         {% for r in rows %}
         <tr data-row="1">
-          <td>{{ r.id }}</td>
           <td>{{ r.empresa_nombre }}</td>
           <td>{{ r.entidad_nombre }}</td>
-          <td>{{ r.tipo_nombre }}</td>
-          <td>{{ r.descripcion }}</td>
+          <td><span class="oblig-truncate" title="{{ r.descripcion }}">{{ r.descripcion }}</span></td>
           <td>{{ r.frecuencia_nombre }}</td>
-          <td>{{ r.creado_en }}</td>
+          <td>{{ r.creado_en.strftime('%Y-%m-%d') if r.creado_en else '-' }}</td>
           <td>{{ r.fecha_vencimiento or '-' }}</td>
           <td>
             {% if r.estado == 'cumplido_fuera_plazo' %}
-            <span class="badge bg-warning text-dark">{{ estado_labels.get(r.estado, r.estado) }}</span>
+            <span class="badge bg-warning text-dark oblig-badge-estado">{{ estado_labels.get(r.estado, r.estado) }}</span>
             {% else %}
-            <span class="badge bg-success">{{ estado_labels.get(r.estado, r.estado) }}</span>
+            <span class="badge bg-success oblig-badge-estado">{{ estado_labels.get(r.estado, r.estado) }}</span>
             {% endif %}
           </td>
-          <td>{{ r.evidencias or '-' }}</td>
+          <td>
+            {% if r.evidencias_list %}
+            {% for ev in r.evidencias_list %}
+            <a class="oblig-evidencia-link" download
+               href="{{ url_for('obligaciones.descargar_evidencia', oblig_id=r.id, evidencia_id=ev.id) }}"
+               title="{{ ev.nombre_archivo }}">
+              <i class="bi bi-download"></i>
+            </a>
+            {% endfor %}
+            {% else %}-{% endif %}
+          </td>
           <td>{{ r.usuario_nombre or r.usuario_username }}</td>
-          <td>{{ r.departamento_nombre or '-' }}</td>
-          <td>{{ r.puesto_nombre or '-' }}</td>
         </tr>
         {% else %}
-        <tr><td colspan="13" class="text-center text-muted py-4">Sin registros en el historial.</td></tr>
+        <tr><td colspan="9" class="text-center text-muted py-4">Sin registros en el historial.</td></tr>
         {% endfor %}
       </tbody>
     </table>

@@ -23,7 +23,9 @@
   </button>
 
   <div class="collapse{{ ' show' if filtros_activos else '' }} mb-4" id="panelFiltrosDashboard">
-  <form class="row g-2 mb-3" method="get" action="{{ url_for('obligaciones.dashboard_obligaciones') }}">
+  <!-- 2026-07-27: id + data-api-entidades agregados para filtro dependiente Tipo -> Entidad (AJAX) -->
+  <form class="row g-2 mb-3" method="get" action="{{ url_for('obligaciones.dashboard_obligaciones') }}"
+        id="frmFiltrosDashboard" data-api-entidades="{{ url_for('obligaciones.api_entidades_por_tipo') }}">
     <div class="col-md-2">
       <select class="form-select form-select-sm" name="empresa_id">
         <option value="">-- Empresa --</option>
@@ -33,7 +35,7 @@
       </select>
     </div>
     <div class="col-md-2">
-      <select class="form-select form-select-sm" name="tipo_id">
+      <select class="form-select form-select-sm" name="tipo_id" id="filtroTipoId">
         <option value="">-- Tipo --</option>
         {% for t in combos.tipos %}
         <option value="{{ t.id }}" {% if filters.tipo_id|string == t.id|string %}selected{% endif %}>{{ t.nombre }}</option>
@@ -41,7 +43,8 @@
       </select>
     </div>
     <div class="col-md-2">
-      <select class="form-select form-select-sm" name="entidad_id">
+      <select class="form-select form-select-sm" name="entidad_id" id="filtroEntidadId"
+              data-selected="{{ filters.entidad_id or '' }}">
         <option value="">-- Entidad --</option>
         {% for en in combos.entidades %}
         <option value="{{ en.id }}" {% if filters.entidad_id|string == en.id|string %}selected{% endif %}>{{ en.nombre }}</option>
@@ -65,43 +68,55 @@
     <div class="col">
       <div class="section">
         <div class="section-header small text-uppercase"><i class="bi bi-collection"></i> Total obligaciones</div>
-        <div class="fs-2 fw-bold">{{ data.kpis.total_obligaciones }}</div>
+        <div class="fs-2 fw-bold" id="kpiTotal">{{ data.kpis.total_obligaciones }}</div>
       </div>
     </div>
     <div class="col">
       <div class="section">
         <div class="section-header small text-uppercase"><i class="bi bi-list-check"></i> Total activas</div>
-        <div class="fs-2 fw-bold">{{ data.kpis.total_activas }}</div>
+        <div class="fs-2 fw-bold" id="kpiActivas">{{ data.kpis.total_activas }}</div>
       </div>
     </div>
     <div class="col">
       <a class="text-decoration-none" href="{{ url_for('obligaciones.lista_obligaciones', estado='atrasado') }}">
         <div class="section section-danger">
           <div class="section-header small text-uppercase"><i class="bi bi-exclamation-triangle-fill"></i> Atrasadas</div>
-          <div class="fs-2 fw-bold text-danger">{{ data.kpis.total_atrasadas }}</div>
+          <div class="fs-2 fw-bold text-danger" id="kpiAtrasadas">{{ data.kpis.total_atrasadas }}</div>
         </div>
       </a>
     </div>
     <div class="col">
       <div class="section section-warning">
         <div class="section-header small text-uppercase"><i class="bi bi-calendar-x"></i> Próximas a vencer (30 días)</div>
-        <div class="fs-2 fw-bold">{{ data.kpis.proximas_vencer }}</div>
+        <div class="fs-2 fw-bold" id="kpiProximas">{{ data.kpis.proximas_vencer }}</div>
       </div>
     </div>
   </div>
 
+  <!-- 2026-07-27: layout rediseñado -- 4 tiles del mismo tamaño (col-md-6),
+       orden: Velocimetro | Por-empresa arriba, Por-estado-general | Por-tipo
+       abajo. Chart "Por frecuencia" eliminado por completo (pedido de
+       Matias) -- ver HISTORIAL-CORRECCIONES.md del modulo. -->
   <div class="row g-3">
     <div class="col-md-6">
       <div class="section section-success">
-        <div class="section-header"><i class="bi bi-check-circle-fill"></i> Cumplidas a tiempo vs. fuera de plazo</div>
+        <div class="section-header"><i class="bi bi-check-circle-fill"></i> Cumplidas vs. Atrasadas</div>
         <div class="chart-box">
           <canvas id="chartCumplimiento"></canvas>
           <div id="chartCumplimientoLabel" class="gauge-label">
-            <span class="fs-2 fw-bold">{{ data.pct_a_tiempo }}%</span>
+            <span class="fs-2 fw-bold"><span id="kpiPct">{{ data.pct_cumplidas }}</span>%</span>
           </div>
         </div>
       </div>
     </div>
+    {% if es_admin %}
+    <div class="col-md-6">
+      <div class="section">
+        <div class="section-header"><i class="bi bi-building"></i> Por estado (empresas)</div>
+        <div class="chart-box"><canvas id="chartEmpresa"></canvas></div>
+      </div>
+    </div>
+    {% endif %}
     <div class="col-md-6">
       <div class="section">
         <div class="section-header"><i class="bi bi-stoplights-fill"></i> Por estado</div>
@@ -114,24 +129,7 @@
         <div class="chart-box"><canvas id="chartTipo"></canvas></div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="section">
-        <div class="section-header"><i class="bi bi-calendar-week"></i> Por frecuencia</div>
-        <div class="chart-box"><canvas id="chartFrecuencia"></canvas></div>
-      </div>
-    </div>
   </div>
-
-  {% if es_admin %}
-  <div class="row g-3 mt-1">
-    <div class="col-md-12">
-      <div class="section">
-        <div class="section-header"><i class="bi bi-building"></i> Por empresa (por estado)</div>
-        <div class="chart-box tall"><canvas id="chartEmpresa"></canvas></div>
-      </div>
-    </div>
-  </div>
-  {% endif %}
 
   <p class="text-muted small mt-3">
     <i class="bi bi-info-circle"></i> Este dashboard es un complemento visual — no reemplaza el Excel exportable del Historial.
@@ -140,13 +138,13 @@
 {% endblock %}
 
 {% block scripts_extra %}
-<script id="dashboard-data" type="application/json">
+<script id="dashboard-data" type="application/json" data-endpoint="{{ url_for('obligaciones.dashboard_obligaciones_data') }}">
 {{ {
+  "kpis": data.kpis,
   "por_estado": data.por_estado,
   "por_tipo": data.por_tipo,
-  "por_empresa_estado": data.por_empresa_estado,
-  "por_frecuencia": data.por_frecuencia,
-  "pct_a_tiempo": data.pct_a_tiempo
+  "por_estado_total": data.por_estado_total,
+  "pct_cumplidas": data.pct_cumplidas
 } | tojson }}
 </script>
 <script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>

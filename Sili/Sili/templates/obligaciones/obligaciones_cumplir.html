@@ -35,10 +35,10 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="card-body">
       <div class="mb-3">
-        <label class="form-label">Evidencia (uno o más archivos) *</label>
+        <label class="form-label">Certificado de cumplimiento (emitido por la entidad correspondiente) *</label>
         <div class="oblig-dropzone" id="dropzoneEvidencia">
           <i class="bi bi-cloud-upload d-block mb-2"></i>
-          Arrastra el archivo aquí o hacé clic para seleccionar
+          Adjuntá el certificado de cumplimiento emitido por la entidad. Arrastralo aquí o hacé clic para seleccionar.
         </div>
         <input type="file" name="evidencias" id="evidencias" class="d-none" multiple required
                accept=".pdf,.jpg,.jpeg,.png,.xlsx,.docx">

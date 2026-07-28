@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import io
+from datetime import date, datetime
 
 import openpyxl
 from flask import (
     Blueprint, render_template, request, redirect, url_for, flash, abort, session, send_file,
+    current_app, jsonify,
 )
 
 from modules.auth.routes_auth import require_login, require_permission
@@ -13,7 +15,6 @@ from .obligaciones_constants import (
     PERM_VER,
     PERM_CREAR,
     PERM_EDITAR,
-    PERM_CARGA_MASIVA,
     PERM_EXPORTAR,
     PERM_HISTORIAL,
     PERM_DASHBOARD,
@@ -27,13 +28,22 @@ from . import obligaciones_services as service
 obligaciones_bp = Blueprint("obligaciones", __name__, url_prefix="/obligaciones")
 
 
+def _excel_cell(value):
+    """Blinda ws.append: openpyxl solo acepta str/número/fecha/None. Cualquier
+    otro tipo (list/dict/etc.) se convierte a texto para no romper el export."""
+    if value is None:
+        return ""
+    if isinstance(value, (str, int, float, bool, date, datetime)):
+        return value
+    return str(value)
+
+
 def register_obligaciones_routes(app):
     # 2026-07-15: importa (y registra) las rutas de Frecuencias en el MISMO
     # blueprint antes de app.register_blueprint -- import diferido acá (no al
     # tope del archivo) para evitar import circular, ya que
     # routes_obligaciones_frecuencias.py importa `obligaciones_bp` de este módulo.
     from . import routes_obligaciones_frecuencias  # noqa: F401 (registra decoradores @obligaciones_bp.route)
-    from . import routes_obligaciones_tipos  # noqa: F401 (Correccion #4 -- ruta propia Tipos)
     app.register_blueprint(obligaciones_bp)
 
 
@@ -72,7 +82,7 @@ def lista_obligaciones():
 @require_login
 @require_permission(PERM_CREAR, "ver")
 def nueva_obligacion():
-    combos = service.get_combos()
+    combos = service.get_combos_form()
 
     if request.method == "POST":
         result = service.crear_obligacion(request.form, session)
@@ -87,6 +97,7 @@ def nueva_obligacion():
             combos=combos,
             mode="new",
             active_page=ACTIVE_KEY,
+            hoy=date.today().isoformat(),
         )
 
     return render_template(
@@ -95,6 +106,7 @@ def nueva_obligacion():
         combos=combos,
         mode="new",
         active_page=ACTIVE_KEY,
+        hoy=date.today().isoformat(),
     )
 
 
@@ -107,7 +119,7 @@ def editar_obligacion(oblig_id):
         abort(404)
     service.assert_puede_acceder_obligacion(row, session)
 
-    combos = service.get_combos()
+    combos = service.get_combos_form()
 
     if request.method == "POST":
         result = service.editar_obligacion(oblig_id, request.form, session)
@@ -126,6 +138,7 @@ def editar_obligacion(oblig_id):
             mode="edit",
             oblig_id=oblig_id,
             active_page=ACTIVE_KEY,
+            hoy=date.today().isoformat(),
         )
 
     return render_template(
@@ -135,6 +148,7 @@ def editar_obligacion(oblig_id):
         mode="edit",
         oblig_id=oblig_id,
         active_page=ACTIVE_KEY,
+        hoy=date.today().isoformat(),
     )
 
 
@@ -235,41 +249,47 @@ def historial_obligaciones():
 @require_login
 @require_permission(PERM_EXPORTAR, "ver")
 def exportar_historial():
-    filters = service.collect_historial_filters(request.args)
-    rows = service.list_historial(session.get("usuario_id"), session.get("rol"), filters)
+    # 2026-07-21: export blindado (try/except) + 10 columnas del Excel real de
+    # referencia (Data Power BI - Obligaciones tributarias y societarias.xlsx).
+    # "Prioridad" no tiene campo en BD todavía -> se exporta vacía
+    # (ver HISTORIAL-CORRECCIONES 2026-07-21).
+    try:
+        filters = service.collect_historial_filters(request.args)
+        rows = service.list_historial(session.get("usuario_id"), session.get("rol"), filters)
 
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Historial"
-    ws.append(list(HISTORIAL_COLUMNAS))
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Historial"
+        ws.append(list(HISTORIAL_COLUMNAS))
 
-    for r in rows:
-        ws.append([
-            r["id"],
-            r["empresa_nombre"],
-            r["entidad_nombre"],
-            r["tipo_nombre"],
-            service.sanear_formula(r["descripcion"]),  # 2026-07-13 (T6): anti CSV/formula injection
-            r["frecuencia_nombre"],
-            r["creado_en"],
-            r["fecha_vencimiento"],
-            ESTADO_LABELS.get(r["estado"], r["estado"]),
-            r["evidencias"] or "",
-            r["usuario_nombre"] or r["usuario_username"],
-            r["departamento_nombre"] or "",
-            r["puesto_nombre"] or "",
-        ])
+        for r in rows:
+            ws.append([
+                _excel_cell(r["id"]),
+                _excel_cell(r["tipo_nombre"]),
+                _excel_cell(service.sanear_formula(r["descripcion"])),  # anti CSV/formula injection (T6)
+                _excel_cell(r["departamento_nombre"] or ""),
+                _excel_cell(r["usuario_nombre"] or r["usuario_username"]),
+                _excel_cell(r["entidad_nombre"]),
+                _excel_cell(r["fecha_vencimiento"]),
+                _excel_cell(r["frecuencia_nombre"]),
+                _excel_cell(ESTADO_LABELS.get(r["estado"], r["estado"])),
+                "",  # Prioridad -- sin campo en BD, pendiente definir origen (Matias)
+            ])
 
-    buf = io.BytesIO()
-    wb.save(buf)
-    buf.seek(0)
+        buf = io.BytesIO()
+        wb.save(buf)
+        buf.seek(0)
 
-    return send_file(
-        buf,
-        as_attachment=True,
-        download_name="obligaciones_historial.xlsx",
-        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
+        return send_file(
+            buf,
+            as_attachment=True,
+            download_name="obligaciones_historial.xlsx",
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+    except Exception:
+        current_app.logger.exception("Error al exportar historial de obligaciones")
+        flash("No se pudo generar el Excel del historial.", "danger")
+        return redirect(url_for("obligaciones.historial_obligaciones"))
 
 
 # ==================================================================
@@ -294,46 +314,28 @@ def dashboard_obligaciones():
     )
 
 
-# ==================================================================
-# Fase 7 -- Carga masiva Excel
-# ==================================================================
-@obligaciones_bp.route("/carga-masiva", methods=["GET", "POST"], endpoint="carga_masiva")
+@obligaciones_bp.route("/dashboard/data", methods=["GET"], endpoint="dashboard_obligaciones_data")
 @require_login
-@require_permission(PERM_CARGA_MASIVA, "ver")
-def carga_masiva():
-    if request.method == "POST":
-        archivo = request.files.get("archivo")
-        result = service.procesar_carga_masiva_preview(archivo, session)
-
-        if not result["ok"]:
-            flash(*result["flash"])
-            return render_template(
-                "obligaciones/obligaciones_carga_masiva.html",
-                preview=None,
-                active_page=ACTIVE_KEY,
-            )
-
-        return render_template(
-            "obligaciones/obligaciones_carga_masiva.html",
-            preview=result,
-            active_page=ACTIVE_KEY,
-        )
-
-    return render_template(
-        "obligaciones/obligaciones_carga_masiva.html",
-        preview=None,
-        active_page=ACTIVE_KEY,
-    )
+@require_permission(PERM_DASHBOARD, "ver")
+def dashboard_obligaciones_data():
+    # Endpoint AJAX del auto-refresco (polling cada 30s). Reusa la MISMA logica
+    # de armado de datos que la vista HTML -- solo cambia render_template por
+    # jsonify. Respeta los filtros que el JS mande en el query string.
+    filters = service.collect_dashboard_filters(request.args)
+    rol = session.get("rol")
+    data = service.dashboard_data(session.get("usuario_id"), rol, filters)
+    return jsonify(data)
 
 
-@obligaciones_bp.route("/carga-masiva/confirmar", methods=["POST"], endpoint="carga_masiva_confirmar")
+# ==================================================================
+# 2026-07-27 -- Filtro dependiente Tipo -> Entidad
+# ==================================================================
+@obligaciones_bp.route("/api/entidades", methods=["GET"], endpoint="api_entidades_por_tipo")
 @require_login
-@require_permission(PERM_CARGA_MASIVA, "ver")
-def carga_masiva_confirmar():
-    token = (request.form.get("token") or "").strip()
-    result = service.confirmar_carga_masiva(token, session)
-    flash(*result["flash"])
-
-    if result["ok"]:
-        return redirect(url_for("obligaciones.lista_obligaciones"))
-    return redirect(url_for("obligaciones.carga_masiva"))
+@require_permission(PERM_VER, "ver")
+def api_entidades_por_tipo():
+    tipo_id = (request.args.get("tipo_id") or "").strip()
+    if not tipo_id.isdigit():
+        return jsonify({"ok": True, "entidades": []})
+    rows = service.list_entidades_por_tipo(int(tipo_id))
+    return jsonify({"ok": True, "entidades": [{"id": r["id"], "nombre": r["nombre"]} for r in rows]})

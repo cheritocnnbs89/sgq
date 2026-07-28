@@ -67,6 +67,31 @@
 
           <div class="mt-3">
             <label class="form-label mb-1">Destinatarios</label>
+
+            <div class="border rounded p-2 mb-2 bg-light">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="notif_{{ i }}_creador" value="1"
+                       id="notif_{{ i }}_creador" {% if n and n.tipo_creador %}checked{% endif %}>
+                <label class="form-check-label" for="notif_{{ i }}_creador">
+                  Notificar al creador de la obligación
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="notif_{{ i }}_jefe" value="1"
+                       id="notif_{{ i }}_jefe" {% if n and n.tipo_jefe %}checked{% endif %}>
+                <label class="form-check-label" for="notif_{{ i }}_jefe">
+                  Notificar a su jefe directo
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="notif_{{ i }}_gerente" value="1"
+                       id="notif_{{ i }}_gerente" {% if n and n.tipo_gerente %}checked{% endif %}>
+                <label class="form-check-label" for="notif_{{ i }}_gerente">
+                  Notificar al gerente del área
+                </label>
+              </div>
+            </div>
+
             <input type="text" class="form-control form-control-sm mb-2 notif-usuario-filtro"
                    placeholder="Buscar usuario...">
             <div class="notif-usuarios-lista border rounded p-2">

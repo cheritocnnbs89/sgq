@@ -10,14 +10,15 @@
     </a>
   </div>
 
-  <form method="post" class="card shadow-sm">
+  <form method="post" class="card shadow-sm" id="frmObligacion"
+        data-api-entidades="{{ url_for('obligaciones.api_entidades_por_tipo') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
     <div class="card-body">
       <div class="row g-3">
         <div class="col-md-4">
           <label class="form-label">Tipo *</label>
-          <select name="tipo_id" class="form-select" required>
+          <select name="tipo_id" id="tipo_id" class="form-select" required>
             <option value="">-- Seleccionar --</option>
             {% for t in combos.tipos %}
             <option value="{{ t.id }}" {% if data.get('tipo_id')|int == t.id %}selected{% endif %}>{{ t.nombre }}</option>
@@ -37,7 +38,8 @@
 
         <div class="col-md-4">
           <label class="form-label">Entidad reguladora *</label>
-          <select name="entidad_id" class="form-select" required>
+          <select name="entidad_id" id="entidad_id" class="form-select" required
+                  data-selected="{{ data.get('entidad_id', '') }}">
             <option value="">-- Seleccionar --</option>
             {% for en in combos.entidades %}
             <option value="{{ en.id }}" {% if data.get('entidad_id')|int == en.id %}selected{% endif %}>{{ en.nombre }}</option>
@@ -47,7 +49,8 @@
 
         <div class="col-12">
           <label class="form-label">Descripción *</label>
-          <textarea name="descripcion" class="form-control" rows="2" required maxlength="500">{{ data.get('descripcion', '') }}</textarea>
+          <textarea name="descripcion" class="form-control" rows="2" required minlength="25" maxlength="200">{{ data.get('descripcion', '') }}</textarea>
+          <small class="text-muted">(Mínimo 25 caracteres y Máximo 200 caracteres.)</small>
         </div>
 
         <div class="col-md-4">
@@ -64,14 +67,10 @@
         <div class="col-md-4">
           <label class="form-label">Fecha de vencimiento</label>
           <input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control"
+                 min="{{ hoy }}"
                  value="{{ data.get('fecha_vencimiento') or '' }}">
-          <small class="text-muted">No obligatoria si la frecuencia es Manual o Sin fecha fin.</small>
         </div>
 
-        <div class="col-12">
-          <label class="form-label">Comentario</label>
-          <textarea name="comentario" class="form-control" rows="2" maxlength="1000">{{ data.get('comentario') or '' }}</textarea>
-        </div>
       </div>
 
       <hr>

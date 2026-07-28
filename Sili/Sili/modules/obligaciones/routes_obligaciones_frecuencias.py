@@ -28,20 +28,34 @@ _FORM_EXTRA_CTX = {
 
 
 def _notif_map(notificaciones):
-    """Normaliza la lista de notificaciones (venga de get_frecuencia_detalle
-    -- destinatarios=[{usuario_id, email}] -- o de un POST fallido --
-    destinatarios=[usuario_id, ...]) a un dict indexado por `orden`, para que
-    el template solo tenga que hacer `notif_map.get(i)` por cada bloque 1-5."""
+    """Normaliza la lista de notificaciones (venga de get_frecuencia_detalle o
+    de un POST fallido; en ambos casos destinatarios=[{tipo, usuario_id, ...}])
+    a un dict indexado por `orden`, para que el template solo haga
+    `notif_map.get(i)` por cada bloque 1-5. Separa los usuarios fijos de los 3
+    tipos jerárquicos (creador/jefe/gerente) para prellenar sus checkboxes."""
     out = {}
     for n in notificaciones or []:
         ids = set()
+        flags = {"creador": False, "jefe": False, "gerente": False}
         for d in n.get("destinatarios") or []:
-            ids.add(d["usuario_id"] if isinstance(d, dict) else d)
+            if isinstance(d, dict):
+                tipo = d.get("tipo", "fijo")
+                uid = d.get("usuario_id")
+            else:  # compat: lista plana de ids (no debería ocurrir ya)
+                tipo, uid = "fijo", d
+            if tipo == "fijo":
+                if uid:
+                    ids.add(uid)
+            elif tipo in flags:
+                flags[tipo] = True
         out[n["orden"]] = {
             "tipo_trigger":     n.get("tipo_trigger"),
             "dias_antes":       n.get("dias_antes"),
             "dia_fijo_mes":     n.get("dia_fijo_mes"),
             "destinatario_ids": ids,
+            "tipo_creador":     flags["creador"],
+            "tipo_jefe":        flags["jefe"],
+            "tipo_gerente":     flags["gerente"],
         }
     return out
 

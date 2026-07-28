@@ -9,12 +9,12 @@ from .obligaciones_constants import (
     TABLA_DEPARTAMENTOS,
     TABLA_PUESTOS,
     TABLA_EMPRESAS,
-    TABLA_TERCEROS,
     TABLA_PARAM_GROUPS,
     TABLA_PARAM_VALUES,
     TABLA_FRECUENCIAS,
     TABLA_FRECUENCIA_NOTIFICACIONES,
     TABLA_NOTIFICACION_DESTINATARIOS,
+    TABLA_TIPO_ENTIDAD,
 )
 
 SQL_SCOPE_IDENTITY = "SELECT CAST(SCOPE_IDENTITY() AS INT)"
@@ -52,7 +52,7 @@ SELECT
 FROM {TABLA_OBLIGACIONES} o
 JOIN {TABLA_PARAM_VALUES} t  ON t.id  = o.tipo_id
 JOIN {TABLA_EMPRESAS}     e  ON e.id  = o.empresa_id
-JOIN {TABLA_TERCEROS}     en ON en.id = o.entidad_id
+JOIN {TABLA_PARAM_VALUES} en ON en.id = o.entidad_id
 JOIN {TABLA_FRECUENCIAS}  fr ON fr.id = o.frecuencia_id
 LEFT JOIN {TABLA_DEPARTAMENTOS} d ON d.id = o.departamento_id
 LEFT JOIN {TABLA_PUESTOS}       p ON p.id = o.puesto_id
@@ -63,20 +63,23 @@ SQL_GET_OBLIGACION_BY_ID = SQL_SELECT_JOIN_BASE + " WHERE o.id = ? "
 
 SQL_GET_OBLIGACION_RAW_BY_ID = f"SELECT * FROM {TABLA_OBLIGACIONES} WHERE id = ?"
 
+# 2026-07-21: columna `comentario` retirada del INSERT/UPDATE (campo eliminado
+# del formulario). La columna sigue existiendo en la tabla, sin usarse.
 SQL_INSERT_OBLIGACION = f"""
 INSERT INTO {TABLA_OBLIGACIONES} (
     tipo_id, empresa_id, descripcion, entidad_id,
     departamento_id, puesto_id, usuario_id,
-    fecha_vencimiento, frecuencia_id, estado, comentario,
+    fecha_vencimiento, frecuencia_id, estado,
     activa, creado_por, creado_en
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, GETDATE())
+OUTPUT INSERTED.id
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, GETDATE())
 """
 
 SQL_UPDATE_OBLIGACION = f"""
 UPDATE {TABLA_OBLIGACIONES}
 SET tipo_id = ?, empresa_id = ?, descripcion = ?, entidad_id = ?,
-    fecha_vencimiento = ?, frecuencia_id = ?, comentario = ?,
+    fecha_vencimiento = ?, frecuencia_id = ?,
     modificado_en = GETDATE()
 WHERE id = ?
 """
@@ -182,11 +185,33 @@ WHERE group_id = ? AND parent_id IS NULL AND activo = 1
 ORDER BY orden, nombre
 """
 
+# 2026-07-22 (Correccion #7): entidades viven en param_values bajo el grupo
+# GRUPO_ENTIDADES (igual que Tipos). Todas las queries se acotan por group_id.
+# Combo de Entidad en formularios y filtros (solo activas).
 SQL_LIST_ENTIDADES_ACTIVAS = f"""
 SELECT id, nombre
-FROM {TABLA_TERCEROS}
-WHERE COALESCE(activo, 1) = 1 AND tipo = 'E'
+FROM {TABLA_PARAM_VALUES}
+WHERE group_id = ? AND parent_id IS NULL AND activo = 1
 ORDER BY nombre
+"""
+
+# 2026-07-27: Entidades filtradas por Tipo (oblig_tipo_entidad, muchos a
+# muchos) -- usado por el endpoint AJAX /obligaciones/api/entidades.
+SQL_LIST_ENTIDADES_POR_TIPO = f"""
+SELECT pv.id, pv.nombre
+FROM {TABLA_PARAM_VALUES} pv
+JOIN {TABLA_TIPO_ENTIDAD} te ON te.entidad_id = pv.id
+WHERE te.tipo_id = ? AND pv.activo = 1
+ORDER BY pv.nombre
+"""
+
+# 2026-07-21: combo Empresa de los filtros (Consultas + Historial) -- solo
+# empresas que tienen al menos una obligacion, no el catalogo completo.
+SQL_LIST_EMPRESAS_CON_OBLIGACIONES = f"""
+SELECT DISTINCT e.id, e.razon_social
+FROM {TABLA_OBLIGACIONES} o
+JOIN {TABLA_EMPRESAS} e ON e.id = o.empresa_id
+ORDER BY e.razon_social
 """
 
 # ------------------------------------------------------------
@@ -240,18 +265,31 @@ WHERE notificacion_id IN (SELECT id FROM {TABLA_FRECUENCIA_NOTIFICACIONES} WHERE
 # ------------------------------------------------------------
 # Destinatarios de una notificación
 # ------------------------------------------------------------
+# 2026-07-22: tipo_destinatario -- 'fijo' usa usuario_id; 'creador'/'jefe'/
+# 'gerente' guardan usuario_id NULL y se resuelven al enviar.
 SQL_INSERT_DESTINATARIO = f"""
-INSERT INTO {TABLA_NOTIFICACION_DESTINATARIOS} (notificacion_id, usuario_id) VALUES (?, ?)
+INSERT INTO {TABLA_NOTIFICACION_DESTINATARIOS} (notificacion_id, usuario_id, tipo_destinatario)
+VALUES (?, ?, ?)
 """
 
 SQL_LIST_NOTIFICACIONES_CON_DESTINATARIOS_POR_FRECUENCIA = f"""
 SELECT n.id AS notificacion_id, n.orden, n.tipo_trigger, n.dias_antes, n.dia_fijo_mes,
-       d.usuario_id, u.email AS usuario_email
+       d.usuario_id, d.tipo_destinatario, u.email AS usuario_email
 FROM {TABLA_FRECUENCIA_NOTIFICACIONES} n
 LEFT JOIN {TABLA_NOTIFICACION_DESTINATARIOS} d ON d.notificacion_id = n.id
 LEFT JOIN {TABLA_USUARIOS} u ON u.id = d.usuario_id
 WHERE n.frecuencia_id = ? AND COALESCE(n.activo, 1) = 1
 ORDER BY n.orden
+"""
+
+# 2026-07-22: emails de los usuarios con rol admin_obligaciones -- copia del
+# aviso de cadena de jefe rota al crear/editar una obligación.
+SQL_LIST_ADMIN_OBLIGACIONES_EMAILS = f"""
+SELECT email
+FROM {TABLA_USUARIOS}
+WHERE LOWER(rol) = 'admin_obligaciones'
+  AND COALESCE(disabled, 0) = 0
+  AND email IS NOT NULL AND LTRIM(RTRIM(email)) <> ''
 """
 
 # ------------------------------------------------------------
@@ -274,7 +312,7 @@ UPDATE {TABLA_OBLIGACIONES} SET estado = 'atrasado', modificado_en = GETDATE() W
 # se resuelven por notificacion via oblig_notificacion_destinatarios.
 # ------------------------------------------------------------
 SQL_LIST_OBLIGACIONES_ACTIVAS_CON_FECHA = f"""
-SELECT o.id, o.frecuencia_id, o.fecha_vencimiento, o.estado, o.usuario_id
+SELECT o.id, o.frecuencia_id, o.fecha_vencimiento, o.estado, o.usuario_id, o.creado_por
 FROM {TABLA_OBLIGACIONES} o
 WHERE o.activa = 1
   AND o.fecha_vencimiento IS NOT NULL
@@ -323,31 +361,24 @@ JOIN {TABLA_PARAM_VALUES} t ON t.id = o.tipo_id
 """
 SQL_DASHBOARD_POR_TIPO_GROUP_BY = " GROUP BY t.nombre"
 
-SQL_DASHBOARD_POR_EMPRESA_SELECT = f"""
-SELECT e.razon_social AS etiqueta, COUNT(*) AS total
-FROM {TABLA_OBLIGACIONES} o
-JOIN {TABLA_EMPRESAS} e ON e.id = o.empresa_id
-"""
-SQL_DASHBOARD_POR_EMPRESA_GROUP_BY = " GROUP BY e.razon_social"
-
-# Igual que POR_EMPRESA pero desglosado tambien por estado (para el grafico
-# de barras agrupadas del dashboard, replica del PBIX de referencia).
-SQL_DASHBOARD_POR_EMPRESA_ESTADO_SELECT = f"""
+# "Por estado (empresas)" -- barra apilada por empresa (2026-07-27, pedido de
+# Matias reemplaza el combinado 2026-07-21). estado_fundido junta cumplido +
+# cumplido_fuera_plazo en "cumplida" -- 3 categorias fijas por barra:
+# cumplida / atrasada / por_presentar.
+SQL_DASHBOARD_POR_ESTADO_TOTAL_SELECT = f"""
 SELECT
     e.razon_social AS empresa,
-    CASE WHEN o.activa = 1 AND o.estado <> 'atrasado' THEN 'activa' ELSE o.estado END AS estado,
+    CASE
+        WHEN o.estado IN ('cumplido', 'cumplido_fuera_plazo') THEN 'cumplida'
+        WHEN o.estado = 'atrasado' THEN 'atrasada'
+        ELSE 'por_presentar'
+    END AS estado,
     COUNT(*) AS total
 FROM {TABLA_OBLIGACIONES} o
 JOIN {TABLA_EMPRESAS} e ON e.id = o.empresa_id
 """
-SQL_DASHBOARD_POR_EMPRESA_ESTADO_GROUP_BY = (
+SQL_DASHBOARD_POR_ESTADO_TOTAL_GROUP_BY = (
     " GROUP BY e.razon_social, "
-    "CASE WHEN o.activa = 1 AND o.estado <> 'atrasado' THEN 'activa' ELSE o.estado END"
+    "CASE WHEN o.estado IN ('cumplido', 'cumplido_fuera_plazo') THEN 'cumplida' "
+    "WHEN o.estado = 'atrasado' THEN 'atrasada' ELSE 'por_presentar' END"
 )
-
-SQL_DASHBOARD_POR_FRECUENCIA_SELECT = f"""
-SELECT fr.nombre AS etiqueta, COUNT(*) AS total
-FROM {TABLA_OBLIGACIONES} o
-JOIN {TABLA_FRECUENCIAS} fr ON fr.id = o.frecuencia_id
-"""
-SQL_DASHBOARD_POR_FRECUENCIA_GROUP_BY = " GROUP BY fr.nombre"

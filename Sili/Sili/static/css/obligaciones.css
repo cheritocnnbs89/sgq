@@ -105,6 +105,66 @@
   padding: 3rem 1.5rem;
 }
 
+/* ===== Truncado de celdas de texto largo (Consultas + Historial) ===== */
+/* 2026-07-21: reusable en descripción y evidencia; el texto completo queda en
+   el atributo title="" de la celda (tooltip al pasar el mouse).
+   2026-07-22: calificado con `td` a proposito. base.css tiene la regla
+   `.content *` con white-space:normal (especificidad 0,1,0) que EMPATA con
+   `.oblig-truncate` a secas nunca ganaba: base.css declara
+   `.content * { white-space: normal !important }`. Con !important en base, la
+   unica forma de truncar es !important propio + mayor especificidad (`td` .cls
+   0,1,1 gana al `.content *` 0,1,0). ESA era la causa de que la Descripcion
+   siguiera en varias lineas pese a mover la clase al <span>. Todas las celdas
+   truncadas viven dentro de un <td>, asi que el scope no pierde ningun uso. */
+td .oblig-truncate {
+  display: inline-block;
+  max-width: 260px;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Variante corta pareja para columnas de nombres (Empresa, Entidad, Frecuencia):
+   mismo ancho fijo entre ellas para que las columnas midan igual. En celdas flex
+   (Empresa, con avatar) va sobre el <span> del texto, no sobre el avatar. */
+td .oblig-truncate-sm {
+  display: inline-block;
+  max-width: 160px;
+  white-space: nowrap !important;  /* vence a base.css .content * white-space:normal !important */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* ===== Filtros compactos (Consultas + Historial) ===== */
+/* 2026-07-21: los filtros ocupan solo el ancho de su contenido (col-md-auto),
+   con ancho fijo igualado entre selects e input month, para que se vean parejos. */
+.oblig-filtros .form-select-sm,
+.oblig-filtros .form-control-sm {
+  width: 170px;
+  max-width: 100%;
+}
+.oblig-filtros input[type="month"] {
+  width: 170px;
+}
+
+/* ===== Historial: badge de Estado más chico (2026-07-22, pedido de Matías) =====
+   Clase propia usada SOLO en obligaciones_historial.html -- Consultas usa su propio
+   markup de estado y no se ve afectado. */
+.oblig-badge-estado {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2em 0.5em;
+}
+
+/* ===== Historial: evidencia como ícono de descarga (sin nombre de archivo) ===== */
+.oblig-evidencia-link {
+  display: inline-block;
+  margin-right: 0.35rem;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
 /* ===== Header de sección con degradado sutil (alternativa a .section-header plano) ===== */
 .oblig-section-hero {
   background: linear-gradient(135deg, var(--brand-100) 0%, #fff 100%);

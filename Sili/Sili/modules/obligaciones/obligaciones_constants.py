@@ -15,6 +15,17 @@ TABLA_ALERTAS      = "oblig_alertas_enviadas"
 TABLA_FRECUENCIAS                = "oblig_frecuencias"
 TABLA_FRECUENCIA_NOTIFICACIONES  = "oblig_frecuencia_notificaciones"
 TABLA_NOTIFICACION_DESTINATARIOS = "oblig_notificacion_destinatarios"
+# 2026-07-27: mapeo Tipo -> Entidad Reguladora (muchos a muchos -- confirmado
+# contra "Data Power BI - Obligaciones tributarias y societarias.xlsx": una
+# misma entidad (ej. Municipio, Superintendencia Cias) aplica a varios tipos,
+# y un tipo tiene varias entidades -- parent_id de param_values no alcanza.
+TABLA_TIPO_ENTIDAD = "oblig_tipo_entidad"
+# 2026-07-22 (Correccion de arquitectura #7): Entidades Reguladoras deja de ser
+# tabla propia (oblig_entidades_reguladoras) y pasa a vivir en param_values bajo
+# el grupo GRUPO_ENTIDADES -- EXACTAMENTE igual que Tipos. Los 35 valores se
+# migraron a param_values (ids nuevos generados por IDENTITY; los ids viejos de
+# terceros solapaban con param_values, no se pudieron preservar) y entidad_id de
+# oblig_obligaciones se re-apunto a los ids nuevos. La tabla propia se elimino.
 
 # ------------------------------------------------------------
 # Tablas Sili existentes usadas por este modulo (NO crear DDL)
@@ -23,7 +34,6 @@ TABLA_USUARIOS      = "usuarios"
 TABLA_DEPARTAMENTOS = "departamentos"
 TABLA_PUESTOS       = "puestos"   # "Cargo" en la UI
 TABLA_EMPRESAS      = "empresas"  # 2026-07-13: catalogo existente, reemplaza oblig_empresas
-TABLA_TERCEROS      = "terceros"  # 2026-07-14: catalogo existente, reemplaza oblig_entidades
 TABLA_PARAM_GROUPS  = "param_groups"  # 2026-07-14: reemplaza oblig_tipos y oblig_reglas_alerta
 TABLA_PARAM_VALUES  = "param_values"
 
@@ -31,12 +41,10 @@ TABLA_PARAM_VALUES  = "param_values"
 # 2026-07-15: GRUPO_FRECUENCIAS eliminado -- Frecuencias ya no vive en
 # param_values (ver Correccion de arquitectura #3, PLAN.md).
 GRUPO_TIPOS = "Obligaciones - Tipos"
-
-# 2026-07-20 (Correccion #4): id fijo del grupo Tipos en param_groups (sgq-local
-# y produccion ya lo tienen creado -- ver PLAN.md). routes_obligaciones_tipos.py
-# reusa las funciones genericas de modules/parametros_generales acotadas a este
-# group_id -- nunca tocar otro group_id desde este modulo.
-TIPOS_GROUP_ID = 5796
+# 2026-07-22 (Correccion #7): grupo de param_values donde viven las Entidades
+# Reguladoras (antes tabla propia). El group_id se resuelve por nombre en runtime
+# (repository._get_group_id) -- mismo patron que list_tipos(), sin id hardcodeado.
+GRUPO_ENTIDADES = "Obligaciones - Entidades Reguladoras"
 
 # ------------------------------------------------------------
 # Identidad del modulo
@@ -50,9 +58,11 @@ PERM_BASE  = "obligaciones"
 # el INSERT real en menu_items (fuera del alcance de esta tarea, NO tocar BD).
 ACTIVE_KEY_FRECUENCIAS = "obligaciones_frecuencias"
 
-# 2026-07-20 (Correccion #4): pantalla de Tipos -- ruta propia
-# /obligaciones/tipos, mismo submenu Configuraciones que Frecuencias.
-ACTIVE_KEY_TIPOS = "obligaciones_tipos"
+# 2026-07-23 (Correccion #23): pantallas dedicadas de Tipos y Entidades
+# Reguladoras eliminadas -- ambas se gestionan desde Parametros Generales
+# genericos (/parametros/generales/<grupo>/items), permiso "parametros"
+# otorgado a admin_obligaciones. ACTIVE_KEY_TIPOS y ACTIVE_KEY_ENTIDADES
+# eliminados (sin uso).
 
 # ------------------------------------------------------------
 # Permisos (tabla opciones) -- 7 permisos del modulo
@@ -63,7 +73,6 @@ ACTIVE_KEY_TIPOS = "obligaciones_tipos"
 PERM_VER            = "obligaciones"
 PERM_CREAR          = "obligaciones_crear"
 PERM_EDITAR         = "obligaciones_editar"
-PERM_CARGA_MASIVA   = "obligaciones_carga_masiva"
 PERM_EXPORTAR       = "obligaciones_exportar"
 PERM_HISTORIAL      = "obligaciones_historial"
 PERM_DASHBOARD      = "obligaciones_dashboard"
@@ -103,20 +112,42 @@ TRIGGER_LABELS = {
 MAX_NOTIFICACIONES_POR_FRECUENCIA = 5
 
 # ------------------------------------------------------------
+# Tipos de destinatario de una notificación (2026-07-22)
+# 'fijo'    -> usuario_id concreto (comportamiento histórico).
+# 'creador' -> el usuario que creó la obligación (oblig_obligaciones.creado_por).
+# 'jefe'    -> jefe directo del creador (usuarios.jefe_id del creador).
+# 'gerente' -> jefe del jefe del creador (dos saltos de jefe_id).
+# Los 3 jerárquicos guardan usuario_id NULL: el email se resuelve en tiempo
+# real al enviar la alerta (por obligación, según quién la creó).
+# ------------------------------------------------------------
+TIPO_DESTINATARIO = ("fijo", "creador", "jefe", "gerente")
+TIPO_DESTINATARIO_JERARQUICOS = ("creador", "jefe", "gerente")
+TIPO_DESTINATARIO_LABELS = {
+    "fijo":    "Usuario fijo",
+    "creador": "Creador de la obligación",
+    "jefe":    "Jefe directo del creador",
+    "gerente": "Gerente del área",
+}
+
+# Mensaje genérico mostrado al usuario final cuando la cadena de jefe está rota
+# (no exponer detalle técnico de jefe/gerente en pantalla -- ese va en el correo).
+MSG_CADENA_ROTA = "Esta frecuencia no está disponible en este momento. Contáctate con el área de TI."
+
+# ------------------------------------------------------------
 # Valores de negocio
 # ------------------------------------------------------------
 ESTADOS = ("por_presentar", "atrasado", "cumplido", "cumplido_fuera_plazo")
 ESTADOS_TERMINALES = ("cumplido", "cumplido_fuera_plazo")
 
 ESTADO_LABELS = {
-    "por_presentar":        "Por presentar",
+    "por_presentar":        "Por presentar a tiempo",
     "atrasado":             "Atrasado",
     "cumplido":             "Cumplido",
     "cumplido_fuera_plazo": "Cumplido fuera de plazo",
 }
 
 ESTADO_BADGE_CLASS = {
-    "por_presentar":        "",
+    "por_presentar":        "bg-warning text-dark",
     "atrasado":             "bg-danger",
     "cumplido":             "bg-success",
     "cumplido_fuera_plazo": "bg-warning text-dark",
@@ -130,47 +161,14 @@ MAX_MB      = 4
 MAX_BYTES   = MAX_MB * 1024 * 1024
 
 # ------------------------------------------------------------
-# Carga masiva (Fase 7) -- normalizacion de valores del Excel
-# ------------------------------------------------------------
-ENTIDAD_ALIAS = {
-    "supercias":                   "superintendencia de compañías",
-    "superintendencia cias":       "superintendencia de compañías",
-    "senae":                       "senae",
-    "servicio de rentas internas": "servicio de rentas internas",
-}
-
-# 2026-07-15 (Correccion #3): mapea el texto del Excel al `nombre` exacto de
-# oblig_frecuencias (ver seed en PLAN.md) -- ya no a un param_value.
-FRECUENCIA_EXCEL_MAP = {
-    "anual":                              "anual",
-    "mensual":                            "mensual",
-    "cada 2 años":                        "cada 2 años",
-    "cada 2 anos":                        "cada 2 años",
-    "cada 3 años":                        "cada 3 años",
-    "cada 3 anos":                        "cada 3 años",
-    "cuando exista una actualización":    "manual",
-    "cuando exista una actualizacion":    "manual",
-}
-
-ESTADO_EXCEL_MAP = {
-    "presentado y pagado a tiempo": "cumplido",
-    "por presentar (a tiempo)":     "por_presentar",
-    "por presentar":                "por_presentar",
-    "cumplido":                     "cumplido",
-    "en proceso":                   "por_presentar",
-    "":                             "por_presentar",
-}
-
-CARGA_MASIVA_COLUMNAS = (
-    "Tipo", "Empresa", "Descripción", "Entidad",
-    "Usuario", "Fecha Vencimiento", "Frecuencia", "Estado",
-)
-
-# ------------------------------------------------------------
-# Historial / Exportar -- columnas exactas (Fase 5 / Fase 9)
+# Exportar Excel del Historial -- columnas exactas (2026-07-21)
+# Confirmado por Matias contra el Excel real de referencia
+# (PLANIFICACION-NUEVO-MODULO/Data Power BI - Obligaciones tributarias y
+# societarias.xlsx, hoja "Obligaciones"). "Prioridad" no tiene todavía un
+# campo en BD -- se exporta en blanco hasta que Matias defina de dónde sale
+# (ver HISTORIAL-CORRECCIONES).
 # ------------------------------------------------------------
 HISTORIAL_COLUMNAS = (
-    "ID", "Empresa", "Entidad", "Tipo", "Descripción", "Frecuencia",
-    "Fecha creación", "Fecha vencimiento", "Estado", "Evidencia",
-    "Usuario", "Departamento", "Cargo",
+    "ID", "Tipo", "Descripción", "Departamento Responsable", "Responsable",
+    "Entidad", "Fecha_Vencimiento", "Frecuencia", "Estado", "Prioridad",
 )

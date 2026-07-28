@@ -10,11 +10,6 @@
   <div class="d-flex align-items-center justify-content-between mb-3">
     <h4 class="mb-0"><i class="bi bi-clipboard-check"></i> Obligaciones - Consultas</h4>
     <div class="d-flex gap-2">
-      {% if has_permission('obligaciones_carga_masiva', 'ver') %}
-      <a href="{{ url_for('obligaciones.carga_masiva') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-file-earmark-excel"></i> Carga masiva
-      </a>
-      {% endif %}
       {% if has_permission('obligaciones_crear', 'ver') %}
       <a href="{{ url_for('obligaciones.nueva_obligacion') }}" class="btn btn-cta-blue btn-sm">
         <i class="bi bi-plus-lg"></i> Nueva obligación
@@ -31,8 +26,9 @@
   </button>
 
   <div class="collapse{{ ' show' if filtros_activos else '' }} mb-4" id="panelFiltrosLista">
-  <form class="row g-2 mb-3" method="get" action="{{ url_for('obligaciones.lista_obligaciones') }}">
-    <div class="col-md-2">
+  <form class="row g-2 mb-3 oblig-filtros" method="get" action="{{ url_for('obligaciones.lista_obligaciones') }}"
+        id="frmFiltrosLista" data-api-entidades="{{ url_for('obligaciones.api_entidades_por_tipo') }}">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="empresa_id">
         <option value="">-- Empresa --</option>
         {% for e in combos.empresas %}
@@ -40,23 +36,25 @@
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-2">
-      <select class="form-select form-select-sm" name="tipo_id">
+    <div class="col-6 col-md-auto">
+      <!-- 2026-07-27: id agregado para filtro dependiente Tipo -> Entidad (AJAX) -->
+      <select class="form-select form-select-sm" name="tipo_id" id="filtroTipoId">
         <option value="">-- Tipo --</option>
         {% for t in combos.tipos %}
         <option value="{{ t.id }}" {% if filters.tipo_id|string == t.id|string %}selected{% endif %}>{{ t.nombre }}</option>
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-2">
-      <select class="form-select form-select-sm" name="entidad_id">
+    <div class="col-6 col-md-auto">
+      <select class="form-select form-select-sm" name="entidad_id" id="filtroEntidadId"
+              data-selected="{{ filters.entidad_id or '' }}">
         <option value="">-- Entidad --</option>
         {% for en in combos.entidades %}
         <option value="{{ en.id }}" {% if filters.entidad_id|string == en.id|string %}selected{% endif %}>{{ en.nombre }}</option>
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-2">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="frecuencia_id">
         <option value="">-- Frecuencia --</option>
         {% for f in combos.frecuencias %}
@@ -64,11 +62,11 @@
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-2">
-      <input type="date" class="form-control form-control-sm" name="fecha_vencimiento" value="{{ filters.fecha_vencimiento }}">
+    <div class="col-6 col-md-auto">
+      <input type="month" class="form-control form-control-sm" name="fecha_vencimiento" value="{{ filters.fecha_vencimiento }}" title="Mes de vencimiento">
     </div>
     {% if usuarios %}
-    <div class="col-md-2">
+    <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="usuario_id">
         <option value="">-- Usuario --</option>
         {% for u in usuarios %}
@@ -86,9 +84,8 @@
 
   <div class="table-responsive mb-4">
     <table id="tabla-obligaciones" class="table table-hover table-sm align-middle tablekit oblig-table">
-      <thead class="table-light position-sticky top-0" style="z-index: 1;">
+      <thead class="table-light">
         <tr>
-          <th>ID</th>
           <th>Empresa</th>
           <th>Entidad</th>
           <th>Descripción</th>
@@ -96,22 +93,20 @@
           <th>Días</th>
           <th>Estado</th>
           <th>Frecuencia</th>
-          <th>Tipo</th>
           <th class="text-end">Acciones</th>
         </tr>
       </thead>
       <tbody>
         {% for r in rows %}
         <tr data-row="1" class="{{ 'table-danger' if r.estado == 'atrasado' else '' }}">
-          <td>{{ r.id }}</td>
           <td>
             <div class="d-flex align-items-center gap-2">
               <div class="oblig-avatar">{{ r.empresa_nombre[0]|upper if r.empresa_nombre else '?' }}</div>
-              <span>{{ r.empresa_nombre }}</span>
+              <span class="oblig-truncate-sm" title="{{ r.empresa_nombre }}">{{ r.empresa_nombre }}</span>
             </div>
           </td>
-          <td>{{ r.entidad_nombre }}</td>
-          <td>{{ r.descripcion }}</td>
+          <td><span class="oblig-truncate-sm" title="{{ r.entidad_nombre }}">{{ r.entidad_nombre }}</span></td>
+          <td><span class="oblig-truncate" title="{{ r.descripcion }}">{{ r.descripcion }}</span></td>
           <td>{{ r.fecha_vencimiento or '-' }}</td>
           <td>
             {% if r.dias_restantes is none %}
@@ -127,11 +122,10 @@
             {% endif %}
           </td>
           <td>
-            {% set estado_badge = {'por_presentar': 'bg-secondary', 'atrasado': 'bg-danger', 'cumplido': 'bg-success', 'cumplido_fuera_plazo': 'bg-warning text-dark'} %}
+            {% set estado_badge = {'por_presentar': 'bg-warning text-dark', 'atrasado': 'bg-danger', 'cumplido': 'bg-success', 'cumplido_fuera_plazo': 'bg-warning text-dark'} %}
             <span class="badge {{ estado_badge.get(r.estado, 'bg-secondary') }}">{{ estado_labels.get(r.estado, r.estado) }}</span>
           </td>
-          <td>{{ r.frecuencia_nombre }}</td>
-          <td>{{ r.tipo_nombre }}</td>
+          <td><span class="oblig-truncate-sm" title="{{ r.frecuencia_nombre }}">{{ r.frecuencia_nombre }}</span></td>
           <td class="text-end">
             {% if has_permission('obligaciones', 'ver') %}
             <a class="btn btn-xs btn-sm btn-outline-success" href="{{ url_for('obligaciones.cumplir_obligacion', oblig_id=r.id) }}" title="Cumplir">
@@ -152,7 +146,7 @@
         </tr>
         {% else %}
         <tr>
-          <td colspan="10" class="p-0">
+          <td colspan="8" class="p-0">
             <div class="oblig-empty text-center text-muted">
               <i class="bi bi-inbox fs-1 d-block mb-2"></i>
               Sin obligaciones pendientes.

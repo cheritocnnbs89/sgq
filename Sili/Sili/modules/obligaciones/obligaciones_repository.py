@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from modules.db import get_db
-from modules.empresas import empresas_repository as empresas_repo
 from . import obligaciones_queries as q
 from .obligaciones_constants import (
     ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA, ESTADOS_TERMINALES,
-    GRUPO_TIPOS,
+    GRUPO_TIPOS, GRUPO_ENTIDADES,
 )
 
 
@@ -93,8 +92,28 @@ def list_tipos():
 
 
 def list_entidades():
+    grupo_id = _get_group_id(GRUPO_ENTIDADES)
+    if not grupo_id:
+        return []
     conn = get_connection()
-    return conn.execute(q.SQL_LIST_ENTIDADES_ACTIVAS).fetchall()
+    return conn.execute(q.SQL_LIST_ENTIDADES_ACTIVAS, (grupo_id,)).fetchall()
+
+
+def list_entidades_por_tipo(tipo_id):
+    """2026-07-27: Entidades acotadas a un Tipo via oblig_tipo_entidad
+    (muchos a muchos) -- usado por el filtro dependiente del formulario y
+    del dashboard/consultas."""
+    conn = get_connection()
+    return conn.execute(q.SQL_LIST_ENTIDADES_POR_TIPO, (tipo_id,)).fetchall()
+
+
+
+
+def list_empresas_con_obligaciones():
+    """2026-07-21: solo empresas con al menos una obligacion -- combo Empresa
+    de los filtros de Consultas e Historial (antes traia TODO el catalogo)."""
+    conn = get_connection()
+    return conn.execute(q.SQL_LIST_EMPRESAS_CON_OBLIGACIONES).fetchall()
 
 
 # ------------------------------------------------------------
@@ -150,8 +169,12 @@ def replace_frecuencia_completa(frecuencia_id, nombre, recalculo_tipo, recalculo
                 notif.get("dia_fijo_mes"),
             ))
             notificacion_id = cur.fetchone()[0]  # OUTPUT INSERTED.id
-            for usuario_id in notif.get("destinatarios") or []:
-                cur.execute(q.SQL_INSERT_DESTINATARIO, (notificacion_id, usuario_id))
+            # 2026-07-22: cada destinatario es un dict {tipo, usuario_id}. Los
+            # jerárquicos (creador/jefe/gerente) guardan usuario_id NULL.
+            for dest in notif.get("destinatarios") or []:
+                cur.execute(q.SQL_INSERT_DESTINATARIO, (
+                    notificacion_id, dest.get("usuario_id"), dest.get("tipo", "fijo"),
+                ))
 
         conn.commit()
         return frecuencia_id
@@ -181,28 +204,92 @@ def list_notificaciones_con_destinatarios(frecuencia_id):
                 "dia_fijo_mes": fila["dia_fijo_mes"],
                 "destinatarios": [],
             }
-        if fila.get("usuario_id"):
+        # 2026-07-22: incluye destinatarios jerárquicos (usuario_id NULL pero
+        # con tipo_destinatario). Se distinguen por 'tipo'.
+        if fila.get("tipo_destinatario"):
             notificaciones[nid]["destinatarios"].append({
-                "usuario_id": fila["usuario_id"],
+                "tipo": fila["tipo_destinatario"],
+                "usuario_id": fila.get("usuario_id"),
                 "email": fila.get("usuario_email"),
             })
 
     return sorted(notificaciones.values(), key=lambda n: n["orden"])
 
 
+def list_admin_obligaciones_emails():
+    """2026-07-22: emails de los admin_obligaciones -- copia del aviso de
+    cadena de jefe rota al crear/editar una obligación."""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_LIST_ADMIN_OBLIGACIONES_EMAILS)
+    return [r[0] for r in cur.fetchall() if r[0]]
+
+
+def resolver_cadena_jefe(usuario_id):
+    """2026-07-22: dado un usuario, devuelve la cadena jerárquica resuelta en
+    tiempo real: {jefe_id, jefe_email, gerente_id, gerente_email}. Un eslabón
+    faltante queda en None. 'gerente' = jefe del jefe (dos saltos de jefe_id)."""
+    out = {"jefe_id": None, "jefe_email": None, "gerente_id": None, "gerente_email": None}
+    if not usuario_id:
+        return out
+    perfil = get_usuario_perfil(usuario_id)
+    jefe_id = perfil["jefe_id"] if perfil else None
+    if not jefe_id:
+        return out
+    jefe = get_usuario_perfil(jefe_id)
+    if not jefe:
+        return out
+    out["jefe_id"] = jefe_id
+    out["jefe_email"] = jefe["email"]
+    gerente_id = jefe["jefe_id"]
+    if not gerente_id:
+        return out
+    gerente = get_usuario_perfil(gerente_id)
+    if gerente:
+        out["gerente_id"] = gerente_id
+        out["gerente_email"] = gerente["email"]
+    return out
+
+
 # ------------------------------------------------------------
 # Combos para formularios
 # ------------------------------------------------------------
 def get_combos():
-    # 2026-07-13: empresas viene del modulo dueño (empresas_repository), no de oblig_empresas
     # 2026-07-15: frecuencias viene de oblig_frecuencias (tabla propia), no de param_values
-    empresas = empresas_repo.list_empresas({"q": "", "activo": "1"})
+    # 2026-07-21: empresas del combo de FILTROS (Consultas + Historial + Dashboard) =
+    # solo las que tienen obligaciones. El FORMULARIO usa get_combos_form() (todas
+    # las empresas activas) -- ver 2026-07-22 en HISTORIAL-CORRECCIONES.
     return {
         "tipos": list_tipos(),
         "frecuencias": list_frecuencias(),
-        "empresas": empresas,
+        "empresas": list_empresas_con_obligaciones(),
         "entidades": list_entidades(),
     }
+
+
+def get_combos_form():
+    # 2026-07-22: combo Empresa del formulario Nueva/Editar = TODAS las empresas
+    # activas (no solo las que ya tienen obligaciones) -- si no, no se puede crear
+    # la primera obligacion de una empresa nueva. Import local para no acoplar este
+    # modulo a empresas en tiempo de import.
+    from modules.empresas import empresas_repository as empresas_repo
+    return {
+        "tipos": list_tipos(),
+        "frecuencias": list_frecuencias(),
+        "empresas": empresas_repo.list_empresas({"q": "", "activo": "1"}),
+        "entidades": list_entidades(),
+    }
+
+
+def _apply_month_filter(where, params, valor):
+    """2026-07-21: el input HTML type=month manda 'YYYY-MM'. Filtra por
+    año+mes de fecha_vencimiento en vez de fecha exacta. Ignora valores mal
+    formados (no rompe el listado)."""
+    partes = (valor or "").split("-")
+    if len(partes) < 2 or not partes[0].isdigit() or not partes[1].isdigit():
+        return
+    where.append("YEAR(o.fecha_vencimiento) = ? AND MONTH(o.fecha_vencimiento) = ?")
+    params.extend([int(partes[0]), int(partes[1])])
 
 
 # ------------------------------------------------------------
@@ -228,8 +315,7 @@ def list_obligaciones(user_id, rol, filters):
         where.append("o.frecuencia_id = ?")
         params.append(filters["frecuencia_id"])
     if filters.get("fecha_vencimiento"):
-        where.append("o.fecha_vencimiento = ?")
-        params.append(filters["fecha_vencimiento"])
+        _apply_month_filter(where, params, filters["fecha_vencimiento"])
     # Mejora (Correccion #5): jefe_area_obligaciones tambien puede filtrar por
     # usuario -- seguro sin validacion aparte porque _apply_visibility() ya
     # acoto el WHERE a "o.usuario_id IN (subordinados)"; este AND adicional
@@ -275,11 +361,9 @@ def insert(data):
             data["fecha_vencimiento"],
             data["frecuencia_id"],
             data.get("estado", "por_presentar"),
-            data.get("comentario"),
             data["creado_por"],
         ))
-        cur.execute(q.SQL_SCOPE_IDENTITY)
-        row = cur.fetchone()
+        row = cur.fetchone()  # OUTPUT INSERTED.id en el mismo INSERT -- SCOPE_IDENTITY() en execute() separado devuelve NULL en este entorno
         conn.commit()
         return row[0] if row else None
     except Exception:
@@ -303,7 +387,6 @@ def insert_no_commit(data):
         data["fecha_vencimiento"],
         data["frecuencia_id"],
         data.get("estado", "por_presentar"),
-        data.get("comentario"),
         data["creado_por"],
     ))
 
@@ -319,7 +402,6 @@ def update(oblig_id, data):
             data["entidad_id"],
             data["fecha_vencimiento"],
             data["frecuencia_id"],
-            data.get("comentario"),
             oblig_id,
         ))
         conn.commit()
@@ -422,9 +504,6 @@ def list_historial(user_id, rol, filters):
 
     _apply_visibility(where, params, rol, user_id)
 
-    if filters.get("id"):
-        where.append("o.id = ?")
-        params.append(filters["id"])
     if filters.get("empresa_id"):
         where.append("o.empresa_id = ?")
         params.append(filters["empresa_id"])
@@ -440,9 +519,8 @@ def list_historial(user_id, rol, filters):
     if filters.get("frecuencia_id"):
         where.append("o.frecuencia_id = ?")
         params.append(filters["frecuencia_id"])
-    if filters.get("anio"):
-        where.append("YEAR(o.fecha_vencimiento) = ?")
-        params.append(filters["anio"])
+    if filters.get("fecha_vencimiento"):
+        _apply_month_filter(where, params, filters["fecha_vencimiento"])
     if filters.get("estado"):
         where.append("o.estado = ?")
         params.append(filters["estado"])
@@ -458,8 +536,16 @@ def list_historial(user_id, rol, filters):
 # Dashboard -- WHERE dinamico (visibilidad por rol + filtros)
 # ------------------------------------------------------------
 def _dashboard_common_where(rol, user_id, filters):
-    where = []
-    params = []
+    # 2026-07-21: el universo del dashboard = obligaciones VIVAS (activa=1) +
+    # cerradas en historial (activa=0 con estado terminal). Excluye las
+    # soft-deleted no terminales (activa=0 con estado por_presentar/atrasado),
+    # que no aparecen ni en Consultas (filtra activa=1) ni en Historial (filtra
+    # estado terminal). Sin esta clausula el dashboard contaba filas borradas
+    # logicamente -> total inflado y un "atrasado" fantasma en los graficos que
+    # contradecia el KPI total_atrasadas.
+    ph = ",".join("?" * len(ESTADOS_TERMINALES))
+    where = [f"(o.activa = 1 OR o.estado IN ({ph}))"]
+    params = list(ESTADOS_TERMINALES)
     _apply_visibility(where, params, rol, user_id)
 
     if filters.get("empresa_id"):
@@ -544,22 +630,10 @@ def dashboard_por_tipo(rol, user_id, filters):
     )
 
 
-def dashboard_por_empresa(rol, user_id, filters):
+def dashboard_por_estado_total(rol, user_id, filters):
+    """Conteo por estado sumando TODAS las empresas -- un solo grafico combinado."""
     return _dashboard_group_query(
-        q.SQL_DASHBOARD_POR_EMPRESA_SELECT, q.SQL_DASHBOARD_POR_EMPRESA_GROUP_BY, rol, user_id, filters
-    )
-
-
-def dashboard_por_frecuencia(rol, user_id, filters):
-    return _dashboard_group_query(
-        q.SQL_DASHBOARD_POR_FRECUENCIA_SELECT, q.SQL_DASHBOARD_POR_FRECUENCIA_GROUP_BY, rol, user_id, filters
-    )
-
-
-def dashboard_por_empresa_estado(rol, user_id, filters):
-    """Conteo agrupado por (empresa, estado) -- barras agrupadas del dashboard."""
-    return _dashboard_group_query(
-        q.SQL_DASHBOARD_POR_EMPRESA_ESTADO_SELECT, q.SQL_DASHBOARD_POR_EMPRESA_ESTADO_GROUP_BY, rol, user_id, filters
+        q.SQL_DASHBOARD_POR_ESTADO_TOTAL_SELECT, q.SQL_DASHBOARD_POR_ESTADO_TOTAL_GROUP_BY, rol, user_id, filters
     )
 
 
