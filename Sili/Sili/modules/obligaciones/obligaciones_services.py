@@ -161,7 +161,8 @@ def collect_filters(args):
         "empresa_id":        get("empresa_id"),
         "entidad_id":        get("entidad_id"),
         "frecuencia_id":     get("frecuencia_id"),
-        "fecha_vencimiento": get("fecha_vencimiento"),
+        "fecha_desde":       get("fecha_desde"),
+        "fecha_hasta":       get("fecha_hasta"),
         "usuario_id":        get("usuario_id"),
         "estado":            get("estado"),
     }
@@ -596,7 +597,8 @@ def collect_historial_filters(args):
         "entidad_id":        get("entidad_id"),
         "departamento_id":   get("departamento_id"),
         "frecuencia_id":     get("frecuencia_id"),
-        "fecha_vencimiento": get("fecha_vencimiento"),
+        "fecha_desde":       get("fecha_desde"),
+        "fecha_hasta":       get("fecha_hasta"),
         "estado":            get("estado"),
         "usuario_id":        get("usuario_id"),
     }
@@ -779,6 +781,8 @@ def collect_dashboard_filters(args):
         "frecuencia_id": get("frecuencia_id"),
         "fecha_desde":   get("fecha_desde"),
         "fecha_hasta":   get("fecha_hasta"),
+        # 2026-07-28: agregado filtro usuario_id en Dashboard (admin=todos, jefe_area=solo subordinados)
+        "usuario_id":    get("usuario_id"),
     }
 
 

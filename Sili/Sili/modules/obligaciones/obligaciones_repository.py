@@ -281,15 +281,16 @@ def get_combos_form():
     }
 
 
-def _apply_month_filter(where, params, valor):
-    """2026-07-21: el input HTML type=month manda 'YYYY-MM'. Filtra por
-    año+mes de fecha_vencimiento en vez de fecha exacta. Ignora valores mal
-    formados (no rompe el listado)."""
-    partes = (valor or "").split("-")
-    if len(partes) < 2 or not partes[0].isdigit() or not partes[1].isdigit():
-        return
-    where.append("YEAR(o.fecha_vencimiento) = ? AND MONTH(o.fecha_vencimiento) = ?")
-    params.extend([int(partes[0]), int(partes[1])])
+# 2026-07-29: reemplaza _apply_month_filter (año+mes) -- ahora Consultas e
+# Historial usan rango de fechas libre (desde/hasta), igual que el Dashboard
+# (_dashboard_common_where ya lo hacia asi, ver mismo patron abajo).
+def _apply_date_range_filter(where, params, desde, hasta):
+    if desde:
+        where.append("o.fecha_vencimiento >= ?")
+        params.append(desde)
+    if hasta:
+        where.append("o.fecha_vencimiento <= ?")
+        params.append(hasta)
 
 
 # ------------------------------------------------------------
@@ -314,8 +315,7 @@ def list_obligaciones(user_id, rol, filters):
     if filters.get("frecuencia_id"):
         where.append("o.frecuencia_id = ?")
         params.append(filters["frecuencia_id"])
-    if filters.get("fecha_vencimiento"):
-        _apply_month_filter(where, params, filters["fecha_vencimiento"])
+    _apply_date_range_filter(where, params, filters.get("fecha_desde"), filters.get("fecha_hasta"))
     # Mejora (Correccion #5): jefe_area_obligaciones tambien puede filtrar por
     # usuario -- seguro sin validacion aparte porque _apply_visibility() ya
     # acoto el WHERE a "o.usuario_id IN (subordinados)"; este AND adicional
@@ -519,8 +519,7 @@ def list_historial(user_id, rol, filters):
     if filters.get("frecuencia_id"):
         where.append("o.frecuencia_id = ?")
         params.append(filters["frecuencia_id"])
-    if filters.get("fecha_vencimiento"):
-        _apply_month_filter(where, params, filters["fecha_vencimiento"])
+    _apply_date_range_filter(where, params, filters.get("fecha_desde"), filters.get("fecha_hasta"))
     if filters.get("estado"):
         where.append("o.estado = ?")
         params.append(filters["estado"])
@@ -566,6 +565,12 @@ def _dashboard_common_where(rol, user_id, filters):
     if filters.get("fecha_hasta"):
         where.append("o.fecha_vencimiento <= ?")
         params.append(filters["fecha_hasta"])
+    # 2026-07-28: agregado filtro usuario_id en Dashboard (admin=todos, jefe_area=solo subordinados)
+    # -- mismo guard que list_obligaciones: _apply_visibility() ya acoto el WHERE, este AND
+    # solo puede angostar el conjunto visible, nunca ampliarlo a otro jefe/area.
+    if filters.get("usuario_id") and rol in (ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA):
+        where.append("o.usuario_id = ?")
+        params.append(filters["usuario_id"])
 
     return where, params
 

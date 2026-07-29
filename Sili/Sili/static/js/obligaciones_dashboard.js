@@ -175,6 +175,9 @@ document.addEventListener('DOMContentLoaded', function () {
   function filtrosActuales() {
     if (!form) { return ''; }
     var params = new URLSearchParams();
+    // 2026-07-28: filtro usuario_id (nuevo <select name="usuario_id"> en el
+    // template) ya queda cubierto por este loop generico -- no requiere linea
+    // aparte, itera TODO select/input del form por name/value.
     form.querySelectorAll('select, input').forEach(function (campo) {
       if (campo.name && campo.value) { params.append(campo.name, campo.value); }
     });

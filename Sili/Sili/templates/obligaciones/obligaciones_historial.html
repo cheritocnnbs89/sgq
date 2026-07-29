@@ -16,7 +16,8 @@
     {% endif %}
   </div>
 
-  <form class="row g-2 mb-3 oblig-filtros" method="get" action="{{ url_for('obligaciones.historial_obligaciones') }}">
+  {# 2026-07-29: align-items-end -- labels Desde/Hasta alargan esas columnas, sin esto quedaban desalineadas vs selects #}
+  <form class="row g-2 mb-3 oblig-filtros align-items-end" method="get" action="{{ url_for('obligaciones.historial_obligaciones') }}">
     <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="empresa_id">
         <option value="">-- Empresa --</option>
@@ -49,8 +50,15 @@
         {% endfor %}
       </select>
     </div>
+    <!-- 2026-07-29: rango de fechas (desde/hasta) reemplaza el filtro por mes unico -->
+    <!-- 2026-07-29: label visible agregado -- placeholder desaparece con valor y usuario no sabia que campo era -->
     <div class="col-6 col-md-auto">
-      <input type="month" class="form-control form-control-sm" name="fecha_vencimiento" value="{{ filters.fecha_vencimiento }}" title="Mes de vencimiento">
+      <small class="text-muted d-block mb-0">Desde</small>
+      <input type="date" class="form-control form-control-sm" name="fecha_desde" value="{{ filters.fecha_desde }}">
+    </div>
+    <div class="col-6 col-md-auto">
+      <small class="text-muted d-block mb-0">Hasta</small>
+      <input type="date" class="form-control form-control-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}">
     </div>
     <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="estado">

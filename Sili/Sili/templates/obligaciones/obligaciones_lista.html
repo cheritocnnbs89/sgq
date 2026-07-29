@@ -18,7 +18,7 @@
     </div>
   </div>
 
-  {% set filtros_activos = filters.empresa_id or filters.tipo_id or filters.entidad_id or filters.frecuencia_id or filters.fecha_vencimiento or filters.usuario_id %}
+  {% set filtros_activos = filters.empresa_id or filters.tipo_id or filters.entidad_id or filters.frecuencia_id or filters.fecha_desde or filters.fecha_hasta or filters.usuario_id %}
   <button class="btn btn-sm btn-outline-secondary mb-2" type="button" data-bs-toggle="collapse"
     data-bs-target="#panelFiltrosLista" aria-expanded="{{ 'true' if filtros_activos else 'false' }}"
     aria-controls="panelFiltrosLista">
@@ -26,7 +26,8 @@
   </button>
 
   <div class="collapse{{ ' show' if filtros_activos else '' }} mb-4" id="panelFiltrosLista">
-  <form class="row g-2 mb-3 oblig-filtros" method="get" action="{{ url_for('obligaciones.lista_obligaciones') }}"
+  {# 2026-07-29: align-items-end -- labels Desde/Hasta alargan esas columnas, sin esto quedaban desalineadas vs selects #}
+  <form class="row g-2 mb-3 oblig-filtros align-items-end" method="get" action="{{ url_for('obligaciones.lista_obligaciones') }}"
         id="frmFiltrosLista" data-api-entidades="{{ url_for('obligaciones.api_entidades_por_tipo') }}">
     <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="empresa_id">
@@ -62,8 +63,15 @@
         {% endfor %}
       </select>
     </div>
+    <!-- 2026-07-29: rango de fechas (desde/hasta) reemplaza el filtro por mes unico -->
+    <!-- 2026-07-29: label visible agregado -- placeholder desaparece con valor y usuario no sabia que campo era -->
     <div class="col-6 col-md-auto">
-      <input type="month" class="form-control form-control-sm" name="fecha_vencimiento" value="{{ filters.fecha_vencimiento }}" title="Mes de vencimiento">
+      <small class="text-muted d-block mb-0">Desde</small>
+      <input type="date" class="form-control form-control-sm" name="fecha_desde" value="{{ filters.fecha_desde }}">
+    </div>
+    <div class="col-6 col-md-auto">
+      <small class="text-muted d-block mb-0">Hasta</small>
+      <input type="date" class="form-control form-control-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}">
     </div>
     {% if usuarios %}
     <div class="col-6 col-md-auto">

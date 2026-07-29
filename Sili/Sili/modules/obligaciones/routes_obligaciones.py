@@ -303,12 +303,21 @@ def dashboard_obligaciones():
     rol = session.get("rol")
     data = service.dashboard_data(session.get("usuario_id"), rol, filters)
     combos = service.get_combos()
+    # 2026-07-28: mismo patron de combo "usuario" que Consultas (lista_obligaciones) --
+    # admin ve todos, jefe_area ve solo sus subordinados, el resto no ve el filtro.
+    if rol in ROLES_ADMIN:
+        usuarios = service.get_usuarios_combo()
+    elif rol == ROL_JEFE_AREA:
+        usuarios = service.get_subordinados_combo(session.get("usuario_id"))
+    else:
+        usuarios = []
 
     return render_template(
         "obligaciones/obligaciones_dashboard.html",
         data=data,
         combos=combos,
         filters=filters,
+        usuarios=usuarios,
         es_admin=rol in ROLES_ADMIN,
         active_page=ACTIVE_KEY,
     )
