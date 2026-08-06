@@ -136,17 +136,17 @@ MSG_CADENA_ROTA = "Esta frecuencia no está disponible en este momento. Contáct
 # ------------------------------------------------------------
 # Valores de negocio
 # ------------------------------------------------------------
-ESTADOS = ("por_presentar", "atrasado", "cumplido", "cumplido_fuera_plazo")
-ESTADOS_TERMINALES = ("cumplido", "cumplido_fuera_plazo")
+ESTATUS_VALORES = ("por_presentar", "atrasado", "cumplido", "cumplido_fuera_plazo")
+ESTATUS_TERMINALES = ("cumplido", "cumplido_fuera_plazo")
 
-ESTADO_LABELS = {
+ESTATUS_LABELS = {
     "por_presentar":        "Por presentar a tiempo",
     "atrasado":             "Atrasado",
     "cumplido":             "Cumplido",
     "cumplido_fuera_plazo": "Cumplido fuera de plazo",
 }
 
-ESTADO_BADGE_CLASS = {
+ESTATUS_BADGE_CLASS = {
     "por_presentar":        "bg-warning text-dark",
     "atrasado":             "bg-danger",
     "cumplido":             "bg-success",
@@ -170,5 +170,5 @@ MAX_BYTES   = MAX_MB * 1024 * 1024
 # ------------------------------------------------------------
 HISTORIAL_COLUMNAS = (
     "ID", "Tipo", "Descripción", "Departamento Responsable", "Responsable",
-    "Entidad", "Fecha_Vencimiento", "Frecuencia", "Estado", "Prioridad",
+    "Entidad", "Fecha_Vencimiento", "Frecuencia", "Estatus", "Prioridad",
 )

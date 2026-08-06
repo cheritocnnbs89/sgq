@@ -564,17 +564,6 @@ textarea.form-control.filled {
   display: block;
 }
 
-/* Label centrado del gauge semicircular -- top se calcula en JS a partir de
-   la geometria real del arco (Chart.js), no de un % adivinado en CSS. */
-.gauge-label {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  text-align: center;
-  transform: translateY(-50%);
-}
-
 @media (min-width: 992px) {
   .chart-box {
     height: 320px;
@@ -702,13 +691,25 @@ textarea.form-control.filled {
   font-size: 0.9rem;
 }
 
+.logout {
+  padding: 7px 9px;
+  font-size: 13px;
+}
+/* 2026-08-06: fusion manual desde sync (Paso 8) — bloque exclusivo LOCAL, usado por dashboard Obligaciones (gauge Chart.js) y otros modulos */
+/* Label centrado del gauge semicircular -- top se calcula en JS a partir de
+   la geometria real del arco (Chart.js), no de un % adivinado en CSS. */
+.gauge-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+
 /* Utilidades ancho contenedor -- CSP style-src 'self': nunca style="" inline */
 .container-max-900 { max-width: 900px; }
 .container-max-800 { max-width: 800px; }
 
 .notif-usuarios-lista { max-height: 180px; overflow-y: auto; }
-
-.logout {
-  padding: 7px 9px;
-  font-size: 13px;
-}

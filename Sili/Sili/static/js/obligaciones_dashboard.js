@@ -2,13 +2,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var raw = document.getElementById('dashboard-data');
   if (!raw || typeof Chart === 'undefined') { return; }
 
-  // Mapa unico de color por estado (clave cruda como llega de la BD) --
-  // usado tanto por el donut "Por estado" como por el bar chart apilado,
-  // para que un mismo estado se vea siempre del mismo color en todo el dashboard.
+  // Mapa unico de color por estatus (clave cruda como llega de la BD) --
+  // usado tanto por el donut "Por estatus" como por el bar chart apilado,
+  // para que un mismo estatus se vea siempre del mismo color en todo el dashboard.
   // 2026-07-27: agregado 'por_presentar' (mismo amarillo que cumplido_fuera_plazo,
   // pedido de Matias) + 'cumplida'/'atrasada' -- claves fundidas que devuelve
-  // SQL_DASHBOARD_POR_ESTADO_TOTAL_SELECT para el chart "Por estado (empresas)".
-  var COLOR_ESTADO = {
+  // SQL_DASHBOARD_POR_ESTATUS_TOTAL_SELECT para el chart "Por estatus (empresas)".
+  var COLOR_ESTATUS = {
     'atrasado': '#dc3545',
     'cumplido': '#198754',
     'cumplido_fuera_plazo': '#ffc107',
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'cumplida': '#198754',
     'atrasada': '#dc3545'
   };
-  var ESTADO_ETIQUETAS = {
+  var ESTATUS_ETIQUETAS = {
     'atrasado': 'Atrasado',
     'cumplido': 'Cumplido',
     'cumplido_fuera_plazo': 'Cumplido fuera de plazo',
@@ -54,13 +54,13 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // 2026-07-27: barra APILADA por empresa (reemplaza el bar combinado del
-  // 2026-07-21, pedido de Matias). Filas vienen como {empresa, estado, total}
-  // con estado ya fundido en 3 categorias fijas (SQL_DASHBOARD_POR_ESTADO_TOTAL_SELECT):
+  // 2026-07-21, pedido de Matias). Filas vienen como {empresa, estatus, total}
+  // con estatus ya fundido en 3 categorias fijas (SQL_DASHBOARD_POR_ESTATUS_TOTAL_SELECT):
   // cumplida (verde) / atrasada (rojo) / por_presentar (amarillo). Un dataset
   // por categoria -> Chart.js las apila con scales.x.stacked/y.stacked.
-  var SEGMENTOS_ESTADO_EMPRESA = ['cumplida', 'atrasada', 'por_presentar'];
+  var SEGMENTOS_ESTATUS_EMPRESA = ['cumplida', 'atrasada', 'por_presentar'];
 
-  function barEstadoTotal(rows, animate) {
+  function barEstatusTotal(rows, animate) {
     var el = document.getElementById('chartEmpresa');
     destroyChart('chartEmpresa');
     if (!el || !rows || !rows.length) { return; }
@@ -70,12 +70,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (empresas.indexOf(r.empresa) === -1) { empresas.push(r.empresa); }
     });
 
-    var datasets = SEGMENTOS_ESTADO_EMPRESA.map(function (estado) {
+    var datasets = SEGMENTOS_ESTATUS_EMPRESA.map(function (estatus) {
       return {
-        label: ESTADO_ETIQUETAS[estado],
-        backgroundColor: COLOR_ESTADO[estado],
+        label: ESTATUS_ETIQUETAS[estatus],
+        backgroundColor: COLOR_ESTATUS[estatus],
         data: empresas.map(function (empresa) {
-          var fila = rows.find(function (r) { return r.empresa === empresa && r.estado === estado; });
+          var fila = rows.find(function (r) { return r.empresa === empresa && r.estatus === estatus; });
           return fila ? fila.total : 0;
         })
       };
@@ -155,9 +155,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function render(chartData, animate) {
     actualizarKpis(chartData.kpis, chartData.pct_cumplidas);
-    doughnut('chartEstado', chartData.por_estado, 'estado', COLOR_ESTADO, ESTADO_ETIQUETAS, animate);
+    // 2026-08-05: doughnut chartEstado ("Por estatus") eliminado -- pedido Matias en reunion.
     doughnut('chartTipo', chartData.por_tipo, 'etiqueta', null, null, animate);
-    barEstadoTotal(chartData.por_estado_total, animate);
+    barEstatusTotal(chartData.por_estatus_total, animate);
     if (typeof chartData.pct_cumplidas === 'number') { gauge(chartData.pct_cumplidas, animate); }
   }
 

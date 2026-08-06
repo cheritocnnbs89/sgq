@@ -103,6 +103,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  document.querySelectorAll('form[data-confirm-message]').forEach(function (form) {
+    form.addEventListener('submit', function (ev) {
+      const ok = window.confirm(form.dataset.confirmMessage);
+      if (!ok) {
+        ev.preventDefault();
+      }
+    });
+  });
+
   if (statusDeleted) {
     const u = new URL(window.location.href);
     u.searchParams.delete('status');
@@ -149,13 +158,21 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   (function initDefaultDates() {
+    // No usar location.search: el gateway de la app enmascara rutas GET en
+    // /g/<token>, por lo que la barra de direcciones no refleja los filtros
+    // reales (p.ej. pend_view). Se lee el estado ya resuelto por el servidor
+    // directamente de los campos del formulario en vez de la URL.
     const pad = (n) => String(n).padStart(2, '0');
     const fmt = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
     const desde = document.querySelector('input[name="desde"]');
     const hasta = document.querySelector('input[name="hasta"]');
+    const pendientesField = document.querySelector('[name="pendientes"]');
+    const ccbField = document.querySelector('[name="ccb"]');
 
-    const qs = new URLSearchParams(location.search);
-    const special = ['ccb', 'pendientes'].some(k => qs.get(k) === '1');
+    const special = (pendientesField && pendientesField.value === '1')
+      || (ccbField && ccbField.value === '1');
+    const hadDesde = !!(desde && desde.value);
+    const hadHasta = !!(hasta && hasta.value);
 
     if (!special) {
       const today = fmt(new Date());
@@ -164,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const form = desde?.closest('form');
-    if (form && !qs.has('desde') && !qs.has('hasta') && !special) {
+    if (form && !hadDesde && !hadHasta && !special) {
       form.submit();
     }
   })();
@@ -679,4 +696,44 @@ document.addEventListener('DOMContentLoaded', function () {
   exportAll('btnExcelVisible');
   exportAll('btnExcelFiltrado');
   exportAll('btnReporteExcel');
+
+  /* ── Toggle CCB (solo coordinador) ─────────────────────────────── */
+  document.addEventListener('click', async function (ev) {
+    const btn = ev.target.closest('.btn-ccb-toggle');
+    if (!btn) return;
+    ev.preventDefault();
+
+    const url     = btn.dataset.url;
+    const actual  = parseInt(btn.dataset.ccbActual || '0', 10);
+    const nuevo   = actual === 1 ? 0 : 1;
+    const label   = nuevo === 1 ? 'SI' : 'NO';
+
+    if (!confirm('¿Cambiar CCB a ' + label + ' para este gasto?')) return;
+
+    btn.disabled = true;
+    try {
+      const fd = new FormData();
+      fd.append('ccb', String(nuevo));
+      fd.append('csrf_token', csrfToken);
+      const resp = await fetch(url, { method: 'POST', body: fd });
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) {
+        showToast(data.error || 'Error al actualizar CCB');
+        return;
+      }
+      btn.dataset.ccbActual = String(nuevo);
+      btn.classList.toggle('btn-warning', nuevo === 1);
+      btn.classList.toggle('btn-outline-secondary', nuevo === 0);
+      const ico = btn.querySelector('i');
+      if (ico) {
+        ico.className = nuevo === 1 ? 'bi bi-star-fill' : 'bi bi-star';
+      }
+      btn.childNodes[btn.childNodes.length - 1].textContent = ' ' + label;
+      showToast('CCB actualizado a ' + label);
+    } catch (e) {
+      showToast('Error de red al actualizar CCB');
+    } finally {
+      btn.disabled = false;
+    }
+  });
 });

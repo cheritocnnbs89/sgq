@@ -61,11 +61,11 @@
       <input type="date" class="form-control form-control-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}">
     </div>
     <div class="col-6 col-md-auto">
-      <select class="form-select form-select-sm" name="estado">
-        <option value="">-- Estado --</option>
-        {% for valor, label in estado_labels.items() %}
+      <select class="form-select form-select-sm" name="estatus">
+        <option value="">-- Estatus --</option>
+        {% for valor, label in estatus_labels.items() %}
           {% if valor in ('cumplido', 'cumplido_fuera_plazo') %}
-          <option value="{{ valor }}" {% if filters.estado == valor %}selected{% endif %}>{{ label }}</option>
+          <option value="{{ valor }}" {% if filters.estatus == valor %}selected{% endif %}>{{ label }}</option>
           {% endif %}
         {% endfor %}
       </select>
@@ -96,7 +96,7 @@
           <th>Frecuencia</th>
           <th>Fecha creación</th>
           <th>Fecha vencimiento</th>
-          <th>Estado</th>
+          <th>Estatus</th>
           <th>Evidencia</th>
           <th>Usuario</th>
         </tr>
@@ -111,10 +111,10 @@
           <td>{{ r.creado_en.strftime('%Y-%m-%d') if r.creado_en else '-' }}</td>
           <td>{{ r.fecha_vencimiento or '-' }}</td>
           <td>
-            {% if r.estado == 'cumplido_fuera_plazo' %}
-            <span class="badge bg-warning text-dark oblig-badge-estado">{{ estado_labels.get(r.estado, r.estado) }}</span>
+            {% if r.estatus == 'cumplido_fuera_plazo' %}
+            <span class="badge bg-warning text-dark oblig-badge-estatus">{{ estatus_labels.get(r.estatus, r.estatus) }}</span>
             {% else %}
-            <span class="badge bg-success oblig-badge-estado">{{ estado_labels.get(r.estado, r.estado) }}</span>
+            <span class="badge bg-success oblig-badge-estatus">{{ estatus_labels.get(r.estatus, r.estatus) }}</span>
             {% endif %}
           </td>
           <td>

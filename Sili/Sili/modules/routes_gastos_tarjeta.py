@@ -455,9 +455,9 @@ def _can_approve_area(area: str) -> bool:
     if _is_super():
         return True
     if a == "gg":
-        return r == "gerente general"
+        return gh.es_rol_gg(r)
     if a == "gf":
-        return r == "gerente financiero"
+        return gh.es_rol_gf(r)
     if a == "ga":
         return r in ("gerente", "gerente de área", "gerente de area")
     return False
@@ -807,8 +807,8 @@ def guess_gerente_area(conn: sqlite3.Connection, user_id: int | None) -> int | N
     BOSS_ROLES = (
         'jefe',
         'gerente',
-        'gerente general',
-        'gerente financiero',
+        gh.rol_gg(),
+        gh.rol_gf(),
         'coordinador',
         'admin','usuario'
     )
@@ -1362,6 +1362,7 @@ def register_gastos_routes(app):
                     LEFT JOIN terceros t ON t.id = g.proveedor_id
                     LEFT JOIN usuarios u ON u.id = g.usuario_id
                     LEFT JOIN gastos_tarjeta_detalle d ON d.gasto_id = g.id
+                    LEFT JOIN facturas_xml fx ON fx.id = g.factura_xml_id
                 """
 
                 select_cols = """
@@ -1374,6 +1375,24 @@ def register_gastos_routes(app):
                     COALESCE(t.nombre, g.proveedor, '') AS proveedor_nombre,
                     COALESCE(g.numero_factura, '') AS numero_factura,
                     COALESCE(g.orden_compra, '') AS orden_compra,
+                    COALESCE(
+                        fx.clave_acceso,
+                        (
+                            SELECT TOP 1 fx2.clave_acceso
+                            FROM facturas_xml fx2
+                            WHERE g.factura_xml_id IS NULL
+                              AND g.numero_factura IS NOT NULL
+                              AND LTRIM(RTRIM(g.numero_factura)) <> ''
+                              AND CHARINDEX('-', REVERSE(g.numero_factura)) > 0
+                              AND fx2.secuencial LIKE SUBSTRING(
+                                    g.numero_factura,
+                                    LEN(g.numero_factura) - CHARINDEX('-', REVERSE(g.numero_factura)) + 2,
+                                    LEN(g.numero_factura)
+                                  ) + '%'
+                              AND fx2.ruc_emisor = t.identificacion
+                        ),
+                        ''
+                    ) AS clave_autorizacion,
 
                     COALESCE(g.subtotal_factura, 0) AS subtotal_factura,
                     COALESCE(g.servicios_10, 0) AS servicios_10,
@@ -1487,6 +1506,7 @@ def register_gastos_routes(app):
                 ("proveedor_nombre", "Proveedor"),
                 ("numero_factura", "N° factura"),
                 ("orden_compra", "N° Orden de compra"),
+                ("clave_autorizacion", "Clave de autorización"),
 
                 ("det_observacion", "Observación (línea)"),
                 ("det_motivo_gasto", "Motivo gasto (línea)"),
@@ -1696,19 +1716,20 @@ def register_gastos_routes(app):
                 filtros["gerente_id"] = ""
 
             pendientes = (request.args.get("pendientes") or request.args.get("pend") or "").strip()
-            current_app.logger.info("ROL_SESSION=%r role_name=%r pendientes=%r", session.get("rol"), role_name, pendientes)
+            pend_view_req = (request.args.get("pend_view") or "").strip().lower()
+            current_app.logger.info("ROL_SESSION=%r role_name=%r pendientes=%r pend_view=%r", session.get("rol"), role_name, pendientes, pend_view_req)
 
-            if pendientes == "1":
-                if tipo in TIPOS_RESTRINGIDOS and role_name in ("gerente general", "gerente financiero"):
+            if pendientes == "1" and pend_view_req == "":
+                if tipo in TIPOS_RESTRINGIDOS and role_name in (gh.rol_gg(), gh.rol_gf()):
                     where.append("1=0")
                 else:
                     if role_name in ("gerente", "gerente de área", "gerente de area"):
                         where.append("COALESCE(g.ga_aprobado,0)=0")
-                    elif role_name == "gerente general":
+                    elif role_name == gh.rol_gg():
                         where.append("COALESCE(g.ga_aprobado,0)=1 AND COALESCE(g.gg_aprobado,0)=0")
-                    #elif role_name == "gerente financiero":
+                    #elif role_name == gh.rol_gf():
                         #where.append("COALESCE(g.gg_aprobado,0)=1 AND COALESCE(g.gf_aprobado,0)=0")
-                    elif role_name == "gerente financiero":
+                    elif role_name == gh.rol_gf():
                         where.append("COALESCE(g.ga_aprobado,0)=1 AND COALESCE(g.gf_aprobado,0)=0")
                     else:
                         where.append("1=0")
@@ -1723,13 +1744,13 @@ def register_gastos_routes(app):
 
             PRIV_ALL = ('admin', 'coordinador')
             if tipo not in TIPOS_RESTRINGIDOS:
-                PRIV_ALL = ('admin', 'coordinador', 'gerente general', 'gerente financiero')
+                PRIV_ALL = ('admin', 'coordinador', gh.rol_gg(), gh.rol_gf())
 
             GERENTE_ROLES = ('gerente', 'gerente de área', 'gerente de area')
             allowed_ids = None
 
             scope_ids_set = set()
-            if role_name in ('gerente general', 'gerente financiero'):
+            if role_name in (gh.rol_gg(), gh.rol_gf()):
                 scope_ids_set = set(obtener_subordinados(conn, uid) or [])
                 if uid:
                     scope_ids_set.add(uid)
@@ -1747,7 +1768,7 @@ def register_gastos_routes(app):
             if role_name in PRIV_ALL:
                 pass
 
-            elif role_name in ('gerente general', 'gerente financiero'):
+            elif role_name in (gh.rol_gg(), gh.rol_gf()):
                 if allowed_ids is None:
                     allowed_ids = {uid}
 
@@ -1787,7 +1808,7 @@ def register_gastos_routes(app):
                     else:
                         filtros['usuario_id'] = ''
 
-                elif role_name in ('gerente general', 'gerente financiero'):
+                elif role_name in (gh.rol_gg(), gh.rol_gf()):
                     if allowed_ids and uid_req in allowed_ids:
                         where.append("g.usuario_id = ?")
                         args.append(uid_req)
@@ -1838,6 +1859,7 @@ def register_gastos_routes(app):
                 COALESCE(g.ga_aprobado, 0) AS ga_aprobado,
                 COALESCE(g.tarjeta_sin_soporte,0) AS tarjeta_sin_soporte,
                 COALESCE(g.boletos_aereos,0) AS boletos_aereos,
+                COALESCE(g.coord_revisado,0) AS coord_revisado,
 
                 (
                     SELECT STRING_AGG(m.x, ', ')
@@ -1930,8 +1952,9 @@ def register_gastos_routes(app):
                     return ""
 
             rows2 = []
-            is_gg_gf = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
-            ROLE_VER_GERENTE = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
+            is_gg_gf = role_name in (gh.rol_gg(), gh.rol_gf(), "coordinador", "admin")
+            ROLE_VER_GERENTE = role_name in (gh.rol_gg(), gh.rol_gf(), "coordinador", "admin")
+            es_coordinador_actual = (role_name == 'admin') or gh.es_coordinador_gastos(uid, role_name)
 
             for d in rows:
                 d = dict(d or {})
@@ -1942,23 +1965,26 @@ def register_gastos_routes(app):
                 es_tarjeta = tipo_gasto in ('tarjeta', 'tarjeta_online', 'tarjeta_boletos')
                 es_restringido = tipo_gasto in ('caja_chica', 'reembolso')
 
+                d['coord_revisado'] = int(d.get('coord_revisado') or 0)
+                d['puede_enviar_gerencia'] = bool(es_tarjeta and d['coord_revisado'] == 0 and es_coordinador_actual)
+
                 d['can_act_as_gf_tarjeta'] = int(d.get('can_act_as_gf_tarjeta') or 0)
                 d['can_act_as_ga_tarjeta'] = int(d.get('can_act_as_ga_tarjeta') or 0)
                 d['can_act_as_ga_restringido'] = int(d.get('can_act_as_ga_restringido') or 0)
                 d['ga_actor'] = (d.get('ga_actor') or 'ga')
 
-                if es_tarjeta and role_name == 'gerente financiero':
+                if es_tarjeta and role_name == gh.rol_gf():
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_tarjeta'] = 1
                         d['can_act_as_gf_tarjeta'] = 1
                         d['ga_actor'] = 'gf'
 
-                if es_tarjeta and role_name == 'gerente general':
+                if es_tarjeta and role_name == gh.rol_gg():
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_tarjeta'] = 1
                         d['ga_actor'] = 'gg'
 
-                if es_restringido and role_name in ('gerente financiero', 'gerente general'):
+                if es_restringido and role_name in (gh.rol_gf(), gh.rol_gg()):
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_restringido'] = 1
 
@@ -2029,11 +2055,14 @@ def register_gastos_routes(app):
 
             is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
 
-            can_approve_gg = is_admin or (role_name == 'gerente general')
-            can_approve_gf = is_admin or (role_name == 'gerente financiero')
-            can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
+            is_coord = gh.es_coordinador_gastos(uid, role_name)
+            is_ga_role = gh.es_rol_ga(role_name)
 
-            readonly_view = (role_name == 'coordinador')
+            can_approve_gg = is_admin or (role_name == gh.rol_gg())
+            can_approve_gf = is_admin or (role_name == gh.rol_gf())
+            can_approve_ga = is_admin or is_ga_role
+
+            readonly_view = (not is_admin) and is_coord
 
             return render_template(
                 'gastos_lista.html',
@@ -2047,6 +2076,11 @@ def register_gastos_routes(app):
                 can_approve_gf=can_approve_gf,
                 can_approve_ga=can_approve_ga,
                 readonly_view=readonly_view,
+                is_coord=is_coord,
+                is_ga_role=is_ga_role,
+                puede_ver_reporte_excel=gh.puede_ver_reporte_excel(role_name, is_coord),
+                rol_gg=gh.rol_gg(),
+                rol_gf=gh.rol_gf(),
                 usuario=session.get('usuario'),
                 rol=session.get('rol'),
                 active_page='gastos_tarjeta'
@@ -2401,10 +2435,10 @@ def register_gastos_routes(app):
 
         # flags para template
         is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
-        can_approve_gg = is_admin or (role_name == 'gerente general')
-        can_approve_gf = is_admin or (role_name == 'gerente financiero')
+        can_approve_gg = is_admin or (role_name == gh.rol_gg())
+        can_approve_gf = is_admin or (role_name == gh.rol_gf())
         can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
-        readonly_view = (role_name == 'coordinador')
+        readonly_view = (not is_admin) and gh.es_coordinador_gastos(uid_session, role_name)
 
         try:
             conn.close()
@@ -2477,7 +2511,7 @@ def register_gastos_routes(app):
                 return redirect(url_for("gastos_pendientes_aprobacion", **qs))
 
             # ✅ SOLO GERENTES (capa extra de seguridad)
-            ALLOWED = ("gerente", "gerente de área", "gerente de area", "gerente general", "gerente financiero")
+            ALLOWED = ("gerente", "gerente de área", "gerente de area", gh.rol_gg(), gh.rol_gf())
             if role_name not in ALLOWED:
                 try:
                     conn.close()
@@ -2572,14 +2606,14 @@ def register_gastos_routes(app):
             # ==========================================================
             PRIV_ALL = ('admin', 'coordinador')
             if tipo not in TIPOS_RESTRINGIDOS:
-                PRIV_ALL = ('admin', 'coordinador', 'gerente general', 'gerente financiero')
+                PRIV_ALL = ('admin', 'coordinador', gh.rol_gg(), gh.rol_gf())
 
             GERENTE_ROLES = ('gerente', 'gerente de área', 'gerente de area')
 
             allowed_ids = None
             scope_ids_set = set()
 
-            if role_name in ('gerente general', 'gerente financiero'):
+            if role_name in (gh.rol_gg(), gh.rol_gf()):
                 scope_ids_set = set(obtener_subordinados(conn, uid) or [])
                 if uid:
                     scope_ids_set.add(uid)
@@ -2598,7 +2632,7 @@ def register_gastos_routes(app):
             if role_name in PRIV_ALL:
                 pass
 
-            elif role_name in ('gerente general', 'gerente financiero'):
+            elif role_name in (gh.rol_gg(), gh.rol_gf()):
                 if allowed_ids is None:
                     allowed_ids = {uid}
 
@@ -2639,7 +2673,7 @@ def register_gastos_routes(app):
                     else:
                         filtros['usuario_id'] = ''
 
-                elif role_name in ('gerente general', 'gerente financiero'):
+                elif role_name in (gh.rol_gg(), gh.rol_gf()):
                     if allowed_ids and uid_req in allowed_ids:
                         where.append("g.usuario_id = ?")
                         args.append(uid_req)
@@ -2789,8 +2823,8 @@ def register_gastos_routes(app):
             # FLAGS POR FILA + gerente por fila
             # ==========================================================
             rows2 = []
-            is_gg_gf = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
-            ROLE_VER_GERENTE = role_name in ("gerente general", "gerente financiero", "coordinador", "admin")
+            is_gg_gf = role_name in (gh.rol_gg(), gh.rol_gf(), "coordinador", "admin")
+            ROLE_VER_GERENTE = role_name in (gh.rol_gg(), gh.rol_gf(), "coordinador", "admin")
 
             for d in rows:
                 d = dict(d or {})
@@ -2810,7 +2844,7 @@ def register_gastos_routes(app):
                 d['can_act_as_ga_restringido'] = int(d.get('can_act_as_ga_restringido') or 0)
                 d['ga_actor'] = (d.get('ga_actor') or 'ga')
 
-                if es_tarjeta and role_name == 'gerente financiero':
+                if es_tarjeta and role_name == gh.rol_gf():
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_tarjeta'] = 1
                         d['can_act_as_gf_tarjeta'] = 1
@@ -2819,12 +2853,12 @@ def register_gastos_routes(app):
                         if tipo_gasto != "tarjeta_online":
                             d['ga_actor'] = 'gf'
 
-                if es_tarjeta and role_name == 'gerente general':
+                if es_tarjeta and role_name == gh.rol_gg():
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_tarjeta'] = 1
                         d['ga_actor'] = 'gg'
 
-                if es_restringido and role_name in ('gerente financiero', 'gerente general'):
+                if es_restringido and role_name in (gh.rol_gf(), gh.rol_gg()):
                     if usuario_gasto in scope_ids_set:
                         d['can_act_as_ga_restringido'] = 1
 
@@ -2863,7 +2897,7 @@ def register_gastos_routes(app):
                 if role_name in ("gerente", "gerente de área", "gerente de area"):
                     return ga == 0
 
-                if role_name == "gerente general":
+                if role_name == gh.rol_gg():
                     if es_restringido:
                         if int(d.get("can_act_as_ga_restringido") or 0) == 1:
                             return ga_eff_restringido == 0
@@ -2877,7 +2911,7 @@ def register_gastos_routes(app):
 
                     return False
 
-                if role_name == "gerente financiero":
+                if role_name == gh.rol_gf():
                     if es_restringido:
                         if int(d.get("can_act_as_ga_restringido") or 0) == 1:
                             return ga_eff_restringido == 0
@@ -2946,11 +2980,14 @@ def register_gastos_routes(app):
 
             is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
 
-            can_approve_gg = is_admin or (role_name == 'gerente general')
-            can_approve_gf = is_admin or (role_name == 'gerente financiero')
-            can_approve_ga = is_admin or (role_name in ('gerente', 'gerente de área', 'gerente de area'))
+            is_coord = gh.es_coordinador_gastos(uid, role_name)
+            is_ga_role = gh.es_rol_ga(role_name)
 
-            readonly_view = (role_name == 'coordinador')
+            can_approve_gg = is_admin or (role_name == gh.rol_gg())
+            can_approve_gf = is_admin or (role_name == gh.rol_gf())
+            can_approve_ga = is_admin or is_ga_role
+
+            readonly_view = (not is_admin) and is_coord
 
             return render_template(
                 'gastos_pendientes_aprobacion.html',
@@ -2964,6 +3001,11 @@ def register_gastos_routes(app):
                 can_approve_gf=can_approve_gf,
                 can_approve_ga=can_approve_ga,
                 readonly_view=readonly_view,
+                is_coord=is_coord,
+                is_ga_role=is_ga_role,
+                puede_ver_reporte_excel=gh.puede_ver_reporte_excel(role_name, is_coord),
+                rol_gg=gh.rol_gg(),
+                rol_gf=gh.rol_gf(),
                 usuario=session.get('usuario'),
                 rol=session.get('rol'),
                 active_page='gastos_pendientes'
@@ -3282,13 +3324,13 @@ def register_gastos_routes(app):
         rol = (session.get("rol") or "").lower().strip()
         is_admin = (rol == "admin") or bool(session.get("is_admin"))
 
-        if area == "gg" and not (is_admin or rol == "gerente general"):
+        if area == "gg" and not (is_admin or rol == gh.rol_gg()):
             return jsonify(ok=False, msg="No puede aprobar como Gerente General"), 403
-        if area == "gf" and not (is_admin or rol == "gerente financiero"):
+        if area == "gf" and not (is_admin or rol == gh.rol_gf()):
             return jsonify(ok=False, msg="No puede aprobar como Gerente Financiero"), 403
 
         GA_ROLES = ("gerente", "gerente de área", "gerente de area")
-        GA_ACT_AS_ROLES = ("gerente general", "gerente financiero")
+        GA_ACT_AS_ROLES = (gh.rol_gg(), gh.rol_gf())
 
         if area == "ga" and not (is_admin or rol in GA_ROLES or rol in GA_ACT_AS_ROLES):
             return jsonify(ok=False, msg="No puede aprobar como Gerente de área"), 403
@@ -3363,7 +3405,7 @@ def register_gastos_routes(app):
                 if rol in ("gerente", "gerente de área", "gerente de area"):
                     subordinados = set(obtener_subordinados(conn, uid) or [])
                     subordinados.add(int(uid))
-                elif rol in ("gerente general", "gerente financiero"):
+                elif rol in (gh.rol_gg(), gh.rol_gf()):
                     ga_act_as_tarjeta = True
 
             def _has_sap(x) -> bool:
@@ -3375,7 +3417,12 @@ def register_gastos_routes(app):
 
             def _actua_como_ga_por_ultimo_jefe(row) -> bool:
                 try:
-                    ultimo_jefe = _get_ultimo_jefe_id(conn, int(row.get("usuario_id") or 0))
+                    # fallback_to_self=True: si el dueño del gasto no tiene jefe_id
+                    # (ej. un gerente que registra su propio gasto), él mismo cuenta
+                    # como su "último jefe" — puede aprobarse su propio paso GA.
+                    ultimo_jefe = _get_ultimo_jefe_id(
+                        conn, int(row.get("usuario_id") or 0), fallback_to_self=True
+                    )
                     return bool(ultimo_jefe) and int(ultimo_jefe) == int(uid)
                 except Exception:
                     return False
@@ -3399,8 +3446,8 @@ def register_gastos_routes(app):
                 es_auto_tipo = (int(row.get("reembolso_vendedor") or 0) == 1) or (int(row.get("es_caja_chica") or 0) == 1)
                 es_tarjeta = _es_tarjeta(row)
 
-                gf_es_ga = (rol == "gerente financiero") and es_tarjeta and _actua_como_ga_por_ultimo_jefe(row)
-                gg_es_ga = (rol == "gerente general") and es_tarjeta and _actua_como_ga_por_ultimo_jefe(row)
+                gf_es_ga = (rol == gh.rol_gf()) and es_tarjeta and _actua_como_ga_por_ultimo_jefe(row)
+                gg_es_ga = (rol == gh.rol_gg()) and es_tarjeta and _actua_como_ga_por_ultimo_jefe(row)
 
                 if subordinados is not None:
                     if int(row.get("usuario_id") or 0) not in subordinados:
@@ -3412,16 +3459,18 @@ def register_gastos_routes(app):
                         skipped.append({"id": gid, "msg": "No aplica: solo tarjeta"})
                         continue
 
-                    ultimo_jefe = _get_ultimo_jefe_id(conn, int(row.get("usuario_id") or 0))
+                    ultimo_jefe = _get_ultimo_jefe_id(
+                        conn, int(row.get("usuario_id") or 0), fallback_to_self=True
+                    )
                     if not ultimo_jefe or int(ultimo_jefe) != int(uid):
                         skipped.append({"id": gid, "msg": "No es último jefe (GA tarjeta)"})
                         continue
 
                 effective_area = area
                 if area == "ga" and es_auto_tipo and (not is_admin):
-                    if rol == "gerente financiero":
+                    if rol == gh.rol_gf():
                         effective_area = "gf"
-                    elif rol == "gerente general":
+                    elif rol == gh.rol_gg():
                         effective_area = "gg"
 
                 if area == "ga":
@@ -3581,13 +3630,13 @@ def register_gastos_routes(app):
             rol = (session.get("rol") or "").lower().strip()
             is_admin = (rol == "admin") or bool(session.get("is_admin"))
 
-            if area == "gg" and not (is_admin or rol == "gerente general"):
+            if area == "gg" and not (is_admin or rol == gh.rol_gg()):
                 return jsonify(ok=False, msg="No puede aprobar como Gerente General"), 403
-            if area == "gf" and not (is_admin or rol == "gerente financiero"):
+            if area == "gf" and not (is_admin or rol == gh.rol_gf()):
                 return jsonify(ok=False, msg="No puede aprobar como Gerente Financiero"), 403
 
             GA_ROLES = ("gerente", "gerente de área", "gerente de area")
-            GA_ACT_AS_ROLES = ("gerente general", "gerente financiero")
+            GA_ACT_AS_ROLES = (gh.rol_gg(), gh.rol_gf())
 
             if area == "ga" and not (is_admin or rol in GA_ROLES or rol in GA_ACT_AS_ROLES):
                 return jsonify(ok=False, msg="No puede aprobar como Gerente de área"), 403
@@ -3637,12 +3686,14 @@ def register_gastos_routes(app):
                         if int(usuario_meta or 0) not in subordinados:
                             return jsonify(ok=False, msg="No puede aprobar gastos fuera de su jerarquía."), 403
 
-                    elif rol in ("gerente general", "gerente financiero"):
+                    elif rol in (gh.rol_gg(), gh.rol_gf()):
                         es_tarjeta = (reembolso_vendedor == 0) and (es_caja_chica == 0)
                         if not es_tarjeta:
                             return jsonify(ok=False, msg="No autorizado para GA en este tipo de gasto."), 403
 
-                        ultimo_jefe = _get_ultimo_jefe_id(conn, int(usuario_meta) if usuario_meta else None)
+                        ultimo_jefe = _get_ultimo_jefe_id(
+                            conn, int(usuario_meta) if usuario_meta else None, fallback_to_self=True
+                        )
                         if not ultimo_jefe or int(ultimo_jefe) != int(uid):
                             return jsonify(ok=False, msg="No puede aprobar como GA: no es el último jefe del usuario."), 403
 
@@ -3653,9 +3704,9 @@ def register_gastos_routes(app):
 
                 effective_area = area
                 if area == "ga" and es_auto_tipo and (not is_admin):
-                    if rol == "gerente financiero":
+                    if rol == gh.rol_gf():
                         effective_area = "gf"
-                    elif rol == "gerente general":
+                    elif rol == gh.rol_gg():
                         effective_area = "gg"
 
                 col = {"gg": "gg", "gf": "gf", "ga": "ga"}[effective_area]
@@ -4432,9 +4483,12 @@ def register_gastos_routes(app):
                 except Exception as _e:
                     current_app.logger.warning("[NUEVO_GASTO] No se pudo asegurar columna %s en detalle: %s", _col, _e)
 
-            # Columnas boletos_aereos / tarjeta_sin_soporte en gastos_tarjeta (cabecera)
-            for _col, _tipo in [('boletos_aereos',     'BIT'),
-                                 ('tarjeta_sin_soporte','BIT')]:
+            # Columnas boletos_aereos / tarjeta_sin_soporte / revisión de coordinador en gastos_tarjeta (cabecera)
+            for _col, _tipo in [('boletos_aereos',      'BIT'),
+                                 ('tarjeta_sin_soporte', 'BIT'),
+                                 ('coord_revisado',      'BIT'),
+                                 ('coord_revisado_por',  'INT'),
+                                 ('coord_revisado_at',   'DATETIME')]:
                 try:
                     cur.execute(f"""
                         IF NOT EXISTS (
@@ -4549,13 +4603,23 @@ def register_gastos_routes(app):
                 )
 
             # Notificación fuera de transacción
+            # Los gastos tipo tarjeta (incluye boletos aéreos y tarjeta online) pasan
+            # primero por revisión del coordinador del módulo antes de notificar al
+            # gerente; caja chica y reembolso de vendedor siguen el flujo de siempre.
+            es_tarjeta_familia = (es_caja_chica == 0 and es_reembolso_vendedor == 0)
             try:
                 if gasto_id:
-                    mail.notify_gasto_created(app, gasto_id, uid)
+                    if es_tarjeta_familia:
+                        mail.notify_gasto_pending_coordinador(app, gasto_id, uid)
+                    else:
+                        mail.notify_gasto_created(app, gasto_id, uid)
             except Exception:
                 app.logger.exception("No se pudo enviar la notificación de creación")
 
-            flash('Gasto creado correctamente.', 'success')
+            if es_tarjeta_familia:
+                flash('Gasto creado correctamente. Queda pendiente de revisión del coordinador antes de pasar a gerencia.', 'success')
+            else:
+                flash('Gasto creado correctamente.', 'success')
             return redirect(url_for('lista_gastos'))
 
         finally:
@@ -4575,10 +4639,33 @@ def register_gastos_routes(app):
         current_app.logger.info("[RECHAZAR_NOTIFICAR] llega gasto_id=%s", gasto_id)
 
         role = (session.get('rol') or '').strip().lower()
-        if role not in ('gerente general', 'admin', 'gerente financiero'):
-            return jsonify(ok=False, msg='No autorizado'), 403
-
         by_uid = session.get('usuario_id') or session.get('user_id')
+
+        autorizado = role == 'admin'
+        if not autorizado and role == gh.rol_gg() and gh.gg_puede_rechazar():
+            autorizado = True
+        if not autorizado and role == gh.rol_gf() and gh.gf_puede_rechazar():
+            autorizado = True
+        if not autorizado and gh.ga_puede_rechazar():
+            # GA no es un rol global fijo: solo puede rechazar si es el jefe
+            # real (último jefe con rol gerente, o él mismo si no tiene jefe)
+            # del usuario dueño de ESTE gasto en particular.
+            conn_chk = get_db()
+            try:
+                cur_chk = conn_chk.cursor()
+                cur_chk.execute(f"SELECT usuario_id FROM {TABLE_GASTOS} WHERE id = ?", (gasto_id,))
+                row_chk = cur_chk.fetchone()
+                if row_chk and by_uid:
+                    ultimo_jefe = _get_ultimo_jefe_id(
+                        conn_chk, row_chk['usuario_id'], fallback_to_self=True
+                    )
+                    if ultimo_jefe and int(ultimo_jefe) == int(by_uid):
+                        autorizado = True
+            finally:
+                conn_chk.close()
+
+        if not autorizado:
+            return jsonify(ok=False, msg='No autorizado'), 403
 
         data = request.get_json(silent=True) or {}
         comentario = (data.get('comentario') or '').strip()
@@ -4664,6 +4751,323 @@ def register_gastos_routes(app):
     
         
 
+    # ── Configuración: coordinador del módulo ─────────────────────────────────
+    @app.route('/reembolsos/gastos/configuracion', methods=['GET'], endpoint='gastos_configuracion')
+    @require_login
+    def gastos_configuracion():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede acceder a esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, nombre_completo, username
+            FROM usuarios
+            WHERE COALESCE(disabled, 0) = 0
+            ORDER BY nombre_completo
+        """)
+        usuarios = cur.fetchall()
+
+        cur.execute("SELECT nombre FROM roles ORDER BY nombre")
+        roles_disponibles = [r['nombre'] for r in cur.fetchall()]
+        conn.close()
+
+        coordinador = gh.get_coordinador_gastos()
+
+        return render_template(
+            'gastos_configuracion.html',
+            usuarios=usuarios,
+            coordinador=coordinador,
+            roles_disponibles=roles_disponibles,
+            rol_gg=gh.rol_gg(),
+            rol_gf=gh.rol_gf(),
+            flujo_requerido=gh.get_flujo_requerido(),
+            ga_puede_rechazar=gh.ga_puede_rechazar(),
+            gg_puede_rechazar=gh.gg_puede_rechazar(),
+            gf_puede_rechazar=gh.gf_puede_rechazar(),
+            roles_ga=gh.roles_ga(),
+            rol_reporte_excel=gh.rol_reporte_excel(),
+            auto_registro_reglas=gh.list_auto_registro_reglas(),
+            usuario=session.get('usuario'),
+            rol=session.get('rol'),
+            active_page='gastos_configuracion',
+        )
+
+    @app.route('/reembolsos/gastos/configuracion/auto-registro/crear', methods=['POST'],
+               endpoint='gastos_configuracion_auto_registro_crear')
+    @require_login
+    def gastos_configuracion_auto_registro_crear():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        ruc = (request.form.get('ruc_proveedor') or '').strip()
+        monto_raw = (request.form.get('monto') or '').strip()
+        motivo = (request.form.get('motivo') or '').strip()
+        centro_costo = (request.form.get('centro_costo') or '').strip()
+        usuario_id_raw = (request.form.get('usuario_id') or '').strip()
+        enviar_sap_auto = request.form.get('enviar_sap_auto') == '1'
+
+        if not (ruc and monto_raw and motivo and centro_costo and usuario_id_raw.isdigit()):
+            flash('Completa RUC, monto, motivo, centro de costo y usuario.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        try:
+            monto = float(monto_raw)
+        except ValueError:
+            flash('Monto inválido.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        try:
+            gh.crear_auto_registro_regla(ruc, monto, motivo, centro_costo, int(usuario_id_raw), enviar_sap_auto)
+            flash('Regla de auto-registro creada.', 'success')
+        except Exception:
+            current_app.logger.exception("Error creando regla de auto-registro")
+            flash(
+                'No se pudo crear la regla: falta crear la tabla gastos_auto_registro_reglas en la base '
+                '(pídele a tu DBA que corra la DDL pendiente).',
+                'danger'
+            )
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/auto-registro/<int:regla_id>/eliminar', methods=['POST'],
+               endpoint='gastos_configuracion_auto_registro_eliminar')
+    @require_login
+    def gastos_configuracion_auto_registro_eliminar(regla_id):
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        gh.eliminar_auto_registro_regla(regla_id)
+        flash('Regla de auto-registro eliminada.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/auto-registro/<int:regla_id>/toggle', methods=['POST'],
+               endpoint='gastos_configuracion_auto_registro_toggle')
+    @require_login
+    def gastos_configuracion_auto_registro_toggle(regla_id):
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        activo = request.form.get('activo') == '1'
+        gh.set_auto_registro_regla_activa(regla_id, activo)
+        flash('Regla actualizada.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/roles-ga', methods=['POST'],
+               endpoint='gastos_configuracion_roles_ga')
+    @require_login
+    def gastos_configuracion_roles_ga():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        roles_nuevos = [r.strip() for r in request.form.getlist('roles_ga') if r.strip()]
+        if not roles_nuevos:
+            flash('Debes seleccionar al menos un rol como GA.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        gh.set_roles_ga(roles_nuevos)
+        flash(f'Roles GA actualizados: {", ".join(roles_nuevos)}.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/reporte-excel', methods=['POST'],
+               endpoint='gastos_configuracion_reporte_excel')
+    @require_login
+    def gastos_configuracion_reporte_excel():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        rol_nuevo = (request.form.get('rol_reporte_excel') or '').strip()
+        if not rol_nuevo:
+            flash('Debes seleccionar un rol.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        gh.set_rol_reporte_excel(rol_nuevo)
+        flash(f'Rol con acceso al Reporte Excel actualizado: {rol_nuevo}.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/rechazo', methods=['POST'],
+               endpoint='gastos_configuracion_rechazo')
+    @require_login
+    def gastos_configuracion_rechazo():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        ga = request.form.get('ga_puede_rechazar') == '1'
+        gg = request.form.get('gg_puede_rechazar') == '1'
+        gf = request.form.get('gf_puede_rechazar') == '1'
+        gh.set_rechazo_config(ga, gg, gf)
+        flash('Permisos de rechazo actualizados.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/roles-gg-gf', methods=['POST'],
+               endpoint='gastos_configuracion_roles_gg_gf')
+    @require_login
+    def gastos_configuracion_roles_gg_gf():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        rol_gg_nuevo = (request.form.get('rol_gg') or '').strip()
+        rol_gf_nuevo = (request.form.get('rol_gf') or '').strip()
+        if not rol_gg_nuevo or not rol_gf_nuevo:
+            flash('Debes seleccionar un rol para GG y otro para GF.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        gh.set_roles_gg_gf(rol_gg_nuevo, rol_gf_nuevo)
+        flash(f'Roles actualizados: GG = {rol_gg_nuevo}, GF = {rol_gf_nuevo}.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/flujo-requerido', methods=['POST'],
+               endpoint='gastos_configuracion_flujo_requerido')
+    @require_login
+    def gastos_configuracion_flujo_requerido():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        try:
+            for tipo in gh.FLUJO_REQUERIDO_DEFAULT.keys():
+                requiere_ga = request.form.get(f'requiere_ga_{tipo}') == '1'
+                requiere_gg = request.form.get(f'requiere_gg_{tipo}') == '1'
+                requiere_gf = request.form.get(f'requiere_gf_{tipo}') == '1'
+                gh.set_flujo_requerido(tipo, requiere_ga, requiere_gg, requiere_gf)
+            flash('Flujo de aprobación actualizado.', 'success')
+        except Exception:
+            current_app.logger.exception("Error guardando gastos_flujo_requerido")
+            flash(
+                'No se pudo guardar: falta crear la tabla gastos_flujo_requerido en la base '
+                '(pídele a tu DBA que corra la DDL pendiente).',
+                'danger'
+            )
+        return redirect(url_for('gastos_configuracion'))
+
+    @app.route('/reembolsos/gastos/configuracion/coordinador', methods=['POST'],
+               endpoint='gastos_configuracion_coordinador')
+    @require_login
+    def gastos_configuracion_coordinador():
+        role = (session.get('rol') or '').strip().lower()
+        if role != 'admin':
+            flash('Solo un administrador puede modificar esta configuración.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        usuario_id_raw = (request.form.get('usuario_id') or '').strip()
+        if not usuario_id_raw:
+            gh.quitar_coordinador_gastos()
+            flash('Se quitó el coordinador del módulo. Los gastos de tarjeta quedarán sin revisor hasta que asignes uno.', 'warning')
+            return redirect(url_for('gastos_configuracion'))
+
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("SELECT id, nombre_completo, username FROM usuarios WHERE id = ?", (usuario_id_raw,))
+        row = cur.fetchone()
+        conn.close()
+
+        if not row:
+            flash('Usuario no encontrado.', 'danger')
+            return redirect(url_for('gastos_configuracion'))
+
+        nombre = (row['nombre_completo'] or row['username'] or '').strip()
+        gh.set_coordinador_gastos(int(row['id']), nombre)
+        flash(f'Coordinador del módulo asignado: {nombre}.', 'success')
+        return redirect(url_for('gastos_configuracion'))
+
+    # ── Editar solo campo CCB (coordinador) ──────────────────────────────────
+    @app.route('/reembolsos/gastos/<int:gasto_id>/editar-ccb', methods=['POST'],
+               endpoint='editar_ccb_gasto')
+    @require_login
+    def editar_ccb_gasto(gasto_id):
+        from flask import jsonify
+        rol = (session.get('rol') or '').lower()
+        uid_ccb = session.get('usuario_id') or session.get('user_id')
+        if not (rol == 'admin' or gh.es_coordinador_gastos(uid_ccb, rol)):
+            return jsonify(ok=False, error='Sin permiso'), 403
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        # Verificar que el gasto existe
+        cur.execute("SELECT id, ccb FROM gastos_tarjeta WHERE id = ?", (gasto_id,))
+        row = cur.fetchone()
+        if not row:
+            return jsonify(ok=False, error='Gasto no encontrado'), 404
+
+        nuevo_ccb = 1 if str(request.form.get('ccb', '0')) == '1' else 0
+        cur.execute(
+            "UPDATE gastos_tarjeta SET ccb = ? WHERE id = ?",
+            (nuevo_ccb, gasto_id)
+        )
+        conn.commit()
+        return jsonify(ok=True, ccb=nuevo_ccb)
+
+    # ── Enviar a Gerencia (revisión del coordinador) ──────────────────────────
+    @app.route('/reembolsos/gastos/<int:gasto_id>/enviar-gerencia', methods=['POST'],
+               endpoint='enviar_gasto_gerencia')
+    @require_login
+    def enviar_gasto_gerencia(gasto_id):
+        role = (session.get('rol') or '').strip().lower()
+        uid = session.get('usuario_id') or session.get('user_id')
+
+        if not (role == 'admin' or gh.es_coordinador_gastos(uid, role)):
+            flash('Sin permiso para revisar este gasto.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, usuario_id, COALESCE(es_caja_chica,0) AS es_caja_chica,
+                   COALESCE(reembolso_vendedor,0) AS reembolso_vendedor,
+                   COALESCE(coord_revisado,0) AS coord_revisado
+            FROM gastos_tarjeta WHERE id = ?
+        """, (gasto_id,))
+        row = cur.fetchone()
+        if not row:
+            conn.close()
+            flash('Gasto no encontrado.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        if int(row['es_caja_chica']) == 1 or int(row['reembolso_vendedor']) == 1:
+            conn.close()
+            flash('Este gasto no pasa por revisión de coordinador.', 'warning')
+            return redirect(url_for('lista_gastos'))
+
+        if int(row['coord_revisado']) == 1:
+            conn.close()
+            flash('Este gasto ya fue enviado a gerencia.', 'info')
+            return redirect(url_for('lista_gastos'))
+
+        cur.execute("""
+            UPDATE gastos_tarjeta
+               SET coord_revisado = 1, coord_revisado_por = ?, coord_revisado_at = GETDATE()
+             WHERE id = ?
+        """, (uid, gasto_id))
+        conn.commit()
+
+        creador_id = row['usuario_id']
+        conn.close()
+
+        try:
+            mail.notify_gasto_created(app, gasto_id, creador_id)
+        except Exception:
+            app.logger.exception("No se pudo enviar la notificación al gerente tras revisión del coordinador")
+
+        flash('Gasto enviado a gerencia.', 'success')
+        return redirect(url_for('lista_gastos'))
+
      # EDITAR
     @app.route('/reembolsos/gastos/<int:gasto_id>/editar', methods=['GET', 'POST'], endpoint='editar_gasto')
     @require_login
@@ -4679,11 +5083,11 @@ def register_gastos_routes(app):
         role_name = (session.get('rol') or '').lower()
         uid = session.get('usuario_id') or session.get('user_id')
 
-        PRIV_ALL = ('admin', 'coordinador', 'gerente general', 'gerente financiero')
+        PRIV_ALL = ('admin', gh.rol_gg(), gh.rol_gf())
         GERENTE_ROLES = ('gerente', 'gerente de área', 'gerente de area')
 
         def _allowed_user_ids_for_role():
-            if role_name in PRIV_ALL:
+            if role_name in PRIV_ALL or gh.es_coordinador_gastos(uid, role_name):
                 return None
             if role_name in GERENTE_ROLES:
                 gerente_id = uid
@@ -5625,7 +6029,7 @@ def register_gastos_routes(app):
         role_name = (session.get('rol') or '').strip().lower()
         uid = session.get('usuario_id') or session.get('user_id')
 
-        privileged = {'admin', 'gerente general', 'gerente financiero', 'coordinador'}
+        privileged = {'admin', gh.rol_gg(), gh.rol_gf(), 'coordinador'}
         gerente_roles = {'gerente', 'gerente de área', 'gerente de area'}
 
         # -------------------------------
@@ -6377,7 +6781,8 @@ def register_gastos_routes(app):
         from decimal import Decimal, ROUND_HALF_UP
 
         role = (session.get('rol') or '').strip().lower()
-        if role not in ('admin', 'coordinador'):
+        uid_sap = session.get('usuario_id') or session.get('user_id')
+        if not (role == 'admin' or gh.es_coordinador_gastos(uid_sap, role)):
             return jsonify(ok=False, msg='No autorizado'), 403
 
         conn = get_db()
@@ -6505,6 +6910,17 @@ def register_gastos_routes(app):
             es_caja_chica = int(g.get('es_caja_chica') or 0) == 1
             es_reembolso = int(g.get('reembolso_vendedor') or 0) == 1
             es_tarjeta_online = int(g.get('tarjeta_sin_soporte') or 0) == 1
+
+            # Para tarjeta_online el Id_Fiscal usa cédula del gerente, no del usuario
+            if not es_tarjeta_online and not (g.get("usuario_cedula") or "").strip():
+                return jsonify(
+                    ok=False,
+                    msg=(
+                        f"El usuario '{g.get('usuario_username', '')}' no tiene número de "
+                        "identificación registrado (Id_Fiscal requerido por SAP). "
+                        "Actualícelo en Gestión de Usuarios."
+                    )
+                ), 400
             es_boletos_aereos = int(g.get('boletos_aereos') or 0) == 1
 
             tipo_caja_chica = (g.get("tipo_caja_chica") or "NINGUNA").strip().upper()
@@ -6523,12 +6939,13 @@ def register_gastos_routes(app):
 
             acreedor_tipo3 = (g.get('usuario_codigo_sap') or "").strip()
 
+            cedula_gerente_tarjeta = ""
             if es_tarjeta_online:
                 gerente_id = _get_ultimo_jefe_id(conn, g.get('usuario_id'))
 
                 if gerente_id:
                     cur.execute(
-                        "SELECT COALESCE(codigo_sap,'') AS codigo_sap FROM usuarios WHERE id = ?",
+                        "SELECT COALESCE(codigo_sap,'') AS codigo_sap, COALESCE(identificacion,'') AS identificacion FROM usuarios WHERE id = ?",
                         (gerente_id,)
                     )
                     r = cur.fetchone()
@@ -6537,8 +6954,10 @@ def register_gastos_routes(app):
                     if r:
                         try:
                             codigo_gerente = (r["codigo_sap"] or "").strip()
+                            cedula_gerente_tarjeta = (r["identificacion"] or "").strip()
                         except Exception:
                             codigo_gerente = (r[0] or "").strip()
+                            cedula_gerente_tarjeta = (r[1] or "").strip()
 
                     if codigo_gerente:
                         acreedor_tipo3 = codigo_gerente
@@ -6561,10 +6980,10 @@ def register_gastos_routes(app):
 
                 actor = _norm_actor(gasto)
 
-                if actor in ("gg", "gerente general", "gerente_general"):
+                if actor in ("gg", gh.rol_gg(), "gerente_general"):
                     return gg_ok_
 
-                if actor in ("gf", "gerente financiero", "gerente_financiero"):
+                if actor in ("gf", gh.rol_gf(), "gerente_financiero"):
                     return gf_ok_
 
                 if (not ga_ok_) and (gg_ok_ or gf_ok_):
@@ -6592,6 +7011,10 @@ def register_gastos_routes(app):
                 cedula_creador = (u_creador['identificacion'] if u_creador else "") or ""
             except Exception:
                 cedula_creador = (u_creador[0] if u_creador else "") or ""
+
+            # Para tarjeta_online el Id_Fiscal debe ser la cédula del gerente, no del empleado
+            if es_tarjeta_online and cedula_gerente_tarjeta:
+                cedula_creador = cedula_gerente_tarjeta
 
             # -----------------------------
             # Detalle
@@ -7011,7 +7434,8 @@ def register_gastos_routes(app):
         from decimal import Decimal, ROUND_HALF_UP
 
         role = (session.get('rol') or '').strip().lower()
-        if role not in ('admin', 'coordinador'):
+        uid_sap_masivo = session.get('usuario_id') or session.get('user_id')
+        if not (role == 'admin' or gh.es_coordinador_gastos(uid_sap_masivo, role)):
             return jsonify(ok=False, msg='No autorizado'), 403
 
         payload_in = request.get_json(silent=True) or {}
@@ -7095,10 +7519,10 @@ def register_gastos_routes(app):
 
                 actor = _norm_actor(g)
 
-                if actor in ("gg", "gerente general", "gerente_general"):
+                if actor in ("gg", gh.rol_gg(), "gerente_general"):
                     return gg_ok
 
-                if actor in ("gf", "gerente financiero", "gerente_financiero"):
+                if actor in ("gf", gh.rol_gf(), "gerente_financiero"):
                     return gf_ok
 
                 if (not ga_ok) and (gg_ok or gf_ok):
@@ -7129,11 +7553,12 @@ def register_gastos_routes(app):
                 except Exception:
                     return ""
 
-            def _make_liq_documento(g0, numero_doc_liq, fecha_doc, cod="001", serie="002"):
+            def _make_liq_documento(g0, numero_doc_liq, fecha_doc, cod="001", serie="002", id_fiscal_override=None):
+                id_fiscal = id_fiscal_override if id_fiscal_override else g0["usuario_cedula"]
                 return {
                     "Fecha_Documento": fecha_doc,
                     "Tipo_Id": "51",
-                    "Id_Fiscal": g0["usuario_cedula"],
+                    "Id_Fiscal": id_fiscal,
                     "Moneda": "USD",
                     "Tipo_Doc_Liquidacion": "01",
                     "Cod_Doc_Liquidacion": cod,
@@ -7273,6 +7698,17 @@ def register_gastos_routes(app):
                 es_boletos_aereos = int(g.get("boletos_aereos") or 0) == 1
                 es_tarjeta_online = int(g.get("tarjeta_sin_soporte") or 0) == 1
 
+                # Validar cédula/RUC para Id_Fiscal (para tarjeta_online se usa la del gerente)
+                if not es_tarjeta_online:
+                    cedula = (g.get("usuario_cedula") or "").strip()
+                    if not cedula:
+                        usuario = g.get("username") or str(g.get("usuario_id", ""))
+                        return jsonify(
+                            ok=False,
+                            msg=f"Gasto {gid}: el usuario '{usuario}' no tiene número de identificación "
+                                "registrado. Actualícelo en Gestión de Usuarios antes de enviar a SAP."
+                        ), 400
+
                 es_restringido = es_caja_chica or es_reembolso
                 ga_eff_ok = _ga_effective_ok(g, ga_ok, gg_ok, gf_ok, es_restringido)
 
@@ -7353,6 +7789,8 @@ def register_gastos_routes(app):
                 sociedad_sap, usuario_sap, owner_id, tipo = group_key
                 g0 = gastos_by_id[gids[0]]
 
+                cedula_gerente_batch = ""
+
                 if tipo == "boletos_aereos":
                     prov_sap = (g0.get("proveedor_codigo_sap") or "").strip()
 
@@ -7367,6 +7805,21 @@ def register_gastos_routes(app):
 
                     if cod_gerente:
                         acreedor = cod_gerente
+
+                    # Obtener cédula del gerente para Id_Fiscal
+                    cedula_gerente_batch = ""
+                    jefe_id_batch = _get_ultimo_jefe_id(conn, owner_id)
+                    if jefe_id_batch:
+                        cur.execute(
+                            "SELECT COALESCE(identificacion,'') AS identificacion FROM usuarios WHERE id = ?",
+                            (jefe_id_batch,)
+                        )
+                        r_ger = cur.fetchone()
+                        if r_ger:
+                            try:
+                                cedula_gerente_batch = (r_ger["identificacion"] or "").strip()
+                            except Exception:
+                                cedula_gerente_batch = (r_ger[0] or "").strip()
 
                 else:
                     acreedor = (g0.get("usuario_codigo_sap") or "").strip()
@@ -7442,7 +7895,8 @@ def register_gastos_routes(app):
                             if not cc:
                                 raise Exception(f"Gasto {gid}: requiere Centro de Costo en el detalle.")
 
-                            liq_doc = _make_liq_documento(g0, numero_doc_liq, fecha_doc)
+                            liq_doc = _make_liq_documento(g0, numero_doc_liq, fecha_doc,
+                                                          id_fiscal_override=cedula_gerente_batch or None)
 
                             liq_doc["Liquidacion_Detalle"].append({
                                 "Cuenta_Gasto": cuenta_gasto,

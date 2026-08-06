@@ -468,6 +468,7 @@ def ver_garantia_fragment(garantia_id):
         "objeto": row["objeto"],
         "valor_contrato": row["valor_contrato"],
     }
+    archivos = repository.fetch_archivos_contrato(row["contrato_id"])
 
     return render_template(
         "garantia_detalle_fragment.html",
@@ -475,6 +476,7 @@ def ver_garantia_fragment(garantia_id):
         contrato=contrato,
         proveedor=row["proveedor"],
         pedido=row["pedido"],
+        archivos=archivos,
     )
 
 

@@ -12,7 +12,7 @@ from . import obligaciones_repository as repo
 from .obligaciones_constants import (
     ROLES_ADMIN,
     ROL_JEFE_AREA,
-    ESTADO_LABELS,
+    ESTATUS_LABELS,
     EXTENSIONES,
     MAX_BYTES,
     MAX_MB,
@@ -164,7 +164,7 @@ def collect_filters(args):
         "fecha_desde":       get("fecha_desde"),
         "fecha_hasta":       get("fecha_hasta"),
         "usuario_id":        get("usuario_id"),
-        "estado":            get("estado"),
+        "estatus":            get("estatus"),
     }
 
 
@@ -327,7 +327,7 @@ def crear_obligacion(form, session):
     data["departamento_id"] = session.get("departamento_id")
     data["puesto_id"] = perfil["puesto_id"] if perfil else None
     data["creado_por"] = usuario_id
-    data["estado"] = "por_presentar"
+    data["estatus"] = "por_presentar"
 
     try:
         new_id = repo.insert(data)
@@ -476,7 +476,7 @@ def cumplir_obligacion(oblig_id, form, files, session):
         return {"ok": False, "flash": ("Obligación no encontrada.", "warning")}
     if not _puede_gestionar(row, session):
         return {"ok": False, "flash": ("No tiene permiso para cumplir esta obligación.", "danger")}
-    if row["estado"] in ("cumplido", "cumplido_fuera_plazo"):
+    if row["estatus"] in ("cumplido", "cumplido_fuera_plazo"):
         return {"ok": False, "flash": ("Esta obligación ya fue cumplida.", "warning")}
 
     archivos_validos, err = _validar_archivos(files)
@@ -489,7 +489,7 @@ def cumplir_obligacion(oblig_id, form, files, session):
     hoy = date.today()
     fecha_venc = _to_date(row["fecha_vencimiento"])
     fuera_de_plazo = bool(fecha_venc and hoy > fecha_venc)
-    estado_final = "cumplido_fuera_plazo" if fuera_de_plazo else "cumplido"
+    estatus_final = "cumplido_fuera_plazo" if fuera_de_plazo else "cumplido"
 
     try:
         folder = get_obligaciones_upload_folder(oblig_id)
@@ -504,9 +504,9 @@ def cumplir_obligacion(oblig_id, form, files, session):
             repo.insert_evidencia(oblig_id, f.filename.strip(), ruta_relativa, ext, tamanio, usuario_id)
 
         repo.insert_historial(
-            oblig_id, "estado", row["estado"], estado_final, observacion, usuario_id
+            oblig_id, "estatus", row["estatus"], estatus_final, observacion, usuario_id
         )
-        repo.marcar_cumplida(oblig_id, estado_final)
+        repo.marcar_cumplida(oblig_id, estatus_final)
 
         # 2026-07-15 (Corrección #3): "repetitiva" ya no se decide por un `valor`
         # de param_value -- se recalcula si recalculo_tipo de la frecuencia no
@@ -526,7 +526,7 @@ def cumplir_obligacion(oblig_id, form, files, session):
                 "usuario_id":        row["usuario_id"],
                 "fecha_vencimiento": nueva_fecha.isoformat(),
                 "frecuencia_id":     row["frecuencia_id"],
-                "estado":            "por_presentar",
+                "estatus":            "por_presentar",
                 "comentario":        None,
                 "creado_por":        row["usuario_id"],
             }
@@ -535,7 +535,7 @@ def cumplir_obligacion(oblig_id, form, files, session):
         repo.commit()
         return {
             "ok": True,
-            "flash": (f"Obligación marcada como {ESTADO_LABELS[estado_final]}.", "success"),
+            "flash": (f"Obligación marcada como {ESTATUS_LABELS[estatus_final]}.", "success"),
         }
     except Exception:
         repo.rollback()
@@ -599,7 +599,7 @@ def collect_historial_filters(args):
         "frecuencia_id":     get("frecuencia_id"),
         "fecha_desde":       get("fecha_desde"),
         "fecha_hasta":       get("fecha_hasta"),
-        "estado":            get("estado"),
+        "estatus":            get("estatus"),
         "usuario_id":        get("usuario_id"),
     }
 
@@ -620,12 +620,12 @@ def list_historial(user_id, rol, filters):
 # Fase 6 -- soporte para el scheduler (logica reutilizable)
 # ==================================================================
 def marcar_obligaciones_atrasadas():
-    """Tarea A: estado='atrasado' -- NO toca activa (sigue en Consultas)."""
+    """Tarea A: estatus='atrasado' -- NO toca activa (sigue en Consultas)."""
     ids = repo.get_ids_para_marcar_atrasadas()
     total = 0
     for oblig_id in ids:
         repo.marcar_atrasada(oblig_id)
-        repo.insert_historial(oblig_id, "estado", None, "atrasado", None, None)
+        repo.insert_historial(oblig_id, "estatus", None, "atrasado", None, None)
         total += 1
     if ids:
         repo.commit()
@@ -791,7 +791,7 @@ def dashboard_data(user_id, rol, filters):
 
     # Indicador Cumplidas vs Atrasadas: cumplidas = todas las cerradas (a tiempo
     # + fuera de plazo, sin importar cuando); atrasadas = las que aun no se cumplen
-    # y ya vencieron (activa=1 AND estado='atrasado').
+    # y ya vencieron (activa=1 AND estatus='atrasado').
     cumplidas = kpis["a_tiempo"] + kpis["fuera_plazo"]
     total_base = cumplidas + kpis["total_atrasadas"]
     pct_cumplidas = round((cumplidas / total_base) * 100, 1) if total_base else 0.0
@@ -803,9 +803,11 @@ def dashboard_data(user_id, rol, filters):
         "kpis": kpis,
         "pct_cumplidas": pct_cumplidas,
         "pct_atrasadas": pct_atrasadas,
-        "por_estado":     repo.dashboard_por_estado(rol, user_id, filters),
+        # 2026-07-30: barra empresas ya no gatea por es_admin -- filtro de visibilidad
+        # real vive en repo._apply_visibility(), el gate por rol aqui era redundante.
+        # 2026-08-05: "por_estatus" eliminado -- sin consumidor tras borrar chartEstado.
         "por_tipo":       repo.dashboard_por_tipo(rol, user_id, filters),
-        "por_estado_total": repo.dashboard_por_estado_total(rol, user_id, filters) if es_admin else [],
+        "por_estatus_total": repo.dashboard_por_estatus_total(rol, user_id, filters),
     }
 
 

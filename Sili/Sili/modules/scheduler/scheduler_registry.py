@@ -61,6 +61,14 @@ JOB_REGISTRY: dict[str, dict] = {
         "intervalo_min": 300,
         "hora_inicio": None,
     },
+    # 2026-08-06: fusion manual desde PROD (Paso 8 sync) — job nuevo digest evidencia OM
+    "process_om_correctivas_evidencia_digest": {
+        "modulo": "oportunidades_mejora",
+        "descripcion": "Digest diario (PDF por proceso/OM) de acciones correctivas vencidas sin evidencia",
+        "tipo": "hora_fija",
+        "intervalo_min": None,
+        "hora_inicio": "08:00",
+    },
     # ── Gastos Tarjeta ────────────────────────────────────
     "process_gastos_expiry": {
         "modulo": "gastos",
@@ -114,6 +122,21 @@ JOB_REGISTRY: dict[str, dict] = {
         "tipo": "hora_fija",
         "intervalo_min": None,
         "hora_inicio": "07:00",
+    },
+    # 2026-08-06: fusion manual desde PROD (Paso 6/8 sync) — jobs vuelo planificador; import roto en scheduler_worker.py (planificador_auto_jobs.py no existe, igual que PROD real)
+    "vuelo_auto_confirmar": {
+        "modulo": "planificador",
+        "descripcion": "Auto-confirma vuelos realizados (fecha retorno pasada, flag activo)",
+        "tipo": "hora_fija",
+        "intervalo_min": None,
+        "hora_inicio": "09:00",
+    },
+    "vuelo_auto_liquidar": {
+        "modulo": "planificador",
+        "descripcion": "Auto-liquida vuelos con valor cotizado (fecha retorno pasada, flag activo)",
+        "tipo": "hora_fija",
+        "intervalo_min": None,
+        "hora_inicio": "09:05",
     },
     # ── AWS / Sync ────────────────────────────────────────
     "aws_sync": {

@@ -128,6 +128,8 @@ def _run_job(job_key: str) -> str:
         "send_daily_report": _run_daily_report,
         "process_om_notifications": _run_om_notifications,
         "process_om_acciones_seguimiento": _run_om_acciones,
+        # 2026-08-06: fusion manual desde PROD (Paso 4 sync) — job nuevo, mantiene esquema require_permission de LOCAL
+        "process_om_correctivas_evidencia_digest": _run_om_evidencia_digest,
         "process_gastos_expiry": _run_gastos_expiry,
         "encolar_notificaciones_contratos_por_vencer": _run_contratos,
         "encolar_notificaciones_garantias_multi_dia": _run_garantias,
@@ -192,6 +194,16 @@ def _run_om_acciones():
     finally:
         conn.close()
     return "OK"
+
+def _run_om_evidencia_digest():
+    from .scheduler.scheduler_repository import get_db_standalone
+    from .scheduler.scheduler_services import process_om_correctivas_evidencia_digest
+    conn = get_db_standalone()
+    try:
+        resultado = process_om_correctivas_evidencia_digest(conn)
+    finally:
+        conn.close()
+    return resultado or "OK (sin cambios)"
 
 def _run_gastos_expiry():
     from .scheduler.scheduler_repository import get_db_standalone

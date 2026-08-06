@@ -111,6 +111,12 @@ def register_all_routes(app):
     except Exception:
         register_puestos_routes = None
 
+    # 2026-08-06: fusion manual desde PROD (Paso 1/4 sync) — modulo roles nuevo, NO pisa register_obligaciones_routes de arriba
+    try:
+        from modules.routes_roles import register_roles_routes
+    except Exception:
+        register_roles_routes = None
+
     from modules.routes_menu import menu_bp
     try:
         from modules.routes_menu import menu_bp
@@ -263,6 +269,20 @@ def register_all_routes(app):
             register_puestos_routes(app)
         except Exception as e:
             app.logger.exception("Fallo register_puestos_routes: %s", e)
+
+    # 2026-08-06: fusion manual desde PROD (Paso 1/4 sync) — registro modulo roles
+    if register_roles_routes:
+        try:
+            if "roles" in app.view_functions:
+                f = app.view_functions["roles"]
+                app.logger.error(
+                    "YA EXISTE endpoint 'roles' definido en %s.%s",
+                    getattr(f, "__module__", "?"),
+                    getattr(f, "__name__", "?")
+                )
+            register_roles_routes(app)
+        except Exception as e:
+            app.logger.exception("Fallo register_roles_routes: %s", e)
 
     # ------------------------------------------------------
     # Registro del blueprint de contratos.

@@ -19,71 +19,119 @@
 
   {# ── Hero ── #}
   <div class="planner-hero">
-    <div>
-      <h1><i class="bi bi-calendar-check me-1"></i>Planificador de Solicitudes</h1>
+    <div class="planner-hero-left">
+      <h1><i class="bi bi-calendar-check me-2"></i>Planificador de Solicitudes</h1>
       <p>Gestione recorridos, vouchers y vuelos · Lunes a viernes, 08:00 – 17:00</p>
     </div>
-    <div class="d-flex gap-2 flex-wrap">
+    <div class="planner-hero-actions">
+      <span class="planner-user-chip">
+        <i class="bi bi-person-circle"></i>{{ session.get('usuario') or '—' }}
+      </span>
+      <span class="planner-user-chip planner-user-chip--role">
+        <i class="bi bi-shield-lock"></i>{{ session.get('rol') or '—' }}
+      </span>
       {% if ctx.es_admin or ctx.tipos_coordinador or ctx.tipos_aprobador %}
-      <a href="{{ url_for('planificador.planificador_reporte') }}"
-         class="btn btn-outline-secondary btn-sm">
+      <a href="{{ url_for('planificador.planificador_reporte') }}" class="btn btn-sm btn-light border">
         <i class="bi bi-filetype-csv"></i> CSV
       </a>
-      <a href="{{ url_for('planificador.planificador_reporte_excel') }}"
-         class="btn btn-outline-success btn-sm">
+      <a href="{{ url_for('planificador.planificador_reporte_excel') }}" class="btn btn-sm btn-light border text-success">
         <i class="bi bi-file-earmark-excel"></i> Excel
       </a>
       {% endif %}
       {% if has_permission('planificador.solicitudes','crear') %}
       <button type="button" class="btn btn-primary btn-sm" data-open-modal="modalNueva">
-        <i class="bi bi-plus-lg"></i> Nueva solicitud
+        <i class="bi bi-plus-lg me-1"></i>Nueva solicitud
       </button>
       {% endif %}
     </div>
   </div>
 
+  {# ── KPI strip ── #}
+  {% set n_reservadas = reservadas|length %}
+  <div class="planner-kpi-strip">
+    <div class="planner-kpi {% if n_reservadas > 0 %}planner-kpi--alert{% endif %}">
+      <span class="planner-kpi-num">{{ n_reservadas }}</span>
+      <span class="planner-kpi-label">
+        {% if n_reservadas > 0 %}<i class="bi bi-exclamation-circle-fill me-1"></i>{% endif %}
+        Necesitan coordinación
+      </span>
+    </div>
+    <div class="planner-kpi-sep"></div>
+    <div class="planner-kpi">
+      <span class="planner-kpi-num">{{ rows|selectattr('estado','eq','PENDIENTE_APROBACION')|list|length }}</span>
+      <span class="planner-kpi-label">Pend. aprobación</span>
+    </div>
+    <div class="planner-kpi-sep"></div>
+    <div class="planner-kpi">
+      <span class="planner-kpi-num planner-kpi-num--green">{{ rows|selectattr('estado','eq','APROBADA')|list|length }}</span>
+      <span class="planner-kpi-label">Aprobadas</span>
+    </div>
+    <div class="planner-kpi-sep"></div>
+    <div class="planner-kpi">
+      <span class="planner-kpi-num planner-kpi-num--muted">{{ rows|selectattr('estado','eq','COMPLETADA')|list|length }}</span>
+      <span class="planner-kpi-label">Completadas</span>
+    </div>
+    <div class="planner-kpi-sep"></div>
+    <div class="planner-kpi">
+      <span class="planner-kpi-num planner-kpi-num--muted">{{ rows|length }}</span>
+      <span class="planner-kpi-label">Total visibles</span>
+    </div>
+  </div>
+
   {# ── Filtros ── #}
-  <form class="row g-2 mb-3" method="get" action="{{ url_for('planificador.planificador_solicitudes') }}">
-    <div class="col-6 col-md-3 col-lg-2">
+  <div class="planner-filters-bar">
+    <form class="planner-filters-form" method="get" action="{{ url_for('planificador.planificador_solicitudes') }}">
       <select class="form-select form-select-sm" name="tipo">
         <option value="">Todos los tipos</option>
         {% for t in tipos %}<option value="{{ t }}" {{ 'selected' if filters.tipo==t }}>{{ t }}</option>{% endfor %}
       </select>
-    </div>
-    <div class="col-6 col-md-3 col-lg-2">
       <select class="form-select form-select-sm" name="estado">
         <option value="">Todos los estados</option>
         {% for k,v in estados.items() %}<option value="{{ k }}" {{ 'selected' if filters.estado==k }}>{{ v }}</option>{% endfor %}
       </select>
-    </div>
-    <div class="col-6 col-md-2 col-lg-2">
-      <input type="date" class="form-control form-select-sm" name="fecha_desde" value="{{ filters.fecha_desde }}" title="Desde">
-    </div>
-    <div class="col-6 col-md-2 col-lg-2">
-      <input type="date" class="form-control form-select-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}" title="Hasta">
-    </div>
-    <div class="col-12 col-md-2 d-flex gap-2">
-      <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search"></i> Filtrar</button>
-      <a class="btn btn-outline-dark btn-sm" href="{{ url_for('planificador.planificador_solicitudes') }}"><i class="bi bi-x-circle"></i></a>
-    </div>
-  </form>
+      <input type="date" class="form-control form-control-sm" name="fecha_desde" value="{{ filters.fecha_desde }}" title="Desde">
+      <input type="date" class="form-control form-control-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}" title="Hasta">
+      <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search me-1"></i>Filtrar</button>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('planificador.planificador_solicitudes') }}"><i class="bi bi-x-lg"></i></a>
+    </form>
+  </div>
 
-  {# ── Layout principal ── #}
-  <div class="planner-layout">
+  {# ── Contenido principal (columna única) ── #}
+  <div class="planner-main">
 
-    {# Columna izquierda: calendario + tabla #}
+    {# Calendario + tabla #}
     <div>
-      <div class="rec-card">
-        <div class="rec-card-header">
-          <h2 id="weekTitle">Agenda semanal</h2>
-          <div class="week-controls">
+      {# Conteo de eventos cargados por tipo #}
+      {% set n_vuelo     = cal_events | selectattr('tipo','equalto','Vuelo')                  | list | length %}
+      {% set n_recorrido = cal_events | selectattr('tipo','equalto','Recorrido / Motorizado') | list | length %}
+      {% set n_voucher   = cal_events | selectattr('tipo','equalto','Voucher')                | list | length %}
+      {% set n_total     = cal_events | list | length %}
+
+      <div class="rec-card calendar-accordion-card" id="calendarAccordionCard">
+        <button type="button" class="calendar-accordion-toggle" id="calendarAccordionHeader" aria-expanded="false" data-calendar-toggle="calendarAccordionBody">
+          <span class="calendar-accordion-label">
+            <i class="bi bi-calendar3 cal-icon-base"></i>
+            <span class="cal-toggle-title">
+              <span class="cal-toggle-heading">Agenda semanal</span>
+              <span class="cal-toggle-sub" id="weekTitle">Cargando semana…</span>
+            </span>
+          </span>
+          <span class="cal-type-pills">
+            <span class="cal-pill cal-pill--vuelo"><i class="bi bi-airplane-fill"></i></span>
+            <span class="cal-pill cal-pill--recorrido"><i class="bi bi-taxi-front-fill"></i></span>
+            <span class="cal-pill cal-pill--voucher"><i class="bi bi-ticket-perforated-fill"></i></span>
+            <span class="cal-expand-hint">Ver agenda <i class="bi bi-chevron-down calendar-chevron"></i></span>
+          </span>
+        </button>
+        <div id="calendarAccordionBody" class="calendar-accordion-body" hidden>
+          <div class="calendar-accordion-controls" id="calendarWeekControls">
             <button type="button" class="btn btn-light btn-sm" data-week-dir="-1">&#8592;</button>
             <button type="button" class="btn btn-light btn-sm" data-week-today="1">Hoy</button>
             <button type="button" class="btn btn-light btn-sm" data-week-dir="1">&#8594;</button>
           </div>
-        </div>
-        <div class="calendar-scroll">
-          <div class="calendar-grid" id="calendarGrid"></div>
+          <div class="calendar-scroll">
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
         </div>
       </div>
 
@@ -91,8 +139,9 @@
       <div class="rec-card mt-3">
 
         {# Nav tabs #}
+        {% set tab_default = 'tab-por-aprobar' if por_aprobar else 'tab-reservadas' %}
         <div class="planner-tabs-nav">
-          <button class="planner-tab active" data-tab="tab-reservadas">
+          <button class="planner-tab {% if tab_default == 'tab-reservadas' %}active{% endif %}" data-tab="tab-reservadas">
             <i class="bi bi-calendar-plus me-1"></i>Reservadas
             <span class="badge bg-warning text-dark ms-1">{{ reservadas|length }}</span>
           </button>
@@ -100,8 +149,20 @@
             <i class="bi bi-calendar-check me-1"></i>Coordinadas
             <span class="badge bg-info text-dark ms-1">{{ coordinadas|length }}</span>
           </button>
+          {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
+          <button class="planner-tab {% if tab_default == 'tab-por-aprobar' %}active{% endif %} {% if por_aprobar %}planner-tab-alert{% endif %}" data-tab="tab-por-aprobar">
+            <i class="bi bi-person-check me-1"></i>Por aprobar
+            {% if por_aprobar %}
+            <span class="badge bg-primary ms-1">{{ por_aprobar|length }}</span>
+            {% endif %}
+          </button>
+          {% endif %}
+          <button class="planner-tab" data-tab="tab-por-completar">
+            <i class="bi bi-flag-fill me-1"></i>Por completar
+            <span class="badge bg-success ms-1">{{ por_completar|length }}</span>
+          </button>
           <button class="planner-tab" data-tab="tab-atendidas">
-            <i class="bi bi-calendar2-check me-1"></i>Atendidas
+            <i class="bi bi-calendar2-check me-1"></i>Completadas
             <span class="badge bg-secondary ms-1">{{ atendidas|length }}</span>
           </button>
         </div>
@@ -112,16 +173,22 @@
           <table class="table table-hover align-middle mb-0 table-sm">
             <thead class="table-light">
               <tr>
-                <th>#</th><th>Tipo</th><th>Área</th><th>Ciudad</th>
-                <th>Fecha</th><th>Horario</th><th>Prioridad</th>
-                <th>Estado</th><th>Solicitante</th>
+                <th data-sort="num"><span class="th-sortable">#<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Tipo<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Área<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="date"><span class="th-sortable">Fecha<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Horario<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Prioridad<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Estado<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Solicitante<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                <th data-sort="text"><span class="th-sortable">Jefe<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th class="text-end">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {% for r in section_rows %}
               <tr>
-                <td class="text-muted small">
+                <td class="text-muted small" data-sort-value="{{ r.id }}">
                   {{ r.id }}
                   {% if r.grupo_id %}
                   <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
@@ -129,7 +196,6 @@
                 </td>
                 <td>{{ r.tipo }}</td>
                 <td>{{ r.area_solicitante }}</td>
-                <td class="text-muted small">{{ r.ciudad or '—' }}</td>
                 <td class="text-nowrap">{{ r.fecha_str }}</td>
                 <td class="text-nowrap">
                   {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
@@ -142,6 +208,9 @@
                 </td>
                 <td><span class="badge {{ r.estado_class }}">{{ r.estado_label }}</span></td>
                 <td class="small">{{ r.solicitante_nombre }}</td>
+                <td class="small text-muted">
+                  {% if r.tipo in ('Vuelo', 'Voucher') %}{{ r.get('jefe_nombre') or '—' }}{% else %}—{% endif %}
+                </td>
                 <td class="text-end text-nowrap">
                   <button type="button" class="btn btn-sm btn-outline-secondary"
                           data-open-detalle="{{ r.id }}" title="Ver detalle">
@@ -230,80 +299,194 @@
         {% endmacro %}
 
         {# Contenido de cada tab #}
-        <div class="planner-tab-content active" id="tab-reservadas">
+        <div class="planner-tab-content {% if tab_default == 'tab-reservadas' %}active{% endif %}" id="tab-reservadas">
           {{ tabla_tab(reservadas, "Sin solicitudes pendientes de coordinación") }}
         </div>
         <div class="planner-tab-content" id="tab-coordinadas">
           {{ tabla_tab(coordinadas, "Sin solicitudes en proceso") }}
         </div>
+        {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
+        <div class="planner-tab-content {% if tab_default == 'tab-por-aprobar' %}active{% endif %}" id="tab-por-aprobar">
+          {% set vuelo_aprobables_jefe = por_aprobar | selectattr('puede_aprobar_jefe_vuelo') | list %}
+          {% set vuelo_aprobables_gg   = por_aprobar | selectattr('puede_aprobar_gg_vuelo')   | list %}
+          {% set tiene_checks = vuelo_aprobables_jefe or vuelo_aprobables_gg %}
+          {# Formularios de aprobación masiva #}
+          {% if vuelo_aprobables_jefe %}
+          <form id="form-aprobar-masivo-jefe" method="post"
+                action="{{ url_for('planificador.planificador_vuelo_aprobar_jefe_masivo') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div id="aprobar-masivo-jefe-ids"></div>
+          </form>
+          {% endif %}
+          {% if vuelo_aprobables_gg %}
+          <form id="form-aprobar-masivo-gg" method="post"
+                action="{{ url_for('planificador.planificador_vuelo_aprobar_gg_masivo') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div id="aprobar-masivo-gg-ids"></div>
+          </form>
+          {% endif %}
+          {% if tiene_checks %}
+          <div class="d-flex align-items-center gap-2 px-2 pt-2 pb-1 flex-wrap">
+            {% if vuelo_aprobables_jefe %}
+            <button type="submit" form="form-aprobar-masivo-jefe"
+                    class="btn btn-success btn-sm" id="btn-aprobar-masivo-jefe" disabled>
+              <i class="bi bi-check2-all me-1"></i>Aprobar selec. (jefe) <span id="cnt-jefe">0</span>
+            </button>
+            {% endif %}
+            {% if vuelo_aprobables_gg %}
+            <button type="submit" form="form-aprobar-masivo-gg"
+                    class="btn btn-primary btn-sm" id="btn-aprobar-masivo-gg" disabled>
+              <i class="bi bi-check2-all me-1"></i>Aprobar selec. (GG) <span id="cnt-gg">0</span>
+            </button>
+            {% endif %}
+          </div>
+          {% endif %}
+          <div class="table-responsive" data-paginated-table>
+            <table class="table table-hover align-middle mb-0 table-sm">
+              <thead class="table-light">
+                <tr>
+                  {% if tiene_checks %}<th><input type="checkbox" id="check-all-aprobar" title="Seleccionar todas"></th>{% endif %}
+                  <th data-sort="num"><span class="th-sortable">#<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Tipo<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Área<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="date"><span class="th-sortable">Fecha<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Horario<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Prioridad<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Estado<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th data-sort="text"><span class="th-sortable">Solicitante<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                  <th class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for r in por_aprobar %}
+                <tr>
+                  {% if tiene_checks %}
+                  <td>
+                    {% if r.puede_aprobar_jefe_vuelo %}
+                    <input type="checkbox" class="check-aprobar check-jefe" value="{{ r.id }}">
+                    {% elif r.puede_aprobar_gg_vuelo %}
+                    <input type="checkbox" class="check-aprobar check-gg" value="{{ r.id }}">
+                    {% endif %}
+                  </td>
+                  {% endif %}
+                  <td class="text-muted small" data-sort-value="{{ r.id }}">
+                    {{ r.id }}
+                    {% if r.grupo_id %}
+                    <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ r.tipo }}</td>
+                  <td>{{ r.area_solicitante }}</td>
+                  <td class="text-nowrap">{{ r.fecha_str }}</td>
+                  <td class="text-nowrap">
+                    {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
+                    {% else %}<span class="text-muted">Sin asignar</span>{% endif %}
+                  </td>
+                  <td>
+                    <span class="badge {% if r.prioridad=='Urgente' %}bg-danger{% elif r.prioridad=='Alta' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                      {{ r.prioridad }}
+                    </span>
+                  </td>
+                  <td><span class="badge {{ r.estado_class }}">{{ r.estado_label }}</span></td>
+                  <td class="small">{{ r.solicitante_nombre }}</td>
+                  <td class="text-end text-nowrap">
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            data-open-detalle="{{ r.id }}" title="Ver detalle">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    {% if r.puede_coordinar %}
+                    <button type="button" class="btn btn-sm btn-outline-warning"
+                            data-open-coordinar="1" data-sid="{{ r.id }}"
+                            data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}">
+                      <i class="bi bi-clock"></i> Coordinar
+                    </button>
+                    {% elif r.estado == 'PENDIENTE_COORDINACION' and r.fecha_str < today and r.puede_reagendar %}
+                    <span class="badge bg-warning text-dark" title="Fecha pasada — use Reagendar">
+                      <i class="bi bi-exclamation-triangle"></i> Fecha pasada
+                    </span>
+                    {% endif %}
+                    {% if r.puede_reagendar %}
+                    <button type="button" class="btn btn-sm btn-outline-warning"
+                            data-open-reagendar="1" data-sid="{{ r.id }}"
+                            data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}"
+                            title="Reagendar">
+                      <i class="bi bi-calendar-event"></i>
+                    </button>
+                    {% endif %}
+                    {% if r.puede_aprobar %}
+                    <button type="button" class="btn btn-sm btn-outline-success"
+                            data-open-aprobar="1" data-sid="{{ r.id }}" data-tipo="{{ r.tipo }}">
+                      <i class="bi bi-check2-circle"></i> Aprobar
+                    </button>
+                    {% if r.grupo_id %}
+                    <button type="button" class="btn btn-sm btn-success"
+                            data-open-aprobar-grupo="1"
+                            data-grupo-id="{{ r.grupo_id }}"
+                            data-tipo="{{ r.tipo }}"
+                            title="Aprobar todas las solicitudes de este grupo juntas">
+                      <i class="bi bi-collection"></i> Aprobar grupo
+                    </button>
+                    {% endif %}
+                    {% endif %}
+                    {% if r.puede_aprobar_gerente %}
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                            data-open-detalle="{{ r.id }}" title="Aprobación gerencial">
+                      <i class="bi bi-person-check"></i>
+                    </button>
+                    {% endif %}
+                    {% if r.puede_completar %}
+                    <form method="post"
+                          action="{{ url_for('planificador.planificador_completar', sid=r.id) }}"
+                          class="d-inline" data-confirm="¿Marcar como completada?">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="btn btn-sm btn-dark">
+                        <i class="bi bi-flag-fill"></i> Completar
+                      </button>
+                    </form>
+                    {% endif %}
+                    {% if r.puede_eliminar %}
+                    <form method="post"
+                          action="{{ url_for('planificador.planificador_eliminar', sid=r.id) }}"
+                          class="d-inline" data-confirm="¿Eliminar esta solicitud? Esta acción no se puede deshacer.">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="btn btn-sm btn-outline-danger" title="Eliminar">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="{{ 11 if tiene_checks else 10 }}" class="text-center text-muted py-4">Sin solicitudes pendientes de su aprobación gerencial</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="planner-pagination planner-pagination--hidden d-flex align-items-center justify-content-between px-2 py-2">
+            <span class="planner-page-info text-muted small"></span>
+            <div class="d-flex gap-1">
+              <button type="button" class="btn btn-sm btn-outline-secondary planner-page-prev" disabled>
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <span class="planner-page-nums d-flex gap-1"></span>
+              <button type="button" class="btn btn-sm btn-outline-secondary planner-page-next">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        <div class="planner-tab-content" id="tab-por-completar">
+          {{ tabla_tab(por_completar, "Sin solicitudes aprobadas por completar") }}
+        </div>
         <div class="planner-tab-content" id="tab-atendidas">
-          {{ tabla_tab(atendidas, "Sin solicitudes atendidas con los filtros aplicados") }}
+          {{ tabla_tab(atendidas, "Sin solicitudes completadas con los filtros aplicados") }}
         </div>
 
       </div>{# /rec-card tabs #}
     </div>
 
-    {# Panel derecho #}
-    <aside class="right-panel">
-
-      <div class="rec-card">
-        <div class="rec-card-header"><h3>Indicadores</h3></div>
-        <div class="stats-grid">
-          {% set n_reservadas = reservadas|length %}
-          <div class="stat-box {% if n_reservadas > 0 %}stat-box-alert{% endif %}">
-            <div class="stat-number">{{ n_reservadas }}</div>
-            <div class="stat-label">
-              {% if n_reservadas > 0 %}<i class="bi bi-exclamation-circle-fill text-warning me-1"></i>{% endif %}
-              Necesitan coordinación
-            </div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number">{{ rows|selectattr('estado','eq','PENDIENTE_APROBACION')|list|length }}</div>
-            <div class="stat-label">Pend. aprobación</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number">{{ rows|selectattr('estado','eq','APROBADA')|list|length }}</div>
-            <div class="stat-label">Aprobadas</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number">{{ rows|selectattr('estado','eq','COMPLETADA')|list|length }}</div>
-            <div class="stat-label">Completadas</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number">{{ rows|length }}</div>
-            <div class="stat-label">Total visibles</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rec-card">
-        <div class="rec-card-header"><h3>Estados</h3></div>
-        <div class="legend-list">
-          {% for k,v in estados.items() %}
-          <div class="legend-item"><span class="dot {{ k }}"></span>{{ v }}</div>
-          {% endfor %}
-        </div>
-      </div>
-
-      {% if ctx.es_admin or ctx.tipos_coordinador or ctx.tipos_aprobador %}
-      <div class="rec-card">
-        <div class="rec-card-header"><h3>Mi rol en el planificador</h3></div>
-        <div class="rol-panel">
-          {% if ctx.es_admin %}
-          <div><i class="bi bi-shield-fill text-primary me-1"></i><strong>Administrador</strong></div>
-          {% endif %}
-          {% for t in ctx.tipos_coordinador %}
-          <div><i class="bi bi-pencil-square text-warning me-1"></i>Coordinador · {{ t }}</div>
-          {% endfor %}
-          {% for t in ctx.tipos_aprobador %}
-          <div><i class="bi bi-check2-circle text-success me-1"></i>Aprobador · {{ t }}</div>
-          {% endfor %}
-        </div>
-      </div>
-      {% endif %}
-
-    </aside>
-  </div>
+  </div>{# /planner-main #}
 
 </div>{# /recorrido-page #}
 
@@ -342,17 +525,29 @@
                    value="{{ usuario_dept.dept_nombre }}" readonly>
             {% endif %}
           </div>
-          <div>
+          <div id="campoFechaRegularDiv">
             <label class="form-label">Fecha *</label>
             <input class="form-control" type="date" name="fecha" id="nfecha" required>
           </div>
-          <div>
+          <div id="campoPrioridadDiv">
             <label class="form-label">Prioridad</label>
             <select class="form-select" name="prioridad">
               {% for p in prioridades %}<option>{{ p }}</option>{% endfor %}
             </select>
           </div>
-          <div>
+          <div class="campo-voucher d-none" id="campoNumeroVouchersDiv">
+            <label class="form-label">N° de vouchers solicitados *</label>
+            <input class="form-control" type="number" name="numero_vouchers" id="campoNumeroVouchers"
+                   min="1" step="1" value="1">
+          </div>
+          <div class="full campo-vuelo" id="campoMotivoVueloDiv">
+            <label class="form-label">Motivo *</label>
+            <select class="form-select" name="motivo_vuelo" id="campoMotivoVuelo">
+              <option value="">Seleccione...</option>
+              {% for m in motivos_vuelo %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+            </select>
+          </div>
+          <div id="campoLugarDiv">
             <label class="form-label">Lugar / destino *</label>
             <div class="lugar-input-group">
               <input class="form-control" name="lugar_destino" id="nlugar" required
@@ -372,32 +567,105 @@
               Usa el botón del mapa para buscar y confirmar la dirección exacta
             </div>
           </div>
-          <div>
+          <div id="campoContactoDiv">
             <label class="form-label">Persona de contacto</label>
-            <input class="form-control" name="contacto" placeholder="Nombre y teléfono">
+            <input class="form-control" name="contacto" id="campoContacto" placeholder="Nombre y teléfono">
           </div>
-          <div class="full">
+          <div class="full" id="campoDetalleDirDiv">
             <label class="form-label">Detalle de dirección <span class="text-muted">(opcional)</span></label>
-            <input class="form-control" name="detalle_direccion"
+            <input class="form-control" name="detalle_direccion" id="campoDetalleDir"
                    placeholder="Ej: Piso 3, oficina 301, junto al banco...">
           </div>
+          {# ── Campos exclusivos para Vuelo ── #}
+          {# Selector de fechas estilo aerolínea (reemplaza el campo Fecha regular) #}
+          <div class="full campo-vuelo" id="campoFechasVueloDiv">
+            <label class="form-label">Fechas del vuelo *</label>
+            <div class="vuelo-fecha-picker">
+              <div class="vuelo-fecha-slot">
+                <span class="vuelo-fecha-icono">✈</span>
+                <div class="vuelo-fecha-content">
+                  <span class="vuelo-fecha-lbl">Salida</span>
+                  <input type="date" name="fecha" id="nfechaVuelo" class="vuelo-fecha-input" disabled>
+                </div>
+              </div>
+              <div class="vuelo-fecha-sep">⇄</div>
+              <div class="vuelo-fecha-slot">
+                <span class="vuelo-fecha-icono">🛬</span>
+                <div class="vuelo-fecha-content">
+                  <span class="vuelo-fecha-lbl">Regreso</span>
+                  <input type="date" name="fecha_retorno" id="campoFechaRetorno"
+                         class="vuelo-fecha-input">
+                </div>
+              </div>
+            </div>
+            <div class="form-text text-danger d-none" id="errorFechaVuelo">
+              La fecha de regreso no puede ser anterior a la de salida.
+            </div>
+            <div class="alert alert-warning py-2 mt-2 d-none" id="alertaDuplicadoVuelo" role="alert">
+              <i class="bi bi-exclamation-triangle-fill me-1"></i>
+              Ya tienes una solicitud activa de Vuelo en la fecha seleccionada. No podrás guardar hasta que la anterior sea completada o rechazada.
+            </div>
+          </div>
+          <div class="campo-vuelo" id="campoPuntoSalidaDiv">
+            <label class="form-label">Punto de salida *</label>
+            <input class="form-control" name="punto_salida" id="campoPuntoSalida"
+                   placeholder="Ej: Quito (UIO)">
+          </div>
+          <div class="campo-vuelo" id="campoPuntoDestinoDiv">
+            <label class="form-label">Punto de destino *</label>
+            <input class="form-control" name="punto_destino" id="campoPuntoDestino"
+                   placeholder="Ej: Guayaquil (GYE)">
+          </div>
           <div class="full">
-            <label class="form-label">Descripción de la actividad *</label>
-            <textarea class="form-control textarea-desc" name="descripcion" required
+            <label class="form-label" id="lblDescripcion">Descripción de la actividad *</label>
+            <textarea class="form-control textarea-desc" name="descripcion" id="campoDescripcion" required
                       placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
           </div>
-          <div class="full campo-vuelo" id="campoPptoBaseDiv">
-            <label class="form-label">Presupuesto Base Cero *</label>
-            <input class="form-control" type="number" name="presupuesto_base_cero"
-                   id="campoPptoBase" min="0" step="0.01"
-                   placeholder="Ej: 1500.00">
-            <div class="form-text">Requerido para solicitudes de tipo Vuelo.</div>
+          <div class="campo-vuelo" id="campoOrdenServicioDiv">
+            <label class="form-label">Orden de servicio <span class="text-muted">(CO - Opcional)</span></label>
+            <input class="form-control" name="orden_servicio" id="campoOrdenServicio"
+                   placeholder="Ej: CO-2025-001">
+          </div>
+          <div class="full campo-vuelo" id="campoHospedajeDiv">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="requiere_hospedaje"
+                     id="campoRequiereHospedaje" value="1">
+              <label class="form-check-label" for="campoRequiereHospedaje">
+                Requiere hospedaje
+              </label>
+            </div>
+          </div>
+          <div class="full campo-vuelo" id="campoSaldoPresupDiv">
+            <div class="vuelo-presup-ind" id="indicadorPresup">
+              <span class="vuelo-presup-dot"></span>
+              <span class="vuelo-presup-label"></span>
+            </div>
+          </div>
+          <div class="full campo-vuelo" id="alertSinCCVuelo">
+            <div class="alert alert-danger py-2 px-3 small mb-0">
+              <i class="bi bi-exclamation-triangle-fill me-1"></i>
+              No tienes un centro de costo configurado, por lo que no puedes crear solicitudes de tipo Vuelo.
+              Selecciona otro tipo de solicitud o contacta a Talento Humano/Sistemas para que te asignen uno.
+            </div>
           </div>
         </div>
-        <div class="rec-notice">
-          La solicitud quedará <strong>Pendiente de coordinación</strong> hasta que el coordinador asigne horario.<br>
-          <i class="bi bi-clock"></i> El coordinador solo puede asignar horarios de <strong>08:00 a 17:00</strong>.
-          Solicitudes para el día actual no pueden coordinarse pasadas las 17:00.
+        <div class="rec-notice" id="recNoticeInfo">
+          <span id="recNoticeTxt">
+            La solicitud quedará <strong>Pendiente de coordinación</strong> hasta que el coordinador asigne horario.<br>
+            <i class="bi bi-clock"></i> El coordinador solo puede asignar horarios de <strong>08:00 a 17:00</strong>.
+            Solicitudes para el día actual no pueden coordinarse pasadas las 17:00.
+          </span>
+          <span id="recNoticeVuelo" class="d-none">
+            La solicitud de vuelo pasará primero a <strong>aprobación de su jefe directo</strong>.<br>
+            Al aprobar, se notificará al <strong>coordinador de vuelos</strong> para que ingrese el valor cotizado del pasaje.<br>
+            Luego pasará a aprobación del <strong>Gerente General</strong> y, una vez aprobada, el coordinador
+            registrará la información del vuelo y cargará los documentos correspondientes.
+          </span>
+          <span id="recNoticeVoucher" class="d-none">
+            La solicitud pasará primero a <strong>aprobación de su jefe directo</strong> (salvo auto-aprobación por rol).<br>
+            Una vez aprobada, cuando termines de usar el/los voucher(s) deberás <strong>finalizar la solicitud</strong>
+            subiendo tu respaldo y una observación. El coordinador registrará el costo para completarla.
+          </span>
         </div>
       </div>
       <div class="sgq-modal-footer">
@@ -432,6 +700,11 @@
           <div>
             <label class="form-label">Nueva fecha *</label>
             <input class="form-control" type="date" name="nueva_fecha" required>
+          </div>
+          <div>
+            <label class="form-label">Penalización ($)</label>
+            <input class="form-control" type="number" name="penalizacion" min="0" step="0.01"
+                   placeholder="0.00" value="0">
           </div>
           <div class="full">
             <label class="form-label">Motivo de la reagenda *</label>
@@ -496,6 +769,119 @@
       <div class="sgq-modal-footer">
         <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalCoordinar">Cancelar</button>
         <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-send"></i> Enviar a aprobación</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{# ══════════════════════════════════════════
+   MODAL – Coordinar Vuelo (registro de reserva)
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalCoordinarVuelo">
+  <div class="sgq-modal modal-vuelo-coordinar">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-airplane me-1"></i>Coordinar solicitud de Vuelo</h2>
+      <button class="close-btn" data-close-modal="modalCoordinarVuelo">&#215;</button>
+    </div>
+
+    {# ── Pestaña: Registrar reserva ── #}
+    <form method="post" id="formCoordinarVuelo" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="action" value="coordinar">
+      <div class="sgq-modal-body">
+        <p id="vuelo-coordinar-info" class="modal-info-text"></p>
+
+        <div class="form-grid mb-2">
+          <div>
+            <label class="form-label">Hora salida *</label>
+            <input class="form-control" type="time" name="hora_inicio" required>
+          </div>
+          <div>
+            <label class="form-label">Hora regreso *</label>
+            <input class="form-control" type="time" name="hora_fin" required>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Datos de la reservación del ticket aéreo *</label>
+          <textarea class="form-control textarea-obs-sm" name="datos_ticket" rows="3"
+                    placeholder="Nro. de reserva, aerolínea, vuelo, asiento, terminal…" required></textarea>
+        </div>
+
+        <div class="mb-2">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <input type="checkbox" id="chkHotel" class="form-check-input m-0">
+            <label class="form-label m-0" for="chkHotel">Incluye reserva de hotel</label>
+          </div>
+          <textarea class="form-control textarea-obs-sm" name="datos_hotel" id="txtHotel"
+                    rows="2" placeholder="Nombre del hotel, nro. de reserva, fechas…"
+                    style="display:none"></textarea>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Observación</label>
+          <textarea class="form-control textarea-obs-sm" name="observacion_coordinador" rows="2"
+                    placeholder="Instrucciones adicionales para el viajero…"></textarea>
+        </div>
+
+        <div class="mb-1">
+          <label class="form-label">Adjuntar documento de reserva / boleto</label>
+          <input type="file" class="form-control form-control-sm" name="adjunto_vuelo"
+                 accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+          <div class="form-text text-muted small">El archivo se enviará por correo al solicitante. Máx 10 MB.</div>
+        </div>
+      </div>
+      <div class="sgq-modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalCoordinarVuelo">Cancelar</button>
+        <button type="button" class="btn btn-outline-warning btn-sm" id="btnAbrirReprogramar">
+          <i class="bi bi-calendar-x me-1"></i>Reprogramar fecha
+        </button>
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="bi bi-send me-1"></i>Registrar reserva
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════
+   MODAL – Reprogramar Vuelo (vuelta a aprobación jefe)
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalReprogramarVuelo">
+  <div class="sgq-modal modal-sm">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-calendar-x me-1"></i>Reprogramar vuelo</h2>
+      <button class="close-btn" data-close-modal="modalReprogramarVuelo">&#215;</button>
+    </div>
+    <form method="post" id="formReprogramarVuelo">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="action" value="reprogramar">
+      <div class="sgq-modal-body">
+        <div class="alert alert-warning small py-2">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          Al cambiar la fecha, la solicitud vuelve al inicio del proceso de aprobación (jefe directo).
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Nueva fecha *</label>
+          <input class="form-control" type="date" name="nueva_fecha" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Penalización ($)</label>
+          <input class="form-control" type="number" name="penalizacion" min="0" step="0.01"
+                 placeholder="0.00" value="0">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Motivo de la reprogramación *</label>
+          <textarea class="form-control textarea-obs-sm" name="motivo_reprogramacion" rows="2"
+                    placeholder="Explica por qué se cambia la fecha del vuelo…" required></textarea>
+        </div>
+      </div>
+      <div class="sgq-modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalReprogramarVuelo">Cancelar</button>
+        <button type="submit" class="btn btn-warning btn-sm">
+          <i class="bi bi-calendar-check me-1"></i>Confirmar reprogramación
+        </button>
       </div>
     </form>
   </div>

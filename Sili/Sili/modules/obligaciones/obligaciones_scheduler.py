@@ -10,7 +10,7 @@ from . import obligaciones_notifications as notifications
 
 
 def run_obligaciones_job(app):
-    """Tarea A: marca atrasadas (estado='atrasado', activa SIGUE=1).
+    """Tarea A: marca atrasadas (estatus='atrasado', activa SIGUE=1).
     Tarea B: envia alertas por correo segun las notificaciones propias de
     cada frecuencia (oblig_frecuencia_notificaciones) y sus destinatarios
     configurados (oblig_notificacion_destinatarios), sin duplicar

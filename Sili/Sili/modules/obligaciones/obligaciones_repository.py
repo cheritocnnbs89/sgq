@@ -3,7 +3,7 @@
 from modules.db import get_db
 from . import obligaciones_queries as q
 from .obligaciones_constants import (
-    ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA, ESTADOS_TERMINALES,
+    ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA, ESTATUS_TERMINALES,
     GRUPO_TIPOS, GRUPO_ENTIDADES,
 )
 
@@ -323,13 +323,13 @@ def list_obligaciones(user_id, rol, filters):
     if filters.get("usuario_id") and rol in (ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA):
         where.append("o.usuario_id = ?")
         params.append(filters["usuario_id"])
-    if filters.get("estado"):
-        where.append("o.estado = ?")
-        params.append(filters["estado"])
+    if filters.get("estatus"):
+        where.append("o.estatus = ?")
+        params.append(filters["estatus"])
 
     sql = (
         q.SQL_SELECT_JOIN_BASE + " WHERE " + " AND ".join(where) +
-        " ORDER BY CASE WHEN o.estado = 'atrasado' THEN 0 ELSE 1 END, o.fecha_vencimiento ASC"
+        " ORDER BY CASE WHEN o.estatus = 'atrasado' THEN 0 ELSE 1 END, o.fecha_vencimiento ASC"
     )
     return conn.execute(sql, params).fetchall()
 
@@ -360,7 +360,7 @@ def insert(data):
             data["usuario_id"],
             data["fecha_vencimiento"],
             data["frecuencia_id"],
-            data.get("estado", "por_presentar"),
+            data.get("estatus", "por_presentar"),
             data["creado_por"],
         ))
         row = cur.fetchone()  # OUTPUT INSERTED.id en el mismo INSERT -- SCOPE_IDENTITY() en execute() separado devuelve NULL en este entorno
@@ -386,7 +386,7 @@ def insert_no_commit(data):
         data["usuario_id"],
         data["fecha_vencimiento"],
         data["frecuencia_id"],
-        data.get("estado", "por_presentar"),
+        data.get("estatus", "por_presentar"),
         data["creado_por"],
     ))
 
@@ -481,10 +481,10 @@ def get_evidencia_by_id(evidencia_id, oblig_id):
     return cur.execute(q.SQL_GET_EVIDENCIA_BY_ID, (evidencia_id, oblig_id)).fetchone()
 
 
-def marcar_cumplida(oblig_id, estado_final):
+def marcar_cumplida(oblig_id, estatus_final):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute(q.SQL_MARCAR_CUMPLIDA, (estado_final, oblig_id))
+    cur.execute(q.SQL_MARCAR_CUMPLIDA, (estatus_final, oblig_id))
     # No hace commit aca -- el service hace commit al final de la transaccion
 
 
@@ -498,9 +498,9 @@ def commit():
 def list_historial(user_id, rol, filters):
     conn = get_connection()
     params = []
-    placeholders = ",".join("?" * len(ESTADOS_TERMINALES))
-    where = ["o.activa = 0", f"o.estado IN ({placeholders})"]
-    params.extend(ESTADOS_TERMINALES)
+    placeholders = ",".join("?" * len(ESTATUS_TERMINALES))
+    where = ["o.activa = 0", f"o.estatus IN ({placeholders})"]
+    params.extend(ESTATUS_TERMINALES)
 
     _apply_visibility(where, params, rol, user_id)
 
@@ -520,9 +520,9 @@ def list_historial(user_id, rol, filters):
         where.append("o.frecuencia_id = ?")
         params.append(filters["frecuencia_id"])
     _apply_date_range_filter(where, params, filters.get("fecha_desde"), filters.get("fecha_hasta"))
-    if filters.get("estado"):
-        where.append("o.estado = ?")
-        params.append(filters["estado"])
+    if filters.get("estatus"):
+        where.append("o.estatus = ?")
+        params.append(filters["estatus"])
     if filters.get("usuario_id") and rol in ("admin", "admin_obligaciones"):
         where.append("o.usuario_id = ?")
         params.append(filters["usuario_id"])
@@ -536,15 +536,15 @@ def list_historial(user_id, rol, filters):
 # ------------------------------------------------------------
 def _dashboard_common_where(rol, user_id, filters):
     # 2026-07-21: el universo del dashboard = obligaciones VIVAS (activa=1) +
-    # cerradas en historial (activa=0 con estado terminal). Excluye las
-    # soft-deleted no terminales (activa=0 con estado por_presentar/atrasado),
+    # cerradas en historial (activa=0 con estatus terminal). Excluye las
+    # soft-deleted no terminales (activa=0 con estatus por_presentar/atrasado),
     # que no aparecen ni en Consultas (filtra activa=1) ni en Historial (filtra
-    # estado terminal). Sin esta clausula el dashboard contaba filas borradas
+    # estatus terminal). Sin esta clausula el dashboard contaba filas borradas
     # logicamente -> total inflado y un "atrasado" fantasma en los graficos que
     # contradecia el KPI total_atrasadas.
-    ph = ",".join("?" * len(ESTADOS_TERMINALES))
-    where = [f"(o.activa = 1 OR o.estado IN ({ph}))"]
-    params = list(ESTADOS_TERMINALES)
+    ph = ",".join("?" * len(ESTATUS_TERMINALES))
+    where = [f"(o.activa = 1 OR o.estatus IN ({ph}))"]
+    params = list(ESTATUS_TERMINALES)
     _apply_visibility(where, params, rol, user_id)
 
     if filters.get("empresa_id"):
@@ -591,9 +591,9 @@ def dashboard_kpis(rol, user_id, filters):
 
     total_obligaciones = _count()
     total_activas = _count("o.activa = 1")
-    total_atrasadas = _count("o.activa = 1 AND o.estado = 'atrasado'")
+    total_atrasadas = _count("o.activa = 1 AND o.estatus = 'atrasado'")
     proximas_vencer = _count(
-        "o.activa = 1 AND o.estado <> 'atrasado' AND o.fecha_vencimiento IS NOT NULL "
+        "o.activa = 1 AND o.estatus <> 'atrasado' AND o.fecha_vencimiento IS NOT NULL "
         "AND o.fecha_vencimiento BETWEEN CAST(GETDATE() AS DATE) AND DATEADD(DAY, 30, CAST(GETDATE() AS DATE))"
     )
 
@@ -623,9 +623,9 @@ def _dashboard_group_query(select_sql, group_by_sql, rol, user_id, filters):
     return _rows_to_dicts(cur)
 
 
-def dashboard_por_estado(rol, user_id, filters):
+def dashboard_por_estatus(rol, user_id, filters):
     return _dashboard_group_query(
-        q.SQL_DASHBOARD_POR_ESTADO_SELECT, q.SQL_DASHBOARD_POR_ESTADO_GROUP_BY, rol, user_id, filters
+        q.SQL_DASHBOARD_POR_ESTATUS_SELECT, q.SQL_DASHBOARD_POR_ESTATUS_GROUP_BY, rol, user_id, filters
     )
 
 
@@ -635,11 +635,15 @@ def dashboard_por_tipo(rol, user_id, filters):
     )
 
 
-def dashboard_por_estado_total(rol, user_id, filters):
-    """Conteo por estado sumando TODAS las empresas -- un solo grafico combinado."""
+def dashboard_por_estatus_total(rol, user_id, filters):
+    """Conteo por estatus sumando TODAS las empresas -- un solo grafico combinado."""
     return _dashboard_group_query(
-        q.SQL_DASHBOARD_POR_ESTADO_TOTAL_SELECT, q.SQL_DASHBOARD_POR_ESTADO_TOTAL_GROUP_BY, rol, user_id, filters
+        q.SQL_DASHBOARD_POR_ESTATUS_TOTAL_SELECT, q.SQL_DASHBOARD_POR_ESTATUS_TOTAL_GROUP_BY, rol, user_id, filters
     )
+
+
+# 2026-08-05: dashboard_por_estatus_fundido() eliminada -- sin consumidor tras
+# borrar chartEstado (pedido Matias, sesion revision pendientes).
 
 
 # ------------------------------------------------------------
@@ -655,7 +659,7 @@ def get_ids_para_marcar_atrasadas():
 def marcar_atrasada(oblig_id):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute(q.SQL_UPDATE_ESTADO_ATRASADO, (oblig_id,))
+    cur.execute(q.SQL_UPDATE_ESTATUS_ATRASADO, (oblig_id,))
 
 
 def list_obligaciones_para_alertas():

@@ -2,7 +2,7 @@
 
 from modules.email_utils import send_email_async
 
-from .obligaciones_constants import ESTADO_LABELS
+from .obligaciones_constants import ESTATUS_LABELS
 
 
 TIPO_ALERTA_LABELS = {
@@ -17,10 +17,10 @@ TIPO_ALERTA_LABELS = {
 def build_email_alerta(obligacion, tipo_alerta):
     """Arma asunto + mensaje de la alerta de una obligacion proxima a vencer / vencida.
     `obligacion` es un dict con al menos: id, descripcion, empresa_nombre, tipo_nombre,
-    entidad_nombre, fecha_vencimiento, frecuencia_nombre, estado, usuario_nombre.
+    entidad_nombre, fecha_vencimiento, frecuencia_nombre, estatus, usuario_nombre.
     """
     etiqueta_alerta = TIPO_ALERTA_LABELS.get(tipo_alerta, tipo_alerta)
-    estado_label = ESTADO_LABELS.get(obligacion.get("estado"), obligacion.get("estado"))
+    estatus_label = ESTATUS_LABELS.get(obligacion.get("estatus"), obligacion.get("estatus"))
     frecuencia_label = obligacion.get("frecuencia_nombre")
 
     subject = f"[Obligaciones] Alerta ({etiqueta_alerta}) -- {obligacion.get('descripcion', '')}"
@@ -35,7 +35,7 @@ def build_email_alerta(obligacion, tipo_alerta):
         f"Entidad reguladora:  {obligacion.get('entidad_nombre', '')}",
         f"Fecha vencimiento:   {obligacion.get('fecha_vencimiento')}",
         f"Frecuencia:          {frecuencia_label}",
-        f"Estado actual:       {estado_label}",
+        f"Estatus actual:       {estatus_label}",
         f"Responsable:         {obligacion.get('usuario_nombre', '')}",
         "",
         f"Motivo de esta alerta: {etiqueta_alerta}.",

@@ -1,4 +1,4 @@
-# modules/routes_reclamos_pdf.py
+# modules/reclamos/routes_reclamos_pdf.py
 # -*- coding: utf-8 -*-
 """
 Generación del PDF "Carta al cliente" para OMs cerradas.

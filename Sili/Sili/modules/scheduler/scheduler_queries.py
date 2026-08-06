@@ -237,9 +237,7 @@ SQL_SELECT_OM_CANDIDATOS = f"""
         COALESCE(r.proceso_text, '') AS proceso,
         COALESCE(r.observacion, '') AS observacion,
         CONVERT(date, r.fecha_creacion) AS fecha_base,
-
         DATEDIFF(day, CONVERT(date, r.fecha_creacion), CONVERT(date, GETDATE())) AS dias
-
     FROM {TB_RECLAMO_IMPUTADOS} ri
     JOIN {TB_RECLAMOS} r ON r.id = ri.reclamo_id
     WHERE ri.estado_asignacion = 'aprobado'
@@ -362,6 +360,7 @@ SQL_SELECT_OM_ACCIONES_SEGUIMIENTO = """
 
         ri.imputado_id AS sponsor_id,
         COALESCE(u_imp.nombre_completo, u_imp.username, '') AS sponsor_nombre,
+        ri.fecha_respuesta_imputado AS fecha_cierre_om,
 
         DATEDIFF(day, CAST(GETDATE() AS date), CAST(a.fecha_compromiso AS date)) AS dias_restantes
 
@@ -372,9 +371,9 @@ SQL_SELECT_OM_ACCIONES_SEGUIMIENTO = """
 
     WHERE COALESCE(a.activo, 1) = 1
       AND COALESCE(a.cumplido, 0) = 0
-      AND UPPER(COALESCE(a.tipo, '')) IN ('CONTROL', 'CORRECTIVA')
+      AND UPPER(COALESCE(a.tipo, '')) = 'CORRECTIVA'
       AND TRY_CONVERT(date, a.fecha_compromiso) IS NOT NULL
-      AND CAST(a.fecha_compromiso AS date) > '2026-06-01'
+      AND CAST(a.fecha_compromiso AS date) > '2026-07-01'
       AND LOWER(LTRIM(RTRIM(COALESCE(r.estado_global, '')))) = 'cerrado'
 """
 

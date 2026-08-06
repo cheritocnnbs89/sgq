@@ -26,6 +26,7 @@ from .scheduler_notifications import (
     ensure_core_templates,
     ensure_gasto_templates,
     ensure_om_templates,
+    ensure_planificador_templates,
 )
 from .scheduler_services import (
     auto_close_expired_tasks,
@@ -44,12 +45,25 @@ from .seedbilling_xml_job import process_seedbilling_facturas_recibidas
 # ── AWS Sync (DynamoDB) ───────────────────────────────────────
 try:
     from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws
+    # push_gerentes_auth_a_aws: aun no esta en produccion, se activa aparte.
+    # from modules.aws_sync import push_gerentes_auth_a_aws
     _AWS_SYNC_ENABLED = True
 except Exception as _aws_err:
     _AWS_SYNC_ENABLED = False
     import logging as _logging
     _logging.getLogger(__name__).warning(
         "[aws_sync] No se pudo importar aws_sync: %s", _aws_err
+    )
+
+# ── AWS Tickets WhatsApp (Twilio → Bedrock → Flask) ───────────
+try:
+    from modules.aws_tickets_sync import process_whatsapp_tickets
+    _AWS_TICKETS_ENABLED = True
+except Exception as _awt_err:
+    _AWS_TICKETS_ENABLED = False
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "[aws_tickets_sync] No se pudo importar: %s", _awt_err
     )
 
 # ── Email-to-Task (Graph API) ──────────────────────────────────────
@@ -108,7 +122,7 @@ def start_scheduler(app=None):
                 cexp = get_db_standalone()
                 try:
                     _log("info", "Worker: Ejecutando expiración de gastos tarjeta...")
-                    process_gastos_expiry(cexp)
+                    #process_gastos_expiry(cexp)
                     _log("info", "Worker: process_gastos_expiry OK")
                 finally:
                     try:
@@ -166,21 +180,21 @@ def start_scheduler(app=None):
             else:
                 _log("debug", "Worker: process_om_acciones_seguimiento omitido (fuera de horario laboral)")
 
-            try:
-                _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
-                from modules.contratos.contratos_services import encolar_notificaciones_contratos_por_vencer
-                n_contratos = encolar_notificaciones_contratos_por_vencer()
-                _log("info", "Worker: contratos_por_vencer encolados=%s", n_contratos)
-            except Exception:
-                target_app.logger.exception("Worker: encolar_notificaciones_contratos_por_vencer falló")
-
-            try:
-                _log("info", "Worker: Encolando notificaciones de garantías por vencer (20/10/5/0d)...")
-                from modules.contratos.contratos_services import encolar_notificaciones_garantias_multi_dia
-                n_garantias = encolar_notificaciones_garantias_multi_dia()
-                _log("info", "Worker: garantias_multi_dia encoladas=%s", n_garantias)
-            except Exception:
-                target_app.logger.exception("Worker: encolar_notificaciones_garantias_multi_dia falló")
+            # auto-registro de facturas recurrentes: aun no esta en produccion.
+            # try:
+            #     _log("info", "Worker: Ejecutando auto-registro de facturas recurrentes...")
+            #     cauto = get_db_standalone()
+            #     try:
+            #         from modules.gastos_auto_registro import procesar_auto_registro_facturas
+            #         creados = procesar_auto_registro_facturas(cauto)
+            #         _log("info", "Worker: auto-registro de facturas OK, gastos creados=%s", creados)
+            #     finally:
+            #         try:
+            #             cauto.close()
+            #         except Exception:
+            #             pass
+            # except Exception:
+            #     target_app.logger.exception("Worker: procesar_auto_registro_facturas falló")
 
         except Exception:
             target_app.logger.exception("Worker: fallo general en %s", tick_label)
@@ -221,6 +235,9 @@ def start_scheduler(app=None):
                     #ensure_om_templates(c0)
                     _log("info", "Worker: ensure_om_templates OK")
 
+                    ensure_planificador_templates(c0)
+                    _log("info", "Worker: ensure_planificador_templates OK")
+
                     _log("info", "Worker: bootstrap inicial completado correctamente.")
                 finally:
                     try:
@@ -241,9 +258,11 @@ def start_scheduler(app=None):
             last_om_date           = None
             last_seedbilling_slots = set()
             last_weekly_report_date = None   # ← control reporte semanal planilla
+            last_contratos_garantias_date = None   # ← control encolado contratos/garantías por vencer (09:00)
             last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
             last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
             last_aws_sync          = 0.0     # ← control sync AWS DynamoDB (cada 5 min)
+            last_aws_tickets       = 0.0     # ← control tickets WhatsApp (cada 2 min)
 
             # Crear tabla email_tickets_inbox si no existe
             if _EMAIL_TO_TASK_ENABLED:
@@ -327,6 +346,31 @@ def start_scheduler(app=None):
                             target_app.logger.exception("Worker: send_daily_report falló")
 
                 # ==================================================
+                # Notificaciones de contratos/garantías por vencer - diario 09:00
+                # ==================================================
+                now4 = datetime.now()
+                is_0900 = now4.hour == 9 and now4.minute < 6  # ventana de 5 min
+
+                if is_0900 and last_contratos_garantias_date != now4.date():
+                    try:
+                        _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
+                        from modules.contratos.contratos_services import encolar_notificaciones_contratos_por_vencer
+                        n_contratos = encolar_notificaciones_contratos_por_vencer()
+                        _log("info", "Worker: contratos_por_vencer encolados=%s", n_contratos)
+                    except Exception:
+                        target_app.logger.exception("Worker: encolar_notificaciones_contratos_por_vencer falló")
+
+                    try:
+                        _log("info", "Worker: Encolando notificaciones de garantías por vencer (20/10/5/0d)...")
+                        from modules.contratos.contratos_services import encolar_notificaciones_garantias_multi_dia
+                        n_garantias = encolar_notificaciones_garantias_multi_dia()
+                        _log("info", "Worker: garantias_multi_dia encoladas=%s", n_garantias)
+                    except Exception:
+                        target_app.logger.exception("Worker: encolar_notificaciones_garantias_multi_dia falló")
+
+                    last_contratos_garantias_date = now4.date()
+
+                # ==================================================
                 # Reporte SEMANAL planilla - Viernes 17:00
                 # ==================================================
                 now3 = datetime.now()
@@ -376,6 +420,21 @@ def start_scheduler(app=None):
                         target_app.logger.exception("Worker: notify_unassigned_tickets falló")
 
                 # ==================================================
+                # AWS Tickets WhatsApp — cada 2 min
+                # ==================================================
+                now_ts5 = time.time()
+                if _AWS_TICKETS_ENABLED and (now_ts5 - last_aws_tickets >= 120):
+                    try:
+                        count = process_whatsapp_tickets(target_app)
+                        last_aws_tickets = now_ts5
+                        if count:
+                            _log("info", "Worker: aws_tickets procesó %d ticket(s)", count)
+                        else:
+                            _log("debug", "Worker: aws_tickets — sin tickets pendientes")
+                    except Exception:
+                        target_app.logger.exception("Worker: process_whatsapp_tickets falló")
+
+                # ==================================================
                 # AWS Sync DynamoDB — push + pull cada 5 min
                 # ==================================================
                 now_ts4 = time.time()
@@ -385,10 +444,90 @@ def start_scheduler(app=None):
                         push_gastos_a_aws(target_app)
                         _log("info", "Worker: AWS sync — pull aprobaciones...")
                         pull_aprobaciones_de_aws(target_app)
+                        # push_gerentes_auth_a_aws: aun no esta en produccion.
+                        # _log("info", "Worker: AWS sync — push auth gerentes...")
+                        # push_gerentes_auth_a_aws(target_app)
                         last_aws_sync = now_ts4
                         _log("info", "Worker: AWS sync OK")
                     except Exception:
                         target_app.logger.exception("Worker: aws_sync falló")
+
+                today_str = now.strftime("%Y-%m-%d")
+
+                # ==================================================
+                # Auto-confirmar vuelos realizados — diario 09:00
+                # ==================================================
+                if now.hour == 9 and now.minute < 10 and globals().get("_last_vuelo_autoconfirmar") != today_str:
+                    try:
+                        from modules.planificador.planificador_auto_jobs import auto_confirmar_vuelos
+                        n = auto_confirmar_vuelos(target_app)
+                        globals()["_last_vuelo_autoconfirmar"] = today_str
+                        if n:
+                            _log("info", "Worker: %d vuelo(s) auto-confirmado(s)", n)
+                    except Exception:
+                        target_app.logger.exception("Worker: auto_confirmar_vuelos falló")
+
+                # ==================================================
+                # Auto-liquidar vuelos — diario 09:05
+                # ==================================================
+                if now.hour == 9 and now.minute >= 5 and now.minute < 15 and globals().get("_last_vuelo_autoliquidar") != today_str:
+                    try:
+                        from modules.planificador.planificador_auto_jobs import auto_liquidar_vuelos
+                        n = auto_liquidar_vuelos(target_app)
+                        globals()["_last_vuelo_autoliquidar"] = today_str
+                        if n:
+                            _log("info", "Worker: %d vuelo(s) auto-liquidado(s)", n)
+                    except Exception:
+                        target_app.logger.exception("Worker: auto_liquidar_vuelos falló")
+
+                # ==================================================
+                # Recordatorio vuelos coordinados sin liquidar - diario a las 08:00
+                # ==================================================
+                if now.hour == 8 and globals().get("_last_vuelo_recorda") != today_str:
+                    try:
+                        from modules.planificador import planificador_repository as _pr
+                        from modules.planificador import planificador_notifications as _pn
+                        vuelos = _pr.get_vuelos_coordinadas_sin_liquidar()
+                        for v in vuelos:
+                            try:
+                                _pn.notif_vuelo_recordatorio_coordinador(
+                                    v["id"], v["area_solicitante"], str(v["fecha"]),
+                                    v["coordinador_id"], v["coordinador_nombre"],
+                                    v["coordinador_email"] or "",
+                                )
+                            except Exception:
+                                pass
+                        globals()["_last_vuelo_recorda"] = today_str
+                        if vuelos:
+                            _log("info", "Worker: recordatorio vuelos sin liquidar enviado a %d coordinador(es)", len(vuelos))
+                    except Exception:
+                        target_app.logger.exception("Worker: recordatorio_vuelos_sin_liquidar falló")
+
+                # ==================================================
+                # Digest OM acciones correctivas sin evidencia - diario
+                # a las 08:00, solo día laboral (lun-vie)
+                # ==================================================
+                if (
+                    now.weekday() < 5
+                    and now.hour == 8
+                    and globals().get("_last_om_evidencia_digest") != today_str
+                ):
+                    try:
+                        from modules.scheduler.scheduler_services import (
+                            process_om_correctivas_evidencia_digest,
+                        )
+                        conn_evi = get_db_standalone()
+                        try:
+                            process_om_correctivas_evidencia_digest(conn_evi)
+                        finally:
+                            try:
+                                conn_evi.close()
+                            except Exception:
+                                pass
+                        globals()["_last_om_evidencia_digest"] = today_str
+                        _log("info", "Worker: digest OM acciones correctivas sin evidencia OK")
+                    except Exception:
+                        target_app.logger.exception("Worker: process_om_correctivas_evidencia_digest falló")
 
                 elapsed = time.time() - cycle_start
                 sleep_s = max(5, 300 - elapsed)
@@ -404,3 +543,6 @@ def start_scheduler(app=None):
     th.start()
     _log("info", "Worker: hilo lanzado correctamente.")
     return th
+
+
+

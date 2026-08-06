@@ -99,14 +99,14 @@
           <th>Descripción</th>
           <th>Fecha vencimiento</th>
           <th>Días</th>
-          <th>Estado</th>
+          <th>Estatus</th>
           <th>Frecuencia</th>
           <th class="text-end">Acciones</th>
         </tr>
       </thead>
       <tbody>
         {% for r in rows %}
-        <tr data-row="1" class="{{ 'table-danger' if r.estado == 'atrasado' else '' }}">
+        <tr data-row="1" class="{{ 'table-danger' if r.estatus == 'atrasado' else '' }}">
           <td>
             <div class="d-flex align-items-center gap-2">
               <div class="oblig-avatar">{{ r.empresa_nombre[0]|upper if r.empresa_nombre else '?' }}</div>
@@ -130,8 +130,8 @@
             {% endif %}
           </td>
           <td>
-            {% set estado_badge = {'por_presentar': 'bg-warning text-dark', 'atrasado': 'bg-danger', 'cumplido': 'bg-success', 'cumplido_fuera_plazo': 'bg-warning text-dark'} %}
-            <span class="badge {{ estado_badge.get(r.estado, 'bg-secondary') }}">{{ estado_labels.get(r.estado, r.estado) }}</span>
+            {% set estatus_badge = {'por_presentar': 'bg-warning text-dark', 'atrasado': 'bg-danger', 'cumplido': 'bg-success', 'cumplido_fuera_plazo': 'bg-warning text-dark'} %}
+            <span class="badge {{ estatus_badge.get(r.estatus, 'bg-secondary') }}">{{ estatus_labels.get(r.estatus, r.estatus) }}</span>
           </td>
           <td><span class="oblig-truncate-sm" title="{{ r.frecuencia_nombre }}">{{ r.frecuencia_nombre }}</span></td>
           <td class="text-end">

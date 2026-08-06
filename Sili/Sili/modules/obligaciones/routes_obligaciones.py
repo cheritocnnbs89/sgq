@@ -20,7 +20,7 @@ from .obligaciones_constants import (
     PERM_DASHBOARD,
     ROLES_ADMIN,
     ROL_JEFE_AREA,
-    ESTADO_LABELS,
+    ESTATUS_LABELS,
     HISTORIAL_COLUMNAS,
 )
 from . import obligaciones_services as service
@@ -73,7 +73,7 @@ def lista_obligaciones():
         filters=filters,
         combos=combos,
         usuarios=usuarios,
-        estado_labels=ESTADO_LABELS,
+        estatus_labels=ESTATUS_LABELS,
         active_page=ACTIVE_KEY,
     )
 
@@ -237,7 +237,7 @@ def historial_obligaciones():
         filters=filters,
         combos=combos,
         usuarios=usuarios,
-        estado_labels=ESTADO_LABELS,
+        estatus_labels=ESTATUS_LABELS,
         active_page=ACTIVE_KEY,
     )
 
@@ -272,7 +272,7 @@ def exportar_historial():
                 _excel_cell(r["entidad_nombre"]),
                 _excel_cell(r["fecha_vencimiento"]),
                 _excel_cell(r["frecuencia_nombre"]),
-                _excel_cell(ESTADO_LABELS.get(r["estado"], r["estado"])),
+                _excel_cell(ESTATUS_LABELS.get(r["estatus"], r["estatus"])),
                 "",  # Prioridad -- sin campo en BD, pendiente definir origen (Matias)
             ])
 

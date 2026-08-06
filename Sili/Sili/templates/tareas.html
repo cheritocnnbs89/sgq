@@ -523,9 +523,6 @@
         <a href="#" id="tdBtnVer" class="btn-ver-detalle">
           <i class="bi bi-eye"></i> Ver detalle completo
         </a>
-        <a href="#" id="tdBtnEditar" class="btn-ver-detalle td-btn-edit d-none">
-          <i class="bi bi-pencil-square"></i> Editar
-        </a>
       </div>
 
     </div>
@@ -539,6 +536,9 @@
     <div class="bs-modal-header">
       <div class="bs-modal-ticket" id="tdDetCodigo"></div>
       <h5 class="bs-modal-title" id="tdDetTitulo"></h5>
+      <button type="button" class="bs-modal-close d-none" id="tdDetBtnEditar" title="Editar tarea">
+        <i class="bi bi-pencil-square"></i>
+      </button>
       <button type="button" class="bs-modal-close" id="tdDetClose" aria-label="Cerrar">
         <i class="bi bi-x-lg"></i>
       </button>
@@ -552,6 +552,73 @@
     <div id="tdDetContent" class="td-detalle-body d-none">
 
       <div id="tdDetInfo" class="td-det-card mb-3"></div>
+
+      <div id="tdDetEditPanel" class="td-det-card td-det-card-primary mb-3 d-none">
+        <div class="td-det-card-title text-primary">
+          <i class="bi bi-pencil-square"></i> Editar tarea
+        </div>
+        <form id="tdDetEditForm" novalidate>
+          <input type="hidden" name="csrf_token" id="tdDetEditCsrf">
+
+          <div id="tdDetEditError" class="alert alert-danger py-2 d-none"></div>
+          <div id="tdDetEditSuccess" class="alert alert-success py-2 d-none"></div>
+
+          <div class="mb-2">
+            <label class="td-edit-label">Título</label>
+            <input type="text" name="titulo" id="tdDetFTitulo" class="form-control form-control-sm" required>
+          </div>
+
+          <div class="mb-2">
+            <label class="td-edit-label">Descripción</label>
+            <textarea name="descripcion" id="tdDetFDesc" class="form-control form-control-sm" rows="4"></textarea>
+          </div>
+
+          <div id="tdDetSolicitanteWrap" class="mb-2 d-none">
+            <label class="td-edit-label">Solicitante</label>
+            <select name="solicitante_id" id="tdDetFSolicitante" class="form-select form-select-sm"></select>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="td-edit-label">Estado</label>
+              <select name="estado" id="tdDetFEstado" class="form-select form-select-sm"></select>
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Avance (%)</label>
+              <input type="number" name="porcentaje_avance" id="tdDetFAvance" class="form-control form-control-sm" min="0" max="100" step="1">
+            </div>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="td-edit-label">Fecha inicio</label>
+              <input type="datetime-local" name="fecha_inicio" id="tdDetFFechaInicio" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Fecha compromiso</label>
+              <input type="datetime-local" name="fecha_compromiso" id="tdDetFFechaCompromiso" class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="td-edit-label">Fecha fin</label>
+              <input type="datetime-local" name="fecha_fin" id="tdDetFFechaFin" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Fecha fin real</label>
+              <input type="datetime-local" name="fecha_cierre_real" id="tdDetFFechaReal" class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm" id="tdDetBtnGuardarEdit">
+              <i class="bi bi-check-circle me-1"></i>Guardar cambios
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="tdDetBtnCancelarEdit">Cancelar</button>
+          </div>
+        </form>
+      </div>
 
       <div class="td-det-card mb-3">
         <div class="td-det-card-title">

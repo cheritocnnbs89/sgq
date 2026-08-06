@@ -14,19 +14,19 @@
     </a>
   </div>
 
-  <div class="section {{ 'section-danger' if row.estado == 'atrasado' else 'section-warning' }} mb-3">
+  <div class="section {{ 'section-danger' if row.estatus == 'atrasado' else 'section-warning' }} mb-3">
     <div class="section-header">
-      <i class="bi {{ 'bi-exclamation-triangle-fill' if row.estado == 'atrasado' else 'bi-clock-history' }}"></i>
-      {{ 'Obligación atrasada' if row.estado == 'atrasado' else 'Obligación pendiente de cumplir' }}
+      <i class="bi {{ 'bi-exclamation-triangle-fill' if row.estatus == 'atrasado' else 'bi-clock-history' }}"></i>
+      {{ 'Obligación atrasada' if row.estatus == 'atrasado' else 'Obligación pendiente de cumplir' }}
     </div>
     <dl class="row mb-0">
       <dt class="col-sm-3">Descripción</dt><dd class="col-sm-9">{{ row.descripcion }}</dd>
       <dt class="col-sm-3">Empresa</dt><dd class="col-sm-9">{{ row.empresa_nombre }}</dd>
       <dt class="col-sm-3">Entidad</dt><dd class="col-sm-9">{{ row.entidad_nombre }}</dd>
       <dt class="col-sm-3">Fecha vencimiento</dt><dd class="col-sm-9">{{ row.fecha_vencimiento or '-' }}</dd>
-      <dt class="col-sm-3">Estado actual</dt>
+      <dt class="col-sm-3">Estatus actual</dt>
       <dd class="col-sm-9">
-        {% if row.estado == 'atrasado' %}<span class="badge bg-danger">Atrasado</span>{% else %}Vigente{% endif %}
+        {% if row.estatus == 'atrasado' %}<span class="badge bg-danger">Atrasado</span>{% else %}Vigente{% endif %}
       </dd>
     </dl>
   </div>

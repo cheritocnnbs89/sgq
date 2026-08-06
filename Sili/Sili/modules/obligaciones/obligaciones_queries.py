@@ -38,7 +38,7 @@ SELECT
     o.frecuencia_id, fr.nombre AS frecuencia_nombre,
     fr.recalculo_tipo AS frecuencia_recalculo_tipo,
     fr.recalculo_cantidad AS frecuencia_recalculo_cantidad,
-    o.estado,
+    o.estatus,
     o.comentario,
     o.activa,
     o.creado_por,
@@ -69,7 +69,7 @@ SQL_INSERT_OBLIGACION = f"""
 INSERT INTO {TABLA_OBLIGACIONES} (
     tipo_id, empresa_id, descripcion, entidad_id,
     departamento_id, puesto_id, usuario_id,
-    fecha_vencimiento, frecuencia_id, estado,
+    fecha_vencimiento, frecuencia_id, estatus,
     activa, creado_por, creado_en
 )
 OUTPUT INSERTED.id
@@ -100,7 +100,7 @@ SELECT COUNT(*) FROM {TABLA_ALERTAS} WHERE obligacion_id = ?
 
 SQL_MARCAR_CUMPLIDA = f"""
 UPDATE {TABLA_OBLIGACIONES}
-SET estado = ?, activa = 0, modificado_en = GETDATE()
+SET estatus = ?, activa = 0, modificado_en = GETDATE()
 WHERE id = ?
 """
 
@@ -298,12 +298,12 @@ WHERE LOWER(rol) = 'admin_obligaciones'
 SQL_MARCAR_ATRASADAS = f"""
 SELECT id FROM {TABLA_OBLIGACIONES}
 WHERE fecha_vencimiento < CAST(GETDATE() AS DATE)
-  AND estado NOT IN ('cumplido', 'cumplido_fuera_plazo', 'atrasado')
+  AND estatus NOT IN ('cumplido', 'cumplido_fuera_plazo', 'atrasado')
   AND activa = 1
 """
 
-SQL_UPDATE_ESTADO_ATRASADO = f"""
-UPDATE {TABLA_OBLIGACIONES} SET estado = 'atrasado', modificado_en = GETDATE() WHERE id = ?
+SQL_UPDATE_ESTATUS_ATRASADO = f"""
+UPDATE {TABLA_OBLIGACIONES} SET estatus = 'atrasado', modificado_en = GETDATE() WHERE id = ?
 """
 
 # ------------------------------------------------------------
@@ -312,11 +312,11 @@ UPDATE {TABLA_OBLIGACIONES} SET estado = 'atrasado', modificado_en = GETDATE() W
 # se resuelven por notificacion via oblig_notificacion_destinatarios.
 # ------------------------------------------------------------
 SQL_LIST_OBLIGACIONES_ACTIVAS_CON_FECHA = f"""
-SELECT o.id, o.frecuencia_id, o.fecha_vencimiento, o.estado, o.usuario_id, o.creado_por
+SELECT o.id, o.frecuencia_id, o.fecha_vencimiento, o.estatus, o.usuario_id, o.creado_por
 FROM {TABLA_OBLIGACIONES} o
 WHERE o.activa = 1
   AND o.fecha_vencimiento IS NOT NULL
-  AND o.estado NOT IN ('cumplido', 'cumplido_fuera_plazo')
+  AND o.estatus NOT IN ('cumplido', 'cumplido_fuera_plazo')
 """
 
 SQL_ALERTA_YA_ENVIADA = f"""
@@ -339,20 +339,25 @@ SQL_DASHBOARD_COUNT_BASE = f"SELECT COUNT(*) FROM {TABLA_OBLIGACIONES} o"
 
 SQL_DASHBOARD_CUMPLIDAS_BASE = f"""
 SELECT
-    SUM(CASE WHEN o.estado = 'cumplido' THEN 1 ELSE 0 END) AS a_tiempo,
-    SUM(CASE WHEN o.estado = 'cumplido_fuera_plazo' THEN 1 ELSE 0 END) AS fuera_plazo
+    SUM(CASE WHEN o.estatus = 'cumplido' THEN 1 ELSE 0 END) AS a_tiempo,
+    SUM(CASE WHEN o.estatus = 'cumplido_fuera_plazo' THEN 1 ELSE 0 END) AS fuera_plazo
 FROM {TABLA_OBLIGACIONES} o
 """
 
-SQL_DASHBOARD_POR_ESTADO_SELECT = f"""
+# 2026-07-30: nueva query fusiona estatus a 3 categorias para doughnut, reemplaza
+# SQL_DASHBOARD_POR_ESTATUS_SELECT -- esta queda sin uso (no se borra por si se revierte).
+SQL_DASHBOARD_POR_ESTATUS_SELECT = f"""
 SELECT
-    CASE WHEN o.activa = 1 AND o.estado <> 'atrasado' THEN 'activa' ELSE o.estado END AS estado,
+    CASE WHEN o.activa = 1 AND o.estatus <> 'atrasado' THEN 'activa' ELSE o.estatus END AS estatus,
     COUNT(*) AS total
 FROM {TABLA_OBLIGACIONES} o
 """
-SQL_DASHBOARD_POR_ESTADO_GROUP_BY = (
-    " GROUP BY CASE WHEN o.activa = 1 AND o.estado <> 'atrasado' THEN 'activa' ELSE o.estado END"
+SQL_DASHBOARD_POR_ESTATUS_GROUP_BY = (
+    " GROUP BY CASE WHEN o.activa = 1 AND o.estatus <> 'atrasado' THEN 'activa' ELSE o.estatus END"
 )
+
+# 2026-08-05: SQL_DASHBOARD_POR_ESTATUS_FUNDIDO_SELECT/GROUP_BY eliminados -- sin
+# consumidor tras borrar chartEstado (pedido Matias, sesion revision pendientes).
 
 SQL_DASHBOARD_POR_TIPO_SELECT = f"""
 SELECT t.nombre AS etiqueta, COUNT(*) AS total
@@ -361,24 +366,24 @@ JOIN {TABLA_PARAM_VALUES} t ON t.id = o.tipo_id
 """
 SQL_DASHBOARD_POR_TIPO_GROUP_BY = " GROUP BY t.nombre"
 
-# "Por estado (empresas)" -- barra apilada por empresa (2026-07-27, pedido de
-# Matias reemplaza el combinado 2026-07-21). estado_fundido junta cumplido +
+# "Por estatus (empresas)" -- barra apilada por empresa (2026-07-27, pedido de
+# Matias reemplaza el combinado 2026-07-21). estatus_fundido junta cumplido +
 # cumplido_fuera_plazo en "cumplida" -- 3 categorias fijas por barra:
 # cumplida / atrasada / por_presentar.
-SQL_DASHBOARD_POR_ESTADO_TOTAL_SELECT = f"""
+SQL_DASHBOARD_POR_ESTATUS_TOTAL_SELECT = f"""
 SELECT
     e.razon_social AS empresa,
     CASE
-        WHEN o.estado IN ('cumplido', 'cumplido_fuera_plazo') THEN 'cumplida'
-        WHEN o.estado = 'atrasado' THEN 'atrasada'
+        WHEN o.estatus IN ('cumplido', 'cumplido_fuera_plazo') THEN 'cumplida'
+        WHEN o.estatus = 'atrasado' THEN 'atrasada'
         ELSE 'por_presentar'
-    END AS estado,
+    END AS estatus,
     COUNT(*) AS total
 FROM {TABLA_OBLIGACIONES} o
 JOIN {TABLA_EMPRESAS} e ON e.id = o.empresa_id
 """
-SQL_DASHBOARD_POR_ESTADO_TOTAL_GROUP_BY = (
+SQL_DASHBOARD_POR_ESTATUS_TOTAL_GROUP_BY = (
     " GROUP BY e.razon_social, "
-    "CASE WHEN o.estado IN ('cumplido', 'cumplido_fuera_plazo') THEN 'cumplida' "
-    "WHEN o.estado = 'atrasado' THEN 'atrasada' ELSE 'por_presentar' END"
+    "CASE WHEN o.estatus IN ('cumplido', 'cumplido_fuera_plazo') THEN 'cumplida' "
+    "WHEN o.estatus = 'atrasado' THEN 'atrasada' ELSE 'por_presentar' END"
 )

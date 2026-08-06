@@ -88,14 +88,16 @@
     </div>
     <div class="col">
       <div class="section">
-        <div class="section-header small text-uppercase"><i class="bi bi-list-check"></i> Total activas</div>
+        <!-- 2026-08-05: label pedido por Matias en reunion -->
+        <div class="section-header small text-uppercase"><i class="bi bi-list-check"></i> Total Presentar a Tiempo</div>
         <div class="fs-2 fw-bold" id="kpiActivas">{{ data.kpis.total_activas }}</div>
       </div>
     </div>
     <div class="col">
-      <a class="text-decoration-none" href="{{ url_for('obligaciones.lista_obligaciones', estado='atrasado') }}">
+      <a class="text-decoration-none" href="{{ url_for('obligaciones.lista_obligaciones', estatus='atrasado') }}">
         <div class="section section-danger">
-          <div class="section-header small text-uppercase"><i class="bi bi-exclamation-triangle-fill"></i> Atrasadas</div>
+          <!-- 2026-08-05: label pedido por Matias en reunion -->
+          <div class="section-header small text-uppercase"><i class="bi bi-exclamation-triangle-fill"></i> Total Atrasadas</div>
           <div class="fs-2 fw-bold text-danger" id="kpiAtrasadas">{{ data.kpis.total_atrasadas }}</div>
         </div>
       </a>
@@ -109,7 +111,7 @@
   </div>
 
   <!-- 2026-07-27: layout rediseñado -- 4 tiles del mismo tamaño (col-md-6),
-       orden: Velocimetro | Por-empresa arriba, Por-estado-general | Por-tipo
+       orden: Velocimetro | Por-empresa arriba, Por-estatus-general | Por-tipo
        abajo. Chart "Por frecuencia" eliminado por completo (pedido de
        Matias) -- ver HISTORIAL-CORRECCIONES.md del modulo. -->
   <div class="row g-3">
@@ -124,23 +126,21 @@
         </div>
       </div>
     </div>
-    {% if es_admin %}
+    {# 2026-07-30: gate es_admin removido -- _apply_visibility() en el repository
+       ya filtra los datos por rol, el gate visual aqui era redundante. #}
     <div class="col-md-6">
       <div class="section">
-        <div class="section-header"><i class="bi bi-building"></i> Por estado (empresas)</div>
+        <!-- 2026-08-05: titulo "Por estatus (empresas)" -> "Estatus por Empresa" (pedido Matias) -->
+        <div class="section-header"><i class="bi bi-building"></i> Estatus por Empresa</div>
         <div class="chart-box"><canvas id="chartEmpresa"></canvas></div>
       </div>
     </div>
-    {% endif %}
+    <!-- 2026-08-05: chart "Por estatus" (doughnut, chartEstado) eliminado -- pedido Matias en reunion,
+         se conserva chartEmpresa arriba que ya cubre el desglose por estatus (empresas) -->
     <div class="col-md-6">
       <div class="section">
-        <div class="section-header"><i class="bi bi-stoplights-fill"></i> Por estado</div>
-        <div class="chart-box"><canvas id="chartEstado"></canvas></div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="section">
-        <div class="section-header"><i class="bi bi-bar-chart-fill"></i> Por tipo</div>
+        <!-- 2026-08-05: label "Por tipo" -> "Entidad", pedido Matias -- SQL sigue agrupando por tipo -->
+        <div class="section-header"><i class="bi bi-bar-chart-fill"></i> Entidad</div>
         <div class="chart-box"><canvas id="chartTipo"></canvas></div>
       </div>
     </div>
@@ -156,9 +156,8 @@
 <script id="dashboard-data" type="application/json" data-endpoint="{{ url_for('obligaciones.dashboard_obligaciones_data') }}">
 {{ {
   "kpis": data.kpis,
-  "por_estado": data.por_estado,
   "por_tipo": data.por_tipo,
-  "por_estado_total": data.por_estado_total,
+  "por_estatus_total": data.por_estatus_total,
   "pct_cumplidas": data.pct_cumplidas
 } | tojson }}
 </script>

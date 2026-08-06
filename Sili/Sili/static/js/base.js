@@ -307,8 +307,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-
-/* Confirmar submit con data-confirm="mensaje" -- global, cualquier módulo */
+/* 2026-08-06: fusion manual desde sync (Paso 8) — handler global exclusivo LOCAL, usado por multiples modulos (data-confirm) */
 document.addEventListener("submit", function (e) {
   const msg = e.target && e.target.dataset ? e.target.dataset.confirm : null;
   if (msg && !confirm(msg)) { e.preventDefault(); }
