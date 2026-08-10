@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+{% block title %}Planificador – Indicadores{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador_indicadores.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <div>
+      <h4 class="mb-0"><i class="bi bi-bar-chart-line me-1"></i>Indicadores — Voucher</h4>
+      <p class="text-muted mb-0 small">Solicitudes de tipo Voucher: uso, costos y participación por usuario/departamento.</p>
+    </div>
+    <a href="{{ url_for('planificador.planificador_solicitudes') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Volver a Solicitudes
+    </a>
+  </div>
+
+  {# ── Filtros ── #}
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body py-2">
+      <form method="get" action="{{ url_for('planificador.planificador_indicadores') }}"
+            class="row g-2 align-items-end">
+        <div class="col-sm-3">
+          <label class="form-label form-label-sm fw-semibold mb-1">Desde</label>
+          <input type="date" class="form-control form-control-sm" name="fecha_desde" value="{{ fecha_desde }}">
+        </div>
+        <div class="col-sm-3">
+          <label class="form-label form-label-sm fw-semibold mb-1">Hasta</label>
+          <input type="date" class="form-control form-control-sm" name="fecha_hasta" value="{{ fecha_hasta }}">
+        </div>
+        <div class="col-sm-3">
+          <label class="form-label form-label-sm fw-semibold mb-1">Área / Departamento</label>
+          <select class="form-select form-select-sm" name="area">
+            <option value="" {% if not area_sel %}selected{% endif %}>— Todas —</option>
+            {% for d in departamentos %}
+            <option value="{{ d.nombre }}" {% if area_sel == d.nombre %}selected{% endif %}>{{ d.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <button type="submit" class="btn btn-primary btn-sm w-100">
+            <i class="bi bi-search me-1"></i>Consultar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {# ── KPI cards ── #}
+  <div class="row g-3 mb-3 ind-kpi-row">
+    <div class="col-6 col-md-3 col-lg">
+      <div class="card ind-kpi-card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="ind-kpi-label">Solicitudes</div>
+          <div class="ind-kpi-value">{{ kpi.total_solicitudes or 0 }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <div class="card ind-kpi-card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="ind-kpi-label">Vouchers solicitados</div>
+          <div class="ind-kpi-value">{{ kpi.total_vouchers or 0 }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <div class="card ind-kpi-card ind-kpi-card--ok border-0 shadow-sm">
+        <div class="card-body">
+          <div class="ind-kpi-label">Confirmados</div>
+          <div class="ind-kpi-value">{{ kpi.confirmados or 0 }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <div class="card ind-kpi-card ind-kpi-card--muted border-0 shadow-sm">
+        <div class="card-body">
+          <div class="ind-kpi-label">No utilizados</div>
+          <div class="ind-kpi-value">{{ kpi.no_utilizados or 0 }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <div class="card ind-kpi-card ind-kpi-card--warn border-0 shadow-sm">
+        <div class="card-body">
+          <div class="ind-kpi-label">Pend. entrega</div>
+          <div class="ind-kpi-value">{{ kpi.pend_entrega or 0 }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <button type="button"
+              class="card ind-kpi-card ind-kpi-card--warn ind-kpi-card--clickable border-0 shadow-sm w-100 text-start"
+              data-bs-toggle="collapse" data-bs-target="#pendConfDetalle" aria-expanded="true"
+              aria-controls="pendConfDetalle">
+        <div class="card-body">
+          <div class="ind-kpi-label">
+            Pend. confirmación
+            <i class="bi bi-chevron-down ind-kpi-chevron"></i>
+          </div>
+          <div class="ind-kpi-value">{{ kpi.pend_confirmacion or 0 }}</div>
+        </div>
+      </button>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <div class="card ind-kpi-card ind-kpi-card--danger border-0 shadow-sm">
+        <div class="card-body">
+          <div class="ind-kpi-label">Escalados (6+ días)</div>
+          <div class="ind-kpi-value">{{ kpi.escalados or 0 }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <div class="card ind-kpi-card ind-kpi-card--money border-0 shadow-sm">
+        <div class="card-body">
+          <div class="ind-kpi-label">Costo total</div>
+          <div class="ind-kpi-value">${{ '%.2f'|format(kpi.costo_total|float) if kpi.costo_total else '0.00' }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <div class="card ind-kpi-card ind-kpi-card--money border-0 shadow-sm">
+        <div class="card-body">
+          <div class="ind-kpi-label">Costo promedio</div>
+          <div class="ind-kpi-value">${{ '%.2f'|format(kpi.costo_promedio|float) if kpi.costo_promedio else '0.00' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# ── Gráficos ── #}
+  <div class="row g-3 mb-3">
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-2">Distribución por estado</h6>
+          <div class="ind-chart-wrap"><canvas id="chartEstado"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-2">Tendencia mensual (vouchers y costo)</h6>
+          <div class="ind-chart-wrap"><canvas id="chartTendencia"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-2">Top usuarios que más solicitan</h6>
+          <div class="ind-chart-wrap ind-chart-wrap--tall"><canvas id="chartUsuarios"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-2">Por departamento</h6>
+          <div class="ind-chart-wrap ind-chart-wrap--tall"><canvas id="chartDepartamentos"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# ── Drill-down: Pend. confirmación → Departamento → Usuario → Voucher ── #}
+  <div class="collapse show mb-3" id="pendConfDetalle">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h6 class="fw-semibold mb-2">
+          <i class="bi bi-hourglass-split me-1"></i>Pendientes de confirmación — por departamento
+        </h6>
+        {% if pend_conf_detalle %}
+        {% for bucket in pend_conf_detalle %}
+        {% set ai = loop.index %}
+        <div class="ind-drill-card">
+          <button type="button" class="ind-drill-toggle" data-bs-toggle="collapse"
+                  data-bs-target="#pcArea{{ ai }}" aria-expanded="false">
+            <span><i class="bi bi-building me-1"></i>{{ bucket.area }}</span>
+            <span class="d-flex align-items-center gap-2">
+              <span class="badge bg-warning text-dark">{{ bucket.total }}</span>
+              <i class="bi bi-chevron-down ind-drill-chevron"></i>
+            </span>
+          </button>
+          <div class="collapse" id="pcArea{{ ai }}">
+            <div class="ind-drill-body">
+              {% for u in bucket.usuarios %}
+              {% set ui = loop.index %}
+              <div class="ind-drill-card ind-drill-card--sub">
+                <button type="button" class="ind-drill-toggle" data-bs-toggle="collapse"
+                        data-bs-target="#pcUser{{ ai }}-{{ ui }}" aria-expanded="false">
+                  <span><i class="bi bi-person me-1"></i>{{ u.usuario_nombre }}</span>
+                  <span class="d-flex align-items-center gap-2">
+                    <span class="badge bg-secondary">{{ u.total }}</span>
+                    <i class="bi bi-chevron-down ind-drill-chevron"></i>
+                  </span>
+                </button>
+                <div class="collapse" id="pcUser{{ ai }}-{{ ui }}">
+                  <div class="ind-drill-body ind-drill-body--table">
+                    <table class="table table-sm mb-0">
+                      <thead>
+                        <tr>
+                          <th>Solicitud</th><th>Voucher #</th><th>Secuencial</th>
+                          <th>Ruta</th><th class="text-end">Días pendiente</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for it in u.vouchers %}
+                        <tr>
+                          <td>#{{ it.solicitud_id }}</td>
+                          <td>{{ it.numero }}</td>
+                          <td>{{ it.secuencial or '—' }}</td>
+                          <td class="small">{{ it.origen or '—' }} → {{ it.destino or '—' }}</td>
+                          <td class="text-end {% if it.dias_pendiente >= 6 %}text-danger fw-semibold{% elif it.dias_pendiente >= 3 %}text-warning fw-semibold{% endif %}">
+                            {{ it.dias_pendiente }}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted mb-0">No hay vouchers pendientes de confirmación en el rango seleccionado.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {# ── Tablas ── #}
+  <div class="row g-3 mb-3">
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-2">Detalle por usuario</h6>
+          <div class="table-responsive ind-tabla-wrap">
+            <table class="table table-sm table-striped mb-0">
+              <thead>
+                <tr><th>Usuario</th><th class="text-end">Solicitudes</th><th class="text-end">Vouchers</th><th class="text-end">Costo</th></tr>
+              </thead>
+              <tbody>
+                {% for r in por_usuario %}
+                <tr>
+                  <td>{{ r.solicitante_nombre }}</td>
+                  <td class="text-end">{{ r.num_solicitudes }}</td>
+                  <td class="text-end">{{ r.num_vouchers }}</td>
+                  <td class="text-end">${{ '%.2f'|format(r.costo_total|float) }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center text-muted">Sin datos en el rango seleccionado.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-2">Rutas más frecuentes</h6>
+          <div class="table-responsive ind-tabla-wrap">
+            <table class="table table-sm table-striped mb-0">
+              <thead>
+                <tr><th>Origen → Destino</th><th class="text-end">Veces</th><th class="text-end">Costo prom.</th></tr>
+              </thead>
+              <tbody>
+                {% for r in top_rutas %}
+                <tr>
+                  <td class="small">{{ r.origen }} → {{ r.destino }}</td>
+                  <td class="text-end">{{ r.cantidad }}</td>
+                  <td class="text-end">${{ '%.2f'|format(r.costo_promedio|float) if r.costo_promedio is not none else '—' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3" class="text-center text-muted">Sin datos en el rango seleccionado.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="indicadoresData" data-chart='{{ chart_data | tojson }}' hidden></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/planificador/indicadores.js') }}"></script>
+{% endblock %}

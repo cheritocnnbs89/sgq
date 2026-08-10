@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>TRABELECT S.A. TRABAJOS ELECTRICOS</razonSocial><nombreComercial>TRABELECT S.A.</nombreComercial><ruc>0992390867001</ruc><claveAcceso>0807202601099239086700120010020000459691356588210</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>002</ptoEmi><secuencial>000045969</secuencial><dirMatriz>CDLA LOS ESTEROS MZ 15A2 SOLAR 42</dirMatriz><agenteRetencion>10</agenteRetencion></infoTributaria><infoFactura><fechaEmision>08/07/2026</fechaEmision><dirEstablecimiento>CDLA LOS ESTEROS MZ 15A2 SOLAR 42</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><totalSinImpuestos>440.00</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>440.00</baseImponible><tarifa>4</tarifa><valor>66.00</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>506.00</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>506.00</total><plazo>30</plazo><unidadTiempo>DIAS</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>723594-01</codigoPrincipal><descripcion>FUENTE DE PODER HP 500W 723594-01;SERIES:5DMWA0CLL917UW:5DMVV0A4D7Q6S3;;OC:1000618149 I:5000169641</descripcion><cantidad>2.00</cantidad><precioUnitario>220.00</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>440.00</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>440.00</baseImponible><valor>66.00</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Dirección:">KM 16.5 VIA DAULE</campoAdicional><campoAdicional nombre="Teléfono:">042162660</campoAdicional><campoAdicional nombre="Correo:">compras.electronica@quimpac.com.ec</campoAdicional><campoAdicional nombre="Vendedor:">NIEVES JOZA AQUI</campoAdicional><campoAdicional nombre="Forma pago:">Créd. 30 días</campoAdicional><campoAdicional nombre="Observación:">OC:1000618149 I:5000169641</campoAdicional><campoAdicional nombre="Orden de Compra">1000618149</campoAdicional><campoAdicional nombre="Informativo:">AGENTE DE RETENCION Resol. 10</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature38938">
+<ds:SignedInfo Id="Signature-SignedInfo272244">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID793498" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature38938-SignedProperties629958">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>+2++LYa/q9X8/hWkliG7gdY87/I=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate12816">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>I1jhV1IM2SFoDYN0kviO+sZC43E=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-871486" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>9Vb4zWfQQauCjOulGqLelfpMEq0=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue899007">
+n78cqTVNysDwMEWjZvP2RZTnYrXV6CqG2lp8jZ/BvlhTkXmWMdD9qGCUFa2CyB1jRSoL+F2dtfbW
+NkzMs2s+frppMVDVjO65WUDG3p0OXiNR9WKdCRSccqulsi+6QHOVB+NbKt4N4WgRMzGPWJ6BATSQ
+ElXk3iHszMHg+mGaRzdaNR7wmrxABh3injLOpmA84boqQjoq0KCoDBQ5nf357YSkg5P/4Tm91WRc
+RlD2jjsw9HDGJYTQr9kh+AVUl03oELB0mdjmKsfARVSbKI0RozMEQbeSgpwiX90GC8Q4RHK3gTET
+lS4kQPEsTDvwEVBnguQtwhLCX93jC/7PIHw3yw==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate12816">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIL7DCCCdSgAwIBAgIEQNEdZjANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMjEwMzExNDQyMDhaFw0yNzEwMzExNDQyMDhaMIGXMSAw
+HgYDVQQDDBdOSUVWRVMgTUFSSUEgSk9aQSBBVVFVSTEVMBMGA1UEBRMMMzExMDIyMDk1MTUyMTAw
+LgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoM
+FFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEBBQADggEP
+ADCCAQoCggEBAMv0o50ZkC1xRLle8Br1Fl4P5ITKqgJIfMOxtCRG2fXnjfUD7ecy+986BWOPiJ2J
+P/Aa3A7fJetEDPo2RFA0Vlabh3qf8UL1TnhXseRWO+2at1pYs/ANiDweq29v68d4AG1DQ3KhoCwp
+VEsixXLnP5SCZGOIh2Slb0sIU2XeQXp2KNm49D2YZ4hQbimZiawNKG6maFO2XFtGU/mG/auwR4o/
+57QUpoQtnyqobD9aHvS+xXCnyCdyOUaAipvQy/hXOm4doDnwX7pk1gW944wxAS+AO4O+cKx0Zaa6
+vmZmwWJaaitz/0+RzXppedc1dQE6a9FLmNxkggP51DHhpvsG9T0CAwEAAaOCBzowggc2MAwGA1Ud
+EwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUHAQEETTBL
+MEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVi
+bGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhsZGFwOi8vbGRhcHNk
+Y2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VC
+Q0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1B
+Q0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0aW9uTGlzdD9iYXNl
+MB4GA1UdEQQXMBWBE25qb3phQHRyYWJlbGVjdC5uZXQwggEVBgNVHSAEggEMMIIBCDBiBgorBgEE
+AYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIA
+ZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8G
+CCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rv
+d25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZp
+Y2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjCCAqIGA1UdHwSCApkwggKVMIHloEGgP4Y9aHR0
+cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2Nz
+cKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBT
+RUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JN
+QUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCBx6CBxKCB
+wYaBvmxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9jZXJ0aWZp
+Y2F0ZVJldm9jYXRpb25MaXN0P2Jhc2UwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRv
+cjIuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9j
+bWQ9Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VS
+SVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VD
+VVJJVFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUwNWxhfgww8xAxR3vksNK+iKDj5MwKwYD
+VR0QBCQwIoAPMjAyMjEwMzExNDQyMDhagQ8yMDI3MTAzMTE0NDIwOFowCwYDVR0PBAQDAgXgMB8G
+CisGAQQBgqZyAwUEEQwPR0VSRU5URSBHRU5FUkFMMBoGCisGAQQBgqZyAwEEDAwKMDkyNDQ2OTQz
+MDAZBgorBgEEAYKmcgMJBAsMCUdVQVlBUVVJTDARBgorBgEEAYKmcgMiBAMMAS4wGAYKKwYBBAGC
+pnIDBwQKDAhTT0xBUiA0MjAcBgorBgEEAYKmcgMCBA4MDE5JRVZFUyBNQVJJQTAfBgorBgEEAYKm
+cgMgBBEMDzAwMTAwMjAwMDI3NjIyNzATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMM
+BAkMB0VDVUFET1IwFAYKKwYBBAGCpnIDAwQGDARKT1pBMDIGCisGAQQBgqZyAwoEJAwiVFJBQkVM
+RUNUIFMuQS4gVFJBQkFKT1MgRUxFQ1RSSUNPUzAdBgorBgEEAYKmcgMLBA8MDTA5OTIzOTA4Njcw
+MDEwEgYKKwYBBAGCpnIDHQQEDAJObzAVBgorBgEEAYKmcgMEBAcMBUFVUVVJMBoGCisGAQQBgqZy
+AwgEDAwKMDk5NzY5NjY5NzANBgkqhkiG9w0BAQsFAAOCAgEAf4ihqkcDqhS34S0RN+0fZq+9dP5v
+dedpCnZMlYQMAWu4WN2dOTauYAg0nlF2rK11Wf5slTaEqfmL+ycG4PH+iMp6DWX5XAE0/ZPy+XEd
+Gyv03rvenWGvvSjyQcXu+RSVdXq8EMW/klqwBT5R4nOqxWnoNnlPiXyf7mNhtbGNUTostp4kJmRk
+W7aEd426bhl4IqF0XQAEnBbXkGaaG4ecT6dOmTS/8VSGSx84pp36aBet2uAXipUzBd5D8bmoTu2Y
+lis6DTq4ziNmwt+YH/5o4kQa7UQCbXWrfyhg1PAyaoCzcbioIXUCeCVC+aM8cF7VbdLjgzSpbKYQ
+hS00S3I02aTzqmdT6LriUN0vs0qUpsfAA3PyNrip/87NxmBiCURLU96sBwVbMIuU9duUnV7Jmo9g
+HwVIqRJiWB6pDiJlOKCU5paJ+35yGrQ6vrpQvkdbx2BkChFPmwRfyEIcaqEVtK+g79efM70w/ARg
+JyJPwNK/2JFmpeke0bMSaQ2nPcSmX9wkRsRUto7UsnvwqhqMOGtRd1HGn902HQqSs0+ICI/CyqCb
+Axr+UK2E3V+MHNKBMt6Szo4lpmSKG31paIWSUEkT3KEuJBvNoLe6WtzkxiKLZ0mBFKDlfbqTpu36
+AJgUrOP2S2ElpYI0aDv30u4Z7z0NAWGRFeZNNuA1q1PjlxI=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+y/SjnRmQLXFEuV7wGvUWXg/khMqqAkh8w7G0JEbZ9eeN9QPt5zL73zoFY4+InYk/8BrcDt8l60QM
++jZEUDRWVpuHep/xQvVOeFex5FY77Zq3Wliz8A2IPB6rb2/rx3gAbUNDcqGgLClUSyLFcuc/lIJk
+Y4iHZKVvSwhTZd5BenYo2bj0PZhniFBuKZmJrA0obqZoU7ZcW0ZT+Yb9q7BHij/ntBSmhC2fKqhs
+P1oe9L7FcKfIJ3I5RoCKm9DL+Fc6bh2gOfBfumTWBb3jjDEBL4A7g75wrHRlprq+ZmbBYlpqK3P/
+T5HNeml51zV1ATpr0UuY3GSCA/nUMeGm+wb1PQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature38938-Object930857"><etsi:QualifyingProperties Target="#Signature38938"><etsi:SignedProperties Id="Signature38938-SignedProperties629958"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-08T13:57:04-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>TDoSAnX4LGaexzTtNUfxBS4mxpQ=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1087446374</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-871486"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

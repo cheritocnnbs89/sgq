@@ -1,0 +1,2234 @@
+{
+  "generated_at": "2026-07-21 16:02",
+  "total": 247,
+  "by_severity": {
+    "ALTO": 166,
+    "MEDIO": 32,
+    "BAJO": 49
+  },
+  "findings": [
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "app copy.py",
+      "line": 462,
+      "snippet": "@app.route(\"/\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "app copy.py",
+      "line": 541,
+      "snippet": "@app.route('/g/<token>', methods=['GET'], endpoint='gateway_disp')",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "token_no_expiry",
+      "stride": "S",
+      "severity": "ALTO",
+      "file": "app copy.py",
+      "line": 541,
+      "snippet": "@app.route('/g/<token>', methods=['GET'], endpoint='gateway_disp')",
+      "detail": "Endpoint de token sin verificación de expiración — agregar validez máxima (ej. 72h)."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "app copy.py",
+      "line": 656,
+      "snippet": "@app.route(\"/bi\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "app.py",
+      "line": 172,
+      "snippet": "@app.route(\"/bi\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "app.py",
+      "line": 182,
+      "snippet": "@app.route(\"/csp-report\", methods=[\"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "crear_db.py",
+      "line": 215,
+      "snippet": "cur.execute(f\"PRAGMA table_info({table})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "crear_db.py",
+      "line": 263,
+      "snippet": "cur.execute(f\"ALTER TABLE usuarios ADD COLUMN {col} {typ}\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/app_core/app_gateway.py",
+      "line": 73,
+      "snippet": "@app.route(\"/g/<token>\", methods=[\"GET\"], endpoint=\"gateway_disp\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/app_core/app_routes.py",
+      "line": 308,
+      "snippet": "@app.route(\"/\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/auth/routes_auth.py",
+      "line": 125,
+      "snippet": "@app.route('/', methods=['GET', 'POST'])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/auth/routes_auth.py",
+      "line": 268,
+      "snippet": "@app.route('/logout', methods=['POST'])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/auth/routes_auth.py",
+      "line": 292,
+      "snippet": "@app.route('/forgot_password', methods=['GET', 'POST'])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/auth/routes_auth.py",
+      "line": 307,
+      "snippet": "@app.route('/verificar_codigo', methods=['GET', 'POST'])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/auth/routes_auth.py",
+      "line": 333,
+      "snippet": "@app.route('/establecer_clave', methods=['GET', 'POST'])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/auth/routes_auth.py",
+      "line": 387,
+      "snippet": "@app.route('/verificar_login_codigo', methods=['GET', 'POST'])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/db_security_migrations.py",
+      "line": 13,
+      "snippet": "cur.execute(f\"ALTER TABLE usuarios ADD COLUMN {col} {decl}\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_dashboard_helper.py",
+      "line": 120,
+      "snippet": "WHERE {' AND '.join(where_ing + vis_where)}",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_dashboard_helper.py",
+      "line": 138,
+      "snippet": "WHERE {' AND '.join(where_pen + vis_where)}",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_exports.py",
+      "line": 409,
+      "snippet": "where.append(f\"g.usuario_id IN ({placeholders})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_exports.py",
+      "line": 637,
+      "snippet": "where.append(f\"g.usuario_id IN ({placeholders})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 93,
+      "snippet": "where.append(\"LOWER(g.centro_costo) LIKE ?\"); args.append(f\"%{centro.lower()}%\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 95,
+      "snippet": "where.append(\"LOWER(g.motivo) LIKE ?\"); args.append(f\"%{motivo.lower()}%\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 217,
+      "snippet": "where.append(f\"({ga_step_pending_sql})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 467,
+      "snippet": "where.append(f\"({ga_step_pending_sql})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 657,
+      "snippet": "cur.execute(f\"PRAGMA table_info({table})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 663,
+      "snippet": "cur.execute(f\"ALTER TABLE {table} ADD COLUMN {col} {decl}\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 665,
+      "snippet": "cur.execute(f\"UPDATE {table} SET {col}=?\", (default,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 719,
+      "snippet": "cur.execute(f'CREATE INDEX IF NOT EXISTS idx_gastos_tc_fecha ON {TABLE_GASTOS}(fecha)')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 720,
+      "snippet": "cur.execute(f'CREATE INDEX IF NOT EXISTS idx_gastos_tc_usuario ON {TABLE_GASTOS}(usuario_id)')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 721,
+      "snippet": "cur.execute(f'CREATE INDEX IF NOT EXISTS ix_{TABLE_GASTOS}_proveedor_id ON {TABLE_GASTOS}(proveedor_id)')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_helpers.py",
+      "line": 797,
+      "snippet": "cur.execute(f\"CREATE INDEX IF NOT EXISTS ix_{TABLE_GASTOS}_proveedor_id ON {TABLE_GASTOS}(proveedor_id)\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_repository.py",
+      "line": 173,
+      "snippet": "cur.execute(f\"DELETE FROM {TABLE_ARCHIVOS} WHERE gasto_id = ?\", (gasto_id,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_repository.py",
+      "line": 234,
+      "snippet": "where = [\"1 = 1\", f\"f.estado = '{FACTURA_XML_PENDIENTE}'\"]",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_repository.py",
+      "line": 383,
+      "snippet": "sql += f\" WHERE g.id IN ({ph})\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_repository.py",
+      "line": 602,
+      "snippet": "cur.execute(f\"DELETE FROM {TABLE_DETALLE} WHERE gasto_id = ?\", (gasto_id,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_repository.py",
+      "line": 603,
+      "snippet": "cur.execute(f\"DELETE FROM {TABLE_ARCHIVOS} WHERE gasto_id = ?\", (gasto_id,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_repository.py",
+      "line": 604,
+      "snippet": "cur.execute(f\"DELETE FROM {TABLE_GASTOS} WHERE id = ?\", (gasto_id,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos/gastos_xml_service.py",
+      "line": 79,
+      "snippet": "raise ValueError(f\"XML inválido: {exc}\") from exc",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_dashboard_helper.py",
+      "line": 120,
+      "snippet": "WHERE {' AND '.join(where_ing + vis_where)}",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_dashboard_helper.py",
+      "line": 138,
+      "snippet": "WHERE {' AND '.join(where_pen + vis_where)}",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_exports.py",
+      "line": 408,
+      "snippet": "where.append(f\"g.usuario_id IN ({placeholders})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_exports.py",
+      "line": 667,
+      "snippet": "where.append(f\"g.usuario_id IN ({placeholders})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 153,
+      "snippet": "cur.execute(f\"SELECT tipo_gasto FROM {TBL_FLUJO_REQUERIDO} WHERE tipo_gasto = ?\", (tipo,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 323,
+      "snippet": "cur.execute(f\"DELETE FROM {TBL_AUTO_REGISTRO_REGLAS} WHERE id = ?\", (regla_id,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 333,
+      "snippet": "cur.execute(f\"UPDATE {TBL_AUTO_REGISTRO_REGLAS} SET activo = ? WHERE id = ?\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 509,
+      "snippet": "where.append(f\"({ga_step_pending_sql}) = 1\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 712,
+      "snippet": "where.append(f\"({ga_step_pending_sql}) = 1\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 899,
+      "snippet": "cur.execute(f\"PRAGMA table_info({table})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 905,
+      "snippet": "cur.execute(f\"ALTER TABLE {table} ADD COLUMN {col} {decl}\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 907,
+      "snippet": "cur.execute(f\"UPDATE {table} SET {col}=?\", (default,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 961,
+      "snippet": "cur.execute(f'CREATE INDEX IF NOT EXISTS idx_gastos_tc_fecha ON {TABLE_GASTOS}(fecha)')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 962,
+      "snippet": "cur.execute(f'CREATE INDEX IF NOT EXISTS idx_gastos_tc_usuario ON {TABLE_GASTOS}(usuario_id)')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 963,
+      "snippet": "cur.execute(f'CREATE INDEX IF NOT EXISTS ix_{TABLE_GASTOS}_proveedor_id ON {TABLE_GASTOS}(proveedor_id)')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/gastos_helpers.py",
+      "line": 1039,
+      "snippet": "cur.execute(f\"CREATE INDEX IF NOT EXISTS ix_{TABLE_GASTOS}_proveedor_id ON {TABLE_GASTOS}(proveedor_id)\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_http.py",
+      "line": 17,
+      "snippet": "@menu_bp.route(\"/config/menu\", methods=[\"GET\"], endpoint=\"menu_admin\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_http.py",
+      "line": 34,
+      "snippet": "@menu_bp.route(\"/config/menu/new\", methods=[\"GET\", \"POST\"], endpoint=\"menu_new\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_http.py",
+      "line": 35,
+      "snippet": "@menu_bp.route(\"/config/menu/<int:item_id>/edit\", methods=[\"GET\", \"POST\"], endpoint=\"menu_edit\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_queries.py",
+      "line": 48,
+      "snippet": "return f\"SELECT COUNT(*) FROM {SCHEMA_NAME}.{MENU_TABLE}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_queries.py",
+      "line": 100,
+      "snippet": "return f\"SELECT * FROM {SCHEMA_NAME}.{MENU_TABLE} WHERE id = ?\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_queries.py",
+      "line": 130,
+      "snippet": "return f\"UPDATE {SCHEMA_NAME}.{MENU_TABLE} SET endpoint = ? WHERE id = ?\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_queries.py",
+      "line": 134,
+      "snippet": "return f\"DELETE FROM {SCHEMA_NAME}.{MENU_TABLE} WHERE id = ?\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_queries.py",
+      "line": 173,
+      "snippet": "return f\"SELECT id FROM {SCHEMA_NAME}.{ROLES_TABLE} WHERE LOWER(nombre) = 'admin'\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_repository.py",
+      "line": 232,
+      "snippet": "f\"SELECT * FROM {SCHEMA_NAME}.{table_name} WHERE id = ?\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_repository.py",
+      "line": 289,
+      "snippet": "f\"DELETE FROM {SCHEMA_NAME}.{table_name} WHERE id = ?\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_services.py",
+      "line": 240,
+      "snippet": "print(f\"[save_menu_item] insert OK new_id={new_id}, llamando sync_permissions_from_menu\", flush=True)",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/menu/menu_services.py",
+      "line": 428,
+      "snippet": "f\"/{slug}/<int:item_id>/delete\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/om_chat_service.py",
+      "line": 1032,
+      "snippet": "f\"Devuelve SOLO el SQL corregido como JSON: {{\\\"sql\\\":\\\"SELECT ...\\\"}}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/reclamos/routes_reclamos_pdf.py",
+      "line": 456,
+      "snippet": "raise RuntimeError(f\"Error al generar PDF: {exc}\") from exc",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/reclamos/routes_reclamos_querys.py",
+      "line": 752,
+      "snippet": "SELECT ', ' + COALESCE(u.username, '')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/reclamos/routes_reclamos_querys.py",
+      "line": 2541,
+      "snippet": "SQL__RECLAMOS_EDITAR_PROCESO_SEL_1 = f\"SELECT valor FROM {T_PARAM_VALUES} WHERE id = ?\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/reclamos/routes_reclamos_querys.py",
+      "line": 2543,
+      "snippet": "SQL__RECLAMOS_EDITAR_PROCESO_SEL_2 = f\"SELECT id, codigo FROM {T_RECLAMOS} WHERE id = ?\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/reclamos/routes_reclamos_querys.py",
+      "line": 2545,
+      "snippet": "SQL__RECLAMOS_EDITAR_PROCESO_UPD_3 = f\"UPDATE {T_RECLAMOS} SET proceso_id = ?, proceso_text = ? WHERE id = ?\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/reclamos/routes_reclamos_querys.py",
+      "line": 2566,
+      "snippet": "SQL__RECLAMOS_EDITAR_PROCESO_SEL_6 = f\"SELECT imputado_id FROM {T_RECLAMO_IMPUTADOS} WHERE reclamo_id = ? AND COALESCE(a",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/reclamos/routes_reclamos_querys.py",
+      "line": 2568,
+      "snippet": "SQL__RECLAMOS_EDITAR_PROCESO_UPD_7 = f\"\"\"UPDATE {T_RECLAMO_IMPUTADOS}",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/reclamos/routes_reclamos_querys.py",
+      "line": 2575,
+      "snippet": "SELECT DISTINCT ', ' + COALESCE(u.username, '')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_config.py",
+      "line": 122,
+      "snippet": "cur.execute(f\"SELECT COUNT(1) AS c FROM {table} WHERE {kcol}=?\", (key,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_config.py",
+      "line": 127,
+      "snippet": "cur.execute(f\"UPDATE {table} SET {vcol}=? WHERE {kcol}=?\", (value, key))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_config.py",
+      "line": 129,
+      "snippet": "cur.execute(f\"INSERT INTO {table}({kcol},{vcol}) VALUES (?,?)\", (key, value))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_email_bandeja.py",
+      "line": 271,
+      "snippet": "f\"WHERE inbox_id IN ({placeholders}) GROUP BY inbox_id\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 178,
+      "snippet": "where.append(f\"COALESCE({user_alias}.empresa_id, -1) = ?\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 360,
+      "snippet": "cur.execute(\"UPDATE secuencias_sap SET ultimo_valor = ultimo_valor + 1 WHERE nombre = ?\", (nombre_secuencia,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 545,
+      "snippet": "cur.execute(f\"\"\"UPDATE {TABLE_GASTOS}",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 550,
+      "snippet": "cur.execute(f\"\"\"UPDATE {TABLE_GASTOS}",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 557,
+      "snippet": "cur.execute(f\"\"\"UPDATE {TABLE_GASTOS}",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 1324,
+      "snippet": "where.append(f\"g.usuario_id IN ({placeholders})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 1786,
+      "snippet": "where.append(f\"g.usuario_id IN ({placeholders})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 1906,
+      "snippet": "sql = f\"SELECT {select_cols} {base_from}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 2337,
+      "snippet": "sql = f\"SELECT {select_cols} {base_from}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 2650,
+      "snippet": "where.append(f\"g.usuario_id IN ({placeholders})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 2771,
+      "snippet": "sql = f\"SELECT {select_cols} {base_from}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 3036,
+      "snippet": "cur.execute(f\"SELECT id, archivo FROM {TABLE_GASTOS} WHERE id=?\", (gid,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 3244,
+      "snippet": "cur.execute(f\"SELECT * FROM {TABLE_GASTOS} WHERE id=?\", (_id,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 3252,
+      "snippet": "cur.execute(f\"DELETE FROM {TABLE_GASTOS} WHERE id=?\", (_id,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 4031,
+      "snippet": "f\"SELECT COUNT(1) AS n FROM {TABLE_GASTOS} WHERE numero_factura = ?\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 4656,
+      "snippet": "cur_chk.execute(f\"SELECT usuario_id FROM {TABLE_GASTOS} WHERE id = ?\", (gasto_id,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 4728,
+      "snippet": "cur.execute(f\"SELECT COUNT(1) AS n FROM {TABLE_GASTOS} WHERE factura_xml_id=?\", (fid,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 6088,
+      "snippet": "where.append(f\"g.usuario_id IN ({ph})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 7292,
+      "snippet": "f\"UPDATE {TABLE_GASTOS} \"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 7318,
+      "snippet": "f\"UPDATE {TABLE_GASTOS} \"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 7341,
+      "snippet": "f\"UPDATE {TABLE_GASTOS} \"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_notifications.py",
+      "line": 824,
+      "snippet": "@notif_bp.route(\"/templates/new\", methods=[\"GET\", \"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_notifications.py",
+      "line": 846,
+      "snippet": "@notif_bp.route(\"/templates/edit/<key>\", methods=[\"GET\", \"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_notifications.py",
+      "line": 893,
+      "snippet": "@notif_bp.route(\"/prefs/edit/<int:user_id>\", methods=[\"GET\",\"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1005,
+      "snippet": "@planilla_bp.route(\"/\", methods=[\"GET\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1062,
+      "snippet": "f\"SELECT tarea_id, fecha, checked FROM plan_checks WHERE fecha BETWEEN ? AND ? AND tarea_id IN ({ph_t})\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1068,
+      "snippet": "f\"SELECT tarea_id, fecha, file_name, obs FROM plan_evidencias WHERE fecha BETWEEN ? AND ? AND tarea_id IN ({ph_t})\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1333,
+      "snippet": "@planilla_bp.route(\"/tareas\", methods=[\"GET\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1359,
+      "snippet": "@planilla_bp.route(\"/tareas/nueva\", methods=[\"GET\", \"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1436,
+      "snippet": "@planilla_bp.route(\"/tareas/<int:tid>/editar\", methods=[\"GET\", \"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1550,
+      "snippet": "@planilla_bp.route(\"/tareas/<int:tid>/eliminar\", methods=[\"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1563,
+      "snippet": "@planilla_bp.route(\"/config/plantilla\", methods=[\"GET\", \"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1620,
+      "snippet": "@planilla_bp.route(\"/config/departamento\", methods=[\"GET\", \"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1747,
+      "snippet": "@planilla_bp.route(\"/api/okrs\", methods=[\"GET\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1758,
+      "snippet": "@planilla_bp.route(\"/api/okrs\", methods=[\"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1777,
+      "snippet": "@planilla_bp.route(\"/api/okrs/<int:okr_id>/resultados-clave\", methods=[\"GET\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1789,
+      "snippet": "@planilla_bp.route(\"/api/resultados-clave\", methods=[\"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_puestos.py",
+      "line": 32,
+      "snippet": "cur.execute(f\"PRAGMA table_info({table})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_puestos.py",
+      "line": 223,
+      "snippet": "cur.execute(f\"SELECT COUNT(*) AS n FROM puestos {where_sql}\", args)",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_reclamos.py",
+      "line": 195,
+      "snippet": "cur.execute(f\"PRAGMA table_info({table})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_reclamos.py",
+      "line": 460,
+      "snippet": "cur.execute(f\"PRAGMA table_info({table})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_reclamos.py",
+      "line": 3182,
+      "snippet": "SELECT DISTINCT ', ' + COALESCE(ui2.username, '')",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_reclamos.py",
+      "line": 3215,
+      "snippet": "SELECT DISTINCT ', ' + COALESCE(u2.nombre_completo, u2.username)",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_reclamos.py",
+      "line": 3470,
+      "snippet": "SELECT DISTINCT ', ' + COALESCE(u2.nombre_completo, u2.username)",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_reclamos.py",
+      "line": 3737,
+      "snippet": "f\"UPDATE reclamos SET gg_notificado=1, gg_notificado_fecha=? WHERE id IN ({','.join(['?']*len(ids))})\",",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6078,
+      "snippet": "return \"WHERE \" + open_condition",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_roles_permisos copy.py",
+      "line": 283,
+      "snippet": "cur.execute(f\"PRAGMA table_info({table})\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_roles_permisos copy.py",
+      "line": 286,
+      "snippet": "cur.execute(f\"ALTER TABLE {table} ADD COLUMN {col} {decl_sql}\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_roles_permisos copy.py",
+      "line": 288,
+      "snippet": "cur.execute(f\"UPDATE {table} SET {col}=?\", (default,))",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_tareas copy.py",
+      "line": 1511,
+      "snippet": "@app.route(\"/api/inbound/email\", methods=[\"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_tareas.py",
+      "line": 316,
+      "snippet": "@app.route('/api/inbound/email', methods=['POST'])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/routes_tareas.py",
+      "line": 345,
+      "snippet": "@app.route('/encuestas/responder/<token>', methods=['GET', 'POST'])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/routes_terceros.py",
+      "line": 61,
+      "snippet": "cur.execute(f\"ALTER TABLE {table} ADD {col} {decl}\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/scheduler/scheduler_config_repo.py",
+      "line": 63,
+      "snippet": "cur.execute(f\"ALTER TABLE {table} ADD {column} {col_def}\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/scheduler/scheduler_services.py",
+      "line": 242,
+      "snippet": "return [r[\"name\"] for r in conn.execute(f\"PRAGMA table_info({table})\").fetchall()]",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 144,
+      "snippet": "fk_rows = src.execute(f\"PRAGMA foreign_key_list('{table}')\").fetchall()",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 181,
+      "snippet": "rows = src.execute(f\"PRAGMA table_info('{table}')\").fetchall()",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 273,
+      "snippet": "cur.execute(f\"ALTER TABLE {qname(schema, table)} CHECK CONSTRAINT ALL;\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 288,
+      "snippet": "msg = f\"DELETE: {schema}.{table}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 292,
+      "snippet": "cur.execute(f\"DELETE FROM {qname(schema, table)};\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 294,
+      "snippet": "log_info(log_fh, f\"[{table}] ERROR EN DELETE | motivo={exc}\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 300,
+      "snippet": "return src.execute(f\"SELECT COUNT(*) FROM '{table}'\").fetchone()[0]",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 304,
+      "snippet": "sql = f\"SELECT COUNT(*) FROM {qname(schema, table)};\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 310,
+      "snippet": "sql = f\"SELECT {col_sql} FROM {qident(table)}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 317,
+      "snippet": "cur.execute(f\"SELECT ISNULL(MAX([id]), 0) FROM {qname(schema, table)};\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 319,
+      "snippet": "cur.execute(f\"DBCC CHECKIDENT ('{schema}.{table}', RESEED, {max_id});\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 350,
+      "snippet": "insert_sql = f\"INSERT INTO {qname(schema, table)} ({column_list}) VALUES ({placeholders})\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 357,
+      "snippet": "cur.execute(f\"SET IDENTITY_INSERT {qname(schema, table)} ON;\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 387,
+      "snippet": "f\"[{table}] UPDATE EMAIL | id={row_id} | email={row_email}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 395,
+      "snippet": "f\"[{table}] ERROR UPDATE EMAIL | id={row_dict.get('id')} | motivo={upd_exc}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 403,
+      "snippet": "cur.execute(f\"SET IDENTITY_INSERT {qname(schema, table)} OFF;\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/sqlite_to_sqlserver_migracion_skip_y_log.py",
+      "line": 415,
+      "snippet": "cur.execute(f\"SET IDENTITY_INSERT {qname(schema, table)} OFF;\")",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/telegram_webhook.py",
+      "line": 41,
+      "snippet": "@telegram_bp.route(\"/webhook\", methods=[\"POST\"], endpoint=\"telegram_webhook\")",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/users/user_repository.py",
+      "line": 223,
+      "snippet": "sql = f\"SELECT COUNT(*) AS c FROM {tabla} WHERE {columna} = ?\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/users/user_repository.py",
+      "line": 345,
+      "snippet": "sql = f\"UPDATE usuarios SET disabled = 1 WHERE id IN ({placeholders})\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/users/user_services.py",
+      "line": 437,
+      "snippet": "f\"fila {idx}: error inesperado update -> {cols!r} / {e}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "sql_injection",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "modules/users/user_services.py",
+      "line": 508,
+      "snippet": "f\"fila {idx}: error inesperado insert -> {cols!r} / {e}\"",
+      "detail": "Query SQL con interpolación dinámica — usar parámetros posicionales (?, %s)."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/whatsapp/webhook.py",
+      "line": 27,
+      "snippet": "@whatsapp_bp.route(\"/webhook\", methods=[\"GET\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "route_without_auth",
+      "stride": "E",
+      "severity": "ALTO",
+      "file": "modules/whatsapp/webhook.py",
+      "line": 45,
+      "snippet": "@whatsapp_bp.route(\"/webhook\", methods=[\"POST\"])",
+      "detail": "Ruta HTTP sin decorador de autenticación — cualquier usuario puede acceder."
+    },
+    {
+      "check": "dangerous_function",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "tools/security_posture.py",
+      "line": 188,
+      "snippet": "\"\"\"Uso de eval(), exec(), os.system(), subprocess con shell=True.\"\"\"",
+      "detail": "eval() ejecuta código arbitrario"
+    },
+    {
+      "check": "dangerous_function",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "tools/security_posture.py",
+      "line": 188,
+      "snippet": "\"\"\"Uso de eval(), exec(), os.system(), subprocess con shell=True.\"\"\"",
+      "detail": "exec() ejecuta código arbitrario"
+    },
+    {
+      "check": "dangerous_function",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "tools/security_posture.py",
+      "line": 188,
+      "snippet": "\"\"\"Uso de eval(), exec(), os.system(), subprocess con shell=True.\"\"\"",
+      "detail": "os.system() permite inyección de comandos"
+    },
+    {
+      "check": "dangerous_function",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "tools/security_posture.py",
+      "line": 191,
+      "snippet": "(re.compile(r'\\beval\\s*\\('), \"eval() ejecuta código arbitrario\"),",
+      "detail": "eval() ejecuta código arbitrario"
+    },
+    {
+      "check": "dangerous_function",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "tools/security_posture.py",
+      "line": 192,
+      "snippet": "(re.compile(r'\\bexec\\s*\\('), \"exec() ejecuta código arbitrario\"),",
+      "detail": "exec() ejecuta código arbitrario"
+    },
+    {
+      "check": "dangerous_function",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "tools/security_posture.py",
+      "line": 193,
+      "snippet": "(re.compile(r'\\bos\\.system\\s*\\('), \"os.system() permite inyección de comandos\"),",
+      "detail": "os.system() permite inyección de comandos"
+    },
+    {
+      "check": "dangerous_function",
+      "stride": "T",
+      "severity": "ALTO",
+      "file": "tools/security_posture.py",
+      "line": 195,
+      "snippet": "(re.compile(r'\\bpickle\\.(loads?|Unpickler)'), \"pickle.loads con datos externos permite RCE\"),",
+      "detail": "pickle.loads con datos externos permite RCE"
+    },
+    {
+      "check": "upload_mime_not_validated",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/contratos/contratos_services.py",
+      "line": 102,
+      "snippet": "files = request.files.getlist(CAMPO_ARCHIVOS_PDF)",
+      "detail": "Subida de archivo valida solo extensión, no contenido real — usar python-magic."
+    },
+    {
+      "check": "open_redirect",
+      "stride": "S",
+      "severity": "MEDIO",
+      "file": "modules/contratos/routes_contratos.py",
+      "line": 506,
+      "snippet": "return redirect(request.form.get(\"next\") or url_for(\"contratos.contab_lista\"))",
+      "detail": "Redirección abierta — validar que la URL destino sea interna antes de redirigir."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/gastos/gastos_xml_service.py",
+      "line": 8,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/gastos/gastos_xml_service.py",
+      "line": 77,
+      "snippet": "root = ET.fromstring(xml_content)",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/gastos/gastos_xml_service.py",
+      "line": 87,
+      "snippet": "factura_root = ET.fromstring(sanitize_sri_xml(comprobante_raw))",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "upload_mime_not_validated",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/planificador/routes_planificador.py",
+      "line": 1291,
+      "snippet": "archivo = request.files.get(\"adjunto_vuelo\")",
+      "detail": "Subida de archivo valida solo extensión, no contenido real — usar python-magic."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 31,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 37,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 42,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 91,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 99,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 602,
+      "snippet": "return ET.fromstring(inner_xml)",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 609,
+      "snippet": "root = ET.fromstring(text)",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "upload_mime_not_validated",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 4218,
+      "snippet": "files = request.files.getlist('archivo')",
+      "detail": "Subida de archivo valida solo extensión, no contenido real — usar python-magic."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_gatos_mail_notify.py",
+      "line": 9,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "upload_mime_not_validated",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1189,
+      "snippet": "f        = request.files.get(\"file\")",
+      "detail": "Subida de archivo valida solo extensión, no contenido real — usar python-magic."
+    },
+    {
+      "check": "upload_mime_not_validated",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_puestos.py",
+      "line": 391,
+      "snippet": "file = request.files.get('csv_file')",
+      "detail": "Subida de archivo valida solo extensión, no contenido real — usar python-magic."
+    },
+    {
+      "check": "upload_mime_not_validated",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6906,
+      "snippet": "f = request.files.get(\"file\")",
+      "detail": "Subida de archivo valida solo extensión, no contenido real — usar python-magic."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/scheduler/seedbilling_xml_job.py",
+      "line": 19,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/scheduler/seedbilling_xml_job.py",
+      "line": 231,
+      "snippet": "root = ET.fromstring(text.encode(\"utf-8\"))",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/scheduler/seedbilling_xml_job.py",
+      "line": 233,
+      "snippet": "root = ET.fromstring(html.unescape(text).encode(\"utf-8\"))",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/scheduler/seedbilling_xml_job.py",
+      "line": 263,
+      "snippet": "inner_root = ET.fromstring(html.unescape(txt).encode(\"utf-8\"))",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/scheduler/seedbilling_xml_job.py",
+      "line": 296,
+      "snippet": "root = ET.fromstring(xml_text.encode(\"utf-8\"))",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/xml_bp.py",
+      "line": 3,
+      "snippet": "import xml.etree.ElementTree as ET",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/xml_bp.py",
+      "line": 30,
+      "snippet": "root = ET.fromstring(xml_bytes)",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/xml_bp.py",
+      "line": 33,
+      "snippet": "root = ET.fromstring(xml_bytes)",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "xxe_risk",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/xml_bp.py",
+      "line": 45,
+      "snippet": "fac = ET.fromstring(inner_txt.encode('utf-8')); _strip_ns(fac)",
+      "detail": "Parseo XML sin defusedxml — vulnerable a XXE si el XML viene de usuarios."
+    },
+    {
+      "check": "upload_mime_not_validated",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "modules/xml_bp.py",
+      "line": 118,
+      "snippet": "files = request.files.getlist('files[]')",
+      "detail": "Subida de archivo valida solo extensión, no contenido real — usar python-magic."
+    },
+    {
+      "check": "debug_mode_on",
+      "stride": "I",
+      "severity": "MEDIO",
+      "file": "run.py",
+      "line": 6,
+      "snippet": "app.run(debug=True)",
+      "detail": "Modo debug activo — expone traceback completo y habilita el debugger interactivo."
+    },
+    {
+      "check": "xss_unsafe_filter",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "templates/reclamos_dashboard copy.html",
+      "line": 570,
+      "snippet": "const CHART = {{ chart | tojson | safe }};",
+      "detail": "Filtro |safe en template Jinja2 — verificar que el valor provenga solo de admins o esté sanitizado."
+    },
+    {
+      "check": "xss_unsafe_filter",
+      "stride": "T",
+      "severity": "MEDIO",
+      "file": "templates/reclamos_dashboard.html",
+      "line": 458,
+      "snippet": "{{ chart | tojson | safe }}",
+      "detail": "Filtro |safe en template Jinja2 — verificar que el valor provenga solo de admins o esté sanitizado."
+    },
+    {
+      "check": "debug_mode_on",
+      "stride": "I",
+      "severity": "MEDIO",
+      "file": "tools/security_posture.py",
+      "line": 322,
+      "snippet": "\"\"\"Flask corriendo con debug=True o DEBUG=True en producción.\"\"\"",
+      "detail": "Modo debug activo — expone traceback completo y habilita el debugger interactivo."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/contratos/routes_contratos.py",
+      "line": 710,
+      "snippet": "@contratos_bp.route(\"/compras/<int:contrato_id>/finanzas\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/gastos/routes_gastos.py",
+      "line": 158,
+      "snippet": "methods=[\"POST\"],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/gastos/routes_gastos.py",
+      "line": 174,
+      "snippet": "methods=[\"POST\"],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/gastos/routes_gastos.py",
+      "line": 296,
+      "snippet": "@app.route(\"/reembolsos/gastos/<int:gasto_id>/aprobar\", methods=[\"POST\"], endpoint=\"aprobar_gasto\")",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/gastos/routes_gastos.py",
+      "line": 312,
+      "snippet": "@app.route(\"/reembolsos/gastos/aprobar-masivo\", methods=[\"POST\"], endpoint=\"aprobar_gasto_masivo\")",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_admin_scheduler.py",
+      "line": 63,
+      "snippet": "@scheduler_admin_bp.route(\"/admin/scheduler/<job_key>/toggle\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_admin_scheduler.py",
+      "line": 82,
+      "snippet": "@scheduler_admin_bp.route(\"/admin/scheduler/<job_key>/config\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_admin_scheduler.py",
+      "line": 107,
+      "snippet": "@scheduler_admin_bp.route(\"/admin/scheduler/<job_key>/run\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_email_bandeja.py",
+      "line": 292,
+      "snippet": "@app.route(\"/tareas/bandeja-soporte/<int:inbox_id>/asignar\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_email_bandeja.py",
+      "line": 348,
+      "snippet": "@app.route(\"/tareas/bandeja-soporte/<int:inbox_id>/descartar\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 4990,
+      "snippet": "@app.route('/reembolsos/gastos/<int:gasto_id>/editar-ccb', methods=['POST'],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_gastos_tarjeta.py",
+      "line": 5618,
+      "snippet": "@app.route('/api/secuencias/caja-chica/next', methods=['POST'], endpoint='api_next_caja_chica_factura')",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1758,
+      "snippet": "@planilla_bp.route(\"/api/okrs\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_planilla_mensual.py",
+      "line": 1789,
+      "snippet": "@planilla_bp.route(\"/api/resultados-clave\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 1639,
+      "snippet": "@app.route(\"/reclamos/<int:reclamo_id>/equipo-respuestas/add\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 1722,
+      "snippet": "@app.route(\"/reclamos/<int:reclamo_id>/equipo-respuestas/guardar\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 2278,
+      "snippet": "methods=['POST'],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 2367,
+      "snippet": "@app.route(\"/reclamos/<int:reclamo_id>/equipo-respuestas/<int:er_id>/eliminar\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 2413,
+      "snippet": "methods=['POST'],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 2529,
+      "snippet": "methods=['POST'],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 2744,
+      "snippet": "@app.route('/reclamos/equipo-acciones/<int:accion_id>/cumplir', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 2873,
+      "snippet": "@app.route('/reclamos/equipo-acciones/<int:accion_id>/evidencia', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 4047,
+      "snippet": "@app.route('/reclamos/api/materiales/nuevo', methods=['POST'], endpoint='reclamos_api_materiales_nuevo')",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 4497,
+      "snippet": "@app.route('/reclamos/<int:reclamo_id>/adjuntos', methods=['POST'], endpoint='reclamos_add_adjuntos')",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 4541,
+      "snippet": "methods=['POST'],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 4649,
+      "snippet": "methods=['POST'],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 4854,
+      "snippet": "@app.route('/reclamos/<int:reclamo_id>/eliminar', methods=['POST'], endpoint='reclamos_eliminar')",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 4921,
+      "snippet": "@app.route('/reclamos/<int:reclamo_id>/editar-proceso', methods=['POST'], endpoint='reclamos_editar_proceso')",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6555,
+      "snippet": "@app.route(\"/reclamos/<int:reclamo_id>/equipo-respuestas/aprobar\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6639,
+      "snippet": "@app.route(\"/reclamos/<int:reclamo_id>/equipo-respuestas/rechazar\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6744,
+      "snippet": "@app.route('/reclamos/equipo-acciones/<int:accion_id>/observacion', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6768,
+      "snippet": "@app.route('/reclamos/equipo-acciones/evidencias/<int:evidencia_id>/eliminar', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6815,
+      "snippet": "@app.route('/reclamos/imputado-acciones/<int:accion_id>/observacion', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6843,
+      "snippet": "@app.route('/reclamos/imputado-acciones/<int:accion_id>/cumplir', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6884,
+      "snippet": "@app.route('/reclamos/imputado-acciones/<int:accion_id>/evidencia', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 6956,
+      "snippet": "@app.route('/reclamos/imputado-acciones/evidencias/<int:evidencia_id>/eliminar', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 7027,
+      "snippet": "@app.route('/reclamos/ia/mejorar_respuesta', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 7360,
+      "snippet": "@app.route(\"/api/om-chat\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 7393,
+      "snippet": "@app.route(\"/api/om/analizar-descripcion\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 7484,
+      "snippet": "@app.route(\"/api/om/mejorar-descripcion\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 7579,
+      "snippet": "@app.route(\"/api/om-chat/reset\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 7625,
+      "snippet": "@app.route('/reclamos/<int:reclamo_id>/carta-cliente', methods=['POST'], endpoint='reclamos_subir_carta_cliente')",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 7699,
+      "snippet": "@app.route('/reclamos/<int:reclamo_id>/generar-carta-pdf', methods=['POST'],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_reclamos.py",
+      "line": 7738,
+      "snippet": "@app.route('/reclamos/<int:reclamo_id>/validar-creador', methods=['POST'],",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_tareas copy.py",
+      "line": 1511,
+      "snippet": "@app.route(\"/api/inbound/email\", methods=[\"POST\"])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_tareas.py",
+      "line": 154,
+      "snippet": "@app.route('/api/tareas/mejorar-comentario', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_tareas.py",
+      "line": 284,
+      "snippet": "@app.route('/tareas/<int:task_id>/editar-ajax', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/routes_tareas.py",
+      "line": 316,
+      "snippet": "@app.route('/api/inbound/email', methods=['POST'])",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    },
+    {
+      "check": "missing_csrf_ajax",
+      "stride": "T",
+      "severity": "BAJO",
+      "file": "modules/telegram_webhook.py",
+      "line": 41,
+      "snippet": "@telegram_bp.route(\"/webhook\", methods=[\"POST\"], endpoint=\"telegram_webhook\")",
+      "detail": "Endpoint POST/JSON sin verificación CSRF explícita — confirmar cobertura de CSRFProtect global."
+    }
+  ]
+}

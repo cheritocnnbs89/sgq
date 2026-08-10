@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>Duragas S.A.</razonSocial>
+    <nombreComercial>Duragas S.A.</nombreComercial>
+    <ruc>1790012956001</ruc>
+    <claveAcceso>1607202601179001295600120010150009149940091499418</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>015</ptoEmi>
+    <secuencial>000914994</secuencial>
+    <dirMatriz>Matriz: Via a la Costa El Salitral Km 7 y Medio Guayaquil - Ecuador</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>16/07/2026</fechaEmision>
+    <dirEstablecimiento>KM 23 VIA A DAULE TERMINAL PETROECUADOR SECTOR EL CHORRILLO GUAYAQUIL GUAYAS</dirEstablecimiento>
+    <contribuyenteEspecial>6925</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <guiaRemision>001-014-000052842</guiaRemision>
+    <razonSocialComprador>Quimpac Ecuador S.A. Quimpacasa</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>Km 16.5 via a Daule Calle RosavinsTARQUIGuayaquil</direccionComprador>
+    <totalSinImpuestos>2911.69</totalSinImpuestos>
+    <totalSubsidio>0.00</totalSubsidio>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <descuentoAdicional>0.00</descuentoAdicional>
+        <baseImponible>2911.69</baseImponible>
+        <valor>436.75</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>3348.44</importeTotal>
+    <moneda>USD</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>3348.44</total>
+        <plazo>30</plazo>
+        <unidadTiempo>DIAS</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>GLP</codigoPrincipal>
+      <codigoAuxiliar>KG</codigoAuxiliar>
+      <descripcion>GLP</descripcion>
+      <cantidad>2910.000</cantidad>
+      <precioUnitario>0.934581</precioUnitario>
+      <precioSinSubsidio>0.000000</precioSinSubsidio>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2719.63</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="peso" valor="2910.000"></detAdicional>
+        <detAdicional nombre="preciounitario1" valor="0.934580"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2719.63</baseImponible>
+          <valor>407.94</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>000000000200000023</codigoPrincipal>
+      <codigoAuxiliar>KG</codigoAuxiliar>
+      <descripcion>Servicio De Comercializacion</descripcion>
+      <cantidad>2910.000</cantidad>
+      <precioUnitario>0.066000</precioUnitario>
+      <precioSinSubsidio>0.000000</precioSinSubsidio>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>192.06</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="peso" valor="0.00"></detAdicional>
+        <detAdicional nombre="preciounitario1" valor="0.066000"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>192.06</baseImponible>
+          <valor>28.81</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="tipoFactura">Granel</campoAdicional>
+    <campoAdicional nombre="indicadorSubsidio">NO</campoAdicional>
+    <campoAdicional nombre="totalSinSubsidio">0.00</campoAdicional>
+    <campoAdicional nombre="correoElectronicoCliente">compras.electronica@quimpac.com.ec</campoAdicional>
+    <campoAdicional nombre="clienteSapARCH">0003544852|09GLP-IC-2292</campoAdicional>
+    <campoAdicional nombre="codSapInstalacion">0091004942-Quimpac</campoAdicional>
+    <campoAdicional nombre="transportista">1790012956001|DURAGAS S.A.</campoAdicional>
+    <campoAdicional nombre="dirInstalacion">GUAYAQUIL. KM 16.5 VIA A DAULE CALLE ROS. S.</campoAdicional>
+    <campoAdicional nombre="observaciones">OC 1000626310 TICKET SERIE 0101753</campoAdicional>
+    <campoAdicional nombre="orgVentas">REPSOLGAS</campoAdicional>
+    <campoAdicional nombre="granContribuyente">Gran Contribuyente Resolucion Nº NAC-GCFOIOC21-00001124-E</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature1038310">
+<ds:SignedInfo Id="Signature-SignedInfo229080">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID1035086" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature1038310-SignedProperties851306">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>DpHRQFOMBQiIClN6829lN0DXaaY=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate160912">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>h4Gelzeckph/QKga9UXOFENFWLE=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-384407" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>w9fZndqHbY6I2KFa8YjkqRfMkmI=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue216488">
+PWlOCihWviMPR5luULkb67Yw5IyAnu5iLBOQnUwKUrpVsjC9WRvBMEU1Kn+Jb9Yo+AZqBkS53to5
+fYCbvrPU4n2DBxFa63mab0jGa+M2nojVVFPPPoL4rHqiXZQ0o/sBnIqKskk7xBw+/GcFpuY2whyn
+E9iPqAGX1KteohvX6WV9p7JsEhdjlZC5iC6TH8uIAgidc8uK+dPo9Yo5gwEQ8IvVH5o1FSuzpBJm
+hqyYkuaLyEV0vAfU/xjlybVSG/6yAtKuXwoLdODdrugFg05QPKWhYB6Kiuvt82soe3Q8OmpNXnpG
+VI+F5dav0moV+CdH/TLonL4dsFlT4lJM5zcMiA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate160912">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIL+jCCCeKgAwIBAgIEF/1ONjANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDA5MTYxNzA5MzJaFw0yNzA5MTYxNzA5MzJaMIGnMSUw
+IwYDVQQDDBxFRERZIEJMQURJTUlSIFBFUkVaIElOVFJJQUdPMSAwHgYDVQQFExcxMjA0NDg4Mjgw
+LTE2MDkyNDEyMTkyNjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9S
+TUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDJbs2/bLSt+6Dtn++a48kEgWPJf61w9BPOGM0nx165
+yqNlHhAmMR1pSffNJYDWUhljaMU43mFqn3LOwn3i6X0SRWWQz68L8tX/FVS982eHDBJ8vknIEsm7
+LOTJ/5r0ctngqQX/TnyQEGtrLjKenXnYPahkUBgS2Buyr5QwmDiUyN0CgwDO8QQ3cgvA9IeXJhpC
+kVRw4Q7mknug+87NCD/5vKbqw9CSKYdUXbxsY8EttjJWobcsIYFFG4QMMnGfKgQsEfRGA0fdGaGT
+pfFWGHQ5D+YIpqXzCysOjuK6IL3yR5AFqc14rPSCboxA+C+upDfA3Eougosb6GeggIY/YtljAgMB
+AAGjggc4MIIHNDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2P
+MFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7
+hoG4bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2
+b2NhdGlvbkxpc3Q/YmFzZTAhBgNVHREEGjAYgRZlcGVyZXppQGR1cmFnYXMuY29tLmVjMIIBEgYD
+VR0gBIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwICMEQeQgBDAGUAcgB0AGkAZgBp
+AGMAYQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBvACAAZABlACAARQBtAHAAcgBlAHMAYTCBoAYK
+KwYBBAGCpnICBDCBkTCBjgYIKwYBBQUHAgEWgYFodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0
+LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9s
+aXRpY2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYwggKiBgNVHR8EggKZ
+MIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJs
+aWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkG
+A1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMv
+Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVO
+VElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5B
+LiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6
+Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dl
+YmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJ
+T04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFB+Z0y14i+Hh
+FgoxdjjBS0ocxdOSMCsGA1UdEAQkMCKADzIwMjQwOTE2MTcwOTMyWoEPMjAyNzA5MTYxNzA5MzJa
+MAsGA1UdDwQEAwIF4DAwBgorBgEEAYKmcgMFBCIMIEpFRkUgREUgQ09OVEFCSUxJREFEIEUgSU1Q
+VUVTVE9TMBoGCisGAQQBgqZyAwEEDAwKMTIwNDQ4ODI4MDAWBgorBgEEAYKmcgMJBAgMBlRBUlFV
+STARBgorBgEEAYKmcgMiBAMMAS4wEgYKKwYBBAGCpnIDBwQEDAJTTjAdBgorBgEEAYKmcgMCBA8M
+DUVERFkgQkxBRElNSVIwHwYKKwYBBAGCpnIDIAQRDA8wMDIwMDEwMDA4NjcyNDQwEwYKKwYBBAGC
+pnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBUGCisGAQQBgqZyAwMEBwwFUEVS
+RVowEQYKKwYBBAGCpnIDHgQDDAEuMBsGCisGAQQBgqZyAwoEDQwLRFVSQUdBUyBTIEEwHQYKKwYB
+BAGCpnIDCwQPDA0xNzkwMDEyOTU2MDAxMBEGCisGAQQBgqZyAx0EAwwBLjAYBgorBgEEAYKmcgME
+BAoMCElOVFJJQUdPMBAGCisGAQQBgqZyAwgEAgwAMA0GCSqGSIb3DQEBCwUAA4ICAQAEKlUDPkAG
+hkQcHyYjjYQY3me3p6JwKMOKqkOEBu4M8ETXglYgaR7gXcLmMqnL1Of6HntYmFIrJzHlAbhMuOdA
+NDQXahP0tWupzqjlDGRtebPTzvHWiy1pWgr5cfhVRqWAsX9H6QyYwQHc6EzDfiA8NjqrYDKUfBSw
+E9iz6XiumbJmaM7FzDiAKsxyh+1/zC7VdoUmRXfUj7VVRV4ZN2UyqBpG5w0zOU1qNOtwldKu7NN+
+QL1wcyZJZl/v0Qa36ZyWUa+PP9IdYBFhkdEATIuMuAnck2uaGqZDeP6OU1FM/2MrhUh/Q5AkyJ8w
+YeGoCLfgLFB3tbFU3Z+jfhad+Sn3fGcl+L3n1be6E53TiLaMCK5KBWAkp094vmD1oxW/fTpqjlyM
+xGfcruEtem7vWMwN3d/IPiGWdaq4qYJztfYxKrLooWGkjHM6Q5hYg76SH+PpG5p6haSe4QwxJJRq
+ctC9BaQCtX/ojz8gwkIvXS8hnn6daXCcmBFY7lsYXAIIQgw9VqpGMlierN/VhxHeXPPXZXfLIkCS
+uX0bjMe1aVHTGQT5SK3ZjjXThYKggU48u0engkY0Nk4bGQzctediFwT1R8GVC8p2hbyUocUiyLQ9
+YXvYsf5iKqyBcKLnOQlmHoJ7fyRNrpYL/g4yl4kyguaPYzF7owMN5KhFSAD6IgxktA==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+yW7Nv2y0rfug7Z/vmuPJBIFjyX+tcPQTzhjNJ8deucqjZR4QJjEdaUn3zSWA1lIZY2jFON5hap9y
+zsJ94ul9EkVlkM+vC/LV/xVUvfNnhwwSfL5JyBLJuyzkyf+a9HLZ4KkF/058kBBray4ynp152D2o
+ZFAYEtgbsq+UMJg4lMjdAoMAzvEEN3ILwPSHlyYaQpFUcOEO5pJ7oPvOzQg/+bym6sPQkimHVF28
+bGPBLbYyVqG3LCGBRRuEDDJxnyoELBH0RgNH3Rmhk6XxVhh0OQ/mCKal8wsrDo7iuiC98keQBanN
+eKz0gm6MQPgvrqQ3wNxKLoKLG+hnoICGP2LZYw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature1038310-Object354436"><etsi:QualifyingProperties Target="#Signature1038310"><etsi:SignedProperties Id="Signature1038310-SignedProperties851306"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-16T19:42:02-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>XHvo48Wf4G3z5VGVZwDIy86NAfE=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>402476598</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-384407"><etsi:Description></etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

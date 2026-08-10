@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>COX PARIS MORENO ROSA DELIA</razonSocial>
+        <nombreComercial>FLORERIA LA ORQUIDEA</nombreComercial>
+        <ruc>0906656749001</ruc>
+        <claveAcceso>1407202601090665674900120022000000000561619969912</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>002</estab>
+        <ptoEmi>200</ptoEmi>
+        <secuencial>000000056</secuencial>
+        <dirMatriz>Calle: BAQUERIZO  MORENO Numero: 914 Interseccion: VICTOR MANUEL RENDON </dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>14/07/2026</fechaEmision>
+        <dirEstablecimiento>Calle: BAQUERIZO  MORENO Numero: 914 Interseccion: VICTOR MANUEL RENDON </dirEstablecimiento>
+        <obligadoContabilidad>NO</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <totalSinImpuestos>50.00</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>0</codigoPorcentaje>
+                <baseImponible>50.00</baseImponible>
+                <valor>0.00</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0</propina>
+        <importeTotal>50.00</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>19</formaPago>
+                <total>50.00</total>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>005</codigoPrincipal>
+            <descripcion>DECORACIÓN FLORAL</descripcion>
+            <cantidad>1</cantidad>
+            <precioUnitario>50</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>50.00</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>0</codigoPorcentaje>
+                    <tarifa>0.0</tarifa>
+                    <baseImponible>50.00</baseImponible>
+                    <valor>0.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Telefono">045000460</campoAdicional>
+        <campoAdicional nombre="Email">awellington@quimpac.com.ec</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-c7c32925-2565-424a-8f98-634b367edfae"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-c7c32925-2565-424a-8f98-634b367edfae-ref0" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>w+bpuaWWDO88GMB17bDr8yGcUwgLFmel7Dll8CA0Nqo=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-c7c32925-2565-424a-8f98-634b367edfae-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>Ap7H/qi1H7vzR3vxZNQMuYKRkjDOK4xoJtNfAX2kgwo=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-c7c32925-2565-424a-8f98-634b367edfae-sigvalue">YayrBABz4IXaDlwgmL1WJ5a3S25GmRDmAvdkX1CiY7nRoR5J1MFmEpwnqeOefAJcHKPZRJFhnilmce5Yz5Q0gFyxMBPvWiEx5HwQt6KaGXjpT8mMpXrACV+3PH73IUfWq3vT0pPQrvr77dvhgQ4YyBJp2YAIUx0PtRQPpnMALXjNfpwEfeblUw7F8Dz9iIUO57TVxAcCtcWlUSxCBZ6bQJqAuW1wPeIzJOU68kZ62thr4PWH/K5IMr+K7xPoLjja2t3lLcUVsZrShNkBDt9kKnRRTqyTvLiWku1Gsetdr8heXFK1ojFAT7yRkl13GP9YQsGkIuzo3aOYH7iatexpfQ==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIKnzCCCIegAwIBAgIIN4fY5m+KS54wDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwNzAyMTcyNzUxWhcNMzEwNzAyMTcyNzUxWjCBpjEkMCIGA1UEAwwbUk9TQSBERUxJQSBDT1ggUEFSSVMgTU9SRU5PMSAwHgYDVQQFExcwOTA2NjU2NzQ5LTAyMDcyNjEyMzc0MDEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC1j4WvMDnxROdv3XWXE3gEpvb0qCLbTrKslTElr1L9wxjo1/pD3ZhGJQEyVkPed/1Vjgiwh0W/TLY81qwGAEq2CovZcXEeO+Ng25A4BFXp8Jmw6oUvdPwVCwESKeu+f1RJdTif3YW/9dSXlOcuEka+xuXpNV//bTYi8NbY3Plw5SIksuvp/qX+Kf4Y6ET5U6q3MSikN8vZ065OHd3YiSX5WIl4QushWappAB1qVP2WHJCivolrWFmF8wKha+WXmke1eeNK7UoOOvoic9eqZtf0bLmv1zSls2io5jxe4WgvTWnwhfuAZymWKb8NEtY0PibGr497WF7U/LogLu2aLipNAgMBAAGjggXaMIIF1jAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAnBgNVHREEIDAegRxtYWZlci5wZW5hZmllbC5jb3hAZ21haWwuY29tMIIBBgYDVR0gBIH+MIH7MFoGCisGAQQBgqZyAgcwTDBKBggrBgEFBQcCAjA+HjwAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUABlAHIAcwBvAG4AYQAgAE4AYQB0AHUAcgBhAGwwgZwGCisGAQQBgqZyAgEwgY0wgYoGCCsGAQUFBwIBFn5odHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIFBlcnNvbmEgTmF0dXJhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBQzb3I/Pxg0C7KnCFJalZFfFhlSfjArBgNVHRAEJDAigA8yMDI2MDcwMjE3Mjc1MVqBDzIwMzEwNzAyMTcyNzUxWjALBgNVHQ8EBAMCBeAwGgYKKwYBBAGCpnIDAQQMDAowOTA2NjU2NzQ5MBQGCisGAQQBgqZyAwkEBgwEUk9DQTARBgorBgEEAYKmcgMiBAMMAS4wOwYKKwYBBAGCpnIDBwQtDCtCQVFVRVJJWk8gTU9SRU5PIDkxNCBZIFZJQ1RPUiBNQU5VRUwgUkVORE9OMBoGCisGAQQBgqZyAwIEDAwKUk9TQSBERUxJQTAQBgorBgEEAYKmcgMgBAIMADARBgorBgEEAYKmcgMjBAMMAS4wEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBMGCisGAQQBgqZyAwMEBQwDQ09YMBoGCisGAQQBgqZyAx4EDAwKRVNUVURJQU5URTAdBgorBgEEAYKmcgMLBA8MDTA5MDY2NTY3NDkwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBwGCisGAQQBgqZyAwQEDgwMUEFSSVMgTU9SRU5PMBoGCisGAQQBgqZyAwgEDAwKMDk4NTI0NDY0NDANBgkqhkiG9w0BAQsFAAOCAgEAJssSGhaMejKi0c40iawrsjLaI1cEjj5E9kqNDaoTt80dGVXNc7XStIwEr65pE0Km7j3WSZ3CvNhdY7C5eo03NDIxbhtnyCGw5yN2ZC4beP1ABIBVT7BLod0sTnCDTFm5b6dQbucBYNzYwg5ycSjz4Vr7jtTAv8R8P0xhoXhEO+Famt1ZcdRqgMd1NhROuniw93+Da2UYPVpkU9dGrMqrVaNVHut7CN0dt+wTlygXoKI+AJaJZvfgaCwO/uzAHKZB7gVx3LyFZ2kI8hQCF//ImtFJlDkwUAt55KTddhuvslbqZy5CUVZDbQcrNLmI0nDp5/febnuVfxGy1vxBClaZBDl3yoE8g96S/b4h6GroI07IZVwe62nUng+4cOGNmXjApFwQ97N5CtBJaKyDl1scJFOBYo+g4FG2Wg9GL0YwZrSw9RTS4KFgxfhC25BjmXdcR8fnfDqNXHofqSVtIg78WafZJ67qPqdyFBX4yde1n0LPIGWORoargainjw+Zp+BlbP146bU17ClzeQDl45JZm7AHjqgo4ZsXCw96pnn8y2IZaGNGlUs8dTMycEyA9kLk4elzwdKpi1/+fp8ama83Ie34pOp0OZ43Cq+xyhjzbUxF/Klp0DUsi0pkMK3nlGnrzB87Ldcqj3y9505y18FHU9sYhujVBCTDDiFLbqsuxKU=</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-c7c32925-2565-424a-8f98-634b367edfae"><xades:SignedProperties Id="xmldsig-c7c32925-2565-424a-8f98-634b367edfae-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-07-14T15:24:25.208-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>Ifi/N1nc+VAgmbKKBxIF/Xp29WLOZN6d2kHJ0nHoARY=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>4001405278167387038</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-c7c32925-2565-424a-8f98-634b367edfae-ref0"><xades:Description>FIRMA DIGITAL SRI</xades:Description><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>

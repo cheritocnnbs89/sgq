@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>TIPIKOS ECUADOR FOODS AND DRINKS S.A.S.</razonSocial>
+	    <nombreComercial>IDENTIDAD</nombreComercial>
+	    <ruc>0993403927001</ruc>
+	    <claveAcceso>0508202601099340392700120010010000042210000243814</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>001</ptoEmi>
+	    <secuencial>000004221</secuencial>
+	    <dirMatriz>GUAYAS / GUAYAQUIL / GUAYAQUIL / CC. ARCOS PLAZA PB LOCAL 3</dirMatriz>
+		
+		
+		
+			<contribuyenteRimpe>CONTRIBUYENTE RÉGIMEN RIMPE</contribuyenteRimpe>
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>05/08/2026</fechaEmision>
+		
+			<dirEstablecimiento>GUAYAS / GUAYAQUIL / GUAYAQUIL / CC. ARCOS PLAZA PB LOCAL 3</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>xxxxxx</direccionComprador>
+	    
+	    <totalSinImpuestos>24.18000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>24.18</baseImponible>
+				<valor>3.63000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>2.42000</propina>
+	    <importeTotal>30.23000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>19</formaPago>
+	    		<total>30.23</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>BE-008</codigoPrincipal>
+		<codigoAuxiliar>BE-008</codigoAuxiliar>
+      	<descripcion>BOTELLA DE AGUA</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2.00000</baseImponible>
+          <valor>0.30</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>MR-006</codigoPrincipal>
+		<codigoAuxiliar>MR-006</codigoAuxiliar>
+      	<descripcion>ENCOCADO DE CAMARON</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>10.390000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>10.39</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>10.39000</baseImponible>
+          <valor>1.56</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>BP-009</codigoPrincipal>
+		<codigoAuxiliar>BP-009</codigoAuxiliar>
+      	<descripcion>JUGO DE MARACUYA</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.200000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.20</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2.20000</baseImponible>
+          <valor>0.33</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>PT-015</codigoPrincipal>
+		<codigoAuxiliar>PT-015</codigoAuxiliar>
+      	<descripcion>LLAPINGACHO</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>9.590000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>9.59</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>9.59000</baseImponible>
+          <valor>1.44</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+	
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">VENTA PUNTO DE VENTA</campoAdicional>
+    		
+    	
+		
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature139958">
+<ds:SignedInfo Id="Signature-SignedInfo189749">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID737110" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature139958-SignedProperties12410">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>eL9iLFyhOFag2PZSZyVtDi0xI3k=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate918671">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>PkhuRNelQYOw67ij5OAGrUNrEiA=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-989109" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>zqlFGqgQP2qFaVROODXJ3GTZ+Ok=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue574289">
+HLKViZtgxEdphEQXY66omZl+gSZIjlYU+P6Xuy2c9oxIigMW7NvXAHDwNiEgXNLvOd9gLvNhkdj/
+enVHIEJp21TKlE09D5WKuS/v2j+9U8+owC6NAf/BQjK3wI8ML5nuNj9pqQGYZrMjzFXSen8n79Xm
+gVjIVAtrpD99E9iQTO7KGsDbxh2r3URyREFQUO3ZszfZnEAejaLE3qSE18jwNCfmOQczNNqINu9t
+Wy1DT7Ey/fgIEF1ENsDoeaJpOI3skky/6nlfYbV6ytRoSP5h6nTgxo2Y1G6U9rdaXUwy5hzJG9XP
+stmsVHsdECvEOtWqe0L1QWNl0MzsDUG3a2rj2Q==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate918671">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJyjCCB7KgAwIBAgIIX/phj+YXP1wwDQYJKoZIhvcNAQELBQAwgYYxCzAJBgNVBAYTAkVTMRIw
+EAYDVQQHDAlCYXJjZWxvbmExFjAUBgNVBAoMDVVBTkFUQUNBIFMuQS4xFTATBgNVBAsMDFRTUC1V
+QU5BVEFDQTEaMBgGA1UEAwwRVUFOQVRBQ0EgQ0EyIDIwMjExGDAWBgNVBGEMD1ZBVEVTLUE2Njcy
+MTQ5OTAeFw0yNjAxMTUyMjQ2MDBaFw0yNzAxMTUyMjQ2MDBaMIHqMQswCQYDVQQGEwJFQzEwMC4G
+A1UECgwnVElQSUtPUyBFQ1VBRE9SIEZPT0RTIEFORCBEUklOS1MgUy5BLlMuMRgwFgYDVQQMDA9H
+RVJFTlRFIEdFTkVSQUwxFzAVBgNVBAQMDk1PR1JPIEFCRURSQVZPMRYwFAYDVQQqDA1YQVZJRVIg
+QU5EUkVTMRkwFwYDVQQFExBJRENFQy0wOTIzNDEzOTE4MSUwIwYDVQQDDBxYQVZJRVIgQU5EUkVT
+IE1PR1JPIEFCRURSQVZPMRwwGgYDVQRhDBNWQVRFQy0wOTkzNDAzOTI3MDAxMIIBIjANBgkqhkiG
+9w0BAQEFAAOCAQ8AMIIBCgKCAQEAh7y535wT+niQjtl2gwA/1TTeP9bFJpyO1thLkrMWAih3t2sK
+4lhFdfsD/0nNm0ML8O36ksKye/KQn5WgmjFAXTjrelvqGpVFwJgzfKrRZ2wUXYOQyKQ6l7jAAy0x
+gF3AfAFuopnDTKgzVNfeQds3ROLMN12h9rHXxNtNvOU0SgBvNI4pCausyX1V/Lq4EemA5M2SAKe2
+6si4Z8YU20KMAiDXDI7wrF0z9FHKTpFudXmePAh01CTHlsk6ll1AVYMtdWMnJfRV1cRgd1SKIAjG
+L5pNQ2A0XsFh8BPwuvGY7FvwxcejcPM9MzKUzOQXgltXdhmL6ltvOAN2Eiv+BgxYjQIDAQABo4IE
+1DCCBNAwGwYLKwYBBAGC8TZmAwEEDAwKMDkyMzQxMzkxODAeBgsrBgEEAYLxNmYDCwQPDA0wOTkz
+NDAzOTI3MDAxMIHtBggrBgEFBQcBAQSB4DCB3TBrBggrBgEFBQcwAoZfaHR0cHM6Ly93ZWIudWFu
+YXRhY2EuY29tL2NvbW1vbi9wcm9qZWN0L3BkZi9hdXRvcmlkYWQtY2VydGlmaWNhY2lvbi8wOF9z
+dWJvcmRpbmFkYS1jYTItMjAyMS5jZXIwNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMS51YW5hdGFj
+YS5jb20vcHVibGljL3BraS9vY3NwLzA2BggrBgEFBQcwAYYqaHR0cDovL29jc3AyLnVhbmF0YWNh
+LmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1UdDgQWBBSmN0jgHA2vZBT9SeNFw2cPGCf1/TAMBgNV
+HRMBAf8EAjAAMB8GA1UdIwQYMBaAFMXnMyXY79SN51OHyqJbdTqLlt1KMBwGA1UdEgQVMBOBEWlu
+Zm9AdWFuYXRhY2EuY29tMIGOBgNVHSAEgYYwgYMwgYAGDCsGAQQBgvE2ZgIDATBwMDcGCCsGAQUF
+BwIBFitodHRwczovL3d3dy51YW5hdGFjYS5jb20vcHVibGljL3BraS9kcGMtZWMvMDUGCCsGAQUF
+BwICMCkMJ0NFUlRJRklDQURPIERFIFJFUFJFU0VOVEFOVEUgRU4gQVJDSElWTzCBhQYDVR0fBH4w
+fDA8oDqgOIY2aHR0cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsLzIwMjFDQTJz
+dWIuY3JsMDygOqA4hjZodHRwOi8vY3JsMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvMjAy
+MUNBMnN1Yi5jcmwwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcD
+BDCCAesGA1UdEQSCAeIwggHegR5zdXBlcnZpc29yQG9uZWNvbnN1bHRpbmdlYy5jb22gGwYLKwYB
+BAGC8TZmAwGgDAwKMDkyMzQxMzkxOKAeBgsrBgEEAYLxNmYDAqAPDA1YQVZJRVIgQU5EUkVToBYG
+CysGAQQBgvE2ZgMDoAcMBU1PR1JPoBkGCysGAQQBgvE2ZgMEoAoMCEFCRURSQVZPoCAGCysGAQQB
+gvE2ZgMFoBEMD0dFUkVOVEUgR0VORVJBTKA+BgsrBgEEAYLxNmYDB6AvDC1DQyBHUkFOIEFMQk9D
+RU5UUk8gSlVOVE8gQSBMQSBDTElOSUNBIEtFTk5FRFmgHwYLKwYBBAGC8TZmAwigEAwOMDA1OTM5
+OTE1MDg4MDOgGgYLKwYBBAGC8TZmAwmgCwwJR1VBWUFRVUlMoDgGCysGAQQBgvE2ZgMKoCkMJ1RJ
+UElLT1MgRUNVQURPUiBGT09EUyBBTkQgRFJJTktTIFMuQS5TLqAeBgsrBgEEAYLxNmYDC6APDA0w
+OTkzNDAzOTI3MDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCQGCysGAQQBgvE2ZgMyoBUME1JFUFJF
+U0VOVEFOVEUgTEVHQUygGAYLKwYBBAGC8TZmAzOgCQwHQVJDSElWTzANBgkqhkiG9w0BAQsFAAOC
+AgEAASMhwtWuyYE4I1m+uoxggapSyziuh22aXPn72ddSgYNx52vnkjkL+vct8R+URrAigHLKW3YQ
+glZYVs5gios29eg5nfr8zyZDbdUansoosXk5/521L4KeHGZ2FvQ88zqR51cNb8D5dmbmttX2Wi8I
+40t2+RA5vwJ0eS9fES2ZQVCmJ7tIJAS+TSnQ6PaDRdrAi6XtPyW0CgV5swHkV39wfmbxyHIc+iOL
+SfT635JnfMzpUhOtf205evN6+e4ZbuGNz1U5zmIC68PZxwgs7yMkb8EQH8GgHWYeR2wtAzNqgp1G
+xoM300t9sfgmCLdS3xTi97u+UCKqMdRETkk9ZXr5mspR1n82+ELtFhmf8CYwOuzQIEH7FKkbSA4E
+P5L1zDNHSw+XOpLmIUIcaUHOjbTklLkXZ/GVIK66W9Wx7ztbTm6T8LmehTaLp99miZx/p5Xb8lEj
+dZGbryQBCiXGYWvG7RjxdOIWje/0sy8/TlNasU7gQvp5XkH0acQlYezRLq0O5NNTVpNqA0y25WeL
+/35hfxsqB+hgdHxGjTx20/x/VcZqvaW2EEgkPMJ+SO2K8maQChzUVnmIlBVPNtadsE+WCxbw7cwz
+IPTZYEAgPR1B4FMz0enKeGeFj3QsGFzs57c1VPkpUSKCXQdM1yZK7BEj7yaXCQsMyNLm+pQ8Lwr9
+5j4=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+h7y535wT+niQjtl2gwA/1TTeP9bFJpyO1thLkrMWAih3t2sK4lhFdfsD/0nNm0ML8O36ksKye/KQ
+n5WgmjFAXTjrelvqGpVFwJgzfKrRZ2wUXYOQyKQ6l7jAAy0xgF3AfAFuopnDTKgzVNfeQds3ROLM
+N12h9rHXxNtNvOU0SgBvNI4pCausyX1V/Lq4EemA5M2SAKe26si4Z8YU20KMAiDXDI7wrF0z9FHK
+TpFudXmePAh01CTHlsk6ll1AVYMtdWMnJfRV1cRgd1SKIAjGL5pNQ2A0XsFh8BPwuvGY7Fvwxcej
+cPM9MzKUzOQXgltXdhmL6ltvOAN2Eiv+BgxYjQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature139958-Object978559"><etsi:QualifyingProperties Target="#Signature139958"><etsi:SignedProperties Id="Signature139958-SignedProperties12410"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-08-05T16:23:06-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>EDG4H90USP9P91Ydi72N7lydDmQ=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=UANATACA CA2 2021,C=ES,L=Barcelona,2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA</ds:X509IssuerName><ds:X509SerialNumber>6915947448449318748</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

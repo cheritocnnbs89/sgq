@@ -1,0 +1,77 @@
+.ind-kpi-card { border-radius: .6rem; }
+.ind-kpi-card .card-body { padding: .85rem 1rem; }
+.ind-kpi-label {
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: #6b7280;
+  margin-bottom: .2rem;
+}
+.ind-kpi-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.ind-kpi-card--ok .ind-kpi-value     { color: #16a34a; }
+.ind-kpi-card--muted .ind-kpi-value  { color: #6b7280; }
+.ind-kpi-card--warn .ind-kpi-value   { color: #d97706; }
+.ind-kpi-card--danger .ind-kpi-value { color: #dc2626; }
+.ind-kpi-card--money .ind-kpi-value  { color: #0f766e; }
+
+.ind-chart-wrap {
+  position: relative;
+  height: 260px;
+}
+.ind-chart-wrap--tall {
+  height: 300px;
+}
+
+.ind-kpi-card--clickable {
+  cursor: pointer;
+  transition: box-shadow .15s, transform .1s;
+}
+.ind-kpi-card--clickable:hover  { box-shadow: 0 .25rem .75rem rgba(0,0,0,.08) !important; }
+.ind-kpi-card--clickable:active { transform: scale(.99); }
+.ind-kpi-chevron { transition: transform .2s ease; margin-left: .25rem; }
+.ind-kpi-card--clickable.collapsed .ind-kpi-chevron { transform: rotate(-90deg); }
+
+/* Acordeón anidado (drill-down) */
+.ind-drill-card {
+  border: 1px solid #e5e7eb;
+  border-radius: .6rem;
+  margin-bottom: .5rem;
+  overflow: hidden;
+}
+.ind-drill-card--sub { margin: .5rem 0 0; border-color: #eef0f3; }
+.ind-drill-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: .5rem;
+  background: #f9fafb;
+  border: 0;
+  padding: .55rem .8rem;
+  font-size: .85rem;
+  font-weight: 600;
+  color: #111827;
+  cursor: pointer;
+}
+.ind-drill-toggle:hover { background: #f1f5f9; }
+.ind-drill-chevron { transition: transform .2s ease; }
+.ind-drill-toggle.collapsed .ind-drill-chevron { transform: rotate(-90deg); }
+.ind-drill-body { padding: .6rem .8rem; }
+.ind-drill-body--table { padding: 0; }
+.ind-drill-body--table table { font-size: .8rem; }
+
+.ind-tabla-wrap {
+  max-height: 360px;
+  overflow-y: auto;
+}
+.ind-tabla-wrap table thead th {
+  position: sticky;
+  top: 0;
+  background: #f9fafb;
+  z-index: 1;
+}

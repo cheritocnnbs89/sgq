@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.0.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>MARTINEZ MORALES VIOLETA JANNETH</razonSocial>
+        <nombreComercial>HOSTERIA QUINTA PARAISO</nombreComercial>
+        <ruc>1708960834001</ruc>
+        <claveAcceso>1607202601170896083400120029020000890050008900516</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>002</estab>
+        <ptoEmi>902</ptoEmi>
+        <secuencial>000089005</secuencial>
+        <dirMatriz>Gonzales Suarez E8-214 y La Paz</dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>16/07/2026</fechaEmision>
+        <dirEstablecimiento>Gonzales Suarez E8-214 y La Paz</dirEstablecimiento>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <totalSinImpuestos>874.00</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <descuentoAdicional>0.00</descuentoAdicional>
+                <baseImponible>874.00</baseImponible>
+                <valor>131.10</valor>
+            </totalImpuesto>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>0</codigoPorcentaje>
+                <descuentoAdicional>0.00</descuentoAdicional>
+                <baseImponible>0.00</baseImponible>
+                <valor>0.00</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0.00</propina>
+        <importeTotal>1005.10</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>1005.10</total>
+                <plazo>2</plazo>
+                <unidadTiempo>dias</unidadTiempo>
+            </pago>
+        </pagos>
+        </infoFactura>
+        <detalles>
+            <detalle>
+                <codigoPrincipal>PACK18</codigoPrincipal>
+                <descripcion>PACK EVENTOS INC ALIMENTACION</descripcion>
+                <cantidad>38.00</cantidad>
+                <precioUnitario>23.00</precioUnitario>
+                <descuento>0.00</descuento>
+                <precioTotalSinImpuesto>874.00</precioTotalSinImpuesto>
+                <impuestos>
+                    <impuesto>
+                        <codigo>2</codigo>
+                        <codigoPorcentaje>4</codigoPorcentaje>
+                        <tarifa>15.00</tarifa>
+                        <baseImponible>874.00</baseImponible>
+                        <valor>131.10</valor>
+                    </impuesto>
+                </impuestos>
+            </detalle>
+        </detalles>
+        <infoAdicional>
+        <campoAdicional nombre="Direcci?n:">AV ROSAVIN LOTE 1 Y CALLE COBRE KM 16 VIA DAULE</campoAdicional>
+        <campoAdicional nombre="Forma de Pago: ">CON UTILIZACION DEL SISTEMA FINANCIERO</campoAdicional>
+        <campoAdicional nombre="Observaciones: ">Factura No:089005</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature317574">
+<ds:SignedInfo Id="Signature-SignedInfo606452">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID9035" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature317574-SignedProperties709039">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>Le6dxpJ3H7wim9HIXn5tfAXww3E=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1533397">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>uY3XCUc+rODNx0So4jOIXtGuEWA=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-619307" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>rdiWiccI/17q69AUHaDDkyP6KOs=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue772531">
+c5cyQdu5tVHvKDdTn6T3UVsznHZrNep6EbTx95fHUaUfqOOWfi0GvHiT/Ay8sTKrvoU0wEHc6z1L
+VRsgVKkNDB2UZ5is/BXltla2noBKM0UhONiTbydwVliYwVvuqv3LYlPjilNv/mBfqHvPAT+3yJ/d
+HFkcs0PYF582EpGIe0phBZcbDs10qCefQTSvFChHil/wsL/ocFZ1XYxwxwvXCwLHn+Q1AnzM7sYi
+UzlfFeBjLX4VRcdLzSPG4mMc8p+ymnB5dFjP5t3woaDrAUHyUvaOckTmCaq+ip+cRRMqGAgQBzHH
+lkKIKdbTj+enQPO89xu01jYk9XQQxwSxhE6+ig==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1533397">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJFTCCBv2gAwIBAgIIFgQciM2DPEkwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTIyMDgwOTIyMzkwMFoXDTI3MDgwODIyMzkwMFowgaYxCzAJBgNVBAYTAkVDMRkwFwYDVQQEDBBN
+QVJUSU5FWiBNT1JBTEVTMRgwFgYDVQQqDA9WSU9MRVRBIEpBTk5FVEgxGTAXBgNVBAUTEElEQ0VD
+LTE3MDg5NjA4MzQxKTAnBgNVBAMMIFZJT0xFVEEgSkFOTkVUSCBNQVJUSU5FWiBNT1JBTEVTMRww
+GgYDVQRhDBNUSU5FQy0xNzA4OTYwODM0MDAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAgw1YjUFxkJmqq5hxnMCV9ki/AabQjlT3uiqWQ/nOPFYbz+rjZXb6227iyrN0BLSl6mZl2or3
+DKLxBCOR16OXmgR9svx7ua7tOdB61mqoVSpFZXDmh8M2t6XnRuriwqpTW5u2bWNtXO6FtwURQHOt
+Ev9+Dvr6KWZKSGv2pe1ezQQ+tVhYkvE1YdQQmu3pk7IWaPdqPsNgA+R3ihIRKooCfxER1JE3B5KR
+STc3IucgpqUYyxE8NrSJ/1GT26nKyCyHsS45BMABYFdQrbXxWGBIWqACWGdEVcurs/MYgC9GMzdr
+PD8ue11cwp7eA5Riy1AFkhTR7zJmLLQfE8MyRHoPFQIDAQABo4IEMTCCBC0wgdcGCCsGAQUFBwEB
+BIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMvZG93bmxv
+YWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipodHRwOi8v
+b2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6Ly9v
+Y3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQUoq9PpkA2nPhCX3fQ
+qKuPlmc6LQEwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGydJJz/TCB
+mQYDVR0gBIGRMIGOMIGLBgwrBgEEAYLxNmYCAQEwezA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cu
+dWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzBABggrBgEFBQcCAjA0DDJDRVJUSUZJQ0FE
+TyBERSBQRVJTT05BIE5BVFVSQUwgTyBGSVNJQ0EgRU4gQVJDSElWTzCBjwYDVR0fBIGHMIGEMECg
+PqA8hjpodHRwOi8vY3JsMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3JkaW5h
+ZGEuY3JsMECgPqA8hjpodHRwOi8vY3JsMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Ey
+c3Vib3JkaW5hZGEuY3JsMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYB
+BQUHAwQwggGkBgNVHREEggGbMIIBl4Eeam9oYW5uYS5zb2xpc0BtaW5lZ29jaW8uY29tLmVjoBsG
+CysGAQQBgvE2ZgMBoAwMCjE3MDg5NjA4MzSgIAYLKwYBBAGC8TZmAwKgEQwPVklPTEVUQSBKQU5O
+RVRIoBkGCysGAQQBgvE2ZgMDoAoMCE1BUlRJTkVaoBgGCysGAQQBgvE2ZgMEoAkMB01PUkFMRVOg
+TgYLKwYBBAGC8TZmAwegPww9Q0FMTEUgTUFSSVNDQUwgU1VDUkUgTlVNRVJPIDQwNjcgSU5URVJT
+RUNDSU9OIEZSQU5DSVNDTyBMT1BFWqAfBgsrBgEEAYLxNmYDCKAQDA4wMDU5Mzk5NzY0MTgwN6AW
+BgsrBgEEAYLxNmYDCaAHDAVRVUlUT6AeBgsrBgEEAYLxNmYDC6APDA0xNzA4OTYwODM0MDAxoBMG
+CysGAQQBgvE2ZgMMoAQMAkVDoCkGCysGAQQBgvE2ZgMyoBoMGFBFUlNPTkEgTkFUVVJBTCBPIEZJ
+U0lDQaAYBgsrBgEEAYLxNmYDM6AJDAdBUkNISVZPMA0GCSqGSIb3DQEBCwUAA4ICAQARZlddDFhU
+d36RGYxR1gpdgUhWrDn9KXbAqfijY1LD7AlMFqOhfCa8hUjGcGeaLMabtd9zxeRw3OYuCTFaN7pV
+eS3rUpe5UF1jIBHtQEJvSEpMIla/qQ/oTPkj8OQnxUsBmi4cC1LRf5IifNvRLGWiXgrd9hV3CNb2
+rquSyHPg98nWGhT/p3a8cLzijg1LJStgtHAeormveqz1FAsMiIQn51JS30QiqeeBw9rlcF03CYFk
+wFM0cZ5v5R7RbW9BwvwVYIdPasVITyJKrzqTzenmK8CJV6Xy1b/aGwJ3ZMW1v/1g3wvfyr1nj7NA
+nwI6ENSP1DUhiCkkCo9Xjp4+RUFXO5atUL3H2bff8t+2bN1ZzZPmrmjZPzaKEdxoSVSHBL1rRiVV
+/8+PgXFxv0GkU48USaPpv9z5+1aRDsKShaTUK8xrEAU0jIK6XpsZlwmbWo7Ei97V4A7Q01Oh3sgI
+hQdb7fkd4/ChVX7gFf8Fj1CrOY4h8YdGDYA8ZLZbVAlIfD2IDvSsNHjeMlHmGNCKcBRjuhiufGZb
+DADuaSJIIBK2hzc1HI3TerpzTnI8wz5zSiCNUosJ8x2PaZZscQOPK91ZE3XsEP+AHwiC1oGU/eiz
+YdILoRG8hlIrcOIYOK3MFQEnvHNNuiUX5lh+DdL4TRdnY0c74kQPR9pFgPvkdGcjBg==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+gw1YjUFxkJmqq5hxnMCV9ki/AabQjlT3uiqWQ/nOPFYbz+rjZXb6227iyrN0BLSl6mZl2or3DKLx
+BCOR16OXmgR9svx7ua7tOdB61mqoVSpFZXDmh8M2t6XnRuriwqpTW5u2bWNtXO6FtwURQHOtEv9+
+Dvr6KWZKSGv2pe1ezQQ+tVhYkvE1YdQQmu3pk7IWaPdqPsNgA+R3ihIRKooCfxER1JE3B5KRSTc3
+IucgpqUYyxE8NrSJ/1GT26nKyCyHsS45BMABYFdQrbXxWGBIWqACWGdEVcurs/MYgC9GMzdrPD8u
+e11cwp7eA5Riy1AFkhTR7zJmLLQfE8MyRHoPFQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature317574-Object5764"><etsi:QualifyingProperties Target="#Signature317574"><etsi:SignedProperties Id="Signature317574-SignedProperties709039"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-16T16:50:22-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>by42oUssZruLtgv5q6Eu591XgRM=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>1586424342630317129</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-619307"><etsi:Description>powered by ElectroFacturas.com</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>FABRICACION RECICLAJE Y RECOLECCION DE DESECHOS RECYFRED S.A.S.</razonSocial><ruc>0993374889001</ruc><claveAcceso>0508202601099337488900120010020000006061234567811</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>002</ptoEmi><secuencial>000000606</secuencial><dirMatriz>SOLAR 12</dirMatriz></infoTributaria><infoFactura><fechaEmision>05/08/2026</fechaEmision><dirEstablecimiento>SOLAR 12</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><guiaRemision>001-002-000000725</guiaRemision><razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>km 16.5 via daule</direccionComprador><totalSinImpuestos>1250.00</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>1250.00</baseImponible><valor>187.5</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>1437.50</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>1437.5</total><plazo>0</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>004</codigoPrincipal><codigoAuxiliar>TMS</codigoAuxiliar><descripcion>TAMBORES METALICOS DE 55 GALONES</descripcion><cantidad>100</cantidad><precioUnitario>12.500000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>1250.00</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>1250.00</baseImponible><valor>187.50</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Email Cliente">recepcion@quimpac.com.ec</campoAdicional><campoAdicional nombre="Telef. Cliente">2690690</campoAdicional><campoAdicional nombre="Detalle">ORDEN DE COMPRA 1000624566 / INGRESO 5000180519</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-d7acdfa3-ca9c-4568-a5cf-97ad0045e8d8">
+<ds:SignedInfo>
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="xmldsig-d7acdfa3-ca9c-4568-a5cf-97ad0045e8d8-ref0" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>jf2aFL/kpXaUGtS57vc/NsjFyCc=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-d7acdfa3-ca9c-4568-a5cf-97ad0045e8d8-signedprops">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>NfOGr+LhtdkADjzUbuwhdgy/lRg=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="xmldsig-d7acdfa3-ca9c-4568-a5cf-97ad0045e8d8-sigvalue">
+WHtDkyVyOUkYOw3gMLbNRbK1tffl09YKcxhxEhnJ9QhW4utTAV5ab6IZ8Ele9Tn0Nz0XUHka1+dQ&amp;#13;
+k6La8yj/VbmttNJ4UvBEvxClI2iPE4BXwcr3gYbyCqyhWLOi7v9TUdrXSVUyXl8E4uZ5FEezp5a5&amp;#13;
+K+uabyCubiwnzO6V0PHD4XcioQumuOWV2FL9XWug8nh/dw8pReWAugYZRpKWUToEENqXISxUDlts&amp;#13;
+xXus3RV98tsVHIaPqfY5xgF1V+/sSVfGI01yYOmQKWtvrqdY8LDHdTr+QA9o7Ru3LNpdHzxBEcUq&amp;#13;
+ms/LKkdZHwaDnsoJbtD7ZmPnb1bqaI9qG55EcA==
+</ds:SignatureValue>
+<ds:KeyInfo>
+<ds:X509Data>
+<ds:X509Certificate>
+MIIK5jCCCM6gAwIBAgIIar+lSS+kRUgwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w&amp;#13;
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ&amp;#13;
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP&amp;#13;
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwNzA2MTQxNDQzWhcNMjgwNzA1MTQxNDQzWjCB&amp;#13;
+pzElMCMGA1UEAwwcRlJFRERZIERFTk5JUyBDSEVWRVogVkFTUVVFWjEgMB4GA1UEBRMXMDkyMTA5&amp;#13;
+OTQ5NS0wNjA3MjYwOTI0MzMxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ&amp;#13;
+TkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIB&amp;#13;
+IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkIwjlHkUflJXOih+QMal/WoFLOLuHl9B+Sqk&amp;#13;
+1a29rD1EOPD0+f99sykNIYk1KE6djcUO0J+c56nMWIKlX+vZi2b8ZGP1MG9aXPAM0otGF2UBhyLh&amp;#13;
+UkKL+7bfUoUrt1jU06gS4Iexb8+N87LCfNSp8oU9dCy1VBdjDQ+2SwzCPDV9YlUiju7lqbqgLO1+&amp;#13;
+rH9xcKDkSTj7dtKYKx5fDptrLldLjO1E2O/xH5TpJUbyD0O6wt/UCUpl+3ATTR1tMfufoeJazQyG&amp;#13;
+iyE44Nlh+HH1EXW5I96Vjpl6vMj2yr/nuA2d9soT7xBDgbHgw1fO82R6YSUXna7rqb3QP0riNNMe&amp;#13;
+hQIDAQABo4IGIDCCBhwwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42u&amp;#13;
+Yt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlk&amp;#13;
+YXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwLQYDVR0RBCYwJIEiZmNoZXZl&amp;#13;
+enZlY3VhY29tYnVzdGlibGVzQGdtYWlsLmNvbTCCARUGA1UdIASCAQwwggEIMGIGCisGAQQBgqZy&amp;#13;
+AgkwVDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUgBlAHAA&amp;#13;
+cgBlAHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYKKwYBBAGCpnICAzCBkjCBjwYIKwYB&amp;#13;
+BQUHAgEWgYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxv&amp;#13;
+YWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRv&amp;#13;
+IFJlcHJlc2VudGFudGUgTGVnYWwucGRmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCC&amp;#13;
+Ag8GA1UdHwSCAgYwggICMIHeoDqgOIY2aHR0cDovL2NybDEuc2VjdXJpdHlkYXRhLm5ldC5lYy9z&amp;#13;
+dWJjYTJjcmwxL2NybGZpbGUuY3JsooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VS&amp;#13;
+VElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VS&amp;#13;
+VElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIx&amp;#13;
+CzAJBgNVBAYTAkVDMDygOqA4hjZodHRwOi8vY3JsMi5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNh&amp;#13;
+MmNybDIvY3JsZmlsZS5jcmwwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIuc2Vj&amp;#13;
+dXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3Js&amp;#13;
+Jmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERB&amp;#13;
+VEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkg&amp;#13;
+REFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUi8R0buyhntVrsRv5qTOD5gvMIxIwKwYDVR0QBCQw&amp;#13;
+IoAPMjAyNjA3MDYxNDE0NDNagQ8yMDI4MDcwNTE0MTQ0M1owCwYDVR0PBAQDAgXgMB8GCisGAQQB&amp;#13;
+gqZyAwUEEQwPR0VSRU5URSBHRU5FUkFMMBoGCisGAQQBgqZyAwEEDAwKMDkyMTA5OTQ5NTAWBgor&amp;#13;
+BgEEAYKmcgMJBAgMBlRBUlFVSTARBgorBgEEAYKmcgMiBAMMAS4wGAYKKwYBBAGCpnIDBwQKDAhT&amp;#13;
+T0xBUiAxMjAdBgorBgEEAYKmcgMCBA8MDUZSRUREWSBERU5OSVMwHwYKKwYBBAGCpnIDIAQRDA8w&amp;#13;
+MDEwMDIwMDExNzMwNzcwEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VB&amp;#13;
+RE9SMBYGCisGAQQBgqZyAwMECAwGQ0hFVkVaME4GCisGAQQBgqZyAwoEQAw+RkFCUklDQUNJT04g&amp;#13;
+UkVDSUNMQUpFIFkgUkVDT0xFQ0NJT04gREUgREVTRUNIT1MgUkVDWUZSRUQgUyBBIFMwHQYKKwYB&amp;#13;
+BAGCpnIDCwQPDA0wOTkzMzc0ODg5MDAxMBEGCisGAQQBgqZyAx0EAwwBLjAXBgorBgEEAYKmcgME&amp;#13;
+BAkMB1ZBU1FVRVowGgYKKwYBBAGCpnIDCAQMDAowOTkxNTAwMzAxMA0GCSqGSIb3DQEBCwUAA4IC&amp;#13;
+AQCQ1LN+BSCr4BDme7ca5L+DCicn8bsyrqH6kcvKu0//DP3jjna6ye85vbnfVjt+lquuo3rNJKs6&amp;#13;
+1aSRh/mbbQGJBhKiTQua/0iKzNev4GjEC90dhDBzv0i067anvlhZDbWNKn1RsYO6rEaYxVZD36HD&amp;#13;
+pKIQardbFdZGQsy91e8dpWY2KXAPK++QzvZU6xjUxKbwtpxXnREFpJohuQfNJkzNXl8g3iE4xnyH&amp;#13;
+dhip8fqxdUpyesBrs+hM+8Qqtb50x2SHnNE7wdPvjMlTcdZAIVtW9bEt81M75fROBVXFJhUwxXux&amp;#13;
+KAe3uvcio189JCplzpcHsrgKMdpctWGjjnPwKqnSidI3dzpcpNsj3p/eEMPlK+7Mc2Dmg8q9Dg8m&amp;#13;
++tCvJzTCSBPwRM0srTHVeq0W+OfbeC2vnzTGH5CFyy4SindSulK6mSX+bE0xrlUTV8BIBuU+t1pJ&amp;#13;
+n4xrpzll4a44N8132Ekk5cpiLi6eGstLu6JEhOpZTEnzOLUiV1tpKBSJuBwjEsjVIvDescXiGn96&amp;#13;
+ALPLHmfmgMukM9gt+GyhoqO58g0ywRziW0oRGIrfQx59RJTvAo+Kkpw82k96gjw2hWQvwOyWCpp4&amp;#13;
+6xkXAX6qqqswCRMkpkQG838YAkXyaB0OF0RFg4QJ6rOjymQWDlMFW5R/eNBeQ5geM1WTpvsuuQ8Q&amp;#13;
+qQ==
+</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+<ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-d7acdfa3-ca9c-4568-a5cf-97ad0045e8d8"><xades:SignedProperties Id="xmldsig-d7acdfa3-ca9c-4568-a5cf-97ad0045e8d8-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-08-05T16:41:16.664-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>IFzKerhPaszuwI7aqQEpJUAw0ZQ=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>cn=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,ou=ENTIDAD DE CERTIFICACION DE INFORMACION,o=SECURITY DATA S.A. 2,c=EC</ds:X509IssuerName><ds:X509SerialNumber>7692048422322586952</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-d7acdfa3-ca9c-4568-a5cf-97ad0045e8d8-ref0"><xades:MimeType>text/xml</xades:MimeType></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object>
+</ds:Signature></factura>

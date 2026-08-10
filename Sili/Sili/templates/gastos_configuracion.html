@@ -316,6 +316,7 @@
                   <th>RUC proveedor</th>
                   <th class="text-end">Monto</th>
                   <th>Motivo (cuenta contable)</th>
+                  <th>Detalle</th>
                   <th>Centro de costo</th>
                   <th>Usuario</th>
                   <th class="text-center">Envío SAP auto</th>
@@ -329,6 +330,7 @@
                   <td>{{ r.ruc_proveedor }}</td>
                   <td class="text-end">{{ '%.2f'|format(r.monto) }}</td>
                   <td>{{ r.motivo }}</td>
+                  <td>{{ r.detalle or '' }}</td>
                   <td>{{ r.centro_costo }}</td>
                   <td>{{ r.usuario_nombre }}</td>
                   <td class="text-center">
@@ -386,6 +388,11 @@
               <input type="text" class="form-control form-control-sm" name="motivo" id="autoreg_motivo"
                      list="dl-autoreg-motivos" autocomplete="off" placeholder="Escribe para buscar…" required>
               <datalist id="dl-autoreg-motivos"></datalist>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label fw-semibold small">Detalle</label>
+              <input type="text" class="form-control form-control-sm" name="detalle"
+                     placeholder="Ej: -GUIAS DE TRANSPORTE-SSF" maxlength="255">
             </div>
             <div class="col-md-2">
               <label class="form-label fw-semibold small">Centro de costo *</label>

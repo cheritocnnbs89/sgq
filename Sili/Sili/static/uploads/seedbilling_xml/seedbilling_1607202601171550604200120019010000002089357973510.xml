@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>CILIO ERAZO GINA VALERIA</razonSocial>
+    <nombreComercial>CILIO ERAZO GINA VALERIA</nombreComercial>
+    <ruc>1715506042001</ruc>
+    <claveAcceso>1607202601171550604200120019010000002089357973510</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>901</ptoEmi>
+    <secuencial>000000208</secuencial>
+    <dirMatriz>TURUBAMBA MUNICIPAL CALLE OE8F NUMERO  S48-42</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>16/07/2026</fechaEmision>
+    <dirEstablecimiento>TURUBAMBA MUNICIPAL CALLE OE8F NUMERO  S48-42</dirEstablecimiento>
+    <obligadoContabilidad>NO</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <guiaRemision>000-000-000000000</guiaRemision>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A.</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>PANAMERICANA SUR KM 14.5</direccionComprador>
+    <totalSinImpuestos>68.80</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>68.80</baseImponible>
+        <valor>10.32</valor>
+      </totalImpuesto>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>5</codigoPorcentaje>
+        <baseImponible>0.00</baseImponible>
+        <valor>0.00</valor>
+      </totalImpuesto>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>0</codigoPorcentaje>
+        <baseImponible>0.00</baseImponible>
+        <valor>0.00</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>79.12</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>79.12</total>
+        <plazo>0</plazo>
+        <unidadTiempo>DIAS</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>000095</codigoPrincipal>
+      <descripcion>CLASE DE BAILOTERAPIA QUIMPAC 1</descripcion>
+      <cantidad>2.0000</cantidad>
+      <precioUnitario>34.4000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>68.80</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>68.80</baseImponible>
+          <valor>10.32</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="CONTRIBUYENTE REGIMEN">CONTRIBUYENTE RÉGIMEN GENERAL</campoAdicional>
+    <campoAdicional nombre="SISTEMA">SYCOF</campoAdicional>
+    <campoAdicional nombre="EMAIL">ginacilioe@gmail.com</campoAdicional>
+    <campoAdicional nombre="TELEFONO">0993156904</campoAdicional>
+    <campoAdicional nombre="EMAIL CLIENTE">medicouio@quimpac.com.ec</campoAdicional>
+    <campoAdicional nombre="TELEFONO CLIENTE">022690690</campoAdicional>
+    <campoAdicional nombre="FORMA DE PAGO">TRANSFERENCIA</campoAdicional>
+    <campoAdicional nombre="FECHA LIMITE">16/07/2026</campoAdicional>
+    <campoAdicional nombre="OBSERVACION FORMA DE PAGO">SN</campoAdicional>
+    <campoAdicional nombre="OBSERVACION">ORDEN DE SERVICIO 7500053689 APROBACIÓN 1001648653</campoAdicional>
+    <campoAdicional nombre="OBSERVACION ADICIONAL">SN</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature596765">
+<ds:SignedInfo Id="Signature-SignedInfo169212">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID116027" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature596765-SignedProperties168201">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>Xj6nZMClL3tijL1hr8kicgHniO0=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1151927">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>5Ox8JmjOKPoGiv37NoFpe7c1fzM=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-154189" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>GBfGcUvOgbcGkDysEXsXnPG+Kfg=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue764855">
+wjnFwMXLXLZKOJp4do0+r3RsA2EbaxksENOg5tYuNn51xNUM+V4uyWbwEQFR5okj6aI20JCWfGLk
+RhMerPl+N2+q42SotGtyLGxKGV9hobsxpKTBtmo/ua31H9GptS1xz9xuI4KYYYGvLU/3NYblVLXF
+75wGU3WGL0pIH6rz1nvZp6MClhnmwx1nqDh6A5aAtxjPMcdriCSl1+EvoCcvp17UCLvWiDIiUmxn
+iZkgszdn7qCnGU2m5GMg3/hBlB+9L11Vq68fud9L4nMoSXHgadQcrVtCMwzNtwZQyk6dis8PNX1K
+w55yErr+y8Ti6OPclrHNMO79HdGUatl97CIrvw==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1151927">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIHuDCCBqCgAwIBAgIFAMIG9oowDQYJKoZIhvcNAQELBQAwRzELMAkGA1UEBhMCRUMxGzAZBgNV
+BAoMEkxhenphdGUgQ2lhLiBMdGRhLjEbMBkGA1UEAwwSTGF6emF0ZSBFbWlzb3IgQ0EyMB4XDTI2
+MDQxMTE5MDgwNVoXDTI3MDQxMTE5MDgwNVowgZIxCzAJBgNVBAYTAkVDMRswGQYDVQQKDBJMYXp6
+YXRlIENpYS4gTHRkYS4xHjAcBgNVBAsMFUVudGUgZGUgQ2VydGlmaWNhY2lvbjEhMB8GA1UEAwwY
+R0lOQSBWQUxFUklBIENJTElPIEVSQVpPMSMwIQYJKoZIhvcNAQkBFhRnaW5hY2lsaW9lQGdtYWls
+LmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMOqEpjG5vy4SFWsOHroOqMMnmWh
+h2njJRSMcowfSVQIDUKkyXRNbN2NL1BHzrmTYKlrdMfWLlsVC3it5GnhxCvN6pbyYDVAkRrKoO9g
+n/RbdDL47Apwqs02V0rrc0it6Mu6g2Inua4jvPwJMpxKuKybfxEvVw1j0HVnrE7bJRvxOjZfhLdD
+RBzzR7TLJdNHqdi1jnWELrYe/PIDRCnB4CozN26daZjExsLyWDS5d2twjzJ3WLENLhstQMNroCRD
+4TSfT7SbCb76Fkfg+F8x8BsYoq4Y73AmQCmfUzD4egOUoJZBtCdzVxw4GZTg0FsVQxKnvGj7Nv31
+Q6ZbJeU9pAsCAwEAAaOCBF0wggRZMBoGCisGAQQBg892AwEEDAwKMTcxNTUwNjA0MjAcBgorBgEE
+AYPPdgMCBA4MDEdJTkEgVkFMRVJJQTAVBgorBgEEAYPPdgMDBAcMBUNJTElPMBUGCisGAQQBg892
+AwQEBwwFRVJBWk8wIAYKKwYBBAGDz3YDBwQSDBBPRThGIFM0ODQyIFkgUzQ4MBoGCisGAQQBg892
+AwgEDAwKMDk5MzE1NjkwNDAVBgorBgEEAYPPdgMJBAcMBVF1aXRvMBcGCisGAQQBg892AwwECQwH
+RUNVQURPUjAdBgorBgEEAYPPdgMLBA8MDTE3MTU1MDYwNDIwMDEwDAYDVR0TAQH/BAIwADAdBgNV
+HQ4EFgQUnsIvug0OHTqEmFasF+aY3609e8owHwYDVR0jBBgwFoAU7XZIsArxyYaGDExGZNIG+MzV
+vT4wDgYDVR0PAQH/BAQDAgXgMDoGA1UdHwQzMDEwL6AtoCuGKWh0dHA6L2VuZXh0Mi54eXovTGF6
+emF0ZUNBMi9lbWlzb3JDQTIuY3JsMIIBhAYDVR0gBIIBezCCAXcwfAYKKwYBBAGDz3YCATBuMGwG
+CCsGAQUFBwICMGAaXkVsIHByZXNlbnRlIGNlcnRpZmljYWRvIGVzIGVtaXRpZG8gZW4gYmFzZSBh
+IGxhcyBwb2zDrXRpY2FzIGRlIHNlZ3VyaWRhZCBkZSBMYXp6YXRlIENpYS4gTHRkYS4wgfYGCSsG
+AQQBg892AjCB6DBsBggrBgEFBQcCAjBgGl5FbCBwcmVzZW50ZSBjZXJ0aWZpY2FkbyBlcyBlbWl0
+aWRvIGVuIGJhc2UgYSBsYXMgcG9sw610aWNhcyBkZSBzZWd1cmlkYWQgZGUgTGF6emF0ZSBDaWEu
+IEx0ZGEuMHgGCCsGAQUFBwICMGwaakVsIHByZXNlbnRlIGNlcnRpZmljYWRvIHN1Ym9yZGluYWRv
+IGVzIGVtaXRpZG8gZW4gYmFzZSBhIGxhcyBwb2zDrXRpY2FzIGRlIHNlZ3VyaWRhZCBkZSBMYXp6
+YXRlIENpYS4gTHRkYS4wggEABgNVHREEgfgwgfWgGgYKKwYBBAGDz3YDAaAMDAoxNzE1NTA2MDQy
+oBwGCisGAQQBg892AwKgDgwMR0lOQSBWQUxFUklBoBUGCisGAQQBg892AwOgBwwFQ0lMSU+gFQYK
+KwYBBAGDz3YDBKAHDAVFUkFaT6AgBgorBgEEAYPPdgMHoBIMEE9FOEYgUzQ4NDIgWSBTNDigGgYK
+KwYBBAGDz3YDCKAMDAowOTkzMTU2OTA0oBUGCisGAQQBg892AwmgBwwFUXVpdG+gFwYKKwYBBAGD
+z3YDDKAJDAdFQ1VBRE9SoB0GCisGAQQBg892AwugDwwNMTcxNTUwNjA0MjAwMTA8BggrBgEFBQcB
+AQQwMC4wLAYIKwYBBQUHMAGGIGh0dHA6Ly9lbmV4dDIueHl6Ojg3NzcvYWRzcy9vY3NwMA0GCSqG
+SIb3DQEBCwUAA4IBAQAREeCleoTkJXjG4kQ8QDZhj5ZFWXGPv88NtJSTubC1q38l79rOKhK0qqm2
+jZwsWn23JRCTjePmB1KBz4Cq9uRZ8dM51t3V4njeydiyrL8UDe3HzPF5atUI0eZdIo/56kFyVdoo
+8nROOt1Kusl2H3N8A3kWqvI9neEH8mOL4aOTygACZsw8tvnc6TdjeosMSNREu95LRCyTlaIbSEbx
+HyR0idTptg7sgaxeNgh5ziOhVMePzWQQvgsH/WpmGR25dZOsGpHc/e2fUBYIjgLKHPIDA5xRowOu
+tFofUXnJntLdpTDwsD9jaJdRBPtaotMD8A+qj0hPHD5dfrfL8xj853Gh
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+w6oSmMbm/LhIVaw4eug6owyeZaGHaeMlFIxyjB9JVAgNQqTJdE1s3Y0vUEfOuZNgqWt0x9YuWxUL
+eK3kaeHEK83qlvJgNUCRGsqg72Cf9Ft0MvjsCnCqzTZXSutzSK3oy7qDYie5riO8/AkynEq4rJt/
+ES9XDWPQdWesTtslG/E6Nl+Et0NEHPNHtMsl00ep2LWOdYQuth788gNEKcHgKjM3bp1pmMTGwvJY
+NLl3a3CPMndYsQ0uGy1Aw2ugJEPhNJ9PtJsJvvoWR+D4XzHwGxiirhjvcCZAKZ9TMPh6A5SglkG0
+J3NXHDgZlODQWxVDEqe8aPs2/fVDplsl5T2kCw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature596765-Object1000025"><etsi:QualifyingProperties Target="#Signature596765"><etsi:SignedProperties Id="Signature596765-SignedProperties168201"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-16T18:51:08-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>HcqxHAi2936cTIKlqNlDw4+wDP4=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=Lazzate Emisor CA2,O=Lazzate Cia. Ltda.,C=EC</ds:X509IssuerName><ds:X509SerialNumber>3255236234</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-154189"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

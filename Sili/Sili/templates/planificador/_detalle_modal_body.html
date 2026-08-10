@@ -29,7 +29,7 @@
     </strong>
   </div>
   {% endif %}
-  {% if not s.puede_completar_vuelo %}
+  {% if not s.puede_completar_vuelo and s.tipo != 'Voucher' %}
   <div class="detail-box"><span>Estado</span>
     <strong><span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span></strong>
   </div>
@@ -38,12 +38,14 @@
   {% if s.tipo == 'Vuelo' %}
   <div class="detail-box"><span>Fecha de regreso</span><strong>{{ s.get('fecha_retorno') or '—' }}</strong></div>
   {% endif %}
+  {% if s.tipo != 'Voucher' %}
   <div class="detail-box"><span>Horario asignado</span>
     <strong>
       {% if s.hora_inicio %}{{ s.hora_inicio }} – {{ s.hora_fin }}
       {% else %}<span class="text-muted">Sin asignar</span>{% endif %}
     </strong>
   </div>
+  {% endif %}
   {% if s.tipo == 'Vuelo' %}
   {% if aeropuerto_display %}
   <div class="detail-box"><span>Aeropuerto</span><strong>{{ aeropuerto_display }}</strong></div>
@@ -458,6 +460,151 @@
 </div>
 {% endif %}
 
+{# ── Voucher: detalle de cada voucher individual (confirmación del usuario / liquidación del coordinador) ── #}
+{% if s.tipo == 'Voucher' and voucher_items %}
+<div class="voucher-list mt-3">
+  <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
+          data-bs-target="#voucherListBox{{ s.id }}" aria-expanded="false"
+          aria-controls="voucherListBox{{ s.id }}">
+    <span class="detail-accordion-label">
+      <i class="bi bi-ticket-perforated-fill me-1"></i>
+      <span>Vouchers de esta solicitud</span>
+      <span class="voucher-count-badge">{{ voucher_items|length }}</span>
+    </span>
+    <span class="detail-accordion-right">
+      <span class="cal-expand-hint">Ver detalle <i class="bi bi-chevron-down detail-accordion-chevron"></i></span>
+    </span>
+  </button>
+
+  <div class="collapse" id="voucherListBox{{ s.id }}">
+  {% for item in voucher_items %}
+  {% if item.no_utilizado %}
+    {% set vstate = 'no_utilizado' %}
+  {% elif item.costo is not none %}
+    {% set vstate = 'liquidado' %}
+  {% elif item.confirmado_usuario %}
+    {% set vstate = 'confirmado' %}
+  {% elif item.secuencial %}
+    {% set vstate = 'entregado' %}
+  {% else %}
+    {% set vstate = 'pendiente' %}
+  {% endif %}
+
+  <div class="voucher-item voucher-item--{{ vstate }}" id="voucher-item-{{ item.id }}">
+    <div class="voucher-item-header">
+      <div class="voucher-item-title">
+        <span class="voucher-num">#{{ item.numero }}</span>
+        {% if item.secuencial %}<span class="voucher-seq">SEC {{ item.secuencial }}</span>{% endif %}
+      </div>
+      <div class="voucher-item-badge">
+        {% if vstate == 'no_utilizado' %}
+        <span class="vbadge vbadge--no-utilizado"><i class="bi bi-slash-circle me-1"></i>No utilizado</span>
+        {% elif vstate == 'liquidado' %}
+        <span class="vbadge vbadge--liquidado"><i class="bi bi-check-circle-fill me-1"></i>Liquidado — ${{ '%.2f'|format(item.costo|float) }}</span>
+        {% elif vstate == 'confirmado' %}
+        <span class="vbadge vbadge--confirmado"><i class="bi bi-hourglass-split me-1"></i>Confirmado, pend. liquidar</span>
+        {% elif vstate == 'entregado' %}
+        <span class="vbadge vbadge--entregado"><i class="bi bi-clock me-1"></i>Entregado, pend. confirmar</span>
+        {% else %}
+        <span class="vbadge vbadge--pendiente"><i class="bi bi-dash-circle me-1"></i>Pend. entrega</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="voucher-item-body">
+      {% if item.origen or item.destino %}
+      <div class="voucher-meta"><span class="vmeta-k">Ruta</span><span class="vmeta-v">{{ item.origen or '—' }} → {{ item.destino or '—' }}</span></div>
+      {% endif %}
+      {% if item.observacion_usuario %}
+      <div class="voucher-meta"><span class="vmeta-k">Observación</span><span class="vmeta-v">{{ item.observacion_usuario }}</span></div>
+      {% endif %}
+      {% if item.adjunto_nombre_original %}
+      <div class="voucher-meta voucher-adjunto-row" id="voucher-adjunto-{{ item.id }}">
+        <span class="vmeta-k"><i class="bi bi-paperclip me-1"></i>Respaldo</span>
+        <span class="vmeta-v text-truncate">{{ item.adjunto_nombre_original }}</span>
+      </div>
+      {% else %}
+      <div class="voucher-meta voucher-adjunto-row" id="voucher-adjunto-{{ item.id }}" style="display:none;">
+        <span class="vmeta-k"><i class="bi bi-paperclip me-1"></i>Respaldo</span>
+        <span class="vmeta-v text-truncate"></span>
+      </div>
+      {% endif %}
+
+      {% if item.puede_confirmar %}
+      <form class="voucher-confirmar-form mt-2"
+            data-voucher-form="confirmar"
+            action="{{ url_for('planificador.planificador_voucher_confirmar_item', sid=s.id, item_id=item.id) }}"
+            enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="voucher-form-fields">
+          <div>
+            <label class="form-label form-label-sm">Observación <span class="text-muted">(opcional)</span></label>
+            <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
+                      rows="2" placeholder="Detalle del uso de este voucher…"></textarea>
+          </div>
+          <div>
+            <label class="form-label form-label-sm">Respaldo *</label>
+            <input class="form-control form-control-sm" type="file" name="adjunto_voucher"
+                   accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required>
+            <div class="form-text">Máx. 10 MB · PDF, Word, imagen</div>
+          </div>
+        </div>
+        <div class="voucher-form-footer">
+          <span class="voucher-upload-status"></span>
+          <button type="submit" class="btn btn-success btn-sm">
+            <i class="bi bi-check2-circle me-1"></i>Confirmar este voucher
+          </button>
+        </div>
+      </form>
+
+      <form class="voucher-no-utilizado-form mt-2"
+            data-voucher-form="no-utilizado"
+            action="{{ url_for('planificador.planificador_voucher_no_utilizado_item', sid=s.id, item_id=item.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="voucher-form-fields">
+          <div>
+            <label class="form-label form-label-sm">¿No usó este voucher? Indique el motivo *</label>
+            <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
+                      rows="2" placeholder="Ej. Se canceló el viaje, no se necesitó…" required></textarea>
+          </div>
+        </div>
+        <div class="voucher-form-footer">
+          <span class="voucher-nouse-status"></span>
+          <button type="submit" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-slash-circle me-1"></i>No lo utilicé
+          </button>
+        </div>
+      </form>
+      {% endif %}
+
+      {% if item.puede_liquidar %}
+      <form method="post" class="mt-2"
+            action="{{ url_for('planificador.planificador_voucher_liquidar_item', sid=s.id, item_id=item.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="voucher-form-fields voucher-liquidar-row">
+          <div>
+            <label class="form-label form-label-sm">Costo de este voucher *</label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">$</span>
+              <input class="form-control" type="number" name="costo"
+                     min="0" step="0.01" placeholder="0.00" required>
+            </div>
+          </div>
+          <div class="align-self-end">
+            <button type="submit" class="btn btn-primary btn-sm w-100">
+              <i class="bi bi-check2-circle me-1"></i>Liquidar
+            </button>
+          </div>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 {# ── Voucher: aprobación jefe directo ── #}
 {% if s.puede_aprobar_jefe_voucher %}
 <div class="action-zone action-zone-orange mt-3">
@@ -509,6 +656,9 @@
       {% for item in voucher_items %}
       <div class="col-sm-6">
         <label class="form-label">Secuencial — Voucher #{{ item.numero }} *</label>
+        {% if item.origen or item.destino %}
+        <div class="small text-muted mb-1">{{ item.origen or '—' }} → {{ item.destino or '—' }}</div>
+        {% endif %}
         <input class="form-control form-control-sm" type="text" name="secuencial_{{ item.id }}"
                placeholder="Ej. 001-2026-00123" required>
       </div>
@@ -520,116 +670,6 @@
       </button>
     </div>
   </form>
-</div>
-{% endif %}
-
-{# ── Voucher: detalle de cada voucher individual (confirmación del usuario / liquidación del coordinador) ── #}
-{% if s.tipo == 'Voucher' and voucher_items %}
-<div class="voucher-list mt-3">
-  <div class="voucher-list-header">
-    <i class="bi bi-ticket-perforated-fill me-1"></i>
-    Vouchers de esta solicitud
-    <span class="voucher-count-badge">{{ voucher_items|length }}</span>
-  </div>
-
-  {% for item in voucher_items %}
-  {% if item.costo is not none %}
-    {% set vstate = 'liquidado' %}
-  {% elif item.confirmado_usuario %}
-    {% set vstate = 'confirmado' %}
-  {% elif item.secuencial %}
-    {% set vstate = 'entregado' %}
-  {% else %}
-    {% set vstate = 'pendiente' %}
-  {% endif %}
-
-  <div class="voucher-item voucher-item--{{ vstate }}" id="voucher-item-{{ item.id }}">
-    <div class="voucher-item-header">
-      <div class="voucher-item-title">
-        <span class="voucher-num">#{{ item.numero }}</span>
-        {% if item.secuencial %}<span class="voucher-seq">SEC {{ item.secuencial }}</span>{% endif %}
-      </div>
-      <div class="voucher-item-badge">
-        {% if vstate == 'liquidado' %}
-        <span class="vbadge vbadge--liquidado"><i class="bi bi-check-circle-fill me-1"></i>Liquidado — ${{ '%.2f'|format(item.costo|float) }}</span>
-        {% elif vstate == 'confirmado' %}
-        <span class="vbadge vbadge--confirmado"><i class="bi bi-hourglass-split me-1"></i>Confirmado, pend. liquidar</span>
-        {% elif vstate == 'entregado' %}
-        <span class="vbadge vbadge--entregado"><i class="bi bi-clock me-1"></i>Entregado, pend. confirmar</span>
-        {% else %}
-        <span class="vbadge vbadge--pendiente"><i class="bi bi-dash-circle me-1"></i>Pend. entrega</span>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="voucher-item-body">
-      {% if item.observacion_usuario %}
-      <div class="voucher-meta"><span class="vmeta-k">Observación</span><span class="vmeta-v">{{ item.observacion_usuario }}</span></div>
-      {% endif %}
-      {% if item.adjunto_nombre_original %}
-      <div class="voucher-meta voucher-adjunto-row" id="voucher-adjunto-{{ item.id }}">
-        <span class="vmeta-k"><i class="bi bi-paperclip me-1"></i>Respaldo</span>
-        <span class="vmeta-v text-truncate">{{ item.adjunto_nombre_original }}</span>
-      </div>
-      {% else %}
-      <div class="voucher-meta voucher-adjunto-row" id="voucher-adjunto-{{ item.id }}" style="display:none;">
-        <span class="vmeta-k"><i class="bi bi-paperclip me-1"></i>Respaldo</span>
-        <span class="vmeta-v text-truncate"></span>
-      </div>
-      {% endif %}
-
-      {% if item.puede_confirmar %}
-      <form class="voucher-confirmar-form mt-2"
-            data-voucher-form="confirmar"
-            action="{{ url_for('planificador.planificador_voucher_confirmar_item', sid=s.id, item_id=item.id) }}"
-            enctype="multipart/form-data">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="voucher-form-fields">
-          <div>
-            <label class="form-label form-label-sm">Observación <span class="text-muted">(opcional)</span></label>
-            <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
-                      rows="2" placeholder="Detalle del uso de este voucher…"></textarea>
-          </div>
-          <div>
-            <label class="form-label form-label-sm">Respaldo *</label>
-            <input class="form-control form-control-sm" type="file" name="adjunto_voucher"
-                   accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required>
-            <div class="form-text">Máx. 10 MB · PDF, Word, imagen</div>
-          </div>
-        </div>
-        <div class="voucher-form-footer">
-          <span class="voucher-upload-status"></span>
-          <button type="submit" class="btn btn-success btn-sm">
-            <i class="bi bi-check2-circle me-1"></i>Confirmar este voucher
-          </button>
-        </div>
-      </form>
-      {% endif %}
-
-      {% if item.puede_liquidar %}
-      <form method="post" class="mt-2"
-            action="{{ url_for('planificador.planificador_voucher_liquidar_item', sid=s.id, item_id=item.id) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="voucher-form-fields voucher-liquidar-row">
-          <div>
-            <label class="form-label form-label-sm">Costo de este voucher *</label>
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">$</span>
-              <input class="form-control" type="number" name="costo"
-                     min="0" step="0.01" placeholder="0.00" required>
-            </div>
-          </div>
-          <div class="align-self-end">
-            <button type="submit" class="btn btn-primary btn-sm w-100">
-              <i class="bi bi-check2-circle me-1"></i>Liquidar
-            </button>
-          </div>
-        </div>
-      </form>
-      {% endif %}
-    </div>
-  </div>
-  {% endfor %}
 </div>
 {% endif %}
 

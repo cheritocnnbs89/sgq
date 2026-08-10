@@ -38,6 +38,11 @@
         <i class="bi bi-file-earmark-excel"></i> Excel
       </a>
       {% endif %}
+      {% if ctx.es_admin or 'Voucher' in ctx.tipos_coordinador %}
+      <button type="button" class="btn btn-sm btn-light border" data-open-modal="modalCargaMasivaVouchers">
+        <i class="bi bi-upload"></i> Cargar costos vouchers
+      </button>
+      {% endif %}
       {% if has_permission('planificador.solicitudes','crear') %}
       <button type="button" class="btn btn-primary btn-sm" data-open-modal="modalNueva">
         <i class="bi bi-plus-lg me-1"></i>Nueva solicitud
@@ -538,7 +543,7 @@
           <div class="campo-voucher d-none" id="campoNumeroVouchersDiv">
             <label class="form-label">N° de vouchers solicitados *</label>
             <input class="form-control" type="number" name="numero_vouchers" id="campoNumeroVouchers"
-                   min="1" step="1" value="1">
+                   min="1" max="6" step="1" value="1">
           </div>
           <div class="full campo-vuelo" id="campoMotivoVueloDiv">
             <label class="form-label">Motivo *</label>
@@ -566,6 +571,45 @@
               <i class="bi bi-info-circle"></i>
               Usa el botón del mapa para buscar y confirmar la dirección exacta
             </div>
+          </div>
+          <div class="full campo-voucher d-none" id="camposVoucherOrigenDestinoDiv">
+            {% for i in range(1, 7) %}
+            <div class="voucher-od-row d-none" id="voucherOdRow{{ i }}">
+              <div class="fw-semibold small text-muted mb-1">Voucher #{{ i }}</div>
+              <div class="row g-2 mb-2">
+                <div class="col-sm-6">
+                  <label class="form-label">Origen *</label>
+                  <div class="lugar-input-group">
+                    <input class="form-control" name="voucher_origen_{{ i }}" id="vOrigen{{ i }}"
+                           placeholder="Punto de origen" autocomplete="off">
+                    <button type="button" class="btn btn-outline-secondary btn-sm lugar-map-btn"
+                            data-open-map="vOrigen{{ i }}" title="Buscar en mapa">
+                      <i class="bi bi-geo-alt-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary btn-sm lugar-map-btn"
+                            data-geolocate="vOrigen{{ i }}" title="Usar mi ubicación actual">
+                      <i class="bi bi-crosshair"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label">Destino *</label>
+                  <div class="lugar-input-group">
+                    <input class="form-control" name="voucher_destino_{{ i }}" id="vDestino{{ i }}"
+                           placeholder="Punto de destino" autocomplete="off">
+                    <button type="button" class="btn btn-outline-secondary btn-sm lugar-map-btn"
+                            data-open-map="vDestino{{ i }}" title="Buscar en mapa">
+                      <i class="bi bi-geo-alt-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary btn-sm lugar-map-btn"
+                            data-geolocate="vDestino{{ i }}" title="Usar mi ubicación actual">
+                      <i class="bi bi-crosshair"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
           </div>
           <div id="campoContactoDiv">
             <label class="form-label">Persona de contacto</label>
@@ -1004,6 +1048,56 @@
       <button type="button" class="btn btn-success btn-sm" data-use-map-address="1">
         <i class="bi bi-check2-circle"></i> Usar esta dirección
       </button>
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════
+   MODAL – Carga masiva de costos de vouchers
+══════════════════════════════════════════ #}
+<div class="sgq-modal-backdrop" id="modalCargaMasivaVouchers"
+     data-url="{{ url_for('planificador.planificador_voucher_carga_masiva') }}">
+  <div class="sgq-modal">
+    <div class="sgq-modal-header">
+      <h2 class="sgq-modal-title"><i class="bi bi-upload me-1"></i>Cargar costos de vouchers</h2>
+      <button class="close-btn" data-close-modal="modalCargaMasivaVouchers">&#215;</button>
+    </div>
+    <div class="sgq-modal-body">
+      <input type="hidden" id="cargaMasivaCsrf" value="{{ csrf_token() }}">
+      <p class="small text-muted mb-2">
+        Sube el Excel del proveedor de taxis con las columnas <strong>VOUCHER</strong> y
+        <strong>VALOR</strong> (opcionalmente <strong>ORIGEN</strong> / <strong>DESTINO</strong>).
+        El sistema busca cada voucher por su número de secuencial y registra el costo automáticamente.
+      </p>
+      <div class="d-flex gap-2 align-items-end mb-2">
+        <div class="flex-grow-1">
+          <label class="form-label form-label-sm">Archivo Excel (.xlsx)</label>
+          <input type="file" class="form-control form-control-sm" id="cargaMasivaArchivo" accept=".xlsx,.xlsm">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="btnCargaMasivaProcesar">
+          <i class="bi bi-play-fill me-1"></i>Procesar
+        </button>
+      </div>
+      <div id="cargaMasivaStatus" class="small mb-2"></div>
+      <div id="cargaMasivaResultado" class="d-none">
+        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+          <div id="cargaMasivaResumen" class="fw-semibold"></div>
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="btnCargaMasivaDescargar">
+            <i class="bi bi-download me-1"></i>Descargar resultado (.txt)
+          </button>
+        </div>
+        <div class="carga-masiva-tabla-wrap">
+          <table class="table table-sm table-striped mb-0" id="cargaMasivaTablaErrores">
+            <thead>
+              <tr><th>Fila</th><th>Voucher</th><th>Motivo</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="sgq-modal-footer">
+      <button type="button" class="btn btn-outline-secondary btn-sm" data-close-modal="modalCargaMasivaVouchers">Cerrar</button>
     </div>
   </div>
 </div>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1707202601091135045200120010010000012801234567013</numeroAutorizacion>
+    <fechaAutorizacion>2026-07-17T14:30:20-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;PICHUCHO GRANJA JOSE GUILLERMO&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;PICHUCHO GRANJA JOSE GUILLERMO&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0911350452001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;1707202601091135045200120010010000012801234567013&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;001&lt;/estab&gt;
+    &lt;ptoEmi&gt;001&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000001280&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;CALLEJON 20 ENTRE BOLIVIA Y VACAS GALINDO&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;17/07/2026&lt;/fechaEmision&gt;
+    &lt;obligadoContabilidad&gt;NO&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;AV. ROSAVIN LOTE 1 Y CALLE COBRE -KM16.5 VIA DAULE&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;1210.00&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;1210.00&lt;/baseImponible&gt;
+        &lt;tarifa&gt;15&lt;/tarifa&gt;
+        &lt;valor&gt;181.50&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;1391.50&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;1391.50&lt;/total&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;1290-QUI&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;MANTENIMIENTO PREVENTIVO A MOTOR UM 701E  HOJA DE ENTRADA 1001640104&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;210.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;210.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;210.00&lt;/baseImponible&gt;
+          &lt;valor&gt;31.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;1291-QUI&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;MANTENIMIENTO PREVENTIVO A MOTOR PM 602B  HOJA DE ENTRADA 1001640105&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;210.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;210.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;210.00&lt;/baseImponible&gt;
+          &lt;valor&gt;31.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;1292-QUI&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;MANTENIMIENTO PREVENTIVO MOTOR PM 101B   HOJA DE ENTRADA 1001640108&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;210.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;210.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;210.00&lt;/baseImponible&gt;
+          &lt;valor&gt;31.50&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;1293-QUI&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;MANTENIMIENTO PREVENTIVO A MOTOR KM 401A   HOJA DE ENTRADA 1001640111&lt;/descripcion&gt;
+      &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;580.00&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;580.00&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;580.00&lt;/baseImponible&gt;
+          &lt;valor&gt;87.00&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="Direccion"&gt;AV. ROSAVIN LOTE 1 Y CALLE COBRE -KM16.5 VIA DAULE&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Varios"&gt;ORDEN DE SERVICIO 7500055718&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Telefono"&gt;2162660&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Email"&gt;RECEPCION@QUIMPAC.COM.EC&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="Fechavencimiento"&gt;16/08/2026&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature825901"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo813209"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID726061" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature825901-SignedProperties457599"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;sAJiYEaoMWn1iDIBrhO1r6xtvd8=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1770668"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;gP8OgW+mEYmM0xeMDdWYub+9FdQ=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-65810" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;2fQ6If52LM0RzEtZqgU2LlX8rG0=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue765000"&gt;
+nbLmV/Y2ZYWUj0RBlEjjM3tv9R5gO8I6Xwq19iiGN+aH+4P2c1Zd2yDfUoa9UDprXPhTz+h2l7Ig
+vPKhb5FCvQQimr9NKO9CU50qD6YL+F3x/LU4x9iSq5Tr+wRSf3cjKDIWLXx8NA0/9s8hNvYvu8Gg
+jRN2li+jKuKhUbhaJru4SooSnZsk+Fa4PzhJDIK1I0v5K8NtNo8Z9dce8J9L6ng0jiB2RyY79pN8
+bBcZkIh4edVIWtC/cJ2+w9c3IP75jx1Hc5yNiqy198CoTjr5g6/GOjl9qM+w+Qe1RjnJnStds1XZ
+idNQKIHx/r5LwiBaYkY5vpyEpSAoCQ1iVXvS3A==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1770668"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIL0jCCCbqgAwIBAgIEJ7qNezANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMzExMTAxOTQ1MjBaFw0yODExMDkxOTQ1MjBaMIGeMScw
+JQYDVQQDDB5KT1NFIEdVSUxMRVJNTyBQSUNIVUNITyBHUkFOSkExFTATBgNVBAUTDDEwMTEyMzE0
+NTUwMzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQC3sPqHnjTUfGzdfIiH5jP1n4rGlBkbEh/uSzwluqx8twJgxuMR/9rf
+SMzdyIv9lvrNQejcyno7p9Oalpr36i0Ina90uVXbpoQBa+y7zM9sBW2v6aOpEcJqPMw9FQ33o2QT
+/2EHoRF8PfPRwjWB8gn3Peztl2Q0ndKk1tWzZy7mKv9akNnwGk/N7bX6x8Uqb2iCLgo94EwI29Jx
+hFbULZvE1kmx2Zzn7OdVdJwRrTKZtD5dBu2MRXdbhcqqtV7NA1LU6aFfKsRTYAz857er4SuQcbeu
+UdMn0+jv6DxpWNck6PmQiotdTs/phtJek4qi0TOek9PrkHvyLE6VuG4FJBGxAgMBAAGjggcZMIIH
+FTAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUF
+BwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2Vq
+YmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4bGRhcDov
+L2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FD
+SU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2NhdGlvbkxp
+c3Q/YmFzZTAoBgNVHREEITAfgR1zaWVpbmpvc2VwaWNodWNob0Bob3RtYWlsLmNvbTCCAQYGA1Ud
+IASB/jCB+zBaBgorBgEEAYKmcgIHMEwwSgYIKwYBBQUHAgIwPh48AEMAZQByAHQAaQBmAGkAYwBh
+AGQAbwAgAGQAZQAgAFAAZQByAHMAbwBuAGEAIABOAGEAdAB1AHIAYQBsMIGcBgorBgEEAYKmcgIB
+MIGNMIGKBggrBgEFBQcCARZ+aHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250
+ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBD
+ZXJ0aWZpY2FkbyBQZXJzb25hIE5hdHVyYWwucGRmMIICogYDVR0fBIICmTCCApUwgeWgQaA/hj1o
+dHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9v
+Y3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0y
+IFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZP
+Uk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIHHoIHE
+oIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJ
+RklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2NlcnRp
+ZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJh
+ZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0
+P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VD
+VVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1T
+RUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBSCPcpyXhKW7lCERihcci4vq+QXmDAr
+BgNVHRAEJDAigA8yMDIzMTExMDE5NDUyMFqBDzIwMjgxMTA5MTk0NTIwWjALBgNVHQ8EBAMCBeAw
+GgYKKwYBBAGCpnIDAQQMDAowOTExMzUwNDUyMBkGCisGAQQBgqZyAwkECwwJR1VBWUFRVUlMMBEG
+CisGAQQBgqZyAyIEAwwBLjAlBgorBgEEAYKmcgMHBBcMFTIwIEFWQSAyNTA5IFkgQk9MSVZJQTAe
+BgorBgEEAYKmcgMCBBAMDkpPU0UgR1VJTExFUk1PMB8GCisGAQQBgqZyAyAEEQwPMDA5MDAxMDAw
+MDAyMjU4MBEGCisGAQQBgqZyAyMEAwwBLjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKm
+cgMMBAkMB0VDVUFET1IwGAYKKwYBBAGCpnIDAwQKDAhQSUNIVUNITzARBgorBgEEAYKmcgMeBAMM
+AS4wHQYKKwYBBAGCpnIDCwQPDA0wOTExMzUwNDUyMDAxMBEGCisGAQQBgqZyAx0EAwwBLjAWBgor
+BgEEAYKmcgMEBAgMBkdSQU5KQTAaBgorBgEEAYKmcgMIBAwMCjA5NjM1MTg4NjYwDQYJKoZIhvcN
+AQELBQADggIBABGKe//nnaE9N6EN3q5GLym5uYUVS6tGwpjzAwaRINsrVi3yao0Id7n+BNe1vBgr
+P7M3tst5tNQ5Ud9ERA5QLJ9IPXCOphmlMasR4wJagOyjYpLr80jtKUcMjzsOgYJXaCzPQgOG9tgJ
+Vrnn9+Dtq6ltzvftgOxHh9NEHYdtcV16/TNh/URKIcbZJcxI38fYZ4e83kBFRGFULRLaZSBuaLM5
+Rs9mJ9eN1PS5VpoFW8iDYcqtUSXmxCTVkZfQAifSIxcpDcx4R0DA+aDVlev1QsU2MhqLZMBUYhq2
+c4JqkVcLDSCWxOW8JFiUkWNqty7OYQWbkWZVDQpB3NNET0XuQcTU4KZDhsRGgk+YtCBeNTnV0RPP
+J6W7oHhUoJMaWtiqr3Rgm7beFFJ2lShaBh7JaIHAZKghjTxxopM9I20FJe8lh3bEHW7oDxqty7xy
+kF1H+2PWGNvPjcnkE9P1KHP8O/nRAxlaJd2nfLk2H1wPiko0RX1QKwTWoeHjlJMVRfPKERtHLHNv
+9YmH+KHbKg7PEgLL3K4LwjRMzkhLgjYK0pAyKlTbk7vaNSopN7wCLhKtdyVukjqoxm5xNFJUUc7+
+uSAIHtTigL/g9s6dc5Y5mlOFn61iN8rg2AOr9p8BZrYLel3FfzOuEcuZrfq3Fq8+Bo5FM0NJOGd2
+g8+cwPEAkJUR
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+t7D6h5401Hxs3XyIh+Yz9Z+KxpQZGxIf7ks8JbqsfLcCYMbjEf/a30jM3ciL/Zb6zUHo3Mp6O6fT
+mpaa9+otCJ2vdLlV26aEAWvsu8zPbAVtr+mjqRHCajzMPRUN96NkE/9hB6ERfD3z0cI1gfIJ9z3s
+7ZdkNJ3SpNbVs2cu5ir/WpDZ8BpPze21+sfFKm9ogi4KPeBMCNvScYRW1C2bxNZJsdmc5+znVXSc
+Ea0ymbQ+XQbtjEV3W4XKqrVezQNS1OmhXyrEU2AM/Oe3q+ErkHG3rlHTJ9Po7+g8aVjXJOj5kIqL
+XU7P6YbSXpOKotEznpPT65B78ixOlbhuBSQRsQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature825901-Object762617"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature825901"&gt;
+                &lt;etsi:SignedProperties Id="Signature825901-SignedProperties457599"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-07-17T14:30:14-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;Uy51QcTnNVteU5OaUbKxUEyHZEY=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;666537339&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-65810"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

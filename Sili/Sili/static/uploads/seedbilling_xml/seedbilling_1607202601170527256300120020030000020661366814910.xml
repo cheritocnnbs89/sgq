@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><factura id="comprobante" version="2.1.0">
+<infoTributaria>
+<ambiente>2</ambiente>
+<tipoEmision>1</tipoEmision>
+<razonSocial>BURBANO LUNA NELSON IVAN</razonSocial>
+<nombreComercial>DISTRIBUIDORA C &amp;amp; E</nombreComercial>
+<ruc>1705272563001</ruc>
+<claveAcceso>1607202601170527256300120020030000020661366814910</claveAcceso>
+<codDoc>01</codDoc>
+<estab>002</estab>
+<ptoEmi>003</ptoEmi>
+<secuencial>000002066</secuencial>
+<dirMatriz>LOLA QUINTANA 1 N10 Y MANUELA CAÑIZARES</dirMatriz>
+<agenteRetencion>1</agenteRetencion>
+</infoTributaria>
+<infoFactura>
+<fechaEmision>16/07/2026</fechaEmision>
+<dirEstablecimiento>CALLE 2 CAS-1 Y CALLE 8 - L105 / SANGOLQUI</dirEstablecimiento>
+<obligadoContabilidad>SI</obligadoContabilidad>
+<tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+<razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+<identificacionComprador>0990344760001</identificacionComprador>
+<direccionComprador>GUAYAQUIL</direccionComprador>
+<totalSinImpuestos>2160.0</totalSinImpuestos>
+<totalDescuento>0.0</totalDescuento>
+<totalConImpuestos>
+<totalImpuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>0</codigoPorcentaje>
+<baseImponible>2160.0</baseImponible>
+<valor>0.0</valor>
+</totalImpuesto>
+</totalConImpuestos>
+<propina>0.0</propina>
+<importeTotal>2160.0</importeTotal>
+<moneda>DOLAR</moneda>
+<pagos>
+<pago>
+<formaPago>20</formaPago>
+<total>2160.0</total>
+<plazo>30</plazo>
+<unidadTiempo>dias</unidadTiempo>
+</pago>
+</pagos>
+</infoFactura>
+<detalles>
+<detalle>
+<codigoPrincipal>DCE02322</codigoPrincipal>
+<codigoAuxiliar> </codigoAuxiliar>
+<descripcion>SESQUICARBONATO DE SODIO S-CARB - SC25</descripcion>
+<cantidad>2250.0</cantidad>
+<precioUnitario>0.960000</precioUnitario>
+<descuento>0.0</descuento>
+<precioTotalSinImpuesto>2160.0</precioTotalSinImpuesto>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>0</codigoPorcentaje>
+<tarifa>0.0</tarifa>
+<baseImponible>2160.0</baseImponible>
+<valor>0.0</valor>
+</impuesto>
+</impuestos>
+</detalle>
+</detalles>
+<infoAdicional>
+<campoAdicional nombre="Sucursal">QUIMPAC ECUADOR S.A QUIMPACSA</campoAdicional>
+<campoAdicional nombre="Dirección">GUAYAQUIL</campoAdicional>
+<campoAdicional nombre="E-MAIL">compras.electronica@quimpac.com.ec; recepcion@quimpac.com.ec</campoAdicional>
+<campoAdicional nombre="Teléfono">2162660</campoAdicional>
+</infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature745241">
+<ds:SignedInfo Id="Signature-SignedInfo288426">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID896838" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature745241-SignedProperties977296">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>/sZVq7H5yghs6XrRuGHaOz1B7f4=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1913480">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>fXIePuvshxnpuZl42keliwcWH/A=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-214284" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>lnoGT9y3tbN6rG+oQxeM3JZq8pU=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue1008523">
+k/eQyPxBSDnJmB4VfsnedCmEXEz/0EP3CNm8bqK3qzIHSfICtLYzbZKoF6najc2obg4DaavO0scx
+ymiorCSlZkryl+Tjrh0wikrr8xLsWpg7M1Hw9KqKvP6q+bHj8oBq6qs5TKvpqhWX9ToXeRRpu9vh
+IcmLmspJWVkcJxj9vUm4uOw1Nq7yarzIfo5hHE3BaKq6O0YFrfbFnrZRy39pK0RJOOuTJosIN2VC
+iLPVdj9IUE+meSA22wnwaK+vXQlzzEplLUdh0EmZwIPE5CXj7iykuknZyomcYMmNfI3cCTqcG7df
+NqEBnSepuK7ICvHqogiXLJOhdGla97w7ccx3iw==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1913480">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIHxzCCBa+gAwIBAgIRAMGZehr5Mx9wr3SWShIe7DMwDQYJKoZIhvcNAQELBQAwgcIxCzAJBgNV
+BAYTAkVDMRswGQYDVQQKDBJGSVJNQVNFR1VSQSBTLkEuUy4xMDAuBgNVBAsMJ0VOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjETMBEGA1UECAwKVFVOR1VSQUhVQTE+MDwGA1UE
+Aww1QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMSBGSVJNQVNFR1VSQSBTLkEuUy4x
+DzANBgNVBAcMBkFNQkFUTzAeFw0yNDA5MzAxODA0MjJaFw0yNjA5MzAxOTA0MjJaMIHdMS0wKwYD
+VQQFEyRmNzJiZWJkMS0xZTg4LTQyYWMtYWJlNS05NTEwZTVkZDE1NzMxKzApBgkqhkiG9w0BCQEW
+HGl2YW5fYnVyYmFub2x1bmFAaG90bWFpbC5jb20xIzAhBgNVBAMTGk5FTFNPTiBJVkFOICBCVVJC
+QU5PICBMVU5BMTAwLgYDVQQLEydFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJ
+T04xGzAZBgNVBAoTEkZJUk1BU0VHVVJBIFMuQS5TLjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQCi5v44tBbo0ZGxmrHGC24pX1zA/X+c83qgbRr24seYwAWqZyma
+hERyjQBSl1JY5GG/Y8XIutB2wguGSQkDcZ0vrYszJSced3ohvetASgzOtWszHn+miVeIzL5E6Imt
+eGOSyeXLKcTq8b3aOnIBEYKdoBT+PelzOafrSD9FF4wE9Nrnw/VlsROqWEeedr0ZxNrrGNTWfObR
+qNTiTqRmj0ap9y61DzTdy6mGg48rCZF1n0IwtvTQuNlAxBo7NW3IOaxDhjxGFzs8pGa+M46kLMro
+jicIGgc6zYqu2XZoybgGNPvVw3yChR5aTr3RXnJ5A8bNlaqOmw7oX9iKZjDNhDjJAgMBAAGjggKZ
+MIIClTAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFBNGk2gJrtckhzNFYyZ336xeXopRMB0GA1UdDgQW
+BBRJlOZwUSTajC7nP/mnlX3vnx4tMzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3JsLmZpcm1h
+c2VndXJhZWMuY29tL2NybC9jY2NlNWE0Zi02YjY4LTQ2ZmMtYTYyMC00YWJjYzRjNGE2OTAuY3Js
+MDkGCCsGAQUFBwEBBC0wKzApBggrBgEFBQcwAYYdaHR0cDovL29jc3AuZmlybWFzZWd1cmFlYy5j
+b20wGgYKKwYBBAGD3nkDAQQMFgoxNzA1MjcyNTYzMBsGCisGAQQBg955AwIEDRYLTkVMU09OIElW
+QU4wFwYKKwYBBAGD3nkDAwQJFgdCVVJCQU5PMBQGCisGAQQBg955AwQEBhYETFVOQTAxBgorBgEE
+AYPeeQMHBCMWIUxPTEEgUVVJTlRBTkEgWSBNQU5VRUxBIENBTklaQVJFUzAcBgorBgEEAYPeeQMI
+BA4WDDU5Mzk5ODMwNTkxMjAVBgorBgEEAYPeeQMJBAcWBVFVSVRPMBMGCisGAQQBg955AwwEBRYD
+RUNVMB0GCisGAQQBg955AwsEDxYNMTcwNTI3MjU2MzAwMTCBnAYDVR0gBIGUMIGRMFAGCysGAQQB
+g955AgEBMEEwPwYIKwYBBQUHAgEWM2h0dHBzOi8vZmlybWFzZWd1cmFlYy5jb20vcG9saXRpY2Fz
+X3BlcnNvbmFfbmF0dXJhbDA9BgsrBgEEAYPeeQICATAuMCwGCCsGAQUFBwICMCAMHkNlcnRpZmlj
+YWRvIGRlIFBlcnNvbmEgTmF0dXJhbDAOBgNVHQ8BAf8EBAMCBeAwDQYJKoZIhvcNAQELBQADggIB
+AJJRrS52VKVGW5z6efn+9wKopytXvVa8pj9dD9E0nxxdt+hEfuy3MK5VT90A14ppDLNJg7CzmjdO
+KLVl8KEJjwWSJ209ld64obXTOV72lUdXpNDW70AIh4wAEqAGniZteEi17I8WM7j67v3MeY1YDa+q
+t9Bd+Tmt0oBjGEKgAmqKUmrQmyiEfSiaNalrEnep8m37eHvdYtmaLPUcBnYeFK2XzJC8byhUH/TT
+L8V+Y0TGQ06Uvm795izzFaiLuJzoHLtXGv/p+UVzZIJyzS28nX9jpSjhNdMw9g87pVvDub3n2d2K
+5MA/L5qM3ho2Xhl6we27d6BWlHuR7+en8teC6+9myZIxvQpdBPy4hG27w6saXqRqIAhB1BZ6eq0W
+19wFC9QRt/lfy433OV4DuxM67rgathI1foybIzgH+ulvVtzxJGdu26i+vgZKIMTA7DLRbS1xb0qN
+aBbu/4c9RyMIrRgLxQDZ1N0mhhu89Hi/CHaR+HCQFLewlAHIAkDtZgqenP6+wbde6sx/I1Q+AYc0
+760JAR2bNOxpshiQ2OvZaFbqvZ4ndkK9Myw68TDDXpFhZZzVaJta8v//B6d7WwscdadyjOVOW2Ij
+t/WlKArUm5AdCUHejEWuxUKMmzKfOyaenazb0xPZDNu23jQZs8+1ITltWrbpfrxH2jOvjzfxRe3s
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+oub+OLQW6NGRsZqxxgtuKV9cwP1/nPN6oG0a9uLHmMAFqmcpmoREco0AUpdSWORhv2PFyLrQdsIL
+hkkJA3GdL62LMyUnHnd6Ib3rQEoMzrVrMx5/polXiMy+ROiJrXhjksnlyynE6vG92jpyARGCnaAU
+/j3pczmn60g/RReMBPTa58P1ZbETqlhHnna9GcTa6xjU1nzm0ajU4k6kZo9GqfcutQ803cuphoOP
+KwmRdZ9CMLb00LjZQMQaOzVtyDmsQ4Y8Rhc7PKRmvjOOpCzK6I4nCBoHOs2Krtl2aMm4BjT71cN8
+goUeWk690V5yeQPGzZWqjpsO6F/YimYwzYQ4yQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature745241-Object653157"><etsi:QualifyingProperties Target="#Signature745241"><etsi:SignedProperties Id="Signature745241-SignedProperties977296"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-16T16:19:44-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>OC0yljtO2EqhSAFjlj1zwSD7wrc=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>L=AMBATO,CN=AUTORIDAD DE CERTIFICACION SUBCA-1 FIRMASEGURA S.A.S.,ST=TUNGURAHUA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=FIRMASEGURA S.A.S.,C=EC</ds:X509IssuerName><ds:X509SerialNumber>257337901196872034106618896282940271667</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-214284"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

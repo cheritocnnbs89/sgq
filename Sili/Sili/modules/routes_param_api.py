@@ -71,6 +71,7 @@ def _search_param_values(conn, group_id, q, limit=50):
             SELECT TOP {limit} id, nombre, valor
             FROM param_values
             WHERE group_id = ?
+              AND COALESCE(activo, 1) = 1
               AND (
                     LOWER(COALESCE(nombre, '')) LIKE ?
                  OR LOWER(COALESCE(CAST(valor AS NVARCHAR(MAX)), '')) LIKE ?
@@ -85,6 +86,7 @@ def _search_param_values(conn, group_id, q, limit=50):
             SELECT TOP {limit} id, nombre, valor
             FROM param_values
             WHERE group_id = ?
+              AND COALESCE(activo, 1) = 1
             ORDER BY nombre
             """,
             (group_id,)

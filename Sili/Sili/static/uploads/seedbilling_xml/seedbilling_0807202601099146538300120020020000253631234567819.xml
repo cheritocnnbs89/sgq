@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>CHIRIBOGA &amp;amp; JARA S.A. </razonSocial><nombreComercial>CHIRIBOGA &amp;amp; JARA S.A.</nombreComercial><ruc>0991465383001</ruc><claveAcceso>0807202601099146538300120020020000253631234567819</claveAcceso><codDoc>01</codDoc><estab>002</estab><ptoEmi>002</ptoEmi><secuencial>000025363</secuencial><dirMatriz>URB. STA. ADRIANA MZ.3 SL.7 (AV. JUAN TANCA MARENGO KM 5.5)</dirMatriz><agenteRetencion>1</agenteRetencion></infoTributaria><infoFactura><fechaEmision>08/07/2026</fechaEmision><dirEstablecimiento>URB. SANTA ADRIANA MZ. 3 SL. 7 (AV. JUAN TANCA MARENGO KM 5.5)</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>KM 16.5 VIA DAULE-AVE. ROSAVIN Y CALLE</direccionComprador><totalSinImpuestos>73.99</totalSinImpuestos><totalDescuento>13.06</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>73.99</baseImponible><tarifa>15.00</tarifa><valor>11.10</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>85.09</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>85.09</total><plazo>30</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>1</codigoPrincipal><codigoAuxiliar>1</codigoAuxiliar><descripcion>MANG. 4" X 5MTS FLEX NARANJA</descripcion><cantidad>5.00</cantidad><precioUnitario>17.4100</precioUnitario><descuento>13.06</descuento><precioTotalSinImpuesto>73.99</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>73.99</baseImponible><valor>11.10</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="DECLARACION">RECIBI CONFORME LAS MERCADERIAS DETALLADAS EN ESTE DOCUMENTO Y, ACEPTO LOS VALORES Y CONDICIONES EN EL ESTIPULADOS.-SIRVASE CANCELAR UNICAMENTE CON CHEQUE CRUZADO AL PRIMER BENEFICIARIO. A NOMBRE DE CHIRIBOGA &amp;amp; JARA S.A.-CORREO ELECTRONICO PARA ENVIO DE RETENCIONES:retenciones@chiribogayjara.com</campoAdicional><campoAdicional nombre="Compromiso">Pagos: $ 85.09. PAGO 1: 07/08/2026(30 DIAS) $85.09.</campoAdicional><campoAdicional nombre="OrdenCompra">Po 1000621578 Dm 5000155224</campoAdicional><campoAdicional nombre="DECLARACION 2">1. EL PRESENTE DOCUMENTO CONSTITUYE UNA OBLIGACION MONETARIA DEL CLIENTE A FAVOR DE CHIRIBOGA &amp;amp; JARA S.A. A SER CANCELADO EN DOLARES ESTADOUNIDENSES.-2. EMITIR EL COMPROBANTE DE RETENCION DENTRO DEL TERMINO NO MAYOR DE CINCO DIAS DE RECIBIDO EL COMPROBANTE DE VENTA (Ref.: Art#50 de la L.O.R.T.I)</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature264253">
+<ds:SignedInfo Id="Signature-SignedInfo149886">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID346900" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature264253-SignedProperties737402">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>UzVGEks+T8K54qrbKwbvU3gLgNQ=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1796452">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>+N2X7uni0XjApcUBaG7wo5Rovzs=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-165236" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>rNDbuVXTUaDmrkHm4bmAnMvyC2w=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue368177">
+wiB/qV/b/Pwn4SVwpsH8pGdnyUdH8GbSOwkjtm/DizDJFYfqYDkvMgSeHFLeiVCUlbKzleN7TGPw
+lta04nmy+rq5Kthz3HIHLfv2HNIM1P+oSznEn/PY5PhPosNEriro7fuFLyBQnjotIUnGmXsnm0G5
+/a77c1mD+6f3xg36+zD74NsrG6y2rDbD7CLgRMhZsNUwz0t1tEtX+y+8UQ+EL/f1MjOeRDH/qdBU
+eQRGyFySPhswlHpLCKHdeGaROz4ZasJgwhjDT+4QLkASuQB/VT0IUsa49dgkKEq7f+Nvq1SGT6XH
+5AeF6SOMmnYjMdYW77qPXjZqHenRD0ZajssinA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1796452">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIL9TCCCd2gAwIBAgIEBYmW/DANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMjEyMTUyMTA3MDlaFw0yNzEyMTUyMTA3MDlaMIGeMScw
+JQYDVQQDDB5DRVNBUiBHQVNUT04gQ0hJUklCT0dBIEdVRVZBUkExFTATBgNVBAUTDDE1MTIyMjE2
+MTY0NzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQDO4ubkuEEdh4mKHeP4IX8EKSpSyTiwGfojuCdMMvG+F7Q7Xd+qQ36L
+djJKi6PEQV72GJL6XcivX7MmxbUSMsSfqPDxsVPJxrS6qqKmr5QX0jQ2uQo4pMM83QuD9HzFHoGn
+6FYVTlrYES6ZCxxvK0/Uf16jama3TJcKXqrRbkBir3Tez532IiyCcKWVzhyHK012zXX71kF20ezQ
+hCV/jYrmmzQmlzpVPG/1P4i+L+f3xpEmi/pv7k0uHGjxdzQ2mPCW2snmm9WHv21qR+cLS+ils5s9
+/Ze0SVA6bOBe9/dRooLTCARwoR3js8iNtfIzBKRMdYWpDvWeHTHkDAnLwqphAgMBAAGjggc8MIIH
+ODAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUF
+BwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2Vq
+YmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4bGRhcDov
+L2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FD
+SU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2NhdGlvbkxp
+c3Q/YmFzZTAoBgNVHREEITAfgR1nY2hpcmlib2dhQGNoaXJpYm9nYXlqYXJhLmNvbTCCARUGA1Ud
+IASCAQwwggEIMGIGCisGAQQBgqZyAgkwVDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBj
+AGEAZABvACAAZABlACAAUgBlAHAAcgBlAHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYK
+KwYBBAGCpnICAzCBkjCBjwYIKwYBBQUHAgEWgYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0
+LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9s
+aXRpY2FzIGRlIENlcnRpZmljYWRvIFJlcHJlc2VudGFudGUgTGVnYWwucGRmMIICogYDVR0fBIIC
+mTCCApUwgeWgQaA/hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVi
+bGljd2ViL3N0YXR1cy9vY3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJ
+BgNVBAYTAkVDMIHHoIHEoIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVj
+L0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1F
+TlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMu
+QS4gMixDPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBz
+Oi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93
+ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FD
+SU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg
+SU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBRq+8q8/t58
+Yq4PHfFwML8jIa7lsTArBgNVHRAEJDAigA8yMDIyMTIxNTIxMDcwOVqBDzIwMjcxMjE1MjEwNzA5
+WjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9HRVJFTlRFIEdFTkVSQUwwGgYKKwYBBAGC
+pnIDAQQMDAowOTA4MzgyNzY1MBkGCisGAQQBgqZyAwkECwwJR1VBWUFRVUlMMBEGCisGAQQBgqZy
+AyIEAwwBLjAXBgorBgEEAYKmcgMHBAkMB1NPTEFSIDcwHAYKKwYBBAGCpnIDAgQODAxDRVNBUiBH
+QVNUT04wHwYKKwYBBAGCpnIDIAQRDA8wMDEwMDIwMDAzMjI4OTYwEwYKKwYBBAGCpnIDIQQFDANQ
+RlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBkGCisGAQQBgqZyAwMECwwJQ0hJUklCT0dBMCQG
+CisGAQQBgqZyAwoEFgwUQ0hJUklCT0dBIFkgSkFSQSBTIEEwHQYKKwYBBAGCpnIDCwQPDA0wOTkx
+NDY1MzgzMDAxMBIGCisGAQQBgqZyAx0EBAwCTm8wFwYKKwYBBAGCpnIDBAQJDAdHVUVWQVJBMBoG
+CisGAQQBgqZyAwgEDAwKMDk5OTEwNDk1MzANBgkqhkiG9w0BAQsFAAOCAgEAPSMZCZSqfPEU20TR
+I+l5vBxosriiG26aKHgbPLlYz86oKc306XXGoChM98TAW91MBCkcGGvruJ2grHxtbBHdF9r+B3N1
+rCu1ohk1sPZ3LooPAatck0bsL4Egz0t+5elCb0tVyM9lz4sZizYXoyrXVaQajFZG1QDW9VCD+ruL
+7GfRrqf1k1oU0r+sk/HfC0Kb52WF5dPXrtQdYFoDN28XRSzix6ukuYmzDSUuVLd7GHIOYkTVooaF
+Jd0rCPg1E6vi5ujePZhzmbgFqScU1A9GFsLFasKxzMYnPmBSvlnhUHDE6qH9FcN0oLAiHzrcz3+f
+VEmpx5pSGs79SnLGgmRTpThA3AxZhaPuf8ukylitCA4q2nqEzjazqFiA7E05i04nvF69RGbgsDWb
+0giew8GIb7JpvfGrcOAcjJaZ0ShO2Kjr5yXzg7NIuojwUMDKjz8MDF1MZZrqc/BiOOuc7nYEAn7w
+8k2wsgdP0Y8u9HkouBL0CGiSOVE9ZEOdPRAYe9lk/P3hzp8Budn6ghlulphPutjQwxy8L/dkwRAB
+U7yM8a+hcSOx6g5xO9GuZ6rJyPj2c0W4NROQGCRpatv5HpSymFRsHrZfK3+wIzDClxus9aK3aiGs
+exFLpVAIOSV2WIXgbym8DvcRNLzWxCTMvA9oXsf86NnPIn+UXIGPW3+/NMA=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+zuLm5LhBHYeJih3j+CF/BCkqUsk4sBn6I7gnTDLxvhe0O13fqkN+i3YySoujxEFe9hiS+l3Ir1+z
+JsW1EjLEn6jw8bFTyca0uqqipq+UF9I0NrkKOKTDPN0Lg/R8xR6Bp+hWFU5a2BEumQscbytP1H9e
+o2pmt0yXCl6q0W5AYq903s+d9iIsgnCllc4chytNds11+9ZBdtHs0IQlf42K5ps0Jpc6VTxv9T+I
+vi/n98aRJov6b+5NLhxo8Xc0NpjwltrJ5pvVh79takfnC0vopbObPf2XtElQOmzgXvf3UaKC0wgE
+cKEd47PIjbXyMwSkTHWFqQ71nh0x5AwJy8KqYQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature264253-Object961312"><etsi:QualifyingProperties Target="#Signature264253"><etsi:SignedProperties Id="Signature264253-SignedProperties737402"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-08T09:31:16-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>/9VvZxCnpqvfXAS2LHPkyEvjA1I=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>92903164</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-165236"><etsi:Description></etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

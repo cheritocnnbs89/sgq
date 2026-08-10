@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>Cangrejal Mayrita</razonSocial>
+    <nombreComercial>Cangrejal Mayrita</nombreComercial>
+    <ruc>0917017626001</ruc>
+    <claveAcceso>0807202601091701762600120020010000074750000007218</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>002</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000007475</secuencial>
+    <dirMatriz>Cangrejal Mayrita</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>08/07/2026</fechaEmision>
+    <dirEstablecimiento>Cangrejal Mayrita</dirEstablecimiento>
+    <obligadoContabilidad>NO</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A.</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>KM 16 Y MEDIO VIA A DAULE</direccionComprador>
+    <totalSinImpuestos>55.10</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>0</codigoPorcentaje>
+        <baseImponible>53.10</baseImponible>
+        <valor>0.00</valor>
+      </totalImpuesto>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>2.00</baseImponible>
+        <valor>0.30</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>55.40</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>55.40</total>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>jexw29</codigoPrincipal>
+      <descripcion>COMBO 4 X 18</descripcion>
+      <cantidad>2.000000</cantidad>
+      <precioUnitario>18.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>36.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0</tarifa>
+          <baseImponible>36.00</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>bq33di</codigoPrincipal>
+      <descripcion>COCOLON</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.500000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.50</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0</tarifa>
+          <baseImponible>2.50</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>a10pb9</codigoPrincipal>
+      <descripcion>AGUA MINERAL</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2.00</baseImponible>
+          <valor>0.30</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>cjif6r</codigoPrincipal>
+      <descripcion>VASO DE JUGO DE MARACUYA</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0</tarifa>
+          <baseImponible>2.00</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>bsm7vi</codigoPrincipal>
+      <descripcion>PORCION DE SALSA DE AJILLO</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>2.500000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2.50</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0</tarifa>
+          <baseImponible>2.50</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>n3766r</codigoPrincipal>
+      <descripcion>FILETE APANADO AL PANKO</descripcion>
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>9.500000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>9.50</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0</tarifa>
+          <baseImponible>9.50</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>b81tt9</codigoPrincipal>
+      <descripcion>CONTENEDOR</descripcion>
+      <cantidad>2.000000</cantidad>
+      <precioUnitario>0.300000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>0.60</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0</tarifa>
+          <baseImponible>0.60</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Email">gcampo@quimpac.com.ec</campoAdicional>
+  </infoAdicional>
+<ds:Signature Id="Signature445188" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo966298">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID495668" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature445188-SignedProperties478047">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>iBQpwdjjkSNmYJFoECiSXMwiLkI=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1488367">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>a+6mcBUHqw/9RLwuciAjWy/XTIs=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-205046" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>06gqpdufREKifVpEL/EMGHHAA4c=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue49050">
+d6hqvTHtu+Xvlv6K1UD6k46eOLAbijbwegVJiCtjZGSiTgTvry9He7izo2i1W3k1T3C/gBMPGCEN
+lquGdFW00e8o2N1Y+qTHe+BAyeUEfVlxTJabqnYyRWLhUCqto6SxC4K10sonLeDaCsOjssQaeI4D
+RDJ6n+/ybKWVULCMC+Ake7dWHJhlNst2LQ6yfRZ/yRXN91QNho6AWqhVL6UwWsi2u/cBMurlaGWp
+LwbcTjlNynoKrdLLzMQUc1LQk0aQUSW5/b5wvUwO/0rkl2/XbqMEKstT4pBkEcrygumblrGjQ2Bm
+CIRdVbiAkfbYxsDQZq1qd9fELBnkiMOQykTUmA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1488367">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKdjCCCF6gAwIBAgIMAzkhBJz570VE20PtMA0GCSqGSIb3DQEBCwUAMIG5MRYwFAYDVQQFEw0x
+NzkyNjAxMjE1MDAxMQswCQYDVQQGEwJFQzE2MDQGA1UEChMtQU5GQUMgQVVUT1JJREFEIERFIENF
+UlRJRklDQUNJT04gRUNVQURPUiBDLkEuMSUwIwYDVQQLExxBTkYgQXV0b3JpZGFkIGludGVybWVk
+aWEgIEVDMTMwMQYDVQQDEypBTkYgSGlnaCBBc3N1cmFuY2UgRWN1YWRvciBJbnRlcm1lZGlhdGUg
+Q0EwHhcNMjUwMTA4MDM1MDEzWhcNMjkwNjI2MDM1MDEzWjCCARExCzAJBgNVBAYTAkVDMRMwEQYD
+VQQFEwowOTE3MDE3NjI2MRswGQYDVQQEDBJDQU5ESUxFSk8gQUxWQVJBRE8xKzApBgNVBAMMIkVS
+TkVTVE8gR09OWkFMTyBDQU5ESUxFSk8gQUxWQVJBRE8xGjAYBgorBgEEAYKkQgoEDAowOTE3MDE3
+NjI2MScwJQYDVQQLDB5DZXJ0aWZpY2FkbyBQZXJzb25hIE5hdHVyYWwgRUMxGDAWBgNVBCoMD0VS
+TkVTVE8gR09OWkFMTzEiMCAGCSqGSIb3DQEJARYTZ29uY2FuMUBob3RtYWlsLmNvbTEPMA0GA1UE
+CAwGR1VBWUFTMQ8wDQYDVQQHDAZHVUFZQVMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+AQCV3ngd+1ZdlE/ZQz9hAciLgEQBGe3pWSw0yUKWVU/pRQ1kAvi+y/skDlpbGUgjdWTXo/bLss3O
+5ZfgwCMtBakLt71B0addAKl6aJ4fnA+1eb6MLeNldr0cP6xzLekjEjmkqxupLmZ8qRYHjLZnuzmy
+S7I5agFoOOeUrBSDl/j7u5LFK0wCvOQTIkQWgfoenBNK9XuPuGh8AptiL5uYHSITxLuO4fAsOfVD
+PJKFtPa28RJKqHjnvkgnaZwIZ6dr1RuTXt8YH70NmPIoYm/DhmAoCJh0saRYsCovelMBlRnY2HGF
+1ZtEbVmc5jERQF/RhWEebgAbuTJntD6NAR38B+AdAgMBAAGjggUhMIIFHTAfBgNVHSMEGDAWgBSS
+rtTLgrSZxtF7EWxl6sVNaCH5rDAdBgNVHQ4EFgQUVccW/IdzOVEBijyBf0zLUUkOhNkwgfUGA1Ud
+EQSB7TCB6oETZ29uY2FuMUBob3RtYWlsLmNvbaSB0jCBzzEfMB0GCisGAQQBgqRCCgEMD0VSTkVT
+VE8gR09OWkFMTzEZMBcGCisGAQQBgqRCCgIMCUNBTkRJTEVKTzEYMBYGCisGAQQBgqRCCgMMCEFM
+VkFSQURPMRowGAYKKwYBBAGCpEIKBAwKMDkxNzAxNzYyNjEZMBcGCSsGAQQBgY8cAQwKQS0wMTA3
+MjAyNDErMCkGA1UEAwwiRVJORVNUTyBHT05aQUxPIENBTkRJTEVKTyBBTFZBUkFETzETMBEGA1UE
+BQwKMDkxNzAxNzYyNjAOBgNVHQ8BAf8EBAMCBsAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUF
+BwMCMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwuYW5mLmVzL2NybC9BTkZIaWdoQXNzdXJh
+bmNlRWN1YWRvckludGVybWVkaWF0ZUNBLmNybDCB+QYDVR0gBIHxMIHuMIHgBg0rBgEEAYKkQgME
+AQIWMIHOMCgGCCsGAQUFBwIBFhxodHRwOi8vd3d3LmFuZi5lcy9kb2N1bWVudG9zMIGhBggrBgEF
+BQcCAjCBlAyBkUNlcnRpZmljYWRvIGNvbmZvcm1lIGEgbGEgbGVnaXNsYWNpw7NuIGRlIGZpcm1h
+IGVsZWN0csOzbmljYS4gQW50ZXMgZGUgYWNlcHRhcmxvIGNvbXBydWViZSBpbnRlZ3JpZGFkLCBs
+aW1pdGFjaW9uZXMsIHZpZ2VuY2lhIHkgdXNvcyBhdXRvcml6YWRvcy4wCQYHBACL7EABADCBmwYI
+KwYBBQUHAQEEgY4wgYswJwYIKwYBBQUHMAGGG2h0dHA6Ly9vY3NwLmFuZi5lcy9zcGFpbi9BVjBg
+BggrBgEFBQcwAoZUaHR0cDovL3d3dy5hbmYuZXMvZXMvY2VydGlmaWNhdGVzLWRvd25sb2FkL0FO
+RkhpZ2hBc3N1cmFuY2VFY3VhZG9ySW50ZXJtZWRpYXRlQ0EuY2VyMAwGA1UdEwEB/wQCMAAwKAYJ
+KwYBBAGBjxwTBBsMGTYxMjYyODY0ODQyMS01NzQwMDcxNTU1NzEwEQYKKwYBBAGBjxwTAgQDDAEw
+MCkGCisGAQQBgqRCEwEEGwwZNTc0MDA3MTU1NTcxLTUzOTEwNDQ0Njc1NDAaBgorBgEEAYKkQgMB
+BAwMCjA5MTcwMTc2MjYwEgYKKwYBBAGCpEIDDAQEDAJFQzAfBgorBgEEAYKkQgMCBBEMD0VSTkVT
+VE8gR09OWkFMTzAiBgorBgEEAYKkQgMDBBQMEkNBTkRJTEVKTyBBTFZBUkFETzAWBgorBgEEAYKk
+QgMJBAgMBkdVQVlBUzAXBgorBgEEAYKkQioBBAkMB1VJTy0wNDAwFAYKKwYBBAGCpEIuAQQGDAQx
+ODIwMFAGCisGAQQBgqRCLwEEQgxAYzE4OTE4MjljYjU5ZDQ3YTBlODY1NWEzNDIxNTY5ODBlZmEx
+OGVlMmEwYmRlOGIxNzA1OTYyYTAzZTcyZWRkYjBEBggrBgEFBQcBAwQ4MDYwCAYGBACORgEBMBMG
+BgQAjkYBBjAJBgcEAI5GAQYBMAkGBwQAi+xJAQEwCgYIKwYBBQUHCwIwDQYJKoZIhvcNAQELBQAD
+ggIBAGY2LQYK9CY4HvrtJp6OLZ9uDcuTxeiOxBPWUooUN8abPkvYEODaWHM2p5A4mx3jnIF104kb
+C5YrxjW/m2FcWH6teaE1QvgRYi+OdUB7q+E19C9f5V/oiVXXEWkiL63/x12BVn8p5V/KjMOsag71
+B8CFU0+jjE0+K5/UXCeFaPGKblXH3+OLas8Nzce27uasJLytEPy7FLEXH+q+7GBmZv4IUo8KNNCH
+obXDLM5RR3uYvMyak99gneWANe6P8t57PwSxNKdkGGqsZuZMEbVOVlUgSjAfZBszuzyRcaTvbjQi
+2UNIWr9gPT5x09U5qBup5w530l0+1VMhGGhl0H10+7GXiSaJf0SstnWvGdqH6y52GrsJYsXbV/B7
+LZT0v3GJ55d9W/l/szuQqSDS3+NIaOU9gTIH10BPpklWuMjORuP9CDZj8+coYsYDQzNg50LAyLYx
+vb5+1k+sTD0i0y9ryS1/b29JaEINuCySjNZSC1VP1pi80HboykrH8NufhHLzKXEstZvMsELTHcyH
+4i5nddU42L3Ayma4H9+/bceS0Q0jQJCrPL1kJG1Wk3NBGFxwqAvDYeGtSUCR7QCV27i8c9tzIvVX
+M9j7FMqFopYoj6mVDVmo4YQ0yZSBORt4j5TyDIEfl2612+1yyaRL6coNRk+kaR9oet+PiD365kZc
+IeX9
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+ld54HftWXZRP2UM/YQHIi4BEARnt6VksNMlCllVP6UUNZAL4vsv7JA5aWxlII3Vk16P2y7LNzuWX
+4MAjLQWpC7e9QdGnXQCpemieH5wPtXm+jC3jZXa9HD+scy3pIxI5pKsbqS5mfKkWB4y2Z7s5skuy
+OWoBaDjnlKwUg5f4+7uSxStMArzkEyJEFoH6HpwTSvV7j7hofAKbYi+bmB0iE8S7juHwLDn1QzyS
+hbT2tvESSqh4575IJ2mcCGena9Ubk17fGB+9DZjyKGJvw4ZgKAiYdLGkWLAqL3pTAZUZ2NhxhdWb
+RG1ZnOYxEUBf0YVhHm4AG7kyZ7Q+jQEd/AfgHQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature445188-Object236741"><etsi:QualifyingProperties Target="#Signature445188"><etsi:SignedProperties Id="Signature445188-SignedProperties478047"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-08T22:45:41-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>nmhltvqmxmQhXRa1rbbR26xkyp4=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=ANF High Assurance Ecuador Intermediate CA,OU=ANF Autoridad intermedia  EC,O=ANFAC AUTORIDAD DE CERTIFICACION ECUADOR C.A.,C=EC,2.5.4.5=#130d31373932363031323135303031</ds:X509IssuerName><ds:X509SerialNumber>997519724374315082167567341</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-205046"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

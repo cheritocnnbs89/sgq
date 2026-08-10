@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>PACIFIC OCEAN S.A PACIFOCSA</razonSocial>
+	    <nombreComercial>PACIFIC OCEAN S.A</nombreComercial>
+	    <ruc>0992865709001</ruc>
+	    <claveAcceso>0508202601099286570900120010020000706074408411915</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>002</ptoEmi>
+	    <secuencial>000070607</secuencial>
+	    <dirMatriz>Edificio 100 Business Plaza Piso 04 Oficina 404</dirMatriz>
+		
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>05/08/2026</fechaEmision>
+		
+			<dirEstablecimiento>Edificio 100 Business Plaza Piso 04 Oficina 404</dirEstablecimiento>
+		
+	    <contribuyenteEspecial>0011</contribuyenteEspecial>
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>ROSAVIN LOTE 1 Y COBRE</direccionComprador>
+	    
+	    <totalSinImpuestos>116.77000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>116.77</baseImponible>
+				<valor>17.52000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>134.29000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>134.29</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>IMP-GLOCAL-025</codigoPrincipal>
+		<codigoAuxiliar>IMP-GLOCAL-025</codigoAuxiliar>
+      	<descripcion>GESTION ADMINISTRATIVA</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>50.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>50.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>50.00000</baseImponible>
+          <valor>7.50</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>IMP-GLOCAL-029</codigoPrincipal>
+		<codigoAuxiliar>IMP-GLOCAL-029</codigoAuxiliar>
+      	<descripcion>COLLECT FEE</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>13.170000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>13.17</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>13.17000</baseImponible>
+          <valor>1.98</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>IMP-GLOCAL-003</codigoPrincipal>
+		<codigoAuxiliar>IMP-GLOCAL-003</codigoAuxiliar>
+      	<descripcion>SERVICIOS LOGISTICOS</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>3.600000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>3.60</precioTotalSinImpuesto>
+	  
+	  
+	  	<detallesAdicionales>
+			
+    			<detAdicional nombre="Detalle" valor="DISTRIBUCIÓN"/>
+    		
+      	</detallesAdicionales>
+      
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>3.60000</baseImponible>
+          <valor>0.54</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>IMP-GLOCAL-034</codigoPrincipal>
+		<codigoAuxiliar>IMP-GLOCAL-034</codigoAuxiliar>
+      	<descripcion>CORTE DE GUIA</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>50.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>50.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>50.00000</baseImponible>
+          <valor>7.50</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">OC 2000031214 W#28 BL#045-20274354/EAMIA26073322-1 CTNDR#NA ORIGEN#MIAMI REFERENCIA#PENDIENTE  BUQUE#NA CLIENTE#QUIMPAC ECUADOR S.A QUIMPACSA CONDITION#COLLECT (ROU071372POC)</campoAdicional>
+    		
+    	
+		
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature384347">
+<ds:SignedInfo Id="Signature-SignedInfo276041">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID296113" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature384347-SignedProperties306883">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>hQBW7pOwL6jOWQOEqqD2kA5KSdc=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate602388">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>iYXjNAxvcXbJT4vycHJo2yL2EvM=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-274295" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>MQYZTxi/se0O8jmVHdpSydesnIQ=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue929794">
+oFe2uGSlbFFDdIZA15ZBF4z/U7i7Hou/JzMAiKudSMTDBxBvATYz2oNtCRFR7V44+YOlb9EG4SH+
+A+zIrnmyc9HU0cza96FxfSzIX687UDYIx7sB/8B+GYMCU/mjAWp80H0GeaVvDLuZ1oo9M5+D819N
+fQuI9PRjf/gygnuLZE90ZEzc2eNIDUIO7tclXM5BE17Z1ZV/+7ahGhoCcWn7b9w7TeMWymgHv3MN
+M42oSFcptjwTox51KL/3jbNXJKafWRUgRHyEeFn7QoIoU5Vaza8KtRnTuYUxYsTCGzSIoJ7bfOHI
+9Wi00HMV00MuUFcd+QIvVfjVVmjOOFBanDSLMg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate602388">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJ3DCCB8SgAwIBAgIISOkwGPZrpnkwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI0MTIwNTE5MzUwMFoXDTI2MTIwNTE5MzUwMFowgeAxCzAJBgNVBAYTAkVDMSQwIgYDVQQKDBtQ
+QUNJRklDIE9DRUFOIFMuQSBQQUNJRk9DU0ExGDAWBgNVBAwMD0dFUkVOVEUgR0VORVJBTDEXMBUG
+A1UEBAwOQ0FSUkFTQ08gQVlBTEExFzAVBgNVBCoMDk1FTElEQSBWSVZJQU5BMRkwFwYDVQQFExBJ
+RENFQy0wOTE1NjA4NTY2MSYwJAYDVQQDDB1NRUxJREEgVklWSUFOQSBDQVJSQVNDTyBBWUFMQTEc
+MBoGA1UEYQwTVkFURUMtMDk5Mjg2NTcwOTAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAKUrEXvrv5fEh2cC48TuQRn38oW89W4lqhj/oKDc9Flehk3IQVEvb58Io2FAkMJtAxE+imOD
++mKAZ2lA2SwefR0Glu08fNR081yub9nrSCwM0s7KQTVlXQtFtefdbD8/HaCCm3erLDJUn4R3wwvj
+1l3i4il5R8r+iky0nGfDrZzW1IK27AHglKKa/kiWW6LD8KJ2Awp4bDXClC5xokHo82HWdlkb3Ra+
+5umRNhGkUa2lODN7svT0SRhd3sooTJaad8J0OY/QFj0MLdDPKXOiFfcfdMr3UHMEHVeHAJNrxZvQ
+vk5Sl8ag+++AhGg72G1448XDjvyndgnIf52kfZf7yo0CAwEAAaOCBL4wggS6MBsGCysGAQQBgvE2
+ZgMBBAwMCjA5MTU2MDg1NjYwHgYLKwYBBAGC8TZmAwsEDwwNMDk5Mjg2NTcwOTAwMTCB1wYIKwYB
+BQUHAQEEgcowgccwVQYIKwYBBQUHMAKGSWh0dHA6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9k
+b3dubG9hZC90c3BfY2VydGlmaWNhdGVzL3N1Ym9yZGluYXRlMS5jcnQwNgYIKwYBBQUHMAGGKmh0
+dHA6Ly9vY3NwMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzA2BggrBgEFBQcwAYYqaHR0
+cDovL29jc3AyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1UdDgQWBBSyFK9UEiYJ
+zVT4ufKPoHOyLtnpXDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH1X52BzzgdGqeKjaPDhEbJ0
+knP9MIGOBgNVHSAEgYYwgYMwgYAGDCsGAQQBgvE2ZgIDATBwMDcGCCsGAQUFBwIBFitodHRwczov
+L3d3dy51YW5hdGFjYS5jb20vcHVibGljL3BraS9kcGMtZWMvMDUGCCsGAQUFBwICMCkMJ0NFUlRJ
+RklDQURPIERFIFJFUFJFU0VOVEFOVEUgRU4gQVJDSElWTzCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
+dHRwOi8vY3JsMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3JkaW5hZGEuY3Js
+MECgPqA8hjpodHRwOi8vY3JsMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3Jk
+aW5hZGEuY3JsMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQw
+ggH/BgNVHREEggH2MIIB8oEebm90aWZpY2FjaW9uZXNmaXJtYXNAc2lpZ28uY29toBsGCysGAQQB
+gvE2ZgMBoAwMCjA5MTU2MDg1NjagHwYLKwYBBAGC8TZmAwKgEAwOTUVMSURBIFZJVklBTkGgGQYL
+KwYBBAGC8TZmAwOgCgwIQ0FSUkFTQ0+gFgYLKwYBBAGC8TZmAwSgBwwFQVlBTEGgIAYLKwYBBAGC
+8TZmAwWgEQwPR0VSRU5URSBHRU5FUkFMoF0GCysGAQQBgvE2ZgMHoE4MTEFWIEpVQU4gVEFOQ0Eg
+TUFSRU5HTyBZIEFWIEpPQVFVSU4gT1JSQU5USUEgRURGIDEwMCBCVVNJTkVTUyBQTEFaQSBQMDQg
+T0Y0MDSgHwYLKwYBBAGC8TZmAwigEAwOMDA1OTM5Njc4NTIwMDagGgYLKwYBBAGC8TZmAwmgCwwJ
+R1VBWUFRVUlMoCwGCysGAQQBgvE2ZgMKoB0MG1BBQ0lGSUMgT0NFQU4gUy5BIFBBQ0lGT0NTQaAe
+BgsrBgEEAYLxNmYDC6APDA0wOTkyODY1NzA5MDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCQGCysG
+AQQBgvE2ZgMyoBUME1JFUFJFU0VOVEFOVEUgTEVHQUygGAYLKwYBBAGC8TZmAzOgCQwHQVJDSElW
+TzANBgkqhkiG9w0BAQsFAAOCAgEAHDyy3vJwZXwmBkwnT7kNx4iJa19IaSZHICqOcVv9ytoub0rH
+JjvpN68tNH4naZGB6HNU+G9o3emzX4akOiVMdgw8/AtXw5hmDoom48+VnfzAFsJUMzkhXvG81HiS
+OdKHDMghmj4ETt/W0qur32TvQ3MQoVe/+uVgCR16PYzJodUMf/oBQ82+o6nMj1/wmPv6gynhHs31
+PhhQ6gBdEvelwhJ/xXaIe/lrPnD3LviTU8YTdpu+8+5tVLr7Zs8Eknj/TJ3dBr6qRdFm7A0movEi
+hPICiF6uxowPKpW3aUV7R9Mk+/+pd5H6WB6cx0SYC3OFHS6zwZ0iBtn2fMQMFrmfRePAJYWghakL
+eLwlVB87y2fAed6TEuwYOqMwElRTF7ioEux4YfaYIFfwmL+0n7su9sy34M6ldGZPWnLaZuo/i6OR
+pRLcj+JgfzZCWxWj5fy7OTjne+dbTcxlwA+SRMmzeYnbhraFJvHTu9gi5BtZLtPu+4sRHQ61Kf9f
+v0HDEuGfkcZcMizQz23F+HJ9zXRn4dkXD4ch//Z47c7kZsVB7/Y6KYmh2fDGvCGNyO5yqdWPwB52
+eex9695qWTXda10aTI7wvVQFtNnSUTUZ95bjGsik2LDhe6eV9JfptDmf1OyFzmg1+YsHuEO+dJWV
+b0IGXLOgYlLAa6dyk2xgs2yHUBQ=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+pSsRe+u/l8SHZwLjxO5BGffyhbz1biWqGP+goNz0WV6GTchBUS9vnwijYUCQwm0DET6KY4P6YoBn
+aUDZLB59HQaW7Tx81HTzXK5v2etILAzSzspBNWVdC0W1591sPz8doIKbd6ssMlSfhHfDC+PWXeLi
+KXlHyv6KTLScZ8OtnNbUgrbsAeCUopr+SJZbosPwonYDCnhsNcKULnGiQejzYdZ2WRvdFr7m6ZE2
+EaRRraU4M3uy9PRJGF3eyihMlpp3wnQ5j9AWPQwt0M8pc6IV9x90yvdQcwQdV4cAk2vFm9C+TlKX
+xqD774CEaDvYbXjjxcOO/Kd2Cch/naR9l/vKjQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature384347-Object883724"><etsi:QualifyingProperties Target="#Signature384347"><etsi:SignedProperties Id="Signature384347-SignedProperties306883"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-08-05T18:44:28-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>n/urcv7N9Kpsq1efsqOP7e2UiSA=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA</ds:X509IssuerName><ds:X509SerialNumber>5253783324075992697</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

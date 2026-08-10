@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>BALAIKA S.A.</razonSocial>
+	    <nombreComercial>BALAIKA S.A.</nombreComercial>
+	    <ruc>0992743158001</ruc>
+	    <claveAcceso>1407202601099274315800120010020000273934445497610</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>002</ptoEmi>
+	    <secuencial>000027393</secuencial>
+	    <dirMatriz>GUAYAS / GUAYAQUIL / TARQUI / AV. CENTRAL 102 Y PRIMERA</dirMatriz>
+		
+		
+			<agenteRetencion>10</agenteRetencion>
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>14/07/2026</fechaEmision>
+		
+			<dirEstablecimiento>GUAYAS / GUAYAQUIL / TARQUI / AV. CENTRAL 102 Y PRIMERA</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE</direccionComprador>
+	    
+	    <totalSinImpuestos>1540.00000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>1540.00</baseImponible>
+				<valor>231.00000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>1771.00000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>1771.00</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>981-001406</codigoPrincipal>
+		<codigoAuxiliar>981-001406</codigoAuxiliar>
+      	<descripcion>HEADSETS LOGITECH/ZONE 300/WIRELESS/MIC. CANCELACION DE  RUIDO/100-7KHZ.</descripcion>
+      
+      <cantidad>22.000000</cantidad>
+      <precioUnitario>70.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1540.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1540.00000</baseImponible>
+          <valor>231.00</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+	
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">Guía Remisión: 001-002-000010485</campoAdicional>
+    		
+    			<campoAdicional nombre="ORDEN DE COMPRA">OC - 1000626357</campoAdicional>
+    		
+    	
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature28036">
+<ds:SignedInfo Id="Signature-SignedInfo149459">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID715768" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature28036-SignedProperties284630">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>Tlr1n9DJQPGmseMeTrI71bkfiYI=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate205391">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>h85MAAAzEjJ+w2QVsS9o0PstDa4=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-686064" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>FFgPgQBkVjQJufnKB+HXvyzng0A=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue702990">
+L4G57Uxlf6HPELMkQ6fH4bzAUvURvhE0f05rY5JapfUqrlUBAkuYzM6QBjHuWHbB2pqrEcT+J/L1
+k7UnyG1bnFJlBG/oe5QKHPFeBOMva7WQw24obphvp8kIuqLBexIpge9Yc9Lv6vgtBFcSTHNkCjFY
+tw5PuL9eRVhr+LeO33JWa372bgtn3jLoADC8BqZmJ+vzKrDzf8QM1a959fJrzlC88R6C/ZanHNNe
+YQ/NZTKKDNzWtYEFR2yXTPPtGcAjiM/ameZUzyhjYi0aO3CRnWRog1ZrgSCVAPQHwZAqPBPCZnyR
+iyNFi0cHbWGdMqSMZdbr3tK8j5ChZAVtcdxgeQ==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate205391">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJjzCCB3egAwIBAgIIeRKm5Wrg5cowDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI2MDIxMjIxMjUwMFoXDTI3MDIxMjIxMjUwMFowgc8xCzAJBgNVBAYTAkVDMRUwEwYDVQQKDAxC
+QUxBSUtBIFMuQS4xGDAWBgNVBAwMD0dFUkVOVEUgR0VORVJBTDEYMBYGA1UEBAwPQ0FTQU5PVkEg
+UE9WRURBMRUwEwYDVQQqDAxST0JFUlRPIElWQU4xGTAXBgNVBAUTEElEQ0VDLTA5MTE3MDUxMTkx
+JTAjBgNVBAMMHFJPQkVSVE8gSVZBTiBDQVNBTk9WQSBQT1ZFREExHDAaBgNVBGEME1ZBVEVDLTA5
+OTI3NDMxNTgwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC1IirZBrQVAw3ISgHw
+xYaByWlmmFrKhyC50+i7oomdMyfPDWQjfBkO/4DW68e+wCJOJC2ay4IqBcMAyG/2wkuXJYr+FW9X
+XxdqrCV6BUy6pcvy6tZBk+0ewUNQIVl25d67XKiOVyN0yYEqb6Vrv5bTcDHU6IvdUNmnZk2h/MHB
+tVjzgHqpzC9gVanc3qsFPuzlZ+vnZl4VsJzetG6rEVPMDJrvEFJu5hory5oijy19WAxmLiEzBrme
+TEmBGucymJEFzWyANKJETOr79aW6F4nZwESi72huAvbmjp6uloNKUiE1GWucpVGDlqDJetJWc5RH
+N9gnky1FPpX+8DzOcH7FAgMBAAGjggSCMIIEfjAbBgsrBgEEAYLxNmYDAQQMDAowOTExNzA1MTE5
+MB4GCysGAQQBgvE2ZgMLBA8MDTA5OTI3NDMxNTgwMDEwgdcGCCsGAQUFBwEBBIHKMIHHMFUGCCsG
+AQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMvZG93bmxvYWQvdHNwX2NlcnRp
+ZmljYXRlcy9zdWJvcmRpbmF0ZTIuY3J0MDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDEudWFuYXRh
+Y2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51YW5hdGFj
+YS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQUgz/F1MGjnEyGeazS5bNq7/s5e6IwDAYD
+VR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGydJJz/TCBjgYDVR0gBIGGMIGD
+MIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cudWFuYXRhY2EuY29t
+L3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJUSUZJQ0FETyBERSBSRVBSRVNF
+TlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6aHR0cDovL2NybDEudWFuYXRh
+Y2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDBAoD6gPIY6aHR0cDovL2Ny
+bDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDAOBgNVHQ8B
+Af8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIIBwwYDVR0RBIIBujCCAbaB
+FXJjYXNhbm92YUBiYWxhaWthLm5ldKAbBgsrBgEEAYLxNmYDAaAMDAowOTExNzA1MTE5oB0GCysG
+AQQBgvE2ZgMCoA4MDFJPQkVSVE8gSVZBTqAZBgsrBgEEAYLxNmYDA6AKDAhDQVNBTk9WQaAXBgsr
+BgEEAYLxNmYDBKAIDAZQT1ZFREGgIAYLKwYBBAGC8TZmAwWgEQwPR0VSRU5URSBHRU5FUkFMoDoG
+CysGAQQBgvE2ZgMHoCsMKU1JUkFGTE9SRVMgQVYgQ0VOVFJBTCAxMDIgWSBDQUxMRSBQUklNRVJB
+oB8GCysGAQQBgvE2ZgMIoBAMDjAwNTkzOTk5Njc3Mjk5oBoGCysGAQQBgvE2ZgMJoAsMCUdVQVlB
+UVVJTKAdBgsrBgEEAYLxNmYDCqAODAxCQUxBSUtBIFMuQS6gHgYLKwYBBAGC8TZmAwugDwwNMDk5
+Mjc0MzE1ODAwMaATBgsrBgEEAYLxNmYDDKAEDAJFQ6AkBgsrBgEEAYLxNmYDMqAVDBNSRVBSRVNF
+TlRBTlRFIExFR0FMoBgGCysGAQQBgvE2ZgMzoAkMB0FSQ0hJVk8wDQYJKoZIhvcNAQELBQADggIB
+ADFox201kdeZb149+MMX7/yRudDi53fOfqkC4XxjYX0JMyrdxoHBjP6Un3f8e4pcXDbEokSBdOnL
+z/qN6IXKe5mDGXkXU+1VQPHif6JU1LldzBsltuHp7DUkjYtuEapu9SKQS0LA1qjseC5Fv2qP/PPG
+ppMpX78j0i1Hvm1XDfHOpnL/cycU7HxivQ0DKm3tK5e80mC7bIZguih1MPrYsNylKHKTt0XuIllL
+gh07AIbtLNv4pVPTrukdOmH9McK6cTZM2NCHh3daP+49NECgSe7+ZoXrzaS9gUVwvPv6TlmqE0Kj
+nT11Vj4uAWp1D/OpXGGI5Sq30P5HN1Mfx94flNuGRrQJtQd2tv4itgNO5CvPfmYkRZGzJ+y8vh/F
+CaDpp0ngQqjxWJidc54i3cjH2GG1LLOgBjmBv+R6o4UlJzZTa35ekDQEaVwRY4XBC7or0G5LA+UR
+4kA6DKdABs1Ix+XyyhWguD7ITpfjbMUkJUETQk+0rR+q1rdEudOyqOkgiOy5ttq3R2hDk+un70r2
++wKfpv9NZk0j5WiLV5N0m4ZiOnlT7y6G8IitNtbaQQB03XP+E4qyMMk4oGZbGErO34A6ogDKuxnk
+EdJxbT/eTH/3fm6gsiWpWPPM6DFiGXo/PJyoEVbzPpBkR+ObuJHQLZXuoD/l6249syL3AhjDTTZ6
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+tSIq2Qa0FQMNyEoB8MWGgclpZphayocgudPou6KJnTMnzw1kI3wZDv+A1uvHvsAiTiQtmsuCKgXD
+AMhv9sJLlyWK/hVvV18XaqwlegVMuqXL8urWQZPtHsFDUCFZduXeu1yojlcjdMmBKm+la7+W03Ax
+1OiL3VDZp2ZNofzBwbVY84B6qcwvYFWp3N6rBT7s5Wfr52ZeFbCc3rRuqxFTzAya7xBSbuYaK8ua
+Io8tfVgMZi4hMwa5nkxJgRrnMpiRBc1sgDSiREzq+/WluheJ2cBEou9obgL25o6erpaDSlIhNRlr
+nKVRg5agyXrSVnOURzfYJ5MtRT6V/vA8znB+xQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature28036-Object249116"><etsi:QualifyingProperties Target="#Signature28036"><etsi:SignedProperties Id="Signature28036-SignedProperties284630"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-14T18:00:04-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>YK0fv+UKN22f3M4H0tMyjAOdEA0=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA</ds:X509IssuerName><ds:X509SerialNumber>8724218932440917450</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

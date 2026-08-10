@@ -490,29 +490,13 @@ WHERE COALESCE(c.disabled,0)=0
 
 
 SQL_LISTA_CONTRATOS_APROBADOS_PARA_GARANTIA = f"""
-SELECT TOP {{top_n}}
+SELECT  
     c.id,
     c.pedido,
     c.proveedor
 FROM {TABLA_CONTRATOS} c
-OUTER APPLY (
-    SELECT TOP 1
-        g.fecha_vencimiento,
-        g.requiere_renovacion
-    FROM {TABLA_GARANTIAS} g
-    WHERE g.contrato_id = c.id
-      AND COALESCE(g.disabled,0)=0
-    ORDER BY g.id DESC
-) ug
 WHERE COALESCE(c.disabled,0)=0
   AND COALESCE(c.aprobado_jefe,0)=1
-  AND (
-        ug.fecha_vencimiento IS NULL
-        OR (
-            COALESCE(ug.requiere_renovacion,0)=1
-            AND CAST(ug.fecha_vencimiento AS date) < CAST(GETDATE() AS date)
-        )
-      )
 ORDER BY c.id DESC
 """
 

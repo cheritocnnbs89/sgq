@@ -284,9 +284,9 @@ SQL_VOUCHER_APROBAR_JEFE_OK = f"""
 # ── Voucher: items individuales (uno por voucher solicitado) ──────────────
 
 SQL_VOUCHER_ITEM_INSERT = f"""
-    INSERT INTO {TBL_VOUCHER_ITEMS} (solicitud_id, numero)
+    INSERT INTO {TBL_VOUCHER_ITEMS} (solicitud_id, numero, origen, destino)
     OUTPUT INSERTED.id
-    VALUES (?, ?)
+    VALUES (?, ?, ?, ?)
 """
 
 SQL_VOUCHER_ITEMS_BY_SOLICITUD = f"""
@@ -297,6 +297,19 @@ SQL_VOUCHER_ITEMS_BY_SOLICITUD = f"""
 
 SQL_VOUCHER_ITEM_BY_ID = f"""
     SELECT * FROM {TBL_VOUCHER_ITEMS} WHERE id = ?
+"""
+
+SQL_VOUCHER_ITEM_BY_SECUENCIAL = f"""
+    SELECT TOP 1 * FROM {TBL_VOUCHER_ITEMS} WHERE secuencial = ?
+"""
+
+# Datos reales (origen/destino) que reporta el proveedor de taxis en la
+# carga masiva de costos — columnas nuevas, ver DDL entregado aparte.
+SQL_VOUCHER_ITEM_SET_DATOS_REALES = f"""
+    UPDATE {TBL_VOUCHER_ITEMS} SET
+        origen_real  = ?,
+        destino_real = ?
+    WHERE id = ?
 """
 
 SQL_VOUCHER_ITEM_ENTREGAR = f"""
@@ -328,6 +341,57 @@ SQL_VOUCHER_ITEM_LIQUIDAR = f"""
     WHERE id = ?
 """
 
+# El solicitante marca el voucher como no utilizado: cuenta como confirmado
+# (costo=0, sin adjunto obligatorio) para que no bloquee ni la etapa de
+# confirmación ni la de liquidación de los demás vouchers de la solicitud.
+SQL_VOUCHER_ITEM_NO_UTILIZADO = f"""
+    UPDATE {TBL_VOUCHER_ITEMS} SET
+        no_utilizado            = 1,
+        observacion_usuario     = ?,
+        confirmado_usuario      = 1,
+        confirmado_at           = GETDATE(),
+        costo                   = 0,
+        liquidado_at            = GETDATE(),
+        liquidado_por_nombre    = 'No utilizado (marcado por el solicitante)'
+    WHERE id = ?
+"""
+
+# ── Voucher: recordatorio/escalamiento de confirmación pendiente ──────────
+# Columnas nuevas necesarias en planificador_voucher_items (ver DDL entregado
+# aparte): recordatorio1_enviado_at, recordatorio2_enviado_at.
+
+SQL_VOUCHER_ITEMS_PENDIENTES_RECORDATORIO_3D = f"""
+    SELECT vi.id, vi.solicitud_id, vi.numero, vi.origen, vi.destino, vi.entregado_at,
+           s.solicitante_id, s.solicitante_nombre, s.area_solicitante, s.fecha
+    FROM {TBL_VOUCHER_ITEMS} vi
+    JOIN {TBL_SOLICITUDES} s ON s.id = vi.solicitud_id AND s.activo = 1
+    WHERE vi.secuencial IS NOT NULL
+      AND COALESCE(vi.confirmado_usuario, 0) = 0
+      AND vi.recordatorio1_enviado_at IS NULL
+      AND vi.entregado_at IS NOT NULL
+      AND DATEDIFF(day, vi.entregado_at, GETDATE()) >= 3
+"""
+
+SQL_VOUCHER_ITEMS_PENDIENTES_RECORDATORIO_6D = f"""
+    SELECT vi.id, vi.solicitud_id, vi.numero, vi.origen, vi.destino, vi.entregado_at,
+           s.solicitante_id, s.solicitante_nombre, s.area_solicitante, s.fecha
+    FROM {TBL_VOUCHER_ITEMS} vi
+    JOIN {TBL_SOLICITUDES} s ON s.id = vi.solicitud_id AND s.activo = 1
+    WHERE vi.secuencial IS NOT NULL
+      AND COALESCE(vi.confirmado_usuario, 0) = 0
+      AND vi.recordatorio2_enviado_at IS NULL
+      AND vi.entregado_at IS NOT NULL
+      AND DATEDIFF(day, vi.entregado_at, GETDATE()) >= 6
+"""
+
+SQL_VOUCHER_ITEM_MARCAR_RECORDATORIO1 = f"""
+    UPDATE {TBL_VOUCHER_ITEMS} SET recordatorio1_enviado_at = GETDATE() WHERE id = ?
+"""
+
+SQL_VOUCHER_ITEM_MARCAR_RECORDATORIO2 = f"""
+    UPDATE {TBL_VOUCHER_ITEMS} SET recordatorio2_enviado_at = GETDATE() WHERE id = ?
+"""
+
 # ── Voucher: transiciones del estado de la solicitud padre ────────────────
 
 SQL_VOUCHER_SOLICITUD_A_CONFIRMACION = f"""
@@ -354,30 +418,9 @@ SQL_VOUCHER_SOLICITUD_COMPLETAR = f"""
     WHERE id = ? AND activo = 1
 """
 
-SQL_CREATE_VOUCHER_ITEMS_TABLE = f"""
-IF OBJECT_ID('{TBL_VOUCHER_ITEMS}', 'U') IS NULL
-CREATE TABLE {TBL_VOUCHER_ITEMS} (
-    id                       INT IDENTITY(1,1) PRIMARY KEY,
-    solicitud_id             INT NOT NULL,
-    numero                   INT NOT NULL,
-    secuencial               NVARCHAR(100) NULL,
-    entregado_at             DATETIME NULL,
-    entregado_por_id         INT NULL,
-    entregado_por_nombre     NVARCHAR(200) NULL,
-    adjunto_nombre_original  NVARCHAR(300) NULL,
-    adjunto_nombre_guardado  NVARCHAR(300) NULL,
-    adjunto_tamano           INT NULL,
-    observacion_usuario      NVARCHAR(MAX) NULL,
-    confirmado_usuario       BIT NOT NULL DEFAULT 0,
-    confirmado_at            DATETIME NULL,
-    costo                    FLOAT NULL,
-    liquidado_at             DATETIME NULL,
-    liquidado_por_id         INT NULL,
-    liquidado_por_nombre     NVARCHAR(200) NULL,
-    CONSTRAINT FK_voucher_items_solicitud FOREIGN KEY (solicitud_id)
-        REFERENCES {TBL_SOLICITUDES}(id)
-)
-"""
+# NOTA: el esquema de planificador_voucher_items (incluyendo columnas
+# origen/destino) se gestiona directamente en SQL Server, no desde código.
+# No agregar aquí constantes de CREATE TABLE / ALTER TABLE.
 
 SQL_EJECUTAR_PRESUPUESTO_VUELO = f"""
     IF EXISTS (
@@ -862,22 +905,8 @@ SQL_INSERT_NOTIFY_INAPP = f"""
 # Presupuesto por CC / empresa / tipo de gasto
 # ──────────────────────────────────────────────
 
-SQL_CREATE_PRESUPUESTO_TABLE = f"""
-    IF OBJECT_ID('{TBL_PRESUPUESTO}', 'U') IS NULL
-    BEGIN
-        CREATE TABLE {TBL_PRESUPUESTO} (
-            id                  INT IDENTITY(1,1) PRIMARY KEY,
-            empresa_id          INT          NOT NULL,
-            centro_costo_id     INT          NOT NULL,
-            tipo_gasto          NVARCHAR(100) NOT NULL,
-            anio                INT          NOT NULL,
-            mes                 TINYINT      NOT NULL CHECK (mes BETWEEN 1 AND 12),
-            monto_presupuestado DECIMAL(18,2) NOT NULL DEFAULT 0,
-            monto_ejecutado     DECIMAL(18,2) NOT NULL DEFAULT 0,
-            CONSTRAINT UQ_plan_presup UNIQUE (empresa_id, centro_costo_id, tipo_gasto, anio, mes)
-        );
-    END
-"""
+# NOTA: el esquema de planificador_presupuesto se gestiona directamente en
+# SQL Server, no desde código. No agregar aquí constantes de CREATE TABLE.
 
 SQL_GET_TIPOS_GASTO = f"""
     SELECT pv.nombre
@@ -979,4 +1008,112 @@ SQL_CHECK_DUPLICADO_SOLICITUD = f"""
             fecha         <= ?
         AND (fecha_retorno IS NULL OR fecha_retorno >= ?)
       )
+"""
+
+# ══════════════════════════════════════════════════════════════
+# Indicadores — Voucher
+# Filtro de área opcional vía el truco (? = '' OR s.area_solicitante = ?)
+# para no armar SQL dinámico; fecha_desde/fecha_hasta siempre se envían.
+# ══════════════════════════════════════════════════════════════
+
+SQL_VOUCHER_IND_KPI = f"""
+    SELECT
+        COUNT(DISTINCT s.id)                                              AS total_solicitudes,
+        COUNT(vi.id)                                                      AS total_vouchers,
+        SUM(CASE WHEN COALESCE(vi.no_utilizado,0)=1 THEN 1 ELSE 0 END)    AS no_utilizados,
+        SUM(CASE WHEN COALESCE(vi.no_utilizado,0)=0
+                  AND COALESCE(vi.confirmado_usuario,0)=1 THEN 1 ELSE 0 END) AS confirmados,
+        SUM(CASE WHEN vi.secuencial IS NULL THEN 1 ELSE 0 END)            AS pend_entrega,
+        SUM(CASE WHEN vi.secuencial IS NOT NULL
+                  AND COALESCE(vi.confirmado_usuario,0)=0 THEN 1 ELSE 0 END) AS pend_confirmacion,
+        SUM(CASE WHEN vi.recordatorio2_enviado_at IS NOT NULL
+                  AND COALESCE(vi.confirmado_usuario,0)=0 THEN 1 ELSE 0 END) AS escalados,
+        SUM(CASE WHEN vi.costo IS NOT NULL THEN vi.costo ELSE 0 END)      AS costo_total,
+        AVG(CASE WHEN vi.costo IS NOT NULL
+                  AND COALESCE(vi.no_utilizado,0)=0 THEN vi.costo END)    AS costo_promedio
+    FROM {TBL_VOUCHER_ITEMS} vi
+    JOIN {TBL_SOLICITUDES} s ON s.id = vi.solicitud_id
+    WHERE s.tipo = 'Voucher' AND s.activo = 1
+      AND s.fecha BETWEEN ? AND ?
+      AND (? = '' OR s.area_solicitante = ?)
+"""
+
+SQL_VOUCHER_IND_POR_USUARIO = f"""
+    SELECT TOP 15
+        s.solicitante_id, s.solicitante_nombre,
+        COUNT(DISTINCT s.id) AS num_solicitudes,
+        COUNT(vi.id)         AS num_vouchers,
+        SUM(CASE WHEN vi.costo IS NOT NULL THEN vi.costo ELSE 0 END) AS costo_total
+    FROM {TBL_VOUCHER_ITEMS} vi
+    JOIN {TBL_SOLICITUDES} s ON s.id = vi.solicitud_id
+    WHERE s.tipo = 'Voucher' AND s.activo = 1
+      AND s.fecha BETWEEN ? AND ?
+      AND (? = '' OR s.area_solicitante = ?)
+    GROUP BY s.solicitante_id, s.solicitante_nombre
+    ORDER BY num_vouchers DESC
+"""
+
+SQL_VOUCHER_IND_POR_DEPARTAMENTO = f"""
+    SELECT
+        COALESCE(NULLIF(LTRIM(RTRIM(s.area_solicitante)),''), 'Sin área') AS area,
+        COUNT(DISTINCT s.id) AS num_solicitudes,
+        COUNT(vi.id)         AS num_vouchers,
+        SUM(CASE WHEN vi.costo IS NOT NULL THEN vi.costo ELSE 0 END) AS costo_total
+    FROM {TBL_VOUCHER_ITEMS} vi
+    JOIN {TBL_SOLICITUDES} s ON s.id = vi.solicitud_id
+    WHERE s.tipo = 'Voucher' AND s.activo = 1
+      AND s.fecha BETWEEN ? AND ?
+      AND (? = '' OR s.area_solicitante = ?)
+    GROUP BY s.area_solicitante
+    ORDER BY costo_total DESC
+"""
+
+SQL_VOUCHER_IND_TENDENCIA_MENSUAL = f"""
+    SELECT
+        YEAR(s.fecha) AS anio, MONTH(s.fecha) AS mes,
+        COUNT(vi.id) AS num_vouchers,
+        SUM(CASE WHEN vi.costo IS NOT NULL THEN vi.costo ELSE 0 END) AS costo_total
+    FROM {TBL_VOUCHER_ITEMS} vi
+    JOIN {TBL_SOLICITUDES} s ON s.id = vi.solicitud_id
+    WHERE s.tipo = 'Voucher' AND s.activo = 1
+      AND s.fecha BETWEEN ? AND ?
+      AND (? = '' OR s.area_solicitante = ?)
+    GROUP BY YEAR(s.fecha), MONTH(s.fecha)
+    ORDER BY anio, mes
+"""
+
+SQL_VOUCHER_IND_TOP_RUTAS = f"""
+    SELECT TOP 10
+        vi.origen, vi.destino,
+        COUNT(*) AS cantidad,
+        AVG(CASE WHEN vi.costo IS NOT NULL THEN vi.costo END) AS costo_promedio
+    FROM {TBL_VOUCHER_ITEMS} vi
+    JOIN {TBL_SOLICITUDES} s ON s.id = vi.solicitud_id
+    WHERE s.tipo = 'Voucher' AND s.activo = 1
+      AND s.fecha BETWEEN ? AND ?
+      AND (? = '' OR s.area_solicitante = ?)
+      AND vi.origen IS NOT NULL AND LTRIM(RTRIM(vi.origen)) <> ''
+      AND vi.destino IS NOT NULL AND LTRIM(RTRIM(vi.destino)) <> ''
+    GROUP BY vi.origen, vi.destino
+    ORDER BY cantidad DESC
+"""
+
+# Detalle (drill-down) de vouchers entregados y aún sin confirmar por el
+# solicitante, para el acordeón Departamento -> Usuario -> Voucher de la
+# tarjeta "Pend. confirmación".
+SQL_VOUCHER_IND_PEND_CONFIRMACION_DETALLE = f"""
+    SELECT
+        COALESCE(NULLIF(LTRIM(RTRIM(s.area_solicitante)),''), 'Sin área') AS area,
+        s.solicitante_nombre,
+        s.id AS solicitud_id,
+        vi.numero, vi.secuencial, vi.origen, vi.destino, vi.entregado_at,
+        DATEDIFF(day, vi.entregado_at, GETDATE()) AS dias_pendiente
+    FROM {TBL_VOUCHER_ITEMS} vi
+    JOIN {TBL_SOLICITUDES} s ON s.id = vi.solicitud_id
+    WHERE s.tipo = 'Voucher' AND s.activo = 1
+      AND s.fecha BETWEEN ? AND ?
+      AND (? = '' OR s.area_solicitante = ?)
+      AND vi.secuencial IS NOT NULL
+      AND COALESCE(vi.confirmado_usuario,0) = 0
+    ORDER BY area, s.solicitante_nombre, dias_pendiente DESC
 """

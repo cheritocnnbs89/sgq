@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block title %}Facturas Automáticas — Registro MDI{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reembolsos/gastos_reportes.css') }}">
+
+<div class="container mt-4 gastos-page">
+
+  <div id="facturas-automaticas-config" data-csrf-token="{{ csrf_token() }}"></div>
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="mb-0">
+      <i class="bi bi-file-earmark-text me-2"></i>Facturas Automáticas
+    </h3>
+    <div class="d-none d-md-flex align-items-center gap-2 text-muted small">
+      <span class="badge bg-light text-dark border">
+        <i class="bi bi-person-circle me-1"></i>{{ usuario or '—' }}
+      </span>
+      <span class="badge bg-light text-dark border">
+        <i class="bi bi-shield-lock me-1"></i>{{ rol or '—' }}
+      </span>
+    </div>
+  </div>
+
+  {# ── Filtros ─────────────────────────────────────────────────── #}
+  <form method="get" action="{{ url_for('lista_facturas_automaticas') }}" class="row g-2 mb-3 align-items-end">
+    <div class="col-auto">
+      <label class="form-label small mb-1">Desde</label>
+      <input type="date" name="desde" class="form-control form-control-sm" value="{{ desde }}">
+    </div>
+    <div class="col-auto">
+      <label class="form-label small mb-1">Hasta</label>
+      <input type="date" name="hasta" class="form-control form-control-sm" value="{{ hasta }}">
+    </div>
+    <div class="col-auto">
+      <label class="form-label small mb-1">SAP</label>
+      <select name="sap" class="form-select form-select-sm">
+        <option value="" {% if sap_filter=='' %}selected{% endif %}>— Todos —</option>
+        <option value="0" {% if sap_filter=='0' %}selected{% endif %}>Pendientes</option>
+        <option value="1" {% if sap_filter=='1' %}selected{% endif %}>Enviados</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary btn-sm">
+        <i class="bi bi-search me-1"></i>Buscar
+      </button>
+    </div>
+    {% if gastos and puede_enviar_sap %}
+    <div class="col-auto ms-auto">
+      <button type="button" id="btnEnviarSapMasivo" class="btn btn-success btn-sm">
+        <i class="bi bi-send me-1"></i>Enviar SAP masivo
+      </button>
+    </div>
+    {% endif %}
+  </form>
+
+  {# ── Totales ─────────────────────────────────────────────────── #}
+  {% if gastos %}
+  <div class="row g-2 mb-3">
+    <div class="col-md-4">
+      <div class="card card-body py-2 text-center">
+        <div class="text-muted small">Sub Total</div>
+        <div class="fw-bold fs-5">{{ '%.2f'|format(total_subtotal) }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-body py-2 text-center">
+        <div class="text-muted small">IVA</div>
+        <div class="fw-bold fs-5">{{ '%.2f'|format(total_iva) }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-body py-2 text-center">
+        <div class="text-muted small">Total</div>
+        <div class="fw-bold fs-5">{{ '%.2f'|format(total_con_iva) }}</div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {# ── Tabla ───────────────────────────────────────────────────── #}
+  {% if gastos %}
+  <div class="table-responsive">
+    <table class="table table-sm table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Fecha</th>
+          <th>Proveedor</th>
+          <th>Nro. Factura</th>
+          <th>Motivo</th>
+          <th>Centro Costo</th>
+          <th class="text-end">Sub Total</th>
+          <th class="text-end">IVA</th>
+          <th class="text-end">Total</th>
+          <th>SAP</th>
+          {% if is_admin %}<th>Usuario</th>{% endif %}
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in gastos %}
+        {% set sap_ok = g.sap_contabilizacion and (g.sap_contabilizacion | string).strip() %}
+        <tr id="row-{{ g.id }}" class="{{ 'table-success' if sap_ok else '' }}">
+          <td class="text-nowrap">{{ g.fecha | string | truncate(10, False, '') if g.fecha else '—' }}</td>
+          <td>{{ g.proveedor_nombre or g.proveedor or '—' }}</td>
+          <td class="text-nowrap">{{ g.numero_factura or '—' }}</td>
+          <td>{{ g.regla_motivo or g.motivo or '—' }}</td>
+          <td>{{ g.regla_cc or g.centro_costo or '—' }}</td>
+          <td class="text-end font-monospace">{{ '%.2f'|format(g.subtotal_sin_iva|float) }}</td>
+          <td class="text-end font-monospace">{{ '%.2f'|format(g.iva|float) }}</td>
+          <td class="text-end font-monospace fw-bold">{{ '%.2f'|format(g.total_con_iva|float) }}</td>
+          <td class="text-nowrap">
+            {% if sap_ok %}
+              <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>{{ g.sap_contabilizacion }}</span>
+            {% else %}
+              <span class="badge bg-warning text-dark">Pendiente</span>
+            {% endif %}
+          </td>
+          {% if is_admin %}
+          <td class="small text-muted">{{ g.usuario_nombre or '—' }}</td>
+          {% endif %}
+          <td>
+            {% if not sap_ok and puede_enviar_sap %}
+            <button type="button"
+                    class="btn btn-sm btn-outline-success btn-enviar-sap"
+                    data-gasto-id="{{ g.id }}"
+                    title="Enviar a SAP">
+              <i class="bi bi-send"></i>
+            </button>
+            {% else %}
+            <span class="text-muted small">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot class="table-light fw-bold">
+        <tr>
+          <td colspan="{{ 7 if is_admin else 6 }}">Totales</td>
+          <td class="text-end font-monospace">{{ '%.2f'|format(total_subtotal) }}</td>
+          <td class="text-end font-monospace">{{ '%.2f'|format(total_iva) }}</td>
+          <td class="text-end font-monospace">{{ '%.2f'|format(total_con_iva) }}</td>
+          <td colspan="{{ 3 if is_admin else 2 }}"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info mt-3">
+    <i class="bi bi-info-circle me-2"></i>No hay registros para los filtros seleccionados.
+  </div>
+  {% endif %}
+
+</div>
+
+<script src="{{ url_for('static', filename='js/reembolsos/facturas_automaticas.js') }}" defer></script>
+{% endblock %}

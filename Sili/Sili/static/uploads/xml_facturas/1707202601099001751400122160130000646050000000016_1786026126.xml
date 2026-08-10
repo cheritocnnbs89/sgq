@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>1707202601099001751400122160130000646050000000016</numeroAutorizacion>
+    <fechaAutorizacion>2026-07-17T12:42:20-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" id="comprobante" version="2.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;TIENDAS INDUSTRIALES ASOCIADAS (TIA) S.A.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;TIENDAS INDUSTRIALES ASOCIADAS (TIA) S.A.&lt;/nombreComercial&gt;
+        &lt;ruc&gt;0990017514001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;1707202601099001751400122160130000646050000000016&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;216&lt;/estab&gt;
+        &lt;ptoEmi&gt;013&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000064605&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;CHIMBORAZO 217 Y LUQUE&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;17/07/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;Cdla. Ciudad Celeste La Marina Mz. 16 Sl. 2&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;6925&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR SA&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;NA&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;9.58&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;1.21&lt;/baseImponible&gt;
+                &lt;tarifa&gt;15&lt;/tarifa&gt;
+                &lt;valor&gt;0.18&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;8.37&lt;/baseImponible&gt;
+                &lt;tarifa&gt;0&lt;/tarifa&gt;
+                &lt;valor&gt;0&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0&lt;/propina&gt;
+        &lt;importeTotal&gt;9.76&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;19&lt;/formaPago&gt;
+                &lt;total&gt;9.76&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;Dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;310429000&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;786210190393&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;LECHUGA CRIOLLA FUNDA&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.69&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.69&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.69&lt;/baseImponible&gt;
+                    &lt;valor&gt;0&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;270997003&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;786113861170&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;YOGURT GRIEGO ZEUS 120 G NATURAL&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.27&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.27&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.27&lt;/baseImponible&gt;
+                    &lt;valor&gt;0&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;300989000&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;786102170411&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TOCINETA REBANADA LA EUROPEA 100 G&lt;/descripcion&gt;
+            &lt;cantidad&gt;2&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.21&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.42&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.42&lt;/baseImponible&gt;
+                    &lt;valor&gt;0&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;235701000&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;786115390580&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ALIMENTO COCIDO P/PERRO PRIME PET TACO 1 KG RES POLLO Y CERDO&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;3.99&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;3.99&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;0&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;3.99&lt;/baseImponible&gt;
+                    &lt;valor&gt;0&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;251149000&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;786100124964&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;MAYONESA MAGGI DOYPACK 170 G LIMON&lt;/descripcion&gt;
+            &lt;cantidad&gt;1&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.21&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.21&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.21&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.18&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="Correo 1"&gt;xtoala@quimpac.com.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Gran Contribuyente"&gt;Gran Contribuyente Resolucion No NAC-GCFOIOC21-00000872-E&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature12441"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo888662"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID286077" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature12441-SignedProperties366469"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;WMfOQ55urdzNRKdojst4pwsAcms=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1659123"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;SmDXzAR7PBXXNJ7hwKGQGJqqoQQ=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-600927" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;+ynt/ljWp3ZlgdO0Yc3ZbuosYC0=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue837483"&gt;
+dgtMYcaY8r/KgFYrHXnKQhpiS3ZK96FPrXVKF9JDwhkhynZ2gTRd6sS8+UIM3Oatx5Aedtg8AlpA
+P5Bbje0YXfvTgBGIMWpRq3qWGu+VpsLqOQhGK4y16xcDsupDs+7gtQaNEBbcHqL7YXcjitMQmjRj
+ytcP2mYV4EuWtxxNzAvt26RfQb497IchA3jXx5alzgP9vJrEH4/wVUQVu8jKiaccvbolPeek2hOn
+wPOBtwc1G1eKH917KLV4g0THIP5nFdz1Zh7SdI8q5CXIlHQ33muZaFTi9V7ef6XPdJ4emZtVdX1A
+PbdsgqNFhYTIaAq07RgCwo/VusC+HXGSnycD1A==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1659123"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIK2zCCCMOgAwIBAgIIBSbwDB7p8AUwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwMzI3MjAwMDIwWhcNMjcwMzI3MjAwMDIwWjCB
+ozEhMB8GA1UEAwwYSk9TRSBFRFVBUkRPIEZBQkFSQSBWRVJBMSAwHgYDVQQFExcxNzA1Mjk2MTY2
+LTI3MDMyNjE1MTAxMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9S
+TUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDACtZj1PXCfdkaBefYHlIrQpK+Uzdyt0B9N87L7S2C
+NfVcbnmb3Qksl8CSqCG/3TDor8D5Dig9hEzrq1NWxu9dXeH3MgKug2GdxUsNXn2fHIwWcp6ividQ
+J1V5FfjDcPjY0kjG/vblXYYZspNOeg0iwiRBevyATw8KYLJ48O+JO6zuSKth4Xnpxxew3dAD2vsx
+C5BNt/3PuJxB+2x2b2K2lXTtldblu7DFMPpcJwVGhP1BVJAYK1jU9XSk5chGe32V3wIZVQam3ZMc
+QyiRCLE6beFQhO3BlutEbSVp6aJoOu3zaP28LfmZMn6Gsx4EG30yDfahpeV84fASjB4lgPZjAgMB
+AAGjggYZMIIGFTAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2P
+MFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAnBgNVHREEIDAegRxnY2hhcnJvQGJ1
+c3RhbWFudGVmYWJhcmEuY29tMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsG
+AQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4A
+dABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0
+dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0
+aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50
+YW50ZSBMZWdhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIIC
+BjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEv
+Y3JsZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9O
+IFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9O
+IERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMC
+RUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxm
+aWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNO
+PUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4g
+MixDPUVDMB0GA1UdDgQWBBRmZnkVY5DyeytMp7MHN1m52/xsmDArBgNVHRAEJDAigA8yMDI2MDMy
+NzIwMDAyMFqBDzIwMjcwMzI3MjAwMDIwWjALBgNVHQ8EBAMCBeAwIgYKKwYBBAGCpnIDBQQUDBJE
+SVJFQ1RPUiBQUklOQ0lQQUwwGgYKKwYBBAGCpnIDAQQMDAoxNzA1Mjk2MTY2MBoGCisGAQQBgqZy
+AwkEDAwKUk9DQUZVRVJURTARBgorBgEEAYKmcgMiBAMMAS4wLAYKKwYBBAGCpnIDBwQeDBxDSElN
+Qk9SQVpPIDIxNyBZIExVUVVFIFZFTEVaMBwGCisGAQQBgqZyAwIEDgwMSk9TRSBFRFVBUkRPMB8G
+CisGAQQBgqZyAyAEEQwPMDAyMDAxMDAxMTg0NjgwMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisG
+AQQBgqZyAwwECQwHRUNVQURPUjAWBgorBgEEAYKmcgMDBAgMBkZBQkFSQTA2BgorBgEEAYKmcgMK
+BCgMJlRJRU5EQVMgSU5EVVNUUklBTEVTIEFTT0NJQURBUyBUSUEgUyBBMB0GCisGAQQBgqZyAwsE
+DwwNMDk5MDAxNzUxNDAwMTARBgorBgEEAYKmcgMdBAMMAS4wFAYKKwYBBAGCpnIDBAQGDARWRVJB
+MBoGCisGAQQBgqZyAwgEDAwKMDk5NTA5MDA1NDANBgkqhkiG9w0BAQsFAAOCAgEALEMirGqB/lwU
+5699DA262HkS2zy7rzCRGAC6stZHj2DAIducEbLZo8RpJU8GmG7pVud+pFc6V4rmaFs0sVTXNymN
+GvHK6N+q64gsmG35oUTIvOSaXho7IFck4xduURPOv/rHtf20FfnA07dW2mtnru44eyk7eQFiSpJO
+GZkpDuVtj95VqDLs9zARhKcKic2sgwPZO/Aiu7w9+541jkSH3zsnPSAdzgYUzySYzwRZxbIbIwni
+j2dSlBPmRn7cdbW276pQmxFte6Nd3o7BF5cGMFn86nxgsslnPlEyojB9e1VHZCIlWT77WWR7Ph3E
+KhVPYGyLpqi07hTEDZ5P5AKQd6FUNiTmPTTZ11A6aCnaNuPfUHCnUlV3EuLbCDLHVTWbRq9Sz2s+
+Iec/qguhHR9H3PzUxgEKjsmog1bRSim8S2LWjCWjssaEiPX2BCXoCZaQlqVYr0YALb+ot0Z5eqhU
+8D/hfjwvOSHZFOKIQH2w6jL7wr9lpvs7Sit/hb52UXLI3nOTDNRsHh+7U+dfoM5PAsZV6yG0yv6j
+r/IQybc0uf/Cjn1dVr+yDwvp7J0Fxbk4lgQ+K0LLjnBgA4hYbD84W3qx3ucgYfQIn4ANmdCvLQ8L
+4tfA+L/egoIgVFxthjNZDfWT8l5wPebzKrbcF9ndvTQxF95Qfgw5yBN8bABwU7U=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+wArWY9T1wn3ZGgXn2B5SK0KSvlM3crdAfTfOy+0tgjX1XG55m90JLJfAkqghv90w6K/A+Q4oPYRM
+66tTVsbvXV3h9zICroNhncVLDV59nxyMFnKeor4nUCdVeRX4w3D42NJIxv725V2GGbKTTnoNIsIk
+QXr8gE8PCmCyePDviTus7kirYeF56ccXsN3QA9r7MQuQTbf9z7icQftsdm9itpV07ZXW5buwxTD6
+XCcFRoT9QVSQGCtY1PV0pOXIRnt9ld8CGVUGpt2THEMokQixOm3hUITtwZbrRG0laemiaDrt82j9
+vC35mTJ+hrMeBBt9Mg32oaXlfOHwEoweJYD2Yw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature12441-Object419699"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature12441"&gt;
+                &lt;etsi:SignedProperties Id="Signature12441-SignedProperties366469"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-07-17T12:42:02-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;CDBd28hfL+1XvllVfaJ7IfSxhgM=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;371247954153566213&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-600927"&gt;
+                            &lt;etsi:Description&gt;comprobateFirma&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

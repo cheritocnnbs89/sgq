@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>ACVA CONSTRUCCIONES S.A.</razonSocial><nombreComercial>ACVA CONSTRUCCIONES S.A.</nombreComercial><ruc>0993259640001</ruc><claveAcceso>0508202601099325964000120010100000002157605894012</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>010</ptoEmi><secuencial>000000215</secuencial><dirMatriz>CDLA GUAYAQUIL MZ 2 SOLAR 29</dirMatriz><contribuyenteRimpe>CONTRIBUYENTE RÉGIMEN RIMPE</contribuyenteRimpe></infoTributaria><infoFactura><fechaEmision>05/08/2026</fechaEmision><dirEstablecimiento>CDLA GUAYAQUIL MZ 2 SOLAR 29</dirEstablecimiento><obligadoContabilidad>NO</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>Av. Rosavin Lote 1 y calle Cobre</direccionComprador><totalSinImpuestos>320.00</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><descuentoAdicional>0.00</descuentoAdicional><baseImponible>320.00</baseImponible><valor>48.00</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>368.00</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>368.00</total></pago></pagos><valorRetIva>0.00</valorRetIva><valorRetRenta>0.00</valorRetRenta></infoFactura><detalles><detalle><codigoPrincipal>0654</codigoPrincipal><codigoAuxiliar>0654</codigoAuxiliar><descripcion>CONSTRUCCIÓN DE PIZARRA E INSTALACION EN PARED DE GYPSUM</descripcion><cantidad>1.000000</cantidad><precioUnitario>320.000000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>320.00</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>320.00</baseImponible><valor>48.00</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="ORDEN DE SERVICIO 7500055990">HOJA DE ENTRADA 1001657991</campoAdicional><campoAdicional nombre="Correo de cliente">recepcion@quimpac.com.ec</campoAdicional><campoAdicional nombre="Enviar los comprobantes de retenciones electrónicas al correo">acvaconstrucciones@gmail.com</campoAdicional><campoAdicional nombre="Contribuyente Régimen RIMPE">.</campoAdicional><campoAdicional nombre="RUC Proveedor">1792524601001</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature754094">
+<ds:SignedInfo Id="Signature-SignedInfo395334">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID489765" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature754094-SignedProperties588645">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>g27Fa6+ewWIhp5OAkMu7ZAI67XU=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1527989">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>1eOGAapTsakmSVTxvSi6VmDbqzg=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-42820" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>NVfarAx8JEFCsBf0D4EMnCMsj7U=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue1017493">
+oWfyb41qeCa0BE1eOsQTotpepZetZd2ndDVLas5N2ylmi57feTEoLkGN8JYPORc5vsuddqNBx4cj
+cZxkAonI0LF8y1Ams/r3SzAaswNs1NdAciX9ZgooMAkzL+RsfplqBkbcNxR9QaPelCnGFMo5A86J
+XCEshP2CaQ4612Lx9ZC6/CkSGWclxm8NfEcCPxJLOWUrOKGUgsu6yIqZNZTZDXeZ4VXVzXm/yCbX
+ZuIFTD+tAF4EVT6eVv62jgqCO/08xT/dfcwlks6aAvf8mU/QIIa4Zm+8i90B1Er7XauAQQKCDkgs
+tsbV/zNsWSytLXO2sGpExoJYYP7a14BkQJd7Zg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1527989">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIK7TCCCNWgAwIBAgIMAzkDYRWyCmk+IVnNMA0GCSqGSIb3DQEBCwUAMIG5MRYwFAYDVQQFEw0x
+NzkyNjAxMjE1MDAxMQswCQYDVQQGEwJFQzE2MDQGA1UEChMtQU5GQUMgQVVUT1JJREFEIERFIENF
+UlRJRklDQUNJT04gRUNVQURPUiBDLkEuMSUwIwYDVQQLExxBTkYgQXV0b3JpZGFkIGludGVybWVk
+aWEgIEVDMTMwMQYDVQQDEypBTkYgSGlnaCBBc3N1cmFuY2UgRWN1YWRvciBJbnRlcm1lZGlhdGUg
+Q0EwHhcNMjUwOTIzMDAxNTAzWhcNMjcwOTIzMDAxNTAzWjCCAaYxITAfBgNVBAoMGEFDVkEgQ09O
+U1RSVUNDSU9ORVMgUy5BLjEaMBgGCisGAQQBgqRCCgQMCjEyMDUwMTIyNzkxKDAmBgNVBAsMH0Nl
+cnRpZmljYWRvIFBlcnNvbmEgSnVyaWRpY2EgRUMxFzAVBgNVBCoMDlZJQ1RPUiBBTlRPTklPMRYw
+FAYDVQRhEw0wOTkzMjU5NjQwMDAxMQswCQYDVQQGEwJFQzETMBEGA1UEBRMKMTIwNTAxMjI3OTEY
+MBYGA1UEBAwPQVJNSUpPUyBDT1JPTkVMMTIwMAYDVQQDDCkxMjA1MDEyMjc5IFZJQ1RPUiBBTlRP
+TklPIEFSTUlKT1MgQ09ST05FTDEYMBYGA1UEDAwPR0VSRU5URSBHRU5FUkFMMSswKQYJKoZIhvcN
+AQkBFhxBY3ZhY29uc3RydWNjaW9uZXNAZ21haWwuY29tMTEwLwYDVQQNDChDZXJ0aWZpY2FkbyBk
+ZSBQZXJzb25hIEp1csOtZGljYSAyIGHDsW9zMQ8wDQYDVQQIDAZHVUFZQVMxDzANBgNVBAcMBlRB
+UlFVSTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKszU9iOa7nvOSES8548jsD9sG/m
+DDId0K4zvArbYqFFxRUt/i+CtbnPdodHYSHrlD2IOfFkwF5qBb/65jrfrBylw7Rnd+4QnHp2PjEu
+ZtBLlv1pyk/KXAePlPJ9KihpWQU8Cky4vCJGPOYJCpP0s//1p2p97G+rqlQVqSMiN81hr7dlQpDK
+JPHf1XP/MBwE0nUDCJJ85fSBl85bc5Whrn+tlGCzV9XYnOAssgrxO9fVlq35TehgRzBsfzczV1we
+uzoNr3wJHzUvbKp+nbHsYiO4ij1CiKO9VStN6EVvGSUHmickwO/MXjNUMVsfN9FSNrtJbF6E5qIv
+zSEi4g3GD1MCAwEAAaOCBQMwggT/MB8GA1UdIwQYMBaAFJKu1MuCtJnG0XsRbGXqxU1oIfmsMB0G
+A1UdDgQWBBRSY2MpvamvCwjLTbXlZTRQ6XC6QzCBuAYDVR0RBIGwMIGtgRxBY3ZhY29uc3RydWNj
+aW9uZXNAZ21haWwuY29tpIGMMIGJMR4wHAYKKwYBBAGCpEIKAQwOVklDVE9SIEFOVE9OSU8xFzAV
+BgorBgEEAYKkQgoCDAdBUk1JSk9TMRcwFQYKKwYBBAGCpEIKAwwHQ09ST05FTDEaMBgGCisGAQQB
+gqRCCgQMCjEyMDUwMTIyNzkxGTAXBgkrBgEEAYGPHAEMCkEtMjIwOTIwMjUwDgYDVR0PAQH/BAQD
+AgbAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDBQBgNVHR8ESTBHMEWgQ6BBhj9odHRw
+Oi8vY3JsLmFuZi5lcy9jcmwvQU5GSGlnaEFzc3VyYW5jZUVjdWFkb3JJbnRlcm1lZGlhdGVDQS5j
+cmwwggENBgNVHSAEggEEMIIBADCB5wYMKwYBBAGCpEICBQEDMIHWMDAGCCsGAQUFBwIBFiRodHRw
+czovL2FuZi5lcy9lYy9yZXBvc2l0b3Jpby1sZWdhbC8wgaEGCCsGAQUFBwICMIGUDIGRQ2VydGlm
+aWNhZG8gY29uZm9ybWUgYSBsYSBsZWdpc2xhY2nDs24gZGUgZmlybWEgZWxlY3Ryw7NuaWNhLiBB
+bnRlcyBkZSBhY2VwdGFybG8gY29tcHJ1ZWJlIGludGVncmlkYWQsIGxpbWl0YWNpb25lcywgdmln
+ZW5jaWEgeSB1c29zIGF1dG9yaXphZG9zLjAJBgcEAIvsQAEBMAkGB2CFVAEDBQgwgZsGCCsGAQUF
+BwEBBIGOMIGLMCcGCCsGAQUFBzABhhtodHRwOi8vb2NzcC5hbmYuZXMvc3BhaW4vQVYwYAYIKwYB
+BQUHMAKGVGh0dHA6Ly93d3cuYW5mLmVzL2VzL2NlcnRpZmljYXRlcy1kb3dubG9hZC9BTkZIaWdo
+QXNzdXJhbmNlRWN1YWRvckludGVybWVkaWF0ZUNBLmNlcjAMBgNVHRMBAf8EAjAAMCgGCSsGAQQB
+gY8cEwQbDBk2NTEzNjM0MDU5OTMtNjMxMzg4MzY1MzI1MBUGCisGAQQBgY8cEwIEBwwFMzc0NDIw
+KQYKKwYBBAGCpEITAQQbDBk2MzEzODgzNjUzMjUtNTUyNzUzNjE2NzE4MBoGCisGAQQBgqRCAwEE
+DAwKMTIwNTAxMjI3OTAoBgorBgEEAYKkQgMKBBoMGEFDVkEgQ09OU1RSVUNDSU9ORVMgUy5BLjAd
+BgorBgEEAYKkQgMLBA8MDTA5OTMyNTk2NDAwMDEwEgYKKwYBBAGCpEIDDAQEDAJFQzAeBgorBgEE
+AYKkQgMCBBAMDlZJQ1RPUiBBTlRPTklPMB8GCisGAQQBgqRCAwMEEQwPQVJNSUpPUyBDT1JPTkVM
+MB8GCisGAQQBgqRCAwUEEQwPR0VSRU5URSBHRU5FUkFMMBYGCisGAQQBgqRCAwkECAwGVEFSUVVJ
+MBMGCisGAQQBgqRCLgEEBQwDNzMwMFAGCisGAQQBgqRCLwEEQgxANzQwMmNhYjliOGI4YzE2ODg0
+ZjEzN2ZjMTJjZGMxMTM0YzRmYzA5ZDkxNjRkYWI4MDVhN2U2MGIzNDc4YTEwNjANBgkqhkiG9w0B
+AQsFAAOCAgEAEDj8i5Upp6rlD6k8SA2aWGX1EZrcf1qAjDPcoAc1YyzTY/YYrHpuq6OtURmx5vPb
+aDctYmrUN5XqwvkXOSfqGp5u+DnsFWO04c6PZ2QRwwZvwPrBZ+LLpxvB9uPzsOi9ZF3YP3ztc+S7
+nAgms/rx/fxKI2/LWV+cMo/H/sPZyuurhilOisV8/v43J4GDFczJyIpaLxZeqclRTURVtygZ70sT
+wCbjSmmlJwnVhZpCYgNi0qrHpg2jklroJSA3r7wNCmBC6H2DnkCplcxtr3R2dchoWp30oqTdFUh+
+K/geFS33SYwDWJZnAANthsgNHJF+l9iuxsoEww9KZGnhFUikGGZ14Be/hBi2P4HiQsd14xJs1GUO
+wICNOCqHbLhnD0oSlIfhhqUrpchndX7l2d/iTd5Nvf9pdmo8LnKohBt7cFyrC9MsiWstTSefcYvi
+qLTfa8i/X3OZqdFxR+PELuH3bOYARiI6bkIFmYHTRsAai1Xg9JymcVrr6J7zBKFDeZjT8DHH9DYQ
+qSSbXJYGPa0yHANzwG3Lmjw5NdaPLVEvNTltYHPaWjEBLUTtyy3zTlt+sWUKmL0OMbl5qCPaPOe0
+mwM6nMVcptj0vMj0VlXWss7Vj2ZG81YYbQM/Z6g3UWXbs6G4PeZO2mVqNK2MQ0FCUqtmFP0vyioI
+OEXOXqA4JsE=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+qzNT2I5rue85IRLznjyOwP2wb+YMMh3QrjO8CttioUXFFS3+L4K1uc92h0dhIeuUPYg58WTAXmoF
+v/rmOt+sHKXDtGd37hCcenY+MS5m0EuW/WnKT8pcB4+U8n0qKGlZBTwKTLi8IkY85gkKk/Sz//Wn
+an3sb6uqVBWpIyI3zWGvt2VCkMok8d/Vc/8wHATSdQMIknzl9IGXzltzlaGuf62UYLNX1dic4Cyy
+CvE719WWrflN6GBHMGx/NzNXXB67Og2vfAkfNS9sqn6dsexiI7iKPUKIo71VK03oRW8ZJQeaJyTA
+78xeM1QxWx830VI2u0lsXoTmoi/NISLiDcYPUw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature754094-Object457287"><etsi:QualifyingProperties Target="#Signature754094"><etsi:SignedProperties Id="Signature754094-SignedProperties588645"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-08-05T15:22:02-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>zqu0vjg0gcO75k6Wxd9w5i7NIIg=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=ANF High Assurance Ecuador Intermediate CA,OU=ANF Autoridad intermedia  EC,O=ANFAC AUTORIDAD DE CERTIFICACION ECUADOR C.A.,C=EC,2.5.4.5=#130d31373932363031323135303031</ds:X509IssuerName><ds:X509SerialNumber>997379759179016295675943373</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-42820"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

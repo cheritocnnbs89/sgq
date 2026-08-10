@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>MONSERRATE PILOZO LUIS ALBERTO</razonSocial>
+        <ruc>0924655616001</ruc>
+        <claveAcceso>1407202601092465561600120011430000003755422531818</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>143</ptoEmi>
+        <secuencial>000000375</secuencial>
+        <dirMatriz>Barrio: COOP MONTE LINDO Numero: SOL 24 Manzana:  46 </dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>14/07/2026</fechaEmision>
+        <dirEstablecimiento>Barrio: COOP MONTE LINDO Numero: SOL 24 Manzana:  46 </dirEstablecimiento>
+        <obligadoContabilidad>NO</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE KM 16.5 VIA DAULE</direccionComprador>
+        <totalSinImpuestos>360.00</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>360.00</baseImponible>
+                <valor>54.00</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0</propina>
+        <importeTotal>414.00</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>01</formaPago>
+                <total>414.00</total>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>7500056335</codigoPrincipal>
+            <descripcion>HABILIT DRENAJE AALL NUEVO CANAL LODOS</descripcion>
+            <cantidad>1</cantidad>
+            <precioUnitario>360</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>360.00</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="informacionAdicional" valor="1001645965"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>360.00</baseImponible>
+                    <valor>54.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Telefono">2162660</campoAdicional>
+        <campoAdicional nombre="Email">gecheverria@quimpac.com.ec</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-1be0a9d4-2215-4b32-91af-cbd8608dd244"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-1be0a9d4-2215-4b32-91af-cbd8608dd244-ref0" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>VvRI6TIb8Y+/qn2YB+Np2h6dmwfqZDT1gfTKfgjF1MQ=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-1be0a9d4-2215-4b32-91af-cbd8608dd244-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>PXls/289SBaFqgZYefJC4s/vGJvcN3CjUUYFbBRt3Vg=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-1be0a9d4-2215-4b32-91af-cbd8608dd244-sigvalue">TwnS7uTDLCvC3z+B0F0tT5dPIb9fiM5njyqUOEkYAxy5pvsoRUxNSo4XLeOxvShUXZiYtaLRrELMJN2L3O2OfNoonFoUWhegCN9hYLrS9VaELkWMeA4Q+krOcejbxG5AlduAbwJRROPmNJ4c7s7Ew1YtKkvyGEyaSUV6VGAq7Jk4nMXDaMS0wkisXHZzShGu782RcqXi6+UE4vgUcVBLTFfpRRiJeF55O8z2ZpSKjBDIB7WuIx83kKKslUube8XqaRfu3Bq3yiN1VHOxwuHQZpWqLHyE43iehEvZPFg+HxWeqg7L3KZFiO7zKGNXoqEJVtKBydk555+L12twGjDWAg==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>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</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-1be0a9d4-2215-4b32-91af-cbd8608dd244"><xades:SignedProperties Id="xmldsig-1be0a9d4-2215-4b32-91af-cbd8608dd244-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-07-14T18:53:30.609-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>srzX2m4O9QPNwBG9ERrQdN08ErUaZKxmi1tG0URj0o0=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>CN=ANF High Assurance Ecuador Intermediate CA,OU=ANF Autoridad intermedia  EC,O=ANFAC AUTORIDAD DE CERTIFICACION ECUADOR C.A.,C=EC,2.5.4.5=#130d31373932363031323135303031</ds:X509IssuerName><ds:X509SerialNumber>1011020297327277952022714827</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-1be0a9d4-2215-4b32-91af-cbd8608dd244-ref0"><xades:Description>FIRMA DIGITAL SRI</xades:Description><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>

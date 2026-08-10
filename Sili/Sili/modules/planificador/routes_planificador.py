@@ -18,7 +18,7 @@ from . import planificador_repository as repo
 from . import planificador_services as svc
 from . import planificador_notifications as notif
 from .planificador_constants import (
-    ACTIVE_KEY, PERM_SOLICITUDES, PERM_CONFIG, PERM_PRESUPUESTO,
+    ACTIVE_KEY, PERM_SOLICITUDES, PERM_CONFIG, PERM_PRESUPUESTO, PERM_INDICADORES,
     ESTADOS, PRIORIDADES,
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
     ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR, ESTADOS_ATENDIDAS,
@@ -219,6 +219,13 @@ def detalle(sid):
                                                 "PENDIENTE_APROBACION_GG_VUELO")
     # Para Vuelo en PENDIENTE_INFO_VUELO el adjunto va dentro del form de completar vuelo
     _es_vuelo_pendiente_coord = (s["tipo"] == "Vuelo" and s["estado"] == "PENDIENTE_INFO_VUELO")
+    # Voucher en PENDIENTE_LIQUIDACION_VOUCHER: ya pasó de manos del solicitante
+    # al coordinador (que registra los costos); el solicitante no debe poder
+    # seguir subiendo adjuntos en esta etapa (admin y coordinador sí, por las
+    # otras ramas de este OR).
+    _es_voucher_pendiente_liquidacion = (
+        s["tipo"] == "Voucher" and s["estado"] == "PENDIENTE_LIQUIDACION_VOUCHER"
+    )
     puede_subir_adjunto = (
         not _es_vuelo_pendiente_coord
         and (
@@ -227,7 +234,11 @@ def detalle(sid):
                 not _estado_bloqueado_general
                 and (ctx["es_gerente"] or ctx["tipos_coordinador"] or ctx["tipos_aprobador"])
             )
-            or (_es_solicitante and s["estado"] not in ("COMPLETADA", "RECHAZADA"))
+            or (
+                _es_solicitante
+                and s["estado"] not in ("COMPLETADA", "RECHAZADA")
+                and not _es_voucher_pendiente_liquidacion
+            )
         )
     )
     puede_eliminar_adjunto = ctx["es_admin"] or s["estado"] not in ("APROBADA", "COMPLETADA")
@@ -326,15 +337,18 @@ def crear():
         flash("Tipo de solicitud no válido.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
-    fecha_retorno   = None
-    punto_salida    = None
-    punto_destino   = None
-    requiere_hosp   = 0
-    orden_servicio  = None
-    cc_id           = None
-    requiere_aprov  = 0
-    motivo_vuelo    = None
-    numero_vouchers = None
+    fecha_retorno    = None
+    punto_salida     = None
+    punto_destino    = None
+    requiere_hosp    = 0
+    orden_servicio   = None
+    cc_id            = None
+    requiere_aprov   = 0
+    motivo_vuelo     = None
+    numero_vouchers  = None
+    voucher_items_data = []
+
+    MAX_VOUCHERS = 6
 
     if tipo == "Voucher":
         numero_vouchers_raw = request.form.get("numero_vouchers", "").strip()
@@ -345,6 +359,24 @@ def crear():
         if numero_vouchers < 1:
             flash("Debe indicar el número de vouchers solicitados (mínimo 1).", "warning")
             return redirect(url_for("planificador.planificador_solicitudes"))
+        # Tope de 6 vouchers por solicitud: se recorta en silencio, sin error,
+        # ya que el formulario ya limita el campo a 6.
+        numero_vouchers = min(numero_vouchers, MAX_VOUCHERS)
+
+        for i in range(1, numero_vouchers + 1):
+            v_origen  = request.form.get(f"voucher_origen_{i}", "").strip()
+            v_destino = request.form.get(f"voucher_destino_{i}", "").strip()
+            if not v_origen or not v_destino:
+                flash(f"Debe indicar origen y destino del voucher #{i}.", "warning")
+                return redirect(url_for("planificador.planificador_solicitudes"))
+            voucher_items_data.append({"origen": v_origen, "destino": v_destino})
+
+        # "lugar_destino" ya no se captura como campo único para Voucher; se
+        # deja un resumen legible para listados/notificaciones que lo muestran.
+        if len(voucher_items_data) == 1:
+            lugar = voucher_items_data[0]["destino"] or voucher_items_data[0]["origen"]
+        else:
+            lugar = f"{len(voucher_items_data)} vouchers — ver detalle"
 
         try:
             fecha_dt = date.fromisoformat(fecha)
@@ -479,8 +511,7 @@ def crear():
 
     if tipo == "Voucher" and sid:
         try:
-            repo.ensure_voucher_items_schema()
-            repo.crear_voucher_items(sid, numero_vouchers)
+            repo.crear_voucher_items(sid, voucher_items_data)
         except Exception:
             current_app.logger.exception("[VOUCHER] Error creando voucher_items sid=%s", sid)
 
@@ -1654,6 +1685,66 @@ def voucher_confirmar_item(sid, item_id):
 
 
 # ─────────────────────────────────────────────────────────────
+# Voucher: el solicitante marca UN voucher como no utilizado
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/voucher/item/<int:item_id>/no-utilizado", methods=["POST"],
+                       endpoint="planificador_voucher_no_utilizado_item")
+@require_login
+def voucher_no_utilizado_item(sid, item_id):
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    s = repo.get_solicitud_by_id(sid)
+    item = repo.get_voucher_item_by_id(item_id)
+    if not s or not item or item.get("solicitud_id") != sid:
+        abort(404)
+    # Mismo permiso que confirmar: es la misma etapa/actor (el solicitante).
+    if not svc.puede_confirmar_voucher_item(s, item, u["id"], ctx):
+        abort(403)
+
+    obs = request.form.get("observacion", "").strip()
+    if not obs:
+        msg = "Debe indicar el motivo por el que no utilizó este voucher."
+        is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+        if is_ajax:
+            from flask import jsonify
+            return jsonify({"ok": False, "msg": msg}), 400
+        flash(msg, "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    resultado = repo.marcar_voucher_no_utilizado(item_id, sid, u["id"], u["nombre"], obs)
+
+    if resultado["completada"]:
+        try:
+            notif.notif_voucher_liquidada(
+                sid, s["area_solicitante"], str(s["fecha"]), s["solicitante_nombre"],
+                s["solicitante_id"], u["nombre"], resultado["costo_total"],
+            )
+        except Exception:
+            pass
+        msg_ok = "Voucher marcado como no utilizado. La solicitud quedó completada."
+    elif resultado["todos_confirmados"]:
+        try:
+            notif.notif_voucher_pendiente_liquidacion(
+                sid, s["area_solicitante"], str(s["fecha"]), s["solicitante_nombre"],
+            )
+        except Exception:
+            pass
+        msg_ok = ("Voucher marcado como no utilizado. Todos tus vouchers quedaron confirmados — "
+                  "se notificó al coordinador para registrar los costos.")
+    else:
+        msg_ok = "Voucher marcado como no utilizado. Aún tienes vouchers pendientes de confirmar."
+
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    if is_ajax:
+        from flask import jsonify
+        return jsonify({"ok": True, "completada": resultado["completada"],
+                        "todos_confirmados": resultado["todos_confirmados"], "msg": msg_ok})
+    flash(msg_ok, "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
 # Voucher: coordinador liquida UN voucher (sin validar presupuesto)
 # ─────────────────────────────────────────────────────────────
 
@@ -1694,6 +1785,164 @@ def voucher_liquidar_item(sid, item_id):
     else:
         flash("Voucher liquidado. Aún hay vouchers pendientes de liquidar.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
+
+
+# ─────────────────────────────────────────────────────────────
+# Voucher: carga masiva de costos (Excel del proveedor de taxis)
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/vouchers/carga-masiva-costos", methods=["POST"],
+                       endpoint="planificador_voucher_carga_masiva")
+@require_login
+def voucher_carga_masiva():
+    from flask import jsonify
+
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    es_coordinador_voucher = "Voucher" in (ctx.get("tipos_coordinador") or [])
+    if not (ctx["es_admin"] or es_coordinador_voucher):
+        return jsonify({"ok": False, "msg": "No tiene permiso para cargar costos de vouchers."}), 403
+
+    archivo = request.files.get("archivo_excel")
+    if not archivo or not archivo.filename:
+        return jsonify({"ok": False, "msg": "Debe seleccionar un archivo Excel (.xlsx)."}), 400
+    if not archivo.filename.lower().endswith((".xlsx", ".xlsm")):
+        return jsonify({"ok": False, "msg": "El archivo debe ser .xlsx o .xlsm."}), 400
+
+    try:
+        from openpyxl import load_workbook
+    except ImportError:
+        return jsonify({"ok": False, "msg": "openpyxl no está instalado en el servidor."}), 500
+
+    try:
+        wb = load_workbook(archivo, data_only=True, read_only=True)
+    except Exception:
+        return jsonify({"ok": False,
+                        "msg": "No se pudo leer el archivo. Verifica que sea un Excel válido (.xlsx)."}), 400
+
+    columnas_requeridas = {"voucher", "valor"}
+    hoja = None
+    col_idx = {}
+    header_row_num = None
+
+    for ws in wb.worksheets:
+        for row in ws.iter_rows(min_row=1, max_row=5):
+            valores = {
+                (str(c.value).strip().lower() if c.value is not None else ""): idx
+                for idx, c in enumerate(row)
+            }
+            if columnas_requeridas.issubset(valores.keys()):
+                hoja = ws
+                col_idx = valores
+                header_row_num = row[0].row
+                break
+        if hoja is not None:
+            break
+
+    if hoja is None:
+        return jsonify({
+            "ok": False,
+            "msg": ("No se encontró en ninguna hoja del archivo una fila de encabezados con las "
+                    "columnas 'VOUCHER' y 'VALOR'. Revisa el formato del archivo."),
+        }), 400
+
+    idx_voucher = col_idx["voucher"]
+    idx_valor   = col_idx["valor"]
+    idx_origen  = col_idx.get("origen")
+    idx_destino = col_idx.get("destino")
+
+    exitosos = 0
+    errores = []
+    fila_num = header_row_num
+
+    for row in hoja.iter_rows(min_row=header_row_num + 1):
+        fila_num += 1
+        celdas = list(row)
+        if idx_voucher >= len(celdas):
+            continue
+
+        v_voucher = celdas[idx_voucher].value
+        if v_voucher is None or str(v_voucher).strip() == "":
+            continue  # fila en blanco, no cuenta como error
+
+        secuencial = str(v_voucher).strip()
+        if secuencial.endswith(".0"):
+            secuencial = secuencial[:-2]
+
+        v_valor = celdas[idx_valor].value if idx_valor < len(celdas) else None
+        try:
+            costo = float(v_valor)
+        except (TypeError, ValueError):
+            errores.append({"fila": fila_num, "voucher": secuencial,
+                            "motivo": f"Costo inválido: {v_valor!r}"})
+            continue
+
+        origen_real = (
+            str(celdas[idx_origen].value).strip()
+            if idx_origen is not None and idx_origen < len(celdas) and celdas[idx_origen].value
+            else ""
+        )
+        destino_real = (
+            str(celdas[idx_destino].value).strip()
+            if idx_destino is not None and idx_destino < len(celdas) and celdas[idx_destino].value
+            else ""
+        )
+
+        item = repo.get_voucher_item_by_secuencial(secuencial)
+        if not item:
+            errores.append({"fila": fila_num, "voucher": secuencial,
+                            "motivo": "No existe ningún voucher con ese secuencial en el sistema."})
+            continue
+
+        if item.get("costo") is not None:
+            errores.append({"fila": fila_num, "voucher": secuencial,
+                            "motivo": "Este voucher ya tenía un costo registrado; se omitió para no duplicar."})
+            continue
+
+        s = repo.get_solicitud_by_id(item["solicitud_id"])
+        if not s or not svc.puede_liquidar_voucher_item(s, item, u["id"], ctx):
+            errores.append({
+                "fila": fila_num, "voucher": secuencial,
+                "motivo": ("La solicitud de este voucher no está lista para liquidar todavía "
+                           "(el solicitante aún no confirma todos sus vouchers)."),
+            })
+            continue
+
+        try:
+            todos_liquidados, costo_total = repo.liquidar_voucher_item(
+                item["id"], item["solicitud_id"], u["id"], u["nombre"], costo,
+            )
+            # El origen/destino real es un dato adicional (para el futuro
+            # indicador de coincidencia): si falla al guardarlo no debe
+            # invalidar el costo, que ya quedó liquidado arriba.
+            if origen_real or destino_real:
+                try:
+                    repo.set_voucher_item_datos_reales(item["id"], origen_real, destino_real)
+                except Exception:
+                    current_app.logger.exception(
+                        "[VOUCHER-CARGA-MASIVA] No se pudo guardar origen/destino real item_id=%s",
+                        item["id"],
+                    )
+            if todos_liquidados:
+                try:
+                    notif.notif_voucher_liquidada(
+                        item["solicitud_id"], s["area_solicitante"], str(s["fecha"]),
+                        s["solicitante_nombre"], s["solicitante_id"], u["nombre"], costo_total,
+                    )
+                except Exception:
+                    pass
+            exitosos += 1
+        except Exception as exc:
+            errores.append({"fila": fila_num, "voucher": secuencial,
+                            "motivo": f"Error al guardar: {exc}"})
+
+    return jsonify({
+        "ok": True,
+        "hoja": hoja.title,
+        "procesados": exitosos + len(errores),
+        "exitosos": exitosos,
+        "errores": errores,
+    })
 
 
 # ─────────────────────────────────────────────────────────────
@@ -2288,6 +2537,102 @@ def presupuesto_guardar():
         "planificador.planificador_presupuesto",
         anio=anio, empresa_id=empresa_id, tipo_gasto=tipo_gasto,
     ))
+
+
+# ─────────────────────────────────────────────────────────────
+# Indicadores — Voucher
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/indicadores", methods=["GET"], endpoint="planificador_indicadores")
+@require_login
+@require_permission(PERM_INDICADORES, "ver")
+def indicadores():
+    from datetime import date as _date
+
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    es_coordinador_voucher = "Voucher" in (ctx.get("tipos_coordinador") or [])
+    if not (ctx["es_admin"] or es_coordinador_voucher):
+        flash("No tiene permiso para ver los indicadores.", "danger")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    hoy = _date.today()
+    fecha_desde = request.args.get("fecha_desde") or hoy.replace(day=1).isoformat()
+    fecha_hasta = request.args.get("fecha_hasta") or hoy.isoformat()
+    area = (request.args.get("area") or "").strip()
+
+    departamentos = repo.get_departamentos()
+
+    kpi          = repo.get_voucher_indicadores_kpi(fecha_desde, fecha_hasta, area)
+    por_usuario  = repo.get_voucher_indicadores_por_usuario(fecha_desde, fecha_hasta, area)
+    por_depto    = repo.get_voucher_indicadores_por_departamento(fecha_desde, fecha_hasta, area)
+    tendencia    = repo.get_voucher_indicadores_tendencia_mensual(fecha_desde, fecha_hasta, area)
+    top_rutas    = repo.get_voucher_indicadores_top_rutas(fecha_desde, fecha_hasta, area)
+
+    # Drill-down de "Pend. confirmación": Departamento -> Usuario -> vouchers
+    pend_conf_rows = repo.get_voucher_indicadores_pend_confirmacion_detalle(fecha_desde, fecha_hasta, area)
+    from collections import OrderedDict as _OrderedDict
+    _por_area = _OrderedDict()
+    for r in pend_conf_rows:
+        area_bucket = _por_area.setdefault(r["area"], {"area": r["area"], "total": 0, "usuarios": _OrderedDict()})
+        area_bucket["total"] += 1
+        user_bucket = area_bucket["usuarios"].setdefault(
+            r["solicitante_nombre"], {"usuario_nombre": r["solicitante_nombre"], "total": 0, "vouchers": []},
+        )
+        user_bucket["total"] += 1
+        user_bucket["vouchers"].append(r)
+    pend_conf_detalle = []
+    for area_bucket in _por_area.values():
+        area_bucket["usuarios"] = list(area_bucket["usuarios"].values())
+        pend_conf_detalle.append(area_bucket)
+
+    meses_nombres = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+                      "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+    tendencia_labels = [f"{meses_nombres[t['mes'] - 1]} {t['anio']}" for t in tendencia]
+    tendencia_vouchers = [t["num_vouchers"] for t in tendencia]
+    tendencia_costo    = [round(float(t["costo_total"] or 0), 2) for t in tendencia]
+
+    chart_data = {
+        "estado": {
+            "labels": ["Confirmados", "No utilizados", "Pend. entrega", "Pend. confirmación"],
+            "values": [
+                kpi.get("confirmados") or 0,
+                kpi.get("no_utilizados") or 0,
+                kpi.get("pend_entrega") or 0,
+                kpi.get("pend_confirmacion") or 0,
+            ],
+        },
+        "usuarios": {
+            "labels": [r["solicitante_nombre"] for r in por_usuario],
+            "vouchers": [r["num_vouchers"] for r in por_usuario],
+            "costo": [round(float(r["costo_total"] or 0), 2) for r in por_usuario],
+        },
+        "departamentos": {
+            "labels": [r["area"] for r in por_depto],
+            "vouchers": [r["num_vouchers"] for r in por_depto],
+            "costo": [round(float(r["costo_total"] or 0), 2) for r in por_depto],
+        },
+        "tendencia": {
+            "labels": tendencia_labels,
+            "vouchers": tendencia_vouchers,
+            "costo": tendencia_costo,
+        },
+    }
+
+    return render_template(
+        "planificador/indicadores.html",
+        active_page=ACTIVE_KEY,
+        kpi=kpi,
+        por_usuario=por_usuario,
+        por_depto=por_depto,
+        top_rutas=top_rutas,
+        pend_conf_detalle=pend_conf_detalle,
+        departamentos=departamentos,
+        fecha_desde=fecha_desde,
+        fecha_hasta=fecha_hasta,
+        area_sel=area,
+        chart_data=chart_data,
+    )
 
 
 # ─────────────────────────────────────────────────────────────

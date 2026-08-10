@@ -31,6 +31,8 @@ from modules.gastos.gastos_queries import (
     SQL_EXISTS_FACTURA_XML,
     SQL_INSERT_FACTURA_XML,
     SQL_INSERT_FACTURA_XML_DET,
+    SQL_INSERT_FACTURA_XML_PAGO,
+    SQL_INSERT_FACTURA_XML_INFO_ADICIONAL,
     SQL_GET_ADMIN_EMAILS,
 )
 
@@ -411,6 +413,22 @@ def _insert_factura_xml(conn, header: dict, detalles: list[dict], archivo: str) 
             d.get("base_imponible"),
             d.get("iva"),
             d.get("total_linea"),
+        ))
+
+    for p in (header.get("pagos") or []):
+        cur.execute(SQL_INSERT_FACTURA_XML_PAGO, (
+            factura_id,
+            p.get("forma_pago"),
+            p.get("total"),
+            p.get("plazo"),
+            p.get("unidad_tiempo"),
+        ))
+
+    for ia in (header.get("info_adicional") or []):
+        cur.execute(SQL_INSERT_FACTURA_XML_INFO_ADICIONAL, (
+            factura_id,
+            ia.get("nombre"),
+            ia.get("valor"),
         ))
 
     return int(factura_id)

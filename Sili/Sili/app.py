@@ -157,7 +157,7 @@ def create_app():
     print(">>> Scheduler llamado")
 
     # ------------------------------------------------------
-    # Poller de correos soporteti@quimpac.com.ec (cada 2 min)
+    # Poller de correos soporteti@quimpac.com.ec 
     # ------------------------------------------------------
     start_email_poller_if_enabled(app)
 

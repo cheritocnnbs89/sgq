@@ -5,8 +5,10 @@ from .gastos_constants import (
     TABLE_DETALLE,
     TABLE_FACTURAS_XML,
     TABLE_FACTURAS_XML_DET,
+    TABLE_FACTURAS_XML_PAGOS,
+    TABLE_FACTURAS_XML_INFO_ADICIONAL,
     TABLE_GASTOS,
-    TABLE_TERCEROS, 
+    TABLE_TERCEROS,
     TABLE_USUARIOS,
 )
 
@@ -186,6 +188,20 @@ FROM {TABLE_GASTOS} g
 LEFT JOIN {TABLE_USUARIOS} u
     ON u.id = g.usuario_id
 WHERE g.id = ?
+"""
+
+SQL_INSERT_FACTURA_XML_PAGO = f"""
+INSERT INTO {TABLE_FACTURAS_XML_PAGOS} (
+    factura_id, forma_pago, total, plazo, unidad_tiempo
+)
+VALUES (?,?,?,?,?)
+"""
+
+SQL_INSERT_FACTURA_XML_INFO_ADICIONAL = f"""
+INSERT INTO {TABLE_FACTURAS_XML_INFO_ADICIONAL} (
+    factura_id, nombre, valor
+)
+VALUES (?,?,?)
 """
 
 SQL_GET_ADMIN_EMAILS = f"""

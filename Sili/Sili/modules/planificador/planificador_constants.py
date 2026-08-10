@@ -130,3 +130,4 @@ SEMAFORO_AMARILLO_PCT = 50  # >= 50% usado → amarillo
 # >= 100% usado → rojo (sin presupuesto, requiere aprobación GG)
 
 PERM_PRESUPUESTO = "planificador.presupuesto"
+PERM_INDICADORES = "planificador.indicadores"

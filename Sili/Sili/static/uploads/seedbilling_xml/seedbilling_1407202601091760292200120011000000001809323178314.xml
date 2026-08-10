@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>BRIONES BAJANA BABINGTON ABDON</razonSocial>
+        <ruc>0917602922001</ruc>
+        <claveAcceso>1407202601091760292200120011000000001809323178314</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>100</ptoEmi>
+        <secuencial>000000180</secuencial>
+        <dirMatriz>Ciudadela: COOP. BASTION POPULAR Numero: SOLAR 3 Manzana: 804 </dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>14/07/2026</fechaEmision>
+        <dirEstablecimiento>Ciudadela: COOP. BASTION POPULAR Numero: SOLAR 3 Manzana: 804 </dirEstablecimiento>
+        <obligadoContabilidad>NO</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <direccionComprador>AV.ROSAVIN LOTE 1 Y CALLE COBRE - KM16.5 VIA DAULE</direccionComprador>
+        <totalSinImpuestos>2055.63</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>2055.63</baseImponible>
+                <valor>308.34</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0</propina>
+        <importeTotal>2363.97</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>2363.97</total>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>MON007</codigoPrincipal>
+            <codigoAuxiliar>MONTAJE TUBERIAS AGUA D</codigoAuxiliar>
+            <descripcion>MONTAJE DE TUBERIAS AGUA DESMI</descripcion>
+            <cantidad>1</cantidad>
+            <precioUnitario>2055.63</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>2055.63</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="informacionAdicional" valor="EC CONSTRUCT INSTAL IMPLEMENT DE MN PROY"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>2055.63</baseImponible>
+                    <valor>308.34</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Telefono">2162660</campoAdicional>
+        <campoAdicional nombre="Email">compras.electronica@quimpac.com.ec</campoAdicional>
+        <campoAdicional nombre="PEDIDO">7500046582</campoAdicional>
+        <campoAdicional nombre="ACEPTACION NRO:">1001638170</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-67f46d59-2e1a-4164-ad44-0d72dd4a5327"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-67f46d59-2e1a-4164-ad44-0d72dd4a5327-ref0" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>3T38PlvRfM7EATMFzvOZXu9wFRsaQUcODo/+ofqYOQQ=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-67f46d59-2e1a-4164-ad44-0d72dd4a5327-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>SruoCLfEBGWtSUtBw6odkimBuMIxWPpcvK80Rk3VtCY=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-67f46d59-2e1a-4164-ad44-0d72dd4a5327-sigvalue">JeQwknj8kpiyoZq/lvz2sKxat04JqMlTuyDTh/4VeTlAmL5LLrZupiWEh6EUSve3Y2GvSdpwwA0PYFPm3TK5KwCQd8OZTlIF0UFwrPFI9WX3LtJKJLGgaCUauxOcITasAuTBnvbmhopnRUO/+ziAFfTS99q1DWsTBsol7/K47bn+C0ztkNnbN4ddyqVI/QKiIVxWmKr/yKNpqRsnY2jX49a1d2b7LpTzAkeul+X0jDPerMIfOGQpKs9Pix1kZuH9TidpyTlLAVyUyGbYXuEXrXWGVcaosPvudabsb0LDfOlQ7k5RRblE61fKdgDYDzbfVRCM/gPkboyonlXzWCQTGA==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIJbzCCB1egAwIBAgIIfGdljJerlFYwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQwQgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNvbS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNBMRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4XDTI1MTExOTE5MTYwMFoXDTI2MTExOTE5MTYwMFowgaQxCzAJBgNVBAYTAkVDMRgwFgYDVQQEDA9CUklPTkVTIEJBSkHDkUExGDAWBgNVBCoMD0JBQklOR1RPTiBBQkRPTjEZMBcGA1UEBRMQSURDRUMtMDkxNzYwMjkyMjEoMCYGA1UEAwwfQkFCSU5HVE9OIEFCRE9OIEJSSU9ORVMgQkFKQcORQTEcMBoGA1UEYQwTVElORUMtMDkxNzYwMjkyMjAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALhJEfvRLVYqLQaTuRDiIrscSGd5Q/Sg5A5IceWvKpXjQ1zGkCqZ2t+Fw9YInNRFEQlKd5NWL0kqMmPyt993ygWrbyYYOXMEIAFokralgb8WzK1wRa3fHamEX1C28K25O5vV31p6clMnziYyXgeep1Ckg6IOanTXuKGChywij22hzJpumo/wcqa59lLtgbztOiRGrP03ZCJwDB0Nss3hkCPHqHo2f0rxfEgGKmwwrVNVIR21e9/sWnn9/M+51Q2bcLFrsppO7EdVqooU/z7gNsfIxMrpN40bEdcrugKmGgOyjIedQcSL5ofYDUeCaRZ0Q/DoAvGui32W3Smjxi63p+cCAwEAAaOCBI0wggSJMBsGCysGAQQBgvE2ZgMBBAwMCjA5MTc2MDI5MjIwHgYLKwYBBAGC8TZmAwsEDwwNMDkxNzYwMjkyMjAwMTCB1wYIKwYBBQUHAQEEgcowgccwVQYIKwYBBQUHMAKGSWh0dHA6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9kb3dubG9hZC90c3BfY2VydGlmaWNhdGVzL3N1Ym9yZGluYXRlMi5jcnQwNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzA2BggrBgEFBQcwAYYqaHR0cDovL29jc3AyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1UdDgQWBBSqqRAiTGJCAW1aBG33jWGoStDc7jAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH1X52BzzgdGqeKjaPDhEbJ0knP9MIGZBgNVHSAEgZEwgY4wgYsGDCsGAQQBgvE2ZgIBATB7MDcGCCsGAQUFBwIBFitodHRwczovL3d3dy51YW5hdGFjYS5jb20vcHVibGljL3BraS9kcGMtZWMvMEAGCCsGAQUFBwICMDQMMkNFUlRJRklDQURPIERFIFBFUlNPTkEgTkFUVVJBTCBPIEZJU0lDQSBFTiBBUkNISVZPMIGPBgNVHR8EgYcwgYQwQKA+oDyGOmh0dHA6Ly9jcmwxLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5jcmwwQKA+oDyGOmh0dHA6Ly9jcmwyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5jcmwwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAcMGA1UdEQSCAbowggG2gRRhY3R1YWwzcm9tQGdtYWlsLmNvbaAbBgsrBgEEAYLxNmYDAaAMDAowOTE3NjAyOTIyoCAGCysGAQQBgvE2ZgMCoBEMD0JBQklOR1RPTiBBQkRPTqAYBgsrBgEEAYLxNmYDA6AJDAdCUklPTkVToBgGCysGAQQBgvE2ZgMEoAkMB0JBSkHDkUGgdAYLKwYBBAGC8TZmAwegZQxjTk1FUk86IFNPTEFSIDMgTUFOWkFOQTogODA0IFJFRkVSRU5DSUE6IEEgVU5BIENVQURSQSBERSBMQSBFU1RBQ0lPTiBERSAgTEEgTElORUEgREUgVFJBTlNQT1JURSBDSUVOoB8GCysGAQQBgvE2ZgMIoBAMDjAwNTkzOTg3NDQxMTcxoBoGCysGAQQBgvE2ZgMJoAsMCUdVQVlBUVVJTKAeBgsrBgEEAYLxNmYDC6APDA0wOTE3NjAyOTIyMDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCkGCysGAQQBgvE2ZgMyoBoMGFBFUlNPTkEgTkFUVVJBTCBPIEZJU0lDQaAYBgsrBgEEAYLxNmYDM6AJDAdBUkNISVZPMA0GCSqGSIb3DQEBCwUAA4ICAQAVjQOuJH2++JQVZWDpXopbBqGI1AG/EvZeiNXGsCa2uvwLzfExVjlrYhpceLzygpteEaGTKTe0p9RKBMN9BoHdznO9BysmThWmi3vxp3903jjdCGmNEzXLT4oraRAWBslnCX/l5m0FpBhB+Kd4b+xXPGVxsc8b06eoAUigshh3gQNk2wYbbH8g8UkcWg59kMwyAqLGwNKA8kBSh2By5JOYkVop/TQiJQeTslPtiq6LEBkVit/pxrvFdGXfLj1C/CYT2sdzk/6tHqejeiWTZX6GgqwdWCYPr7+CLySMp7fs53RFrQUE1RP51NDgpmi2At4aorUxamTwpIUPiX44gT91qkJwVsOAG5JgMKaD7I9JyLpFsr1xLIb7HihThsUHWdKqdjVMtI7dmj7IokG19cCLPC5gZ7F1vLilo3L1yc6E98nzgtrJdm7P6nu8MGWAKskrPpvYCF+KigAnxrH06qVNQ17jek6JWdP5FuxgXcMhKLb9UPxIDZOV0X83wMqmORjsyv2BSv99IqBEuiAdHdTyHEDBb56ioss7TSIuXWFHsJE9nbdiziedPzZ+9bo9lxa66iyzRIHQCWxvsEsBmW1zAKNAHTCRIPov7gRg1HYClynUz2Kbblu4Mx8RqNyJ0nQaoTeZDJqeOeZgtMCHgMz9ann28ZM6xoHLHQY+ulbYJg==</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-67f46d59-2e1a-4164-ad44-0d72dd4a5327"><xades:SignedProperties Id="xmldsig-67f46d59-2e1a-4164-ad44-0d72dd4a5327-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-07-14T12:17:47.643-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>wtfvkdT6ZRDeI88g4Bp8DztoEumrKhEq5Csr1QGThdU=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>8964245237818692694</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-67f46d59-2e1a-4164-ad44-0d72dd4a5327-ref0"><xades:Description>FIRMA DIGITAL SRI</xades:Description><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>

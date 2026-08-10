@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>HERRERA LOZANO KETTY EGDA AMINTA</razonSocial>
+	    <nombreComercial>DISTRIBUIDORA H&amp;amp;H SEGURIDAD INDUSTRIAL</nombreComercial>
+	    <ruc>0907917041001</ruc>
+	    <claveAcceso>1407202601090791704100120010010000292654121342011</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>001</ptoEmi>
+	    <secuencial>000029265</secuencial>
+	    <dirMatriz>GUAYAS  GUAYAQUIL  TARQUI  CDLA FAE MZ 1 SOLAR 9</dirMatriz>
+		
+		
+			<agenteRetencion>1</agenteRetencion>
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>14/07/2026</fechaEmision>
+		
+			<dirEstablecimiento>GUAYAS  GUAYAQUIL  TARQUI  CDLA FAE MZ 1 SOLAR 9</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE</direccionComprador>
+	    
+	    <totalSinImpuestos>1112.00000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>1112.00</baseImponible>
+				<valor>166.80000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>1278.80000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>1278.80</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>0087MIDECT-M</codigoPrincipal>
+		<codigoAuxiliar>0087MIDECT-M</codigoAuxiliar>
+      	<descripcion>GUANTE DE EXAMINACION NITRILO AZUL SIN POLVO T-M</descripcion>
+      
+      <cantidad>40.000000</cantidad>
+      <precioUnitario>3.900000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>156.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>156.00000</baseImponible>
+          <valor>23.40</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>0087MIDECT-L</codigoPrincipal>
+		<codigoAuxiliar>0087MIDECT-L</codigoAuxiliar>
+      	<descripcion>GUANTE DE EXAMINACION NITRILO AZUL SIN POLVO T-L</descripcion>
+      
+      <cantidad>40.000000</cantidad>
+      <precioUnitario>3.900000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>156.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>156.00000</baseImponible>
+          <valor>23.40</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>20456</codigoPrincipal>
+		<codigoAuxiliar>20456</codigoAuxiliar>
+      	<descripcion>TRAJE DE SEGURIDAD BLANCO 4510 3M T-L</descripcion>
+      
+      <cantidad>40.000000</cantidad>
+      <precioUnitario>10.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>400.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>400.00000</baseImponible>
+          <valor>60.00</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>20414</codigoPrincipal>
+		<codigoAuxiliar>20414</codigoAuxiliar>
+      	<descripcion>TRAJE DE SEGURIDAD BLANCO 4510 3M T-XL</descripcion>
+      
+      <cantidad>40.000000</cantidad>
+      <precioUnitario>10.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>400.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>400.00000</baseImponible>
+          <valor>60.00</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+	
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">ATENCION: Sr. Jacobo Cabada / Jonathan Izquieta.    ORDEN DE COMPRA 1000625606    INGRESO 5000173867</campoAdicional>
+    		
+    			<campoAdicional nombre="ordenCompra">1000625606</campoAdicional>
+    		
+    			<campoAdicional nombre="LUGAR DE ENTREGA">instalaciones en Gye</campoAdicional>
+    		
+    	
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature922425">
+<ds:SignedInfo Id="Signature-SignedInfo672322">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID121648" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature922425-SignedProperties455739">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>lEIe/9rssY7Tq/9QZHYMd6zGj5g=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate157882">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>GeFNGZu51CV9FJN2oYkcPsFQ/1w=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-629764" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>1mwZFg0PCfxlgu77ir3zuB5/ApQ=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue511413">
+1TvI6MBw2cgOJ4h3BZOvcknYEK7yPua+dkYn/TBsqCHMiZj/bQlQrVdn2E8qQJ6eqQCnfAB3fheu
+mP2cTCRPloFcgqesjzM57Wr7nQTPqZD1cSpYuKo4MiIxQGG59fUsdHxm4ZxgafWfDlIufwqkBxiP
+h78yk/hXz4H+iQE9JgG6lB1G6jeajLqBCRGPsFEd4igst1EekfE7SwZycITeWWfudLv2BxjNguIm
+duQp16xp6+d1H1msUkWevNJmHUyXrlwMivo2dl5APQS3JEuoGiprtDGvCLYd/ctTv3R6io7MiYUz
+dgrqIe6nns+i2tZezozOp6srpHdC9U8eYhRG+A==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate157882">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIMGzCCCgOgAwIBAgIEPyY18DANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDExMjUxMzQ0MTFaFw0yNjExMjUxMzQ0MTFaMIGrMSkw
+JwYDVQQDDCBLRVRUWSBFR0RBIEFNSU5UQSBIRVJSRVJBIExPWkFOTzEgMB4GA1UEBRMXMDkwNzkx
+NzA0MS0yNTExMjQwODU0MDAxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIB
+IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4BaT2i/SFDgp4r7QhUwu+A4HLC1SNxKMBJLs
+0+dl5uINFWZEC+Ge/h0QHU0Y89FTGX7fvxIgRJI0PeRRUwDyQedMYDT7XQZwwmfRJBW3/W/qRbXI
+N+Pnu6oyfz7+7aF/PqnmQVD0ENn3q7QDp50YmyJcLBLZ1/tEYNcYahNqEV/DNSa+Y41KF3c9cwZM
+o3/ry49ZFvbZGOICeRaYHGgaIW3ko6lFCvaNHMakWgdu9tftYr4udUPzUnw4bn6qyN5h+jo1iAkM
+FA5OQSjpmzLelcef+ag1flxrU/laqa9HVwXHSrIJEjSUd3yRjpRHw4nad56DjKOvA43SCz0VHKlC
+lQIDAQABo4IHVTCCB1EwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42u
+Yt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlk
+YXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3Awgc8GA1UdLgSBxzCBxDCBwaCB
+vqCBu4aBuGxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQg
+REUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJU
+SUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9kZWx0
+YVJldm9jYXRpb25MaXN0P2Jhc2UwKAYDVR0RBCEwH4EdZGlzdHJpYnVpZG9yYV9oeWhAaG90bWFp
+bC5jb20wggEGBgNVHSAEgf4wgfswWgYKKwYBBAGCpnICBzBMMEoGCCsGAQUFBwICMD4ePABDAGUA
+cgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABQAGUAcgBzAG8AbgBhACAATgBhAHQAdQByAGEAbDCB
+nAYKKwYBBAGCpnICATCBjTCBigYIKwYBBQUHAgEWfmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5u
+ZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Q
+b2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUGVyc29uYSBOYXR1cmFsLnBkZjAdBgNVHSUEFjAUBggr
+BgEFBQcDAgYIKwYBBQUHAwQwggKiBgNVHR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cu
+c2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkx
+OTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFU
+QTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYD
+VQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8v
+bGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJ
+T04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0
+aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5
+ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1
+ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9V
+PUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEg
+Uy5BLiAyLEM9RUMwHQYDVR0OBBYEFDs6APA28Rj4wIH4iAPwajnnTQZKMCsGA1UdEAQkMCKADzIw
+MjQxMTI1MTM0NDExWoEPMjAyNjExMjUxMzQ0MTFaMAsGA1UdDwQEAwIF4DAaBgorBgEEAYKmcgMB
+BAwMCjA5MDc5MTcwNDEwFgYKKwYBBAGCpnIDCQQIDAZUQVJRVUkwEQYKKwYBBAGCpnIDIgQDDAEu
+MDoGCisGAQQBgqZyAwcELAwqQVYgQ09TTUUgUkVOTkVMTEEgUyBOIFkgVkFMRU5USU5BIFRFUkVO
+U0tPMCEGCisGAQQBgqZyAwIEEwwRS0VUVFkgRUdEQSBBTUlOVEEwHwYKKwYBBAGCpnIDIAQRDA8w
+MDEwMDIwMDA2NzQ2MTAwEQYKKwYBBAGCpnIDIwQDDAEuMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcG
+CisGAQQBgqZyAwwECQwHRUNVQURPUjAXBgorBgEEAYKmcgMDBAkMB0hFUlJFUkEwGgYKKwYBBAGC
+pnIDHgQMDApFU1RVRElBTlRFMB0GCisGAQQBgqZyAwsEDwwNMDkwNzkxNzA0MTAwMTARBgorBgEE
+AYKmcgMdBAMMAS4wFgYKKwYBBAGCpnIDBAQIDAZMT1pBTk8wGgYKKwYBBAGCpnIDCAQMDAowOTk5
+OTY5MzE1MA0GCSqGSIb3DQEBCwUAA4ICAQCkLqn/aG1MSFUkgctf4xm6UJb+3JsrkxWVMP1RczdV
+mLw26kxY6SfndHHG/gdRJRqPKKJ6V4R9wEqTXCb3jyfMgcFSHRJ4rsChUnBg0LIF73C6tr/yzlYe
+jKcyTcIOkdnOEgFLIcESmYEkUE7g0ODA0y9cqtL59y9hWNxxJiSWpe7twPdKrX3xUQY9/ilWZTUe
+bznlWmTo1CD6is7JegjZEYmjF/pdjrOd/ez1zGt/oh2rCBzGCOnVxc5SSevMyW9SeUgPeh6NtFD8
+Y092JY9XOKKWKwXri4AkGRkLl+Q7xYICixp+WIeQiwpIvatWuj4mcyw3Rng11xviBwpdJjGK6C26
+Z5Tm6qR6ZELeptdTmFzfr9f8za9XBDSRW4Tbs0dB+6wTV3WOjYulAaw+syocL0aKaadHUsBYAXPJ
+JxZPStlEbybh0xSIj9+A44CQtedGOI8DicZaK9p6YKT66+Jnaibp+9Son5rrRDPJSSbh2PNpLNYv
+8lDIca7rspVk9/z5+o0hzWPs+W81WtTe/lCa9olmhiDODcAHIENeOCGwhT4BxfNPwEWl3up1jCYa
+e3E7d+R5X5mHiEGFpw0tQA3oi76ZYeZSdcPYHv/UAEjD0v0VXNLDa6h2FzciaQ2eLuWZv+s+Sw6q
+CbirRStFONHbVCChJe91kPRiGiOyU0SrNg==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+4BaT2i/SFDgp4r7QhUwu+A4HLC1SNxKMBJLs0+dl5uINFWZEC+Ge/h0QHU0Y89FTGX7fvxIgRJI0
+PeRRUwDyQedMYDT7XQZwwmfRJBW3/W/qRbXIN+Pnu6oyfz7+7aF/PqnmQVD0ENn3q7QDp50YmyJc
+LBLZ1/tEYNcYahNqEV/DNSa+Y41KF3c9cwZMo3/ry49ZFvbZGOICeRaYHGgaIW3ko6lFCvaNHMak
+Wgdu9tftYr4udUPzUnw4bn6qyN5h+jo1iAkMFA5OQSjpmzLelcef+ag1flxrU/laqa9HVwXHSrIJ
+EjSUd3yRjpRHw4nad56DjKOvA43SCz0VHKlClQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature922425-Object175481"><etsi:QualifyingProperties Target="#Signature922425"><etsi:SignedProperties Id="Signature922425-SignedProperties455739"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-14T10:49:15-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>Y2/o82EZtthQCcgut5cqGcD0SqI=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION</ds:X509IssuerName><ds:X509SerialNumber>1059468784</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

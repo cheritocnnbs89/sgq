@@ -52,7 +52,11 @@
             </div>
 
             <div class="hint mt-2">
+              {% if mode == 'edit' %}
               Solo se listan contratos <strong>aprobados por Jefatura</strong> y <strong>sin garantía activa</strong>.
+              {% else %}
+              Solo se listan contratos <strong>aprobados por Jefatura</strong>. Un contrato puede tener más de una garantía.
+              {% endif %}
             </div>
           </div>
 

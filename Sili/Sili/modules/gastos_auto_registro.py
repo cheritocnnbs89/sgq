@@ -17,7 +17,8 @@ from flask import current_app
 from . import gastos_helpers as gh
 from .config import TABLE_GASTOS
 
-TPL_GASTO_AUTO_REGISTRADO = "gasto_auto_registrado"
+TPL_GASTO_AUTO_REGISTRADO = "gasto_auto_registrado"     # verde — SAP auto enviado
+TPL_PENDIENTE_SAP         = "gasto_auto_pendiente_sap"  # naranja — SAP pendiente manual
 
 
 def _exec(cur, sql, params=None):
@@ -25,67 +26,124 @@ def _exec(cur, sql, params=None):
     return cur
 
 
-def ensure_auto_registro_template(conn) -> None:
-    """Da de alta (o actualiza) la plantilla de notificación, idempotente."""
-    cur = conn.cursor()
-
-    subject = "📎 Gasto #{{ gasto_id }} registrado automáticamente"
-    html = """\
+_HTML_BASE = """\
 <!doctype html>
 <html>
   <body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Arial,sans-serif;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="640" cellpadding="0" cellspacing="0"
-                 style="max-width:640px;background:#ffffff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
-            <tr>
-              <td style="background:#0f766e;padding:18px 22px;color:#ffffff;">
-                <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.92;">
-                  GASTOS CON TARJETA — AUTO-REGISTRO
-                </div>
-                <div style="font-size:18px;font-weight:600;margin-top:4px;">
-                  Gasto auto-registrado #{{ gasto_id }}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:20px 22px;color:#111827;font-size:14px;line-height:1.5;">
-                <p>Hola {{ usuario }}, el sistema reconoció una factura recurrente y registró
-                automáticamente el gasto <b>#{{ gasto_id }}</b>, ya aprobado.</p>
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
-                  <tr><td style="padding:6px 0;color:#6b7280;">Proveedor</td><td style="padding:6px 0;text-align:right;">{{ proveedor }}</td></tr>
-                  <tr><td style="padding:6px 0;color:#6b7280;">Motivo</td><td style="padding:6px 0;text-align:right;">{{ motivo }}</td></tr>
-                  <tr><td style="padding:6px 0;color:#6b7280;">Fecha factura</td><td style="padding:6px 0;text-align:right;">{{ fecha }}</td></tr>
-                  <tr><td style="padding:6px 0;color:#6b7280;">Total</td><td style="padding:6px 0;text-align:right;">${{ total_con_iva_fmt }}</td></tr>
-                </table>
-                {% if gasto_url %}
-                <p style="margin-top:16px;">
-                  <a href="{{ gasto_url }}" style="background:#0f766e;color:#fff;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:600;">Ver gasto</a>
-                </p>
-                {% endif %}
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
+      <tr><td align="center">
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0"
+               style="max-width:640px;background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+          <tr>
+            <td style="background:{header_color};padding:18px 22px;color:#fff;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:.09em;opacity:.9;">
+                GASTOS CON TARJETA — AUTO-REGISTRO
+              </div>
+              <div style="font-size:18px;font-weight:700;margin-top:5px;">{header_title}</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:22px 22px 8px;color:#111827;font-size:14px;line-height:1.6;">
+              <p style="margin:0 0 14px;">Hola <b>{{{{ usuario }}}}</b>, {intro}</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                     style="border-top:1px solid #e5e7eb;margin-top:4px;">
+                <tr>
+                  <td style="padding:8px 0;color:#6b7280;font-size:13px;">Proveedor</td>
+                  <td style="padding:8px 0;text-align:right;font-weight:500;">{{{{ proveedor }}}}</td>
+                </tr>
+                <tr style="background:#f9fafb;">
+                  <td style="padding:8px 0;color:#6b7280;font-size:13px;">Motivo</td>
+                  <td style="padding:8px 0;text-align:right;font-weight:500;">{{{{ motivo }}}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;color:#6b7280;font-size:13px;">Fecha factura</td>
+                  <td style="padding:8px 0;text-align:right;font-weight:500;">{{{{ fecha }}}}</td>
+                </tr>
+                <tr style="background:#f9fafb;">
+                  <td style="padding:8px 0;color:#6b7280;font-size:13px;">Total</td>
+                  <td style="padding:8px 0;text-align:right;font-weight:700;font-size:15px;">${{{{ total_con_iva_fmt }}}}</td>
+                </tr>
+              </table>
+              <p style="margin:18px 0 4px;">
+                <a href="{{{{ gasto_url }}}}"
+                   style="background:{btn_color};color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600;margin-right:8px;">{btn_label}</a>
+                {sap_btn}
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:12px 22px;font-size:11px;color:#9ca3af;border-top:1px solid #f3f4f6;">
+              Este correo fue generado automáticamente por el sistema de Sili.
+            </td>
+          </tr>
+        </table>
+      </td></tr>
     </table>
   </body>
-</html>
-"""
-    text = "Gasto #{{ gasto_id }} registrado automáticamente. Proveedor: {{ proveedor }}. Total: {{ total_con_iva_fmt }}."
+</html>"""
 
-    _exec(cur, """
-        UPDATE notify_templates
-           SET tipo = ?, subject = ?, html = ?, text = ?
-         WHERE [key] = ?
-    """, ("gasto", subject, html, text, TPL_GASTO_AUTO_REGISTRADO))
+_SAP_BTN = ('<a href="{gasto_url}" '
+            'style="background:#1d4ed8;color:#fff;padding:10px 18px;border-radius:6px;'
+            'text-decoration:none;font-weight:600;">Enviar a SAP</a>')
 
+
+def _render_html(header_color, header_title, intro, btn_color, btn_label, include_sap_btn=False):
+    sap_btn = _SAP_BTN.replace("{gasto_url}", "{{ gasto_url }}") if include_sap_btn else ""
+    return _HTML_BASE.format(
+        header_color=header_color,
+        header_title=header_title,
+        intro=intro,
+        btn_color=btn_color,
+        btn_label=btn_label,
+        sap_btn=sap_btn,
+    )
+
+
+def _upsert_template(cur, key, subject, html, text):
+    _exec(cur, "UPDATE notify_templates SET tipo=?,subject=?,html=?,text=? WHERE [key]=?",
+          ("gasto", subject, html, text, key))
     if cur.rowcount == 0:
-        _exec(cur, """
-            INSERT INTO notify_templates ([key], tipo, subject, html, text)
-            VALUES (?, ?, ?, ?, ?)
-        """, (TPL_GASTO_AUTO_REGISTRADO, "gasto", subject, html, text))
+        _exec(cur, "INSERT INTO notify_templates ([key],tipo,subject,html,text) VALUES (?,?,?,?,?)",
+              (key, "gasto", subject, html, text))
+
+
+def ensure_auto_registro_template(conn) -> None:
+    """Da de alta (o actualiza) ambas plantillas de notificación, idempotente."""
+    cur = conn.cursor()
+
+    # Verde — SAP enviado automáticamente
+    html_verde = _render_html(
+        header_color="#15803d",
+        header_title="✅ Gasto #{{ gasto_id }} registrado y enviado a SAP",
+        intro="el sistema reconoció una factura recurrente, registró el gasto "
+              "<b>#{{ gasto_id }}</b> ya aprobado y lo envió a SAP automáticamente.",
+        btn_color="#15803d",
+        btn_label="Ver gasto",
+        include_sap_btn=False,
+    )
+    _upsert_template(
+        cur, TPL_GASTO_AUTO_REGISTRADO,
+        subject="✅ Gasto #{{ gasto_id }} registrado y enviado a SAP",
+        html=html_verde,
+        text="Gasto #{{ gasto_id }} registrado y enviado a SAP. Proveedor: {{ proveedor }}. Total: ${{ total_con_iva_fmt }}.",
+    )
+
+    # Naranja — SAP pendiente de envío manual
+    html_naranja = _render_html(
+        header_color="#ea580c",
+        header_title="📎 Gasto #{{ gasto_id }} registrado — SAP pendiente",
+        intro="el sistema reconoció una factura recurrente y registró el gasto "
+              "<b>#{{ gasto_id }}</b> ya aprobado. El envío a SAP queda pendiente.",
+        btn_color="#ea580c",
+        btn_label="Ver gasto",
+        include_sap_btn=False,
+    )
+    _upsert_template(
+        cur, TPL_PENDIENTE_SAP,
+        subject="📎 Gasto #{{ gasto_id }} registrado — SAP pendiente",
+        html=html_naranja,
+        text="Gasto #{{ gasto_id }} registrado, SAP pendiente. Proveedor: {{ proveedor }}. Total: ${{ total_con_iva_fmt }}.",
+    )
 
     conn.commit()
 
@@ -227,11 +285,12 @@ def _crear_gasto_desde_factura(conn, factura: dict, regla: dict) -> int:
             ga_aprobado, ga_aprobado_por, ga_aprobado_at,
             gg_aprobado, gg_aprobado_por, gg_aprobado_at,
             gf_aprobado, gf_aprobado_por, gf_aprobado_at,
-            coord_revisado, coord_revisado_por, coord_revisado_at
+            coord_revisado, coord_revisado_por, coord_revisado_at,
+            auto_registro_regla_id
         )
         OUTPUT INSERTED.id
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
-                1,?,?, 1,?,?, 1,?,?, 1,?,?)
+                1,?,?, 1,?,?, 1,?,?, 1,?,?,?)
     """, (
         anio, mes, dia, fecha, regla["motivo"], pid, prov_nombre, regla["centro_costo"],
         totales["con_soporte"], totales["sin_soporte"], totales["subtotal_factura"], totales["servicios_10"],
@@ -245,6 +304,7 @@ def _crear_gasto_desde_factura(conn, factura: dict, regla: dict) -> int:
         usuario_id, now,
         usuario_id, now,
         usuario_id, now,
+        regla["id"],
     ))
     gasto_row = cur.fetchone()
     gasto_id = gasto_row[0] if gasto_row else None
@@ -264,42 +324,76 @@ def _crear_gasto_desde_factura(conn, factura: dict, regla: dict) -> int:
             r["servicios_10"], r["subtotal_sin_iva"], r["iva"], r["total_con_iva"]
         ))
 
-    cur.execute("""
-        UPDATE facturas_xml SET estado = 'PROCESADO'
-        WHERE id = ? AND estado = 'PENDIENTE'
-    """, (factura["id"],))
+    # facturas_xml.estado es exclusivo de Sili (rutina usa su propia columna
+    # estado_xml_sap) -> seguro marcarlo aquí sin pisar el flujo de "rutina".
+    cur.execute("UPDATE facturas_xml SET estado = 'PROCESADO' WHERE id = ?", (factura["id"],))
 
     gh.recalc_gasto_totales(conn, gasto_id)
 
     return gasto_id
 
 
-def _enqueue_notificacion(conn, gasto_id: int, usuario_id: int, motivo: str) -> None:
-    payload = json.dumps({"gasto_id": int(gasto_id), "motivo": motivo}, ensure_ascii=False)
+def _enqueue_notificacion(conn, gasto_id: int, usuario_id: int, motivo: str, sap_auto: bool = False) -> None:
+    tpl = TPL_GASTO_AUTO_REGISTRADO if sap_auto else TPL_PENDIENTE_SAP
     event_key = f"gasto_auto_registrado:{int(gasto_id)}"
     cur = conn.cursor()
+
     cur.execute("""
-        IF NOT EXISTS (SELECT 1 FROM notify_queue WHERE event_key = ?)
-        BEGIN
-            INSERT INTO notify_queue (
-                user_id, tipo, fecha_obj, canal, template_key, payload_json,
-                estado, scheduled_at, gasto_id, area, event_key
-            )
-            VALUES (?, ?, GETDATE(), 'email', ?, ?, 'pending', GETDATE(), ?, 'auto', ?)
-        END
+        SELECT g.total_con_iva, g.proveedor, g.fecha, u.username
+        FROM gastos_tarjeta g
+        LEFT JOIN usuarios u ON u.id = g.usuario_id
+        WHERE g.id = ?
+    """, (gasto_id,))
+    row = cur.fetchone()
+    total_fmt = f"{float(row['total_con_iva'] or 0):,.2f}" if row else "0,00"
+    proveedor = (row["proveedor"] or "") if row else ""
+    fecha_raw = row["fecha"] if row else None
+    fecha = fecha_raw.isoformat() if hasattr(fecha_raw, "isoformat") else str(fecha_raw or "")
+    usuario = (row["username"] or "") if row else ""
+
+    payload = json.dumps({
+        "gasto_id": int(gasto_id),
+        "motivo": motivo,
+        "total_con_iva_fmt": total_fmt,
+        "proveedor": proveedor,
+        "fecha": fecha,
+        "usuario": usuario,
+    }, ensure_ascii=False)
+    cur.execute("""
+        BEGIN TRY
+            IF NOT EXISTS (SELECT 1 FROM notify_queue WHERE event_key = ?)
+            BEGIN
+                INSERT INTO notify_queue (
+                    user_id, tipo, fecha_obj, canal, template_key, payload_json,
+                    estado, scheduled_at, gasto_id, area, event_key
+                )
+                VALUES (?, ?, GETDATE(), 'email', ?, ?, 'pending', GETDATE(), ?, 'auto', ?)
+            END
+        END TRY
+        BEGIN CATCH
+            -- índice único por user+tipo+fecha+canal; cada gasto tiene su event_key,
+            -- pero el constraint no incluye gasto_id -> se ignora el duplicado
+        END CATCH
     """, (
         event_key,
-        usuario_id, TPL_GASTO_AUTO_REGISTRADO, TPL_GASTO_AUTO_REGISTRADO, payload,
+        usuario_id, tpl, tpl, payload,
         gasto_id, event_key
     ))
 
 
 def procesar_auto_registro_facturas(conn) -> list[int]:
     """
-    Job idempotente: por cada regla activa, busca facturas_xml PENDIENTE que
-    calcen (mismo RUC + mismo monto exacto), crea el gasto ya aprobado,
-    marca la factura como PROCESADO y encola la notificación. Correrlo varias
-    veces seguidas es seguro: una factura ya PROCESADO no se vuelve a tomar.
+    Job idempotente: por cada regla activa, busca facturas_xml que calcen
+    (mismo RUC + mismo monto exacto) y que todavía no tengan un gastos_tarjeta
+    asociado (factura_xml_id), crea el gasto ya aprobado, marca
+    facturas_xml.estado = 'PROCESADO' y encola la notificación.
+
+    facturas_xml.estado es de uso exclusivo de Sili -> el proceso externo
+    "rutina" (generación del XML SRI/SAP) usa su propia columna
+    estado_xml_sap, así que no hay colisión entre los dos.
+
+    Correrlo varias veces seguidas es seguro: una factura con gasto ya
+    creado no se vuelve a tomar (NOT EXISTS contra gastos_tarjeta).
     """
     cur = conn.cursor()
 
@@ -325,11 +419,18 @@ def procesar_auto_registro_facturas(conn) -> list[int]:
     for regla in reglas:
         regla_d = dict(regla)
         cur.execute("""
-            SELECT id, clave_acceso, estab, pto_emi, secuencial,
-                   fecha_emision, fecha_autorizacion, razon_social_emisor,
-                   ruc_emisor, subtotal, iva, total
-            FROM facturas_xml
-            WHERE ruc_emisor = ? AND total = ? AND estado = 'PENDIENTE'
+            SELECT f.id, f.clave_acceso, f.estab, f.pto_emi, f.secuencial,
+                   f.fecha_emision, f.fecha_autorizacion, f.razon_social_emisor,
+                   f.ruc_emisor, f.subtotal, f.iva, f.total
+            FROM facturas_xml f
+            WHERE f.ruc_emisor = ? AND f.total = ?
+              AND NOT EXISTS (
+                    SELECT 1 FROM gastos_tarjeta g WHERE g.factura_xml_id = f.id
+              )
+              AND TRY_CONVERT(date,
+                    SUBSTRING(f.fecha_emision,7,4)+'-'+
+                    SUBSTRING(f.fecha_emision,4,2)+'-'+
+                    SUBSTRING(f.fecha_emision,1,2)) >= '2026-06-01'
         """, (regla_d["ruc_proveedor"], regla_d["monto"]))
         facturas = cur.fetchall()
 
@@ -347,7 +448,10 @@ def procesar_auto_registro_facturas(conn) -> list[int]:
                 continue
 
             try:
-                _enqueue_notificacion(conn, gasto_id, regla_d["usuario_id"], regla_d["motivo"])
+                _enqueue_notificacion(
+                    conn, gasto_id, regla_d["usuario_id"], regla_d["motivo"],
+                    sap_auto=bool(regla_d.get("enviar_sap_auto")),
+                )
                 conn.commit()
             except Exception:
                 conn.rollback()

@@ -899,6 +899,22 @@
 
   /* ── Campos exclusivos de tipo Voucher (taxi) ── */
   var TIPO_VOUCHER = 'Voucher';
+  var MAX_VOUCHERS = 6;
+
+  function actualizarFilasVoucherOD(numero) {
+    var n = parseInt(numero, 10);
+    if (isNaN(n)) n = 1;
+    if (n > MAX_VOUCHERS) n = MAX_VOUCHERS;
+    for (var i = 1; i <= MAX_VOUCHERS; i++) {
+      var row = document.getElementById('voucherOdRow' + i);
+      var inpO = document.getElementById('vOrigen' + i);
+      var inpD = document.getElementById('vDestino' + i);
+      var visible = (n > 0) && (i <= n);
+      if (row) row.classList.toggle('d-none', !visible);
+      if (inpO) inpO.required = visible;
+      if (inpD) inpD.required = visible;
+    }
+  }
 
   function toggleCampoVoucher(tipoVal) {
     var esVoucher = (tipoVal === TIPO_VOUCHER);
@@ -909,6 +925,15 @@
     if (inpNumVouchers) {
       inpNumVouchers.required = esVoucher;
       if (!esVoucher) inpNumVouchers.value = '1';
+    }
+
+    // Filas de Origen/Destino por voucher (reemplazan al campo único Lugar/destino)
+    var divVoucherOD = document.getElementById('camposVoucherOrigenDestinoDiv');
+    if (divVoucherOD) divVoucherOD.classList.toggle('d-none', !esVoucher);
+    if (esVoucher) {
+      actualizarFilasVoucherOD(inpNumVouchers ? inpNumVouchers.value : 1);
+    } else {
+      actualizarFilasVoucherOD(0); // oculta y desmarca required las 6 filas
     }
 
     // Fecha >= hoy solo para Voucher (mensajería sigue sin restricción)
@@ -923,6 +948,11 @@
         var el = document.getElementById(id);
         if (el) el.style.display = esVoucher ? 'none' : '';
       });
+      // El campo único "Lugar / destino" lo reemplazan las filas por voucher
+      var campoLugarDiv = document.getElementById('campoLugarDiv');
+      var inpLugar = document.getElementById('nlugar');
+      if (campoLugarDiv) campoLugarDiv.style.display = esVoucher ? 'none' : '';
+      if (inpLugar) inpLugar.required = !esVoucher;
     }
 
     // Mensaje informativo específico de Voucher (se superpone al de toggleCampoVuelo)
@@ -1077,6 +1107,18 @@
       });
       toggleCampoVuelo(selectTipo.value);
       toggleCampoVoucher(selectTipo.value);
+    }
+
+    /* N° de vouchers: máximo 6 (clamp silencioso) + sincroniza filas Origen/Destino visibles */
+    var inpNumVouchers = document.getElementById('campoNumeroVouchers');
+    if (inpNumVouchers) {
+      inpNumVouchers.addEventListener('input', function () {
+        var v = parseInt(this.value, 10);
+        if (!isNaN(v) && v > MAX_VOUCHERS) {
+          this.value = MAX_VOUCHERS;
+        }
+        actualizarFilasVoucherOD(this.value);
+      });
     }
 
     /* Motivo de vuelo: pista visual cuando se elige "Otros" */
@@ -1242,12 +1284,64 @@
             if (vv) vv.textContent = data.adjunto_nombre || '';
           }
 
-          // Quitar el formulario y mostrar mensaje inline
+          // Quitar ambos formularios (confirmar y no-utilizado) y mostrar mensaje inline
           if (statusEl) { statusEl.className = 'voucher-upload-status ok'; statusEl.textContent = '¡Confirmado!'; }
+          var noUseForm = card.querySelector('form[data-voucher-form="no-utilizado"]');
+          if (noUseForm) noUseForm.remove();
           setTimeout(function () { form.remove(); }, 1200);
         })
         .catch(function (err) {
           if (statusEl) { statusEl.className = 'voucher-upload-status err'; statusEl.textContent = err.message || 'Error al subir'; }
+          if (btn) { btn.disabled = false; }
+        });
+      });
+    });
+
+    container.querySelectorAll('form[data-voucher-form="no-utilizado"]').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var obsInput = form.querySelector('[name="observacion"]');
+        if (!obsInput || !obsInput.value.trim()) {
+          if (obsInput) obsInput.reportValidity();
+          return;
+        }
+
+        var statusEl = form.querySelector('.voucher-nouse-status');
+        var btn      = form.querySelector('[type="submit"]');
+        var card     = form.closest('.voucher-item');
+
+        if (statusEl) { statusEl.className = 'voucher-upload-status uploading'; statusEl.textContent = 'Guardando…'; }
+        if (btn) { btn.disabled = true; }
+
+        var fd = new FormData(form);
+        fetch(form.action, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: fd,
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data.ok) throw new Error(data.msg || 'Error');
+
+          var badgeEl = card.querySelector('.voucher-item-badge');
+          if (badgeEl) {
+            badgeEl.innerHTML = '<span class="vbadge vbadge--no-utilizado">'
+              + '<i class="bi bi-slash-circle me-1"></i>No utilizado</span>';
+          }
+
+          card.classList.remove('voucher-item--entregado', 'voucher-item--pendiente', 'voucher-item--confirmado');
+          card.classList.add('voucher-item--no-utilizado');
+          var hdr = card.querySelector('.voucher-item-header');
+          if (hdr) { hdr.style.background = '#f1f5f9'; }
+
+          if (statusEl) { statusEl.className = 'voucher-upload-status ok'; statusEl.textContent = 'Marcado como no utilizado.'; }
+          var confirmarForm = card.querySelector('form[data-voucher-form="confirmar"]');
+          if (confirmarForm) confirmarForm.remove();
+          setTimeout(function () { form.remove(); }, 1200);
+        })
+        .catch(function (err) {
+          if (statusEl) { statusEl.className = 'voucher-upload-status err'; statusEl.textContent = err.message || 'Error'; }
           if (btn) { btn.disabled = false; }
         });
       });
@@ -1265,6 +1359,155 @@
       var open = !body.hidden;
       body.hidden = open;
       toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+  });
+
+  // ── Voucher: carga masiva de costos (Excel del proveedor) ─────
+  document.addEventListener('DOMContentLoaded', function () {
+    var modal = document.getElementById('modalCargaMasivaVouchers');
+    if (!modal) return;
+
+    var url          = modal.dataset.url || '';
+    var inpArchivo   = document.getElementById('cargaMasivaArchivo');
+    var btnProcesar  = document.getElementById('btnCargaMasivaProcesar');
+    var btnDescargar = document.getElementById('btnCargaMasivaDescargar');
+    var statusEl     = document.getElementById('cargaMasivaStatus');
+    var resultadoEl  = document.getElementById('cargaMasivaResultado');
+    var resumenEl    = document.getElementById('cargaMasivaResumen');
+    var tablaBody    = document.querySelector('#cargaMasivaTablaErrores tbody');
+
+    var ultimoResultado = null;
+
+    function limpiarResultado() {
+      resultadoEl.classList.add('d-none');
+      tablaBody.innerHTML = '';
+      resumenEl.textContent = '';
+      ultimoResultado = null;
+    }
+
+    function mostrarResultado(data) {
+      ultimoResultado = data;
+      var exitosos = data.exitosos || 0;
+      var procesados = data.procesados || 0;
+      var errores = data.errores || [];
+
+      resumenEl.textContent = 'Hoja "' + (data.hoja || '') + '": ' + exitosos + ' de ' +
+        procesados + ' vouchers cargados correctamente' +
+        (errores.length ? ', ' + errores.length + ' con error.' : '.');
+
+      tablaBody.innerHTML = '';
+      errores.forEach(function (e) {
+        var tr = document.createElement('tr');
+        var tdFila = document.createElement('td');
+        tdFila.textContent = e.fila;
+        var tdVoucher = document.createElement('td');
+        tdVoucher.textContent = e.voucher;
+        var tdMotivo = document.createElement('td');
+        tdMotivo.textContent = e.motivo;
+        tr.appendChild(tdFila);
+        tr.appendChild(tdVoucher);
+        tr.appendChild(tdMotivo);
+        tablaBody.appendChild(tr);
+      });
+
+      resultadoEl.classList.remove('d-none');
+    }
+
+    if (btnProcesar) {
+      btnProcesar.addEventListener('click', function () {
+        if (!inpArchivo || !inpArchivo.files.length) {
+          statusEl.className = 'small mb-2 text-danger';
+          statusEl.textContent = 'Selecciona primero un archivo Excel.';
+          return;
+        }
+
+        limpiarResultado();
+        statusEl.className = 'small mb-2 text-primary';
+        statusEl.textContent = 'Procesando archivo…';
+        btnProcesar.disabled = true;
+
+        var fd = new FormData();
+        var csrfEl = document.getElementById('cargaMasivaCsrf');
+        if (csrfEl) fd.append('csrf_token', csrfEl.value);
+        fd.append('archivo_excel', inpArchivo.files[0]);
+
+        fetch(url, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: fd,
+        })
+        .then(function (r) {
+          return r.json().catch(function () {
+            throw new Error('El servidor no devolvió una respuesta válida (posible sesión expirada o token CSRF inválido). Recarga la página e intenta de nuevo.');
+          }).then(function (data) { return { status: r.status, data: data }; });
+        })
+        .then(function (res) {
+          if (!res.data.ok) throw new Error(res.data.msg || 'No se pudo procesar el archivo.');
+          statusEl.className = 'small mb-2 text-success';
+          statusEl.textContent = '¡Archivo procesado!';
+          mostrarResultado(res.data);
+        })
+        .catch(function (err) {
+          statusEl.className = 'small mb-2 text-danger';
+          statusEl.textContent = err.message || 'Error al procesar el archivo.';
+        })
+        .finally(function () {
+          btnProcesar.disabled = false;
+        });
+      });
+    }
+
+    if (btnDescargar) {
+      btnDescargar.addEventListener('click', function () {
+        if (!ultimoResultado) return;
+
+        var lineas = [];
+        lineas.push('Carga masiva de costos de vouchers');
+        lineas.push('Hoja: ' + (ultimoResultado.hoja || ''));
+        lineas.push('Procesados: ' + (ultimoResultado.procesados || 0));
+        lineas.push('Exitosos: ' + (ultimoResultado.exitosos || 0));
+        lineas.push('Errores: ' + (ultimoResultado.errores || []).length);
+        lineas.push('');
+        if ((ultimoResultado.errores || []).length) {
+          lineas.push('Fila\tVoucher\tMotivo');
+          ultimoResultado.errores.forEach(function (e) {
+            lineas.push(e.fila + '\t' + e.voucher + '\t' + e.motivo);
+          });
+        } else {
+          lineas.push('Sin errores.');
+        }
+
+        var blob = new Blob([lineas.join('\n')], { type: 'text/plain;charset=utf-8' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'carga_masiva_vouchers_' + new Date().toISOString().slice(0, 10) + '.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 500);
+      });
+    }
+
+    // Al reabrir el modal, empezar limpio
+    document.addEventListener('click', function (e) {
+      var opener = e.target.closest('[data-open-modal="modalCargaMasivaVouchers"]');
+      if (opener) {
+        limpiarResultado();
+        statusEl.className = 'small mb-2';
+        statusEl.textContent = '';
+        if (inpArchivo) inpArchivo.value = '';
+      }
+    });
+
+    // Si al menos un voucher se cargó con éxito, recargar la página al
+    // cerrar el modal para que las pestañas/KPIs reflejen los cambios
+    // (la carga en sí no recarga la pantalla, solo su propio resultado).
+    modal.querySelectorAll('[data-close-modal="modalCargaMasivaVouchers"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (ultimoResultado && ultimoResultado.exitosos > 0) {
+          location.reload();
+        }
+      });
     });
   });
 

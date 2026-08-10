@@ -82,7 +82,6 @@ from .planificador_querys import (
     SQL_GET_SOLICITUDES_PENDIENTE_GG_VUELO,
     SQL_UPDATE_COORDINAR_VUELO,
     SQL_REAGENDAR_VUELO_A_JEFE,
-    SQL_CREATE_PRESUPUESTO_TABLE,
     SQL_GET_TIPOS_GASTO,
     SQL_GET_PRESUPUESTO_CC,
     SQL_UPSERT_PRESUPUESTO,
@@ -98,13 +97,25 @@ from .planificador_querys import (
     SQL_VOUCHER_ITEM_INSERT,
     SQL_VOUCHER_ITEMS_BY_SOLICITUD,
     SQL_VOUCHER_ITEM_BY_ID,
+    SQL_VOUCHER_ITEM_BY_SECUENCIAL,
+    SQL_VOUCHER_ITEM_SET_DATOS_REALES,
     SQL_VOUCHER_ITEM_ENTREGAR,
     SQL_VOUCHER_ITEM_CONFIRMAR,
     SQL_VOUCHER_ITEM_LIQUIDAR,
+    SQL_VOUCHER_ITEM_NO_UTILIZADO,
+    SQL_VOUCHER_ITEMS_PENDIENTES_RECORDATORIO_3D,
+    SQL_VOUCHER_ITEMS_PENDIENTES_RECORDATORIO_6D,
+    SQL_VOUCHER_ITEM_MARCAR_RECORDATORIO1,
+    SQL_VOUCHER_ITEM_MARCAR_RECORDATORIO2,
     SQL_VOUCHER_SOLICITUD_A_CONFIRMACION,
     SQL_VOUCHER_SOLICITUD_A_LIQUIDACION,
     SQL_VOUCHER_SOLICITUD_COMPLETAR,
-    SQL_CREATE_VOUCHER_ITEMS_TABLE,
+    SQL_VOUCHER_IND_KPI,
+    SQL_VOUCHER_IND_POR_USUARIO,
+    SQL_VOUCHER_IND_POR_DEPARTAMENTO,
+    SQL_VOUCHER_IND_TENDENCIA_MENSUAL,
+    SQL_VOUCHER_IND_TOP_RUTAS,
+    SQL_VOUCHER_IND_PEND_CONFIRMACION_DETALLE,
 )
 
 
@@ -518,21 +529,21 @@ def rechazar_jefe_voucher(solicitud_id: int, usuario_id: int, usuario_nombre: st
                          f"Solicitud de voucher rechazada. Motivo: {obs or '—'}")
 
 
-def ensure_voucher_items_schema() -> None:
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute(SQL_CREATE_VOUCHER_ITEMS_TABLE)
-    conn.commit()
-    conn.close()
+def crear_voucher_items(solicitud_id: int, vouchers: list[dict]) -> list[int]:
+    """Crea un item por cada voucher solicitado (numero 1..N) con su origen/destino.
 
-
-def crear_voucher_items(solicitud_id: int, numero_vouchers: int) -> list[int]:
-    """Crea un item por cada voucher solicitado (numero 1..N). Devuelve los ids creados."""
+    `vouchers` es una lista de dicts [{"origen": str, "destino": str}, ...],
+    en el orden en que deben numerarse (1..N).
+    """
     conn = get_db()
     cur = conn.cursor()
     ids = []
-    for n in range(1, int(numero_vouchers or 1) + 1):
-        cur.execute(SQL_VOUCHER_ITEM_INSERT, (solicitud_id, n))
+    for n, v in enumerate(vouchers or [], start=1):
+        cur.execute(SQL_VOUCHER_ITEM_INSERT, (
+            solicitud_id, n,
+            (v.get("origen") or "").strip(),
+            (v.get("destino") or "").strip(),
+        ))
         row = cur.fetchone()
         if row:
             ids.append(row[0])
@@ -553,6 +564,21 @@ def get_voucher_item_by_id(item_id: int) -> dict | None:
     cur.execute(SQL_VOUCHER_ITEM_BY_ID, (item_id,))
     row = cur.fetchone()
     return dict(row) if row else None
+
+
+def get_voucher_item_by_secuencial(secuencial: str) -> dict | None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEM_BY_SECUENCIAL, (secuencial,))
+    row = cur.fetchone()
+    return dict(row) if row else None
+
+
+def set_voucher_item_datos_reales(item_id: int, origen_real: str, destino_real: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEM_SET_DATOS_REALES, (origen_real or "", destino_real or "", item_id))
+    conn.commit()
 
 
 def entregar_voucher_items(solicitud_id: int, secuenciales: dict,
@@ -586,6 +612,10 @@ def confirmar_voucher_item(item_id: int, solicitud_id: int, usuario_id: int, usu
     conn.commit()
     insert_solicitud_log(solicitud_id, "VOUCHER_ITEM_CONFIRMADO", usuario_id, usuario_nombre,
                          f"Solicitante confirmó voucher item #{item_id} (secuencial adjunto).")
+    # insert_solicitud_log cierra la conexión de g.db al terminar: hay que
+    # reobtenerla (get_db() reconecta sola) antes de seguir usando cur/conn.
+    conn = get_db()
+    cur = conn.cursor()
 
     items = get_voucher_items(solicitud_id)
     todos_confirmados = bool(items) and all(i.get("confirmado_usuario") for i in items)
@@ -595,6 +625,50 @@ def confirmar_voucher_item(item_id: int, solicitud_id: int, usuario_id: int, usu
         insert_solicitud_log(solicitud_id, "PENDIENTE_LIQUIDACION_VOUCHER", usuario_id, usuario_nombre,
                              "Todos los vouchers fueron confirmados. Pendiente liquidación del coordinador.")
     return todos_confirmados
+
+
+def marcar_voucher_no_utilizado(item_id: int, solicitud_id: int, usuario_id: int,
+                                usuario_nombre: str, observacion: str) -> dict:
+    """El solicitante marca un voucher como no utilizado: cuenta como
+    confirmado (con costo $0, sin liquidación pendiente). Si con este ya
+    quedan todos confirmados, pasa a PENDIENTE_LIQUIDACION_VOUCHER; si además
+    ya estaban todos con costo (p.ej. todos no utilizados), completa la
+    solicitud directamente. Devuelve {todos_confirmados, completada, costo_total}."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEM_NO_UTILIZADO, (observacion or "", item_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "VOUCHER_ITEM_NO_UTILIZADO", usuario_id, usuario_nombre,
+                         f"Solicitante marcó el voucher item #{item_id} como no utilizado. "
+                         f"Motivo: {observacion or '—'}")
+    # insert_solicitud_log cierra la conexión de g.db al terminar: hay que
+    # reobtenerla (get_db() reconecta sola) antes de seguir usando cur/conn.
+    conn = get_db()
+    cur = conn.cursor()
+
+    items = get_voucher_items(solicitud_id)
+    todos_confirmados = bool(items) and all(i.get("confirmado_usuario") for i in items)
+    if not todos_confirmados:
+        return {"todos_confirmados": False, "completada": False, "costo_total": 0.0}
+
+    cur.execute(SQL_VOUCHER_SOLICITUD_A_LIQUIDACION, (solicitud_id,))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "PENDIENTE_LIQUIDACION_VOUCHER", usuario_id, usuario_nombre,
+                         "Todos los vouchers fueron confirmados. Pendiente liquidación del coordinador.")
+    conn = get_db()
+    cur = conn.cursor()
+
+    todos_liquidados = all(i.get("costo") is not None for i in items)
+    if not todos_liquidados:
+        return {"todos_confirmados": True, "completada": False, "costo_total": 0.0}
+
+    costo_total = round(sum(float(i["costo"]) for i in items), 2)
+    cur.execute(SQL_VOUCHER_SOLICITUD_COMPLETAR, (costo_total, solicitud_id))
+    conn.commit()
+    insert_solicitud_log(solicitud_id, "COMPLETADA", usuario_id, usuario_nombre,
+                         f"Todos los vouchers quedaron confirmados (ninguno requería liquidación). "
+                         f"Costo total: ${costo_total:.2f}")
+    return {"todos_confirmados": True, "completada": True, "costo_total": costo_total}
 
 
 def liquidar_voucher_item(item_id: int, solicitud_id: int, coordinador_id: int,
@@ -607,6 +681,10 @@ def liquidar_voucher_item(item_id: int, solicitud_id: int, coordinador_id: int,
     conn.commit()
     insert_solicitud_log(solicitud_id, "VOUCHER_ITEM_LIQUIDADO", coordinador_id, coordinador_nombre,
                          f"Coordinador liquidó voucher item #{item_id}: ${costo:.2f}")
+    # insert_solicitud_log cierra la conexión de g.db al terminar: hay que
+    # reobtenerla (get_db() reconecta sola) antes de seguir usando cur/conn.
+    conn = get_db()
+    cur = conn.cursor()
 
     items = get_voucher_items(solicitud_id)
     todos_liquidados = bool(items) and all(i.get("costo") is not None for i in items)
@@ -619,6 +697,34 @@ def liquidar_voucher_item(item_id: int, solicitud_id: int, coordinador_id: int,
     insert_solicitud_log(solicitud_id, "COMPLETADA", coordinador_id, coordinador_nombre,
                          f"Todos los vouchers liquidados. Costo total: ${costo_total:.2f}")
     return True, costo_total
+
+
+def get_voucher_items_pendientes_recordatorio_3d() -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEMS_PENDIENTES_RECORDATORIO_3D)
+    return [dict(r) for r in cur.fetchall()]
+
+
+def get_voucher_items_pendientes_recordatorio_6d() -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEMS_PENDIENTES_RECORDATORIO_6D)
+    return [dict(r) for r in cur.fetchall()]
+
+
+def marcar_voucher_recordatorio1_enviado(item_id: int) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEM_MARCAR_RECORDATORIO1, (item_id,))
+    conn.commit()
+
+
+def marcar_voucher_recordatorio2_enviado(item_id: int) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_VOUCHER_ITEM_MARCAR_RECORDATORIO2, (item_id,))
+    conn.commit()
 
 
 def get_vuelos_coordinadas_sin_liquidar() -> list:
@@ -1254,14 +1360,6 @@ def insert_notify_inapp(user_id: int, title: str, body: str) -> None:
 # Presupuesto
 # ──────────────────────────────────────────────
 
-def ensure_presupuesto_schema():
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute(SQL_CREATE_PRESUPUESTO_TABLE)
-    conn.commit()
-    conn.close()
-
-
 def get_tipos_gasto() -> list[str]:
     conn = get_db()
     cur = conn.cursor()
@@ -1463,3 +1561,57 @@ def get_jefe_nombre_batch(solicitante_ids: list) -> dict:
         except Exception:
             result[r[0]] = r[1] or ""
     return result
+
+
+# ──────────────────────────────────────────────
+# Indicadores — Voucher
+# ──────────────────────────────────────────────
+
+def get_voucher_indicadores_kpi(fecha_desde: str, fecha_hasta: str, area: str = "") -> dict:
+    conn = get_db()
+    cur = conn.cursor()
+    area = area or ""
+    cur.execute(SQL_VOUCHER_IND_KPI, (fecha_desde, fecha_hasta, area, area))
+    row = cur.fetchone()
+    return dict(row) if row else {}
+
+
+def get_voucher_indicadores_por_usuario(fecha_desde: str, fecha_hasta: str, area: str = "") -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    area = area or ""
+    cur.execute(SQL_VOUCHER_IND_POR_USUARIO, (fecha_desde, fecha_hasta, area, area))
+    return [dict(r) for r in cur.fetchall()]
+
+
+def get_voucher_indicadores_por_departamento(fecha_desde: str, fecha_hasta: str, area: str = "") -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    area = area or ""
+    cur.execute(SQL_VOUCHER_IND_POR_DEPARTAMENTO, (fecha_desde, fecha_hasta, area, area))
+    return [dict(r) for r in cur.fetchall()]
+
+
+def get_voucher_indicadores_tendencia_mensual(fecha_desde: str, fecha_hasta: str, area: str = "") -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    area = area or ""
+    cur.execute(SQL_VOUCHER_IND_TENDENCIA_MENSUAL, (fecha_desde, fecha_hasta, area, area))
+    return [dict(r) for r in cur.fetchall()]
+
+
+def get_voucher_indicadores_top_rutas(fecha_desde: str, fecha_hasta: str, area: str = "") -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    area = area or ""
+    cur.execute(SQL_VOUCHER_IND_TOP_RUTAS, (fecha_desde, fecha_hasta, area, area))
+    return [dict(r) for r in cur.fetchall()]
+
+
+def get_voucher_indicadores_pend_confirmacion_detalle(fecha_desde: str, fecha_hasta: str,
+                                                        area: str = "") -> list[dict]:
+    conn = get_db()
+    cur = conn.cursor()
+    area = area or ""
+    cur.execute(SQL_VOUCHER_IND_PEND_CONFIRMACION_DETALLE, (fecha_desde, fecha_hasta, area, area))
+    return [dict(r) for r in cur.fetchall()]

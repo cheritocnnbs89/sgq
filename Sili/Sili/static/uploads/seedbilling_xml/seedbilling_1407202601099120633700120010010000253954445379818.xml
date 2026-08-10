@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>GUSBER S.A.</razonSocial>
+	    <nombreComercial>GUSBER S.A.</nombreComercial>
+	    <ruc>0991206337001</ruc>
+	    <claveAcceso>1407202601099120633700120010010000253954445379818</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>001</ptoEmi>
+	    <secuencial>000025395</secuencial>
+	    <dirMatriz>Parque Industrial PIADY Km 11.5 Via Duran Yaguachi</dirMatriz>
+		
+		
+			<agenteRetencion>10</agenteRetencion>
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>14/07/2026</fechaEmision>
+		
+			<dirEstablecimiento>Parque Industrial PIADY Km 11.5 Via Duran Yaguachi</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>GUAYAS / GUAYAQUIL / VIA A DAULE KM 16.5 ROSAVIN LOTE 1 Y COBRE</direccionComprador>
+	    
+	    <totalSinImpuestos>2980.00000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>2980.00</baseImponible>
+				<valor>447.00000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>3427.00000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>3427.00</total>
+	    		<plazo>30</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>SP-F15CH-YL-QPC</codigoPrincipal>
+		<codigoAuxiliar>SP-F15CH-YL-QPC</codigoAuxiliar>
+      	<descripcion>FAST 15 CH YELLOW QUIMPAC</descripcion>
+      
+      <cantidad>15000.000000</cantidad>
+      <precioUnitario>0.149000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>2235.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>2235.00000</baseImponible>
+          <valor>335.25</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>SP-F15CH-YL-QPC</codigoPrincipal>
+		<codigoAuxiliar>SP-F15CH-YL-QPC</codigoAuxiliar>
+      	<descripcion>FAST 15 CH YELLOW QUIMPAC</descripcion>
+      
+      <cantidad>5000.000000</cantidad>
+      <precioUnitario>0.149000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>745.00</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>745.00000</baseImponible>
+          <valor>111.75</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">PED. OP19054 - QUIMPAC GYE - 15000 SELLOS FAST 15 AMARILLO # GYE380001 - GYE395000 - LOTE: OP19054 // PED. OP19054 - QUIMPAC GYE - 5000 SELLOS FAST 15 AMARILLO # GYE395001 - GYE400000 - LOTE: OP19054 //  GUIA 27683  / 27690</campoAdicional>
+    		
+    			<campoAdicional nombre="Orden de compra">COD OP 1000625668</campoAdicional>
+    		
+    			<campoAdicional nombre="Adicional 2">COD ING 5000172650 - 5000171640</campoAdicional>
+    		
+    	
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature943900">
+<ds:SignedInfo Id="Signature-SignedInfo597602">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID336534" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature943900-SignedProperties790523">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>zhTDAMS5SnttqPVhNrERoL7qBLQ=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate596834">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>+zTfOii5/tL3K0Y2XA7WI4bKA60=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-845383" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>R1U3VbGeasZtEhVKxsvSj29bmEg=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue823920">
+ZfncVUV6PsxKu0iEo4jowVMee4bLIkprsGDQTfJK8xbHqc+P68Q/DZR9N3ZdZ81OOrCzYflyjw30
+lZkKIx7gCv8y66d9oDzve1/2rYapbkvBSiP7BmuQo0ChifjSw+V/FjFGGOax5MjgdstU59a29kH2
+TXFCpK9rHF29BEwtt4Kw+iUISLJJoq2wq3CSe+vt5ztnRmb1Nv7b3XTGUuNUVmyCmKdDSxxHpYAf
+jBkV35fLaR6c9qYCuSK6XJjXQNSwcMI8MGI9jc/2BrxmE7PNArzSOvwc4hruJOx3ahTW1NT4/pys
+HcgAGo8iEGmv44uEzQdjt89R0J83f++7gq+HYA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate596834">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJmTCCB4GgAwIBAgIIfgPgV6XwKhEwDQYJKoZIhvcNAQELBQAwgYYxCzAJBgNVBAYTAkVTMRIw
+EAYDVQQHDAlCYXJjZWxvbmExFjAUBgNVBAoMDVVBTkFUQUNBIFMuQS4xFTATBgNVBAsMDFRTUC1V
+QU5BVEFDQTEaMBgGA1UEAwwRVUFOQVRBQ0EgQ0EyIDIwMjExGDAWBgNVBGEMD1ZBVEVTLUE2Njcy
+MTQ5OTAeFw0yNTEyMTgyMTU5MDBaFw0yNzEyMTgyMTU5MDBaMIHQMQswCQYDVQQGEwJFQzEUMBIG
+A1UECgwLR1VTQkVSIFMuQS4xGDAWBgNVBAwMD0dFUkVOVEUgR0VORVJBTDEXMBUGA1UEBAwOQkVS
+TUVPIEdST0VOT1cxFzAVBgNVBCoMDkRBTklFTCBST0JFUlRPMRkwFwYDVQQFExBJRENFQy0xNzEx
+NTIzODc2MSYwJAYDVQQDDB1EQU5JRUwgUk9CRVJUTyBCRVJNRU8gR1JPRU5PVzEcMBoGA1UEYQwT
+VkFURUMtMDk5MTIwNjMzNzAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJJZ2szC
+a4bYBVu80BnEyL+gBgxIR4Qh1iW7khnGz3jVk8jMVY6qOoJdK8RBp1AFouB7krt03+LKa073geF8
+iVz4f1Zrw/O1iG/sHnumU4JHwRIJZW++THBWnlgoXQMIjIW6MGWcD3fuTsk4cKZzBiOzg5TCpclP
+7BbGRC8pbkxnco1aC0stjMu/pX+vQxM3wCC2e7EfyjbgrLx31DQPgQaLTeBXqwRpSd7+jVZtadOT
+CLpV8nsLKJaFOvDOC/30Ii5qdF0kiv8sJVjyoWzjR5FAwku/JqdcT588QY+EB+FDWU98kd4hprbJ
+9o0ctV+wFqMhMrbrazgUg5LJAYIz3H0CAwEAAaOCBL0wggS5MBsGCysGAQQBgvE2ZgMBBAwMCjE3
+MTE1MjM4NzYwHgYLKwYBBAGC8TZmAwsEDwwNMDk5MTIwNjMzNzAwMTCB7QYIKwYBBQUHAQEEgeAw
+gd0wawYIKwYBBQUHMAKGX2h0dHBzOi8vd2ViLnVhbmF0YWNhLmNvbS9jb21tb24vcHJvamVjdC9w
+ZGYvYXV0b3JpZGFkLWNlcnRpZmljYWNpb24vMDhfc3Vib3JkaW5hZGEtY2EyLTIwMjEuY2VyMDYG
+CCsGAQUFBzABhipodHRwOi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYI
+KwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNV
+HQ4EFgQUUyOBzemItzq2kWzw3lXNOs/ngq8wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBTF5zMl
+2O/UjedTh8qiW3U6i5bdSjAcBgNVHRIEFTATgRFpbmZvQHVhbmF0YWNhLmNvbTCBjgYDVR0gBIGG
+MIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cudWFuYXRhY2Eu
+Y29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJUSUZJQ0FETyBERSBSRVBS
+RVNFTlRBTlRFIEVOIEFSQ0hJVk8wgYUGA1UdHwR+MHwwPKA6oDiGNmh0dHA6Ly9jcmwxLnVhbmF0
+YWNhLmNvbS9wdWJsaWMvcGtpL2NybC8yMDIxQ0Eyc3ViLmNybDA8oDqgOIY2aHR0cDovL2NybDIu
+dWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsLzIwMjFDQTJzdWIuY3JsMA4GA1UdDwEB/wQEAwIF
+4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggHUBgNVHREEggHLMIIBx4Eebm90aWZp
+Y2FjaW9uZXNmaXJtYXNAc2lpZ28uY29toBsGCysGAQQBgvE2ZgMBoAwMCjE3MTE1MjM4NzagHwYL
+KwYBBAGC8TZmAwKgEAwOREFOSUVMIFJPQkVSVE+gFwYLKwYBBAGC8TZmAwOgCAwGQkVSTUVPoBgG
+CysGAQQBgvE2ZgMEoAkMB0dST0VOT1egIAYLKwYBBAGC8TZmAwWgEQwPR0VSRU5URSBHRU5FUkFM
+oEMGCysGAQQBgvE2ZgMHoDQMMktNIDExLjUgVklBIERVUkFOIFlBR1VBQ0hJIFBBUlFVRSBJTkRV
+U1RSSUFMIFBJQURZoB8GCysGAQQBgvE2ZgMIoBAMDjAwNTkzOTY3ODUyMDA2oBkGCysGAQQBgvE2
+ZgMJoAoMCFlBR1VBQ0hJoBwGCysGAQQBgvE2ZgMKoA0MC0dVU0JFUiBTLkEuoB4GCysGAQQBgvE2
+ZgMLoA8MDTA5OTEyMDYzMzcwMDGgEwYLKwYBBAGC8TZmAwygBAwCRUOgJAYLKwYBBAGC8TZmAzKg
+FQwTUkVQUkVTRU5UQU5URSBMRUdBTKAYBgsrBgEEAYLxNmYDM6AJDAdBUkNISVZPMA0GCSqGSIb3
+DQEBCwUAA4ICAQA6nHxN/ETg4tYM5xJAaR4nUQYZFSzFcQYGiNzl3w615LXvhcCCRWMBN40WtakX
+kc3jDy+qSbptdhRWy62wnd7mWlcNDNmVx0rOfvIIguYJlC8Fte1NdGhI95Tcb7w6ux7FXYYDOcgO
+LR7skPPEolGOzuFtPRMjsy2IUR9qVQj/OPQD65A4RkyxeXQoF6jbpn7iUPFtDMqe8vZUNMpoGgUu
+JtwBPlhcu6xz2HAgZ3lNc9v15lBq1X1MnJ31/er+kkI2L5kRJd+9j3qtTyzWJpsHGAVkxf6IPlK0
+Us9pcy583INjw5tXPFyYS3uUaWa9wochzGRZ6jKWCsepGRnByc1fiTptR2iDRBjPn4WrXhbTnPaq
+UjfIrl73H5qfQXTHljqrjSHv7eeOuGMd+14T1gvyaPtKYb9NJ3mA9U6mCX3Sod6soORvNRekMRt1
+ZRjjNzk0gRSICmhj2JRYBLI9JW9pPhfMbPKuAncYYn1Cbm5ag6fZ2XumfMVPMyxNh9VLT5mEM0uB
+TmAOoIGjSPWxtyk0YUuxDsS6IbYrXV6bPev7iPfzvOmIk/4QwQ/r9JFC9W5ay+UxN624UKKYJrf0
+lNi46Su3usozejDjH0d6HAyEIc1tx5hnM1akruIpjnE5NWsaTR5zF2Y7+S/P4cXhBx5TmAROcWY3
+6y+QRY7j7rFvzQ==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+klnazMJrhtgFW7zQGcTIv6AGDEhHhCHWJbuSGcbPeNWTyMxVjqo6gl0rxEGnUAWi4HuSu3Tf4spr
+TveB4XyJXPh/VmvD87WIb+wee6ZTgkfBEgllb75McFaeWChdAwiMhbowZZwPd+5OyThwpnMGI7OD
+lMKlyU/sFsZELyluTGdyjVoLSy2My7+lf69DEzfAILZ7sR/KNuCsvHfUNA+BBotN4FerBGlJ3v6N
+Vm1p05MIulXyewsoloU68M4L/fQiLmp0XSSK/ywlWPKhbONHkUDCS78mp1xPnzxBj4QH4UNZT3yR
+3iGmtsn2jRy1X7AWoyEytutrOBSDkskBgjPcfQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature943900-Object634361"><etsi:QualifyingProperties Target="#Signature943900"><etsi:SignedProperties Id="Signature943900-SignedProperties790523"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-14T14:15:53-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>14Tnwg0mRdDhpu+kOahz1q5VSQc=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=UANATACA CA2 2021,C=ES,L=Barcelona,2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA</ds:X509IssuerName><ds:X509SerialNumber>9080347940759808529</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

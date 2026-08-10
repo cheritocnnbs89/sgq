@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<factura id="comprobante" version="1.1.0">
+<infoTributaria>
+   <ambiente>2</ambiente>
+   <tipoEmision>1</tipoEmision>
+   <razonSocial>GALLETAS PECOSA CIA. LTDA.</razonSocial>
+   <nombreComercial>GALLETA PECOSA</nombreComercial>
+   <ruc>0990718873001</ruc>
+   <claveAcceso>0508202601099071887300120130040000899751234567810</claveAcceso>
+   <codDoc>01</codDoc>
+   <estab>013</estab>
+   <ptoEmi>004</ptoEmi>
+   <secuencial>000089975</secuencial>
+   <dirMatriz>10 de Agosto 528 y Boyaca</dirMatriz>
+   <agenteRetencion>1</agenteRetencion>
+</infoTributaria>
+<infoFactura>
+   <fechaEmision>05/08/2026</fechaEmision>
+   <dirEstablecimiento>LA PUNTILLA  SOL 121&amp;#x002D;1</dirEstablecimiento>
+<obligadoContabilidad>SI</obligadoContabilidad>
+   <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+   <razonSocialComprador>QUIMPAC ECUADOR SA</razonSocialComprador>
+   <identificacionComprador>0990344760001</identificacionComprador>
+   <totalSinImpuestos>12.74</totalSinImpuestos>
+   <totalDescuento>0.00</totalDescuento>
+   <totalConImpuestos>
+   <totalImpuesto>
+      <codigo>2</codigo>
+      <codigoPorcentaje>4</codigoPorcentaje>
+      <baseImponible>12.74</baseImponible>
+      <valor>1.91</valor>
+   </totalImpuesto>
+   </totalConImpuestos>
+   <propina>0.00</propina>
+   <importeTotal>14.65</importeTotal>
+   <moneda>DOLAR US</moneda>
+<pagos>
+<pago>
+<formaPago>19</formaPago>
+<total>14.65</total>
+<plazo>0</plazo>
+<unidadTiempo>DIAS</unidadTiempo>
+</pago>
+</pagos>
+</infoFactura>
+<detalles>
+   <detalle>
+     <codigoPrincipal>4875</codigoPrincipal>
+     <descripcion>COMBO GRATINADO</descripcion>
+     <cantidad>1.000000</cantidad>
+     <precioUnitario>4.996522</precioUnitario>
+     <descuento>0.00</descuento>
+     <precioTotalSinImpuesto>5.00</precioTotalSinImpuesto>
+     <impuestos>
+         <impuesto>
+            <codigo>2</codigo>
+            <codigoPorcentaje>4</codigoPorcentaje>
+            <tarifa>15.00</tarifa>
+            <baseImponible>5.00</baseImponible>
+            <valor>0.75</valor>
+         </impuesto>
+     </impuestos>
+   </detalle>
+   <detalle>
+     <codigoPrincipal>500001</codigoPrincipal>
+     <descripcion>EMPANADA DE CHOCLO </descripcion>
+     <cantidad>1.000000</cantidad>
+     <precioUnitario>2.000000</precioUnitario>
+     <descuento>0.00</descuento>
+     <precioTotalSinImpuesto>2.00</precioTotalSinImpuesto>
+     <impuestos>
+         <impuesto>
+            <codigo>2</codigo>
+            <codigoPorcentaje>4</codigoPorcentaje>
+            <tarifa>15.00</tarifa>
+            <baseImponible>2.00</baseImponible>
+            <valor>0.30</valor>
+         </impuesto>
+     </impuestos>
+   </detalle>
+   <detalle>
+     <codigoPrincipal>500002</codigoPrincipal>
+     <descripcion>EMPANADAS DE CARNE  </descripcion>
+     <cantidad>1.000000</cantidad>
+     <precioUnitario>1.826087</precioUnitario>
+     <descuento>0.00</descuento>
+     <precioTotalSinImpuesto>1.83</precioTotalSinImpuesto>
+     <impuestos>
+         <impuesto>
+            <codigo>2</codigo>
+            <codigoPorcentaje>4</codigoPorcentaje>
+            <tarifa>15.00</tarifa>
+            <baseImponible>1.83</baseImponible>
+            <valor>0.27</valor>
+         </impuesto>
+     </impuestos>
+   </detalle>
+   <detalle>
+     <codigoPrincipal>703002</codigoPrincipal>
+     <descripcion>LIMONADA 16 OZ </descripcion>
+     <cantidad>1.000000</cantidad>
+     <precioUnitario>2.434783</precioUnitario>
+     <descuento>0.00</descuento>
+     <precioTotalSinImpuesto>2.43</precioTotalSinImpuesto>
+     <impuestos>
+         <impuesto>
+            <codigo>2</codigo>
+            <codigoPorcentaje>4</codigoPorcentaje>
+            <tarifa>15.00</tarifa>
+            <baseImponible>2.43</baseImponible>
+            <valor>0.36</valor>
+         </impuesto>
+     </impuestos>
+   </detalle>
+   <detalle>
+     <codigoPrincipal>705015</codigoPrincipal>
+     <descripcion>T&amp;#x00C9; NEGRO 16 OZ </descripcion>
+     <cantidad>1.000000</cantidad>
+     <precioUnitario>1.478261</precioUnitario>
+     <descuento>0.00</descuento>
+     <precioTotalSinImpuesto>1.48</precioTotalSinImpuesto>
+     <impuestos>
+         <impuesto>
+            <codigo>2</codigo>
+            <codigoPorcentaje>4</codigoPorcentaje>
+            <tarifa>15.00</tarifa>
+            <baseImponible>1.48</baseImponible>
+            <valor>0.22</valor>
+         </impuesto>
+     </impuestos>
+   </detalle>
+</detalles>
+<infoAdicional>
+<campoAdicional nombre="DIRECCION">GYE </campoAdicional>
+<campoAdicional nombre="TELEFONO">0999999</campoAdicional>
+<campoAdicional nombre="EMAIL">DCUNNINGHAN@QUIMPAC.COM.EC</campoAdicional>
+</infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-862564772"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><ds:Reference Id="ReferenciaComprobante" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>wSTXBZyw7y5CfzORYMIy8ZDXtMw=</ds:DigestValue></ds:Reference><ds:Reference Id="ReferenciaCertificado" URI="#Certificado"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>fpgaBkWRsEaB4jEQEJ0h8nIyw1A=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignedProperties-743490677"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>wY6MBvHM01eL3zEHH/g5pgvW0MY=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>JFbqS/UJ6YoeRulmoeFBOgtaKVJpCu7L41FslEYPOkCj/5LfNEpsuURlgfMZ5+kXv8iwZcK2uB5oqqyHv1faxig3ooQEHvti2L0/JAFcYf6AKiN0HCVmGizFVXAvygfA2vFfaFqJh4bS+p4lW9dY535Etb2Wdkz9MB6LulYJ7wtDlhrArH0hxtU23U5PyJfhyoh9OkhDeNtWA0gkxzPgIO4e9GoeZ8PwCbeTol7cDkJkX29lzoMSL24jCPDAT85hdkRPU2ehfA6Fn7VyrmD9csULy9hbhx1WPQSJWd70jLgMRUnKBc1kIfrJk6DcQXGe2m/Lo3/085HhPg2fE4HuZA==</ds:SignatureValue><ds:KeyInfo Id="Certificado"><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>nQXpxm9rsV+p6pd78WPWkexhV/7K67POmnPbKaK/cDUpjNjqWiaDfFyp9ow27ldgIU9pP994Rd0N75xc/E1DTLJpJI6QqA8/nXH7SwSJieKIRRF3vAP4y0LJfiDfS6UJg2RSNaiy4FLECxvBBY0oB3BIHzJixWdACCr3j1a22KuvpuaKPNkW4AzRUlt+jqOX207Atl6FnVykUWIVNIMycKfVwWyTU1bjQNxfaW8DBtSfZeXmwX4hAMFwb6Rp1aImRov03aXN3agIlicbuBv1SMD0WCTcKxzL3CH7b0BN01/mKW8Gin+aHlDWpLPtlTKDVmo/4oGoiTesa08vRgilYQ==</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue><ds:X509Data><ds:X509IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC</ds:X509IssuerName><ds:X509SerialNumber>1673939017</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509SubjectName>C=EC, O=SECURITY DATA S.A. 2, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, 2.5.4.5=220921170446, CN=CAROLINA ISABEL PURIZAGA GARCIA</ds:X509SubjectName><ds:X509Certificate>MIIMCDCCCfCgAwIBAgIEY8ZISTANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMTA5MjIyMTU0NTNaFw0yNjA5MjIyMTU0NTNaMIGfMSgwJgYDVQQDDB9DQVJPTElOQSBJU0FCRUwgUFVSSVpBR0EgR0FSQ0lBMRUwEwYDVQQFEwwyMjA5MjExNzA0NDYxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnQXpxm9rsV+p6pd78WPWkexhV/7K67POmnPbKaK/cDUpjNjqWiaDfFyp9ow27ldgIU9pP994Rd0N75xc/E1DTLJpJI6QqA8/nXH7SwSJieKIRRF3vAP4y0LJfiDfS6UJg2RSNaiy4FLECxvBBY0oB3BIHzJixWdACCr3j1a22KuvpuaKPNkW4AzRUlt+jqOX207Atl6FnVykUWIVNIMycKfVwWyTU1bjQNxfaW8DBtSfZeXmwX4hAMFwb6Rp1aImRov03aXN3agIlicbuBv1SMD0WCTcKxzL3CH7b0BN01/mKW8Gin+aHlDWpLPtlTKDVmo/4oGoiTesa08vRgilYQIDAQABo4IHTjCCB0owDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3Awgc8GA1UdLgSBxzCBxDCBwaCBvqCBu4aBuGxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQz9kZWx0YVJldm9jYXRpb25MaXN0P2Jhc2UwJgYDVR0RBB8wHYEbY2Fyb2xpbmEucHVyaXphZ2FAZ21haWwuY29tMIIBEgYDVR0gBIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwICMEQeQgBDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBvACAAZABlACAARQBtAHAAcgBlAHMAYTCBoAYKKwYBBAGCpnICBDCBkTCBjgYIKwYBBQUHAgEWgYFodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYwggKiBgNVHR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFP5PqbI/ydU5rGztmb/9YmJp60GjMCsGA1UdEAQkMCKADzIwMjEwOTIyMjE1NDUzWoEPMjAyNjA5MjIyMTU0NTNaMAsGA1UdDwQEAwIF4DAZBgorBgEEAYKmcgMFBAsMCUNPTlRBRE9SQTAaBgorBgEEAYKmcgMBBAwMCjA5MDk3NTIyOTcwGQYKKwYBBAGCpnIDCQQLDAlHVUFZQVFVSUwwEQYKKwYBBAGCpnIDIgQDDAEuMCsGCisGAQQBgqZyAwcEHQwbRElFWiBERSBBR09TVE8gNTI4IFkgQk9ZQUNBMB8GCisGAQQBgqZyAwIEEQwPQ0FST0xJTkEgSVNBQkVMMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAwMTUxOTIxMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAYBgorBgEEAYKmcgMDBAoMCFBVUklaQUdBMCoGCisGAQQBgqZyAwoEHAwaR0FMTEVUQVMgUEVDT1NBIENJQS4gTFREQS4wHQYKKwYBBAGCpnIDCwQPDA0wOTkwNzE4ODczMDAxMBIGCisGAQQBgqZyAx0EBAwCTm8wFgYKKwYBBAGCpnIDBAQIDAZHQVJDSUEwHAYKKwYBBAGCpnIDCAQODAw1OTM5NjkwNTkzNzEwDQYJKoZIhvcNAQELBQADggIBAHMkTKD56jDs/x6lD4aLSZaPuic98vVzqE6EZIlipxcb8WYSHILvt6bDwjeaHKyHlHfbjaBBTkG1oZkBfHwwUQFHKtqbmiua2/Hw22i6SYa6sl946RgcUbJj+Vabux7zqL50ztRe1fQ685w85Y4Kfd0UXKJsrRz71EBcHzPl3wPZTVv/sTqzoKDIkYuE3NnD5C8VRvNQGWHdT3TCc3qfGGnXP5R4TORRAqz6FlxdQQRVwLpTnmYp6kpkqnb/HTJVOqgHzRSHg0QVePDhIRjtrOcrZBc8iOaN75WpBRtstJUNyD/cndz3Ox98lkf1k2ZHCoW57ZaibSRkhwd5uw+xYcka+B3Ybl5dfx46UHyH2yJUEN7yvry9bh8uzlBPHCSX8kn5J6TuNNn16U7MHMVAxMpmSEuDQaT3fF0qsFhE753ZIo0SZzKjpXMu4xp9SsKPmGMbQnGL9IENVJYc0GAXaaINS44txn7qM4AB1gVaWMGv6J1xdatn8GrJaSSTenvxleCnhYad6y+mIcPuLjadlgKQ3eQ9/f1INCyqtuhqPrj+kMJ+yin8TiKbWXOt1Gs6PPptx4QmdMxt7m5M2y8yHItLtWqCAZliqVkiL2Bn5VLkXwXbd21vMOeEr2DNf+5YyrvOHOpYQV5nEgmTQJBh6/PlyHGqMXr82hdYy0CJs/Hc</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><QualifyingProperties xmlns="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature-862564772"><SignedProperties Id="SignedProperties-743490677"><SignedSignatureProperties><SigningTime>2026-08-05T15:31:59.058Z</SigningTime><SigningCertificate><Cert><CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>ifMOQjepeiqyaJmzTh/I3YDxAUQ=</ds:DigestValue></CertDigest><IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC</ds:X509IssuerName><ds:X509SerialNumber>1673939017</ds:X509SerialNumber></IssuerSerial></Cert></SigningCertificate></SignedSignatureProperties></SignedProperties></QualifyingProperties></ds:Object></ds:Signature>
+</factura>

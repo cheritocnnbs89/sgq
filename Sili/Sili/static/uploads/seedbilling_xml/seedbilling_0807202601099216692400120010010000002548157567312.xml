@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>ASEGLOB ASISTENCIA EMPRESARIAL GLOBAL S.A.</razonSocial>
+        <nombreComercial>ASEGLOB S.A.</nombreComercial>
+        <ruc>0992166924001</ruc>
+        <claveAcceso>0807202601099216692400120010010000002548157567312</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>001</ptoEmi>
+        <secuencial>000000254</secuencial>
+        <dirMatriz>Barrio: LA AURORA Numero: SOLAR 4 Interseccion: SEGUNDA CALLE PRINCIPAL Manzana: 61 </dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>08/07/2026</fechaEmision>
+        <dirEstablecimiento>Barrio: LA AURORA Numero: SOLAR 4 Interseccion: SEGUNDA CALLE PRINCIPAL Manzana: 61 </dirEstablecimiento>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <direccionComprador>GUAYAS - PASCUALES ROSAVIN LOTE 1 Y COBRE</direccionComprador>
+        <totalSinImpuestos>940.00</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>940.00</baseImponible>
+                <valor>141.00</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0</propina>
+        <importeTotal>1081.00</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>1081.00</total>
+                <plazo>15</plazo>
+                <unidadTiempo>Dias</unidadTiempo>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>INTERNET CORPORATIVO 01</codigoPrincipal>
+            <descripcion>INTERNET CORPORATIVO - GUAYAQUIL 100 MBPS / 100 MBPS</descripcion>
+            <cantidad>1</cantidad>
+            <precioUnitario>650</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>650.00</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="informacionAdicional" valor="INTERNET CORPORATIVO - GUAYAQUIL 100 MBS / 100 MBPS"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>650.00</baseImponible>
+                    <valor>97.50</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>INTERNET CORPORATIVO 02</codigoPrincipal>
+            <descripcion>INTERNET CORPORATIVO QUITO 30MBPS / 30 MBPS</descripcion>
+            <cantidad>1</cantidad>
+            <precioUnitario>290</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>290.00</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="informacionAdicional" valor="INTERNET CORPORATIVO QUITO 30MBPS / 30 MBPS"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>290.00</baseImponible>
+                    <valor>43.50</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Email">soporteti@quimpac.com.ec</campoAdicional>
+        <campoAdicional nombre="Internet corporativo Guayaquil / Quito">Orden de compra # 7500053217
+Aceptación de Servicio 1001639922. correspondiente al mes de Julio</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-c1a4f280-3671-4a38-a1c9-9e888134bc4e"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-c1a4f280-3671-4a38-a1c9-9e888134bc4e-ref0" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>Zi8coRDX8Soqw1oO6mAXMGbrXTFCMv1HYqoK1mrQ/PE=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-c1a4f280-3671-4a38-a1c9-9e888134bc4e-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>UiCiRFm6mJmHhf/kUFx/xy3n9bn8jkpHN9HpAuopiHI=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-c1a4f280-3671-4a38-a1c9-9e888134bc4e-sigvalue">nutUDM6M9PxUfWTK35T1VGsZVPA4S+PDi/MEZF12MmiEo5XnCu4nOFkfXtTSPLKI6TlzkLTKEyH6ZFXP0JDzVeAnX+I3IKj8uytRy7t+zTPHrlOE6LsvqU2JDcKqlNo500WAUx0ldIVBeno8YznmzqurepEmokRO5hcJ1RwC6mmCPM5V+zIiMiBLo1Mc3nv8DnSdRrOeu5mlq7ZW3IgcGe4VjgD+Ot1ywQNsDcOIa83ajGFXVeuVWQd9OUBVnUsEVI/ZNpCAGHAVeln+d4jdZvCmv5cuxpEQ0SE5NXaOziy2VLnjDxhpu4l+nYawmKJwAX7VS+mxrY0qR6CWO9nNYA==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIK8zCCCNugAwIBAgIIYzB9Ba8lKNQwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwOTA4MjMxODIzWhcNMjcwOTA4MjMxODIzWjCBqTEnMCUGA1UEAwweQVJBQ0VMWSBNQVJMRU5FIEFSTUlKTyBDQVJSRVJBMSAwHgYDVQQFExcxMjA0MTMxOTU1LTA4MDkyNTE4MjgxNDEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCxyVuxybw2ojFI8lbskmPz6EWKx3ctJ9F0hndYeVSCsei9ZlCfr0C8LiG0fhJGZUG9nUagDZu2ug6qSOL0ZJhTcvsj3zdzMdNa68dwslLlNVYMbLzaHJJBL7CCajKtKwmAaeFzErOnIF6ZasDX5zBeWGwCrJbeNitKkX/0T14KeuUSCnvhCkNGfO77RbnO8adCqB6bZejFeGR67EIDTrHik3A38J5icIxGD7Eau/xTT4Fbyoi17aUNqsdEbvy1TH95reZGZZRKnbe1XCBBPmIcMw9XFwJVoisDreaP6VPXCno2Bx2IYsec8xz8dAGxtDAtKhP9U4c7zx9m3J++AsgzAgMBAAGjggYrMIIGJzAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAhBgNVHREEGjAYgRZyZW5lX3JleWVzQGhvdG1haWwuY29tMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsGAQUFBwICMEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4AdABhAG4AdABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50YW50ZSBMZWdhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIwgd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmlsZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNybDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBQjEiseWSpieKGeo3LzgRLdGpwk/jArBgNVHRAEJDAigA8yMDI1MDkwODIzMTgyM1qBDzIwMjcwOTA4MjMxODIzWjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9HRVJFTlRFIEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQMDAoxMjA0MTMxOTU1MCcGCisGAQQBgqZyAwkEGQwXREFVTEUgQ0FCRUNFUkEgQ0FOVE9OQUwwEQYKKwYBBAGCpnIDIgQDDAEuMDEGCisGAQQBgqZyAwcEIwwhU09MQVIgNCBZIFNFR1VOREEgQ0FMTEUgUFJJTkNJUEFMMB8GCisGAQQBgqZyAwIEEQwPQVJBQ0VMWSBNQVJMRU5FMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAxMDQ0MjkyMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAWBgorBgEEAYKmcgMDBAgMBkFSTUlKTzA5BgorBgEEAYKmcgMKBCsMKUFTRUdMT0IgQVNJU1RFTkNJQSBFTVBSRVNBUklBTCBHTE9CQUwgUyBBMB0GCisGAQQBgqZyAwsEDwwNMDk5MjE2NjkyNDAwMTARBgorBgEEAYKmcgMdBAMMAS4wFwYKKwYBBAGCpnIDBAQJDAdDQVJSRVJBMBoGCisGAQQBgqZyAwgEDAwKMDk4NzIwOTM3ODANBgkqhkiG9w0BAQsFAAOCAgEAs/gpL2XmOXA5qqwqHbq0YMLP9uB5zCP5PMzSSUEQixv8yJAj9athYP4W2pnltmIyFdu6r4d+8r4jvpIVBe3lq96T0KwDg9a/0s+9IqxV5NEfrHVg4X7GU88H7UoTymfvevgWl42UkUCZqH4EwI+/WPIGznhHa15R3wGG+krGJSpmQoVJ3sLLNGH4a7YP7cCCzFgdcDBj8Pgp3RShcKVpXJui9JXUQ//ykH4xCLvGgamgQNvwNX10o2KnYUjQ133UGYp+PTSZuqv2f/Bf41tP3/ADXPKfxgEgsbVdvB4OR9JGXe30dE+XAd66KjnZhXSQNNHs10wj/ll/Mphah/Mz8WJ1cA4wXfFABhq9L8lIISYS1ZHY6sx+OQ+FQFv1OPBsETkSNOEEh8pWTTs0l67YxVMJiihkNp4QdqdTnnyLo6XglgJkGHoTaaOeeHMr3RJTAzJlAsr+90MW/UWz4EMAYGJdoQiBFObtL46ailniTbFx04YLvKAzD28mwB1ANRMs8MP0Er8y3CxLh8dEZQXL2QIDf4FLdTOFH3m9UMCae5kF5T245d1wRHb2VvGxFGKqr46JkdCkqO+tr1+X193A7FP4rgThWiciqSInATrUYrvMsA9+x0xLHTk7vSf2w5oABf3iqDge97LPCTX8REOrBglPmeN6GheAE34mU96WjBs=</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-c1a4f280-3671-4a38-a1c9-9e888134bc4e"><xades:SignedProperties Id="xmldsig-c1a4f280-3671-4a38-a1c9-9e888134bc4e-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-07-08T12:54:35.828-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>eUZcOVkagxXdceDgJpIL5NHXb87VqYL0thZ65d3A824=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>7147350072003733716</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-c1a4f280-3671-4a38-a1c9-9e888134bc4e-ref0"><xades:Description>FIRMA DIGITAL SRI</xades:Description><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>

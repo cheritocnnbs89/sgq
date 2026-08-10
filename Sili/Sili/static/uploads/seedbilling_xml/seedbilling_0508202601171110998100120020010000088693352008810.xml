@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>GUEVARA SANCHEZ SONIA HIRLANDA</razonSocial>
+	    <nombreComercial>SUMINDFER</nombreComercial>
+	    <ruc>1711109981001</ruc>
+	    <claveAcceso>0508202601171110998100120020010000088693352008810</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>002</estab>
+	    <ptoEmi>001</ptoEmi>
+	    <secuencial>000008869</secuencial>
+	    <dirMatriz>PICHINCHA / QUITO / PUENGAS / CALLE E20A S5-146 Y PASAJE S5D</dirMatriz>
+		
+		
+			<agenteRetencion>8</agenteRetencion>
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>05/08/2026</fechaEmision>
+		
+			<dirEstablecimiento>PICHINCHA / QUITO / PUENGAS / CALLE E20A S5-146 Y PASAJE S5D</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE</direccionComprador>
+	    
+	    <totalSinImpuestos>144.00000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>124.00</baseImponible>
+				<valor>18.60000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+			      
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>0</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>20.00000</baseImponible>
+				<valor>0</valor>
+			</totalImpuesto>
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>162.60000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>162.60</total>
+	    		<plazo>30</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>PLA-ZUN-004538</codigoPrincipal>
+		<codigoAuxiliar>PLA-ZUN-004538</codigoAuxiliar>
+      	<descripcion>ZUNCHO PLASTICO PVC 3/4</descripcion>
+      
+      <cantidad>5.000000</cantidad>
+      <precioUnitario>24.800000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>124.00</precioTotalSinImpuesto>
+	  
+	  
+	  	<detallesAdicionales>
+			
+    			<detAdicional nombre="Detalle" valor="ROLLO DE ZUNCHO PLASTICO PVC 3/4"/>
+    		
+      	</detallesAdicionales>
+      
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>124.00000</baseImponible>
+          <valor>18.60</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>VAR-SER-001624</codigoPrincipal>
+		<codigoAuxiliar>VAR-SER-001624</codigoAuxiliar>
+      	<descripcion>SERVICIO DE LOGISTICA</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>20.000000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>20.00</precioTotalSinImpuesto>
+	  
+	  
+	  	<detallesAdicionales>
+			
+    			<detAdicional nombre="Detalle" valor="FLETE"/>
+    		
+      	</detallesAdicionales>
+      
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0</tarifa>
+          <baseImponible>20.00000</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+	
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">ODC 1000626569 (INGRESO DE MATERIAL CON DOCUMENTO #5000188747)</campoAdicional>
+    		
+    	
+		
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature613973">
+<ds:SignedInfo Id="Signature-SignedInfo507426">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID271849" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature613973-SignedProperties177668">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>FzvyvFCNnn9v2R9ayv54Y+5D52g=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate262961">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>CAJbmxn+6BjIgayIa7sGJyJulR8=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-11801" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>4JKfl60ChhjjuIRUBTI1YunirjM=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue222189">
+CpHsHms0Xhk27JMzaxbESoV4Jeri0k5cB85ka4WcCXFSINe1VCvd9ERmxuKlrWqFHfTulqRBEWzd
+jVRlci3aY/AdGs7Oo8hXZnp5IDmoxZiBbt4MdypktOUey3zeKwkB9AAfjwsbnvw5gx+BZH9JKhRe
+pakcaXmKoAHRYyc48UlXGtKLNRUpE/Yu5ImxiNq4EKZvHMVTDw+xGoLtTCk9W8ZY6n/7SrS0VvdB
+j/DSMCZxVEB2slBn++7LwQgsI8NZ9Y2B3ysR6ehWWkX1A/iA+JYNT13/B5UAWdq/hpvZchMHTcmi
+tdhkiKYpKLEn+yHXt5c3NXC9gdCPFdgM4LhV9A==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate262961">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKrjCCCJagAwIBAgIIdSrV3UcDeAIwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwNTE0MTkxNzMzWhcNMjkwNTEzMTkxNzMzWjCB
+qTEnMCUGA1UEAwweU09OSUEgSElSTEFOREEgR1VFVkFSQSBTQU5DSEVaMSAwHgYDVQQFExcxNzEx
+MTA5OTgxLTE0MDUyNjE0MjcyNTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERF
+IElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMw
+ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDONx7jISEqoA/a8mUu1UzSIKbMij9mp6Y1
+fusXZMCZP4Yb+G8Ut5SXgOwgn9K6ILC2CeYp4TkkQqSi5y2cAj+FDfWfm3JlE8T1RFW5qsS6USXL
+Rw/k3uvPOttBrCnoi7IOo1nq5lNYeoHoAG9Nq3zpNXZs+ztM8hfaKKYR+MfKlQHn1pEAKySsuhPV
+C/qLAkMMEcWaIBpI274wvf51SItt5wmmIsNejjV3SN6ZYWFPkdsLPWCZt0pov6So1ui7+wvpmtFJ
+5UjLmLKbj7Vxf/XJJZuQCKvYrw384MzHI6MQbMvlE1mpOv0cX/UKttYUg58wsCnz10p857xf4Q5O
+lJCFAgMBAAGjggXmMIIF4jAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/
+ja5i3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0
+eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAkBgNVHREEHTAbgRljb250
+YWJpbGlkYWRAc3VtaW5kZmVyLmVjMIIBBgYDVR0gBIH+MIH7MFoGCisGAQQBgqZyAgcwTDBKBggr
+BgEFBQcCAjA+HjwAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUABlAHIAcwBvAG4AYQAg
+AE4AYQB0AHUAcgBhAGwwgZwGCisGAQQBgqZyAgEwgY0wgYoGCCsGAQUFBwIBFn5odHRwczovL3d3
+dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9k
+ZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIFBlcnNvbmEgTmF0dXJhbC5w
+ZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIwgd6gOqA4
+hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmlsZS5jcmyi
+gZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VD
+VVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFD
+SU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6oDiGNmh0
+dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNybDCB4KCB
+3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNh
+L3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJ
+RklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1Ud
+DgQWBBRDczQmguyiCUFBixlINouwmo0YSDArBgNVHRAEJDAigA8yMDI2MDUxNDE5MTczM1qBDzIw
+MjkwNTEzMTkxNzMzWjALBgNVHQ8EBAMCBeAwGgYKKwYBBAGCpnIDAQQMDAoxNzExMTA5OTgxMBgG
+CisGAQQBgqZyAwkECgwIUFVFTkdBU0kwEQYKKwYBBAGCpnIDIgQDDAEuMC4GCisGAQQBgqZyAwcE
+IAweQ0FMTEUgRTIwQSBTNSAxNDYgWSBQQVNBSkUgUzVEMB4GCisGAQQBgqZyAwIEEAwOU09OSUEg
+SElSTEFOREEwHwYKKwYBBAGCpnIDIAQRDA8wMDIwMDEwMDEyMTQwMTgwEQYKKwYBBAGCpnIDIwQD
+DAEuMBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAXBgorBgEE
+AYKmcgMDBAkMB0dVRVZBUkEwIAYKKwYBBAGCpnIDHgQSDBBFTVBMRUFETyBQVUJMSUNPMB0GCisG
+AQQBgqZyAwsEDwwNMTcxMTEwOTk4MTAwMTARBgorBgEEAYKmcgMdBAMMAS4wFwYKKwYBBAGCpnID
+BAQJDAdTQU5DSEVaMBoGCisGAQQBgqZyAwgEDAwKMDk5NTExOTAzNzANBgkqhkiG9w0BAQsFAAOC
+AgEAHnlDj37VGF+k9v/7GrciIk/s2mvcfGArj7Xa7fcJuKRUc6p3s0v2nAC8Mq4ojf/K/xDhm2t2
+rRqRpv/1aQRiUpt1Rx/0twB+valIadPiPt5g6AsRVsXnSKFHEY9D7iGmyYz3EWUYUbPJtt/TbeGS
+xaN08l7D0gYfCobV91AMadRbaRF6r4YNpCTE1dPR0Ju+LoDwzXlVcNaDgzrXi3PPwB1xaFdalvFD
+wr7Y5Z9QU/UjhRBGFU0T0dqbzLzHOyyPQUn+bYWK8Nnduf3+1Khpwf86z7zk+UUjtrWdNOF2On34
+cUQHGBRqet9sVrUwDdWnEwX6mNW+F9ENRsaulvS26C9jBFtCeEM9EudQxd4usbpEFEVgLEjRlwNJ
+GW8DR5nVdzlG7Toypp0j7tMSGPl0/fM5bexWQEK6dIUOLZ1KnHp0I0JbDviqD7TzFdHQGHI8j8ll
+exalnk6Gsesobm9aN+gmD+u4E0PZdaQB/f2T/xap+WltRThvSopuuTmoVOIOnLTUmwZBgsOyp9bb
+Sgc3F5Vd/htDddPCtcjRyUralPALF7WyeYinapDwkZYS2XqDmMpoxJkWR9SvhkzOWfsgDJbefsbp
+n4u1x7ykEk+Tox1ByAycbW+yZ1k4TNIQ7p0yMYQHzFEa/gd83lEru8Rl+2c8ncxFJSw/Tp7WvklE
+70g=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+zjce4yEhKqAP2vJlLtVM0iCmzIo/ZqemNX7rF2TAmT+GG/hvFLeUl4DsIJ/SuiCwtgnmKeE5JEKk
+ouctnAI/hQ31n5tyZRPE9URVuarEulEly0cP5N7rzzrbQawp6IuyDqNZ6uZTWHqB6ABvTat86TV2
+bPs7TPIX2iimEfjHypUB59aRACskrLoT1Qv6iwJDDBHFmiAaSNu+ML3+dUiLbecJpiLDXo41d0je
+mWFhT5HbCz1gmbdKaL+kqNbou/sL6ZrRSeVIy5iym4+1cX/1ySWbkAir2K8N/ODMxyOjEGzL5RNZ
+qTr9HF/1CrbWFIOfMLAp89dKfOe8X+EOTpSQhQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature613973-Object497983"><etsi:QualifyingProperties Target="#Signature613973"><etsi:SignedProperties Id="Signature613973-SignedProperties177668"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-08-05T12:43:39-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>ucoHg7gsQNN81w6UFzZo2TCPi3E=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION</ds:X509IssuerName><ds:X509SerialNumber>8442795597815314434</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

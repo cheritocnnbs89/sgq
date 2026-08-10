@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>TORRES &amp;amp;   TORRES AGENTES DE ADUANAS TTADAD C.A.</razonSocial><nombreComercial>TORRES &amp;amp;   TORRES AGENTES DE ADUANAS TTADAD C.A.</nombreComercial><ruc>0991370226001</ruc><claveAcceso>0807202601099137022600120010050007729431234567815</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>005</ptoEmi><secuencial>000772943</secuencial><dirMatriz>Daule - Pascuales Km.15 vía Daule Rosavin Sl. 6</dirMatriz></infoTributaria><infoFactura><fechaEmision>08/07/2026</fechaEmision><dirEstablecimiento>Daule - Pascuales Km.15 vía Daule Rosavin Sl. 6</dirEstablecimiento><contribuyenteEspecial>1305</contribuyenteEspecial><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>ROSAVIN LOTE 1 Y COBRE GUAYAQUILECUADOR</direccionComprador><totalSinImpuestos>289.20</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>289.200000</baseImponible><valor>43.38</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>332.58</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>332.58</total></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>HON-037</codigoPrincipal><codigoAuxiliar>07/08/2026%%30 dias</codigoAuxiliar><descripcion>HON. AGENCIAMIENTO DE ADUANA MARITIMO</descripcion><cantidad>1.00</cantidad><precioUnitario>289.200000</precioUnitario><descuento>0.000000</descuento><precioTotalSinImpuesto>289.20</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="2026IM15073 PED: OC 2000030951 | GEORG FISCHER FACT 135062843 - 135062844 LITTLE ROCK, ARKANSAS, USA" valor="--"></detAdicional><detAdicional nombre="FECHAVENC%%PLAZO" valor="07/08/2026%%30 dias"></detAdicional></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>289.20</baseImponible><valor>43.38</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="DIRECCION CLIENTE">ROSAVIN LOTE 1 Y COBRE</campoAdicional><campoAdicional nombre="Detalle:">TRM:2026IM15073 /PED:OC 2000030951 | GEORG FISCHER FACT 135062843 - 135062844 LITTLE ROCK, ARKANSAS, USA /</campoAdicional><campoAdicional nombre="ORDEN COMPRA:">OC 2000030951 | GEORG FISCHER FACT 135062843 - 135062844 LITTLE ROCK, ARKANSAS, USA</campoAdicional><campoAdicional nombre="Num. Refrendo:">02820261001239744</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature457880">
+<ds:SignedInfo Id="Signature-SignedInfo735647">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID271000" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature457880-SignedProperties194">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>fs6jES+fTtcqowxoLkL6sUtJxuk=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1403930">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>ba4LLjHkuNM7bJci1Y3NBIkjVGE=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-536838" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>BalN9oh9+EnyYFe8CpDdbuZ1tXc=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue898989">
+BUqu0gZevjJRXmJA6h1F5o4qfj0QR3jbfkSmCp9F1y+kP+bJy4lYjZm/OWNlfv08di0KgvqyxTQ8
+NlZFJ8386AOlz4s4D0+ClkL9RxMWdjXUEMrxaT77jTyUl5bsu4cOXT2MOQD5xnqecNJNGgPz5BL8
+b5vPZLge9r+ThAZ5STx+uzotp5qEaE1ED3Nw6YPa4NehzCVeoHYQVjoSlFePrtb0ptnpe8Lnegcd
+ZzFOVYEwtyuRvbNh7qqPXeEJ+wvCd7SS8b6FXpn8vov4ETmCE3ywXHtSflvo8qUMKvG8rcOBL8O7
+mF5Mvg/EaYNdJlBoOot2ApnVF1lyHKHy8aaUCg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1403930">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIK1zCCCL+gAwIBAgIIFRXq1FLgUbUwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUxMDE2MjExNDE0WhcNMzAxMDE2MjExNDE0WjCB
+ozEhMB8GA1UEAwwYUEFCTE8gREFWSUQgVE9SUkVTIEFMQU5BMSAwHgYDVQQFExcwOTA5ODQ2Mzg4
+LTE2MTAyNTE2MjQwNzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9S
+TUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDit9TWTZ0vHmoqsVvET0k5zhFthlmJYMYvN1AM7bOn
+qFUXZP8BqvMC/S+k5FJE6G1GybmUzFjB0ExcB9nhWxLRKOylp263IRpXkNillqsUEAJC4uFUQzlF
+4fOkIUoq4i3mK97LZB462guVgK32rVVWtkns2LTyn58Ct9YxQJCQbV6TluAt4thC0SSakgtIG+rG
+an4RFSLMmteJKuv42xZuF0G7S+lh55PmaYlMMOOI1IR/e/OhDp12JOr2l50v7sN5mxvwat99M7tX
+ZYDIuqJjTwjOMay/8U+0+F7IZwCi7OOsJUavsf3mA5K/0uhDeJtzGIUtoEgBAWJaGA25C113AgMB
+AAGjggYVMIIGETAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2P
+MFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEu
+bmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAlBgNVHREEHjAcgRpnZXJlbmNpYUB0
+b3JyZXN5dG9ycmVzLmNvbTCCARUGA1UdIASCAQwwggEIMGIGCisGAQQBgqZyAgkwVDBSBggrBgEF
+BQcCAjBGHkQAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUgBlAHAAcgBlAHMAZQBuAHQA
+YQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYKKwYBBAGCpnICAzCBkjCBjwYIKwYBBQUHAgEWgYJodHRw
+czovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2
+YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIFJlcHJlc2VudGFu
+dGUgTGVnYWwucGRmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAg8GA1UdHwSCAgYw
+ggICMIHeoDqgOIY2aHR0cDovL2NybDEuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwxL2Ny
+bGZpbGUuY3JsooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBT
+VUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBE
+RSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVD
+MDygOqA4hjZodHRwOi8vY3JsMi5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDIvY3JsZmls
+ZS5jcmwwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJpdHlkYXRhLm5l
+dC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTj1B
+VVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURB
+RCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIs
+Qz1FQzAdBgNVHQ4EFgQUYwpRxnhODh2NsIgB0PYx5z4vVogwKwYDVR0QBCQwIoAPMjAyNTEwMTYy
+MTE0MTRagQ8yMDMwMTAxNjIxMTQxNFowCwYDVR0PBAQDAgXgMB8GCisGAQQBgqZyAwUEEQwPR0VS
+RU5URSBHRU5FUkFMMBoGCisGAQQBgqZyAwEEDAwKMDkwOTg0NjM4ODAZBgorBgEEAYKmcgMJBAsM
+CVBBU0NVQUxFUzARBgorBgEEAYKmcgMiBAMMAS4wJwYKKwYBBAGCpnIDBwQZDBdST1NBVklOIFNP
+TEFSIDYgWSBDT0JSRTAbBgorBgEEAYKmcgMCBA0MC1BBQkxPIERBVklEMB8GCisGAQQBgqZyAyAE
+EQwPNjY2NjY2NjY2NjY2NjY2MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwH
+RUNVQURPUjAWBgorBgEEAYKmcgMDBAgMBlRPUlJFUzA9BgorBgEEAYKmcgMKBC8MLVRPUlJFUyBZ
+IFRPUlJFUyBBR0VOVEVTIERFIEFEVUFOQVMgVFRBREFEIEMgQTAdBgorBgEEAYKmcgMLBA8MDTA5
+OTEzNzAyMjYwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBUGCisGAQQBgqZyAwQEBwwFQUxBTkEwGgYK
+KwYBBAGCpnIDCAQMDAowOTk5NDg2ODEwMA0GCSqGSIb3DQEBCwUAA4ICAQCGx2uqrnmHHx2b2FfF
+t115Pe3VU2AM6O8j3yJxqjLDPdnYkXcd5/W8RuXJRH9WUrJw45+z7Em7VUiNoq/52N2hRqNKYIcK
+iwn5AH+tLbiHoh4NgkqOlXnQ9UBoDkheSAxXGZztLCrs3XykIueT6E4CNMiFLYJvk9VBaoQEaT9M
+QStiXnWW8SB5hIz0PoojviAJ3LruibGLt9yfk15VlQuRGZyqeXTV+VrsSvW28d4f74WuFMkP44T6
+js+2OJdLic37IESx7mVVNlyJEra4pyuwCh5GZ6QiLL/NymrN9Pm63gNqgm9hd2TdVotE50gHMmSh
+T2cucyjIdqvGkj/M9eQ4JUoOrkA/rEgmXgYVufHp4DD3mqj8oHbM6su8BzeFv8MpYZdmiBQYZ4UO
+M39kyjbsq1NpwyS3HO/gavFURTXs7M08yutuKYIGxPu4VIeWq4jzo1Wm1oHq4MBM5j/kZv8nvqgG
+Dav61pItcSruYHvcfd4A24tT0zgLMZveMzwrBt0MM5zWQrio4z9jvZIqrMtjcPA9ikzc4a45YWbs
+gitXsnEw1sbUNdrAFzXYUF1gRBXB/K2bP/ws9LCfBfF4RtQ//Z8W6Rv/UtigN1SafhcOvYb5H1lG
+gSus867yvZf/r8Y0VOO5/vFwsph1dfUl5LfOfy8WEtZmN2rX5HeC8MOQcQ==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+4rfU1k2dLx5qKrFbxE9JOc4RbYZZiWDGLzdQDO2zp6hVF2T/AarzAv0vpORSROhtRsm5lMxYwdBM
+XAfZ4VsS0SjspadutyEaV5DYpZarFBACQuLhVEM5ReHzpCFKKuIt5ivey2QeOtoLlYCt9q1VVrZJ
+7Ni08p+fArfWMUCQkG1ek5bgLeLYQtEkmpILSBvqxmp+ERUizJrXiSrr+NsWbhdBu0vpYeeT5mmJ
+TDDjiNSEf3vzoQ6ddiTq9pedL+7DeZsb8GrffTO7V2WAyLqiY08IzjGsv/FPtPheyGcAouzjrCVG
+r7H95gOSv9LoQ3ibcxiFLaBIAQFiWhgNuQtddw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature457880-Object636652"><etsi:QualifyingProperties Target="#Signature457880"><etsi:SignedProperties Id="Signature457880-SignedProperties194"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-08T15:53:49-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>hPTHL3kKR5z1pwZdk0aYolua/Vg=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1519378646951809461</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-536838"><etsi:Description>Descripcion del documento</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

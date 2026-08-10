@@ -1031,6 +1031,47 @@ def notify_gasto_deleted(app, snapshot: Dict[str, Any], by_user_id: int | None):
     return _send_email(app, subject, text, [snapshot.get("usuario_email")], html_body=html_body)
 
 
+def notify_gasto_sap_contabilizado(app, gasto_id: int, doc: str, by_user_id: int | None):
+    """Notifica al dueño del gasto que fue contabilizado en SAP."""
+    g = _gasto_meta(gasto_id)
+    if not g:
+        return False
+
+    creator_email = (g.get("usuario_email") or "").strip()
+    if not creator_email:
+        return False
+
+    fecha_fmt = _fmt_fecha_ddmmyyyy(g.get("fecha"))
+    usuario = g.get("usuario_username") or ""
+    doc_txt = doc or "—"
+
+    rows = (
+        _row_blue("ID Gasto", f"#{gasto_id}") +
+        _row_blue("Fecha", fecha_fmt) +
+        _row_blue("Total con IVA", f"${_money(g.get('total_con_iva'))}") +
+        _row_blue("Doc. SAP", doc_txt)
+    )
+
+    titulo = f"Gasto #{gasto_id} contabilizado en SAP"
+    saludo = f"Hola {usuario}, tu gasto fue enviado y contabilizado en SAP correctamente."
+    link = _link_ver_gasto(gasto_id)
+    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Ver gasto", link)
+
+    subject = f"[Gastos] ✅ Contabilizado en SAP – Gasto #{gasto_id} · Doc {doc_txt}"
+    text = (
+        f"El gasto #{gasto_id} fue contabilizado en SAP.\n"
+        f"Fecha: {fecha_fmt}\n"
+        f"Total con IVA: ${_money(g.get('total_con_iva'))}\n"
+        f"Doc. SAP: {doc_txt}\n"
+    )
+
+    app.logger.info(
+        "[GASTOS][MAIL] SAP contabilizado gasto=%s doc=%r to=%r",
+        gasto_id, doc_txt, creator_email
+    )
+    return _send_mail_safe(creator_email, subject, text, html_body=html_body)
+
+
 # ========= NOTIFICACIONES DE APROBACIÓN =========
 
 ROLE_GA = (

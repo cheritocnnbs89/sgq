@@ -140,29 +140,59 @@
               <thead class="table-light">
                 <tr>
                   <th>Tipo</th>
-                  <th class="text-center">Requiere aprobación del gerente del solicitante</th>
+                  <th class="text-center">Requiere aprobación gerente</th>
+                  <th class="text-center">
+                    <i class="bi bi-check2-circle text-success me-1"></i>
+                    Auto-confirmar vuelo
+                    <div class="text-muted fw-normal" style="font-size:.75em;">Tras fecha retorno</div>
+                  </th>
+                  <th class="text-center">
+                    <i class="bi bi-receipt text-primary me-1"></i>
+                    Auto-liquidar vuelo
+                    <div class="text-muted fw-normal" style="font-size:.75em;">Con valor cotizado</div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {% for t in tipos %}
                 {% set flags = tipo_flags.get(t, {}) %}
-                {% set field_key = 'req_gerente_' ~ t.replace(' ', '_').replace('/', '_') %}
+                {% set fk = t.replace(' ', '_').replace('/', '_') %}
                 <tr>
-                  <td>{{ t }}</td>
+                  <td><strong>{{ t }}</strong></td>
                   <td class="text-center">
                     <div class="form-check form-switch d-flex justify-content-center">
                       <input class="form-check-input" type="checkbox" role="switch"
-                             id="{{ field_key }}"
-                             name="{{ field_key }}"
-                             value="1"
+                             name="req_gerente_{{ fk }}" value="1"
                              {% if flags.get('requiere_aprobacion_gerente') %}checked{% endif %}>
                     </div>
+                  </td>
+                  <td class="text-center">
+                    {% if t == 'Vuelo' %}
+                    <div class="form-check form-switch d-flex justify-content-center">
+                      <input class="form-check-input" type="checkbox" role="switch"
+                             name="auto_confirmar_{{ fk }}" value="1"
+                             {% if flags.get('auto_confirmar_vuelo') %}checked{% endif %}>
+                    </div>
+                    {% else %}<span class="text-muted">—</span>{% endif %}
+                  </td>
+                  <td class="text-center">
+                    {% if t == 'Vuelo' %}
+                    <div class="form-check form-switch d-flex justify-content-center">
+                      <input class="form-check-input" type="checkbox" role="switch"
+                             name="auto_liquidar_{{ fk }}" value="1"
+                             {% if flags.get('auto_liquidar_vuelo') %}checked{% endif %}>
+                    </div>
+                    {% else %}<span class="text-muted">—</span>{% endif %}
                   </td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end align-items-center gap-3">
+              <span class="small text-muted">
+                <i class="bi bi-info-circle me-1"></i>
+                Auto-confirmar y auto-liquidar se ejecutan diariamente a las 09:00 solo para vuelos tipo <strong>Vuelo</strong>.
+              </span>
               <button type="submit" class="btn btn-primary btn-sm">
                 <i class="bi bi-save me-1"></i>Guardar opciones
               </button>
@@ -180,13 +210,13 @@
   </div>
   {% endif %}
 
-  {# ── Roles que auto-aprueban la aprobación del jefe directo (Vuelo) ── #}
+  {# ── Roles que auto-aprueban la aprobación del jefe directo (Vuelo y Voucher) ── #}
   {% if has_permission('planificador.configuracion','editar') %}
   <div class="row g-3 mt-2">
     <div class="col-12">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-light fw-bold">
-          <i class="bi bi-person-check me-1"></i>Roles que auto-aprueban la aprobación del jefe (Vuelo)
+          <i class="bi bi-person-check me-1"></i>Roles que auto-aprueban la aprobación del jefe (Vuelo y Voucher)
         </div>
         <div class="card-body">
           <form method="post" action="{{ url_for('planificador.planificador_rol_flags') }}">
@@ -224,11 +254,13 @@
           </form>
           <p class="small text-muted mt-2 mb-0">
             <i class="bi bi-info-circle me-1"></i>
-            Cuando esta opción está activa, si el solicitante de una Vuelo tiene ese rol de sistema,
-            la solicitud salta directo a <strong>Pendiente cotización coordinador</strong> sin pasar
-            por la aprobación del jefe directo — aplica aunque en el futuro se le llegue a configurar
-            un jefe directo. Si el rol no está activado aquí, se usa el flujo normal (valida el jefe
-            directo del solicitante).
+            Cuando esta opción está activa, si el solicitante de una Vuelo o de un Voucher tiene ese
+            rol de sistema, la solicitud salta directo a la siguiente etapa sin pasar por la
+            aprobación del jefe directo — <strong>Pendiente cotización coordinador</strong> para
+            Vuelo, o <strong>Pendiente entrega</strong> para Voucher (el coordinador puede entregar
+            los vouchers de una vez, sin esperar la aprobación del jefe). Aplica aunque en el futuro
+            se le llegue a configurar un jefe directo. Si el rol no está activado aquí, se usa el
+            flujo normal (valida el jefe directo del solicitante) para ambos tipos.
           </p>
         </div>
       </div>

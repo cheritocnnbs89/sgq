@@ -940,3 +940,82 @@ def notif_voucher_liquidada(solicitud_id: int, area: str, fecha: str,
            f"Tu solicitud de Voucher #{solicitud_id} fue completada. Costo total: ${costo_total:,.2f}")
     email_s = repo.get_email_by_usuario_id(solicitante_id)
     _email([email_s] if email_s else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Voucher: 3 días entregado sin confirmar → recordatorio al solicitante
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_recordatorio_confirmacion(solicitud_id: int, items: list[dict],
+                                             solicitante_id: int, solicitante_nombre: str,
+                                             area: str, fecha: str) -> None:
+    cantidad = len(items)
+    subject = f"[Planificador] Recordatorio — confirma {cantidad} voucher(s) de la solicitud #{solicitud_id}"
+    titulo  = f"Voucher #{solicitud_id} — Confirmación pendiente"
+    saludo  = (f"Hola <strong>{solicitante_nombre}</strong>, tienes {cantidad} voucher(s) de esta "
+               f"solicitud entregados hace 3 días o más y aún sin confirmar. Ingresa al SGQ y "
+               f"confirma cada uno subiendo su respaldo, o márcalo como \"No lo utilicé\" si no "
+               f"lo usaste.")
+    filas = [
+        ("N° solicitud", str(solicitud_id)),
+        ("Área",         area),
+        ("Fecha",        fecha),
+        ("Vouchers pendientes", ", ".join(f"#{i['numero']}" for i in items)),
+    ]
+    nota = "Ingresa al SGQ → Planificador → Solicitudes y confirma o marca como no utilizado cada voucher."
+    html = _email_html("PLANIFICADOR · VOUCHER — RECORDATORIO", titulo, saludo, filas, nota)
+    _inapp(solicitante_id, subject,
+           f"Tienes {cantidad} voucher(s) de la solicitud #{solicitud_id} pendientes de confirmar hace 3+ días.")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html)
+
+
+# ──────────────────────────────────────────────────────────
+# Voucher: 6 días entregado sin confirmar → escala a jefe, solicitante y coordinador
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_escalamiento_confirmacion(solicitud_id: int, items: list[dict],
+                                             solicitante_id: int, solicitante_nombre: str,
+                                             area: str, fecha: str,
+                                             jefe_id: int | None, jefe_nombre: str) -> None:
+    cantidad = len(items)
+    subject = f"[Planificador] Escalamiento — {cantidad} voucher(s) sin confirmar hace 6+ días (Solicitud #{solicitud_id})"
+    titulo  = f"Voucher #{solicitud_id} — Confirmación vencida"
+    saludo  = (f"<strong>{solicitante_nombre}</strong> tiene {cantidad} voucher(s) de esta solicitud "
+               f"entregados hace 6 días o más y todavía sin confirmar.")
+    filas = [
+        ("N° solicitud", str(solicitud_id)),
+        ("Área",         area),
+        ("Fecha",        fecha),
+        ("Solicitante",  solicitante_nombre),
+        ("Vouchers pendientes", ", ".join(f"#{i['numero']}" for i in items)),
+    ]
+    nota = "Se notifica al jefe directo, al solicitante y al coordinador de vouchers para dar seguimiento."
+    html = _email_html("PLANIFICADOR · VOUCHER — ESCALAMIENTO", titulo, saludo, filas, nota)
+
+    destinatarios_email = []
+
+    # Solicitante
+    _inapp(solicitante_id, subject,
+           f"Tienes {cantidad} voucher(s) de la solicitud #{solicitud_id} sin confirmar hace 6+ días.")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    if email_s:
+        destinatarios_email.append(email_s)
+
+    # Jefe directo
+    if jefe_id:
+        _inapp(jefe_id, subject,
+               f"{solicitante_nombre} tiene {cantidad} voucher(s) sin confirmar hace 6+ días (Solicitud #{solicitud_id}).")
+        email_j = repo.get_email_by_usuario_id(jefe_id)
+        if email_j:
+            destinatarios_email.append(email_j)
+
+    # Coordinador(es) de vouchers
+    coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Voucher")
+    for c in coordinadores:
+        _inapp(c["id"], subject,
+               f"{solicitante_nombre} tiene {cantidad} voucher(s) sin confirmar hace 6+ días (Solicitud #{solicitud_id}).")
+        if c.get("email"):
+            destinatarios_email.append(c["email"])
+
+    _email(destinatarios_email, subject, html)

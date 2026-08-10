@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>GUAYAQUIL YACHT CLUB</razonSocial>
+    <nombreComercial>GUAYAQUIL YACHT CLUB</nombreComercial>
+    <ruc>0990173591001</ruc>
+    <claveAcceso>1407202601099017359100120010060000008231234567818</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>006</ptoEmi>
+    <secuencial>000000823</secuencial>
+    <dirMatriz>VIA A LA COSTA KM 10 1/2</dirMatriz>
+    <agenteRetencion>00000001</agenteRetencion>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>14/07/2026</fechaEmision>
+    <dirEstablecimiento>VIA A LA COSTA KM 10 1/2</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <totalSinImpuestos>989.70</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>989.70</baseImponible>
+        <valor>148.46</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>73.97</propina>
+    <importeTotal>1212.13</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>1212.13</total>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>531</codigoPrincipal>
+      <descripcion>USO DE DECK PISCINA Y SALONEROS</descripcion>
+      <cantidad>1.00000</cantidad>
+      <precioUnitario>250.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>250.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.0</tarifa>
+          <baseImponible>250.00</baseImponible>
+          <valor>37.50</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>1434</codigoPrincipal>
+      <descripcion>BANDEJA MINI HOT DOG 12 UNIDADES</descripcion>
+      <cantidad>4.00000</cantidad>
+      <precioUnitario>16.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>64.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.0</tarifa>
+          <baseImponible>64.00</baseImponible>
+          <valor>9.60</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>3773</codigoPrincipal>
+      <descripcion>BANDEJA DE MINI PIZZA (12 UNIDADES) - EVENTOS</descripcion>
+      <cantidad>3.00000</cantidad>
+      <precioUnitario>14.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>42.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.0</tarifa>
+          <baseImponible>42.00</baseImponible>
+          <valor>6.30</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>1432</codigoPrincipal>
+      <descripcion>BANDEJA DE MINI SANDUCHITOS POLLO (40 UNID)</descripcion>
+      <cantidad>2.00000</cantidad>
+      <precioUnitario>32.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>64.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.0</tarifa>
+          <baseImponible>64.00</baseImponible>
+          <valor>9.60</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>1437</codigoPrincipal>
+      <descripcion>BANDEJA DE MINI FLAUTAS DE POLLO ( 20 UNIDADES)</descripcion>
+      <cantidad>3.00000</cantidad>
+      <precioUnitario>39.500000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>118.50</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.0</tarifa>
+          <baseImponible>118.50</baseImponible>
+          <valor>17.78</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>5286</codigoPrincipal>
+      <descripcion>BANDEJA DE MINI EMPANADITAS DE VIENTO (24 UNIDADES)</descripcion>
+      <cantidad>2.00000</cantidad>
+      <precioUnitario>15.600000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>31.20</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.0</tarifa>
+          <baseImponible>31.20</baseImponible>
+          <valor>4.68</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>1820</codigoPrincipal>
+      <descripcion>NUGGETS DE POLLO CON PAPAS FRITAS (10 UNIDADES) - NIÃ±OS</descripcion>
+      <cantidad>40.00000</cantidad>
+      <precioUnitario>6.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>240.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.0</tarifa>
+          <baseImponible>240.00</baseImponible>
+          <valor>36.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>5311</codigoPrincipal>
+      <descripcion>COLAS Y AGUAS ILIMITADAS - MATINE</descripcion>
+      <cantidad>60.00000</cantidad>
+      <precioUnitario>3.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>180.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.0</tarifa>
+          <baseImponible>180.00</baseImponible>
+          <valor>27.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Email">gcampo@quimpac.com.ec</campoAdicional>
+    <campoAdicional nombre="DIRECCLIENTE">KM 16.5 VIA DAULE</campoAdicional>
+    <campoAdicional nombre="CORREOESTAB">asistente@gyc.ec</campoAdicional>
+    <campoAdicional nombre="FONOESTAB">043710300</campoAdicional>
+    <campoAdicional nombre="EXPHAB"> </campoAdicional>
+    <campoAdicional nombre="FONOCLIENTE">21626600 </campoAdicional>
+    <campoAdicional nombre="Fecha Vencimiento">14/07/2026</campoAdicional>
+    <campoAdicional nombre="Plazo">Contado</campoAdicional>
+    <campoAdicional nombre="Forma de Pago">Otros con Utilización de Sist. Financiero</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature424001">
+<ds:SignedInfo Id="Signature-SignedInfo102892">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID395127" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature424001-SignedProperties796924">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>Fj2Mk+gsmGqZazGuzyWwwXTl3BA=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate11033138">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>eG1Oyl21T6dLPzZPUkqpDXtXtJo=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-866410" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>nUdkp5ABE4ksVj1F0/tHZ2akAv4=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue424608">
+CsHQwgKE66GoVgNVzid70lyF8qmBylNQVq20z/qeUnyv/ALcD8VUvnSD721+Y35vXHl2CxbxsY5H
+XvfK90T7oqqa1SdN7DUDydS6WmHClPagIEvsF5DLjQ+lttvx/1biB/iS12qJ72Ba2lVk7oG2umGW
+N7qArBSoEBwYjPl42EsBeRSgXbULXRtg6LET2CG5V9TUOoI7B9KD6AjvUHm/TrDTdKOPY4ZhBX5S
+eGtvDeJ2HnardpxCQxyIZ4tIXapxd+LL13omOO3AKVWhXlo6B1kFW55LcFgvFW/jX8EsBmgo0jOx
+rVsAptBtJZ+CGiCWMhhftC0PemYn3PFH1FSrYw==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate11033138">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKkzCCCHugAwIBAgIIZD3niaYv1jYwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwODIwMTkzOTUxWhcNMjcwODIwMTkzOTUxWjCB
+oDEeMBwGA1UEAwwVU0FOVElBR08gTExBRE8gRkVSUkVSMSAwHgYDVQQFExcwOTAyNTQ3NDIxLTIw
+MDgyNTE0NDk0MTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFD
+SU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDQcwZmk1zbcpmgPt1DmuCt7o28vrDDBRqzVcxN5aztlz36
+B9TYERvrRuYBGjkwo6IWF6PY5fpsBJhih55xIJWZY58heQ/7t1q594B2oxdUR3zWxSabjFRiyCeA
+VMa8VUEdbiVuj5p7NvWgCRGTi5p8V5EdhXZxkfxHyvoAPLd7EjRnrYDZ/y9yBo7P9tYOOZQd2SWq
+HXP+eQqfREau2Q7ph0oUJ4UILSTLXdgqlY8lLR7laak25rot0ik7RPjmHPOBpQjRNdlt4hXFzuOb
+k3Q+epcT5AaH0fGE/L6rRVdGyoHvAE7K8jR42aF0/nIyAOEe3BfIzO59iZKyuymc/5QrAgMBAAGj
+ggXUMIIF0DAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkG
+CCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0
+LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAaBgNVHREEEzARgQ9nZXJlbmNpYUBneWMu
+ZWMwggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQBy
+AHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUA
+ZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJp
+dHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlm
+aWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjAd
+BgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB3qA6oDiGNmh0
+dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxlLmNybKKBn6SB
+nDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklU
+WSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04x
+HTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqgOIY2aHR0cDov
+L2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3JsMIHgoIHdoIHa
+hoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVi
+bGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENF
+UlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNB
+Q0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYE
+FFdK3MpIkYR5YixEeoBWEbvIcW1CMCsGA1UdEAQkMCKADzIwMjUwODIwMTkzOTUxWoEPMjAyNzA4
+MjAxOTM5NTFaMAsGA1UdDwQEAwIF4DAYBgorBgEEAYKmcgMFBAoMCENPTU9ET1JPMBoGCisGAQQB
+gqZyAwEEDAwKMDkwMjU0NzQyMTAWBgorBgEEAYKmcgMJBAgMBlRBUlFVSTARBgorBgEEAYKmcgMi
+BAMMAS4wFwYKKwYBBAGCpnIDBwQJDAdTT0xBUiAxMBgGCisGAQQBgqZyAwIECgwIU0FOVElBR08w
+HwYKKwYBBAGCpnIDIAQRDA8wMDEwMDIwMDEwMjQ3NjIwEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYK
+KwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBUGCisGAQQBgqZyAwMEBwwFTExBRE8wJAYKKwYBBAGCpnID
+CgQWDBRHVUFZQVFVSUwgWUFDSFQgQ0xVQjAdBgorBgEEAYKmcgMLBA8MDTA5OTAxNzM1OTEwMDEw
+EQYKKwYBBAGCpnIDHQQDDAEuMBYGCisGAQQBgqZyAwQECAwGRkVSUkVSMBoGCisGAQQBgqZyAwgE
+DAwKMDk5MzI1NzMzMTANBgkqhkiG9w0BAQsFAAOCAgEAcwNMuQNhXK9sZ7yDnYir3ZX3uqRPzh/E
+uqM/W8CmDDg0DR4eyEYN9HfiKaS34T8AT+42p6hOF6sluA0C7Emx2KC/S9FoIBmdOI7GSTyS4t7V
+9PdpTdDFjFDMY7Y2TiuxHRBIxmUj1Qzk86+b+fQr84NagLtXEJEdUMAC8/ExFzkudimnWO35Ovlq
+G2+mmCYAajeCHFnM8YX2FVenmXBLgzZ1ZotEGhy+pTXW8Ju1xM4TDoQQS4kzeGnqzm00WgzU+C2C
+02E0vbGM92H3CT05ACjg8wpdsiJX+cp4Dg3i3hFvihKfGsBNIJ+A938/MiBQFFbhZt0Kfy6ajLIK
+5rqdQ7NumQ2Bo9fF8wwdYoN5EumFqZYlTdqB6iFAYq8FeAz2HzQ7FLESPIAfjHHmi96L0BDiwIII
+BNNke2czCeMhRQqpKDtyl5HI2LfVnRhV8ppczHLt/pPKf+L+tN2wD9Pd842HJIw0HuHNzlPQeDXX
+7wtedrEYPFWE6AP0txrKr/vRxI/URiVbgA8NUyWqp+24uEvd39qkYkzUtfQyhhov8oMeK3g/ihac
+VP3IX5MzjhP/kVc91HD55wFyDSJfnqd1+OrvnUhuXoqYg6IdesPeZZjBr0ay1mn4ugg15wZfbWax
+/4DGHAH2GewW74qxLRdUdLDShD+f9fbxPrJaL+424+I=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+0HMGZpNc23KZoD7dQ5rgre6NvL6wwwUas1XMTeWs7Zc9+gfU2BEb60bmARo5MKOiFhej2OX6bASY
+YoeecSCVmWOfIXkP+7daufeAdqMXVEd81sUmm4xUYsgngFTGvFVBHW4lbo+aezb1oAkRk4uafFeR
+HYV2cZH8R8r6ADy3exI0Z62A2f8vcgaOz/bWDjmUHdklqh1z/nkKn0RGrtkO6YdKFCeFCC0ky13Y
+KpWPJS0e5WmpNua6LdIpO0T45hzzgaUI0TXZbeIVxc7jm5N0PnqXE+QGh9HxhPy+q0VXRsqB7wBO
+yvI0eNmhdP5yMgDhHtwXyMzufYmSsrspnP+UKw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature424001-Object918869"><etsi:QualifyingProperties Target="#Signature424001"><etsi:SignedProperties Id="Signature424001-SignedProperties796924"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-14T15:28:43-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>vE3iCX5S4Q7V4Xxx8zV59R7a1RI=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>7223183955756832310</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-866410"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

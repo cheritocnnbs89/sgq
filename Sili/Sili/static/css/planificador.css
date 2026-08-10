@@ -627,10 +627,11 @@ tr.pg-hidden { display:none; }
 }
 .voucher-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,.07); }
 
-.voucher-item--liquidado  { border-left-color: #16a34a; }
-.voucher-item--confirmado { border-left-color: #0891b2; }
-.voucher-item--entregado  { border-left-color: #d97706; }
-.voucher-item--pendiente  { border-left-color: #9ca3af; }
+.voucher-item--liquidado    { border-left-color: #16a34a; }
+.voucher-item--confirmado   { border-left-color: #0891b2; }
+.voucher-item--entregado    { border-left-color: #d97706; }
+.voucher-item--pendiente    { border-left-color: #9ca3af; }
+.voucher-item--no-utilizado { border-left-color: #64748b; }
 
 .voucher-item-header {
   display: flex;
@@ -639,10 +640,11 @@ tr.pg-hidden { display:none; }
   padding: .55rem .85rem;
   gap: .5rem;
 }
-.voucher-item--liquidado  .voucher-item-header { background: #f0fdf4; }
-.voucher-item--confirmado .voucher-item-header { background: #ecfeff; }
-.voucher-item--entregado  .voucher-item-header { background: #fffbeb; }
-.voucher-item--pendiente  .voucher-item-header { background: #f9fafb; }
+.voucher-item--liquidado    .voucher-item-header { background: #f0fdf4; }
+.voucher-item--confirmado   .voucher-item-header { background: #ecfeff; }
+.voucher-item--entregado    .voucher-item-header { background: #fffbeb; }
+.voucher-item--pendiente    .voucher-item-header { background: #f9fafb; }
+.voucher-item--no-utilizado .voucher-item-header { background: #f1f5f9; }
 
 .voucher-item-title {
   display: flex;
@@ -672,10 +674,11 @@ tr.pg-hidden { display:none; }
   padding: .25rem .55rem;
   white-space: nowrap;
 }
-.vbadge--liquidado  { background:#dcfce7; color:#14532d; }
-.vbadge--confirmado { background:#cffafe; color:#164e63; }
-.vbadge--entregado  { background:#fef3c7; color:#78350f; }
-.vbadge--pendiente  { background:#f3f4f6; color:#6b7280; }
+.vbadge--liquidado    { background:#dcfce7; color:#14532d; }
+.vbadge--confirmado   { background:#cffafe; color:#164e63; }
+.vbadge--entregado    { background:#fef3c7; color:#78350f; }
+.vbadge--pendiente    { background:#f3f4f6; color:#6b7280; }
+.vbadge--no-utilizado { background:#e2e8f0; color:#334155; }
 
 .voucher-item-body {
   padding: .6rem .85rem .75rem;
@@ -835,4 +838,19 @@ tr.pg-hidden { display:none; }
   gap: .35rem;
   padding: .4rem 1rem .6rem;
   border-top: 1px solid #f1f5f9;
+}
+
+/* Carga masiva de costos de vouchers */
+.carga-masiva-tabla-wrap {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: .4rem;
+}
+.carga-masiva-tabla-wrap table { font-size: .8rem; }
+.carga-masiva-tabla-wrap thead th {
+  position: sticky;
+  top: 0;
+  background: #f9fafb;
+  z-index: 1;
 }
