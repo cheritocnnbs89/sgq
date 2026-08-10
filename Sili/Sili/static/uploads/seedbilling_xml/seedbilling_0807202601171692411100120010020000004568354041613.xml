@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>CAIZA LASLUISA JULIO PAUL</razonSocial>
+	    <nombreComercial>CAIZA LASLUISA JULIO PAUL</nombreComercial>
+	    <ruc>1716924111001</ruc>
+	    <claveAcceso>0807202601171692411100120010020000004568354041613</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>002</ptoEmi>
+	    <secuencial>000000456</secuencial>
+	    <dirMatriz>GUAYAS / GUAYAQUIL / FEBRES CORDERO / B 812 Y 36AVA. - 37AVA.</dirMatriz>
+		
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>08/07/2026</fechaEmision>
+		
+			<dirEstablecimiento>GUAYAS / GUAYAQUIL / FEBRES CORDERO / B 812 Y 36AVA. - 37AVA.</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>NO</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE KM 16.5 VIA DAULE</direccionComprador>
+	    
+	    <totalSinImpuestos>52.50000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>52.50</baseImponible>
+				<valor>7.88000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>60.38000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>60.38</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>SERV. TEC 001</codigoPrincipal>
+		<codigoAuxiliar>SERV. TEC 001</codigoAuxiliar>
+      	<descripcion>SERVICIO TECNICO</descripcion>
+      
+      <cantidad>3.000000</cantidad>
+      <precioUnitario>17.500000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>52.50</precioTotalSinImpuesto>
+	  
+	  
+	  	<detallesAdicionales>
+			
+    			<detAdicional nombre="Detalle" valor="Instalacion de sensores de nivel de agua pozo Planta cloro soda  GYE.  TAG P-763 Bomba de pozo N°2 (MATA MANGO)  suministro de 3 sensores tipo péndulo para control de nivel en el pozo"/>
+    		
+      	</detallesAdicionales>
+      
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>52.50000</baseImponible>
+          <valor>7.88</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">PEDIDO Nro. 7500055813  HOJA DE ENTRADA ACEPTACION  1001639962</campoAdicional>
+    		
+    	
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature691944">
+<ds:SignedInfo Id="Signature-SignedInfo361922">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID211087" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature691944-SignedProperties800938">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>uq+hcUHawokgsejmBWYoxVNLtAY=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate74544">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>D+/wlIeE5oDJGbYZDChkxIIawps=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-980988" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>9ljwTrtKSnGyKI4HQGnqYSi++y0=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue514417">
+gQN46exn4KqfksO2/E4hQkqxMvDthi1Kkv6XeKRl7PbExLGAw2toxmaPH1Tn/JR8J5GootYfhdTd
+qXIibLjeDRvTcxr9JfscjQVnIhoZrsgaUUDS9Mp2oRZFcVFQnsaYjLFOI0LnkQnfXi9M/KyEeI+A
+RiVxBQHw4KIbJHXGzfkVmqk39W4AOj5agiUGFEIsoZarPZga6063QnE03oRphS/PvjHSS832GOso
+ALAzuvKrk6+g89TXiBSQX2h+ZRYyyOEANkXQp9C3PQsihHALn6aSYHMAELfbpOsOBN3M19K69w0z
+u0bDO9Z7rZW5eRzxcnlVZ3bDAuFcdnld9DBPNQ==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate74544">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJMjCCBxqgAwIBAgIIHTVsP8lgz7swDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI1MTExMDE0MDYwMFoXDTI2MTExMDE0MDYwMFowgZgxCzAJBgNVBAYTAkVDMRcwFQYDVQQEDA5D
+QUlaQSBMQVNMVUlTQTETMBEGA1UEKgwKSlVMSU8gUEFVTDEZMBcGA1UEBRMQSURDRUMtMTcxNjky
+NDExMTEiMCAGA1UEAwwZSlVMSU8gUEFVTCBDQUlaQSBMQVNMVUlTQTEcMBoGA1UEYQwTVElORUMt
+MTcxNjkyNDExMTAwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANszWd5IQYJ9JeMc
+RMnV/2dg+2rp+MHNu9CFVuauy6dH8jksMtrUgQXZSzOBj6LOo6gslsLsLL8E5LnPEcF5iwM8FNj7
+uSDCWtcpYs8ELIQIi3DkcCBbimqv8Lqw74XPoD6OkD26w4mLzAVQkiUCsWMU/d6O9melha3NZPig
+aEDVAsNmWcwjKotvompX6M6eRPOQikj9Gl5W4HqklJb71cICF3lmUhgB4rqQ805Vr+QFjh2S9C1K
+6+2DkY4B7IjFAfstF7gIzSr5n+rv405l8+yhez/nUucmxmX72A0VNK70pTrWAeJw5bEWhP70GBWb
+tQslTCsD42xxV1cuxYujqT0CAwEAAaOCBFwwggRYMBsGCysGAQQBgvE2ZgMBBAwMCjE3MTY5MjQx
+MTEwHgYLKwYBBAGC8TZmAwsEDwwNMTcxNjkyNDExMTAwMTCB1wYIKwYBBQUHAQEEgcowgccwVQYI
+KwYBBQUHMAKGSWh0dHA6Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9kb3dubG9hZC90c3BfY2Vy
+dGlmaWNhdGVzL3N1Ym9yZGluYXRlMi5jcnQwNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMS51YW5h
+dGFjYS5jb20vcHVibGljL3BraS9vY3NwLzA2BggrBgEFBQcwAYYqaHR0cDovL29jc3AyLnVhbmF0
+YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1UdDgQWBBQNu5D+4UFq/9VrzrvixhQG7gNzBjAM
+BgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH1X52BzzgdGqeKjaPDhEbJ0knP9MIGZBgNVHSAEgZEw
+gY4wgYsGDCsGAQQBgvE2ZgIBATB7MDcGCCsGAQUFBwIBFitodHRwczovL3d3dy51YW5hdGFjYS5j
+b20vcHVibGljL3BraS9kcGMtZWMvMEAGCCsGAQUFBwICMDQMMkNFUlRJRklDQURPIERFIFBFUlNP
+TkEgTkFUVVJBTCBPIEZJU0lDQSBFTiBBUkNISVZPMIGPBgNVHR8EgYcwgYQwQKA+oDyGOmh0dHA6
+Ly9jcmwxLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFkYS5jcmwwQKA+
+oDyGOmh0dHA6Ly9jcmwyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL2NybC9DQTJzdWJvcmRpbmFk
+YS5jcmwwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAZIG
+A1UdEQSCAYkwggGFgR5ub3RpZmljYWNpb25lc2Zpcm1hc0BzaWlnby5jb22gGwYLKwYBBAGC8TZm
+AwGgDAwKMTcxNjkyNDExMaAbBgsrBgEEAYLxNmYDAqAMDApKVUxJTyBQQVVMoBYGCysGAQQBgvE2
+ZgMDoAcMBUNBSVpBoBkGCysGAQQBgvE2ZgMEoAoMCExBU0xVSVNBoD8GCysGAQQBgvE2ZgMHoDAM
+LkNBTExFIEIgIE5STy4gODEyICBJTlRFUlNFQ0NJT04gMzZBVkEgLSAzNyBBVkGgHwYLKwYBBAGC
+8TZmAwigEAwOMDA1OTM5Njc4NTIwMDagGgYLKwYBBAGC8TZmAwmgCwwJR1VBWUFRVUlMoB4GCysG
+AQQBgvE2ZgMLoA8MDTE3MTY5MjQxMTEwMDGgEwYLKwYBBAGC8TZmAwygBAwCRUOgKQYLKwYBBAGC
+8TZmAzKgGgwYUEVSU09OQSBOQVRVUkFMIE8gRklTSUNBoBgGCysGAQQBgvE2ZgMzoAkMB0FSQ0hJ
+Vk8wDQYJKoZIhvcNAQELBQADggIBAAHEFKqRu2N98wg3a0CqKIF/Bn3XVJAeqg/bQ+pLMEi+K2Ii
+dGllmy3LKLU0nKyNqYdGvJkv4qym7lBGVbjuzUjyxCyttH11yFcWgQhuIaUHA7A5zGyBIrOThAz6
+9NxG/QB/61YL3jsZ4HyGy7gMW6wY9nCgrIsaY6PkoS190krPm+BgBdfy5RoVQhrN2uWiP2CyTD09
+aISbPdmLr62CxEs1EOV9dxlbhy6VqLvgr8m4bx8xgzrBgtJQqVl37HPGx5XgynSG7XmwLiXVXI4d
+VeRCI+ZwIWKGUC67AyHMoW/cmWfOQx3EHGGJuAf8J9glZNnfjlUH3I/YEYb5BuPy8YQIwiMBQ4N3
+iOCsJ8qUDj9c+qxQyj+Yk7z6D5gvMIqo6UrquO9Llovel4GAbwZsrpMPagIa498MiTEtTHaBDO+B
+Rkf7t0ASrztqJsXGQVeAE3/RcerrMJCRj1Nx8sKxYuYxxcCLHmx2G5fbfiD+gFBzyE0rspLNFlgf
+/A8mgoLNjvKqcztj4g28IpeuipZKW/eVF1LbQXTBoqyKIl2Xhi+UrrWN1y60jBLzgN8OZGd6ePMn
+XPlXYMiGlhkdRfkdnhCBHiCs8TVTnb7CmRSdEIMzimKMLk8t/jhQ+ce+7ySeEogBiyJgONeMDa8p
+hVquRDHCJi6nz7EdlA1G1Pb3kDTL
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+2zNZ3khBgn0l4xxEydX/Z2D7aun4wc270IVW5q7Lp0fyOSwy2tSBBdlLM4GPos6jqCyWwuwsvwTk
+uc8RwXmLAzwU2Pu5IMJa1ylizwQshAiLcORwIFuKaq/wurDvhc+gPo6QPbrDiYvMBVCSJQKxYxT9
+3o72Z6WFrc1k+KBoQNUCw2ZZzCMqi2+ialfozp5E85CKSP0aXlbgeqSUlvvVwgIXeWZSGAHiupDz
+TlWv5AWOHZL0LUrr7YORjgHsiMUB+y0XuAjNKvmf6u/jTmXz7KF7P+dS5ybGZfvYDRU0rvSlOtYB
+4nDlsRaE/vQYFZu1CyVMKwPjbHFXVy7Fi6OpPQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature691944-Object355122"><etsi:QualifyingProperties Target="#Signature691944"><etsi:SignedProperties Id="Signature691944-SignedProperties800938"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-08T22:50:25-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>1uqc5zDahscQZuoRyjUzgb3/CMM=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=UANATACA CA2 2016,C=ES,L=Barcelona (see current address at www.uanataca.com/address),2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA</ds:X509IssuerName><ds:X509SerialNumber>2104707422082879419</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

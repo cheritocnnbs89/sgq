@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>SOLVESA ECUADOR S.A.</razonSocial>
+    <nombreComercial>SOLVESA ECUADOR S.A.</nombreComercial>
+    <ruc>0990839557001</ruc>
+    <claveAcceso>0508202601099083955700120070010000054048152674311</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>007</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000005404</secuencial>
+    <dirMatriz>AV. CASUARINA # 100 Y KM. 9.5 VIA A DAULE</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>05/08/2026</fechaEmision>
+    <dirEstablecimiento>VIA NARANJITO MILAGRO KM6.5</dirEstablecimiento>
+    <contribuyenteEspecial>6925</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <guiaRemision>007-001-000005858</guiaRemision>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <totalSinImpuestos>10936.80</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>10936.80</baseImponible>
+        <tarifa>15.00</tarifa>
+        <valor>1640.52</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>12577.32</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>12577.32</total>
+        <plazo>90</plazo>
+        <unidadTiempo>DIAS</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>PT201054</codigoPrincipal>
+      <codigoAuxiliar>1.000000000000</codigoAuxiliar>
+      <descripcion>ACIDO SULFURICO GRANEL</descripcion>
+      <cantidad>30380.000000</cantidad>
+      <precioUnitario>0.360000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>10936.80</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional nombre="." valor="KG"></detAdicional>
+        <detAdicional nombre="%" valor="15.00"></detAdicional>
+        <detAdicional nombre="." valor="PRODUCTO CONTROLADO"></detAdicional>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>10936.80</baseImponible>
+          <valor>1640.52</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Términos">90 DIAS VENCE EL: 03/11/2026</campoAdicional>
+    <campoAdicional nombre="Orden Compra">1000628357</campoAdicional>
+    <campoAdicional nombre="Orden de Servicio:">6656</campoAdicional>
+    <campoAdicional nombre="Vendedor">OF005</campoAdicional>
+    <campoAdicional nombre="Direccion">KM 16.5 VIA A DAULE CALLE ROSAVIN LOTE 1 Y COBRE MZ 15 EDIFICIO QUIMPAC ECUADOR S.A. A DOS CUADRAS DE LA CERVECERIA NACIONAL</campoAdicional>
+    <campoAdicional nombre="Telefono(s)">45000460</campoAdicional>
+    <campoAdicional nombre="Email">compras.electronica@quimpac.com.ec;kiara.tamayo@solvesacorp.com</campoAdicional>
+    <campoAdicional nombre="MDG# SOLVESA">09-4790J-I</campoAdicional>
+    <campoAdicional nombre="MDG# CLIENTE">09-0866-I</campoAdicional>
+    <campoAdicional nombre="Info Tributaria">Gran Contribuyente según oficio NAC-ADROGEC23-00001283-M. con base al Artículo 2 de la Resolución Nro. NAC-DGERCGC21-00000022</campoAdicional>
+    <campoAdicional nombre="Observaciones">MDI#9-4790-14100
+DOC# 5000194096</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature849524">
+<ds:SignedInfo Id="Signature-SignedInfo125741">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID743717" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature849524-SignedProperties637266">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>w5/xt/0P8aOfbKhAN+yyhRz64Rw=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1268362">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>DKc0ORZE6+0fZlM1FQ++2dVVq2U=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-928081" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>zeS62/Hidig3tWCGzoTYAE808uQ=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue64761">
+U9VbBNFq3V4PFTRkfgLVsO+XdDfUejMlwdG6oAe2L8n0EqbABwhpEo4eNT93TXy+T2a0jSVVi9dW
+fSiofvnnw1EXf38XpCh3FUsx04xEFPzbrx9MOt+doEyCCR3D/+oAo6+dzC4Z6nJfkx9I3qdN+qa9
+onql9w6KQelQtBE3xhSsdrlVF1lKb7INd4Ldf9OeggQVA8sylgtnYmN6wiyekKcNEjmciauo2GFj
+AVW2zs7j9ciNosh7FOqLUhDALPPfg7rV4rIl6FHBns7we0bmiN3lk65Sp0hf++ZNzcys3GUhGrZF
+/ptkfEZF6OyNVyRfWUyRtPwOMdJ6yOOb+wtkbg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1268362">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIMSDCCCjCgAwIBAgIEeZA6tzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTAyMTQxNTM2NTNaFw0yNzAyMTQxNTM2NTNaMIGpMScw
+JQYDVQQDDB5TRUdVTkRPIEpBQ0tTT04gQ0FTVElMTE8gQVlPVkkxIDAeBgNVBAUTFzA5MjcwMzgw
+ODMtMTQwMjI1MTA0NjQ4MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5G
+T1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIw
+DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKBmimPef/iGwvM5ClgZlNAzfhyj7rtvyWaaJp1c
+LILr2EaWyQK8ml4v8uEC6TSHJf7OIyfHB4cJNS7i+Ly8ErULFkNQott22eYwXKxHhYBOfn4md+S2
+/5B4CStjUO0iDff0JX4zq44NhIujoRTNmCmcepeQJxvQrgxGFZpDUaC4hD4skpSWfs3RLXurGfyv
+WKszE24DdJbz2tVquGJFrIYEEyyY5xG4TB8avQK1QKGRZ+FNOEZ/pCqKDwheDwGuj6iXNk33co+T
+hICZB+TosVomXBms29Nm5MdK2d9PxmkqUK4u/wR60m4QUwZqPfFCdM2Rp+MSnp0RD7fveL1GX00C
+AwEAAaOCB4QwggeAMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLd
+vY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0
+YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6g
+gbuGgbhsZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERF
+IENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFS
+ZXZvY2F0aW9uTGlzdD9iYXNlMCsGA1UdEQQkMCKBIGphY2tzb24uY2FzdGlsbG9Ac29sdmVzYWNv
+cnAuY29tMIIBEgYDVR0gBIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwICMEQeQgBD
+AGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBvACAAZABlACAARQBtAHAA
+cgBlAHMAYTCBoAYKKwYBBAGCpnICBDCBkTCBjgYIKwYBBQUHAgEWgYFodHRwczovL3d3dy5zZWN1
+cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0
+aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYw
+HQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICogYDVR0fBIICmTCCApUwgeWgQaA/hj1o
+dHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9v
+Y3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0y
+IFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZP
+Uk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIHHoIHE
+oIHBhoG+bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJ
+RklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2NlcnRp
+ZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJh
+ZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0
+P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VD
+VVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1T
+RUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBTJlXa7cvlkBVXW3tghpZm6uqd3fjAr
+BgNVHRAEJDAigA8yMDI1MDIxNDE1MzY1M1qBDzIwMjcwMjE0MTUzNjUzWjALBgNVHQ8EBAMCBeAw
+MAYKKwYBBAGCpnIDBQQiDCBKRUZFIERFIENPTlRBQklMSURBRCBFIElNUFVFU1RPUzAaBgorBgEE
+AYKmcgMBBAwMCjA5MjcwMzgwODMwFgYKKwYBBAGCpnIDCQQIDAZUQVJRVUkwEQYKKwYBBAGCpnID
+IgQDDAEuMCsGCisGAQQBgqZyAwcEHQwbQ0FTVUFSSU5BIDEwMCBZIFZJQSBBIERBVUxFMB8GCisG
+AQQBgqZyAwIEEQwPU0VHVU5ETyBKQUNLU09OMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAwNzEz
+MTM1MBMGCisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAYBgorBgEE
+AYKmcgMDBAoMCENBU1RJTExPMBEGCisGAQQBgqZyAx4EAwwBLjAjBgorBgEEAYKmcgMKBBUME1NP
+TFZFU0EgRUNVQURPUiBTIEEwHQYKKwYBBAGCpnIDCwQPDA0wOTkwODM5NTU3MDAxMBEGCisGAQQB
+gqZyAx0EAwwBLjAVBgorBgEEAYKmcgMEBAcMBUFZT1ZJMBAGCisGAQQBgqZyAwgEAgwAMA0GCSqG
+SIb3DQEBCwUAA4ICAQBlbJRArwJf2WK4vaL+eZY8C2zMXejHMyFMziK61DPnSA9NQ14B65rCOAQM
+nD2xeVRO6SQ51PBwjgd+XPWaRqz+mPZZTzsmhQvU+VV/MNuo1WCQ8rCT/+RgsNWVAbe5LI8PonA+
+5KZ5cTe6ZXb3zsAu6cVsoGd5IT31wk32evX7PDqUSG8ogBxYr9HuOtVARFCVb+UEU9hUEH5GXplf
+1eB+5FnH69o+HEfqevGXV2RI9mrEMYOF8rqLluBK+kxPjgKcfGowRNrV8zHED3Qy5Ibi/mvN8GHg
+srnaXlmn/lCDOqmMavY/lLz1Uh2LJ1xFvwlUimw5IS6pp4SHHecmCPlnAaTirSknD4+s8kuUtIPu
+sslswakzHpZ5i91OsMX0bR986kzh7kbzclEorp7nEhjC7lJL/f7Ok+lQ3ZyYeyijgesaQCWlyTgO
+QH/LKcAcCFRTejRMeLldL3QZvPqsJA8ESiV+n/dMqZPCk9135DhM8G4G7dTOAoPOMe4rRPMZeE+j
+9WbbgTWvgyNdkoSydJKA4U9ZgSIIUXbqII5pLpwdhXvlNo7lAdI0O1YXNwE2ZT3kNacY51kkqClf
+QSK3ZVbs6BmSvZY6z31zQzFrdOD1xM6fX5ndXXatqctWMQZMa6X6Xg+BqtbCQmWqdz2x5aVXD0LB
+AVbR8qt82/EgoJFI2A==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+oGaKY95/+IbC8zkKWBmU0DN+HKPuu2/JZpomnVwsguvYRpbJAryaXi/y4QLpNIcl/s4jJ8cHhwk1
+LuL4vLwStQsWQ1Ci23bZ5jBcrEeFgE5+fiZ35Lb/kHgJK2NQ7SIN9/QlfjOrjg2Ei6OhFM2YKZx6
+l5AnG9CuDEYVmkNRoLiEPiySlJZ+zdEte6sZ/K9YqzMTbgN0lvPa1Wq4YkWshgQTLJjnEbhMHxq9
+ArVAoZFn4U04Rn+kKooPCF4PAa6PqJc2Tfdyj5OEgJkH5OixWiZcGazb02bkx0rZ30/GaSpQri7/
+BHrSbhBTBmo98UJ0zZGn4xKenREPt+94vUZfTQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature849524-Object425145"><etsi:QualifyingProperties Target="#Signature849524"><etsi:SignedProperties Id="Signature849524-SignedProperties637266"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-08-05T12:16:05-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>UeMFnKgW70x0iH7+rugB939Kc/M=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>2039495351</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-928081"><etsi:Description>GuruSoft S.A Tel.045109312</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+<infoTributaria>
+<ambiente>2</ambiente>
+<tipoEmision>1</tipoEmision>
+<razonSocial>EXRO DEL ECUADOR CIA LTDA</razonSocial>
+<nombreComercial>EXRO DEL ECUADOR CIA LTDA</nombreComercial>
+<ruc>1791861442001</ruc>
+<claveAcceso>0508202601179186144200120010020000032178513903119</claveAcceso>
+<codDoc>01</codDoc>
+<estab>001</estab>
+<ptoEmi>002</ptoEmi>
+<secuencial>000003217</secuencial>
+<dirMatriz>FLORIDAS DE CHANTAG 4TA TRANSVERSAL Y AUTOPISTA E35  SECTOR INTERCAMBIADOR DE PIFO</dirMatriz><agenteRetencion>1</agenteRetencion>
+</infoTributaria>
+<infoFactura>
+<fechaEmision>05/08/2026</fechaEmision>
+<dirEstablecimiento>FLORIDAS DE CHANTAG 4TA TRANSVERSAL Y AUTOPISTA E35  SECTOR INTERCAMBIADOR DE PIFO</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad>	
+<tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+<razonSocialComprador>QUIMPAC ECUADOR S A QUIMPACSA                               </razonSocialComprador>
+<identificacionComprador>0990344760001</identificacionComprador>
+<direccionComprador>AV ROSAVIN LOTE 1 Y CALLE COBRE  KM 16 5 VIA DAULE PASCUALES</direccionComprador>
+<totalSinImpuestos>4160.00</totalSinImpuestos>
+<totalDescuento>0.00</totalDescuento>
+<totalConImpuestos><totalImpuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<baseImponible>4160.00</baseImponible>
+<valor>624.00</valor>
+</totalImpuesto></totalConImpuestos>
+<propina>0.00</propina>
+<importeTotal>4784.00</importeTotal>
+<moneda>DOLAR</moneda>
+<pagos>
+<pago>
+<formaPago>20</formaPago>
+<total>4784.00</total>
+<plazo>60</plazo>
+<unidadTiempo>dias</unidadTiempo>
+</pago>
+</pagos>
+<valorRetIva>0.00</valorRetIva>
+<valorRetRenta>0.00</valorRetRenta>
+</infoFactura>
+<detalles><detalle>
+<codigoPrincipal>POL-004116-ECU-1K</codigoPrincipal>
+<codigoAuxiliar>POL-004116-ECU-1K</codigoAuxiliar>
+<descripcion>EXRO - 651 SACO POR 25 KG</descripcion>
+<cantidad>800.00</cantidad>
+<precioUnitario>5.20</precioUnitario>
+<descuento>0.00</descuento>
+<precioTotalSinImpuesto>4160.00</precioTotalSinImpuesto>
+<impuestos>
+<impuesto>
+<codigo>2</codigo>
+<codigoPorcentaje>4</codigoPorcentaje>
+<tarifa>15.00</tarifa>
+<baseImponible>4160.00</baseImponible>
+<valor>624.00</valor>
+</impuesto>
+</impuestos>
+</detalle></detalles><infoAdicional>
+<campoAdicional nombre="Direccion">AV ROSAVIN LOTE 1 Y CALLE COBRE  KM 16 5 VIA DAULE PASCUALES</campoAdicional>
+<campoAdicional nombre="Telefono">2162660</campoAdicional>
+<campoAdicional nombre="Email">recepcion@quimpac.com.ec</campoAdicional>
+<campoAdicional nombre="Orden de Compra">1000627810</campoAdicional>
+</infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature644645">
+<ds:SignedInfo Id="Signature-SignedInfo872355">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID765011" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature644645-SignedProperties707432">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>i0mV8sizHl0nOz07NC83KUTO3p8=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1140781">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>4ZXKvTSnF4jp0l9C06HW8NxY6cg=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-436276" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>GO3HS43GLQWwd7/NibDjCaBp7AQ=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue505304">
+T69y5M+Z5rjJSiP71Y+UV3dmj+SvWd3GGfhjIMADXaOC2ZOHHxiOd3W/3mtlSjWFvkbWeyWmbFxE
+xmWIn/TLlqkM7mEVL719eYcKW0MD+t+9cEOAbln4ix7VylsAnDQk5Me9ohNt9FGsuf0+83iZ0H7u
+8YY8WwG4QAc39K2npwVL8S6ZRpg8HWJlVU/gdraiK7rsaoSxYvScEBf4cnVW60mzTX+iaMtFnfR9
+32OPHEliYDu6elo5WFfeXHYfdLfWaUIC93jZrRdziG7u054Zgg+KKOxAsxHLK3wYoMMzX2YxwEMf
+qsgGT9HWzoKlXHyGZ4xgkVqesuXtHU95fT1gIg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1140781">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKrDCCCJSgAwIBAgIEIkAkAzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTA1MDEwMDA0MzJaFw0yNzEyMjAyMTI3MDBaMIGdMR0w
+GwYDVQQDDBRFUk5FU1RPIFZBTkVHQVMgSkFSQTEeMBwGA1UEBRMVUEUxMjQyNDAtMzAwNDI1MTkx
+NDI5MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAb
+BgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEB
+BQADggEPADCCAQoCggEBAMZaRZUjUAQ74cJOwBp4dnZ8tv92Rrog3Ao1A8eVkBBx1KA4ZUJV20XA
+7R7S+DnO/MiQ/bZw7PZV4GXofAI0e1OV7lSswqTT+mBNQQnBXU5KcSRZ+fWwjlU8sG7BHXWBAID3
+geScAsyPLTg18WkDZ8jLEBKE9o+J8Etk2KBh+boN7GvZvcyNBXOCY6GMT4hzUsY+4n2pti6C8yQH
+tdiYShrfxIrfYJPbYFNV6nkHsbENBDEtSGYwKvS9oRLgVXTo4VPzLh0V8bv/afX8jjAVQhriUSwD
+9b0+bO1UyLp//oehnsiFhd+kEbPsZlorFxuru0TOROwzaBqA+YgrWR9x0RkCAwEAAaOCBfQwggXw
+MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUH
+AQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpi
+Y2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMCUGA1UdEQQeMByBGmd1c3Rhdm9tb250b3lhQGV4cm8u
+Y29tLmNvMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsGAQUFBwICMEYeRABD
+AGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4AdABhAG4AdABlACAA
+TABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0dHBzOi8vd3d3LnNl
+Y3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0Nl
+cnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50YW50ZSBMZWdhbC5w
+ZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIwgd6gOqA4
+hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmlsZS5jcmyi
+gZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VD
+VVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFD
+SU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6oDiGNmh0
+dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNybDCB4KCB
+3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNh
+L3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJ
+RklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1Ud
+DgQWBBS4IiBXBVaRbrVIEsTbIm1rbsYoxjArBgNVHRAEJDAigA8yMDI1MDUwMTAwMDQzMlqBDzIw
+MzAwNTAxMDAwNDMyWjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9HRVJFTlRFIEdFTkVS
+QUwwGAYKKwYBBAGCpnIDAQQKDAhQRTEyNDI0MDAUBgorBgEEAYKmcgMJBAYMBFBJRk8wEQYKKwYB
+BAGCpnIDIgQDDAEuMCUGCisGAQQBgqZyAwcEFwwVUEFTQUpFIFNOIExPVEUgNiBZIFNOMBcGCisG
+AQQBgqZyAwIECQwHRVJORVNUTzAfBgorBgEEAYKmcgMgBBEMDzAwMjAwMTAwMDk5ODAwODATBgor
+BgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFwYKKwYBBAGCpnIDAwQJ
+DAdWQU5FR0FTMCkGCisGAQQBgqZyAwoEGwwZRVhSTyBERUwgRUNVQURPUiBDSUEgTFREQTAdBgor
+BgEEAYKmcgMLBA8MDTE3OTE4NjE0NDIwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBQGCisGAQQBgqZy
+AwQEBgwESkFSQTAaBgorBgEEAYKmcgMIBAwMCjA5OTk4NDgzODMwDQYJKoZIhvcNAQELBQADggIB
+AC5Ovag01iij0SclWRvZCRkuTWcwxP4qM18g+0+/Zb72XtlaLqy1vqTV1tNs5xjy8mnAc7sGx0m1
+OLo41DNBpeBeO3SMuV3iNK/8P2Qc10+qIemUByuPNkHIjc1GBcUUYmN9DGb9fUQaVcfKEOEls09x
+EGTIWVutGJAxKSg5aEKcmWFP0Su7nbRIryTMMfzv12yxzM9ic/Ofw4ccoepD1V0SpUxPKynNxVB9
+Ra6fmmE/L7OCpBPSmlXeOVbNNr1Bw6NxUPL/H3W82A8rE8cnbHqQo5jhlMDhtN9hG4jhEMzBHD0T
+gFh4VB/qQfTZpgwx9WIfSxi7gs2Vu3MW3ZFvWbuIttqQ4uuEkdz0kRVPOptIny9p74scQNe07rHo
+CLtf5xbmBoPTztTPtZLwzKGk/2O4o5X0SvPHl1u8oUhWuCZJD4ahw9oVod5BAnByLeIMIi2uLQTI
+PZLLXqmB8XtlReg/naCfiS4ZeOYGV/o8cQ162L5tPspoRB4ssZuBfRCvMRQMaLfbAimi+72e796h
+lu+l90BmZVeNdURZKX9GzsvRn/eG4bZ+pt2Hmtfl5o6kGcAOAY80NLKmziA/Bu0vGblwOnaRVObk
+gDl2XL3vBmKxU7UE610q8yOeb+IjUgSzX48C9a+zUgduBrBGkaUp4lm1PLNa7Ht+XHkvYxFIzXsn
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+xlpFlSNQBDvhwk7AGnh2dny2/3ZGuiDcCjUDx5WQEHHUoDhlQlXbRcDtHtL4Oc78yJD9tnDs9lXg
+Zeh8AjR7U5XuVKzCpNP6YE1BCcFdTkpxJFn59bCOVTywbsEddYEAgPeB5JwCzI8tODXxaQNnyMsQ
+EoT2j4nwS2TYoGH5ug3sa9m9zI0Fc4JjoYxPiHNSxj7ifam2LoLzJAe12JhKGt/Eit9gk9tgU1Xq
+eQexsQ0EMS1IZjAq9L2hEuBVdOjhU/MuHRXxu/9p9fyOMBVCGuJRLAP1vT5s7VTIun/+h6GeyIWF
+36QRs+xmWisXG6u7RM5E7DNoGoD5iCtZH3HRGQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature644645-Object273905"><etsi:QualifyingProperties Target="#Signature644645"><etsi:SignedProperties Id="Signature644645-SignedProperties707432"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-08-05T08:09:19-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>6O65X8coUvEoCvtBAmFl33Z/HNY=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>574628867</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-436276"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

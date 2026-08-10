@@ -265,7 +265,7 @@ def list_auto_registro_reglas(solo_activas: bool = False) -> list[dict]:
     cur = conn.cursor()
     try:
         sql = f"""
-            SELECT r.id, r.ruc_proveedor, r.monto, r.motivo, r.centro_costo,
+            SELECT r.id, r.ruc_proveedor, r.monto, r.motivo, r.detalle, r.centro_costo,
                    r.usuario_id, r.enviar_sap_auto, r.activo,
                    u.nombre_completo AS usuario_nombre, u.username AS usuario_username
             FROM {TBL_AUTO_REGISTRO_REGLAS} r
@@ -290,6 +290,7 @@ def list_auto_registro_reglas(solo_activas: bool = False) -> list[dict]:
             "centro_costo": r["centro_costo"],
             "usuario_id": r["usuario_id"],
             "usuario_nombre": r["usuario_nombre"] or r["usuario_username"] or "",
+            "detalle": r["detalle"] or "",
             "enviar_sap_auto": bool(r["enviar_sap_auto"]),
             "activo": bool(r["activo"]),
         }
@@ -299,17 +300,17 @@ def list_auto_registro_reglas(solo_activas: bool = False) -> list[dict]:
 
 def crear_auto_registro_regla(ruc_proveedor: str, monto: float, motivo: str,
                                centro_costo: str, usuario_id: int,
-                               enviar_sap_auto: bool) -> None:
+                               enviar_sap_auto: bool, detalle: str = "") -> None:
     conn = get_db()
     cur = conn.cursor()
     try:
         cur.execute(f"""
             INSERT INTO {TBL_AUTO_REGISTRO_REGLAS}
-                (ruc_proveedor, monto, motivo, centro_costo, usuario_id, enviar_sap_auto, activo)
-            VALUES (?, ?, ?, ?, ?, ?, 1)
+                (ruc_proveedor, monto, motivo, detalle, centro_costo, usuario_id, enviar_sap_auto, activo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 1)
         """, (
             (ruc_proveedor or "").strip(), monto, (motivo or "").strip(),
-            (centro_costo or "").strip(), usuario_id, int(bool(enviar_sap_auto))
+            (detalle or "").strip(), (centro_costo or "").strip(), usuario_id, int(bool(enviar_sap_auto))
         ))
         conn.commit()
     finally:
@@ -320,7 +321,7 @@ def eliminar_auto_registro_regla(regla_id: int) -> None:
     conn = get_db()
     cur = conn.cursor()
     try:
-        cur.execute(f"DELETE FROM {TBL_AUTO_REGISTRO_REGLAS} WHERE id = ?", (regla_id,))
+        cur.execute(f"UPDATE {TBL_AUTO_REGISTRO_REGLAS} SET activo = 0 WHERE id = ?", (regla_id,))
         conn.commit()
     finally:
         conn.close()

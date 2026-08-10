@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<factura version="2.1.0" id="comprobante">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>ACQUE-TECNOLOGIA CA</razonSocial>
+    <nombreComercial>ACQUE-TECNOLOGIA C.A.</nombreComercial>
+    <ruc>0993231622001</ruc>
+    <claveAcceso>0508202601099323162200120010010000044533121521411</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000004453</secuencial>
+    <dirMatriz>BALSAMOS SUR 118 Y V.E. ESTRADA UNICA,URDESA</dirMatriz>
+    <agenteRetencion>1</agenteRetencion>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>05/08/2026</fechaEmision>
+    <dirEstablecimiento>BALSAMOS SUR 118 Y V.E. ESTRADA UNICA,URDESA</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>GUAYAS / GUAYAQUIL / PASCUALES / ROSAVIN LOTE 1 Y COBRE</direccionComprador>
+    <totalSinImpuestos>3349.200000</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>3349.200000</baseImponible>
+        <tarifa>15.000000</tarifa>
+        <valor>502.38</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <importeTotal>3851.58</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>3851.58</total>
+        <plazo>30</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>C602-A</codigoPrincipal>
+      <descripcion>[C602-A] SpectraGuard 311 - KG</descripcion>
+      <cantidad>40.000000</cantidad>
+      <precioUnitario>83.730000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>3349.20</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.000000</tarifa>
+          <baseImponible>3349.200000</baseImponible>
+          <valor>502.38</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Referencia">Fact 001-001-000004453</campoAdicional>
+    <campoAdicional nombre="Vendedor">Garcia Cruzatti Ariana Ivette</campoAdicional>
+    <campoAdicional nombre="E-mail">agarcia@acquetech.com</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature360c76df-a92a-4f85-8db6-e3914353b063">
+<ds:SignedInfo>
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" Id="SignedPropertiesIDaa636b80-bab7-407e-b472-4c649573124f" URI="#Signature360c76df-a92a-4f85-8db6-e3914353b063-SignedPropertiesID22e25817-d048-488d-822b-9adb5275a37a">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>jjs59jFKQq7ZHcJ+OopyfONy7Yw=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificateb8b2de89-3c83-40b6-b42c-95878eee7ffa">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>T+NhxhErUoELLrcDmUesQWguWvo=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#comprobante" Id="Reference-ID-1f55b564-b357-47b3-9e91-5820432b730e">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>ApDybdUynLOgC7qbmHzYw6B4XXM=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue>mJ/R1iWWxliFXQ/mbswpvmef/0bIe/RyqJlYHFmNBDRm/qjpko23XCFXEcWtZkzi2gvde0NsXxCy
+W9kndZdfWnRukPnph8iDEALrGjDc5bTOZikl1zoyFP2zTDyqsuSdQoIPgbKW++He8w/O0UBikMFV
+GDuT+BGGLjrUv09aYP9UwVotqlpOx4O7Jgh3mMTPUkBHW2FAR24/E4a2CImOvEJG8Wk0A6Bww77N
+vuu7pwNJOEXwgYN6Gt+rcv6kOSCQ+iNNMcGbowULMcNaTp/QUNpMCQwmSmE149eiFRrFkd0B5lZp
+BjcirrdZSi1mlFQJrOTU+jFzIKh1Zs7NsjosPA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificateb8b2de89-3c83-40b6-b42c-95878eee7ffa">
+<ds:X509Data>
+<ds:X509Certificate>MIIKnDCCCISgAwIBAgIILpgtPvUrSq0wDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUxMjA0MjA1MTI5WhcNMjgxMjAzMjA1MTI5WjCB
+nTEbMBkGA1UEAwwSQU5UT05JTyBGSU9SRU5aQU5JMSAwHgYDVQQFExcwOTYwNjI0NDE5LTA0MTIy
+NTE2MDExNzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9O
+MR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQC1GYHwFtCbXEZNeigHVDWvNe6NQ3yQub46CT88Td87FSFc/VZM
+t0KTslsj3RLWqF7qvKDG+yPflyqmJPY0BrHCZoDWTX+zdkMLQ/deS1/86NCSVs9b/Z8Za898YJYJ
+lDrWOC32nMLl68R8djZseAX+QzgeOoSilMrLAhjQG4SqkAVow4l9EGoZNiQ8lC9WD3qDI98zCMkL
+91ipWowzZFpVTFEb5T6cXghT1clcbo6ou9qvBvMuUGK5kliY9HPFcJnwg+NCvNVtY5PBQHSMwE96
+5LjFJPu61pYPcNyRnIfCQ9flkPJW7ngsQSCpmVF4bRYcwI8YOSn7AI88rtNpKiZfAgMBAAGjggXg
+MIIF3DAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsG
+AQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVj
+L2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDAjBgNVHREEHDAagRhtanJlZ2FsYWRvQGFjcXVl
+dGVjaC5jb20wggEVBgNVHSAEggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5E
+AEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUA
+IABMAGUAZwBhAGwwgaEGCisGAQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cu
+c2VjdXJpdHlkYXRhLm5ldC5lYy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVf
+Q2VydGlmaWNhZG9zL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2Fs
+LnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB3qA6
+oDiGNmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxlLmNy
+bKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBT
+RUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JN
+QUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqgOIY2
+aHR0cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3JsMIHg
+oIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpi
+Y2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFE
+IERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VS
+VElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYD
+VR0OBBYEFO3wN9vadJ04vzBnKeO9nn6z8i2zMCsGA1UdEAQkMCKADzIwMjUxMjA0MjA1MTI5WoEP
+MjAyODEyMDMyMDUxMjlaMAsGA1UdDwQEAwIF4DAaBgorBgEEAYKmcgMFBAwMClBSRVNJREVOVEUw
+GgYKKwYBBAGCpnIDAQQMDAowOTYwNjI0NDE5MBYGCisGAQQBgqZyAwkECAwGVEFSUVVJMBEGCisG
+AQQBgqZyAyIEAwwBLjAZBgorBgEEAYKmcgMHBAsMCVBSSU5DSVBBTDAXBgorBgEEAYKmcgMCBAkM
+B0FOVE9OSU8wHwYKKwYBBAGCpnIDIAQRDA8wMDEwMDIwMDEwNzcyMjYwEwYKKwYBBAGCpnIDIQQF
+DANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBoGCisGAQQBgqZyAwMEDAwKRklPUkVOWkFO
+STAkBgorBgEEAYKmcgMKBBYMFEFDUVVFIFRFQ05PTE9HSUEgQyBBMB0GCisGAQQBgqZyAwsEDwwN
+MDk5MzIzMTYyMjAwMTARBgorBgEEAYKmcgMdBAMMAS4wEQYKKwYBBAGCpnIDBAQDDAEuMBoGCisG
+AQQBgqZyAwgEDAwKMDk4NzY3MjE5MTANBgkqhkiG9w0BAQsFAAOCAgEApR7QhYLtORiztjgfIVlg
+3qhTZg8UzwRBC69ZybN8O+z1wnZ4BuYJpo8fkzGcBQfyHX6PtqTbFG5Mb1H3j8I5XPRPm8+NwUpj
+Iu3rsvVCDtSfuhotlNI59oyZCvo9Izs0IXctoHW4xV9lr+QiVX1Rf0k8IfV4bcV5hS0IcpgZHmSk
+h5ngbUVL4ifNRKu46IJG9N5PqWqhyMNcKbgFkrCYTwMhiAJlvrRHRs0mB+taYC7a1nwZv7WTArNe
+T/gExD1xISeKcjEyIjKr4vdamSwJ6WVmyyIJfiX/qLS3TASgM0l+WGMWDqrb+pJ/k00XfX/Yo0lF
+B1zY6L1i3QuYIJ7f+LJLAPfgmDb1UxS99BBn3UnAf1y4my7HFTA6KPSYMvXG2iY6BLZHbvzkAX6Q
+6ikRy/nirv6j6je/COdkzSprTyS0rRfdGL5mhcmRyB5SLK7S5BuaFHrp8sPAIwbFSCk/ULrfTYe8
+9rfsxNlXDDRU5U5j20koMduHbtOo4hOIe0dsw4DJ4PxHWVSCDVpy6u/tqrzAhKCDrCDWF3TohHTg
+1hJMMZA4aKzYH+9mYczh8WIAmEuPmlf9fZ4IbfG/nqW4WPz8zBH6pggbKEHtZYpr85NYabGZRh14
+qWpxEhdvzTIk5yxjMmL17ZfBXWSQIS7t6L+rO7vO5crf5tZY+BASVbY=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>tRmB8BbQm1xGTXooB1Q1rzXujUN8kLm+Ogk/PE3fOxUhXP1WTLdCk7JbI90S1qhe6rygxvsj35cq
+piT2NAaxwmaA1k1/s3ZDC0P3Xktf/OjQklbPW/2fGWvPfGCWCZQ61jgt9pzC5evEfHY2bHgF/kM4
+HjqEopTKywIY0BuEqpAFaMOJfRBqGTYkPJQvVg96gyPfMwjJC/dYqVqMM2RaVUxRG+U+nF4IU9XJ
+XG6OqLvarwbzLlBiuZJYmPRzxXCZ8IPjQrzVbWOTwUB0jMBPeuS4xST7utaWD3DckZyHwkPX5ZDy
+Vu54LEEgqZlReG0WHMCPGDkp+wCPPK7TaSomXw==
+</ds:Modulus>
+<ds:Exponent>AQAB
+</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object><etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature360c76df-a92a-4f85-8db6-e3914353b063" Id="Signature360c76df-a92a-4f85-8db6-e3914353b063"><etsi:SignedProperties Id="Signature360c76df-a92a-4f85-8db6-e3914353b063-SignedPropertiesID22e25817-d048-488d-822b-9adb5275a37a"><etsi:SignedSignatureProperties><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>NWn9UYnrJcdzTENn3caone6ZdUQ=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>3357483270629182125</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate><etsi:SignaturePolicyIdentifier><etsi:SignaturePolicyImplied/></etsi:SignaturePolicyIdentifier></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-1f55b564-b357-47b3-9e91-5820432b730e"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

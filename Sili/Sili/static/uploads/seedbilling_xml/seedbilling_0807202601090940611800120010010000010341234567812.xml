@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>JORGE VINICIO ORTEGA FREIRE</razonSocial>
+        <nombreComercial>JORGE VINICIO ORTEGA FREIRE</nombreComercial>
+        <ruc>0909406118001</ruc>
+        <claveAcceso>0807202601090940611800120010010000010341234567812</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>001</ptoEmi>
+        <secuencial>000001034</secuencial>
+        <dirMatriz>KM 16 1/2 VIA A DAULE</dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>08/07/2026</fechaEmision>
+        <dirEstablecimiento>KM 16 1/2 VIA A DAULE</dirEstablecimiento>
+        <obligadoContabilidad>NO</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <guiaRemision>001-001-000001262</guiaRemision>
+        <razonSocialComprador>QUIMPAC - ECUADOR S.A</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <direccionComprador>KM 16,5 VIA A DAULE</direccionComprador>
+        <totalSinImpuestos>1040.00</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>1040.00</baseImponible>
+                <tarifa>15.0</tarifa>
+                <valor>156.00</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0.00</propina>
+        <importeTotal>1196.00</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>1196.0</total>
+                <plazo>30.0</plazo>
+                <unidadTiempo>Dias</unidadTiempo>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>PTM100QP</codigoPrincipal>
+            <descripcion>TAMBOR METALICO BOCA PEQUENA PT QUIMPAC</descripcion>
+            <cantidad>80.000</cantidad>
+            <precioUnitario>13.000</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>1040.00</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.00</tarifa>
+                    <baseImponible>1040.00</baseImponible>
+                    <valor>156.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="DIRECCION:">KM 16,5 VIA A DAULE</campoAdicional>
+        <campoAdicional nombre="EMAIL:">compras.electronica@quimpac.com.ec</campoAdicional>
+        <campoAdicional nombre="OP">1000624560</campoAdicional>
+        <campoAdicional nombre="CI">5000170071</campoAdicional>
+    </infoAdicional>
+<ds:Signature Id="Signature981377" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo161486">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID221835" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature981377-SignedProperties313152">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>nLyMjWkM+SCQwx/WEhsAbO6DofY=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1512836">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>UxAWkJcT5n5eRdQZOZ5xZNkWAMA=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-673964" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>7GQBApQQNdmMZL9ksEJ8SkFU8BA=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue43136">
+GL1eVUQSz3RNCr8YYYWEeC5RV/YqkJe+63gLhqvUFrIOCHifjAGaLNFyaINAGVi5nk3rYnCFJ44u
+GvT76EnpJ9DIJGib/Os+YzuGlOJsh8C8aEs5tOPP9pXxJ2x8IRTGmCVSGts2B0DfpopFiYlCZVJ0
+xd1fxG19wZMbO9kc37zqUmRsRhi2/SR5/UcWiA2nz4pQKU4ebH+tsjqCMWooTMW1QgCrlD6yk7Bs
+k2m5KAkRuA0cxQb5AEmMKy37MEGKoASgqLUrXiZk7iprP/SCv6dnCjb3JnZ3RkR77TJt89e9IueH
+1wpN2LVgNghxGuurbmkQ7dGO69ukdlftoFcZMg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1512836">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJbjCCB1agAwIBAgIIOrn1wqvjqfAwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTIzMTExMDE2MjMwMFoXDTI4MTEwODE2MjMwMFowgZwxCzAJBgNVBAYTAkVDMRYwFAYDVQQEDA1P
+UlRFR0EgRlJFSVJFMRYwFAYDVQQqDA1KT1JHRSBWSU5JQ0lPMRkwFwYDVQQFExBJRENFQy0wOTA5
+NDA2MTE4MSQwIgYDVQQDDBtKT1JHRSBWSU5JQ0lPIE9SVEVHQSBGUkVJUkUxHDAaBgNVBGEME1RJ
+TkVDLTA5MDk0MDYxMTgwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCH3mmRpOXT
+35VeHca+cX88BjiwWv/HOo79IwOk9vebxU7IfurXXzKTqkfVQvg0XchuZD52MYB9EKc0bRmZaBUU
+MkOPmCZx+zCrXorBtEp/AuWc7JxfYPXcs6YWRD6AeSQMdKcLABGF5oY5ywpA5X9eawUnu4ON+OpX
+RIvk5uXTGblmwUbXrBeUDAX3RAoPIROY1cpk6kOIzVe0LfJOjOThNj7t+Xmd+q9eJJ6ryqyqRc7f
+u+Sg+/AYyw2WIxx1WEiU4cq6Vi5rqSBfbH121CsAVsYLrgVU5yAJYgJF4+Niq8CyGq3TKb04oZSd
+On3gibUIIfXwf/01ALSD4epqzsH9AgMBAAGjggSUMIIEkDAbBgsrBgEEAYLxNmYDAQQMDAowOTA5
+NDA2MTE4MB4GCysGAQQBgvE2ZgMLBA8MDTA5MDk0MDYxMTgwMDEwgdcGCCsGAQUFBwEBBIHKMIHH
+MFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMvZG93bmxvYWQvdHNw
+X2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipodHRwOi8vb2NzcDEu
+dWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6Ly9vY3NwMi51
+YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQU2+EKuxyGEXE4NFfM4oDmJ+zR
+kHQwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGydJJz/TCBmQYDVR0g
+BIGRMIGOMIGLBgwrBgEEAYLxNmYCAQEwezA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cudWFuYXRh
+Y2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzBABggrBgEFBQcCAjA0DDJDRVJUSUZJQ0FETyBERSBQ
+RVJTT05BIE5BVFVSQUwgTyBGSVNJQ0EgRU4gQVJDSElWTzCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
+dHRwOi8vY3JsMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3JkaW5hZGEuY3Js
+MECgPqA8hjpodHRwOi8vY3JsMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9jcmwvQ0Eyc3Vib3Jk
+aW5hZGEuY3JsMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQw
+ggHKBgNVHREEggHBMIIBvYEgam9yZ2Uub3N3YWxkby5vcnRlZ2FAaG90bWFpbC5jb22gGwYLKwYB
+BAGC8TZmAwGgDAwKMDkwOTQwNjExOKAeBgsrBgEEAYLxNmYDAqAPDA1KT1JHRSBWSU5JQ0lPoBcG
+CysGAQQBgvE2ZgMDoAgMBk9SVEVHQaAXBgsrBgEEAYLxNmYDBKAIDAZGUkVJUkWgcwYLKwYBBAGC
+8TZmAwegZAxiTk1FUk86IFMgTiBDQVJSRVRFUkE6IFZJQSBBIERBVUxFIEtJTE1FVFJPOiAxNiBD
+T05KVU5UTzogUEFSUS4gSU5ELiBQQVNDVUFMRVMgUkVGRVJFTkNJQTogRlJFTlRFIEGgHwYLKwYB
+BAGC8TZmAwigEAwOMDA1OTM5ODQ1NjY2NjigGgYLKwYBBAGC8TZmAwmgCwwJR1VBWUFRVUlMoB4G
+CysGAQQBgvE2ZgMLoA8MDTA5MDk0MDYxMTgwMDGgEwYLKwYBBAGC8TZmAwygBAwCRUOgKQYLKwYB
+BAGC8TZmAzKgGgwYUEVSU09OQSBOQVRVUkFMIE8gRklTSUNBoBgGCysGAQQBgvE2ZgMzoAkMB0FS
+Q0hJVk8wDQYJKoZIhvcNAQELBQADggIBAAZFR1K60/IC1rgzQgRHWdd93GCmP+nd8e+CVDwslvmD
+DggMRThgbJnl+etc3rvbYBaSYqF9LOKZmFmqmU8yXf9DRPeHKZ/mqTtYstOg1tmK46DK8w8a89fg
+cVu5v//PJpghnerhGJCVo+HuiTD962+KUcjZTGGw1ZIzjsdg5cuXi53XtWmvGuuNfSGvso2AzZLQ
+4S3GG6pTppFIAT7TxXDjGv/ZEAi6NK24/pag1gpc+uSaNx1zaXuIuGib1k/TIsHiNizwm+lr2ejf
+95a5p1YY1ZX8vZz7PZdJyDX46B0xnIf+w6aR2RuGNlXmWJwSff5RXBv0Jl9UbRo6R6TaHjxz6qN+
+m4R+oALhhtuaNioUhQIh2zC8UbtAA9mLnfShP4mtU72i4iWqPWqtonzX0bXQk7tpzhBffSGcq8gt
+Sg2qQJhIhwqGaq+J/dl8urLgU/+0Of/8M7tWJTa9XB7xwUp/fFtZSR4jtIyVZsvcxNAGHf93+XBS
+bx8RFK8KJO3SYZXc7cw8qDmkThBFlgIpiI1cA5AHVynWP+iHgI9eAyb9ypvMq58VagWF404Iid8O
+jZVXprB19I8ZKwGu3NHlXzFIOfi1/G6ld/8Pu6Sx7BL773qliephLXlBgebOynYw19HrMWMKFuBp
+2ye7sk9tmq0HnkT4tF/N7O8HO48AKSFh
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+h95pkaTl09+VXh3GvnF/PAY4sFr/xzqO/SMDpPb3m8VOyH7q118yk6pH1UL4NF3IbmQ+djGAfRCn
+NG0ZmWgVFDJDj5gmcfswq16KwbRKfwLlnOycX2D13LOmFkQ+gHkkDHSnCwARheaGOcsKQOV/XmsF
+J7uDjfjqV0SL5Obl0xm5ZsFG16wXlAwF90QKDyETmNXKZOpDiM1XtC3yTozk4TY+7fl5nfqvXiSe
+q8qsqkXO37vkoPvwGMsNliMcdVhIlOHKulYua6kgX2x9dtQrAFbGC64FVOcgCWICRePjYqvAshqt
+0ym9OKGUnTp94Im1CCH18H/9NQC0g+Hqas7B/Q==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature981377-Object1015864"><etsi:QualifyingProperties Target="#Signature981377"><etsi:SignedProperties Id="Signature981377-SignedProperties313152"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-08T12:56:21-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>yPWbWVCVLtO1GNhNKhg8fPfnKOE=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>4231683541347576304</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-673964"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

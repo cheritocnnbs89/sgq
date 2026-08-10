@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>0608202601099017689200120050110000615121234567811</numeroAutorizacion>
+    <fechaAutorizacion>2026-08-06T15:16:21-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+  &lt;infoTributaria&gt;
+    &lt;ambiente&gt;2&lt;/ambiente&gt;
+    &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+    &lt;razonSocial&gt;GERONIMO ONETO GERONETO S.A.&lt;/razonSocial&gt;
+    &lt;nombreComercial&gt;GERONETO S.A.&lt;/nombreComercial&gt;
+    &lt;ruc&gt;0990176892001&lt;/ruc&gt;
+    &lt;claveAcceso&gt;0608202601099017689200120050110000615121234567811&lt;/claveAcceso&gt;
+    &lt;codDoc&gt;01&lt;/codDoc&gt;
+    &lt;estab&gt;005&lt;/estab&gt;
+    &lt;ptoEmi&gt;011&lt;/ptoEmi&gt;
+    &lt;secuencial&gt;000061512&lt;/secuencial&gt;
+    &lt;dirMatriz&gt;KM 11.5 VIA A DAULE - AV. 43 NO (TECAS) Y AV. LUIS ROBLES PLAZA&lt;/dirMatriz&gt;
+  &lt;/infoTributaria&gt;
+  &lt;infoFactura&gt;
+    &lt;fechaEmision&gt;06/08/2026&lt;/fechaEmision&gt;
+    &lt;dirEstablecimiento&gt;KM 11.5 VIA A DAULE - AV. 43 NO (TECAS) Y AV. LUIS ROBLES PLAZA&lt;/dirEstablecimiento&gt;
+    &lt;contribuyenteEspecial&gt;198&lt;/contribuyenteEspecial&gt;
+    &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+    &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+    &lt;razonSocialComprador&gt;QUIMPAC ECUADOR  S.A QUIMPACSA&lt;/razonSocialComprador&gt;
+    &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+    &lt;direccionComprador&gt;KM. 16.5 VIA DAULE PARQUE INDUSTRIAL&lt;/direccionComprador&gt;
+    &lt;totalSinImpuestos&gt;293.64&lt;/totalSinImpuestos&gt;
+    &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+    &lt;totalConImpuestos&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;293.64&lt;/baseImponible&gt;
+        &lt;valor&gt;44.05&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+      &lt;totalImpuesto&gt;
+        &lt;codigo&gt;2&lt;/codigo&gt;
+        &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+        &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+        &lt;valor&gt;0&lt;/valor&gt;
+      &lt;/totalImpuesto&gt;
+    &lt;/totalConImpuestos&gt;
+    &lt;propina&gt;0.00&lt;/propina&gt;
+    &lt;importeTotal&gt;337.69&lt;/importeTotal&gt;
+    &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+    &lt;pagos&gt;
+      &lt;pago&gt;
+        &lt;formaPago&gt;20&lt;/formaPago&gt;
+        &lt;total&gt;337.69&lt;/total&gt;
+        &lt;plazo&gt;30&lt;/plazo&gt;
+        &lt;unidadTiempo&gt;DIAS&lt;/unidadTiempo&gt;
+      &lt;/pago&gt;
+    &lt;/pagos&gt;
+  &lt;/infoFactura&gt;
+  &lt;detalles&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;000710&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TC NEGRO 4X4" X 3.0MM&lt;/descripcion&gt;
+      &lt;cantidad&gt;2.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;59.300000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;118.60&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;118.60&lt;/baseImponible&gt;
+          &lt;valor&gt;17.79&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+    &lt;detalle&gt;
+      &lt;codigoPrincipal&gt;001309&lt;/codigoPrincipal&gt;
+      &lt;descripcion&gt;TREC NEGRO 100 X 50 X 3.0 MM&lt;/descripcion&gt;
+      &lt;cantidad&gt;4.000000&lt;/cantidad&gt;
+      &lt;precioUnitario&gt;43.760000&lt;/precioUnitario&gt;
+      &lt;descuento&gt;0.00&lt;/descuento&gt;
+      &lt;precioTotalSinImpuesto&gt;175.04&lt;/precioTotalSinImpuesto&gt;
+      &lt;impuestos&gt;
+        &lt;impuesto&gt;
+          &lt;codigo&gt;2&lt;/codigo&gt;
+          &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+          &lt;tarifa&gt;15&lt;/tarifa&gt;
+          &lt;baseImponible&gt;175.04&lt;/baseImponible&gt;
+          &lt;valor&gt;26.26&lt;/valor&gt;
+        &lt;/impuesto&gt;
+      &lt;/impuestos&gt;
+    &lt;/detalle&gt;
+  &lt;/detalles&gt;
+  &lt;infoAdicional&gt;
+    &lt;campoAdicional nombre="EMAIL"&gt;recepcion@quimpac.com.ec&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="DIRECCION"&gt;KM. 16.5 VIA DAULE PARQUE INDUSTRIAL&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="PLAZO_PAGO"&gt;30 DIAS CREDITO&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="VENCIMIENTO"&gt;05/09/2026&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="REFERENCIA"&gt;FAC-01-361265&lt;/campoAdicional&gt;
+    &lt;campoAdicional nombre="ORDEN DE COMPRA"&gt;OC 1000628020 DOC MAT 5000196338 GUIA 005-011-00064416&lt;/campoAdicional&gt;
+  &lt;/infoAdicional&gt;
+&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature244251"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo233654"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID543631" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature244251-SignedProperties539117"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;b/jIPdA7IR1QJmMf19Mi+MgcKEg=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate637793"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;EMbsGse5xLPUdkT2c+8gL8vPLGY=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-330979" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;fbG9i/zCVuumUkFxGUyWLl3ugGI=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue309243"&gt;
+XH9YeHGnsoNfv7RCG0P8mMItVX7erCo20G6AbWJsc64diG7JD5BLPb5w7d+ChPHIThq4jYAtyJwU
+KWt5jiVBjezFyUQ0w7xpXk/M2FLoD06vyEQkOiz3BsKuNU1Jd4WqSuH3/7/3ztClpnYsl35jh6T2
+3tL5Y5HqLG/yX0A4hYcTPt7HlThfM2cI/TwCv5ujc5HiyEBa+nr1EZ+LEBqmQ5XaHpa6u2Nsy2P6
+Q/uti5X+J2cPiKJbJ5BCR3y9BU+wpC3yFpYU9tefbxTfrsplqkd7Ji3e+HCd69q9DF5FRyLyKWmE
+a6HNiLWYnlhwlV9evHfrGCkGKTg+8T/tYFWR0w==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate637793"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIKAzCCB+ugAwIBAgIEZefQqjANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV
+BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB
+QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTI2MDIxMjE0NDMyMVoXDTI4MDIxMjE1MTMy
+MFowgbExCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw
+NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w
+DAYDVQQHEwVRVUlUTzE1MBEGA1UEBRMKMDAwMDcxMDA1NDAgBgNVBAMTGUpVQU4gSkFWSUVSIE9O
+RVRPIFBFUkVJUkEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDCxNvmmeRal8ZBHMSG
+505oQ6suX8IdTQ211DEk95+OuKxRjcRI74avh+TCsL3PPSAMhNFAfaXXDpr2+VmgBVMFuaijHVkx
+PdeCFGM8NWhpIUgRMmeD5mkTD2TYRr4OdmB+lM7uIGDcLLT2MTlgwHQNzCkFg5RMKMW56yfINr1C
+3RTQDF0DrDzykOmrIFhmBPtg+UNfzz71trlypWNteb/1VM0VJafGa4OO9RR8vyGCP6QGzDmZU8DZ
+fALlwf+jYJSZBgBtI297E6ID0y9GbsPeornrHanXrF2l9XktcBOQEbmWtdS6As4OkrHzQKAsRa0B
+jm5KpOY4lO/BExvL7mVvAgMBAAGjggUvMIIFKzALBgNVHQ8EBAMCBsAwZwYDVR0gBGAwXjBcBgsr
+BgEEAYKoOwICATBNMEsGCCsGAQUFBwIBFj9odHRwOi8vd3d3LmVjaS5iY2UuZWMvcG9saXRpY2Et
+Y2VydGlmaWNhZG8vcGVyc29uYS1qdXJpZGljYS5wZGYwgZEGCCsGAQUFBwEBBIGEMIGBMD4GCCsG
+AQUFBzABhjJodHRwOi8vb2NzcC5lY2kuYmNlLmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2Nz
+cDA/BggrBgEFBQcwAYYzaHR0cDovL29jc3AxLmVjaS5iY2UuZWMvZWpiY2EvcHVibGljd2ViL3N0
+YXR1cy9vY3NwMCwGCisGAQQBgqg7AwoEHhMcR0VST05JTU8gT05FVE8gR0VST05FVE8gUy5BLjAd
+BgorBgEEAYKoOwMLBA8TDTA5OTAxNzY4OTIwMDEwGgYKKwYBBAGCqDsDAQQMEwowOTE0Nzk4ODA2
+MBsGCisGAQQBgqg7AwIEDRMLSlVBTiBKQVZJRVIwFQYKKwYBBAGCqDsDAwQHEwVPTkVUTzAXBgor
+BgEEAYKoOwMEBAkTB1BFUkVJUkEwIgYKKwYBBAGCqDsDBQQUExJHRVJFTlRFIEZJTkFOQ0lFUk8w
+OAYKKwYBBAGCqDsDBwQqEyhVUkIuIFJJVklFUkEgQ0xVQiBLTSAzLjUgVklBIFNBTUJPUk9ORE9O
+MBkGCisGAQQBgqg7AwgECxMJMDQzOTA2MjYyMBsGCisGAQQBgqg7AwkEDRMLU0FNQk9ST05ET04w
+FwYKKwYBBAGCqDsDDAQJEwdFQ1VBRE9SMCAGCisGAQQBgqg7AzMEEhMQU09GVFdBUkUtQVJDSElW
+TzAfBgNVHREEGDAWgRRqam9uZXRvQGdlcm9uZXRvLmNvbTCCAeEGA1UdHwSCAdgwggHUMIIB0KCC
+AcygggHIhoHWbGRhcDovL2JjZXFsZGFwc3VicDEuYmNlLmVjL2NuPUNSTDIzMzEsY249QUMlMjBC
+QU5DTyUyMENFTlRSQUwlMjBERUwlMjBFQ1VBRE9SLGw9UVVJVE8sb3U9RU5USURBRCUyMERFJTIw
+Q0VSVElGSUNBQ0lPTiUyMERFJTIwSU5GT1JNQUNJT04tRUNJQkNFLG89QkFOQ08lMjBDRU5UUkFM
+JTIwREVMJTIwRUNVQURPUixjPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZYY0aHR0
+cDovL3d3dy5lY2kuYmNlLmVjL0NSTC9lY2lfYmNlX2VjX2NybGZpbGVjb21iLmNybKSBtjCBszEL
+MAkGA1UEBhMCRUMxIjAgBgNVBAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsT
+LkVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcT
+BVFVSVRPMSUwIwYDVQQDExxBQyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMRAwDgYDVQQDEwdD
+UkwyMzMxMCsGA1UdEAQkMCKADzIwMjYwMjEyMTQ0MzIxWoEPMjAyODAyMTIxNTEzMjBaMB8GA1Ud
+IwQYMBaAFEii3yMfHfgsUXqMA81JMqUJwZSrMB0GA1UdDgQWBBTnN/+YzFBQFIp0rBUsoz1HxdAv
+KTAJBgNVHRMEAjAAMBoGCSqGSIb2fQdBAAQNMAsbBVYxMC4wAwIEMDANBgkqhkiG9w0BAQsFAAOC
+AgEAJqeGRhfwhtlI+K1ooia7L844REkPe3gkyFAYZcy4ZQTIl3NdDUtf9s/g7NLUlTnK2t9FBkhS
+Ev7sUkGSzS9ksxrHUGKgDtkB0ell5yJ3qkjT7We4smxadZ8mGPXmmDPnRiGuCSwkBp9xMV2h7kRc
+e8r/BFQ+RjjuwM28XM0sa6if3+xcKwLz2DrAt8YYXJcpVh2y1tiV2NdCobK7eIuV7GURcaClFHFq
+U8WoeETVYj1x2GKvd9Vh/vxxy+hyMjAJ03m9O/m436fLx1/tNnl4Ouv6teYKy+8Oj/bq0eC6QxF9
+sQISIMWHy7bGyC7XpLZzc6HAJA1ePqc1ycZQs9ACCUGQub/8V4dSsA5IEWTz81hE1kbw/aiHQC4I
+pcI3TorXJshjPVAqfCZTFOEs1Lt+jfvWUDwZXahJpGrMrL22M/EQ/ZKlA5L6zOtmdT0pl2nGx6zX
+F5zcSNz0Z05l8W7jmIjWZOPTTaSNa7Eys7DBP61B8oJJnCGlDjx/6zzwXkJZVf2ynfOaBWqIPm2M
+bIvDVnG+7vMELQXCym1w3TM8UR/gNlOxgVD+eZHR80TrHEiyv5rtIabvdmjf/T3L/DVL4Ro8NcZB
+r4LHMcAQ6EmeF666dpp60KvdM2E6CWSM249eSqAWnVdKASOiRWnAaZQmKtVdK5JbvGWfkBWjVliY
+0NA=
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+wsTb5pnkWpfGQRzEhudOaEOrLl/CHU0NtdQxJPefjrisUY3ESO+Gr4fkwrC9zz0gDITRQH2l1w6a
+9vlZoAVTBbmoox1ZMT3XghRjPDVoaSFIETJng+ZpEw9k2Ea+DnZgfpTO7iBg3Cy09jE5YMB0Dcwp
+BYOUTCjFuesnyDa9Qt0U0AxdA6w88pDpqyBYZgT7YPlDX88+9ba5cqVjbXm/9VTNFSWnxmuDjvUU
+fL8hgj+kBsw5mVPA2XwC5cH/o2CUmQYAbSNvexOiA9MvRm7D3qK56x2p16xdpfV5LXATkBG5lrXU
+ugLODpKx80CgLEWtAY5uSqTmOJTvwRMby+5lbw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature244251-Object942822"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature244251"&gt;
+                &lt;etsi:SignedProperties Id="Signature244251-SignedProperties539117"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-08-06T15:16:20-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;UAbHu8F5zeB+TIxBP1CD+8lcYmw=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;1709691050&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-330979"&gt;
+                            &lt;etsi:Description&gt;Comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

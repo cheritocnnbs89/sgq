@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><factura version="2.1.0" id="comprobante">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>SECADO Y TRATADO DE MADERA SETRAMAD CIA. LTDA.</razonSocial>
+    <nombreComercial>SECADO Y TRATADO DE MADERA SETRAMAD CIA. LTDA.</nombreComercial>
+    <ruc>0992716371001</ruc>
+    <claveAcceso>1607202601099271637100120010030000034157637035612</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>003</ptoEmi>
+    <secuencial>000003415</secuencial>
+    <dirMatriz>KM. 43 VÍA MANABÍ, AV TELÉGRAFO</dirMatriz>
+    <agenteRetencion>1</agenteRetencion>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>16/07/2026</fechaEmision>
+    <dirEstablecimiento>KM. 43 VÍA MANABÍ, AV TELÉGRAFO</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>Km 16 vía a daule por cervecería nacional</direccionComprador>
+    <totalSinImpuestos>1340.00</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>1340.00</baseImponible>
+        <valor>201.00</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>1541.00</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>1541.00</total>
+        <plazo>15</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>PALL-REC-PALE-01</codigoPrincipal>
+      <codigoAuxiliar>HAID</codigoAuxiliar>
+      <descripcion>[PALL-REC-PALE-01] PALL-REC-PALE-AME-120x120X13CM</descripcion>
+      <cantidad>200.000000</cantidad>
+      <precioUnitario>6.700000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1340.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1340.00</baseImponible>
+          <valor>201.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="OC">1000625225</campoAdicional>
+    <campoAdicional nombre="GUIA DE REMISION">5376</campoAdicional>
+    <campoAdicional nombre="INGRESO">5000177041</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signaturef4328516-142d-46b1-b54d-ee01cec48712">
+<ds:SignedInfo>
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" Id="SignedPropertiesID92dfaf92-15a3-4881-abcb-a0bf8862b73e" URI="#Signaturef4328516-142d-46b1-b54d-ee01cec48712-SignedPropertiesIDc6d94d39-f44d-4ae4-8721-7b4fb2268870">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>0dWOQ8/MVG7MydxN6siJwglTMwM=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificatef4ff6c42-3bd9-4957-98d4-331c0fc0116f">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>ZoSgJijSzn038t+1a0fjfdVuZGU=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#comprobante" Id="Reference-ID-49c9774c-4d6d-4310-aa75-c914a1d30a99">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>g8lHViO4ydzHHY6+Rm7hN9MkFpQ=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue>VFyengKQ8uN4/wDccYpyMqkWJPvSNmQR/SY+zHW6J86PeRgKdPo7p5wbO03LyLwUwWAVIVP9oEFU
+UnlCa4tBQCmrb+CYdok9XqRcQ8RhHo4JclOxkLGYZOZz39emejlopSEXdsDRZjcnLkJ10CroBULz
+oBer/xFCqqWYbAtnaXsdJSBw+za/HEF1YTZuwmiZ9FJvNhrXofEAeNUlTJHUEWrfSVpJABH402u+
+5ye6cNMvx8yarC8rIqUYhK9CoilzdoFshQQGRRgXYPH0F1eFyOHdbyi8Iw5ZUDnTS6cQhfWEgWBn
+sDNU9up212RflSJQ4Xv0eP1FoFPC4OUVoNC5Ug==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificatef4ff6c42-3bd9-4957-98d4-331c0fc0116f">
+<ds:X509Data>
+<ds:X509Certificate>MIIJ6TCCB9GgAwIBAgIIFe8gaCQHdOYwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw
+QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv
+bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB
+MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X
+DTI0MDgyNzIwMzMwMFoXDTI2MDgyNzIwMzMwMFowgeExCzAJBgNVBAYTAkVDMTcwNQYDVQQKDC5T
+RUNBRE8gWSBUUkFUQURPIERFIE1BREVSQSBTRVRSQU1BRCBDSUEuIExUREEuMRAwDgYDVQQMDAdH
+RVJFTlRFMRYwFAYDVQQEDA1NQU5aQU5PIFBBTE1BMRMwEQYDVQQqDApKVUFOIFBBQkxPMRkwFwYD
+VQQFExBJRENFQy0wMTAzMTA0NzgyMSEwHwYDVQQDDBhKVUFOIFBBQkxPIE1BTlpBTk8gUEFMTUEx
+HDAaBgNVBGEME1ZBVEVDLTA5OTI3MTYzNzEwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+AoIBAQCJ9YbX4nJ6Xgnh2GYNHVlF5JdpfGMJ8p16MWE/5lHWF6NF7XJY7PNKRJiGvtOXcKoJFJk8
+ueb/NXd6aVEHki5Ur1gP+N77La0G96LFJ4IKo2HdG4d8ts+ZFoe5WlXGUQ0xCUj6lVwXqRckbMhA
+1rFthILQ474kfRgqGqKTdxRbFmBfdTayjnpdux38WJHThaw2lWPftQWu/5sioNKcaMJn2VzSKZnt
+uPUG6YseN28IqPb2BOiwSE2J07cYTt+NiL0mrMLtv7ftLYvfi32MidctnV8f1jFWEKiRFtXszNts
+GCdVec+jmnpSHGg8jpaI+bWZkWZROG9jU/5OvxHnb+RjAgMBAAGjggTKMIIExjAbBgsrBgEEAYLx
+NmYDAQQMDAowMTAzMTA0NzgyMB4GCysGAQQBgvE2ZgMLBA8MDTA5OTI3MTYzNzEwMDEwgdcGCCsG
+AQUFBwEBBIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMv
+ZG93bmxvYWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipo
+dHRwOi8vb2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0
+dHA6Ly9vY3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQUcCYvXW73
+YdLUA6IpwoBgqHr9cQswDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGy
+dJJz/TCBjgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6
+Ly93d3cudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJU
+SUZJQ0FETyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6
+aHR0cDovL2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNy
+bDBAoD6gPIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9y
+ZGluYWRhLmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwME
+MIICCwYDVR0RBIICAjCCAf6BHm5vdGlmaWNhY2lvbmVzZmlybWFzQHNpaWdvLmNvbaAbBgsrBgEE
+AYLxNmYDAaAMDAowMTAzMTA0NzgyoBsGCysGAQQBgvE2ZgMCoAwMCkpVQU4gUEFCTE+gGAYLKwYB
+BAGC8TZmAwOgCQwHTUFOWkFOT6AWBgsrBgEEAYLxNmYDBKAHDAVQQUxNQaAYBgsrBgEEAYLxNmYD
+BaAJDAdHRVJFTlRFoGMGCysGAQQBgvE2ZgMHoFQMUkxPVC4gRklOQ0FTIERFTElBIENBTExFOiBT
+T0xBUkVTIDI1IDI2IFkgMjcgTk1FUk86IFNOIElOVEVSU0VDQ0lOOiBWSUEgRFVSQU4gVEFNQk+g
+HwYLKwYBBAGC8TZmAwigEAwOMDA1OTM5Njc4NTIwMDagGgYLKwYBBAGC8TZmAwmgCwwJR1VBWUFR
+VUlMoD8GCysGAQQBgvE2ZgMKoDAMLlNFQ0FETyBZIFRSQVRBRE8gREUgTUFERVJBIFNFVFJBTUFE
+IENJQS4gTFREQS6gHgYLKwYBBAGC8TZmAwugDwwNMDk5MjcxNjM3MTAwMaATBgsrBgEEAYLxNmYD
+DKAEDAJFQ6AkBgsrBgEEAYLxNmYDMqAVDBNSRVBSRVNFTlRBTlRFIExFR0FMoBgGCysGAQQBgvE2
+ZgMzoAkMB0FSQ0hJVk8wDQYJKoZIhvcNAQELBQADggIBAKKYU0ZHtsA7N4FDEdE9m8Gvc72XH7j0
+5Vd8vUOM0SK0wIPbOgDoLb5Xu4OAERDGvYJ10jOVWKHOPxjAwgS0aLcOUpPHRDMSOKI/XNxuUFB/
+e1IP2uOhhdL25Rdbp9Gd+NG/ZjLpIzTFhHOM7KAMCygMcD+3HicsbC1JkrKA6RnRRyf/NAwTjqKB
+DZZ8pQL8wHyL3vqsvsFNTJmZUXN2EmsU4tSO0IMQh9801Bkj8tiaQCOpeGGd9ecNUr29NFz50FF4
+71tN5Mu17rbu8EnZmhg2IQIZNSsyAt6zFhELWDjMo1195Puet4KeWZ2QxMDH5bFg/O7SsRZAPqUb
+kMusMDEGxvCC1HwW5X61NEDLc76z99jb0+RD+1NLqOgkdwTM80UziJqTRVO9wxyxvA7Uvfaepy1/
+zeV+aJ+jJG+jeIyNoaASxNhyZ6hT3DTug6MuIqU7GIIP/fLkJu7fxwsD3kwIdVUmYNQbN8tTg4cC
+SQWdtJJuvkSUpu4u5rdt15rV9YxILkiFRHiIl2PUsA1tWM2QA+GEhvjCmhvQe0GrA0VeuqYZJLVN
+nKKsKNU9O4l+5sTyN0KS29rvzTdTquLfAy8ZHiLMG2FptwuzI+l7RYJHvmDNNAxEKI25ONwzSZwu
+DlL8cvEfK5jFWa08FqH2hqauVpeDjkOFo1on1IEcXYHw
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>ifWG1+Jyel4J4dhmDR1ZReSXaXxjCfKdejFhP+ZR1hejRe1yWOzzSkSYhr7Tl3CqCRSZPLnm/zV3
+emlRB5IuVK9YD/je+y2tBveixSeCCqNh3RuHfLbPmRaHuVpVxlENMQlI+pVcF6kXJGzIQNaxbYSC
+0OO+JH0YKhqik3cUWxZgX3U2so56Xbsd/FiR04WsNpVj37UFrv+bIqDSnGjCZ9lc0imZ7bj1BumL
+HjdvCKj29gTosEhNidO3GE7fjYi9JqzC7b+37S2L34t9jInXLZ1fH9YxVhCokRbV7MzbbBgnVXnP
+o5p6UhxoPI6WiPm1mZFmUThvY1P+Tr8R52/kYw==
+</ds:Modulus>
+<ds:Exponent>AQAB
+</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object><etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Target="#Signaturef4328516-142d-46b1-b54d-ee01cec48712" Id="Signaturef4328516-142d-46b1-b54d-ee01cec48712"><etsi:SignedProperties Id="Signaturef4328516-142d-46b1-b54d-ee01cec48712-SignedPropertiesIDc6d94d39-f44d-4ae4-8721-7b4fb2268870"><etsi:SignedSignatureProperties><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>Y//CPIkINjwE/80HMiOcZbG0ct8=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>2.5.4.97=VATES-A66721499,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>1580517625883489510</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate><etsi:SignaturePolicyIdentifier><etsi:SignaturePolicyImplied/></etsi:SignaturePolicyIdentifier></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-49c9774c-4d6d-4310-aa75-c914a1d30a99"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

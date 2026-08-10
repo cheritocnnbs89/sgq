@@ -65,8 +65,8 @@
     </div>
 
     <div class="d-flex align-items-end gap-2">
-      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('dashboard', year=prev_y, month=prev_m, freq=freq) }}">&laquo; Mes anterior</a>
-      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('dashboard', year=next_y, month=next_m, freq=freq) }}">Mes siguiente &raquo;</a>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('dashboard', year=prev_y, month=prev_m, freq=freq, area=area_sel, depto=depto_sel, resp=resp_sel) }}">&laquo; Mes anterior</a>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('dashboard', year=next_y, month=next_m, freq=freq, area=area_sel, depto=depto_sel, resp=resp_sel) }}">Mes siguiente &raquo;</a>
     </div>
 
     <div class="d-flex align-items-end gap-2">

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>Fredy Eduardo Calle Suri</razonSocial><nombreComercial>Anunciate Asi</nombreComercial><ruc>0910462399001</ruc><claveAcceso>1607202601091046239900120010100000004584785569915</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>010</ptoEmi><secuencial>000000458</secuencial><dirMatriz>Cdla. Huancavilca Sur. Mz. D 30 Villa 10</dirMatriz><contribuyenteRimpe>CONTRIBUYENTE RÉGIMEN RIMPE</contribuyenteRimpe></infoTributaria><infoFactura><fechaEmision>16/07/2026</fechaEmision><dirEstablecimiento>Ciudadela Huancavilca Mz. D-30 Villa 10</dirEstablecimiento><obligadoContabilidad>NO</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>Quimpac Ecuador S.a Quimpacsa</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>GUAYAS / GUAYAQUIL / PASCUALES / ROSAVIN LOTE 1 Y COBRE</direccionComprador><totalSinImpuestos>129.00</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><descuentoAdicional>0.00</descuentoAdicional><baseImponible>5.00</baseImponible><valor>0.00</valor></totalImpuesto><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><descuentoAdicional>0.00</descuentoAdicional><baseImponible>124.00</baseImponible><valor>18.60</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>147.60</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>01</formaPago><total>147.60</total></pago></pagos><valorRetIva>0.00</valorRetIva><valorRetRenta>0.00</valorRetRenta></infoFactura><detalles><detalle><codigoPrincipal>009-002282</codigoPrincipal><codigoAuxiliar>BLOCKCHEQUEODESPACHOVEHIC</codigoAuxiliar><descripcion>Block Chequeo Despacho Vehiculo pesado</descripcion><cantidad>20.000000</cantidad><precioUnitario>6.200000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>124.00</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>124.00</baseImponible><valor>18.60</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>LOGISTICADEENTREGA</codigoPrincipal><codigoAuxiliar>LOGISTICADEENTREGA</codigoAuxiliar><descripcion>Logistica de entrega</descripcion><cantidad>1.000000</cantidad><precioUnitario>5.000000</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>5.00</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><tarifa>0.00</tarifa><baseImponible>5.00</baseImponible><valor>0.00</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="OC 1000626061 / IB 5000178137">.</campoAdicional><campoAdicional nombre="Correo de cliente">compras.electronica@quimpac.com.ec</campoAdicional><campoAdicional nombre="Enviar los comprobantes de retenciones electrónicas al correo">anunciateasi@gmail.com</campoAdicional><campoAdicional nombre="Contribuyente Régimen RIMPE">.</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature313580">
+<ds:SignedInfo Id="Signature-SignedInfo4587">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID757809" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature313580-SignedProperties109715">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>Vn0DhuVbsKoX3TBlLtCsJIM5de0=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate11039186">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>8ScFyXQfbjd7t1pmCTWrtMPYWDI=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-475592" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>M9tb5hJhQBMVGC3AnTtIDSuJg5Q=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue618552">
+DNoFFfY0YrhqdzAIAtbwuHw0STf9SlpRtoL+bn/cLb5ka9GBERLnHoxbaHVV2uREFLOudO+DPCa7
+V5mMBaDAsT5yVzPM7roXm08EkKrmRhXQuUWbeE3yx/LBifV4QdyiAyphazVnfuVNbgcNFB73xbzQ
+J+QbLaFNMtlc0kZJFmk4OFhOmLLjg3at1o+4Jm/CYzbY876bo0tAUPZNDiJdP4A66HJPkWahHZKY
+6pVv8VfLMbrg/y0vVZxDUi9InWK5KJtz2v+tAWnzCM5gz6qbW/ktQMWRq/NO3Oaxz9gwpDPx0K1E
++g72vESetI1UZyCc1XsM96Db2PE1SqPikLhCPw==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate11039186">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKdzCCCF+gAwIBAgIMAzmfZKecfmLZlsAdMA0GCSqGSIb3DQEBCwUAMIG5MRYwFAYDVQQFEw0x
+NzkyNjAxMjE1MDAxMQswCQYDVQQGEwJFQzE2MDQGA1UEChMtQU5GQUMgQVVUT1JJREFEIERFIENF
+UlRJRklDQUNJT04gRUNVQURPUiBDLkEuMSUwIwYDVQQLExxBTkYgQXV0b3JpZGFkIGludGVybWVk
+aWEgIEVDMTMwMQYDVQQDEypBTkYgSGlnaCBBc3N1cmFuY2UgRWN1YWRvciBJbnRlcm1lZGlhdGUg
+Q0EwHhcNMjUwODEzMjMwNTA3WhcNMjcwODEzMjMwNTA3WjCCAUoxITAfBgNVBAoMGENBTExFIFNV
+UkkgRlJFRFkgRURVQVJETzEaMBgGCisGAQQBgqRCCgQMCjA5MTA0NjIzOTkxKzApBgNVBAsMIkNl
+cnRpZmljYWRvIFBlcnNvbmEgTmF0dXJhbCBSVUMgRUMxFjAUBgNVBCoMDUZSRURZIEVEVUFSRE8x
+FjAUBgNVBGETDTA5MTA0NjIzOTkwMDExCzAJBgNVBAYTAkVDMRMwEQYDVQQFEwowOTEwNDYyMzk5
+MRMwEQYDVQQEDApDQUxMRSBTVVJJMSwwKgYDVQQDDCMwOTEwNDYyMzk5IEZSRURZIEVEVUFSRE8g
+Q0FMTEUgU1VSSTElMCMGCSqGSIb3DQEJARYWYW51bmNpYXRlYXNpQGdtYWlsLmNvbTEPMA0GA1UE
+CAwGR1VBWUFTMQ8wDQYDVQQHDAZYSU1FTkEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+AQC8OGb8HfLWY053BhXCax0AkNJBYHjNL/p/kwPGL74wb4+JAyy6xp+VSdUt59Q6evPAErehVHGQ
+ZoNPEZStYgcpwewPH8qXhxux42/fsxd6e8jFz+k0oQI88r38rQykQz839d2xJrq5bH96WpNfGZ4u
+1Le7fh4Jskc568y+pWyq9sSSun592rOyr9MYWKBUTKsoTkucIp3tu2ic6RYznErA45Y2BpNrETVg
+erO1BSzPSFFftunkUsl1taOyBLaHQeiAfRY7GEKYIZTHlkC2lwgQ01TwjWMTZWBCsVzoYZcyfzf/
+G1/HA/VpVKmfbgzJhIrZr2TWtVkNAiCU9QEBci4HAgMBAAGjggTpMIIE5TAfBgNVHSMEGDAWgBSS
+rtTLgrSZxtF7EWxl6sVNaCH5rDAdBgNVHQ4EFgQUcNuJOK5pyv9AoKIixGJVVNcLwbMwgawGA1Ud
+EQSBpDCBoYEWYW51bmNpYXRlYXNpQGdtYWlsLmNvbaSBhjCBgzEdMBsGCisGAQQBgqRCCgEMDUZS
+RURZIEVEVUFSRE8xFTATBgorBgEEAYKkQgoCDAVDQUxMRTEUMBIGCisGAQQBgqRCCgMMBFNVUkkx
+GjAYBgorBgEEAYKkQgoEDAowOTEwNDYyMzk5MRkwFwYJKwYBBAGBjxwBDApBLTA4MDgyMDI1MA4G
+A1UdDwEB/wQEAwIGwDAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwUAYDVR0fBEkwRzBF
+oEOgQYY/aHR0cDovL2NybC5hbmYuZXMvY3JsL0FORkhpZ2hBc3N1cmFuY2VFY3VhZG9ySW50ZXJt
+ZWRpYXRlQ0EuY3JsMIIBDQYDVR0gBIIBBDCCAQAwgecGDCsGAQQBgqRCAgUBAzCB1jAwBggrBgEF
+BQcCARYkaHR0cHM6Ly9hbmYuZXMvZWMvcmVwb3NpdG9yaW8tbGVnYWwvMIGhBggrBgEFBQcCAjCB
+lAyBkUNlcnRpZmljYWRvIGNvbmZvcm1lIGEgbGEgbGVnaXNsYWNpw7NuIGRlIGZpcm1hIGVsZWN0
+csOzbmljYS4gQW50ZXMgZGUgYWNlcHRhcmxvIGNvbXBydWViZSBpbnRlZ3JpZGFkLCBsaW1pdGFj
+aW9uZXMsIHZpZ2VuY2lhIHkgdXNvcyBhdXRvcml6YWRvcy4wCQYHBACL7EABATAJBgdghVQBAwUI
+MIGbBggrBgEFBQcBAQSBjjCBizAnBggrBgEFBQcwAYYbaHR0cDovL29jc3AuYW5mLmVzL3NwYWlu
+L0FWMGAGCCsGAQUFBzAChlRodHRwOi8vd3d3LmFuZi5lcy9lcy9jZXJ0aWZpY2F0ZXMtZG93bmxv
+YWQvQU5GSGlnaEFzc3VyYW5jZUVjdWFkb3JJbnRlcm1lZGlhdGVDQS5jZXIwDAYDVR0TAQH/BAIw
+ADAoBgkrBgEEAYGPHBMEGwwZNjQ3NDY0NzI1NTYzLTUyNTAyMDE3MjExNTAVBgorBgEEAYGPHBMC
+BAcMBTM3NDQyMCkGCisGAQQBgqRCEwEEGwwZNTI1MDIwMTcyMTE1LTQ4NzA2NTEyMjM0ODAaBgor
+BgEEAYKkQgMBBAwMCjA5MTA0NjIzOTkwKAYKKwYBBAGCpEIDCgQaDBhDQUxMRSBTVVJJIEZSRURZ
+IEVEVUFSRE8wHQYKKwYBBAGCpEIDCwQPDA0wOTEwNDYyMzk5MDAxMBIGCisGAQQBgqRCAwwEBAwC
+RUMwHQYKKwYBBAGCpEIDAgQPDA1GUkVEWSBFRFVBUkRPMBoGCisGAQQBgqRCAwMEDAwKQ0FMTEUg
+U1VSSTAWBgorBgEEAYKkQgMJBAgMBlhJTUVOQTAXBgorBgEEAYKkQioBBAkMB1VJTy0wMDcwEwYK
+KwYBBAGCpEIuAQQFDAM3MzAwUAYKKwYBBAGCpEIvAQRCDEA0NjdkMWQzODcwNjBhNDZjZmFiMTk5
+MjhlMzdkMzBlZTUyNjZiNDM3ZGRhNDFmYmQ1ZDg3NTdhZmU3NWMwNzY5MA0GCSqGSIb3DQEBCwUA
+A4ICAQBwUIoc2cFVWES8soADw9nY1SOfRN9H/ae7BfQ/Hm3JUmYKt3NKeK6KBT2/1SWstPabagY5
+9/z7iNALou5GyxoAMMmq4PQWJgwhnFKAD1/XTFrM2ksrkUaNSij87wWZfa/k0rklfj3Cn9OZVGgo
+XcXgOpLs/jTwt+8SxQsnAmazfd1d7RtvWc9q0SuwBp+FSZ39DJJREID3JCGah1wAXqQYuQfPW5ie
+lq571lejWlFSElpmQZ+4kVqI0MGw/HSU/UhxlLpnqX3rIBcHtiujXzyKLbFCD7g8Kvg4aDSvjnSE
+fGrgLSi5DOxOxVd2ibcoacnELqhCR9BKKfjWY0LSd9/HZ5rXmL5gBL1pxFPw24i8y01jfzvLI+5y
+7C8t3ftpb85tASNBFhfojlPC7SYU7AUvmTl+7Sg2viR7KLJWYoTrLGMppr6KZPCDSH0iJtBa3+40
+0+yXQV+FM2jTjE8U3QlG7h6nBgg40YLUowLGL/YMd8DOtbhJF5fnMuYuIPu1fjt8/9k56BIgNAgw
+LaAozjF/KAJQwMmKYqCa6MmIAwm7PNnVbeGrBVjTFZNmu6S4+dh1O5k5bq3Rs7QNadtZDwB69NXD
+f/6tBLlobSmOBOPYh17nhNZtRSNThxwas5kOrwAi4K/qRVIjUy4z0b2VqHYlhDYfvFmevYvJmczl
+msr91g==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+vDhm/B3y1mNOdwYVwmsdAJDSQWB4zS/6f5MDxi++MG+PiQMsusaflUnVLefUOnrzwBK3oVRxkGaD
+TxGUrWIHKcHsDx/Kl4cbseNv37MXenvIxc/pNKECPPK9/K0MpEM/N/XdsSa6uWx/elqTXxmeLtS3
+u34eCbJHOevMvqVsqvbEkrp+fdqzsq/TGFigVEyrKE5LnCKd7btonOkWM5xKwOOWNgaTaxE1YHqz
+tQUsz0hRX7bp5FLJdbWjsgS2h0HogH0WOxhCmCGUx5ZAtpcIENNU8I1jE2VgQrFc6GGXMn83/xtf
+xwP1aVSpn24MyYSK2a9k1rVZDQIglPUBAXIuBw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature313580-Object813946"><etsi:QualifyingProperties Target="#Signature313580"><etsi:SignedProperties Id="Signature313580-SignedProperties109715"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-16T16:54:02-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>t9YQUqIIPQDr8ZI0elaxp/stGrM=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=ANF High Assurance Ecuador Intermediate CA,OU=ANF Autoridad intermedia  EC,O=ANFAC AUTORIDAD DE CERTIFICACION ECUADOR C.A.,C=EC,2.5.4.5=#130d31373932363031323135303031</ds:X509IssuerName><ds:X509SerialNumber>998116514204919977399992349</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-475592"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

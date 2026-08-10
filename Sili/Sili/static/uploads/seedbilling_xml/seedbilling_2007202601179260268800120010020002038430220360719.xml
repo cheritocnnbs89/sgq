@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>PAN AMERICAN LIFE DE ECUADOR COMPAÑÍA DE SEGUROS S. A.</razonSocial>
+    <nombreComercial>PAN AMERICAN LIFE DE ECUADOR COMPAÑÍA DE SEGUROS S. A.</nombreComercial>
+    <ruc>1792602688001</ruc>
+    <claveAcceso>2007202601179260268800120010020002038430220360719</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>002</ptoEmi>
+    <secuencial>000203843</secuencial>
+    <dirMatriz>República del Salvador N36140 y Naciones Unidas, Edificio Mansión Blanca, Piso 10.</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>20/07/2026</fechaEmision>
+    <dirEstablecimiento>Av. Miguel H. Alcivar y Nahin Isaias, Edificio Torres del Norte, Piso 5, Oficina 508</dirEstablecimiento>
+    <contribuyenteEspecial>789</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>KM 16 1 2 VIA DAULE CALLE ROSAVIN Y COBRE GUAYAQUIL 09 01</direccionComprador>
+    <totalSinImpuestos>2016.29</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>0</codigoPorcentaje>
+        <descuentoAdicional>0</descuentoAdicional>
+        <baseImponible>2016.29</baseImponible>
+        <tarifa>0.00</tarifa>
+        <valor>0.00</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0</propina>
+    <importeTotal>2016.29</importeTotal>
+    <moneda>DOLARES</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>2016.29</total>
+        <plazo>30</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>MDA</codigoPrincipal>
+      <codigoAuxiliar>MDA</codigoAuxiliar>
+      <descripcion>SEGURO DE VIDA</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>325.60</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>325.60</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0.00</tarifa>
+          <baseImponible>325.60</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>SBS</codigoPrincipal>
+      <codigoAuxiliar>SBS</codigoAuxiliar>
+      <descripcion>SUPERINTENDENCIA DE BANCOS</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>67.86</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>67.86</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0.00</tarifa>
+          <baseImponible>67.86</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>SSC</codigoPrincipal>
+      <codigoAuxiliar>SSC</codigoAuxiliar>
+      <descripcion>SEGURO SOCIAL CAMPESINO</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>9.69</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>9.69</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0.00</tarifa>
+          <baseImponible>9.69</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>VGM</codigoPrincipal>
+      <codigoAuxiliar>VGM</codigoAuxiliar>
+      <descripcion>SEGURO DE VIDA</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>238.25</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>238.25</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0.00</tarifa>
+          <baseImponible>238.25</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>VIA</codigoPrincipal>
+      <codigoAuxiliar>VIA</codigoAuxiliar>
+      <descripcion>SEGURO DE VIDA</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>290.65</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>290.65</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0.00</tarifa>
+          <baseImponible>290.65</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>VID</codigoPrincipal>
+      <codigoAuxiliar>VID</codigoAuxiliar>
+      <descripcion>SEGURO DE VIDA</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>1084.24</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1084.24</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>0</codigoPorcentaje>
+          <tarifa>0.00</tarifa>
+          <baseImponible>1084.24</baseImponible>
+          <valor>0.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="FechaPublicacion">20/07/2026</campoAdicional>
+    <campoAdicional nombre="GRAN CONTRIBUYENTE RESOLUCIÓN ">NAC-GCFOIOC21-00001195-E</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature1011425">
+<ds:SignedInfo Id="Signature-SignedInfo43758">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID526181" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature1011425-SignedProperties747770">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>vqX1RWRRGSztQxt7V7zeaHpZHRU=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1488140">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>3NJujIPpCRlmftZTcdrbdPCJWAY=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-73970" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>Ga6nW7ocw2WFuOGWsUUzNk/CN0I=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue103331">
+THQZ6ow1QCzCiav08fhfBQwH5CAg7nj/VU2ry63QPAfbsCeWVnLRgeX2/ijg5lwd0GLghoGzorMP
+/boUvIauX4UybuigV0Dqw6///w3uVcKL7fhaQCMk8bsvXADs3zwDwlXvAfZNI/bWiI2Q+wXCWSSi
+Oc4PDxQZgWYMXE2rzD8cRHegizehbfgDtsdYe8f2p3Qnz8Q3YtegnFCHdt+wGSjo8OBWDWDkzudX
+EDYkcofoJMwoqj1nSNOEVqemSDcjRScTf1JHtflCFYhySgmscufziVloycyLyCP1O11wdHoHTq6b
+pQ6zAncSNdarI0Bgp0wV9/DaciyZ89yjb1xQ5g==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1488140">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKJzCCCA+gAwIBAgIEZeRPOjANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV
+BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB
+QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTI0MDgxMzIwNDQ1MFoXDTI2MDgxMzIxMTQ0
+OVowgbQxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw
+NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w
+DAYDVQQHEwVRVUlUTzE4MBEGA1UEBRMKMDIwMDAzNTIxNzAjBgNVBAMTHExVSVMgR0FCUklFTCBB
+TFZBUkVaIENBQU1BTk8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDe2cEhOJtNuM+B
+4jfa1zhcl1DyY+iqQHIOPF/4cDZKc+hSkBOg3sb917XqVv0ilDVSPkfLE/Ndo9cpVEOsPRVLYSez
+JeRFbKghPfCk31SFXwLxZi0E346uTkh39IOb56q+7odBinMYYRztF5dchrfXMK2dw3ROxLnTccbR
+ykqC9VB/xu8Cr43tHX8fUHuZA6tLtZIln1IcycKeblF5I/VcKOPqfJ/qTeCN8ckiZW9GyVi2Q9PD
+1Q/zqqaUEZFaedDZWPBf35ZBrweWXZ05lGRvcBURmPvewrUcraDfWX0Shucq6Y9XH21eS5eyL+yf
+qbIr0p2ZDaUqkbseB0ipTz5dAgMBAAGjggVQMIIFTDALBgNVHQ8EBAMCB4AwZwYDVR0gBGAwXjBc
+BgsrBgEEAYKoOwICATBNMEsGCCsGAQUFBwIBFj9odHRwOi8vd3d3LmVjaS5iY2UuZWMvcG9saXRp
+Y2EtY2VydGlmaWNhZG8vcGVyc29uYS1qdXJpZGljYS5wZGYwgZEGCCsGAQUFBwEBBIGEMIGBMD4G
+CCsGAQUFBzABhjJodHRwOi8vb2NzcC5lY2kuYmNlLmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMv
+b2NzcDA/BggrBgEFBQcwAYYzaHR0cDovL29jc3AxLmVjaS5iY2UuZWMvZWpiY2EvcHVibGljd2Vi
+L3N0YXR1cy9vY3NwMEUGCisGAQQBgqg7AwoENxM1UEFOIEFNRVJJQ0FOIExJRkUgREUgRUNVQURP
+UiBDT01QQU5JQSBERSBTRUdVUk9TIFMuQS4wHQYKKwYBBAGCqDsDCwQPEw0xNzkyNjAyNjg4MDAx
+MBoGCisGAQQBgqg7AwEEDBMKMTcyMDY0MzM3NjAcBgorBgEEAYKoOwMCBA4TDExVSVMgR0FCUklF
+TDAXBgorBgEEAYKoOwMDBAkTB0FMVkFSRVowFwYKKwYBBAGCqDsDBAQJEwdDQUFNQU5PMCAGCisG
+AQQBgqg7AwUEEhMQQ09OVEFET1IgR0VORVJBTDA1BgorBgEEAYKoOwMHBCcTJUNBTExFIEpPU0Ug
+Q0FSUklPTiBZIFBBU0FKRSBZLCBPRTYtOTEwGQYKKwYBBAGCqDsDCAQLEwkwMjM1MTQxNTEwFQYK
+KwYBBAGCqDsDCQQHEwVRVUlUTzAXBgorBgEEAYKoOwMMBAkTB0VDVUFET1IwEQYKKwYBBAGCqDsD
+MgQDEwEwMCAGCisGAQQBgqg7AzMEEhMQU09GVFdBUkUtQVJDSElWTzAdBgNVHREEFjAUgRJsYWx2
+YXJlekBwYWxpZy5jb20wggHhBgNVHR8EggHYMIIB1DCCAdCgggHMoIIByIaB1mxkYXA6Ly9iY2Vx
+bGRhcHN1YnAxLmJjZS5lYy9jbj1DUkwyMDU5LGNuPUFDJTIwQkFOQ08lMjBDRU5UUkFMJTIwREVM
+JTIwRUNVQURPUixsPVFVSVRPLG91PUVOVElEQUQlMjBERSUyMENFUlRJRklDQUNJT04lMjBERSUy
+MElORk9STUFDSU9OLUVDSUJDRSxvPUJBTkNPJTIwQ0VOVFJBTCUyMERFTCUyMEVDVUFET1IsYz1F
+Qz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2WGNGh0dHA6Ly93d3cuZWNpLmJjZS5lYy9D
+UkwvZWNpX2JjZV9lY19jcmxmaWxlY29tYi5jcmykgbYwgbMxCzAJBgNVBAYTAkVDMSIwIAYDVQQK
+ExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcwNQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4wDAYDVQQHEwVRVUlUTzElMCMGA1UEAxMcQUMg
+QkFOQ08gQ0VOVFJBTCBERUwgRUNVQURPUjEQMA4GA1UEAxMHQ1JMMjA1OTArBgNVHRAEJDAigA8y
+MDI0MDgxMzIwNDQ1MFqBDzIwMjYwODEzMjExNDQ5WjAfBgNVHSMEGDAWgBRIot8jHx34LFF6jAPN
+STKlCcGUqzAdBgNVHQ4EFgQUMYOsAAFFUZkaJg3yFKDJcuGCW5AwCQYDVR0TBAIwADAZBgkqhkiG
+9n0HQQAEDDAKGwRWOC4zAwIEMDANBgkqhkiG9w0BAQsFAAOCAgEAb/gqxuCqn1PCtbvYwdyJFplv
+G5Sy0FokzWyJuz7IvqBmlHjNtUocEzL27Y1F2McFdH8cG1aI1gAHQpuZnoVDqUKcPLjsAxG0ufIj
+o2q/ZquBh+02/vaMOrPSl4v3ogp6QxMFQ/OsvFA1SwcaKHQ+LVlCvyS4aQ7bmQTwXMxuEzZBjqrE
+3p4QWNStoM/k3GNQR48EiuyLiZMyjO0gFKlN715T8MKvxVfN6SdSwBCRiwNxjz+W9TMrkY2fC9B8
+NBZ4kijshnZ+FvBOA5sUHQUPZHbflHI6pqwGdQXfjp8Au8DUMwoUoJSpfotwwnfWipZWK9CnzFxD
+X26ivVBYWwyLARjvI8VgWbcXKK7YFin5Px38ErdDyVVpYXFuc0KL6Mq73axVJ0t2mdvLZK4qPmOS
+pVVwH8nCUubVDlIihCyY18JIBtLEaxnaOZiY9iT0giAmDn5XbCqk5WZQZ5+Dyt5hRVLcQploTQaW
+YNkSUZVCjpokTvUrfgp+7JHGZjYEQFiaIcIYcJPjuF5QbLpIJic1j7cAkKjpInkyHQnWHJliSszK
+kS/pTcSCMSIuOpjPIInHyvlS8e33db1xmyNVKaef8zsLEu+kVVO66dpHvt0v+W+J+Rp1nzv0zIcj
+SoG60qM/Id/eACOzwspX0hEhjJ025Yi1vtplBlCAnVbDUBAqKlk=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+3tnBITibTbjPgeI32tc4XJdQ8mPoqkByDjxf+HA2SnPoUpAToN7G/de16lb9IpQ1Uj5HyxPzXaPX
+KVRDrD0VS2EnsyXkRWyoIT3wpN9UhV8C8WYtBN+Ork5Id/SDm+eqvu6HQYpzGGEc7ReXXIa31zCt
+ncN0TsS503HG0cpKgvVQf8bvAq+N7R1/H1B7mQOrS7WSJZ9SHMnCnm5ReSP1XCjj6nyf6k3gjfHJ
+ImVvRslYtkPTw9UP86qmlBGRWnnQ2VjwX9+WQa8Hll2dOZRkb3AVEZj73sK1HK2g31l9EobnKumP
+Vx9tXkuXsi/sn6myK9KdmQ2lKpG7HgdIqU8+XQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature1011425-Object246525"><etsi:QualifyingProperties Target="#Signature1011425"><etsi:SignedProperties Id="Signature1011425-SignedProperties747770"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-20T14:20:36-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>oQQzOr39Tl06+GLgL9FzFZcBh7w=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1709461306</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-73970"><etsi:Description>Comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

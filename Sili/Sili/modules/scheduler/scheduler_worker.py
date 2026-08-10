@@ -44,9 +44,7 @@ from .seedbilling_xml_job import process_seedbilling_facturas_recibidas
 
 # ── AWS Sync (DynamoDB) ───────────────────────────────────────
 try:
-    from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws
-    # push_gerentes_auth_a_aws: aun no esta en produccion, se activa aparte.
-    # from modules.aws_sync import push_gerentes_auth_a_aws
+    from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws, push_gerentes_auth_a_aws
     _AWS_SYNC_ENABLED = True
 except Exception as _aws_err:
     _AWS_SYNC_ENABLED = False
@@ -180,21 +178,20 @@ def start_scheduler(app=None):
             else:
                 _log("debug", "Worker: process_om_acciones_seguimiento omitido (fuera de horario laboral)")
 
-            # auto-registro de facturas recurrentes: aun no esta en produccion.
-            # try:
-            #     _log("info", "Worker: Ejecutando auto-registro de facturas recurrentes...")
-            #     cauto = get_db_standalone()
-            #     try:
-            #         from modules.gastos_auto_registro import procesar_auto_registro_facturas
-            #         creados = procesar_auto_registro_facturas(cauto)
-            #         _log("info", "Worker: auto-registro de facturas OK, gastos creados=%s", creados)
-            #     finally:
-            #         try:
-            #             cauto.close()
-            #         except Exception:
-            #             pass
-            # except Exception:
-            #     target_app.logger.exception("Worker: procesar_auto_registro_facturas falló")
+            try:
+                _log("info", "Worker: [MDI] auto-registro de facturas recurrentes...")
+                cauto = get_db_standalone()
+                try:
+                    from modules.gastos_auto_registro import procesar_auto_registro_facturas
+                    creados = procesar_auto_registro_facturas(cauto)
+                    _log("info", "Worker: [MDI] auto-registro OK, gastos creados=%s", creados)
+                finally:
+                    try:
+                        cauto.close()
+                    except Exception:
+                        pass
+            except Exception:
+                target_app.logger.exception("Worker: procesar_auto_registro_facturas falló")
 
         except Exception:
             target_app.logger.exception("Worker: fallo general en %s", tick_label)
@@ -444,9 +441,8 @@ def start_scheduler(app=None):
                         push_gastos_a_aws(target_app)
                         _log("info", "Worker: AWS sync — pull aprobaciones...")
                         pull_aprobaciones_de_aws(target_app)
-                        # push_gerentes_auth_a_aws: aun no esta en produccion.
-                        # _log("info", "Worker: AWS sync — push auth gerentes...")
-                        # push_gerentes_auth_a_aws(target_app)
+                        _log("info", "Worker: AWS sync — push auth gerentes...")
+                        push_gerentes_auth_a_aws(target_app)
                         last_aws_sync = now_ts4
                         _log("info", "Worker: AWS sync OK")
                     except Exception:
@@ -502,6 +498,22 @@ def start_scheduler(app=None):
                             _log("info", "Worker: recordatorio vuelos sin liquidar enviado a %d coordinador(es)", len(vuelos))
                     except Exception:
                         target_app.logger.exception("Worker: recordatorio_vuelos_sin_liquidar falló")
+
+                # ==================================================
+                # Recordatorio/escalamiento vouchers sin confirmar - diario 08:15
+                # ==================================================
+                if now.hour == 8 and 15 <= now.minute < 25 and globals().get("_last_voucher_recorda") != today_str:
+                    try:
+                        from modules.planificador.planificador_auto_jobs import (
+                            recordar_vouchers_pendientes_confirmacion,
+                        )
+                        res = recordar_vouchers_pendientes_confirmacion(target_app)
+                        globals()["_last_voucher_recorda"] = today_str
+                        if res.get("recordatorio_3d") or res.get("escalamiento_6d"):
+                            _log("info", "Worker: recordatorio voucher 3d=%d, escalamiento 6d=%d",
+                                 res.get("recordatorio_3d", 0), res.get("escalamiento_6d", 0))
+                    except Exception:
+                        target_app.logger.exception("Worker: recordar_vouchers_pendientes_confirmacion falló")
 
                 # ==================================================
                 # Digest OM acciones correctivas sin evidencia - diario

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>GRUENTEC CIA LTDA</razonSocial><nombreComercial>GRUENTEC CIA LTDA</nombreComercial><ruc>1791344073001</ruc><claveAcceso>1407202601179134407300120010020000334431234567811</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>002</ptoEmi><secuencial>000033443</secuencial><dirMatriz>ELOY ALFARO S7-157 Y BELISARIO QUEVEDO </dirMatriz></infoTributaria>
+  <infoFactura>
+    <fechaEmision>14/07/2026</fechaEmision>
+    <dirEstablecimiento>ELOY ALFARO S7-157 Y BELISARIO QUEVEDO</dirEstablecimiento>
+    <contribuyenteEspecial>516</contribuyenteEspecial>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>PARQUE INDUSTRIAL DEL SUR, PANAMERICANA SUR</direccionComprador>
+    <totalSinImpuestos>1000.00</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>1000.00</baseImponible>
+        <tarifa>15.00</tarifa>
+        <valor>150.00</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>1150.00</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>1150.00</total>
+        <plazo>30</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>RDO:RDO01</codigoPrincipal>
+      <descripcion>ANALISIS EXTERNO AGUA DE POZO PLANTA UIO</descripcion>
+      <cantidad>1.00</cantidad>
+      <precioUnitario>1000.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1000.00</precioTotalSinImpuesto>
+      <detallesAdicionales><detAdicional nombre="Nota" valor="ANALISIS EXTERNO AGUA DE POZO PLANTA UIO" /></detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>1000.00</baseImponible>
+          <valor>150.00</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional><campoAdicional nombre="PedidoCompra">OS: 7500055937</campoAdicional><campoAdicional nombre="NoAceptacion">0</campoAdicional></infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature6388738"><ds:SignedInfo Id="Signature-SignedInfo3534592"><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><ds:Reference Id="SignedPropertiesID6192540" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature6388738-SignedProperties1996130"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>65Pkm14k1vSImUF3CiWOg/XthTc=</ds:DigestValue></ds:Reference><ds:Reference URI="#Certificate2586980"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>rWT3Nt0OyaHYIsD7UKQxsbJl/MA=</ds:DigestValue></ds:Reference><ds:Reference Id="Reference-ID-3797414" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>8Lxtpz5OzZzM1F9kALmByFUCG5o=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="SignatureValue2297815">KqvbyHLicecABUx2Z+zD1cM9SrPcCQBJXg5zGQTWGSdz95pyeBIpL9SbHe3H9VW5WC3lpZ/lBeUBttXHGV44oaRZ7ii53VAbBquKCYoTfJzDRGlzM3glldOpo4PdyXIN2Yx/eLleN58eWa95949/VGj5LcnEs/HqxMsGTnI1Qi8H5ogHYr0T+hwIewavkjV15W5h55QtYM2qMCRznqkoGQBzEFyMSkNj3ME8gdlJXxGIW1y46uLHieqMAnixnva1kmBrJCWLrFuNZfOTGkP850nMC5uu1Re2Cl+qTtMnMcVFxstx/hj1JH3H2WIF2Gh1iGpeMZ15ffubRjqMmiwmTw==</ds:SignatureValue><ds:KeyInfo Id="Certificate2586980"><ds:X509Data><ds:X509Certificate>MIIMMjCCChqgAwIBAgIECPnR4DANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTAyMDYxODI1NDlaFw0zMDAyMDYxODI1NDlaMIGqMSgwJgYDVQQDDB9ORUxMWSBFTElaQUJFVEggVklMTEFDSVMgVFVGSU5PMSAwHgYDVQQFExcxNzEwNjA5NzgzLTA2MDIyNTEzMzU0NDEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCSh0JprU2lOaRXZEQXg+hANsdZdwHvE07TOXAEQi3ZqxIYHMUEr7GNGYcoisgWxMTqdsjPA33Q6GB/TVcr6NmD1DR7nqwymSy5O87jAwLLxSX7Q7pvHwQia0bbLozBaPVdz5WDf/MB2PEcuH/8eG4mLy7xHic1Pqa5BVf2nJ7J3PTitiCAafAduIXAqtbqhV2/4DLK+z6/4DUoT8G9bGbNsYW/V0Gevrj1cdoF/zaXzJFGN43UqMR+aOTtWFj2nXmoNlTltOK8QnX93Kly6jRCdqQ9uJ/+WS6sv6DXRlxcPZiX95TdHCs2z/ObGEzint9v3lEShI4488KU2CDz1PGNAgMBAAGjggdtMIIHaTAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4bGRhcDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDP2RlbHRhUmV2b2NhdGlvbkxpc3Q/YmFzZTAjBgNVHREEHDAagRhuZWxseWV2aWxsYWNpc0BnbWFpbC5jb20wggESBgNVHSAEggEJMIIBBTBgBgorBgEEAYKmcgIKMFIwUAYIKwYBBQUHAgIwRB5CAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAE0AaQBlAG0AYgByAG8AIABkAGUAIABFAG0AcAByAGUAcwBhMIGgBgorBgEEAYKmcgIEMIGRMIGOBggrBgEFBQcCARaBgWh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gTWllbWJybyBkZSBFbXByZXNhLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggKiBgNVHR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFGM6nKgfRbBTxyBfvQzzfQenOjDIMCsGA1UdEAQkMCKADzIwMjUwMjA2MTgyNTQ5WoEPMjAzMDAyMDYxODI1NDlaMAsGA1UdDwQEAwIF4DAgBgorBgEEAYKmcgMFBBIMEENPTlRBRE9SIEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQMDAoxNzEwNjA5NzgzMBcGCisGAQQBgqZyAwkECQwHQ1VNQkFZQTARBgorBgEEAYKmcgMiBAMMAS4wNgYKKwYBBAGCpnIDBwQoDCZFTE9ZIEFMRkFSTyBTNyAxNTcgWSBCRUxJU0FSSU8gUVVFVkVETzAfBgorBgEEAYKmcgMCBBEMD05FTExZIEVMSVpBQkVUSDAfBgorBgEEAYKmcgMgBBEMDzAwMjAwMTAwMDk1MTIzMzATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwGAYKKwYBBAGCpnIDAwQKDAhWSUxMQUNJUzAhBgorBgEEAYKmcgMKBBMMEUdSVUVOVEVDIENJQSBMVERBMB0GCisGAQQBgqZyAwsEDwwNMTc5MTM0NDA3MzAwMTARBgorBgEEAYKmcgMdBAMMAS4wFgYKKwYBBAGCpnIDBAQIDAZUVUZJTk8wGQYKKwYBBAGCpnIDCAQLDAkwNjIwMTQzNzEwDQYJKoZIhvcNAQELBQADggIBALx/S9QxWFe+6dMVitZIvv8dMVVFKvrXBWneOI+kuqc5hBEQIQpy34phzvkRm9oTwabM5z1/s+G9AVZd8W7oGkTxH7SMUzdqx7vdGXQr+BVqvfq/IueK0gO/ITSlpTclg3n5siZWZ/vabTD1r+DiD1rL3wGU7/r7PnPi0Qeuj0KZVwYWZfcrhzFeuc4Yr2//LWgWA4tu5FzxzIlDYZhtg+R+hwWx9kpyHdzEsqfiEOKBIZbrKgqGygw31Rq2bsySnHbaD5dVvgLFzpKllkd8Ni/P1SoUFbTpCvpSh98OQqVMz/5ojylccvMqVbckYKmBSzpj0uVC/nlM0VeZJIF1e7s3X1p5evvwsfhmC5dD70P/Hy8Pi6342AUhxSeFLg8YqG4r5lIhCLVgXC0rl7OaZ0A/7BIFSWgO/jOninaeGImbcLpn+Mh56Yq5aB2Lzy4EfAmIoD9DNfyBpEIbBfIoVv+S5vD98WynosXyY7ylON526bSIs/kFJCnldnArdhcL8odA8KnNAV7FJ6kti0W7kilWZY1pi924v1K1Pjap9etHDEGQVQoSCbq9Wx/eYQenQ5e4Q1igO6k/IDLTuKV3UD59xnUS51INomKJYlUM6/jTSjvuPFpTGlbPpfG/GUm7YEFx49agzYzmOWZoWs+aaTs43WYE+I59WsQiZewGoQJS</ds:X509Certificate></ds:X509Data><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>kodCaa1NpTmkV2REF4PoQDbHWXcB7xNO0zlwBEIt2asSGBzFBK+xjRmHKIrIFsTE6nbIzwN90Ohgf01XK+jZg9Q0e56sMpksuTvO4wMCy8Ul+0O6bx8EImtG2y6MwWj1Xc+Vg3/zAdjxHLh//HhuJi8u8R4nNT6muQVX9pyeydz04rYggGnwHbiFwKrW6oVdv+Ayyvs+v+A1KE/BvWxmzbGFv1dBnr649XHaBf82l8yRRjeN1KjEfmjk7VhY9p15qDZU5bTivEJ1/dypcuo0QnakPbif/lkurL+g10ZcXD2Yl/eU3RwrNs/zmxhM4p7fb95REoSOOPPClNgg89TxjQ==</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue></ds:KeyInfo><ds:Object Id="Signature6388738-Object1870529"><etsi:QualifyingProperties Target="#Signature6388738"><etsi:SignedProperties Id="Signature6388738-SignedProperties1996130"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-14T15:54:37-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><ds:DigestValue>lweDO/1k0PPAtd/QZgFY8AxRQJw=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA, OU=ENTIDAD DE CERTIFICACION DE INFORMACION, O=SECURITY DATA S.A. 2, C=EC</ds:X509IssuerName><ds:X509SerialNumber>150589920</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-3797414"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

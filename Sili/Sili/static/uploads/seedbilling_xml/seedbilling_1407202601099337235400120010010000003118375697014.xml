@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>JAMAPSA S.A.S.</razonSocial>
+	    <nombreComercial>JAMAPSA S.A.S.</nombreComercial>
+	    <ruc>0993372354001</ruc>
+	    <claveAcceso>1407202601099337235400120010010000003118375697014</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>001</estab>
+	    <ptoEmi>001</ptoEmi>
+	    <secuencial>000000311</secuencial>
+	    <dirMatriz>GUAYAQUIL / ALBORADA Y AV. 1 A</dirMatriz>
+		
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>14/07/2026</fechaEmision>
+		
+			<dirEstablecimiento>GUAYAQUIL / ALBORADA Y AV. 1 A</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A. QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE</direccionComprador>
+	    
+	    <totalSinImpuestos>2365.71000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>0.00</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>2365.71</baseImponible>
+				<valor>354.86000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>2720.57000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>2720.57</total>
+	    		<plazo>0</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>SERV020</codigoPrincipal>
+		<codigoAuxiliar>SERV020</codigoAuxiliar>
+      	<descripcion>SANDBLASTING Y PINTURA</descripcion>
+      
+      <cantidad>9.000000</cantidad>
+      <precioUnitario>209.400000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>1884.60</precioTotalSinImpuesto>
+	  
+	  
+	  	<detallesAdicionales>
+			
+    			<detAdicional nombre="Detalle" valor="SANDBLASTING/PINTURA QUIMPAC EC 907/1000"/>
+    		
+      	</detallesAdicionales>
+      
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>1884.60000</baseImponible>
+          <valor>282.69</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+    <detalle>
+      
+      	<codigoPrincipal>SERV020</codigoPrincipal>
+		<codigoAuxiliar>SERV020</codigoAuxiliar>
+      	<descripcion>SANDBLASTING Y PINTURA</descripcion>
+      
+      <cantidad>7.000000</cantidad>
+      <precioUnitario>68.730000</precioUnitario>
+	  
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>481.11</precioTotalSinImpuesto>
+	  
+	  
+	  	<detallesAdicionales>
+			
+    			<detAdicional nombre="Detalle" valor="SANDBLASTING/PINTURA QUIMPAC EC 68"/>
+    		
+      	</detallesAdicionales>
+      
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>481.11000</baseImponible>
+          <valor>72.17</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">Orden de servicio# 7500056034  Códigos de aceptación# 1001646448 ; 1001646750</campoAdicional>
+    		
+    	
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature291197">
+<ds:SignedInfo Id="Signature-SignedInfo961365">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID736559" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature291197-SignedProperties135469">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>sTBvPY5DkLcEDNXY5dA9gIjMfv0=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate612078">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>RgwdeiOI3nuvpSLi5dIIHCExezA=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-205736" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>eYTvBTFu+9fELYvmf8oTHdLPt90=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue634014">
+VzFSjNoUpRY2SMI6FcIB/0QxntajaqI/ZYdH5AsD64E7Wtc46UetyIUtbGBVH+rmhiIXKMPfznKg
+Vc1/o4IPrFK7CnZB91y5VtQmpxb2WrGsTkndacCVxhJToxRQcmHeyClt382oziaYb1REW4Q24GEW
+N3bw3nIJ1Vjn5m2LWU0ARkoRifeiDcDLlHBxf8pqWYeosaHM1LgLAY+fQenQIVzhGbq94OE2aYFt
+Gg5o3q2bgGOuiPtzSHbFB0qcD4DiWpjhqpVtV7fFMOsTC9UjXNU5x3jK7PZWiOoZ330WKHM4xnSa
+V4Od5903lw/1/KpX+fPdcLOXqQzt4pCVH4M7yA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate612078">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIJRDCCByygAwIBAgIIDavLG+ASl04wDQYJKoZIhvcNAQELBQAwgYYxCzAJBgNVBAYTAkVTMRIw
+EAYDVQQHDAlCYXJjZWxvbmExFjAUBgNVBAoMDVVBTkFUQUNBIFMuQS4xFTATBgNVBAsMDFRTUC1V
+QU5BVEFDQTEaMBgGA1UEAwwRVUFOQVRBQ0EgQ0EyIDIwMjExGDAWBgNVBGEMD1ZBVEVTLUE2Njcy
+MTQ5OTAeFw0yNjA1MjkxNjI1MDBaFw0yNzA1MjkxNjI1MDBaMIHPMQswCQYDVQQGEwJFQzEXMBUG
+A1UECgwOSkFNQVBTQSBTLkEuUy4xGDAWBgNVBAwMD0dFUkVOVEUgR0VORVJBTDEWMBQGA1UEBAwN
+TUFOWU9NQSBQTFVBUzEWMBQGA1UEKgwNSk9SR0UgQVJNQU5ETzEZMBcGA1UEBRMQSURDRUMtMDkx
+ODcxNDY0MzEkMCIGA1UEAwwbSk9SR0UgQVJNQU5ETyBNQU5ZT01BIFBMVUFTMRwwGgYDVQRhDBNW
+QVRFQy0wOTkzMzcyMzU0MDAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlDke3Xuf
+SJI+SjekT+6H2zYbK0WmeZ/05qC6x3ODKjXyu/14bvcxpBu1oOTHSNN8OerLEugPADqXgvleOZeu
+q5u6nF5C3FJ55CV+yrdV9Rhp4OqN6tQ1G7kFDtkvxAgzL1rmvDr6qx84RRzyWqyn69g9ChcIMx4s
+QJXOVy8WGJbxLcfimUOIJULTCkL26uZ+bPgLsJJ67E/iixnxBuq64c6XTvMZsEOLKJJpa4OiNv+f
+KagX+8pklC8Z+zkI+oGSGVyUNdZRLkdQHMMKWG4FGQFxvSYqd9Dit9Xh+iUtzqkGJfQn9s2KV8vn
+re4taXTd98EcN9djOicS031rn0vd6wIDAQABo4IEaTCCBGUwGwYLKwYBBAGC8TZmAwEEDAwKMDkx
+ODcxNDY0MzAeBgsrBgEEAYLxNmYDCwQPDA0wOTkzMzcyMzU0MDAxMIHtBggrBgEFBQcBAQSB4DCB
+3TBrBggrBgEFBQcwAoZfaHR0cHM6Ly93ZWIudWFuYXRhY2EuY29tL2NvbW1vbi9wcm9qZWN0L3Bk
+Zi9hdXRvcmlkYWQtY2VydGlmaWNhY2lvbi8wOF9zdWJvcmRpbmFkYS1jYTItMjAyMS5jZXIwNgYI
+KwYBBQUHMAGGKmh0dHA6Ly9vY3NwMS51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzA2Bggr
+BgEFBQcwAYYqaHR0cDovL29jc3AyLnVhbmF0YWNhLmNvbS9wdWJsaWMvcGtpL29jc3AvMB0GA1Ud
+DgQWBBSeN17hgN/tGusu/fqzH+VvKYLDDzAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFMXnMyXY
+79SN51OHyqJbdTqLlt1KMBwGA1UdEgQVMBOBEWluZm9AdWFuYXRhY2EuY29tMFQGA1UdIARNMEsw
+SQYMKwYBBAGC8TZmAgMBMDkwNwYIKwYBBQUHAgEWK2h0dHBzOi8vd3d3LnVhbmF0YWNhLmNvbS9w
+dWJsaWMvcGtpL2RwYy1lYy8wgYUGA1UdHwR+MHwwPKA6oDiGNmh0dHA6Ly9jcmwxLnVhbmF0YWNh
+LmNvbS9wdWJsaWMvcGtpL2NybC8yMDIxQ0Eyc3ViLmNybDA8oDqgOIY2aHR0cDovL2NybDIudWFu
+YXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsLzIwMjFDQTJzdWIuY3JsMA4GA1UdDwEB/wQEAwIF4DAd
+BgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggG7BgNVHREEggGyMIIBroETamFtYW55b21h
+QGdtYWlsLmNvbaAbBgsrBgEEAYLxNmYDAaAMDAowOTE4NzE0NjQzoB4GCysGAQQBgvE2ZgMCoA8M
+DUpPUkdFIEFSTUFORE+gGAYLKwYBBAGC8TZmAwOgCQwHTUFOWU9NQaAWBgsrBgEEAYLxNmYDBKAH
+DAVQTFVBU6AgBgsrBgEEAYLxNmYDBaARDA9HRVJFTlRFIEdFTkVSQUygMwYLKwYBBAGC8TZmAweg
+JAwiQUxCT1JBREEgMTRBVkEgRVRBUEEgTVogNSBTT0xBUiAxMqAfBgsrBgEEAYLxNmYDCKAQDA4w
+MDU5Mzk4Mzc1OTkzN6AaBgsrBgEEAYLxNmYDCaALDAlHVUFZQVFVSUygHwYLKwYBBAGC8TZmAwqg
+EAwOSkFNQVBTQSBTLkEuUy6gHgYLKwYBBAGC8TZmAwugDwwNMDk5MzM3MjM1NDAwMaATBgsrBgEE
+AYLxNmYDDKAEDAJFQ6AkBgsrBgEEAYLxNmYDMqAVDBNSRVBSRVNFTlRBTlRFIExFR0FMoBgGCysG
+AQQBgvE2ZgMzoAkMB0FSQ0hJVk8wDQYJKoZIhvcNAQELBQADggIBABuZdrjvqsJUWgU6G2QfXdhn
+ZwcXwzbwB2Qo0XLITQtnNWX2GM7OXPVcZmsxi/3+2n0vmGUg5F6PrKOHm8vHI1fx1/f+vQgOeqv1
+2/BsJfx+oiVAHFf0TTSKi9vwom8XHUeAIDDtsL2cFkAZQDZVdDUfL1sV1VgUoEY39LLW+mjC9bMl
+vdVILcfxZ8wGqO44yfV+fxBIb7F3Ai3gVioRgriTX88D0Wc+jERpucT7G0sVmExp+KyHKy5cCWOD
+UMOp9MXfebHnIUYZChqdGHN6oNzbzlxp154jxQROwulvdlKHza1DHeRdFebq03kc5drHuonPbjnO
+cNe5+Bssn2JjzcklfVaejwDEA9sdmo+AyYq4bn22CvVBeQ4SKHEjLFqNsd3e6vF6xAq0jCD8nhUM
+lmlMMUnEikezPXLhBjTyHI248kYXdkoz3XPgl4Zpw85DE3q5NJFC9CbuZ7ZxpQ+Qh/sb2IXxuEdq
+1FVJAtLR7xILJamHcUPGhN/74Nl12l9DYOjtLQyEVHUmh0kz95gZyUgDCBGXJXk9rGISeLy52mOU
+Axp7BgOr7QgvvHCe1nO31JTQWZewxit229x49bOe3rjHzjyXiFrYvkJJLJ6PQCGG0a5czwdxsm33
+33bLcNH3fY8V/94XCHUghskinm7xikov0tJFecb5MMUIWc7lbqfl
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+lDke3XufSJI+SjekT+6H2zYbK0WmeZ/05qC6x3ODKjXyu/14bvcxpBu1oOTHSNN8OerLEugPADqX
+gvleOZeuq5u6nF5C3FJ55CV+yrdV9Rhp4OqN6tQ1G7kFDtkvxAgzL1rmvDr6qx84RRzyWqyn69g9
+ChcIMx4sQJXOVy8WGJbxLcfimUOIJULTCkL26uZ+bPgLsJJ67E/iixnxBuq64c6XTvMZsEOLKJJp
+a4OiNv+fKagX+8pklC8Z+zkI+oGSGVyUNdZRLkdQHMMKWG4FGQFxvSYqd9Dit9Xh+iUtzqkGJfQn
+9s2KV8vnre4taXTd98EcN9djOicS031rn0vd6w==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature291197-Object629131"><etsi:QualifyingProperties Target="#Signature291197"><etsi:SignedProperties Id="Signature291197-SignedProperties135469"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-14T17:13:05-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>4aI8gYSbtWIdHly08J9MSlz/D50=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=UANATACA CA2 2021,C=ES,L=Barcelona,2.5.4.97=#0c0f56415445532d413636373231343939,O=UANATACA S.A.,OU=TSP-UANATACA</ds:X509IssuerName><ds:X509SerialNumber>985104264094455630</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

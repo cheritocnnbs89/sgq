@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="2.1.0">
+	<infoTributaria>
+		<ambiente>2</ambiente>
+	    <tipoEmision>1</tipoEmision>
+	    <razonSocial>SUMINISTROS ELECTRICOS Y ELECTRONICOS SUMELTRONIC S.A.S.</razonSocial>
+	    <nombreComercial>SUMELTRONIC S.A.S.</nombreComercial>
+	    <ruc>0993327417001</ruc>
+	    <claveAcceso>0807202601099332741700120020010000045074393894816</claveAcceso>
+	    <codDoc>01</codDoc>
+	    <estab>002</estab>
+	    <ptoEmi>001</ptoEmi>
+	    <secuencial>000004507</secuencial>
+	    <dirMatriz>URDENOR 1 MZ 112 SL 16 LOCAL N° 2 - GUAYAQUIL - ECUADOR</dirMatriz>
+		
+		
+			<agenteRetencion>10</agenteRetencion>
+		
+		
+  	</infoTributaria>
+	<infoFactura>
+	    <fechaEmision>08/07/2026</fechaEmision>
+		
+			<dirEstablecimiento>URDENOR 1 MZ 112 SL 16 LOCAL N° 2 - GUAYAQUIL - ECUADOR</dirEstablecimiento>
+		
+	    
+	    
+			<obligadoContabilidad>SI</obligadoContabilidad>
+		
+		
+	    
+	    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+		
+		<razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+	    <identificacionComprador>0990344760001</identificacionComprador>
+		<direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE</direccionComprador>
+	    
+	    <totalSinImpuestos>380.03000</totalSinImpuestos>
+		
+	  	
+	    <totalDescuento>42.23</totalDescuento>
+	    
+	    <totalConImpuestos>
+		
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>4</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>380.03</baseImponible>
+				<valor>57.00000</valor>
+			</totalImpuesto>
+			
+			
+			<totalImpuesto>
+				<codigo>2</codigo>
+				<codigoPorcentaje>5</codigoPorcentaje>
+				<descuentoAdicional>0</descuentoAdicional>
+				<baseImponible>0</baseImponible>
+				<valor>0.00</valor>
+			</totalImpuesto>
+			
+		
+		
+	      
+		  
+		  
+	    </totalConImpuestos>
+	    <propina>0</propina>
+	    <importeTotal>437.03000</importeTotal>
+	    <moneda>DOLAR</moneda>
+		
+	    
+	    <pagos>
+	    	
+	    	<pago>
+	    		<formaPago>20</formaPago>
+	    		<total>437.03</total>
+	    		<plazo>30</plazo>
+	    		<unidadTiempo>días</unidadTiempo>
+	    	</pago>
+	    	
+	    </pagos>
+	    
+  	</infoFactura>
+  	<detalles>
+  	
+    <detalle>
+      
+      	<codigoPrincipal>WIHA-32490</codigoPrincipal>
+		<codigoAuxiliar>WIHA-32490</codigoAuxiliar>
+      	<descripcion>SPEEDELL ELECTRIC SCREWDRIVER SLIMLINE BLADE 13 PIECE SET</descripcion>
+      
+      <cantidad>1.000000</cantidad>
+      <precioUnitario>422.260000</precioUnitario>
+	  
+      <descuento>42.23</descuento>
+      <precioTotalSinImpuesto>380.03</precioTotalSinImpuesto>
+	  
+	  
+            
+      
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>380.03000</baseImponible>
+          <valor>57.00</valor>
+        </impuesto>
+        
+		
+		
+      </impuestos>
+	  
+	</detalle>
+    
+	
+	
+	
+    </detalles>
+    
+	
+    
+    <infoAdicional>
+		
+    	
+    		
+    			<campoAdicional nombre="Descripción">JUEGO DE 13 PIEZAS DE DESTORNILLADORES ELÉCTRICOS, SPEEDE®II, CON HOJAS SLIMLINE, TRINQUETE DE TORSIÓN, 2 NIVELES DE POTENCIA, MARCA WIHA. // REFERENTE A LA OC No. 1000622769 // DM: 5000156371.</campoAdicional>
+    		
+    	
+		
+		
+    </infoAdicional>
+	
+	
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature177262">
+<ds:SignedInfo Id="Signature-SignedInfo429658">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID63180" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature177262-SignedProperties477127">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>NTlIUnpE01EMcDi1o2wcS+Mz1yw=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate599415">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>phropccfPVbviqmQo7R3BYPSxmE=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-848704" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>I+bkGAUmVFYA45eN2vfvXTBXFb8=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue492114">
+XflMoHbQE/p2w238H2K90lpWEFCXZdxlkpjOtGHtvuBV0RlCpwECW4vmXp2qRbU69ZHhB9UiHfIp
+cHupdC2PWno5X9MmzGEhEusIDTn7mQgyuzMYymSnLB2abA6CwNR1IWNaJCB6FnSlg6YV3VFvKJvq
+92VkTu9HqDlbQYrz/4QUQ6nVMakTXi4Kp6pr+ZYJiV1jox2aAxqPgi5coLzaR2+17S7pZAi6L2Lj
+4pMZMlZM/DSZkx/IQZ7OqmkTLMadoPxPgONw0+npYnAW0F26VrHC8GFXhwy80I69AB5Tb+WZ+9yT
+v32CnBCfr7FxSvqbIqkJx4KwR1VdYVvgPxG33Q==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate599415">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIMETCCCfmgAwIBAgIEVMcbRjANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yMzA2MDUyMTEwNTZaFw0yODA2MDQyMTEwNTZaMIGdMSYw
+JAYDVQQDDB1DUklTVElBTiBGQUJJQU4gTkFSQU5KTyBPUlRJWjEVMBMGA1UEBRMMMDUwNjIzMTYy
+MDI4MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAb
+BgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEB
+BQADggEPADCCAQoCggEBAK4vfrueJBNyJ64t4wic2E5vJp9tiQNm7shN9Pzw+akHInYC23+Fh8gk
+kIcbvLusIN4KR5wkzOf1VfxH3+5VFeHSp3PaAbIrRoUdP67J/JyeMtoJi0H8kdcLAdiF/+5r5da5
+JTmV1M48CwQuYO9SbOdIsjx7LJCfx+hfPCGiLx9+MQhoPOFbxzXbjAc9t05sUq5zq8E5mQ9doSag
+VkIDZ6nHOCEU6rjpaKddOzTiQQpA83Z74o69lpWrJ3Q63i/dWkEoKZ+VVoNWXEiP1tV5QUWDYaFy
+yhplC79Oo7V+xoy9/5KxQp2BVekKyV4qjHPibnsbENQoBVJqidzfirudEgECAwEAAaOCB1kwggdV
+MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUH
+AQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpi
+Y2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuGgbhsZGFwOi8v
+bGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJ
+T04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJ
+TkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZvY2F0aW9uTGlz
+dD9iYXNlMCcGA1UdEQQgMB6BHGNyaXN0aWFuYXJhbmpvcnRpekBnbWFpbC5jb20wggEVBgNVHSAE
+ggEMMIIBCDBiBgorBgEEAYKmcgIJMFQwUgYIKwYBBQUHAgIwRh5EAEMAZQByAHQAaQBmAGkAYwBh
+AGQAbwAgAGQAZQAgAFIAZQBwAHIAZQBzAGUAbgB0AGEAbgB0AGUAIABMAGUAZwBhAGwwgaEGCisG
+AQQBgqZyAgMwgZIwgY8GCCsGAQUFBwIBFoGCaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRhLm5ldC5l
+Yy93cC1jb250ZW50L2Rvd25sb2Fkcy9Ob3JtYXRpdmFzL1BfZGVfQ2VydGlmaWNhZG9zL1BvbGl0
+aWNhcyBkZSBDZXJ0aWZpY2FkbyBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjCCAqIGA1UdHwSCApkw
+ggKVMIHloEGgP4Y9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1Ymxp
+Y3dlYi9zdGF0dXMvb2NzcKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklD
+QUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYD
+VQQGEwJFQzCBx6CBxKCBwYaBvmxkYXA6Ly9sZGFwc2RjYTIuc2VjdXJpdHlkYXRhLm5ldC5lYy9D
+Tj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5U
+SURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEu
+IDIsQz1FQz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2UwgeCggd2ggdqGgddodHRwczov
+L3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2Vi
+ZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OLE89U0VDVVJJVFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUV7zBGG8mNvku
+4hU4GGIfqGBKZgkwKwYDVR0QBCQwIoAPMjAyMzA2MDUyMTEwNTZagQ8yMDI4MDYwNDIxMTA1Nlow
+CwYDVR0PBAQDAgXgMCAGCisGAQQBgqZyAwUEEgwQR0VSRU5URSAgR0VORVJBTDAaBgorBgEEAYKm
+cgMBBAwMCjA5MjU0MzgyMDIwFQYKKwYBBAGCpnIDCQQHDAVEVVJBTjARBgorBgEEAYKmcgMiBAMM
+AS4wFgYKKwYBBAGCpnIDBwQIDAZTTCAxMUEwHwYKKwYBBAGCpnIDAgQRDA9DUklTVElBTiBGQUJJ
+QU4wHwYKKwYBBAGCpnIDIAQRDA8wMDEwMDIwMDA0MDE2OTMwEwYKKwYBBAGCpnIDIQQFDANQRlgw
+FwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBcGCisGAQQBgqZyAwMECQwHTkFSQU5KTzBHBgorBgEE
+AYKmcgMKBDkMN1NVTUlOSVNUUk9TIEVMRUNUUklDT1MgWSBFTEVDVFJPTklDT1MgU1VNRUxUUk9O
+SUMgUyBBIFMwHQYKKwYBBAGCpnIDCwQPDA0wOTkzMzI3NDE3MDAxMBIGCisGAQQBgqZyAx0EBAwC
+Tm8wFQYKKwYBBAGCpnIDBAQHDAVPUlRJWjAaBgorBgEEAYKmcgMIBAwMCjA5NjMzODAzMzAwDQYJ
+KoZIhvcNAQELBQADggIBAGK+OGmEvHS0J/cbBxlI4jQkH7ekT26ZOqDLFAOg4TOpcJjaiWuQfW08
+mdfZqoDmDksFbuigpd1EIpUq0dgMx5GAEXoB74v7qkzwZrIkFonHARYqbN2NKZ4m5ClK8N0Z8aF4
+dO2Ow6aP/yjhSMYwmwSD4+5PSOnw3YqAQ2njTYeWHCQb5apkeDJGzLo+XEhJWbqso19cgZ0TapL/
+yLU8EzSy8HNvdKds+1tZlvFEeJA37kRLu4IBtIHkl8/Ykl9qvOYMMD5iYf4LOO9PbgRRzlQPcJcF
++/qWn2It+7nX/pjbSrPm2Fi0WCtJTINjtpkk5KI0H2tvpdLjy39jsKgHM6t/1pnkRi9p1udGcaEB
+U5kadj/Lcic32dv9tIIutvznAJPvrvygO8iV3j0575LNa2IrSb+WDhAr4ZWgWIKN0O7UcnDjPP8B
+xoMRrSebBNbFa1GKizbHm/8QXAswvQTfOLXEIE8IY9qB3unzg+HOl+Dd/Ph0F94Zb8ZcfH8qe3IZ
+qUjSo9uefozu7Vn4LyEfyUtZ2rVrofG/vmy/mSnscmQCuz2NzSog8Ps00pMbzT5ICFOn0MqqVd52
+ynLOBgXSKmvWDOvAw1uPSvU1GQVSTCUk/xWMzKOGVdSODffyQJM7/ECftbtw6ixjivzIs9czM/Cv
+AqmcghOUfBcPGOX3fFQK
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+ri9+u54kE3Inri3jCJzYTm8mn22JA2buyE30/PD5qQcidgLbf4WHyCSQhxu8u6wg3gpHnCTM5/VV
+/Eff7lUV4dKnc9oBsitGhR0/rsn8nJ4y2gmLQfyR1wsB2IX/7mvl1rklOZXUzjwLBC5g71Js50iy
+PHsskJ/H6F88IaIvH34xCGg84VvHNduMBz23TmxSrnOrwTmZD12hJqBWQgNnqcc4IRTquOlop107
+NOJBCkDzdnvijr2WlasndDreL91aQSgpn5VWg1ZcSI/W1XlBRYNhoXLKGmULv06jtX7GjL3/krFC
+nYFV6QrJXiqMc+JuexsQ1CgFUmqJ3N+Ku50SAQ==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature177262-Object166235"><etsi:QualifyingProperties Target="#Signature177262"><etsi:SignedProperties Id="Signature177262-SignedProperties477127"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-08T05:23:20-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>iZfMl/BmdF/662goZtT2YjkdRKE=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION</ds:X509IssuerName><ds:X509SerialNumber>1422334790</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

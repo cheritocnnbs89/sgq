@@ -365,6 +365,11 @@ def push_gastos_a_aws(app=None):
                 ON u.id = g.usuario_id
             WHERE COALESCE(g.aws_enviado, 0) = 0
               AND g.sap_contabilizacion IS NULL
+              AND (
+                  COALESCE(g.es_caja_chica, 0) = 1
+                  OR COALESCE(g.reembolso_vendedor, 0) = 1
+                  OR COALESCE(g.coord_revisado, 0) = 1
+              )
             """
         ).fetchall()
 

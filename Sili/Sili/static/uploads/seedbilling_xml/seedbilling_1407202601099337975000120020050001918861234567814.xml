@@ -1,0 +1,161 @@
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>SAMBOGAS S.A</razonSocial>
+    <ruc>0993379750001</ruc>
+    <claveAcceso>1407202601099337975000120020050001918861234567814</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>002</estab>
+    <ptoEmi>005</ptoEmi>
+    <secuencial>000191886</secuencial>
+    <dirMatriz>URBANIZACION BATAN, MZ 1, SOLAR C2, KM 9, VIA SAMBORONDON, VIA CIUDAD CELESTE</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>14/07/2026</fechaEmision>
+    <dirEstablecimiento>GUAYAS / SAMBORONDON / LA PUNTILLA (SATELITE) / VIA SAMBORON</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <totalSinImpuestos>69.57</totalSinImpuestos>
+    <totalDescuento>0</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>69.57</baseImponible>
+        <valor>10.44</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0</propina>
+    <importeTotal>80.01</importeTotal>
+    <moneda>DOLAR</moneda>
+    <placa>PFT8590</placa>
+    <pagos>
+      <pago>
+        <formaPago>01</formaPago>
+        <total>80.01</total>
+        <plazo>00</plazo>
+        <unidadTiempo>dias</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>0103</codigoPrincipal>
+      <codigoAuxiliar>0103</codigoAuxiliar>
+      <descripcion>SUPER</descripcion>
+      <cantidad>14.02</cantidad>
+      <precioUnitario>4.964348</precioUnitario>
+      <descuento>0</descuento>
+      <precioTotalSinImpuesto>69.57</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15</tarifa>
+          <baseImponible>69.57</baseImponible>
+          <valor>10.44</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="PLACA">PFT8590</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature864881">
+<ds:SignedInfo Id="Signature-SignedInfo131890">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID1028176" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature864881-SignedProperties866736">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>ahHzSbs5D00VT+2UzeYTl1GtBKE=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1261433">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>8KJPIHx//+O0Y5GyqlUL44zlEIQ=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-696987" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>3+OLgVdJsfDx4AilC+fNUFKBG+k=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue753094">
+YQQFM+ozsQZzBU2JynIpghz2uIgf5WB12UplxIkIQ1XDp+QDOK94RNqYH0Ti7V8xPqR2+xeSuKcu
+RG4UlABDkRKGbgUqjcMvS9O31Z5tU3fgAqamEB7sSQ7fA3WSpVQdlZKErLXelRDCReKJo/x9M+6X
+e6Q5NdGOz5KfFWE4POcrY1Bm4WPYcuWIVDIv88De7yOcE6ubwrQ/45Qxg9kBRbRVv1opCDC4COWx
+QwRJdheQKfNytQDdMPPc+3k9OJbDv/xXfbRKvTafqmqqiNwSEvOotLsSsdu1pk9Zv3DqrEUc6jC4
+CPld6OszK1jqYIiK2Jo06qerO8Wor7ie7N3BjA==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1261433">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIK4TCCCMmgAwIBAgIEIEbypjANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNTA1MjYxOTQ5MDlaFw0yNzA1MjYxOTQ5MDlaMIGlMSMw
+IQYDVQQDDBpKVUFOIEFOVE9OSU8gTklFVE8gQ0FUQUdVQTEgMB4GA1UEBRMXMDkwNTQ4Mjc5MC0y
+NjA1MjUxNDU5MDAxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1B
+Q0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjANBgkq
+hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn7MW5GezyunBNk/oHW8/wD7W/0L+fvWoH/0RDFXydZ3Y
+OYrKSJbvJOz3lo4patxy9RqG3enlq6wGUXR8kbCiSpnMqO8QMpGpd0DZerICREAh5gO5tmygqVvf
+soX6agyHCj15v24pieGq+v069H5QwBHHWzFmWTsx1pW8zLcC7qKTDH7krV/wOTo6T49copGjfuZf
+D/ZiCVGFBU2LKueRx5Gqx2evi1X6DknQz6Ua/HNGNi/qU9dD0tyJQi5za9ecCwJTtOi4TivwG461
+6E1AECUrAFqi1ZmFcPRfqam+zpN3ww94xuRIzhPbYhiKsUCKnmpx1IbxGlbMhRfVWwoY2wIDAQAB
+o4IGITCCBh0wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29jzBZ
+BggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRhLm5l
+dC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwHQYDVR0RBBYwFIESam5pZXRvQHZlcGFt
+aWwuY29tMIIBEgYDVR0gBIIBCTCCAQUwYAYKKwYBBAGCpnICCjBSMFAGCCsGAQUFBwICMEQeQgBD
+AGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABNAGkAZQBtAGIAcgBvACAAZABlACAARQBtAHAA
+cgBlAHMAYTCBoAYKKwYBBAGCpnICBDCBkTCBjgYIKwYBBQUHAgEWgYFodHRwczovL3d3dy5zZWN1
+cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0
+aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIE1pZW1icm8gZGUgRW1wcmVzYS5wZGYw
+HQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIwgd6gOqA4hjZo
+dHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmlsZS5jcmyigZ+k
+gZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJ
+VFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9O
+MR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6oDiGNmh0dHA6
+Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNybDCB4KCB3aCB
+2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1
+YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBD
+RVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklD
+QUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQW
+BBQZZrhVPvp6eyioMPiZhKCB+M/N6DArBgNVHRAEJDAigA8yMDI1MDUyNjE5NDkwOVqBDzIwMjcw
+NTI2MTk0OTA5WjALBgNVHQ8EBAMCBeAwGAYKKwYBBAGCpnIDBQQKDAhDT05UQURPUjAaBgorBgEE
+AYKmcgMBBAwMCjA5MDU0ODI3OTAwLQYKKwYBBAGCpnIDCQQfDB1TQU1CT1JPTkRPTiBDQUJFQ0VS
+QSBDQU5UT05BTDARBgorBgEEAYKmcgMiBAMMAS4wPQYKKwYBBAGCpnIDBwQvDC1WSUEgU0FNQk9S
+QU5ET04gU09MQVIgQzIgWSBWSUEgQ0lVREFEIENFTEVTVEUwHAYKKwYBBAGCpnIDAgQODAxKVUFO
+IEFOVE9OSU8wHwYKKwYBBAGCpnIDIAQRDA8wMDgwMDEwMDAwMTM1MTMwEwYKKwYBBAGCpnIDIQQF
+DANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBUGCisGAQQBgqZyAwMEBwwFTklFVE8wEQYK
+KwYBBAGCpnIDHgQDDAEuMBwGCisGAQQBgqZyAwoEDgwMU0FNQk9HQVMgUyBBMB0GCisGAQQBgqZy
+AwsEDwwNMDk5MzM3OTc1MDAwMTARBgorBgEEAYKmcgMdBAMMAS4wFwYKKwYBBAGCpnIDBAQJDAdD
+QVRBR1VBMBoGCisGAQQBgqZyAwgEDAwKMDk5NDUwMDA3MzANBgkqhkiG9w0BAQsFAAOCAgEAJMHR
+YTDLgxxP/L46tBj7ts08Jtt9i6XYkngEVWRGsuXvg6WBBxLFxgJchEyzTLb53weDFv+V/MFy+HcB
+QiKm2Y0O3I4a+HvxNEQTtMtinSSB0fKyn3d2L4feP5MFJZ3JH1UbdJ24tmIHprDGQzPw3MdB9pM5
+zn9yYZX0Owl84ql8QZ5TQmi3WzTPE2M5Ui33jQ9UksBgB+DOHt43kgjufRmihfMer/1jaY8VFuR5
+XMvqnKufZz19jKPmvtd1HE1ZAsCJ48jYzl1/Z18CqeUDUnbSvjord1/gQhi+/ip1xgCpQ6/saK8x
+3ifAvnD62+edf5Rrl0RUft30tKAMJWRkpoNZg2hrengAguwTngswK/H7Xr3ccBI6BbcG4QwgdnPa
+apWXLGtJJuG74/ceTSBiTvs3an4iWl8puIiYNBU6Hyepy2CvmBj4Z6pMkxk9S+mBkj64UotWezYp
+J28UDMBMuBEJ5HirdxKdK1EBXPg41oMJ2azdHLn63aCUM9eAWaTOQTVxZCdQPQWEBgVBKmtea42R
+PCdzEBOrwdllrCGazf70UddpX2N/DscNZ+Xtd4NcQNskfuW6Z4aBmZrQmTl6345Nbcbr/g0krRjI
++6MflnN5AC9TAqPfy/BmOdYjsfsbjozm8k4u/4XSiCaz7Bshvm7FQCh55JQ69l0qRlI/jDc=
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+n7MW5GezyunBNk/oHW8/wD7W/0L+fvWoH/0RDFXydZ3YOYrKSJbvJOz3lo4patxy9RqG3enlq6wG
+UXR8kbCiSpnMqO8QMpGpd0DZerICREAh5gO5tmygqVvfsoX6agyHCj15v24pieGq+v069H5QwBHH
+WzFmWTsx1pW8zLcC7qKTDH7krV/wOTo6T49copGjfuZfD/ZiCVGFBU2LKueRx5Gqx2evi1X6DknQ
+z6Ua/HNGNi/qU9dD0tyJQi5za9ecCwJTtOi4TivwG4616E1AECUrAFqi1ZmFcPRfqam+zpN3ww94
+xuRIzhPbYhiKsUCKnmpx1IbxGlbMhRfVWwoY2w==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature864881-Object335208"><etsi:QualifyingProperties Target="#Signature864881"><etsi:SignedProperties Id="Signature864881-SignedProperties866736"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-14T18:48:11-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>jv2jnfFF1bX+yYBRvWFYw3lCvsM=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>541520550</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-696987"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

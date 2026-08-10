@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><factura xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>SERVIENTREGA ECUADOR S.A.</razonSocial><nombreComercial>SERVIENTREGA ECUADOR S.A.</nombreComercial><ruc>0991285679001</ruc><claveAcceso>1607202601099128567900122250250001405241234567811</claveAcceso><codDoc>01</codDoc><estab>225</estab><ptoEmi>025</ptoEmi><secuencial>000140524</secuencial><dirMatriz>AV. JUAN TANCA MARENGO S/N DR. CAMILO PONCE ENRIQUE</dirMatriz></infoTributaria><infoFactura><fechaEmision>16/07/2026</fechaEmision><dirEstablecimiento>AV JUAN TANCA MARENGO Y DR CAMILO PONCE ENRIQUE</dirEstablecimiento><contribuyenteEspecial>198</contribuyenteEspecial><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>CALLE ROSAVIN LOTE 1 Y COBRE MZ15 EDF.QUIMPAC VIA DAULE KM 16.5</direccionComprador><totalSinImpuestos>200.0</totalSinImpuestos><totalDescuento>0.0</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>200.0</baseImponible><tarifa>15.00</tarifa><valor>30.0</valor></totalImpuesto></totalConImpuestos><propina>0.0</propina><importeTotal>230.0</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>230.00</total><plazo>8</plazo><unidadTiempo>DÍAS</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>3000000002</codigoPrincipal><descripcion>DOCUMENTO UNITARIO PROVINCIAL</descripcion><cantidad>1.00</cantidad><precioUnitario>148.93</precioUnitario><descuento>0.0</descuento><precioTotalSinImpuesto>148.93</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Envios" valor="1"/><detAdicional nombre="Porcentaje" valor="                           15"/></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>148.93</baseImponible><valor>22.34</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>3000000004</codigoPrincipal><descripcion>DOCUMENTO UNITARIO ESPECIAL</descripcion><cantidad>1.00</cantidad><precioUnitario>8.92</precioUnitario><descuento>0.0</descuento><precioTotalSinImpuesto>8.92</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Envios" valor="2"/><detAdicional nombre="Porcentaje" valor="                           15"/></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>8.92</baseImponible><valor>1.34</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>3000000002</codigoPrincipal><descripcion>DOCUMENTO UNITARIO PROVINCIAL</descripcion><cantidad>1.00</cantidad><precioUnitario>6.60</precioUnitario><descuento>0.0</descuento><precioTotalSinImpuesto>6.6</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Envios" valor="2"/><detAdicional nombre="Porcentaje" valor="                           15"/></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>6.6</baseImponible><valor>0.99</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>3000000022</codigoPrincipal><descripcion>MERCANCIA PREMIER REGIONAL</descripcion><cantidad>1.00</cantidad><precioUnitario>35.55</precioUnitario><descuento>0.0</descuento><precioTotalSinImpuesto>35.55</precioTotalSinImpuesto><detallesAdicionales><detAdicional nombre="Envios" valor="3"/><detAdicional nombre="Porcentaje" valor="                           15"/></detallesAdicionales><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>35.55</baseImponible><valor>5.33</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Correo">ulynch@quimpac.com.ec;recepcion@quimpac.com.ec;MAURICIO.URIBE@SERVIENTREGA.COM.EC;jose.achupallas@servientrega.com.ec</campoAdicional><campoAdicional nombre="Telefono">042162220</campoAdicional><campoAdicional nombre="direccion">CALLE ROSAVIN LOTE 1 Y COBRE MZ15 EDF.QUIMPAC VIA DAULE KM 16.5  </campoAdicional><campoAdicional nombre="Ciudad">GUAYAQUIL</campoAdicional><campoAdicional nombre="observacion">.</campoAdicional><campoAdicional nombre="Cod. Cliente">0000101619</campoAdicional><campoAdicional nombre="Periodo">Jun.- 16 Jul.- 15</campoAdicional><campoAdicional nombre="Documento SAP">7000066400</campoAdicional><campoAdicional nombre="Pre-Factura">1085808</campoAdicional><campoAdicional nombre="Pedido Ventas">1000067428</campoAdicional><campoAdicional nombre="Gran Contribuyente">GRAN CONTRIBUYENTE MEDIANTE RESOLUCIÓN NAC-GCFOIOC21-00001260-E</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature974823">
+<ds:SignedInfo Id="Signature-SignedInfo600081">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID686303" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature974823-SignedProperties187558">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>m7Xj81TN8lsjGB+w6B1aFBGvC9o=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1214526">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>jzYvm0UBoDalFYoU4MVNC2QAtIQ=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-949920" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>mL4xirLbM5EopXrL2PxYbQKVv3E=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue452413">
+gV+dvjqWLOTueldeZrYlFAC5yI2xk7StF5XBLyNwDSCTbP9ciTW2mDsU8ZoOlAgWH6mqdiiYorRd
+ycGReNwAiHJtMsV9KDxl9znpxLKuyqcXMP2JtuBWx4X03QuFTLbkkIjzlfaUBTP44P2mkRF0HlAB
+9Kwiee0xGxJXEWQBzEneoSRi6P4oRC8quRa3K5xKTvN8J4+ezSidcYbAb6473M2X2v0I+IZ2iUt0
+tWIh3Jdj7t4NRyyIrNpiGnU7EQWjgzX2BwFkQj7MOjzLxYh4ei1KG/+2BLlbAeWQltAxeuoyHeoU
+DGHbKaSaWFQsqULP/D3a1Llw8alxqjQr4arOUQ==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1214526">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIK7DCCCNSgAwIBAgIIK71x9bw71L8wDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwMjIwMjE0MzEyWhcNMjgwMjIwMjE0MzEyWjCB
+pTEjMCEGA1UEAwwaQVJNQU5ETyBDQVNURUxMQU5PUyBUQUxFUk8xIDAeBgNVBAUTFzA5MTg0NDg3
+MTMtMjAwMjI2MTY1MzAwMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5G
+T1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIw
+DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAI4JB5gSiwjbm1Qet2pVZh3MKL8PeHaVZWQZndFM
+rmL4+mSfuLPXdXnv1k5e9A4vXTcIuaMfIkhMZT/gsVp/coYPwzbsPmnLageDwXX1/hdWFxc9kUaZ
+tUz9wA7jS7+DTOah/AOmIn5p/3VrmntU8lQ4lu7f/HdXPr2cqaOIlfhUCT4JeENXB9zj9YXKJmyr
++WB1X+OEYu2cIkk+lfs87GJ5uQ/aZuO1xtgI81rZznBdn6Fa2bsFGBDw/KIBGbMuIfMrYOqf2d/L
+nr80heTMrXkRluwdGQl3Edlr72Ilg9j+I/gyGDK9qWnkKuDpPz0i2+YsJKZ9fkXn+CWzUYC+Z2MC
+AwEAAaOCBigwggYkMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLd
+vY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0
+YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMDIGA1UdEQQrMCmBJ2FybWFuZG8u
+Y2FzdGVsbGFub3NAc2VydmllbnRyZWdhLmNvbS5lYzCCARUGA1UdIASCAQwwggEIMGIGCisGAQQB
+gqZyAgkwVDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUgBl
+AHAAcgBlAHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYKKwYBBAGCpnICAzCBkjCBjwYI
+KwYBBQUHAgEWgYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93
+bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmlj
+YWRvIFJlcHJlc2VudGFudGUgTGVnYWwucGRmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcD
+BDCCAg8GA1UdHwSCAgYwggICMIHeoDqgOIY2aHR0cDovL2NybDEuc2VjdXJpdHlkYXRhLm5ldC5l
+Yy9zdWJjYTJjcmwxL2NybGZpbGUuY3JsooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEu
+IDIxCzAJBgNVBAYTAkVDMDygOqA4hjZodHRwOi8vY3JsMi5zZWN1cml0eWRhdGEubmV0LmVjL3N1
+YmNhMmNybDIvY3JsZmlsZS5jcmwwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIu
+c2VjdXJpdHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9
+Y3JsJmlzc3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZ
+IERBVEEsT1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJ
+VFkgREFUQSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUy5I7lz6t6IKdt9ckjPcRWVCx1CQwKwYDVR0Q
+BCQwIoAPMjAyNjAyMjAyMTQzMTJagQ8yMDI4MDIyMDIxNDMxMlowCwYDVR0PBAQDAgXgMB8GCisG
+AQQBgqZyAwUEEQwPR0VSRU5URSBHRU5FUkFMMBoGCisGAQQBgqZyAwEEDAwKMDkxODQ0ODcxMzAW
+BgorBgEEAYKmcgMJBAgMBlRBUlFVSTARBgorBgEEAYKmcgMiBAMMAS4wQwYKKwYBBAGCpnIDBwQ1
+DDNBViBKVUFOIFRBTkNBIE1BUkVOR08gUyBOIFkgRFIgQ0FNSUxPIFBPTkNFIEVOUklRVUUwFwYK
+KwYBBAGCpnIDAgQJDAdBUk1BTkRPMB8GCisGAQQBgqZyAyAEEQwPMDAxMDAyMDAxMTEzNzM1MBMG
+CisGAQQBgqZyAyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAbBgorBgEEAYKmcgMD
+BA0MC0NBU1RFTExBTk9TMCgGCisGAQQBgqZyAwoEGgwYU0VSVklFTlRSRUdBIEVDVUFET1IgUyBB
+MB0GCisGAQQBgqZyAwsEDwwNMDk5MTI4NTY3OTAwMTARBgorBgEEAYKmcgMdBAMMAS4wFgYKKwYB
+BAGCpnIDBAQIDAZUQUxFUk8wGgYKKwYBBAGCpnIDCAQMDAowOTk5NTAxMDAzMA0GCSqGSIb3DQEB
+CwUAA4ICAQAcuTsnxPbS71jl0QLqmXtxixBjhuS15FZGaIOzstqm92oS0AXtH0PnhI9pAbpQtB+3
+OdSPXWr91VvRodDllOfQImDp/JJG7KFxNaz3SJ+P/Jyw1GGW4fSZhnYmaxwKy3CTb0yVwedIfZ5E
+yBrbfUgY2X82B20qNhRPT/9+/xx2dk+0NAJkf4WhkdjPwPeSx86p+fYreyaN6xn31QEvm1MvwRm/
+khKR2SednqV1yxFX5jHIb/YZVwSq67vSekulMs+k8DIkJVuURahjZ/EpV7lRPzNAfuRSUuMoLjSZ
+Iy72jfvpUZXkYBxjMwPcEF9RmWudc2eGGHS3ElkLB7+AjspyVy2LnDRqaa46wWRGIdlFqaRdsfdj
+hPKfylSsA1/dTQFmtZGnWIe+tbUrt972jL/a9FS81vcwYbRg4pAIWC7QzriSngaMVpOaoehB4axC
+Z+hLm3cVevcv9bPYFeGosMFFu5BIdQ5KUJg340aLpQQVqstAvgY+Cm7Sh+baSlgUuVBSycKzm50a
+HZ1Ps/3Ch6pTZ4YR/l3grgH1wLyNou/WTGVNlJwJtUqVwxgBI8Fx7MRJ5bidfEeh986y1fyJQMM4
+PvtFuwpMPzD1nf2L4LkSYtaZYipdbJSpu3HIN8WJZGvdebhCBtNg+ZvG1imzzr+sCXAfKH5iofh1
+pWMhOXHv1w==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+jgkHmBKLCNubVB63alVmHcwovw94dpVlZBmd0UyuYvj6ZJ+4s9d1ee/WTl70Di9dNwi5ox8iSExl
+P+CxWn9yhg/DNuw+actqB4PBdfX+F1YXFz2RRpm1TP3ADuNLv4NM5qH8A6Yifmn/dWuae1TyVDiW
+7t/8d1c+vZypo4iV+FQJPgl4Q1cH3OP1hcombKv5YHVf44Ri7ZwiST6V+zzsYnm5D9pm47XG2Ajz
+WtnOcF2foVrZuwUYEPD8ogEZsy4h8ytg6p/Z38uevzSF5MyteRGW7B0ZCXcR2WvvYiWD2P4j+DIY
+Mr2paeQq4Ok/PSLb5iwkpn1+Ref4JbNRgL5nYw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature974823-Object1014784"><etsi:QualifyingProperties Target="#Signature974823"><etsi:SignedProperties Id="Signature974823-SignedProperties187558"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-16T10:04:19-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>Gw8YqBOFL6hq2OACDcrm/k7R9+E=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>3151800614468179135</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-949920"><etsi:Description>comprobateFirma</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

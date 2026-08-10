@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>KARLA TRONCOZO HASING</razonSocial>
+        <nombreComercial>KARLA TRONCOZO HASING</nombreComercial>
+        <ruc>0916202922001</ruc>
+        <claveAcceso>0807202601091620292200120020050000044890000436415</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>002</estab>
+        <ptoEmi>005</ptoEmi>
+        <secuencial>000004489</secuencial>
+        <dirMatriz>AV. 9 DE OCTUBRE 424 Y CHILE, EDIFICIO GRAN PASAJE, PISO 3, OFICINA 303. GUAYAQUIL</dirMatriz>
+        
+        
+        <agenteRetencion>10</agenteRetencion>
+        
+        
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>08/07/2026</fechaEmision>
+        
+        
+        <obligadoContabilidad>NO</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <direccionComprador>AV. ROSAVIN Y CALLE COBRE PARQUE INDUSTRIAL</direccionComprador>
+        <totalSinImpuestos>6.70</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <descuentoAdicional>0.00</descuentoAdicional>
+                <baseImponible>6.70</baseImponible>
+                <valor>1.01</valor>
+            </totalImpuesto>
+            
+        </totalConImpuestos>
+        <propina>0.00</propina>
+        <importeTotal>7.71</importeTotal>
+        <moneda>DOLAR</moneda>
+            <pagos>
+                
+                <pago>
+                    <formaPago>20</formaPago>
+                    <total>7.71</total>
+                    
+                </pago>
+                
+            </pagos>
+        <valorRetIva>0.00</valorRetIva>
+        <valorRetRenta>0.00</valorRetRenta>
+    </infoFactura>
+    <detalles>
+        
+        <detalle>
+            <codigoPrincipal>965</codigoPrincipal>
+            <codigoAuxiliar>503</codigoAuxiliar>
+            <descripcion>(5) CERTIFICACION DE DOCUMENTOS MATERIALIZADOS DESDE PAGINA WEB O DE CUALQUIER SOPORTE ELECTRONICO</descripcion>
+            <cantidad>1.00</cantidad>
+            <precioUnitario>6.70</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>6.70</precioTotalSinImpuesto>
+            
+            <impuestos>
+                
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15</tarifa>
+                    <baseImponible>6.70</baseImponible>
+                    <valor>1.01</valor>
+                </impuesto>
+                
+            </impuestos>
+        </detalle>
+        
+    </detalles>
+    <infoAdicional>
+        
+            <campoAdicional nombre="Forma de Pago">OTROS CON UTILIZACION DEL SISTEMA FINANCIERO 7.71</campoAdicional>
+        
+            <campoAdicional nombre="Numero de Libro"> 20260901021C01226</campoAdicional>
+        
+            <campoAdicional nombre="Matrizador"> CARLOS GABRIEL MAGALLANEZ MALDONADO</campoAdicional>
+        
+            <campoAdicional nombre="Email Cliente">sandra-chambers@hotmail.com; alegal@quimpac.com.ec</campoAdicional>
+        
+            <campoAdicional nombre="Agente de Retención Resolución No.">NAC-DGERCG25-00000010</campoAdicional>
+        
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature879938" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#">
+<ds:SignedInfo Id="Signature-SignedInfo541296">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID991068" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature879938-SignedProperties603218">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>eo3pT9j6ua9shV+LaiL7sUd+mhs=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1904597">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>9NS1n/sp8bRyJ8Ibmru4sUk1lk4=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-539387" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>35SUgn187JxlEEMp66ljgGGXQqw=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue686695">
+jIxtxNDx5jz2gvFZ3gdkMc244UwdBMdoKO4JV3lI3yVMNeqN50BWbyL3sqJ+zMp456lPLl6aZ0Tt
+mT0EIEfp4+9ykM8pGqmXI2tSfRqhY9/tb8XNDBLgaU2A8jauqOewSwDdbGv8pUcscnpGJ+TkK4o3
+9BK6egaiI2x2PcljDhppkJeW51+balNC2K7NU2hor+ZDfnyLdOyDFTIH1LbwJjLg0SMfzR/ZAuxo
+R52pGpuJr55CTpgIqS/HZ0h8i//joyLEerTV+9iP4w5G2/lO5GPZij5Gtpml9Txn+2Z5pPoKCigW
+C1TQVEoP7l/SWAEAQqV6Zte9rXPIwiDaSNSG/Q==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1904597">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIF3zCCBMegAwIBAgIQemmu78Nqfs/gv4x1OzzVsjANBgkqhkiG9w0BAQsFADBaMQswCQYDVQQG
+EwJFQzESMBAGA1UECgwJQXJnb3NEYXRhMRUwEwYDVQQLDAxBcmdvc0RhdGEgQ0ExIDAeBgNVBAMM
+F0FyZ29zRGF0YSBDQSAxIC0gU0hBMjU2MB4XDTI0MDgyODE2NDA1NVoXDTI2MDgyODE3NDA1NVow
+gZUxDzANBgNVBAgMBkdVQVlBUzELMAkGA1UEBhMCRUMxITAfBgkqhkiG9w0BCQEWEmNsaWVudGVz
+QGhlcm1lcy5lYzEmMCQGA1UEAwwdS2FybGEgTGlsaWFuYSBUcm9uY296byBIYXNpbmcxEjAQBgNV
+BAcMCUdVQVlBUVVJTDEWMBQGA1UEYQwNMDkxNjIwMjkyMjAwMTCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAO0DZB1Z3sRH+h4GuP9IeT9l1Pw56lVLyysm9yn1EtOxSaZx+41DgphX9M5k
+cbLVGeLjT6QqnzKnogkzEZudbNNTHp0a9KblVyrWI1aZbO/JoDZ21gLpdy+uF2AplyuGTHBYFWvY
++xRUsBwHOCeMchbCCxgr2B3u1SJRhfWdeI0qgvngVo8fwL/yrmiiVq7gWMGdU4Xhwy7wk7Yh7tQb
+AZDt2MdK2GNT3kCfU5Vfowmme09X5Zn2oB2RzbWorxm/krY4AT4LacFbEYN1vP6YTe/xyFifywHC
+dIdgxN0WcIqbaOkZ76bmLtSz+hePihmuZW8UOHJzElgng0e5U9xpJk8CAwEAAaOCAmMwggJfMB0G
+A1UdEQQWMBSBEmNsaWVudGVzQGhlcm1lcy5lYzAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFC16b67i
+TX5ifyqFyQsWxR3zSglHMB0GA1UdDgQWBBQ31dAdyUWq157/xsCYnnacJvBhZTBZBgNVHR8EUjBQ
+ME6gTKBKhkhodHRwOi8vY3JsLmFyZ29zZGF0YS5jb20uZWMvY3JsLzBjZGFlYTQ1LTMzNzQtNDJj
+YS05MjQ4LTdkNDc5N2VhMDBhNC5jcmwwOAYIKwYBBQUHAQEELDAqMCgGCCsGAQUFBzABhhxodHRw
+Oi8vb2NzcC5hcmdvc2RhdGEuY29tLmVjMA4GA1UdDwEB/wQEAwIGwDBTBgNVHSAETDBKMEgGCysG
+AQQBg84+AgEBMDkwNwYIKwYBBQUHAgEWK2h0dHBzOi8vc2lnbmFyZS5hcmdvc2RhdGEuY29tLmVj
+L3JlcG9zaXRvcnkwGgYKKwYBBAGDzj4DAQQMEwowOTE2MjAyOTIyMB0GCisGAQQBg84+AwIEDxMN
+S2FybGEgTGlsaWFuYTAgBgorBgEEAYPOPgMHBBITEE5VRVZFIERFIE9DVFVCUkUwHAYKKwYBBAGD
+zj4DCAQOEww1OTM5OTg4MzU3MDMwGQYKKwYBBAGDzj4DCQQLEwlHVUFZQVFVSUwwHQYKKwYBBAGD
+zj4DCwQPEw0wOTE2MjAyOTIyMDAxMBIGCisGAQQBg84+AwwEBBMCRUMwGAYKKwYBBAGDzj4DAwQK
+EwhUcm9uY296bzAWBgorBgEEAYPOPgMEBAgTBkhhc2luZzANBgkqhkiG9w0BAQsFAAOCAQEAQrVK
+ybrnUb+Hvej49itLDfEI/A1dEN8GbX5xl/O3pd2FFrJ1yfoM3hlK6erV2RXfbCkWJQ2YsuvDGAqC
+9J8f6apm87cMmuuYEP8H42OFRxSPss+B8pND1wa5hRPl6uTJSwfyAhteLX+QP9EOt4FKgjomsLL1
+aITbYDgs3Vf42CVJfEUcmTbYCQ1iMQ4xUN6zm3/Z067nxW3UxuCZQk+LhSdClVI2ie5Uu19raZx4
+gjB+PuronVHLuFAH1jSEX6Qvs7lJOsaOvL+kfffznTvp+YR1xF9lepnk/WGiJQcLDKMmTlqKt1/J
+pmGU6t0a4qKTzIkwZn8t8CMy7cKqYzxz6Q==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+7QNkHVnexEf6Hga4/0h5P2XU/DnqVUvLKyb3KfUS07FJpnH7jUOCmFf0zmRxstUZ4uNPpCqfMqei
+CTMRm51s01MenRr0puVXKtYjVpls78mgNnbWAul3L64XYCmXK4ZMcFgVa9j7FFSwHAc4J4xyFsIL
+GCvYHe7VIlGF9Z14jSqC+eBWjx/Av/KuaKJWruBYwZ1TheHDLvCTtiHu1BsBkO3Yx0rYY1PeQJ9T
+lV+jCaZ7T1flmfagHZHNtaivGb+StjgBPgtpwVsRg3W8/phN7/HIWJ/LAcJ0h2DE3RZwipto6Rnv
+puYu1LP6F4+KGa5lbxQ4cnMSWCeDR7lT3GkmTw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature879938-Object576253"><etsi:QualifyingProperties Target="#Signature879938"><etsi:SignedProperties Id="Signature879938-SignedProperties603218"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-08T15:45:35-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>xiYANf/lHqMZV2IuIsKtrOYgwH8=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=ArgosData CA 1 - SHA256,OU=ArgosData CA,O=ArgosData,C=EC</ds:X509IssuerName><ds:X509SerialNumber>162714554791186091599979736294703814066</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-539387"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

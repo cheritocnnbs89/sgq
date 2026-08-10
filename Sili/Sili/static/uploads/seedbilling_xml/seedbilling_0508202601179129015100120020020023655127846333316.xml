@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><factura xmlns:ds="http://www.w3.org/2000/09/xmldsig#" id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>PUNTONET S.A</razonSocial>
+        <nombreComercial>1791290151001</nombreComercial>
+        <ruc>1791290151001</ruc>
+        <claveAcceso>0508202601179129015100120020020023655127846333316</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>002</estab>
+        <ptoEmi>002</ptoEmi>
+        <secuencial>002365512</secuencial>
+        <dirMatriz>Quito, Amazonas 4545 y Pereira Edif. Centro Financiero, 4to piso, Ofi. 401</dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>05/08/2026</fechaEmision>
+        <dirEstablecimiento>Guayaquil, Av. Francisco de Orellana. Edificio Blue Towers, Piso 5 Oficina. 501 - 505.</dirEstablecimiento>
+        <contribuyenteEspecial>636</contribuyenteEspecial>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR SA QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <totalSinImpuestos>769.48</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>769.48</baseImponible>
+                <valor>115.42</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0.00</propina>
+        <importeTotal>884.90</importeTotal>
+        <moneda>USD</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>884.90</total>
+                <plazo>45</plazo>
+                <unidadTiempo>días</unidadTiempo>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>2104037</codigoPrincipal>
+            <codigoAuxiliar>1697184</codigoAuxiliar>
+            <descripcion>Recurrente Seguridad Gestionada FIREWALL FISICO MENSUAL</descripcion>
+            <cantidad>1.00</cantidad>
+            <precioUnitario>192.37</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>192.37</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="Ubicación: " valor="QUIMPAC | GUAYAQUIL FG 120G PRINCIPAL -"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.00</tarifa>
+                    <baseImponible>192.37</baseImponible>
+                    <valor>28.86</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>2104038</codigoPrincipal>
+            <codigoAuxiliar>1697184</codigoAuxiliar>
+            <descripcion>Recurrente Seguridad Gestionada FIREWALL FISICO MENSUAL</descripcion>
+            <cantidad>1.00</cantidad>
+            <precioUnitario>192.37</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>192.37</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="Ubicación: " valor="QUIMPAC | GUAYAQUIL FG 120G HA -"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.00</tarifa>
+                    <baseImponible>192.37</baseImponible>
+                    <valor>28.86</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>2104040</codigoPrincipal>
+            <codigoAuxiliar>1697184</codigoAuxiliar>
+            <descripcion>Recurrente Seguridad Gestionada FIREWALL FISICO MENSUAL</descripcion>
+            <cantidad>1.00</cantidad>
+            <precioUnitario>192.37</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>192.37</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="Ubicación: " valor="QUIMPAC | QUITO FG 120G HA -"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.00</tarifa>
+                    <baseImponible>192.37</baseImponible>
+                    <valor>28.86</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>2104039</codigoPrincipal>
+            <codigoAuxiliar>1697184</codigoAuxiliar>
+            <descripcion>Recurrente Seguridad Gestionada FIREWALL FISICO MENSUAL</descripcion>
+            <cantidad>1.00</cantidad>
+            <precioUnitario>192.37</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>192.37</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="Ubicación: " valor="QUIMPAC | QUITO FG 120G PRINCIPAL -"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.00</tarifa>
+                    <baseImponible>192.37</baseImponible>
+                    <valor>28.86</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="ciudad">Guayaquil</campoAdicional>
+        <campoAdicional nombre="Direccion">Calle: Rosavin Número: Lote 1 y Cobre, Via A Daule, Kilómetro: 16.5, Quimpac Ecuador Manzana: 385 Referencia: A Dos, Cuadras De La Cerveceria Nacional</campoAdicional>
+        <campoAdicional nombre="Telefono">042162660</campoAdicional>
+        <campoAdicional nombre="FechaCorte">31/08/2026</campoAdicional>
+        <campoAdicional nombre="Peridodo de consumo">01/08/2026 - 31/08/2026</campoAdicional>
+        <campoAdicional nombre="FechaPago">10/08/2026</campoAdicional>
+        <campoAdicional nombre="mensajeCobranzas|granContribuyente">Si usted desea mayor información sobre nuestros servicios o su factura, por favor comunicarse con su Ejecutivo de Cobranzas nalvarez@gye.puntonet.ec ó a nuestro PBX (04) 3800300 ext 201| Grandes Contribuyentes Resolución: NAC-GCFOIOC21-00001214-E</campoAdicional>
+        <campoAdicional nombre="email">aleon@quimpac.com.ec;ppalma@quimpac.com.ec;sistemas@quimpac.com.ec</campoAdicional>
+        <campoAdicional nombre="tipoContrato">Cuenta Corporativa</campoAdicional>
+        <campoAdicional nombre="Codigo">97929/1697184</campoAdicional>
+        <campoAdicional nombre="valorServicio">769.48</campoAdicional>
+        <campoAdicional nombre="clienteDesde">01/12/2025</campoAdicional>
+        <campoAdicional nombre="Observacion">OC 7500054192 AC 1001657987</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature1013055902"><ds:SignedInfo Id="SignedInfoDoc"><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><ds:Reference Id="SignedProperties230" Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignedProperties"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>ImXM/FTBrq3xND4Y/LjPai4awnI=</ds:DigestValue></ds:Reference><ds:Reference Id="Cert383" URI="#Certificate"><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>qvUtPsGT9erhV0djcR9OB8Y66+E=</ds:DigestValue></ds:Reference><ds:Reference Id="Reference790" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>ygFw7WsEjHze1WoBYjA/NwBEd7A=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>CDA0h7dSngVzRCkspkrLT0HyOPw7Z5RrrdFGSKyiNIRVmgWvHM5PkNMyf5ku/XiZF2HSVuGH/z8tvIHInHDy7lpOxiwjIUvfjdRrlodeosRuyJkhdmbuQFoaAjos336tdpkwfwGpW5Y7JJqm/x/sa64QH3qyfKjX1Xu/3C/2Ppe2NCooKSDtix6WH0fCefE0m3AIiaij/0bgtbsCRy5xBJoPbAgKCJjBJ83WMvh7KvuoHegOqcatqu7WdRTnFaV5ay3kaGba7kyhMJMuM/OvzoKBguyuzFIg0WSY01W/5dRBbSUhs1i7iK0lDHOfsJRFPWra99kjgT0OY8qO+Y44JQ==</ds:SignatureValue><ds:KeyInfo Id="Certificate"><ds:X509Data><ds:X509Certificate>MIILGzCCCQOgAwIBAgIIZstpZsbZZMowDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUxMjE2MTk1NDQ2WhcNMjYxMjE2MTk1NDQ2WjCBpTEjMCEGA1UEAwwaQ0VDSUxJQSBQQU9MQSBEQVFVSSBKQU5FVEExIDAeBgNVBAUTFzA2MDQzMzIwMDctMTYxMjI1MTUwNDM5MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKiEQ0LTOUm2RwOAk4MkXcs7gJqk/aETo6KfSNb2Rw78LnWokZXULQnhJqpufRsGdGNrSAUp+liNveBmnOPUF9qhPqOfmVrYV1qVj+WC61Uc8UAwoFjPUINkrD+AcrXapD8Ur+ZcPP0dAEZB4mIJI+ejTBQWU8tIoK7Y//0UJfGVIuYVKq8/X62TOvY1weny/fOX7/n9woUQqUtLKLiRWWxvB7hmttI7R/9uoOFnY6GfNzqM7HfQ62ucSxqWw5g710VTRTv8ecijXsqAbXHzyir84BPeMS8MlxfL5nLaGKI8dzLNRHRIEXFMHMbjgLQNwTdyx1SkEpjYtixhn8iijDMCAwEAAaOCBlcwggZTMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMCQGA1UdEQQdMBuBGWNlY2lsaWEuZGFxdWlAcHVudG9uZXQuZWMwggESBgNVHSAEggEJMIIBBTBgBgorBgEEAYKmcgIKMFIwUAYIKwYBBQUHAgIwRB5CAEMAZQByAHQAaQBmAGkAYwBhAGQAbwAgAGQAZQAgAE0AaQBlAG0AYgByAG8AIABkAGUAIABFAG0AcAByAGUAcwBhMIGgBgorBgEEAYKmcgIEMIGRMIGOBggrBgEFBQcCARaBgWh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gTWllbWJybyBkZSBFbXByZXNhLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwggIPBgNVHR8EggIGMIICAjCB3qA6oDiGNmh0dHA6Ly9jcmwxLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMS9jcmxmaWxlLmNybKKBn6SBnDCBmTE5MDcGA1UEAwwwQVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzA8oDqgOIY2aHR0cDovL2NybDIuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJjYTJjcmwyL2NybGZpbGUuY3JsMIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMwHQYDVR0OBBYEFKO0NA1CR5vtjoxkDR+nna3fp6CNMCsGA1UdEAQkMCKADzIwMjUxMjE2MTk1NDQ2WoEPMjAyNjEyMTYxOTU0NDZaMAsGA1UdDwQEAwIF4DAYBgorBgEEAYKmcgMFBAoMCENPTlRBRE9SMBoGCisGAQQBgqZyAwEEDAwKMDYwNDMzMjAwNzBvBgorBgEEAYKmcgMJBGEMX1FVSVRPIERJU1RSSVRPIE1FVFJPUE9MSVRBTk8gQ0FCRUNFUkEgQ0FOVE9OQUwgQ0FQSVRBTCBQUk9WSU5DSUFMIFkgREUgTEEgUkVQVUJMSUNBIERFTCBFQ1VBRE9SMBEGCisGAQQBgqZyAyIEAwwBLjAqBgorBgEEAYKmcgMHBBwMGkFWIEFNQVpPTkFTIDQ1NDUgWSBQRVJFSVJBMB0GCisGAQQBgqZyAwIEDwwNQ0VDSUxJQSBQQU9MQTAfBgorBgEEAYKmcgMgBBEMDzAwMjAwMTAwMTExODk5NjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFQYKKwYBBAGCpnIDAwQHDAVEQVFVSTARBgorBgEEAYKmcgMeBAMMAS4wHAYKKwYBBAGCpnIDCgQODAxQVU5UT05FVCBTIEEwHQYKKwYBBAGCpnIDCwQPDA0xNzkxMjkwMTUxMDAxMBEGCisGAQQBgqZyAx0EAwwBLjAWBgorBgEEAYKmcgMEBAgMBkpBTkVUQTAaBgorBgEEAYKmcgMIBAwMCjA5OTM0MzYwNTcwDQYJKoZIhvcNAQELBQADggIBAHXzz6Qp4SarTSsf59DY5ICOVhKsKZdHLOjbBGJi1xMtu0afFO4tEya1gFoBgnWJg0lyGwunAs9c1EtQBa3ZjanMkRAclyt5hShmhLV4HJdHWqvcSdG5hnH78bPKfLgTOb1jrGxnGgJA4/ibsfJMj3WT5D1jCnFAMdIIt3nbG5CCgc9/DjTROIbN0k2ANwRor+cw3Mkb/TEbSqyO/UX6k6NH2ab0Oynbuxg4nKgS1Nv93z2GgJ1cr3IZ+AgwfhVQZSzch9hLnP2qQFgurCworEybFCSv5z4jopIbyCEssWNCTQO7fvRSsSTit5h+CbudZenq3xbzTYp7RC5EZxcRmpV+4rtSq/OQOVy3NbLY6UWlFQomkkvEqNeAiKGiysEsuuHQGtKETg4dw1RmIPIESnU3iXj1PRYzKa4p7bwHeslFP6uDtzfUvyDZA5Qk+BjFkMhoKjunJICZLIrNmkJKk7FOnYIceLZC0pm1jLVQrKRR/fdHRxTe7LWxN/cv4OSveOmr5PPCLh6cRVnEr3F/X1vEfttNhWnnsSopNun7hN5oS9q3nP0KW4DYwumm4t8Rk2HAAKWZrVSdbA9Ogrjs2wGI4Jj2eA9GqD89eniumLW0WwXzRy5XJPQOhuFEf6yqPeEN8RNKDwIqni+hC/R5n4U13PxG+IZQl3+tMAtfI5Vr</ds:X509Certificate></ds:X509Data><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>qIRDQtM5SbZHA4CTgyRdyzuAmqT9oROjop9I1vZHDvwudaiRldQtCeEmqm59GwZ0Y2tIBSn6WI294Gac49QX2qE+o5+ZWthXWpWP5YLrVRzxQDCgWM9Qg2SsP4BytdqkPxSv5lw8/R0ARkHiYgkj56NMFBZTy0igrtj//RQl8ZUi5hUqrz9frZM69jXB6fL985fv+f3ChRCpS0souJFZbG8HuGa20jtH/26g4WdjoZ83Oozsd9Dra5xLGpbDmDvXRVNFO/x5yKNeyoBtcfPKKvzgE94xLwyXF8vmctoYojx3Ms1EdEgRcUwcxuOAtA3BN3LHVKQSmNi2LGGfyKKMMw==</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue></ds:KeyInfo><ds:Object Id="Signature1013055902-Object"><etsi:QualifyingProperties Target="#Signature1013055902"><etsi:SignedProperties Id="SignedProperties"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-08-05T15:15:29.338-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>GSOzt7yGHnIfjD9gg6s21IERr8I=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>7407129902284629194</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference790"><etsi:Description>Comprobante SRI by QuindeFee</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

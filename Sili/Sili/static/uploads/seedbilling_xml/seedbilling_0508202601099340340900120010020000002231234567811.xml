@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>COMPANIA DE TRANSPORTE DE CARGA PESADA ANDESCARGA S.A.</razonSocial><nombreComercial>ANDESCARGA S.A</nombreComercial><ruc>0993403409001</ruc><claveAcceso>0508202601099340340900120010020000002231234567811</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>002</ptoEmi><secuencial>000000223</secuencial><dirMatriz>SL 7</dirMatriz></infoTributaria><infoFactura><fechaEmision>05/08/2026</fechaEmision><dirEstablecimiento>SL 7</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador><identificacionComprador>0990344760001</identificacionComprador><direccionComprador>ROSAVIN LOTE 1 Y COBRE</direccionComprador><totalSinImpuestos>123.20</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>123.20</baseImponible><valor>18.48</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>141.68</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>20</formaPago><total>141.68</total><plazo>0</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>00016</codigoPrincipal><descripcion>SERVICIO DEVOLUCION DE CONTENEDOR</descripcion><cantidad>2</cantidad><precioUnitario>61.60</precioUnitario><descuento>0.00</descuento><precioTotalSinImpuesto>123.20</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>123.20</baseImponible><valor>18.48</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Email Cliente">inhouse@quimpac.com.ec,pgallegos@quimpac.com.ec</campoAdicional><campoAdicional nombre="Telef. Cliente">042162660</campoAdicional><campoAdicional nombre="Detalle Adicional">OC 2000030434 / ACIDO NITRICO CONT FBlU222773 / MEDU6735377</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-9ea593f9-3f0f-4da7-be4a-1d68537b3d6c">
+<ds:SignedInfo>
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="xmldsig-9ea593f9-3f0f-4da7-be4a-1d68537b3d6c-ref0" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>ui1JSoDpl1SWRj/mZur00XIjGeM=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-9ea593f9-3f0f-4da7-be4a-1d68537b3d6c-signedprops">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>JlEf16ZLKbMB3LKD9PX27cWLjeg=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="xmldsig-9ea593f9-3f0f-4da7-be4a-1d68537b3d6c-sigvalue">
+Df/RR1h9FhhFcTB9p76HSCr67nspPPwANJo2ojshtqs2b2DcJlNVjnz6j9beBL2hfCOfW0mvHvMi&amp;#13;
+QCJpWWWMAXN7MWx9urbQlHnHkdpnPm9LXxRL1DEfsxv6/s8L73V3Og7n/sV+WIGOBaOzo8xOxo5f&amp;#13;
+LkEbTDVd/3yGFthAHgqe+ihtUv6nvgyXq31vwQZPVCV25zISzffz+/rhrFzK/SLLfEakL3O+arj+&amp;#13;
+iW1iRtMKpOZ7XFyfEXDUsS39bvduovfcXvk6nfj9I6Xuojo4BuiEMgeFAT+rzn5/laxCzzd8kBMS&amp;#13;
+OMl92M60TiOe+OHzbNltQoqj2FVnziLWwEpbmA==
+</ds:SignatureValue>
+<ds:KeyInfo>
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKyjCCCLKgAwIBAgIIJjgIucCkPYswDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w&amp;#13;
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ&amp;#13;
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP&amp;#13;
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjYwMTA5MDI0NjE5WhcNMjcwMTA5MDI0NjE5WjCB&amp;#13;
+qDEmMCQGA1UEAwwdR1JFR09SWSBBTEZSRURPIFNPU0EgQkFSUkVJUk8xIDAeBgNVBAUTFzA5MTcy&amp;#13;
+MDg4OTQtMDgwMTI2MjE1NjEyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUg&amp;#13;
+SU5GT1JNQUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCC&amp;#13;
+ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMB7RmLp8PzzbQoZ2YHUZ5ch+jD6Wxl8hWQD&amp;#13;
+b9izWN4PPf9fUyFhI6I+ct/3h1K/ux2Au1Cn2PEJRpH1a+hQXt1hYG8n1/9br40OYXO7r77k+hDo&amp;#13;
+QYW+LgdJu00KrFQ8WyERyBZnY+8AFwYeGyanhfEWAiLzHWtcG4j0GpMxyjvxFzUHt5UoyXTtHVzn&amp;#13;
+fTYOLsVP8+wgYulq+pKfUnDe/DCHGNM/2lPNzMrIftYG+gPir4NQOgo2bfig1yzVdjzUKdNwM4cz&amp;#13;
+FiNl7Y7iV2w7S6qSGLT+OLxC2Ek6YnAzkJwoqYAJxRtNhK+ig5lsjlP6pXWdTHfudlADM9EbnqbI&amp;#13;
+VmcCAwEAAaOCBgMwggX/MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+N&amp;#13;
+rmLdvY8wWQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5&amp;#13;
+ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMBwGA1UdEQQVMBOBEWdyZXNv&amp;#13;
+c2FAZ21haWwuY29tMIIBFQYDVR0gBIIBDDCCAQgwYgYKKwYBBAGCpnICCTBUMFIGCCsGAQUFBwIC&amp;#13;
+MEYeRABDAGUAcgB0AGkAZgBpAGMAYQBkAG8AIABkAGUAIABSAGUAcAByAGUAcwBlAG4AdABhAG4A&amp;#13;
+dABlACAATABlAGcAYQBsMIGhBgorBgEEAYKmcgIDMIGSMIGPBggrBgEFBQcCARaBgmh0dHBzOi8v&amp;#13;
+d3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29udGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9Q&amp;#13;
+X2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUgQ2VydGlmaWNhZG8gUmVwcmVzZW50YW50ZSBM&amp;#13;
+ZWdhbC5wZGYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIw&amp;#13;
+gd6gOqA4hjZodHRwOi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmls&amp;#13;
+ZS5jcmyigZ+kgZwwgZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNB&amp;#13;
+LTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO&amp;#13;
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6&amp;#13;
+oDiGNmh0dHA6Ly9jcmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNy&amp;#13;
+bDCB4KCB3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVj&amp;#13;
+L2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9S&amp;#13;
+SURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERF&amp;#13;
+IENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVD&amp;#13;
+MB0GA1UdDgQWBBTiA/aB6zAjBmDwSSRDxtlurmaWTDArBgNVHRAEJDAigA8yMDI2MDEwOTAyNDYx&amp;#13;
+OVqBDzIwMjcwMTA5MDI0NjE5WjALBgNVHQ8EBAMCBeAwHwYKKwYBBAGCpnIDBQQRDA9HRVJFTlRF&amp;#13;
+IEdFTkVSQUwwGgYKKwYBBAGCpnIDAQQMDAowOTE3MjA4ODk0MBYGCisGAQQBgqZyAwkECAwGWElN&amp;#13;
+RU5BMBEGCisGAQQBgqZyAyIEAwwBLjAUBgorBgEEAYKmcgMHBAYMBFNMIDcwHwYKKwYBBAGCpnID&amp;#13;
+AgQRDA9HUkVHT1JZIEFMRlJFRE8wHwYKKwYBBAGCpnIDIAQRDA8wMDEwMDIwMDEwNjM0NDAwEwYK&amp;#13;
+KwYBBAGCpnIDIQQFDANQRlgwFwYKKwYBBAGCpnIDDAQJDAdFQ1VBRE9SMBQGCisGAQQBgqZyAwME&amp;#13;
+BgwEU09TQTBFBgorBgEEAYKmcgMKBDcMNUNPTVBBTklBIERFIFRSQU5TUE9SVEUgREUgQ0FSR0Eg&amp;#13;
+UEVTQURBIEFOREVTQ0FSR0EgUyBBMB0GCisGAQQBgqZyAwsEDwwNMDk5MzQwMzQwOTAwMTARBgor&amp;#13;
+BgEEAYKmcgMdBAMMAS4wGAYKKwYBBAGCpnIDBAQKDAhCQVJSRUlSTzAaBgorBgEEAYKmcgMIBAwM&amp;#13;
+CjA5ODY5OTk4NjgwDQYJKoZIhvcNAQELBQADggIBAB6TruvHV9p+lRKPrW9rtv1aupJJIHnzvQyB&amp;#13;
+9ru0tSPTSI/8Dwgh2CpQgpDPKlXbAlOmgCbvwkwK469fMbzQZH6HNIjEZBoWNiYGh9KAeLLTCYIb&amp;#13;
+7zJ41YbNLqpGigxN1ir2Hv4KlcMNid0zId2TZ0LWE6mFvLcLw8Q4awf/3QQNN6J6tQNU0f93ETbh&amp;#13;
+EfaE1J90/S5Iw9JeSDtfwhzuJZiBKZptXAQqVBWBnSGDJsAUW+WmocchO8Fuk4D9VWsQzB2NBow+&amp;#13;
+a4lysed87abSFYHSdt/0nK4trUoVVcq/zZ5cTPGrcd+SnCsg2m4vLRuYXHiX90S/iBe0GDXPdizE&amp;#13;
+bCAEGV2lZb+UbGOrF0PKL3rwXjULHF8eAzii6MHHFQPV+oOafhuKcescUBbcNKzVRsVyKktyk1XG&amp;#13;
+Z9CiBXcY/MC5pOH2N6xjSwjj3YuVVNv4RTHE0WyWNSeCVyKhg6r2jMyf6lyNk9LDqAWYFFb3ud12&amp;#13;
+zHCb+LRmuuJ6XCmAv1Q6UWn5NR4Ru5wNjRbEr8BroMbpO9yWVagNa/F3G/Awp/IVl7wyxBA33XZ9&amp;#13;
+QsQI2pmfhsZxIi5l9me2XYtaO2GagI2oONVa0yBpn9fasT+GMkkq3/vz/efD+v4stAv01aa7pSf+&amp;#13;
+sHW0xLYjcfs+6Q57Oa5PrlOj5M/xy0NwVJGl7tc5
+</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+<ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-9ea593f9-3f0f-4da7-be4a-1d68537b3d6c"><xades:SignedProperties Id="xmldsig-9ea593f9-3f0f-4da7-be4a-1d68537b3d6c-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-08-05T09:14:03.475-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>KLRT+5xG1qCEGuB5w+LEhpn0bHM=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>cn=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,ou=ENTIDAD DE CERTIFICACION DE INFORMACION,o=SECURITY DATA S.A. 2,c=EC</ds:X509IssuerName><ds:X509SerialNumber>2753960766031019403</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-9ea593f9-3f0f-4da7-be4a-1d68537b3d6c-ref0"><xades:MimeType>text/xml</xades:MimeType></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object>
+</ds:Signature></factura>

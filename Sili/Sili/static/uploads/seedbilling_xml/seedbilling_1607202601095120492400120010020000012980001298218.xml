@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="comprobante" version="1.0.0">
+  <infoTributaria>
+    <ambiente>2</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>VERA VELASQUEZ JOHN LENON</razonSocial>
+    <nombreComercial>VERA VELASQUEZ JOHN LENON</nombreComercial>
+    <ruc>0951204924001</ruc>
+    <claveAcceso>1607202601095120492400120010020000012980001298218</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>002</ptoEmi>
+    <secuencial>000001298</secuencial>
+    <dirMatriz>COOP BASTION POPULAR Numero: SOLAR 12 Bloque: 1 Manzana: 510 Referencia: A UNA CUADRA DEL UPC</dirMatriz>
+    <agenteRetencion>1</agenteRetencion>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>16/07/2026</fechaEmision>
+    <dirEstablecimiento>COOP BASTION POPULAR Numero: SOLAR 12 Bloque: 1 Manzana: 510 Referencia: A UNA CUADRA DEL UPC</dirEstablecimiento>
+    <obligadoContabilidad>NO</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+    <identificacionComprador>0990344760001</identificacionComprador>
+    <direccionComprador>KM 16.5 VIA DAULE</direccionComprador>
+    <totalSinImpuestos>650.00</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>4</codigoPorcentaje>
+        <baseImponible>650.00</baseImponible>
+        <tarifa>15.00</tarifa>
+        <valor>97.50</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <importeTotal>747.50</importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+      <pago>
+        <formaPago>20</formaPago>
+        <total>747.50</total>
+        <unidadTiempo>dia</unidadTiempo>
+      </pago>
+    </pagos>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>006</codigoPrincipal>
+      <descripcion>TAPAS PLASTICAS PARA TAMBORES - TPT</descripcion>
+      <cantidad>650.00</cantidad>
+      <precioUnitario>1.000000</precioUnitario>
+      <descuento>0.00</descuento>
+      <precioTotalSinImpuesto>650.00</precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>4</codigoPorcentaje>
+          <tarifa>15.00</tarifa>
+          <baseImponible>650.00</baseImponible>
+          <valor>97.50</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+  <infoAdicional>
+    <campoAdicional nombre="Informacion">TAPAS PARA TAMBORES  GUÍA # 2244 ORDEN DE COMPRA # 1000625529 INGRESO # 5000176591</campoAdicional>
+    <campoAdicional nombre="Direccion">KM 16.5 VIA DAULE</campoAdicional>
+    <campoAdicional nombre="Email">compras.electronica@quimpac.com.ec</campoAdicional>
+  </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature93522">
+<ds:SignedInfo Id="Signature-SignedInfo799809">
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod>
+<ds:Reference Id="SignedPropertiesID79805" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature93522-SignedProperties850803">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>cqS7XGuXGKP9ybedKmHho6RUacc=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate1962076">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>rBgyEDHqV6bWA/wb7kzfNZ0SeHQ=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-734151" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+<ds:DigestValue>KGXsJr9XcSCJGjePNkZvRYB0LP4=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue Id="SignatureValue198287">
+XoruryQetrU2HnGpHwJanunLcw9lFjNw2b1cmDAurR1DxoV81ei1Oo55SU/m7/ZcC8upKFPv9nBC
+dQrfjWpRPJqwl0baklBQ6wyQYVIxbQCi7YvSwO/QdaqOcK7581TO56ChGW2Vfg/WjbNmp9YntPgG
+RLq9HZDFkxHUMnqExpuVIsoSqZU/Oo1fiVg5F7BZGb9MUR0MSQPL+AknxflRvWoFniK5HqNsMBtY
+emqvnvNTbek5Uz6YLk3d9wxBHXGszmE/l7oCS59XGz8ijWpoG5BzAiEPylmGl5QRXglRCOeKbEbI
+Bgk25XheiHGzuDdF8PqZdX2vAYxINno3mrQwEg==
+</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate1962076">
+<ds:X509Data>
+<ds:X509Certificate>
+MIIKhjCCCG6gAwIBAgIIHdJZEbBD8tswDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwOTAyMDMwNDQxWhcNMjYwOTAyMDMwNDQxWjCB
+pDEiMCAGA1UEAwwZSk9ITiBMRU5PTiBWRVJBIFZFTEFTUVVFWjEgMB4GA1UEBRMXMDk1MTIwNDky
+NC0wMTA5MjUyMjE0MzMxMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZP
+Uk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIIBIjAN
+BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArLSd9+NrQqPEpgeB/Aqd6AmCoozUw3RFdPiye2uu
+h6W1tc9xso8c4R6933+AupswiHwy4lF6BMrMz+iuTKmlG0bTvlNY18cPyS+iuxhV5Uj0vnBu7Xrk
+biEaHVmXSiw1ykLL5VnuHrDv33SaL/8XXHAf5afbTXmFkFW3dihLPA3yXcncf5mrPt0590QaPS4o
+3wmA7wOiFCY3IVFjs5NsCNuM6biAkZ1/Ai8M+UMMGHvrENGGZFhE+VIEqMQbvgx8wqtP0qrlj8e6
+pNnghvhniHMCfE/e1gR2tCl+c3Q9Qt2ZPhWGEQ2K6Oa+V655juKvC7NcSNCG3ny5Z+88ZcGOCwID
+AQABo4IFwzCCBb8wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSMusoRV3glgB1rCktVv42uYt29
+jzBZBggrBgEFBQcBAQRNMEswSQYIKwYBBQUHMAGGPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRh
+Lm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3AwIwYDVR0RBBwwGoEYam9obl9sZW5v
+bjIxQGhvdG1haWwuY29tMIIBBgYDVR0gBIH+MIH7MFoGCisGAQQBgqZyAgcwTDBKBggrBgEFBQcC
+AjA+HjwAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUABlAHIAcwBvAG4AYQAgAE4AYQB0
+AHUAcgBhAGwwgZwGCisGAQQBgqZyAgEwgY0wgYoGCCsGAQUFBwIBFn5odHRwczovL3d3dy5zZWN1
+cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1hdGl2YXMvUF9kZV9DZXJ0
+aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIFBlcnNvbmEgTmF0dXJhbC5wZGYwHQYD
+VR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIICDwYDVR0fBIICBjCCAgIwgd6gOqA4hjZodHRw
+Oi8vY3JsMS5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNybDEvY3JsZmlsZS5jcmyigZ+kgZww
+gZkxOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkg
+REFUQTEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwPKA6oDiGNmh0dHA6Ly9j
+cmwyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvc3ViY2EyY3JsMi9jcmxmaWxlLmNybDCB4KCB3aCB2oaB
+12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1Ymxp
+Y3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNzdWVyPUNOPUFVVE9SSURBRCBERSBDRVJU
+SUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBRs
+2BDvn9TDe6APbIRMMiQVvKMaFzArBgNVHRAEJDAigA8yMDI1MDkwMjAzMDQ0MVqBDzIwMjYwOTAy
+MDMwNDQxWjALBgNVHQ8EBAMCBeAwGgYKKwYBBAGCpnIDAQQMDAowOTUxMjA0OTI0MBkGCisGAQQB
+gqZyAwkECwwJUEFTQ1VBTEVTMBEGCisGAQQBgqZyAyIEAwwBLjAYBgorBgEEAYKmcgMHBAoMCFNP
+TEFSIDEyMBoGCisGAQQBgqZyAwIEDAwKSk9ITiBMRU5PTjAfBgorBgEEAYKmcgMgBBEMDzAwMjAw
+MTAwMDQxMTcwNzARBgorBgEEAYKmcgMjBAMMAS4wEwYKKwYBBAGCpnIDIQQFDANQRlgwFwYKKwYB
+BAGCpnIDDAQJDAdFQ1VBRE9SMBQGCisGAQQBgqZyAwMEBgwEVkVSQTAYBgorBgEEAYKmcgMeBAoM
+CE1FQ0FOSUNPMB0GCisGAQQBgqZyAwsEDwwNMDk1MTIwNDkyNDAwMTARBgorBgEEAYKmcgMdBAMM
+AS4wGQYKKwYBBAGCpnIDBAQLDAlWRUxBU1FVRVowGgYKKwYBBAGCpnIDCAQMDAowOTc5OTY4MjIx
+MA0GCSqGSIb3DQEBCwUAA4ICAQCEGni5Rm6p/2sNnr6q/M+SSG+tTwZKhGS9fwhbP6ULR9UlLr8H
+buF4qDeH1FOILBl3Svx7r8IZu++2r5CjW8vpLj8FWCsv+HTGmx7ndS2FnmIFo8IAaVCc1i8+xp3R
+f4UtHxhgsZKsEzRleXCBY0IxICcpW7ywgQchEc3Vd8t2aSbUCgWosEjRD/yXd1pneIFW7IEsisRW
+KPUB14Ez2WObyTH7pV09pZ60DIDGVb9wPkDr1zRHSakMzspEf97nE+rejV3oQp9aeFsh5Ofo7OaG
+hfEX7SAzJBAG/3dmYrW+sPCcfLsSGDURGJaCAx4Sb5DYZl3uQreI1yZoB8tAMNb2rNkVIeWGDkfs
+NzNv/SUJCtFbiw/8D1oMMl66Z4ZLqw+RQ1cTVSBqyfSZxLY6c2MsvE7g/U1qvVcsr6jbcBGDEYab
+C841yOy6rYH9JwLnnfuaiB1rYjQ4PPVHfR5CJWkv5/B0sLanN23MH5iT3OASkrMhcmXzoRROd9+O
+UvlLFJERtI2GqCj+e91kfanpP/otuK3HUBU6ClVA00F+l8/wYV6pOipVrvm6p1B5ETOcpPitYOyF
+hAV17RnmD4uU+XWL5dy3QOu2myl6fTisJ496uRr3XPa4DrDNgHTeivVkLRhY4aVf/IVHLfBV08CS
+yWXjW6ynGzh84hYYF2igR++jhg==
+</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>
+rLSd9+NrQqPEpgeB/Aqd6AmCoozUw3RFdPiye2uuh6W1tc9xso8c4R6933+AupswiHwy4lF6BMrM
+z+iuTKmlG0bTvlNY18cPyS+iuxhV5Uj0vnBu7XrkbiEaHVmXSiw1ykLL5VnuHrDv33SaL/8XXHAf
+5afbTXmFkFW3dihLPA3yXcncf5mrPt0590QaPS4o3wmA7wOiFCY3IVFjs5NsCNuM6biAkZ1/Ai8M
++UMMGHvrENGGZFhE+VIEqMQbvgx8wqtP0qrlj8e6pNnghvhniHMCfE/e1gR2tCl+c3Q9Qt2ZPhWG
+EQ2K6Oa+V655juKvC7NcSNCG3ny5Z+88ZcGOCw==
+</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object Id="Signature93522-Object535826"><etsi:QualifyingProperties Target="#Signature93522"><etsi:SignedProperties Id="Signature93522-SignedProperties850803"><etsi:SignedSignatureProperties><etsi:SigningTime>2026-07-16T14:55:04-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>qZiTGgz7oBM8SqaCN8HkXYdRyRA=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC</ds:X509IssuerName><ds:X509SerialNumber>2148877904715707099</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate><etsi:SignaturePolicyIdentifier><etsi:SignaturePolicyId><etsi:SigPolicyId><etsi:Identifier>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</etsi:Identifier><etsi:Description>Política de Firma FacturaE v3.1</etsi:Description></etsi:SigPolicyId><etsi:SigPolicyHash><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>Ohixl6upD6av8N7pEvDABhEL6hM=</ds:DigestValue></etsi:SigPolicyHash></etsi:SignaturePolicyId></etsi:SignaturePolicyIdentifier></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-734151"><etsi:Description>comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>

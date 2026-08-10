@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2007202601170351181400120010200000090580000905817</numeroAutorizacion>
+    <fechaAutorizacion>2026-07-20T16:50:45-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;VINUEZA PANCHEZ FABIAN RENE&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;FERRETERIA GUAMANI&lt;/nombreComercial&gt;
+        &lt;ruc&gt;1703511814001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2007202601170351181400120010200000090580000905817&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;001&lt;/estab&gt;
+        &lt;ptoEmi&gt;020&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000009058&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;AV. MALDONADO S51-88 Y LA PERLA&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;20/07/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;AV. MALDONADO S51-88 Y LA PERLA&lt;/dirEstablecimiento&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A.&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;Panam.Sur Km 14 1/2&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;666.51&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;baseImponible&gt;666.51&lt;/baseImponible&gt;
+                &lt;valor&gt;99.98&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;766.49&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;20&lt;/formaPago&gt;
+                &lt;total&gt;766.49&lt;/total&gt;
+                &lt;plazo&gt;30&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;13.01.25&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;13.01.25&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TOL ACERO INOXIDABLE 3 MM MATE 304. . . . ..&lt;/descripcion&gt;
+            &lt;cantidad&gt;2.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;240.972000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;481.94&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;481.94&lt;/baseImponible&gt;
+                    &lt;valor&gt;72.29&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;01.02.14&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;01.02.14&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PINTURA SPRAY ANTICORR. NAXO GRIS 400ML . . . . . . .&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.630000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;6.52&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;6.52&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.98&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;03.12.25&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;03.12.25&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ESCOBAS PLASTICAS FIBRA DURA 40 CMTS&lt;/descripcion&gt;
+            &lt;cantidad&gt;6.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;2.580000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;15.48&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;15.48&lt;/baseImponible&gt;
+                    &lt;valor&gt;2.32&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;01.85.56&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;01.85.56&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PIEDRA CHISPERO UND . . . . . . . . . .&lt;/descripcion&gt;
+            &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.390000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.17&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.17&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.18&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;11.20.26&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;11.20.26&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ADAPTADOR ACERO INOX P/MANG 1/4  304 NPT 150LBS CED 40 . . . . .&lt;/descripcion&gt;
+            &lt;cantidad&gt;4.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.220000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;4.88&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;4.88&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.73&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;09.01.14&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;09.01.14&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ALUMBAND LAMINA 20X10 ROLLO&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;27.830000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;27.83&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;27.83&lt;/baseImponible&gt;
+                    &lt;valor&gt;4.17&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;03.60.29&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;03.60.29&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;CODO POLIMEX 1/2"X90 PLMX PLASTIGAMA. ..&lt;/descripcion&gt;
+            &lt;cantidad&gt;6.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.420000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;2.52&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;2.52&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.38&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;03.18.58&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;03.18.58&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;NEPLO POLIMEX 1/2 X 10 CM. PLASTIGAMA. .&lt;/descripcion&gt;
+            &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.390000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.17&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.17&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.18&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;03.18.60&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;03.18.60&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;PEGA SELLANTE POLIMEX 100CC. PASTA. . ..&lt;/descripcion&gt;
+            &lt;cantidad&gt;5.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;12.130000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;60.65&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;60.65&lt;/baseImponible&gt;
+                    &lt;valor&gt;9.10&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;03.45.98&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;03.45.98&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;TUBO PVC ROSCABLE  1/2 PLASTIGAMA (420 PSI) . . .&lt;/descripcion&gt;
+            &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;6.940000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;20.82&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;20.82&lt;/baseImponible&gt;
+                    &lt;valor&gt;3.12&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;25.67.78&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;25.67.78&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;ESMALTE ATOMIX MARFIL 1GL&lt;/descripcion&gt;
+            &lt;cantidad&gt;3.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;14.510000&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;43.53&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15.00&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;43.53&lt;/baseImponible&gt;
+                    &lt;valor&gt;6.53&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="emailCliente"&gt;compras.electronica@quimpac.com.ec&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Atendido por"&gt;OFICINA&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="fechaVencimiento"&gt;19/08/2026&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Co.:"&gt;ORD:10006143889/ING:5000090696&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="Ob.:"&gt;ORD:10006143889/ING:5000090696&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature933354"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo432248"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID875036" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature933354-SignedProperties522166"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;VInssx5it422ciE43rod5pMVJys=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate11000873"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;kSDPwjoQsrLxhvybtbZd+DwbvOE=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-589622" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;sAsDaz5kC5mW1S32Kx5jEtSA2dE=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue474960"&gt;
+Ez49WLdigHZWCQ/iVvnVT+0JX/46c9qm/RKRK0YxNwQnW4nyQOVwwfl/FJiRJlvDc31hFs5HIdaX
+sHwHi3L3W9As9w0M4AFSBjtNlbf8ozueUfD2s+Yss6zvnX1t0AQgxU3jxvculcMH2qkqvArEENk4
+bApwI1mt+qT2LHax5LbMJcK31bmcQORwEEsTRDjaE/jMaDMzoTcQR589b11p/fOD0/CG0ER92b9M
+yNDFIOwEpLqOR8LkdOO0+uZuu340g98W4t/9Y0BGE1FKcZo7Ux6uhYzODMmMqnPa8YUyF/u/gDHQ
+Bq+Yei4i0bruNH6xNjMrf03GGgRPmaTUgOS5Sg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate11000873"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIL/zCCCeegAwIBAgIEIzguQjANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMCRUMxHTAbBgNV
+BAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJ
+T04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNV
+QkNBLTIgU0VDVVJJVFkgREFUQTAeFw0yNDEyMjExNTU5MDJaFw0yNjEyMjExNTU5MDJaMIGmMSQw
+IgYDVQQDDBtGQUJJQU4gUkVORSBWSU5VRVpBIFBBTkNIRVoxIDAeBgNVBAUTFzE3MDM1MTE4MTQt
+MjExMjI0MTEwODU3MTAwLgYDVQQLDCdFTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JN
+QUNJT04xHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMQswCQYDVQQGEwJFQzCCASIwDQYJ
+KoZIhvcNAQEBBQADggEPADCCAQoCggEBANvrDYzDLYFXMJg81y4mILoeBiS1bWPnXSfxcb9J3Skw
+tpL0JfKJHs9ybzQjWFRWjhBJlUjy68sBcX7yxWRzZIDq5AECm2SOqxjQmw4z2fJYJCkMvGN2NYT0
+V3v3i89Q7jwwNqYQPog2Y2RVoUefFrmSazaGoLuZKVueZIPVHVFsh2a6OSo7N0zMq+vDRqXYRove
+t9BimoigH6UtEeJBh3RbyjSXPbqcSNO6AKMIJyA3EQlPzOTjlUf3PvysQiq8muaDwmbE63TVm1gU
+S7rFTj/vK7hNzilK7MY9N5aloqFH4keClgWCoaS5Q5wtYqMKWfzBAALCyHBK4SLsaOxjNm8CAwEA
+AaOCBz4wggc6MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjLrKEVd4JYAdawpLVb+NrmLdvY8w
+WQYIKwYBBQUHAQEETTBLMEkGCCsGAQUFBzABhj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5u
+ZXQuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9vY3NwMIHPBgNVHS4EgccwgcQwgcGggb6ggbuG
+gbhsZGFwOi8vbGRhcHNkY2EyLnNlY3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENF
+UlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNB
+Q0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/ZGVsdGFSZXZv
+Y2F0aW9uTGlzdD9iYXNlMCEGA1UdEQQaMBiBFmZlcnJlZ3VhbWFuaUB5YWhvby5jb20wggEGBgNV
+HSAEgf4wgfswWgYKKwYBBAGCpnICBzBMMEoGCCsGAQUFBwICMD4ePABDAGUAcgB0AGkAZgBpAGMA
+YQBkAG8AIABkAGUAIABQAGUAcgBzAG8AbgBhACAATgBhAHQAdQByAGEAbDCBnAYKKwYBBAGCpnIC
+ATCBjTCBigYIKwYBBQUHAgEWfmh0dHBzOi8vd3d3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvd3AtY29u
+dGVudC9kb3dubG9hZHMvTm9ybWF0aXZhcy9QX2RlX0NlcnRpZmljYWRvcy9Qb2xpdGljYXMgZGUg
+Q2VydGlmaWNhZG8gUGVyc29uYSBOYXR1cmFsLnBkZjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYB
+BQUHAwQwggKiBgNVHR8EggKZMIIClTCB5aBBoD+GPWh0dHA6Ly9vY3NwZ3cuc2VjdXJpdHlkYXRh
+Lm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvc3RhdHVzL29jc3CigZ+kgZwwgZkxOTA3BgNVBAMMMEFV
+VE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTEwMC4GA1UECwwn
+RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklU
+WSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwgceggcSggcGGgb5sZGFwOi8vbGRhcHNkY2EyLnNl
+Y3VyaXR5ZGF0YS5uZXQuZWMvQ049QVVUT1JJREFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBT
+RUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixP
+PVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNl
+MIHgoIHdoIHahoHXaHR0cHM6Ly9wb3J0YWwtb3BlcmFkb3IyLnNlY3VyaXR5ZGF0YS5uZXQuZWMv
+ZWpiY2EvcHVibGljd2ViL3dlYmRpc3QvY2VydGRpc3Q/Y21kPWNybCZpc3N1ZXI9Q049QVVUT1JJ
+REFEIERFIENFUlRJRklDQUNJT04gU1VCQ0EtMiBTRUNVUklUWSBEQVRBLE9VPUVOVElEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTixPPVNFQ1VSSVRZIERBVEEgUy5BLiAyLEM9RUMw
+HQYDVR0OBBYEFMu19O5SHHQriRqNxbpjj4crhxx2MCsGA1UdEAQkMCKADzIwMjQxMjIxMTU1OTAy
+WoEPMjAyNjEyMjExNTU5MDJaMAsGA1UdDwQEAwIF4DAaBgorBgEEAYKmcgMBBAwMCjE3MDM1MTE4
+MTQwFwYKKwYBBAGCpnIDCQQJDAdHVUFNQU5JMBEGCisGAQQBgqZyAyIEAwwBLjAuBgorBgEEAYKm
+cgMHBCAMHkFWIE1BTERPTkFETyBTNTEgODggWSBMQSBQRVJMQTAbBgorBgEEAYKmcgMCBA0MC0ZB
+QklBTiBSRU5FMB8GCisGAQQBgqZyAyAEEQwPMDAyMDAxMDAwOTI0MzkwMBEGCisGAQQBgqZyAyME
+AwwBLjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1IwFwYKKwYB
+BAGCpnIDAwQJDAdWSU5VRVpBMBoGCisGAQQBgqZyAx4EDAwKRUNPTk9NSVNUQTAdBgorBgEEAYKm
+cgMLBA8MDTE3MDM1MTE4MTQwMDEwEQYKKwYBBAGCpnIDHQQDDAEuMBcGCisGAQQBgqZyAwQECQwH
+UEFOQ0hFWjAaBgorBgEEAYKmcgMIBAwMCjA5ODg5MzY2NzcwDQYJKoZIhvcNAQELBQADggIBAEOv
+K38TPJ9hW81QVCEC7mqZYWpjrwJdydE8csovVJW0pGvU6tfwL5/Ie23qp7Qg/vPvYD5ou4fEIQED
+YvcgwEmvz+oouZQa5Qvli5xv8QH6H6BdLZKjCqFWRjCNVBPXBUd+9AedxpnG2MCW8wss1Ny5ICOG
+Le3NMZLwUX8dftNUPoAS3IY27+HXeikAzV1bAsI5PnbXI/jPKD73jKTbabiVOvfbOSjoCM5J9rwN
+Y2nJ5s69n9hhmaXc7C9ETdXnjTdVC5jecM9MDUsTua46IYsY6TlELBaOKbpuYxRlI0uEWvGJzAu9
+wFFLeJNFn1psvKKGDpVuAa7+JZjMYORduXZQEXdR3GRpIXvknxLWiNz6JQXqJNutCRWjLx2DRZ9m
+CU+2iH5O7bUfX1HBzaRcSjrFeeXN9+WIHAqyFlQqCramyNEEf/35eRgY03e7/elANftxzKoh1WQr
+gx1My+rm5Iz3gPqMt0RW5VaTsMhOl0YkVDqhAjrSpwYD5iqxGO9Nf30A+VHJWVE2e3TNGinMmrI5
+6DO60POkwbe0q+xyKYTgDi849wdG3Zo3B+/vDEy4g6AWXzpIzfKP//rHHlDlOg7S0kcHiksAFMHB
+oTRNG+fGUm843EpIXrF3n5fpC4UjU/xVCAd1VrD/sDM1S0TGo0qoKt1946ktfQFd0zqW4RoC
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+2+sNjMMtgVcwmDzXLiYguh4GJLVtY+ddJ/Fxv0ndKTC2kvQl8okez3JvNCNYVFaOEEmVSPLrywFx
+fvLFZHNkgOrkAQKbZI6rGNCbDjPZ8lgkKQy8Y3Y1hPRXe/eLz1DuPDA2phA+iDZjZFWhR58WuZJr
+Noagu5kpW55kg9UdUWyHZro5Kjs3TMyr68NGpdhGi9630GKaiKAfpS0R4kGHdFvKNJc9upxI07oA
+owgnIDcRCU/M5OOVR/c+/KxCKrya5oPCZsTrdNWbWBRLusVOP+8ruE3OKUrsxj03lqWioUfiR4KW
+BYKhpLlDnC1iowpZ/MEAAsLIcErhIuxo7GM2bw==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature933354-Object115619"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature933354"&gt;
+                &lt;etsi:SignedProperties Id="Signature933354-SignedProperties522166"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-07-20T16:50:36-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;7uiCHgJYROf4bvME4b+HGxogRK0=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;590884418&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-589622"&gt;
+                            &lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

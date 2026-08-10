@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autorizacion>
+    <estado>AUTORIZADO</estado>
+    <numeroAutorizacion>2107202601179195235900120750200000700632023818415</numeroAutorizacion>
+    <fechaAutorizacion>2026-07-21T14:07:20-05:00</fechaAutorizacion>
+    <ambiente>PRODUCCIÓN</ambiente>
+    <comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="comprobante" version="1.1.0"&gt;
+    &lt;infoTributaria&gt;
+        &lt;ambiente&gt;2&lt;/ambiente&gt;
+        &lt;tipoEmision&gt;1&lt;/tipoEmision&gt;
+        &lt;razonSocial&gt;LA TABLITA GROUP CIA. LTDA.&lt;/razonSocial&gt;
+        &lt;nombreComercial&gt;LA TABLITA DEL TARTARO&lt;/nombreComercial&gt;
+        &lt;ruc&gt;1791952359001&lt;/ruc&gt;
+        &lt;claveAcceso&gt;2107202601179195235900120750200000700632023818415&lt;/claveAcceso&gt;
+        &lt;codDoc&gt;01&lt;/codDoc&gt;
+        &lt;estab&gt;075&lt;/estab&gt;
+        &lt;ptoEmi&gt;020&lt;/ptoEmi&gt;
+        &lt;secuencial&gt;000070063&lt;/secuencial&gt;
+        &lt;dirMatriz&gt;MANUEL AMBROSI LOTE 10, TRAS LA UNIDAD DE VIGILANCIA NORTE&lt;/dirMatriz&gt;
+    &lt;/infoTributaria&gt;
+    &lt;infoFactura&gt;
+        &lt;fechaEmision&gt;21/07/2026&lt;/fechaEmision&gt;
+        &lt;dirEstablecimiento&gt;AV FRANCISCO DE ORELLANA, MANZANA 2576, CENTRO COMERCIAL MALL DEL NORTE&lt;/dirEstablecimiento&gt;
+        &lt;contribuyenteEspecial&gt;677&lt;/contribuyenteEspecial&gt;
+        &lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;
+        &lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;
+        &lt;razonSocialComprador&gt;QUIMPAC ECUADOR S.A.&lt;/razonSocialComprador&gt;
+        &lt;identificacionComprador&gt;0990344760001&lt;/identificacionComprador&gt;
+        &lt;direccionComprador&gt;SN&lt;/direccionComprador&gt;
+        &lt;totalSinImpuestos&gt;54.86&lt;/totalSinImpuestos&gt;
+        &lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;
+        &lt;totalConImpuestos&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;0&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                &lt;valor&gt;0.00&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;54.86&lt;/baseImponible&gt;
+                &lt;valor&gt;8.23&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+            &lt;totalImpuesto&gt;
+                &lt;codigo&gt;2&lt;/codigo&gt;
+                &lt;codigoPorcentaje&gt;7&lt;/codigoPorcentaje&gt;
+                &lt;descuentoAdicional&gt;0.00&lt;/descuentoAdicional&gt;
+                &lt;baseImponible&gt;0.00&lt;/baseImponible&gt;
+                &lt;valor&gt;0.00&lt;/valor&gt;
+            &lt;/totalImpuesto&gt;
+        &lt;/totalConImpuestos&gt;
+        &lt;propina&gt;0.00&lt;/propina&gt;
+        &lt;importeTotal&gt;63.09&lt;/importeTotal&gt;
+        &lt;moneda&gt;DOLAR&lt;/moneda&gt;
+        &lt;pagos&gt;
+            &lt;pago&gt;
+                &lt;formaPago&gt;16&lt;/formaPago&gt;
+                &lt;total&gt;63.09&lt;/total&gt;
+                &lt;plazo&gt;0&lt;/plazo&gt;
+                &lt;unidadTiempo&gt;Dias&lt;/unidadTiempo&gt;
+            &lt;/pago&gt;
+        &lt;/pagos&gt;
+    &lt;/infoFactura&gt;
+    &lt;detalles&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;2146438384&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;2146438384&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;NY STEAK+ESPARRAGOS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;11.29&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;11.29&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;11.29&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.69&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;75&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;75&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;**MORCILLA&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.86&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.86&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.86&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.13&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;73&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;73&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;**CHORIZO&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.86&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.86&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.86&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.13&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;102&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;102&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;**AGUA PURA 500ML&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.17&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.17&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.17&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.18&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;2146438384&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;2146438384&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;NY STEAK+ESPARRAGOS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;11.29&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;11.29&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;11.29&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.69&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;73&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;73&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;**CHORIZO&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.86&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.86&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.86&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.13&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;75&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;75&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;**MORCILLA&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;0.86&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;0.86&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;0.86&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.13&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;2146438384&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;2146438384&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;NY STEAK+ESPARRAGOS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;11.29&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;11.29&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;11.29&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.69&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;2146438384&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;2146438384&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;NY STEAK+ESPARRAGOS&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;11.29&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;11.29&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;11.29&lt;/baseImponible&gt;
+                    &lt;valor&gt;1.69&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;102&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;102&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;**AGUA PURA 500ML&lt;/descripcion&gt;
+            &lt;cantidad&gt;1.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.17&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;1.17&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;1.17&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.18&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+        &lt;detalle&gt;
+            &lt;codigoPrincipal&gt;2146436141&lt;/codigoPrincipal&gt;
+            &lt;codigoAuxiliar&gt;2146436141&lt;/codigoAuxiliar&gt;
+            &lt;descripcion&gt;**LIMONADA 22OZ&lt;/descripcion&gt;
+            &lt;cantidad&gt;2.00&lt;/cantidad&gt;
+            &lt;precioUnitario&gt;1.96&lt;/precioUnitario&gt;
+            &lt;descuento&gt;0.00&lt;/descuento&gt;
+            &lt;precioTotalSinImpuesto&gt;3.92&lt;/precioTotalSinImpuesto&gt;
+            &lt;impuestos&gt;
+                &lt;impuesto&gt;
+                    &lt;codigo&gt;2&lt;/codigo&gt;
+                    &lt;codigoPorcentaje&gt;4&lt;/codigoPorcentaje&gt;
+                    &lt;tarifa&gt;15&lt;/tarifa&gt;
+                    &lt;baseImponible&gt;3.92&lt;/baseImponible&gt;
+                    &lt;valor&gt;0.59&lt;/valor&gt;
+                &lt;/impuesto&gt;
+            &lt;/impuestos&gt;
+        &lt;/detalle&gt;
+    &lt;/detalles&gt;
+    &lt;infoAdicional&gt;
+        &lt;campoAdicional nombre="CorreoCliente"&gt;clienteltg@latablitadeltartaro.com&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="CAJERO"&gt;EANZULES&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="TRANSACCION"&gt;174259664&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="FECHA CIERRE"&gt;2026/07/21&lt;/campoAdicional&gt;
+        &lt;campoAdicional nombre="FORMA DE PAGO"&gt;TARJETA DEBITO: 63.09&lt;/campoAdicional&gt;
+    &lt;/infoAdicional&gt;
+    &lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature558569"&gt;
+&lt;ds:SignedInfo Id="Signature-SignedInfo280599"&gt;
+&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
+&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;
+&lt;ds:Reference Id="SignedPropertiesID301039" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature558569-SignedProperties11959"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Prcay3G8Hkes5wd3fChwL7ct4JI=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference URI="#Certificate1804274"&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;Es3cMBemA0UKnh3eqTPj6Hjm9dA=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;ds:Reference Id="Reference-ID-640409" URI="#comprobante"&gt;
+&lt;ds:Transforms&gt;
+&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
+&lt;/ds:Transforms&gt;
+&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+&lt;ds:DigestValue&gt;ir5+i58xRhaeB7+BwlyE7ud+MMY=&lt;/ds:DigestValue&gt;
+&lt;/ds:Reference&gt;
+&lt;/ds:SignedInfo&gt;
+&lt;ds:SignatureValue Id="SignatureValue9097"&gt;
+cUKlk8ihWqdPo1LBMd7nR8rY0X2/SDQD2CV2gQjaaV9McBye3YMEdp8laHG4vJQ9JhOq2rjVeAUE
+bZX91CzZ6EF1W125aWz5GshaWim5DVe9VxLaD3fYRpU4kUo7NjPXgl15BJYDRUNnj36qCQCgDAL+
++urWyIoTSFeeU8dsn7sq+oQ+c3aQJPbGd2ZgOWeGF+EhQa5TEVDA7v5N0zsqn/FsrIrLeGVO4NL6
+fxJcVxI2Hwi6NpFd8cTQjBZ9q2QDhfZiMfyY3PsrgOTPW7hNAHHWFfHM6LnEMI/2p8I5TI4kRBDJ
+3hE4eLvD9MNc+HyrW837m2vMLLLUSdw7Itrsyg==
+&lt;/ds:SignatureValue&gt;
+&lt;ds:KeyInfo Id="Certificate1804274"&gt;
+&lt;ds:X509Data&gt;
+&lt;ds:X509Certificate&gt;
+MIIK3TCCCMWgAwIBAgIIQcIy9db+FNEwDQYJKoZIhvcNAQELBQAwgZkxCzAJBgNVBAYTAkVDMR0w
+GwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJ
+Q0FDSU9OIERFIElORk9STUFDSU9OMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lP
+TiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEwHhcNMjUwNzMwMTY0NzQ1WhcNMjcwNzMwMTY0NzQ1WjCB
+pjEkMCIGA1UEAwwbUklDQVJETyBBTlRPTklPIEdBUkNJQSBIQVJPMSAwHgYDVQQFExcxNzE0MjM3
+MTEwLTMwMDcyNTExNTczNzEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElO
+Rk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjELMAkGA1UEBhMCRUMwggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDX37INBtCAtiOtHhLeeCxEFAJpEoD4FYdDBsJf
+fkNaNtWccMZpcaLv9SMPGNsGOvEoe1ShZsh1E1vtOxL6fubHbxSq1gvLyiMzHdZOmSZrX1U6by/H
+kWE1+mXn56vKb17mZ/ei83cF9fKFM+aoeI9W9A53XhbLvHXC1ivi8cwSz7/Az1Ib5IjflWt38rEd
+NcmzZskhXIZQZKIhD/5HCvZloEGCQYP13NWel3JjT8dSbM+piP1JLmzvrocDdJSqkw7extqFtnOn
+e0B5Rs1c9za8etv6Si5wPFexsHlhgaMCGbll1yD7DKS55xxiD6YkaMbWcFHVBZzhR02R5uQqtPvJ
+AgMBAAGjggYYMIIGFDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFIy6yhFXeCWAHWsKS1W/ja5i
+3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRh
+dGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcDArBgNVHREEJDAigSByYWdhcmNp
+YUBsYXRhYmxpdGFkZWx0YXJ0YXJvLmNvbTCCARUGA1UdIASCAQwwggEIMGIGCisGAQQBgqZyAgkw
+VDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBjAGEAZABvACAAZABlACAAUgBlAHAAcgBl
+AHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBnAGEAbDCBoQYKKwYBBAGCpnICAzCBkjCBjwYIKwYBBQUH
+AgEWgYJodHRwczovL3d3dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRz
+L05vcm1hdGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRvIFJl
+cHJlc2VudGFudGUgTGVnYWwucGRmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCCAg8G
+A1UdHwSCAgYwggICMIHeoDqgOIY2aHR0cDovL2NybDEuc2VjdXJpdHlkYXRhLm5ldC5lYy9zdWJj
+YTJjcmwxL2NybGZpbGUuY3JsooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VOVElEQUQgREUgQ0VSVElG
+SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwUU0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJ
+BgNVBAYTAkVDMDygOqA4hjZodHRwOi8vY3JsMi5zZWN1cml0eWRhdGEubmV0LmVjL3N1YmNhMmNy
+bDIvY3JsZmlsZS5jcmwwgeCggd2ggdqGgddodHRwczovL3BvcnRhbC1vcGVyYWRvcjIuc2VjdXJp
+dHlkYXRhLm5ldC5lYy9lamJjYS9wdWJsaWN3ZWIvd2ViZGlzdC9jZXJ0ZGlzdD9jbWQ9Y3JsJmlz
+c3Vlcj1DTj1BVVRPUklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEEs
+T1U9RU5USURBRCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OLE89U0VDVVJJVFkgREFU
+QSBTLkEuIDIsQz1FQzAdBgNVHQ4EFgQUiEjK/ztgke0otO9Fb4lMVjk22bwwKwYDVR0QBCQwIoAP
+MjAyNTA3MzAxNjQ3NDVagQ8yMDI3MDczMDE2NDc0NVowCwYDVR0PBAQDAgXgMCIGCisGAQQBgqZy
+AwUEFAwSQVBPREVSQURPIEVTUEVDSUFMMBoGCisGAQQBgqZyAwEEDAwKMTcxNDIzNzExMDAaBgor
+BgEEAYKmcgMJBAwMCkNPVE9DT0xMQU8wEQYKKwYBBAGCpnIDIgQDDAEuMDEGCisGAQQBgqZyAwcE
+IwwhTUFOVUVMIEFNQlJPU0kgTjY1IDg2IFkgUEFTQUpFIEUzMB8GCisGAQQBgqZyAwIEEQwPUklD
+QVJETyBBTlRPTklPMB8GCisGAQQBgqZyAyAEEQwPMDAyMDAxMDAxMDQzOTczMBMGCisGAQQBgqZy
+AyEEBQwDUEZYMBcGCisGAQQBgqZyAwwECQwHRUNVQURPUjAWBgorBgEEAYKmcgMDBAgMBkdBUkNJ
+QTApBgorBgEEAYKmcgMKBBsMGUxBIFRBQkxJVEEgR1JPVVAgQ0lBIExUREEwHQYKKwYBBAGCpnID
+CwQPDA0xNzkxOTUyMzU5MDAxMBEGCisGAQQBgqZyAx0EAwwBLjAUBgorBgEEAYKmcgMEBAYMBEhB
+Uk8wGgYKKwYBBAGCpnIDCAQMDAowOTk5NTI0MTQ2MA0GCSqGSIb3DQEBCwUAA4ICAQBqwXhbqlya
+ncw4R9wjZPZzlMXIxX1kIzlbY1eFStNduditkiZX2ucpYvkQjqIlZSoNk34ezzgafeu4ni5PPnDt
+b4x+LcNRHnm2lJ8f4nNSDd8UZnaLVmmJQG7CsxzUifiMJpO480EXgiJiPVnTI5QpmqM63+DeFYzp
+DlPdhzZeuLU20Ep1CejEOYbsW2YYLFaQgdm9kIskQNvJVhX3p37QdMRmFRsLTBLw4xCuMgsQYOVc
+EvNvAgTaCrDTENZm2le63yluVxAkHRpLgHppieeWvB/5nzYuQ7IXJX6XgCnpgSVw0BQB03i0D0qZ
+4PC9OtauA+6ymfEkiwjeJinuKzisQMdEAYKTvrQT/qjue6YmOivrZ7k0VmBU98JtxcxX5xGUjBbl
+p9+Zu8ED2EcFfX0G70I1zORMPawhY+7e+X9tGNXaB92/eEU8inL0IoeY3bGoGVh5wbV7AqhB9k5I
+NwG9omJm1qHQ/rsgLurLKGS0MRZM4orxBnapzcpdH8/46vb8U6x+9os3s9TU4rd1qSlNM00gk+MJ
+7SpYHfvQPNC/9z+K8HgeR3ca/RjzdnmDLTcgyGY1e+tH53oefKw2IEmmEhV8YEIBWTEWPXMSj/su
+tUOXD1UgRjPuYlIDyoZFa4D8dEJSgH5iEpAqFEn7zVnkyvmVVQGukoMOB483a1RSHg==
+&lt;/ds:X509Certificate&gt;
+&lt;/ds:X509Data&gt;
+&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+19+yDQbQgLYjrR4S3ngsRBQCaRKA+BWHQwbCX35DWjbVnHDGaXGi7/UjDxjbBjrxKHtUoWbIdRNb
+7TsS+n7mx28UqtYLy8ojMx3WTpkma19VOm8vx5FhNfpl5+erym9e5mf3ovN3BfXyhTPmqHiPVvQO
+d14Wy7x1wtYr4vHMEs+/wM9SG+SI35Vrd/KxHTXJs2bJIVyGUGSiIQ/+Rwr2ZaBBgkGD9dzVnpdy
+Y0/HUmzPqYj9SS5s766HA3SUqpMO3sbahbZzp3tAeUbNXPc2vHrb+koucDxXsbB5YYGjAhm5Zdcg
++wykueccYg+mJGjG1nBR1QWc4UdNkebkKrT7yQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;AQAB&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;
+&lt;/ds:KeyInfo&gt;
+&lt;ds:Object Id="Signature558569-Object753393"&gt;
+            &lt;etsi:QualifyingProperties Target="#Signature558569"&gt;
+                &lt;etsi:SignedProperties Id="Signature558569-SignedProperties11959"&gt;
+                    &lt;etsi:SignedSignatureProperties&gt;
+                        &lt;etsi:SigningTime&gt;2026-07-21T14:07:18-05:00&lt;/etsi:SigningTime&gt;
+                        &lt;etsi:SigningCertificate&gt;
+                            &lt;etsi:Cert&gt;
+                                &lt;etsi:CertDigest&gt;
+                                    &lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;
+                                    &lt;ds:DigestValue&gt;pxIihWUtNgTtzdi7nUEbqw8gEss=&lt;/ds:DigestValue&gt;
+                                &lt;/etsi:CertDigest&gt;
+                                &lt;etsi:IssuerSerial&gt;
+                                    &lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A. 2,C=EC&lt;/ds:X509IssuerName&gt;
+                                    &lt;ds:X509SerialNumber&gt;4738405789402535121&lt;/ds:X509SerialNumber&gt;
+                                &lt;/etsi:IssuerSerial&gt;
+                            &lt;/etsi:Cert&gt;
+                        &lt;/etsi:SigningCertificate&gt;
+                    &lt;/etsi:SignedSignatureProperties&gt;
+                    &lt;etsi:SignedDataObjectProperties&gt;
+                        &lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-640409"&gt;
+                            &lt;etsi:Description&gt;Documento firmado con XADES_BES&lt;/etsi:Description&gt;
+                            &lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;
+                        &lt;/etsi:DataObjectFormat&gt;
+                    &lt;/etsi:SignedDataObjectProperties&gt;
+                &lt;/etsi:SignedProperties&gt;
+            &lt;/etsi:QualifyingProperties&gt;
+        &lt;/ds:Object&gt;
+    &lt;/ds:Signature&gt;
+&lt;/factura&gt;
+&lt;/comprobante&gt;
+    <mensajes/>
+</autorizacion>

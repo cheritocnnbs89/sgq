@@ -1907,6 +1907,7 @@ def register_gastos_routes(app):
             _apply_empresa_scope(conn, where, args, user_alias="u", uid=uid)
             all_where = list(where)
             all_where.append("COALESCE(g.inactivo,0)=0")
+            all_where.append("g.auto_registro_regla_id IS NULL")
 
             if all_where:
                 sql += " WHERE " + " AND ".join(all_where)
@@ -2083,7 +2084,7 @@ def register_gastos_routes(app):
                 rol_gf=gh.rol_gf(),
                 usuario=session.get('usuario'),
                 rol=session.get('rol'),
-                active_page='gastos_tarjeta'
+                active_page='gastos_tarjeta',
             )
 
         finally:
@@ -2464,6 +2465,122 @@ def register_gastos_routes(app):
     
 
 
+    @app.route('/reembolsos/facturas-automaticas', methods=['GET'], endpoint='lista_facturas_automaticas')
+    @require_permission('facturas_automaticas', 'ver')
+    @require_login
+    def lista_facturas_automaticas():
+        conn = get_db()
+        try:
+            role_name = (session.get('rol') or '').lower().strip()
+            uid = session.get('usuario_id') or session.get('user_id')
+            is_admin = (role_name == 'admin') or bool(session.get('is_admin'))
+
+            # Reglas activas del usuario actual (para saber qué puede ver)
+            try:
+                cur = conn.cursor()
+                cur.execute("""
+                    SELECT id, usuario_id, ruc_proveedor, motivo, centro_costo, enviar_sap_auto
+                    FROM gastos_auto_registro_reglas
+                    WHERE COALESCE(activo,1) = 1
+                """)
+                todas_reglas = [dict(r) for r in cur.fetchall()]
+            except Exception:
+                todas_reglas = []
+
+            if not is_admin:
+                reglas_usuario = [r for r in todas_reglas if r['usuario_id'] == uid]
+                if not reglas_usuario:
+                    flash('No tiene acceso a facturas automáticas.', 'warning')
+                    return redirect(url_for('dashboard'))
+                ids_reglas_visibles = [r['id'] for r in reglas_usuario]
+            else:
+                reglas_usuario = todas_reglas
+                ids_reglas_visibles = [r['id'] for r in todas_reglas]
+
+            # Dueño de al menos una regla (incluye admin/coordinador de paso) puede
+            # enviar sus propias facturas automáticas a SAP, manual y masivamente.
+            puede_enviar_sap = is_admin or gh.es_coordinador_gastos(uid, role_name) or bool(reglas_usuario)
+
+            if not ids_reglas_visibles:
+                gastos = []
+            else:
+                placeholders = ','.join('?' * len(ids_reglas_visibles))
+                desde = request.args.get('desde', '')
+                hasta = request.args.get('hasta', '')
+                where = [f"g.auto_registro_regla_id IN ({placeholders})",
+                         "COALESCE(g.inactivo,0)=0"]
+                args = list(ids_reglas_visibles)
+
+                if desde:
+                    where.append("CAST(g.fecha AS date) >= CAST(? AS date)")
+                    args.append(desde)
+                if hasta:
+                    where.append("CAST(g.fecha AS date) <= CAST(? AS date)")
+                    args.append(hasta)
+
+                sap_filter = request.args.get('sap', '')
+                if sap_filter == '0':
+                    where.append("(g.sap_contabilizacion IS NULL OR LTRIM(RTRIM(g.sap_contabilizacion))='')")
+                elif sap_filter == '1':
+                    where.append("(g.sap_contabilizacion IS NOT NULL AND LTRIM(RTRIM(g.sap_contabilizacion))<>'')")
+
+                sql = f"""
+                    SELECT
+                        g.id, g.fecha, g.motivo, g.centro_costo,
+                        g.numero_factura, g.proveedor,
+                        g.subtotal_sin_iva, g.iva, g.total_con_iva,
+                        g.sap_contabilizacion, g.auto_registro_regla_id,
+                        u.nombre_completo AS usuario_nombre,
+                        t.identificacion AS proveedor_ruc,
+                        COALESCE(t.nombre, g.proveedor) AS proveedor_nombre,
+                        r.motivo AS regla_motivo, r.centro_costo AS regla_cc
+                    FROM gastos_tarjeta g
+                    LEFT JOIN usuarios u ON u.id = g.usuario_id
+                    LEFT JOIN terceros t ON t.id = g.proveedor_id
+                    LEFT JOIN gastos_auto_registro_reglas r ON r.id = g.auto_registro_regla_id
+                    WHERE {' AND '.join(where)}
+                    ORDER BY CAST(g.fecha AS date) DESC, g.id DESC
+                """
+                cur.execute(sql, args)
+                gastos = [dict(r) for r in cur.fetchall()]
+
+            # Totales
+            total_subtotal = sum(float(g.get('subtotal_sin_iva') or 0) for g in gastos)
+            total_iva = sum(float(g.get('iva') or 0) for g in gastos)
+            total_con_iva = sum(float(g.get('total_con_iva') or 0) for g in gastos)
+
+            desde = request.args.get('desde', '')
+            hasta = request.args.get('hasta', '')
+            sap_filter = request.args.get('sap', '')
+
+        except Exception:
+            current_app.logger.exception("lista_facturas_automaticas error")
+            gastos = []
+            total_subtotal = total_iva = total_con_iva = 0.0
+            desde = hasta = sap_filter = ''
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+        return render_template(
+            'facturas_automaticas.html',
+            gastos=gastos,
+            total_subtotal=total_subtotal,
+            total_iva=total_iva,
+            total_con_iva=total_con_iva,
+            is_admin=is_admin,
+            puede_enviar_sap=puede_enviar_sap,
+            desde=desde,
+            hasta=hasta,
+            sap_filter=sap_filter,
+            usuario=session.get('usuario'),
+            rol=session.get('rol'),
+            active_page='facturas_automaticas'
+        )
+
+
     @app.route('/reembolsos/gastos/pendientes-aprobacion', methods=['GET'], endpoint='gastos_pendientes_aprobacion')
     @require_permission('gastos_pendientes_aprobacion', 'ver')
     @require_login
@@ -2772,6 +2889,7 @@ def register_gastos_routes(app):
             _apply_empresa_scope(conn, where, args, user_alias="u", uid=uid)
             all_where = list(where)
             all_where.append("COALESCE(g.inactivo,0)=0")
+            all_where.append("g.auto_registro_regla_id IS NULL")
 
             if all_where:
                 sql += " WHERE " + " AND ".join(all_where)
@@ -6782,8 +6900,6 @@ def register_gastos_routes(app):
 
         role = (session.get('rol') or '').strip().lower()
         uid_sap = session.get('usuario_id') or session.get('user_id')
-        if not (role == 'admin' or gh.es_coordinador_gastos(uid_sap, role)):
-            return jsonify(ok=False, msg='No autorizado'), 403
 
         conn = get_db()
 
@@ -6884,6 +7000,16 @@ def register_gastos_routes(app):
                 return jsonify(ok=False, msg='Gasto no encontrado'), 404
 
             g = _row_to_dict(g_row) or {}
+
+            # Autorizado: admin, coordinador de gastos, o el usuario dueño de la
+            # regla de auto-registro que generó este gasto (puede enviar los suyos).
+            es_dueno_auto_registro = (
+                g.get('auto_registro_regla_id') is not None
+                and uid_sap is not None
+                and int(g.get('usuario_id') or 0) == int(uid_sap)
+            )
+            if not (role == 'admin' or gh.es_coordinador_gastos(uid_sap, role) or es_dueno_auto_registro):
+                return jsonify(ok=False, msg='No autorizado'), 403
 
             sociedad_sap = (g.get("empresa_sociedad") or "").strip().upper()
             usuario_sap = (g.get("empresa_usuario_sap") or "").strip().upper()
@@ -7435,8 +7561,7 @@ def register_gastos_routes(app):
 
         role = (session.get('rol') or '').strip().lower()
         uid_sap_masivo = session.get('usuario_id') or session.get('user_id')
-        if not (role == 'admin' or gh.es_coordinador_gastos(uid_sap_masivo, role)):
-            return jsonify(ok=False, msg='No autorizado'), 403
+        privilegiado_masivo = (role == 'admin') or gh.es_coordinador_gastos(uid_sap_masivo, role)
 
         payload_in = request.get_json(silent=True) or {}
         ids = payload_in.get('ids') or []
@@ -7655,6 +7780,22 @@ def register_gastos_routes(app):
                     })
 
             gastos_by_id = {g["id"]: g for g in gastos}
+
+            # No privilegiado: solo puede enviar sus propias facturas automáticas
+            # (mismo criterio que el envío individual en enviar_gasto_sap).
+            if not privilegiado_masivo:
+                def _es_dueno(g):
+                    return (
+                        g.get('auto_registro_regla_id') is not None
+                        and uid_sap_masivo is not None
+                        and int(g.get('usuario_id') or 0) == int(uid_sap_masivo)
+                    )
+                ids_int = [gid for gid in ids_int if _es_dueno(gastos_by_id.get(gid, {}))]
+                gastos = [g for g in gastos if _es_dueno(g)]
+                gastos_by_id = {g["id"]: g for g in gastos}
+                if not ids_int:
+                    return jsonify(ok=False, msg='No autorizado'), 403
+                ph = ",".join(["?"] * len(ids_int))
 
             # ---------------------------------------------------------
             # Detalles

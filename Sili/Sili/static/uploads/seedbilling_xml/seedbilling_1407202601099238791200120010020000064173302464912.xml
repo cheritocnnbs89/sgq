@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.1.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>WIMPORTSAT S.A.</razonSocial>
+        <nombreComercial>WIMPORTSAT</nombreComercial>
+        <ruc>0992387912001</ruc>
+        <claveAcceso>1407202601099238791200120010020000064173302464912</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>002</ptoEmi>
+        <secuencial>000006417</secuencial>
+        <dirMatriz>Ciudadela: GARZOTA Numero: SOLAR 5 Manzana: 11 </dirMatriz>
+        <agenteRetencion>1</agenteRetencion>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>14/07/2026</fechaEmision>
+        <dirEstablecimiento>Ciudadela: GARZOTA Numero: SOLAR 5 Manzana: 11 </dirEstablecimiento>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>QUIMPAC ECUADOR S.A QUIMPACSA</razonSocialComprador>
+        <identificacionComprador>0990344760001</identificacionComprador>
+        <direccionComprador>AV. ROSAVIN LOTE 1 Y CALLE COBRE - KM 16.5 VIA DAULE </direccionComprador>
+        <totalSinImpuestos>124.20</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>4</codigoPorcentaje>
+                <baseImponible>124.20</baseImponible>
+                <valor>18.63</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0</propina>
+        <importeTotal>142.83</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>142.83</total>
+                <plazo>30</plazo>
+                <unidadTiempo>Dias</unidadTiempo>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>P7/8X41/2</codigoPrincipal>
+            <descripcion>PERNO 7/8 X 4 1/2 GAL</descripcion>
+            <cantidad>30.00</cantidad>
+            <precioUnitario>4.14</precioUnitario>
+            <descuento>0</descuento>
+            <precioTotalSinImpuesto>124.20</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>4</codigoPorcentaje>
+                    <tarifa>15.0</tarifa>
+                    <baseImponible>124.20</baseImponible>
+                    <valor>18.63</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Email">gecheverria@quimpac.com.ec</campoAdicional>
+        <campoAdicional nombre="Orden">1000625490</campoAdicional>
+        <campoAdicional nombre="Documento">5000175155</campoAdicional>
+    </infoAdicional>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-f196c175-0566-42b6-8f2c-ec7e8901f1be"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-f196c175-0566-42b6-8f2c-ec7e8901f1be-ref0" URI="#comprobante"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>NXmlkwHYZPEPVcWnwabf8Q57z9mfhIJM69D98Tdwmj8=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-f196c175-0566-42b6-8f2c-ec7e8901f1be-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>bANxWJJ51QQr6LH+PsYCZWLEA8YaedLi23ECb5Et4xg=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-f196c175-0566-42b6-8f2c-ec7e8901f1be-sigvalue">py+52gdAFc7cxXnbVzVi+H37/ZFNVGHKGukzL9st35gyPY1HTEYo0+W8M8TDZH4P+R91azKYyC13vFKjbQmzE6voN+T+CyOmCU4EDg8I0oEcHjPvs+tes16zzSzBi+S2BJPqA4VFqupALChwDejzoclxfoZjd3cNK9yqc0BAljhcLMKIe1/ytqhFUiJEht4qKp2DwHHPi6tduh/WfP+O0O1qkzCl7HU5fweXLthgXjvgZcwLndBmaAMrpeou1fP+4+O2OZls3oitGzAFnRvdKDs1QEgBE8CuFrHOgO7I44/Xm9Dp3XRLCu6dLGPtQcD+HEhsb8ficPmJzEO/FuMd5w==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>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</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-f196c175-0566-42b6-8f2c-ec7e8901f1be"><xades:SignedProperties Id="xmldsig-f196c175-0566-42b6-8f2c-ec7e8901f1be-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2026-07-14T17:25:09.903-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>aAgitdnuu30xeRPPvsBFTNuRpIhoK63ftLYjsdJtO+o=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>5264962208263849644</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#xmldsig-f196c175-0566-42b6-8f2c-ec7e8901f1be-ref0"><xades:Description>FIRMA DIGITAL SRI</xades:Description><xades:MimeType>text/xml</xades:MimeType><xades:Encoding>UTF-8</xades:Encoding></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></factura>
