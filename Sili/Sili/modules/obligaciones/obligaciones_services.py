@@ -982,11 +982,15 @@ def guardar_tipo(tipo_id, form):
     ok, err = _validate_catalogo_data(data)
     if not ok:
         return {"ok": False, "flash": (err, "warning"), "data": data}
+    # 2026-08-11: entidades marcadas en el checklist del form -- lista de ids,
+    # puede venir vacia (tipo sin entidades vinculadas).
+    entidad_ids = [int(v) for v in form.getlist("entidades") if v.strip()]
     try:
         if tipo_id:
             repo.update_tipo(tipo_id, data["nombre"], data["orden"])
         else:
             tipo_id = repo.create_tipo(data["nombre"], data["orden"])
+        repo.set_entidades_de_tipo(tipo_id, entidad_ids)
         return {"ok": True, "flash": ("Tipo guardado.", "success"), "id": tipo_id}
     except Exception:
         current_app.logger.exception("Error al guardar tipo de obligación")
@@ -1004,6 +1008,10 @@ def toggle_tipo_activo(tipo_id, activo):
 
 def list_entidades_todas():
     return repo.list_entidades_todas()
+
+
+def list_entidad_ids_por_tipo(tipo_id):
+    return repo.list_entidad_ids_por_tipo(tipo_id)
 
 
 def get_entidad_detalle(entidad_id):

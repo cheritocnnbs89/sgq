@@ -177,5 +177,7 @@
 {% endblock %}
 
 {% block scripts_extra %}
+<!-- 2026-08-11: script compartido del filtro Tipo->Entidad, cargado antes de obligaciones_lista.js -->
+<script src="{{ url_for('static', filename='js/obligaciones_filtro_tipo_entidad.js') }}"></script>
 <script src="{{ url_for('static', filename='js/obligaciones_lista.js') }}"></script>
 {% endblock %}

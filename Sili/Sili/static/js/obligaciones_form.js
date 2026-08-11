@@ -1,38 +1,5 @@
-// 2026-07-27: filtro dependiente Tipo -> Entidad (usa oblig_tipo_entidad via
-// GET /obligaciones/api/entidades?tipo_id=X). Repuebla el select de Entidad
-// cada vez que cambia Tipo, preservando la seleccion actual si sigue valida
-// (necesario al editar una obligacion existente).
-function wireFiltroTipoEntidad(form, tipoSelect, entidadSelect) {
-  var apiUrl = form && form.dataset.apiEntidades;
-  if (!apiUrl || !tipoSelect || !entidadSelect) { return; }
-
-  function repoblar(preservarSeleccion) {
-    var tipoId = tipoSelect.value;
-    var seleccionActual = preservarSeleccion ? (entidadSelect.dataset.selected || entidadSelect.value) : '';
-    entidadSelect.innerHTML = '<option value="">-- Seleccionar --</option>';
-    if (!tipoId) { return; }
-    fetch(apiUrl + '?tipo_id=' + encodeURIComponent(tipoId), {
-      headers: { 'X-Requested-With': 'XMLHttpRequest' },
-      credentials: 'same-origin'
-    })
-      .then(function (resp) { return resp.json(); })
-      .then(function (data) {
-        (data.entidades || []).forEach(function (en) {
-          var opt = document.createElement('option');
-          opt.value = en.id;
-          opt.textContent = en.nombre;
-          if (String(en.id) === String(seleccionActual)) { opt.selected = true; }
-          entidadSelect.appendChild(opt);
-        });
-        entidadSelect.dataset.selected = '';
-      })
-      .catch(function (err) { console.warn('Filtro Tipo->Entidad: fallo la carga', err); });
-  }
-
-  tipoSelect.addEventListener('change', function () { repoblar(false); });
-  if (tipoSelect.value) { repoblar(true); }
-}
-
+// 2026-08-11: wireFiltroTipoEntidad ahora vive en obligaciones_filtro_tipo_entidad.js
+// (compartido con lista/dashboard/historial) -- cargar ese script ANTES que este en el template.
 document.addEventListener('DOMContentLoaded', function () {
   wireFiltroTipoEntidad(
     document.getElementById('frmObligacion'),

@@ -17,7 +17,9 @@
   </div>
 
   {# 2026-07-29: align-items-end -- labels Desde/Hasta alargan esas columnas, sin esto quedaban desalineadas vs selects #}
-  <form class="row g-2 mb-3 oblig-filtros align-items-end" method="get" action="{{ url_for('obligaciones.historial_obligaciones') }}">
+  <!-- 2026-08-11: id + data-api-entidades agregados para filtro dependiente Tipo -> Entidad (AJAX), mismo patron que obligaciones_lista.html/obligaciones_dashboard.html -->
+  <form class="row g-2 mb-3 oblig-filtros align-items-end" method="get" action="{{ url_for('obligaciones.historial_obligaciones') }}"
+        id="frmFiltrosHistorial" data-api-entidades="{{ url_for('obligaciones.api_entidades_por_tipo') }}">
     <div class="col-6 col-md-auto">
       <select class="form-select form-select-sm" name="empresa_id">
         <option value="">-- Empresa --</option>
@@ -27,7 +29,7 @@
       </select>
     </div>
     <div class="col-6 col-md-auto">
-      <select class="form-select form-select-sm" name="tipo_id">
+      <select class="form-select form-select-sm" name="tipo_id" id="filtroTipoId">
         <option value="">-- Tipo --</option>
         {% for t in combos.tipos %}
         <option value="{{ t.id }}" {% if filters.tipo_id|string == t.id|string %}selected{% endif %}>{{ t.nombre }}</option>
@@ -35,7 +37,8 @@
       </select>
     </div>
     <div class="col-6 col-md-auto">
-      <select class="form-select form-select-sm" name="entidad_id">
+      <select class="form-select form-select-sm" name="entidad_id" id="filtroEntidadId"
+              data-selected="{{ filters.entidad_id or '' }}">
         <option value="">-- Entidad --</option>
         {% for en in combos.entidades %}
         <option value="{{ en.id }}" {% if filters.entidad_id|string == en.id|string %}selected{% endif %}>{{ en.nombre }}</option>
@@ -142,5 +145,7 @@
 {% endblock %}
 
 {% block scripts_extra %}
+<!-- 2026-08-11: script compartido del filtro Tipo->Entidad, cargado antes de obligaciones_historial.js -->
+<script src="{{ url_for('static', filename='js/obligaciones_filtro_tipo_entidad.js') }}"></script>
 <script src="{{ url_for('static', filename='js/obligaciones_historial.js') }}"></script>
 {% endblock %}

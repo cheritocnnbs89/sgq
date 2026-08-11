@@ -235,6 +235,23 @@ WHERE te.tipo_id = ? AND en.activo = 1
 ORDER BY en.nombre
 """
 
+# 2026-08-11: ids de entidad vinculados a un Tipo -- usado por el form de
+# Tipos para premarcar los checkboxes al editar.
+SQL_LIST_ENTIDAD_IDS_POR_TIPO = f"""
+SELECT entidad_id FROM {TABLA_TIPO_ENTIDAD} WHERE tipo_id = ?
+"""
+
+# 2026-08-11: borra TODOS los vinculos de un Tipo antes de regrabar los
+# elegidos en el form (guardar_tipo hace delete + insert en la misma
+# transaccion, nunca deja huecos a mitad de camino).
+SQL_DELETE_TIPO_ENTIDAD_BY_TIPO = f"""
+DELETE FROM {TABLA_TIPO_ENTIDAD} WHERE tipo_id = ?
+"""
+
+SQL_INSERT_TIPO_ENTIDAD = f"""
+INSERT INTO {TABLA_TIPO_ENTIDAD} (tipo_id, entidad_id) VALUES (?, ?)
+"""
+
 # 2026-07-21: combo Empresa de los filtros (Consultas + Historial) -- solo
 # empresas que tienen al menos una obligacion, no el catalogo completo.
 SQL_LIST_EMPRESAS_CON_OBLIGACIONES = f"""

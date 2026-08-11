@@ -32,6 +32,10 @@ def lista_tipos():
 @require_login
 @require_permission(PERM_CONFIG, "crear")
 def nuevo_tipo():
+    # 2026-08-11: catalogo completo de entidades para el checklist -- un tipo
+    # nuevo arranca sin ninguna marcada (entidad_ids_seleccionadas vacio).
+    entidades_todas = service.list_entidades_todas()
+
     if request.method == "POST":
         result = service.guardar_tipo(None, request.form)
         flash(*result["flash"])
@@ -44,6 +48,8 @@ def nuevo_tipo():
             tipo=result.get("data", {}),
             mode="new",
             active_page=ACTIVE_KEY_TIPOS,
+            entidades_todas=entidades_todas,
+            entidad_ids_seleccionadas=[int(v) for v in request.form.getlist("entidades") if v.strip()],
         )
 
     return render_template(
@@ -51,6 +57,8 @@ def nuevo_tipo():
         tipo={},
         mode="new",
         active_page=ACTIVE_KEY_TIPOS,
+        entidades_todas=entidades_todas,
+        entidad_ids_seleccionadas=[],
     )
 
 
@@ -61,6 +69,10 @@ def editar_tipo(tipo_id):
     tipo = service.get_tipo_detalle(tipo_id)
     if not tipo:
         abort(404)
+
+    # 2026-08-11: catalogo completo de entidades + cuales ya estan vinculadas
+    # a este tipo -- usado para premarcar los checkboxes.
+    entidades_todas = service.list_entidades_todas()
 
     if request.method == "POST":
         result = service.guardar_tipo(tipo_id, request.form)
@@ -75,14 +87,19 @@ def editar_tipo(tipo_id):
             mode="edit",
             tipo_id=tipo_id,
             active_page=ACTIVE_KEY_TIPOS,
+            entidades_todas=entidades_todas,
+            entidad_ids_seleccionadas=[int(v) for v in request.form.getlist("entidades") if v.strip()],
         )
 
+    entidad_ids_seleccionadas = service.list_entidad_ids_por_tipo(tipo_id)
     return render_template(
         "obligaciones/obligaciones_tipo_form.html",
         tipo=tipo,
         mode="edit",
         tipo_id=tipo_id,
         active_page=ACTIVE_KEY_TIPOS,
+        entidades_todas=entidades_todas,
+        entidad_ids_seleccionadas=entidad_ids_seleccionadas,
     )
 
 

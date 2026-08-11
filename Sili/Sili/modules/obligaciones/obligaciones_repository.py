@@ -161,6 +161,30 @@ def list_entidades_por_tipo(tipo_id):
     return conn.execute(q.SQL_LIST_ENTIDADES_POR_TIPO, (tipo_id,)).fetchall()
 
 
+def list_entidad_ids_por_tipo(tipo_id):
+    """2026-08-11: ids de entidad vinculados a un Tipo -- usado para
+    premarcar los checkboxes en el form de edicion de Tipo."""
+    conn = get_connection()
+    rows = conn.execute(q.SQL_LIST_ENTIDAD_IDS_POR_TIPO, (tipo_id,)).fetchall()
+    return [r[0] for r in rows]
+
+
+def set_entidades_de_tipo(tipo_id, entidad_ids):
+    """2026-08-11: regraba TODOS los vinculos de un Tipo en una sola
+    transaccion (delete + insert) -- nunca deja huecos a mitad de camino
+    si falla la mitad de los inserts."""
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute(q.SQL_DELETE_TIPO_ENTIDAD_BY_TIPO, (tipo_id,))
+        for entidad_id in entidad_ids:
+            cur.execute(q.SQL_INSERT_TIPO_ENTIDAD, (tipo_id, entidad_id))
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+
+
 
 
 def list_empresas_con_obligaciones():
