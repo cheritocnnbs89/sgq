@@ -98,6 +98,15 @@ def register_terceros_routes(app):
     def clientes():
         return _listar('C')
 
+    # 2026-08-07 (Correccion de arquitectura #8): la GESTION de Entidades
+    # Reguladoras se movio a /obligaciones/entidades (tabla propia
+    # oblig_entidades_reguladoras -- ver routes_obligaciones_entidades.py) y
+    # tercero_nuevo() ya no permite crear tipo 'E' nuevos aqui. Este endpoint
+    # NO se elimina porque sigue en uso real: _endpoint_for_tipo() (mas abajo)
+    # lo devuelve para editar/eliminar filas tipo 'E' YA EXISTENTES en la
+    # tabla `terceros` (legacy, antes del modulo Obligaciones), y
+    # modules/menu/menu_services.py + templates/tercero_form.html tambien lo
+    # referencian. Eliminar el route rompe esas 2 rutas con BuildError.
     @app.route('/config/entidades-reguladoras', methods=['GET'], endpoint='entidades_reguladoras')
     @require_login
     @require_permission('terceros', 'ver')
@@ -552,7 +561,8 @@ def register_terceros_routes(app):
     @require_login
     @require_permission('terceros', 'crear')
     def tercero_nuevo(tipo):
-        if tipo not in ('C', 'P', 'E'):
+        # 2026-08-07: tipo 'E' (entidades reguladoras) retirado -- ver Correccion #8.
+        if tipo not in ('C', 'P'):
             flash('Tipo inválido.', 'warning')
             return redirect(url_for('clientes'))
 

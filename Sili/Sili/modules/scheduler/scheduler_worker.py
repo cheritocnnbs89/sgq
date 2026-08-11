@@ -42,6 +42,48 @@ from .scheduler_planilla_weekly import send_planilla_weekly_report
 
 from .seedbilling_xml_job import process_seedbilling_facturas_recibidas
 
+# 2026-08-07 (Correccion #8): job de Obligaciones unificado al scheduler
+# principal -- antes vivia en modules/obligaciones/obligaciones_scheduler.py
+# con thread propio (lib schedule). Se mueve aqui, mismo patron que los demas
+# jobs de hora fija de este archivo (ver bloque "Reporte diario - 07:30").
+from modules.obligaciones import obligaciones_repository as _oblig_repo
+from modules.obligaciones import obligaciones_services as _oblig_service
+from modules.obligaciones import obligaciones_notifications as _oblig_notifications
+
+
+def _run_obligaciones_job(target_app):
+    """Tarea A: marca atrasadas. Tarea B: envia alertas por correo segun
+    frecuencia/destinatarios configurados, sin duplicar. No falla si SMTP no
+    esta configurado -- send_email ya degrada a log en ese caso."""
+    try:
+        total_atrasadas = _oblig_service.marcar_obligaciones_atrasadas()
+        if total_atrasadas:
+            target_app.logger.info("Obligaciones: %s marcada(s) como atrasada.", total_atrasadas)
+    except Exception:
+        target_app.logger.exception("Obligaciones: fallo Tarea A (marcar atrasadas)")
+
+    try:
+        pendientes = _oblig_service.evaluar_alertas_pendientes()
+        for p in pendientes:
+            try:
+                obligacion = _oblig_repo.get_by_id(p["obligacion_id"])
+                if not obligacion:
+                    continue
+                destinatarios = p.get("destinatarios") or []
+                _oblig_notifications.enviar_alerta(destinatarios, obligacion, p["tipo_alerta"])
+                _oblig_service.registrar_alerta_enviada(
+                    p["obligacion_id"], p["tipo_alerta"], p["periodo"]
+                )
+            except Exception:
+                target_app.logger.exception(
+                    "Obligaciones: fallo al enviar alerta obligacion_id=%s tipo=%s",
+                    p.get("obligacion_id"), p.get("tipo_alerta"),
+                )
+        if pendientes:
+            target_app.logger.info("Obligaciones: %s alerta(s) evaluada(s)/enviada(s).", len(pendientes))
+    except Exception:
+        target_app.logger.exception("Obligaciones: fallo Tarea B (alertas)")
+
 # ── AWS Sync (DynamoDB) ───────────────────────────────────────
 try:
     from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws
@@ -258,6 +300,7 @@ def start_scheduler(app=None):
             last_om_date           = None
             last_seedbilling_slots = set()
             last_weekly_report_date = None   # ← control reporte semanal planilla
+            last_obligaciones_date  = None   # ← control job diario Obligaciones (07:00)
             last_contratos_garantias_date = None   # ← control encolado contratos/garantías por vencer (09:00)
             last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
             last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
@@ -344,6 +387,21 @@ def start_scheduler(app=None):
                             _log("info", "Worker: send_daily_report OK")
                         except Exception:
                             target_app.logger.exception("Worker: send_daily_report falló")
+
+                # ==================================================
+                # Obligaciones Legales - diario 07:00 (Correccion #8, 2026-08-07)
+                # marca atrasadas + evalua/envia alertas por frecuencia
+                # ==================================================
+                now5 = datetime.now()
+                if now5.hour == 7 and now5.minute < 6:  # ventana de 5 min
+                    if last_obligaciones_date != now5.date():
+                        try:
+                            _log("info", "Worker: Ejecutando job Obligaciones...")
+                            _run_obligaciones_job(target_app)
+                            last_obligaciones_date = now5.date()
+                            _log("info", "Worker: job Obligaciones OK")
+                        except Exception:
+                            target_app.logger.exception("Worker: job Obligaciones falló")
 
                 # ==================================================
                 # Notificaciones de contratos/garantías por vencer - diario 09:00

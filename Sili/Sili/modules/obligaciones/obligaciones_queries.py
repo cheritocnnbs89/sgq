@@ -9,12 +9,12 @@ from .obligaciones_constants import (
     TABLA_DEPARTAMENTOS,
     TABLA_PUESTOS,
     TABLA_EMPRESAS,
-    TABLA_PARAM_GROUPS,
-    TABLA_PARAM_VALUES,
     TABLA_FRECUENCIAS,
     TABLA_FRECUENCIA_NOTIFICACIONES,
     TABLA_NOTIFICACION_DESTINATARIOS,
     TABLA_TIPO_ENTIDAD,
+    TABLA_TIPOS,
+    TABLA_ENTIDADES,
 )
 
 SQL_SCOPE_IDENTITY = "SELECT CAST(SCOPE_IDENTITY() AS INT)"
@@ -50,9 +50,9 @@ SELECT
         WHERE ev.obligacion_id = o.id
     ) AS evidencias
 FROM {TABLA_OBLIGACIONES} o
-JOIN {TABLA_PARAM_VALUES} t  ON t.id  = o.tipo_id
-JOIN {TABLA_EMPRESAS}     e  ON e.id  = o.empresa_id
-JOIN {TABLA_PARAM_VALUES} en ON en.id = o.entidad_id
+JOIN {TABLA_TIPOS}     t  ON t.id  = o.tipo_id
+JOIN {TABLA_EMPRESAS}  e  ON e.id  = o.empresa_id
+JOIN {TABLA_ENTIDADES} en ON en.id = o.entidad_id
 JOIN {TABLA_FRECUENCIAS}  fr ON fr.id = o.frecuencia_id
 LEFT JOIN {TABLA_DEPARTAMENTOS} d ON d.id = o.departamento_id
 LEFT JOIN {TABLA_PUESTOS}       p ON p.id = o.puesto_id
@@ -171,38 +171,68 @@ WHERE id = ? AND obligacion_id = ?
 """
 
 # ------------------------------------------------------------
-# Lookups -- Tipos (param_values) y Entidades (terceros)
-# 2026-07-14 (Ronda 2): reemplaza oblig_tipos/oblig_entidades. Ya no hay
-# CRUD propio -- Tipos se gestiona desde parametros_generales, Entidades
-# desde /terceros (ver "Corrección de arquitectura #2").
+# Tipos y Entidades Reguladoras -- CRUD propio (2026-08-07, Correccion de
+# arquitectura #8). Mismo patron que Frecuencias mas abajo.
 # ------------------------------------------------------------
-SQL_GET_GROUP_ID_BY_NOMBRE = f"SELECT id FROM {TABLA_PARAM_GROUPS} WHERE nombre = ?"
-
-SQL_LIST_PARAM_VALUES_ACTIVOS_POR_GRUPO = f"""
-SELECT id, nombre, valor
-FROM {TABLA_PARAM_VALUES}
-WHERE group_id = ? AND parent_id IS NULL AND activo = 1
+SQL_LIST_TIPOS_ACTIVOS = f"""
+SELECT id, nombre, activo, orden
+FROM {TABLA_TIPOS}
+WHERE activo = 1
 ORDER BY orden, nombre
 """
 
-# 2026-07-22 (Correccion #7): entidades viven en param_values bajo el grupo
-# GRUPO_ENTIDADES (igual que Tipos). Todas las queries se acotan por group_id.
+SQL_LIST_TIPOS_TODOS = f"""
+SELECT id, nombre, activo, orden
+FROM {TABLA_TIPOS}
+ORDER BY orden, nombre
+"""
+
+SQL_GET_TIPO_BY_ID = f"SELECT id, nombre, activo, orden FROM {TABLA_TIPOS} WHERE id = ?"
+
+SQL_INSERT_TIPO = f"""
+INSERT INTO {TABLA_TIPOS} (nombre, activo, orden)
+OUTPUT INSERTED.id
+VALUES (?, 1, ?)
+"""
+
+SQL_UPDATE_TIPO = f"UPDATE {TABLA_TIPOS} SET nombre = ?, orden = ? WHERE id = ?"
+
+SQL_TOGGLE_TIPO_ACTIVO = f"UPDATE {TABLA_TIPOS} SET activo = ? WHERE id = ?"
+
 # Combo de Entidad en formularios y filtros (solo activas).
 SQL_LIST_ENTIDADES_ACTIVAS = f"""
 SELECT id, nombre
-FROM {TABLA_PARAM_VALUES}
-WHERE group_id = ? AND parent_id IS NULL AND activo = 1
-ORDER BY nombre
+FROM {TABLA_ENTIDADES}
+WHERE activo = 1
+ORDER BY orden, nombre
 """
+
+SQL_LIST_ENTIDADES_TODAS = f"""
+SELECT id, nombre, activo, orden
+FROM {TABLA_ENTIDADES}
+ORDER BY orden, nombre
+"""
+
+SQL_GET_ENTIDAD_BY_ID = f"SELECT id, nombre, activo, orden FROM {TABLA_ENTIDADES} WHERE id = ?"
+
+SQL_INSERT_ENTIDAD = f"""
+INSERT INTO {TABLA_ENTIDADES} (nombre, activo, orden)
+OUTPUT INSERTED.id
+VALUES (?, 1, ?)
+"""
+
+SQL_UPDATE_ENTIDAD = f"UPDATE {TABLA_ENTIDADES} SET nombre = ?, orden = ? WHERE id = ?"
+
+SQL_TOGGLE_ENTIDAD_ACTIVO = f"UPDATE {TABLA_ENTIDADES} SET activo = ? WHERE id = ?"
 
 # 2026-07-27: Entidades filtradas por Tipo (oblig_tipo_entidad, muchos a
 # muchos) -- usado por el endpoint AJAX /obligaciones/api/entidades.
 SQL_LIST_ENTIDADES_POR_TIPO = f"""
-SELECT pv.id, pv.nombre
-FROM {TABLA_PARAM_VALUES} pv
-JOIN {TABLA_TIPO_ENTIDAD} te ON te.entidad_id = pv.id
-WHERE te.tipo_id = ? AND pv.activo = 1
-ORDER BY pv.nombre
+SELECT en.id, en.nombre
+FROM {TABLA_ENTIDADES} en
+JOIN {TABLA_TIPO_ENTIDAD} te ON te.entidad_id = en.id
+WHERE te.tipo_id = ? AND en.activo = 1
+ORDER BY en.nombre
 """
 
 # 2026-07-21: combo Empresa de los filtros (Consultas + Historial) -- solo
@@ -359,10 +389,11 @@ SQL_DASHBOARD_POR_ESTATUS_GROUP_BY = (
 # 2026-08-05: SQL_DASHBOARD_POR_ESTATUS_FUNDIDO_SELECT/GROUP_BY eliminados -- sin
 # consumidor tras borrar chartEstado (pedido Matias, sesion revision pendientes).
 
+# 2026-08-07: JOIN contra TABLA_TIPOS (antes param_values, Correccion #8).
 SQL_DASHBOARD_POR_TIPO_SELECT = f"""
 SELECT t.nombre AS etiqueta, COUNT(*) AS total
 FROM {TABLA_OBLIGACIONES} o
-JOIN {TABLA_PARAM_VALUES} t ON t.id = o.tipo_id
+JOIN {TABLA_TIPOS} t ON t.id = o.tipo_id
 """
 SQL_DASHBOARD_POR_TIPO_GROUP_BY = " GROUP BY t.nombre"
 

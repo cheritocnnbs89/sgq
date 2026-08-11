@@ -48,17 +48,8 @@ def start_scheduler_if_enabled(app):
         print(">>> ERROR scheduler:", e)
 
     # ------------------------------------------------------
-    # Scheduler propio del modulo Obligaciones -- independiente
-    # del flag SCHEDULER_JOBS_ENABLED (ese flag solo gobierna
-    # modules/scheduler_jobs.py). Respeta el mismo guard de
-    # reloader que el bloque de arriba para no arrancar 2 threads
-    # en modo debug.
+    # 2026-08-07 (Correccion #8): scheduler propio de Obligaciones eliminado --
+    # el job diario (07:00) se unifico al scheduler principal de arriba
+    # (modules/scheduler/scheduler_worker.py, bloque "Obligaciones Legales").
+    # Ver HISTORIAL-CORRECCIONES.md.
     # ------------------------------------------------------
-    if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        try:
-            from modules.obligaciones.obligaciones_scheduler import start_obligaciones_scheduler
-            start_obligaciones_scheduler(app)
-            print(">>> Obligaciones scheduler arrancado")
-        except Exception as e:
-            app.logger.warning("Obligaciones scheduler no iniciado: %s", e)
-            print(">>> ERROR Obligaciones scheduler:", e)

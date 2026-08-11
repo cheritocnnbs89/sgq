@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - Tipos{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/obligaciones.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 title-blue"><i class="bi bi-tags"></i> Obligaciones - Tipos</h4>
+    {% if has_permission('obligaciones_config', 'crear') %}
+    <a href="{{ url_for('obligaciones.nuevo_tipo') }}" class="btn-cta-blue">
+      <i class="bi bi-plus-lg"></i> Nuevo tipo
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="oblig-section-hero mb-3">
+    <p class="text-muted small mb-0">
+      Catálogo de tipos de obligación (tributaria, societaria, laboral, etc.) usado en el
+      formulario de Obligaciones. Un tipo desactivado deja de aparecer en los combos nuevos,
+      pero las obligaciones ya creadas con ese tipo no se ven afectadas.
+    </p>
+  </div>
+
+  <div class="table-responsive">
+    <table id="tabla-tipos" class="table table-hover table-sm align-middle tablekit oblig-table">
+      <thead class="table-light">
+        <tr>
+          <th>Nombre</th>
+          <th>Orden</th>
+          <th>Estado</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in tipos %}
+        <tr data-row="1">
+          <td><i class="bi bi-tag text-primary"></i> {{ t.nombre }}</td>
+          <td>{{ t.orden }}</td>
+          <td>
+            {% if t.activo %}
+              <span class="btn-chip">Activo</span>
+            {% else %}
+              <span class="btn-chip btn-chip-red">Inactivo</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            {% if has_permission('obligaciones_config', 'editar') %}
+            <a class="btn btn-xs btn-sm btn-outline-primary" href="{{ url_for('obligaciones.editar_tipo', tipo_id=t.id) }}" title="Editar">
+              <i class="bi bi-pencil-square"></i>
+            </a>
+            <form method="post" action="{{ url_for('obligaciones.toggle_tipo', tipo_id=t.id) }}" class="d-inline"
+                  data-confirm="{{ '¿Desactivar' if t.activo else '¿Activar' }} este tipo?">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-xs btn-sm btn-outline-secondary" title="{{ 'Desactivar' if t.activo else 'Activar' }}">
+                <i class="bi {{ 'bi-toggle-on' if t.activo else 'bi-toggle-off' }}"></i>
+              </button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-center text-muted py-4">Sin tipos configurados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

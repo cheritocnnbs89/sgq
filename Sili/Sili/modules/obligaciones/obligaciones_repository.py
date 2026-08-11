@@ -4,7 +4,6 @@ from modules.db import get_db
 from . import obligaciones_queries as q
 from .obligaciones_constants import (
     ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA, ESTATUS_TERMINALES,
-    GRUPO_TIPOS, GRUPO_ENTIDADES,
 )
 
 
@@ -72,31 +71,86 @@ def list_subordinados(jefe_id):
 
 
 # ------------------------------------------------------------
-# Lookups -- Tipos (param_values) y Entidades (terceros)
-# 2026-07-14 (Ronda 2): reemplaza oblig_tipos/oblig_entidades -- ver
-# "Corrección de arquitectura #2" en PLAN.md.
+# Tipos y Entidades Reguladoras -- CRUD propio (2026-08-07, Correccion de
+# arquitectura #8) -- tablas oblig_tipos_obligacion / oblig_entidades_
+# reguladoras, mismo patron que Frecuencias.
 # ------------------------------------------------------------
-def _get_group_id(nombre_grupo):
+def list_tipos():
+    conn = get_connection()
+    return conn.execute(q.SQL_LIST_TIPOS_ACTIVOS).fetchall()
+
+
+def list_tipos_todos():
+    conn = get_connection()
+    return conn.execute(q.SQL_LIST_TIPOS_TODOS).fetchall()
+
+
+def get_tipo_by_id(tipo_id):
     conn = get_connection()
     cur = conn.cursor()
-    row = cur.execute(q.SQL_GET_GROUP_ID_BY_NOMBRE, (nombre_grupo,)).fetchone()
+    return cur.execute(q.SQL_GET_TIPO_BY_ID, (tipo_id,)).fetchone()
+
+
+def create_tipo(nombre, orden):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_INSERT_TIPO, (nombre, orden))
+    row = cur.fetchone()  # OUTPUT INSERTED.id en el mismo INSERT
+    conn.commit()
     return row[0] if row else None
 
 
-def list_tipos():
-    grupo_id = _get_group_id(GRUPO_TIPOS)
-    if not grupo_id:
-        return []
+def update_tipo(tipo_id, nombre, orden):
     conn = get_connection()
-    return conn.execute(q.SQL_LIST_PARAM_VALUES_ACTIVOS_POR_GRUPO, (grupo_id,)).fetchall()
+    cur = conn.cursor()
+    cur.execute(q.SQL_UPDATE_TIPO, (nombre, orden, tipo_id))
+    conn.commit()
+
+
+def toggle_tipo_activo(tipo_id, activo):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_TOGGLE_TIPO_ACTIVO, (1 if activo else 0, tipo_id))
+    conn.commit()
 
 
 def list_entidades():
-    grupo_id = _get_group_id(GRUPO_ENTIDADES)
-    if not grupo_id:
-        return []
     conn = get_connection()
-    return conn.execute(q.SQL_LIST_ENTIDADES_ACTIVAS, (grupo_id,)).fetchall()
+    return conn.execute(q.SQL_LIST_ENTIDADES_ACTIVAS).fetchall()
+
+
+def list_entidades_todas():
+    conn = get_connection()
+    return conn.execute(q.SQL_LIST_ENTIDADES_TODAS).fetchall()
+
+
+def get_entidad_by_id(entidad_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    return cur.execute(q.SQL_GET_ENTIDAD_BY_ID, (entidad_id,)).fetchone()
+
+
+def create_entidad(nombre, orden):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_INSERT_ENTIDAD, (nombre, orden))
+    row = cur.fetchone()  # OUTPUT INSERTED.id en el mismo INSERT
+    conn.commit()
+    return row[0] if row else None
+
+
+def update_entidad(entidad_id, nombre, orden):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_UPDATE_ENTIDAD, (nombre, orden, entidad_id))
+    conn.commit()
+
+
+def toggle_entidad_activo(entidad_id, activo):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_TOGGLE_ENTIDAD_ACTIVO, (1 if activo else 0, entidad_id))
+    conn.commit()
 
 
 def list_entidades_por_tipo(tipo_id):

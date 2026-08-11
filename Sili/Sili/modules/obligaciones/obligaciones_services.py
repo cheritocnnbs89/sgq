@@ -623,12 +623,17 @@ def marcar_obligaciones_atrasadas():
     """Tarea A: estatus='atrasado' -- NO toca activa (sigue en Consultas)."""
     ids = repo.get_ids_para_marcar_atrasadas()
     total = 0
-    for oblig_id in ids:
-        repo.marcar_atrasada(oblig_id)
-        repo.insert_historial(oblig_id, "estatus", None, "atrasado", None, None)
-        total += 1
-    if ids:
-        repo.commit()
+    try:
+        for oblig_id in ids:
+            repo.marcar_atrasada(oblig_id)
+            repo.insert_historial(oblig_id, "estatus", None, "atrasado", None, None)
+            total += 1
+        if ids:
+            repo.commit()
+    except Exception:
+        repo.rollback()
+        current_app.logger.exception("Error al marcar obligaciones atrasadas")
+        raise
     return total
 
 
@@ -918,6 +923,7 @@ def guardar_frecuencia_completa(frecuencia_id, form):
         )
         return {"ok": True, "flash": ("Frecuencia guardada.", "success"), "id": new_id}
     except Exception:
+        repo.rollback()
         current_app.logger.exception("Error al guardar frecuencia")
         return {
             "ok": False,
@@ -932,5 +938,98 @@ def eliminar_frecuencia(frecuencia_id):
         repo.soft_delete_frecuencia(frecuencia_id)
         return {"ok": True, "flash": ("Frecuencia eliminada.", "success")}
     except Exception:
+        repo.rollback()
         current_app.logger.exception("Error al eliminar frecuencia")
         return {"ok": False, "flash": ("No se pudo eliminar la frecuencia.", "danger")}
+
+
+# ==================================================================
+# Fase 12 -- Tipos y Entidades Reguladoras (Correccion de arquitectura #8,
+# 2026-08-07). Pantallas propias bajo Configuraciones -> Parametros
+# Generales en el menu (mismo patron que Frecuencias), tablas propias
+# oblig_tipos_obligacion / oblig_entidades_reguladoras.
+# ==================================================================
+def _normalize_catalogo_form(form):
+    get = lambda k: (form.get(k) or "").strip()
+    return {
+        "nombre": sanear_formula(get("nombre")),
+        "orden":  safe_int(get("orden"), 0) or 0,
+    }
+
+
+def _validate_catalogo_data(data):
+    if not data.get("nombre"):
+        return False, "El nombre es obligatorio."
+    if len(data["nombre"]) > 200:
+        return False, "El nombre no puede superar los 200 caracteres."
+    return True, None
+
+
+def list_tipos():
+    return repo.list_tipos()
+
+
+def list_tipos_todos():
+    return repo.list_tipos_todos()
+
+
+def get_tipo_detalle(tipo_id):
+    return repo.get_tipo_by_id(tipo_id)
+
+
+def guardar_tipo(tipo_id, form):
+    data = _normalize_catalogo_form(form)
+    ok, err = _validate_catalogo_data(data)
+    if not ok:
+        return {"ok": False, "flash": (err, "warning"), "data": data}
+    try:
+        if tipo_id:
+            repo.update_tipo(tipo_id, data["nombre"], data["orden"])
+        else:
+            tipo_id = repo.create_tipo(data["nombre"], data["orden"])
+        return {"ok": True, "flash": ("Tipo guardado.", "success"), "id": tipo_id}
+    except Exception:
+        current_app.logger.exception("Error al guardar tipo de obligación")
+        return {"ok": False, "flash": ("No se pudo guardar el tipo.", "danger"), "data": data}
+
+
+def toggle_tipo_activo(tipo_id, activo):
+    try:
+        repo.toggle_tipo_activo(tipo_id, activo)
+        return {"ok": True, "flash": ("Tipo actualizado.", "success")}
+    except Exception:
+        current_app.logger.exception("Error al cambiar estado del tipo")
+        return {"ok": False, "flash": ("No se pudo actualizar el tipo.", "danger")}
+
+
+def list_entidades_todas():
+    return repo.list_entidades_todas()
+
+
+def get_entidad_detalle(entidad_id):
+    return repo.get_entidad_by_id(entidad_id)
+
+
+def guardar_entidad(entidad_id, form):
+    data = _normalize_catalogo_form(form)
+    ok, err = _validate_catalogo_data(data)
+    if not ok:
+        return {"ok": False, "flash": (err, "warning"), "data": data}
+    try:
+        if entidad_id:
+            repo.update_entidad(entidad_id, data["nombre"], data["orden"])
+        else:
+            entidad_id = repo.create_entidad(data["nombre"], data["orden"])
+        return {"ok": True, "flash": ("Entidad guardada.", "success"), "id": entidad_id}
+    except Exception:
+        current_app.logger.exception("Error al guardar entidad reguladora")
+        return {"ok": False, "flash": ("No se pudo guardar la entidad.", "danger"), "data": data}
+
+
+def toggle_entidad_activo(entidad_id, activo):
+    try:
+        repo.toggle_entidad_activo(entidad_id, activo)
+        return {"ok": True, "flash": ("Entidad actualizada.", "success")}
+    except Exception:
+        current_app.logger.exception("Error al cambiar estado de la entidad")
+        return {"ok": False, "flash": ("No se pudo actualizar la entidad.", "danger")}

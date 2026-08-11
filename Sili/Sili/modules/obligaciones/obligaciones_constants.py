@@ -2,11 +2,14 @@
 
 # ------------------------------------------------------------
 # Tablas propias del modulo (prefijo oblig_)
-# 2026-07-14 (Ronda 2): TABLA_TIPOS/TABLA_ENTIDADES/TABLA_REGLAS eliminadas --
-# Tipos vive en param_values, Entidades en terceros.
 # 2026-07-15 (Correccion #3): Frecuencias vuelve a tener tablas propias --
 # cada notificacion necesita destinatarios configurables por usuario, algo
 # que param_values no puede modelar sin un JSON opaco.
+# 2026-08-07: Tipos y Entidades Reguladoras vuelven a tener tablas propias
+# (oblig_tipos_obligacion / oblig_entidades_reguladoras) -- preservan los
+# mismos IDs que tenian en param_values (0 huerfanos verificado contra
+# oblig_obligaciones.tipo_id/entidad_id). GRUPO_TIPOS/GRUPO_ENTIDADES/
+# TABLA_PARAM_GROUPS/TABLA_PARAM_VALUES eliminados de este archivo.
 # ------------------------------------------------------------
 TABLA_OBLIGACIONES = "oblig_obligaciones"
 TABLA_EVIDENCIAS   = "oblig_evidencias"
@@ -15,17 +18,16 @@ TABLA_ALERTAS      = "oblig_alertas_enviadas"
 TABLA_FRECUENCIAS                = "oblig_frecuencias"
 TABLA_FRECUENCIA_NOTIFICACIONES  = "oblig_frecuencia_notificaciones"
 TABLA_NOTIFICACION_DESTINATARIOS = "oblig_notificacion_destinatarios"
+TABLA_TIPOS     = "oblig_tipos_obligacion"
+TABLA_ENTIDADES = "oblig_entidades_reguladoras"
 # 2026-07-27: mapeo Tipo -> Entidad Reguladora (muchos a muchos -- confirmado
 # contra "Data Power BI - Obligaciones tributarias y societarias.xlsx": una
 # misma entidad (ej. Municipio, Superintendencia Cias) aplica a varios tipos,
 # y un tipo tiene varias entidades -- parent_id de param_values no alcanza.
 TABLA_TIPO_ENTIDAD = "oblig_tipo_entidad"
-# 2026-07-22 (Correccion de arquitectura #7): Entidades Reguladoras deja de ser
-# tabla propia (oblig_entidades_reguladoras) y pasa a vivir en param_values bajo
-# el grupo GRUPO_ENTIDADES -- EXACTAMENTE igual que Tipos. Los 35 valores se
-# migraron a param_values (ids nuevos generados por IDENTITY; los ids viejos de
-# terceros solapaban con param_values, no se pudieron preservar) y entidad_id de
-# oblig_obligaciones se re-apunto a los ids nuevos. La tabla propia se elimino.
+# Historial de este bloque: #2 (2026-07-14) movio Tipos/Entidades a
+# param_values/terceros; #7 (2026-07-22) unifico Entidades a param_values;
+# #8 (2026-08-07) revierte ambas a tablas propias con pantalla dedicada.
 
 # ------------------------------------------------------------
 # Tablas Sili existentes usadas por este modulo (NO crear DDL)
@@ -34,17 +36,6 @@ TABLA_USUARIOS      = "usuarios"
 TABLA_DEPARTAMENTOS = "departamentos"
 TABLA_PUESTOS       = "puestos"   # "Cargo" en la UI
 TABLA_EMPRESAS      = "empresas"  # 2026-07-13: catalogo existente, reemplaza oblig_empresas
-TABLA_PARAM_GROUPS  = "param_groups"  # 2026-07-14: reemplaza oblig_tipos y oblig_reglas_alerta
-TABLA_PARAM_VALUES  = "param_values"
-
-# Nombres de los grupos en param_groups que este modulo usa
-# 2026-07-15: GRUPO_FRECUENCIAS eliminado -- Frecuencias ya no vive en
-# param_values (ver Correccion de arquitectura #3, PLAN.md).
-GRUPO_TIPOS = "Obligaciones - Tipos"
-# 2026-07-22 (Correccion #7): grupo de param_values donde viven las Entidades
-# Reguladoras (antes tabla propia). El group_id se resuelve por nombre en runtime
-# (repository._get_group_id) -- mismo patron que list_tipos(), sin id hardcodeado.
-GRUPO_ENTIDADES = "Obligaciones - Entidades Reguladoras"
 
 # ------------------------------------------------------------
 # Identidad del modulo
@@ -58,11 +49,11 @@ PERM_BASE  = "obligaciones"
 # el INSERT real en menu_items (fuera del alcance de esta tarea, NO tocar BD).
 ACTIVE_KEY_FRECUENCIAS = "obligaciones_frecuencias"
 
-# 2026-07-23 (Correccion #23): pantallas dedicadas de Tipos y Entidades
-# Reguladoras eliminadas -- ambas se gestionan desde Parametros Generales
-# genericos (/parametros/generales/<grupo>/items), permiso "parametros"
-# otorgado a admin_obligaciones. ACTIVE_KEY_TIPOS y ACTIVE_KEY_ENTIDADES
-# eliminados (sin uso).
+# 2026-08-07: pantallas dedicadas de Tipos y Entidades Reguladoras vuelven a
+# existir (revierte Correccion #23) -- ahora con tablas propias, mismo patron
+# que Frecuencias.
+ACTIVE_KEY_TIPOS = "obligaciones_tipos"
+ACTIVE_KEY_ENTIDADES = "obligaciones_entidades"
 
 # ------------------------------------------------------------
 # Permisos (tabla opciones) -- 7 permisos del modulo

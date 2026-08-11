@@ -232,8 +232,9 @@ def _run_unassigned_tickets():
 
 def _run_obligaciones():
     from flask import current_app
-    from .obligaciones.obligaciones_scheduler import run_obligaciones_job
-    run_obligaciones_job(current_app._get_current_object())
+    # 2026-08-07 (Correccion #8): job unificado a scheduler_worker.py
+    from .scheduler.scheduler_worker import _run_obligaciones_job
+    _run_obligaciones_job(current_app._get_current_object())
     return "OK"
 
 

@@ -44,6 +44,11 @@ def register_obligaciones_routes(app):
     # tope del archivo) para evitar import circular, ya que
     # routes_obligaciones_frecuencias.py importa `obligaciones_bp` de este módulo.
     from . import routes_obligaciones_frecuencias  # noqa: F401 (registra decoradores @obligaciones_bp.route)
+    # 2026-08-07 (Correccion #8): rutas de Tipos y Entidades Reguladoras --
+    # mismo patron de import diferido que Frecuencias, mismo motivo (evitar
+    # import circular con obligaciones_bp).
+    from . import routes_obligaciones_tipos  # noqa: F401
+    from . import routes_obligaciones_entidades  # noqa: F401
     app.register_blueprint(obligaciones_bp)
 
 
