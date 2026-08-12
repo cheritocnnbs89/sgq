@@ -13,7 +13,7 @@
   --shadow-soft: 0 6px 20px rgba(2, 6, 23, .08);
   --shadow-focus: 0 0 0 3px rgba(37, 99, 235, .28);
 }
-
+ 
 html.theme-dark {
   --bg: #0B1220;
   --card: #0F172A;
@@ -379,6 +379,17 @@ html.theme-dark .chart-box.loading {
   border-left: 3px solid var(--line);
   margin-top: .75rem;
 }
+.okr-depto-subhead {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin: 1rem 0 .5rem;
+  padding-bottom: .3rem;
+  border-bottom: 1px dashed var(--line);
+}
+.okr-depto-subhead:first-child { margin-top: 0; }
 .okr-area-head[aria-expanded="true"] .okr-chevron-icon  { transform: rotate(180deg); }
 .okr-toggle:hover .okr-area-name { opacity: .8; }
 

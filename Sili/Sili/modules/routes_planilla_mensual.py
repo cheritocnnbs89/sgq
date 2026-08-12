@@ -9,7 +9,7 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 from .db import get_db
-
+ 
 planilla_bp = Blueprint("planilla_mensual", __name__, url_prefix="/planilla-mensual")
 
 # ---------- Config ----------
@@ -827,9 +827,11 @@ def planilla_dashboard():
         if t.get("depto"):
             ag["deptos"].add(t["depto"])
 
-        og = ag["okrs"].setdefault(okr_key, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "rcs": {}})
+        og = ag["okrs"].setdefault(okr_key, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "rcs": {}, "deptos": set()})
         og["plan"]   += tp;  og["real"]   += tr
         og["plan_h"] += tph; og["real_h"] += trh
+        if t.get("depto"):
+            og["deptos"].add(t["depto"])
 
         rg = og["rcs"].setdefault(rc_key, {"plan": 0, "real": 0, "plan_h": 0, "real_h": 0, "tareas": []})
         rg["plan"]   += tp;  rg["real"]   += tr
@@ -847,7 +849,12 @@ def planilla_dashboard():
 
     def _build_okr_rows(okrs_dict):
         rows = []
-        for (oid, onom), og in sorted(okrs_dict.items(), key=lambda x: x[0][1]):
+        # Ordena por depto (para agrupar visualmente) y luego por nombre de OKR
+        def _sort_key(item):
+            (oid, onom), og = item
+            deptos = sorted(og.get("deptos") or [])
+            return (deptos[0] if deptos else "", onom)
+        for (oid, onom), og in sorted(okrs_dict.items(), key=_sort_key):
             op = og["plan"] or 0; or_ = og["real"] or 0
             oph = og["plan_h"] or 0; orh = og["real_h"] or 0
             rcs_list = []
@@ -876,6 +883,7 @@ def planilla_dashboard():
             o_esp  = round(sum(rc["esp_pct"]  for rc in rcs_activas) / len(rcs_activas), 1) if rcs_activas else 0.0
             o_real = round(sum(rc["real_pct"] for rc in rcs_activas) / len(rcs_activas), 1) if rcs_activas else 0.0
             num_tareas_okr = sum(len(rc["tareas"]) for rc in rcs_list)
+            o_deptos = sorted(og.get("deptos") or [])
             rows.append({
                 "id": oid, "nombre": onom,
                 "plan": op, "real": or_,
@@ -885,6 +893,7 @@ def planilla_dashboard():
                 "num_rcs": len(rcs_list),
                 "num_tareas": num_tareas_okr,
                 "resultados_clave": rcs_list,
+                "depto": o_deptos[0] if o_deptos else "Sin departamento",
             })
         return rows
 

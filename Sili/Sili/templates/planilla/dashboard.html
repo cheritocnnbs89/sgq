@@ -119,7 +119,7 @@
              data-bs-target="#area-detail-{{ ai }}"
              aria-expanded="true"
              aria-controls="area-detail-{{ ai }}"
-             role="button">
+             role="button"> 
           <div class="okr-card-left">
             <p class="okr-area-name"><i class="bi bi-layers me-2 opacity-75"></i>{{ area.nombre }}</p>
             <div class="okr-card-badges">
@@ -155,11 +155,15 @@
           </div>
         </div>
 
-        {# ── Nivel 2: OKRs de esta área ── #}
+        {# ── Nivel 2: OKRs de esta área, agrupados por departamento cuando hay más de uno ── #}
         <div class="collapse show" id="area-detail-{{ ai }}">
           <div class="okr-area-okrs">
-
+            {% set ns_dept = namespace(last=none) %}
             {% for okr in area.okrs %}
+            {% if area.deptos|length > 1 and okr.depto != ns_dept.last %}
+            <div class="okr-depto-subhead"><i class="bi bi-diagram-2 me-1"></i>{{ okr.depto }}</div>
+            {% set ns_dept.last = okr.depto %}
+            {% endif %}
             {% set oi = ai ~ '-' ~ loop.index %}
             {% set gap = okr.real_pct - okr.esp_pct %}
             {% set status_cls = 'ok' if gap >= 0 else ('warn' if gap >= -15 else 'danger') %}
