@@ -913,7 +913,9 @@ def planilla_dashboard():
     # ── Tabla jerárquica Empresa → Área → Depto → OKR ────────────────────────
     # Lookups desde area_rows (mismos % que el card OKR para consistencia)
     _area_pct  = {ar["nombre"]: ar["real_pct"] for ar in area_rows}
+    _area_esp  = {ar["nombre"]: ar["esp_pct"]  for ar in area_rows}
     _okr_pct   = {o["id"]: o["real_pct"] for ar in area_rows for o in ar["okrs"]}
+    _okr_esp   = {o["id"]: o["esp_pct"]  for ar in area_rows for o in ar["okrs"]}
 
     # Agrupar tareas por (empresa, area, dept) → set de okrs con su real_pct
     # {emp_nom: {area_nom: {dept_nom: {okr_id: okr_nom}}}}
@@ -938,15 +940,18 @@ def planilla_dashboard():
                     okr_rows_h.append({
                         "nombre":   onom,
                         "real_pct": _okr_pct.get(oid, 0.0),
+                        "esp_pct":  _okr_esp.get(oid, 0.0),
                     })
                 dept_rows_h.append({"nombre": d_nom, "okrs": okr_rows_h})
             emp_areas.append({
                 "nombre":   a_nom,
                 "real_pct": _area_pct.get(a_nom, 0.0),
+                "esp_pct":  _area_esp.get(a_nom, 0.0),
                 "deptos":   dept_rows_h,
             })
         emp_pct = round(sum(a["real_pct"] for a in emp_areas) / len(emp_areas), 1) if emp_areas else 0.0
-        empresa_rows.append({"nombre": emp_nom, "real_pct": emp_pct, "areas": emp_areas})
+        emp_esp = round(sum(a["esp_pct"]  for a in emp_areas) / len(emp_areas), 1) if emp_areas else 0.0
+        empresa_rows.append({"nombre": emp_nom, "real_pct": emp_pct, "esp_pct": emp_esp, "areas": emp_areas})
     # ──────────────────────────────────────────────────────────────────────────
 
     return render_template(

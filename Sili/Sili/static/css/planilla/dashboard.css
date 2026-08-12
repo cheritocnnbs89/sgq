@@ -548,7 +548,7 @@ html.theme-dark .okr-badge-danger { background: #3d1a1a; color: #fca5a5; }
   letter-spacing: .07em; padding: 10px 14px; white-space: nowrap;
   border-bottom: 2px solid #334155;
 }
-.hier-th-pct  { text-align: right; width: 80px; }
+.hier-th-pct  { text-align: right; width: 96px; }
 .hier-th-empresa { width: 160px; }
 .hier-th-area    { width: 110px; }
 .hier-th-dept    { width: 180px; }
@@ -556,11 +556,16 @@ html.theme-dark .okr-badge-danger { background: #3d1a1a; color: #fca5a5; }
 
 /* Celdas base */
 .hier-table td {
-  padding: 9px 14px; vertical-align: middle;
+  padding: 12px 14px; vertical-align: middle;
   border-bottom: 1px solid var(--line); color: var(--ink);
 }
 .hier-row:last-child td { border-bottom: none; }
 .hier-row:hover td { background: rgba(37,99,235,.04); }
+
+/* Separador visual entre grupos de área distintos */
+.hier-row-new-area td { border-top: 1px solid var(--line); }
+.hier-row-new-area:first-child td,
+.hier-table tbody tr:first-child td { border-top: none; }
 
 /* Columnas de nivel */
 .hier-td-empresa {
@@ -576,10 +581,14 @@ html.theme-dark .okr-badge-danger { background: #3d1a1a; color: #fca5a5; }
   border-right: 1px solid var(--line);
 }
 .hier-td-okr  {
-  font-size: 12px; padding-left: 18px;
-  max-width: 340px; white-space: normal; line-height: 1.35;
+  font-size: 12px; padding-left: 18px; padding-top: 10px; padding-bottom: 10px;
+  max-width: 360px; white-space: normal; line-height: 1.45;
 }
 .hier-td-pct  { text-align: right; white-space: nowrap; padding-right: 14px; }
+
+/* Real % + Esperado % apilados */
+.hier-pct-wrap { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.hier-esp-note { font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: .01em; }
 
 /* Badges de porcentaje */
 .hier-pct-badge {
@@ -594,6 +603,8 @@ html.theme-dark .okr-badge-danger { background: #3d1a1a; color: #fca5a5; }
 html.theme-dark .hier-td-empresa { background: #1e3a5f; border-right-color: #2563eb; }
 html.theme-dark .hier-td-area    { background: #14532d; border-right-color: #16a34a; }
 html.theme-dark .hier-td-dept    { background: #1e293b; }
+html.theme-dark .hier-esp-note   { color: #94a3b8; }
+html.theme-dark .hier-row-new-area td { border-top-color: #334155; }
 html.theme-dark .hier-pct-badge.pct-ok     { background: #14532d; color: #86efac; }
 html.theme-dark .hier-pct-badge.pct-warn   { background: #713f12; color: #fde047; }
 html.theme-dark .hier-pct-badge.pct-danger { background: #7f1d1d; color: #fca5a5; }
