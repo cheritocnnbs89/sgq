@@ -152,7 +152,7 @@
     var nfecha = document.getElementById('nfecha');
     var picker = document.getElementById('fechaQuickPicker');
     if (!nfecha || !picker) return;
-    picker.querySelectorAll('.fecha-quick-btn').forEach(function (b) {
+    picker.querySelectorAll('.quick-pick-btn').forEach(function (b) {
       b.classList.toggle('active', b.dataset.fechaQuick === mode);
     });
     if (mode === 'hoy') {
@@ -170,6 +170,17 @@
     }
   }
 
+  /* ── Selector rápido de prioridad (Normal / Alta / Urgente) ── */
+  function setPrioridad(val) {
+    var input  = document.getElementById('prioridadInput');
+    var picker = document.getElementById('prioridadPicker');
+    if (!input || !picker) return;
+    input.value = val;
+    picker.querySelectorAll('.quick-pick-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.prioridad === val);
+    });
+  }
+
   function resetModalNueva() {
     var tipoInput = document.getElementById('tipoSolicitudInput');
     if (tipoInput) tipoInput.value = '';
@@ -183,6 +194,7 @@
     toggleCampoVuelo('');
     toggleCampoVoucher('');
     setFechaQuick('hoy');
+    setPrioridad('Normal');
   }
 
   /* ── Nueva solicitud con fecha prellenada ── */
@@ -1150,8 +1162,17 @@
     setFechaQuick('hoy');
     var fechaQuickPicker = document.getElementById('fechaQuickPicker');
     if (fechaQuickPicker) {
-      fechaQuickPicker.querySelectorAll('.fecha-quick-btn').forEach(function (btn) {
+      fechaQuickPicker.querySelectorAll('.quick-pick-btn').forEach(function (btn) {
         btn.addEventListener('click', function () { setFechaQuick(btn.dataset.fechaQuick); });
+      });
+    }
+
+    /* Prellenar prioridad Normal (selector rápido) */
+    setPrioridad('Normal');
+    var prioridadPicker = document.getElementById('prioridadPicker');
+    if (prioridadPicker) {
+      prioridadPicker.querySelectorAll('.quick-pick-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () { setPrioridad(btn.dataset.prioridad); });
       });
     }
     var nfechaVuelo = document.getElementById('nfechaVuelo');

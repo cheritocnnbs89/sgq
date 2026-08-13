@@ -507,33 +507,34 @@ tr.pg-hidden { display:none; }
 /* ── Selector de tipo de solicitud (iconos) ── */
 .tipo-icon-row { display:flex; gap:.6rem; flex-wrap:wrap; }
 .tipo-icon-btn {
-  display:flex; flex-direction:column; align-items:center; gap:.35rem;
-  flex:1; min-width:110px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.4rem;
+  flex:1; min-width:110px; min-height:96px;
   padding:.85rem .6rem;
   border:1.5px solid #cbd5e1; border-radius:.85rem;
-  background:#fff; cursor:pointer;
-  transition:background .15s, border-color .15s, box-shadow .15s;
+  background:#fff; color:#475569; cursor:pointer;
+  transition:background .15s, border-color .15s, box-shadow .15s, color .15s;
 }
 .tipo-icon-btn:hover { background:#f8fafc; border-color:#94a3b8; }
 .tipo-icon-btn.active {
-  border-color:var(--brand-600); background:var(--brand-100);
+  border-color:var(--brand-600); background:var(--brand-100); color:var(--brand-600);
   box-shadow:0 0 0 3px rgba(37,99,235,.15);
 }
-.tipo-icon-emoji { font-size:1.6rem; line-height:1; }
+.tipo-icon-emoji { font-size:1.5rem; line-height:1; display:flex; align-items:center; justify-content:center; }
 .tipo-icon-label { font-size:.8rem; font-weight:600; color:#111827; text-align:center; }
+.tipo-icon-btn.active .tipo-icon-label { color:var(--brand-600); }
 @media (max-width:600px) { .tipo-icon-btn { min-width:0; } }
 
-/* ── Selector rápido de fecha (Hoy / Mañana / Otra fecha) ── */
-.fecha-quick-picker { display:flex; gap:.5rem; flex-wrap:wrap; }
-.fecha-quick-btn {
+/* ── Selectores rápidos con botones (Fecha, Prioridad) ── */
+.quick-pick-row { display:flex; gap:.5rem; flex-wrap:wrap; }
+.quick-pick-btn {
   flex:1; min-width:90px;
   padding:.45rem .6rem;
   border:1.5px solid #cbd5e1; border-radius:.6rem;
   background:#fff; color:#111827; font-size:.82rem; font-weight:600;
   cursor:pointer; transition:background .15s, border-color .15s;
 }
-.fecha-quick-btn:hover { background:#f8fafc; border-color:#94a3b8; }
-.fecha-quick-btn.active {
+.quick-pick-btn:hover { background:#f8fafc; border-color:#94a3b8; }
+.quick-pick-btn.active {
   border-color:var(--brand-600); background:var(--brand-100); color:var(--brand-600);
 }
 

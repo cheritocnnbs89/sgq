@@ -508,15 +508,13 @@
     <form method="post" action="{{ url_for('planificador.planificador_crear') }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="sgq-modal-body">
-        {% set tipo_icons = {'Voucher': '🎫', 'Vuelo': '✈️'} %}
+        {% set tipo_icons = {'Voucher': 'bi-ticket-perforated-fill', 'Vuelo': 'bi-airplane-fill'} %}
         <div class="tipo-solicitud-picker" id="tipoSolicitudPicker">
           <label class="form-label">Tipo de solicitud *</label>
           <div class="tipo-icon-row">
             {% for t in tipos %}
             <button type="button" class="tipo-icon-btn" data-tipo="{{ t }}">
-              <span class="tipo-icon-emoji">
-                {%- if t in tipo_icons %}{{ tipo_icons[t] }}{% else %}<i class="bi bi-cart3"></i>{% endif -%}
-              </span>
+              <span class="tipo-icon-emoji"><i class="bi {{ tipo_icons.get(t, 'bi-cart3') }}"></i></span>
               <span class="tipo-icon-label">{{ t }}</span>
             </button>
             {% endfor %}
@@ -544,18 +542,21 @@
           {% endif %}
           <div id="campoFechaRegularDiv">
             <label class="form-label">Fecha *</label>
-            <div class="fecha-quick-picker" id="fechaQuickPicker">
-              <button type="button" class="fecha-quick-btn" data-fecha-quick="hoy">Hoy</button>
-              <button type="button" class="fecha-quick-btn" data-fecha-quick="manana">Mañana</button>
-              <button type="button" class="fecha-quick-btn" data-fecha-quick="otra">Otra fecha</button>
+            <div class="quick-pick-row" id="fechaQuickPicker">
+              <button type="button" class="quick-pick-btn" data-fecha-quick="hoy">Hoy</button>
+              <button type="button" class="quick-pick-btn" data-fecha-quick="manana">Mañana</button>
+              <button type="button" class="quick-pick-btn" data-fecha-quick="otra">Otra fecha</button>
             </div>
             <input class="form-control mt-2 d-none" type="date" name="fecha" id="nfecha" required>
           </div>
           <div id="campoPrioridadDiv">
             <label class="form-label">Prioridad</label>
-            <select class="form-select" name="prioridad">
-              {% for p in prioridades %}<option>{{ p }}</option>{% endfor %}
-            </select>
+            <div class="quick-pick-row" id="prioridadPicker">
+              {% for p in prioridades %}
+              <button type="button" class="quick-pick-btn" data-prioridad="{{ p }}">{{ p }}</button>
+              {% endfor %}
+            </div>
+            <input type="hidden" name="prioridad" id="prioridadInput" value="Normal">
           </div>
           <div class="campo-voucher d-none" id="campoNumeroVouchersDiv">
             <label class="form-label">N° de vouchers solicitados *</label>
