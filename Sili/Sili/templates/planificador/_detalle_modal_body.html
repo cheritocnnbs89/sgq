@@ -405,7 +405,7 @@
       <div class="col-sm-4">
         <label class="form-label">
           {{ tipo }}
-          {% if sugerido %}<span class="badge bg-light text-secondary border ms-1" style="font-size:.7em;">cotizado</span>{% endif %}
+          {% if sugerido %}<span class="badge bg-light text-secondary border ms-1 fs-70">cotizado</span>{% endif %}
         </label>
         <div class="input-group input-group-sm">
           <span class="input-group-text">$</span>
@@ -422,7 +422,7 @@
       <div class="col-sm-4">
         <label class="form-label">
           Penalización reagenda
-          <span class="badge bg-light text-danger border ms-1" style="font-size:.7em;">reagenda</span>
+          <span class="badge bg-light text-danger border ms-1 fs-70">reagenda</span>
         </label>
         <div class="input-group input-group-sm">
           <span class="input-group-text">$</span>
@@ -524,7 +524,7 @@
         <span class="vmeta-v text-truncate">{{ item.adjunto_nombre_original }}</span>
       </div>
       {% else %}
-      <div class="voucher-meta voucher-adjunto-row" id="voucher-adjunto-{{ item.id }}" style="display:none;">
+      <div class="voucher-meta voucher-adjunto-row d-none" id="voucher-adjunto-{{ item.id }}">
         <span class="vmeta-k"><i class="bi bi-paperclip me-1"></i>Respaldo</span>
         <span class="vmeta-v text-truncate"></span>
       </div>

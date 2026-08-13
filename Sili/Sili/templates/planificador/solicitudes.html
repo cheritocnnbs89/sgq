@@ -17,6 +17,16 @@
 
 <div class="recorrido-page">
 
+  {# ── Barra de usuario/rol (cabecera de la página) ── #}
+  <div class="planner-userbar">
+    <span class="planner-user-chip">
+      <i class="bi bi-person-circle"></i>{{ session.get('usuario') or '—' }}
+    </span>
+    <span class="planner-user-chip planner-user-chip--role">
+      <i class="bi bi-shield-lock"></i>{{ session.get('rol') or '—' }}
+    </span>
+  </div>
+
   {# ── Hero ── #}
   <div class="planner-hero">
     <div class="planner-hero-left">
@@ -24,12 +34,6 @@
       <p>Gestione recorridos, vouchers y vuelos · Lunes a viernes, 08:00 – 17:00</p>
     </div>
     <div class="planner-hero-actions">
-      <span class="planner-user-chip">
-        <i class="bi bi-person-circle"></i>{{ session.get('usuario') or '—' }}
-      </span>
-      <span class="planner-user-chip planner-user-chip--role">
-        <i class="bi bi-shield-lock"></i>{{ session.get('rol') or '—' }}
-      </span>
       {% if ctx.es_admin or ctx.tipos_coordinador or ctx.tipos_aprobador %}
       <a href="{{ url_for('planificador.planificador_reporte') }}" class="btn btn-sm btn-light border">
         <i class="bi bi-filetype-csv"></i> CSV
@@ -76,11 +80,13 @@
       <span class="planner-kpi-num planner-kpi-num--muted">{{ rows|selectattr('estado','eq','COMPLETADA')|list|length }}</span>
       <span class="planner-kpi-label">Completadas</span>
     </div>
+    {% if ctx.es_admin or ctx.tipos_coordinador %}
     <div class="planner-kpi-sep"></div>
     <div class="planner-kpi">
       <span class="planner-kpi-num planner-kpi-num--muted">{{ rows|length }}</span>
       <span class="planner-kpi-label">Total visibles</span>
     </div>
+    {% endif %}
   </div>
 
   {# ── Filtros ── #}
@@ -150,10 +156,12 @@
             <i class="bi bi-calendar-plus me-1"></i>Reservadas
             <span class="badge bg-warning text-dark ms-1">{{ reservadas|length }}</span>
           </button>
+          {% if ctx.es_admin or ctx.tipos_coordinador %}
           <button class="planner-tab" data-tab="tab-coordinadas">
             <i class="bi bi-calendar-check me-1"></i>Coordinadas
             <span class="badge bg-info text-dark ms-1">{{ coordinadas|length }}</span>
           </button>
+          {% endif %}
           {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
           <button class="planner-tab {% if tab_default == 'tab-por-aprobar' %}active{% endif %} {% if por_aprobar %}planner-tab-alert{% endif %}" data-tab="tab-por-aprobar">
             <i class="bi bi-person-check me-1"></i>Por aprobar
@@ -173,19 +181,23 @@
         </div>
 
         {# Macro tabla interna #}
-        {% macro tabla_tab(section_rows, empty_msg) %}
+        {% macro tabla_tab(section_rows, empty_msg, mostrar_area_solicitante=true) %}
         <div class="table-responsive" data-paginated-table>
           <table class="table table-hover align-middle mb-0 table-sm">
             <thead class="table-light">
               <tr>
                 <th data-sort="num"><span class="th-sortable">#<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th data-sort="text"><span class="th-sortable">Tipo<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                {% if mostrar_area_solicitante %}
                 <th data-sort="text"><span class="th-sortable">Área<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                {% endif %}
                 <th data-sort="date"><span class="th-sortable">Fecha<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th data-sort="text"><span class="th-sortable">Horario<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th data-sort="text"><span class="th-sortable">Prioridad<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th data-sort="text"><span class="th-sortable">Estado<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                {% if mostrar_area_solicitante %}
                 <th data-sort="text"><span class="th-sortable">Solicitante<i class="bi bi-arrow-down-up ms-1"></i></span></th>
+                {% endif %}
                 <th data-sort="text"><span class="th-sortable">Jefe<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th class="text-end">Acciones</th>
               </tr>
@@ -200,7 +212,9 @@
                   {% endif %}
                 </td>
                 <td>{{ r.tipo }}</td>
+                {% if mostrar_area_solicitante %}
                 <td>{{ r.area_solicitante }}</td>
+                {% endif %}
                 <td class="text-nowrap">{{ r.fecha_str }}</td>
                 <td class="text-nowrap">
                   {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
@@ -212,7 +226,9 @@
                   </span>
                 </td>
                 <td><span class="badge {{ r.estado_class }}">{{ r.estado_label }}</span></td>
+                {% if mostrar_area_solicitante %}
                 <td class="small">{{ r.solicitante_nombre }}</td>
+                {% endif %}
                 <td class="small text-muted">
                   {% if r.tipo in ('Vuelo', 'Voucher') %}{{ r.get('jefe_nombre') or '—' }}{% else %}—{% endif %}
                 </td>
@@ -284,7 +300,7 @@
                 </td>
               </tr>
               {% else %}
-              <tr><td colspan="10" class="text-center text-muted py-4">{{ empty_msg }}</td></tr>
+              <tr><td colspan="{{ 10 if mostrar_area_solicitante else 8 }}" class="text-center text-muted py-4">{{ empty_msg }}</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -305,11 +321,13 @@
 
         {# Contenido de cada tab #}
         <div class="planner-tab-content {% if tab_default == 'tab-reservadas' %}active{% endif %}" id="tab-reservadas">
-          {{ tabla_tab(reservadas, "Sin solicitudes pendientes de coordinación") }}
+          {{ tabla_tab(reservadas, "Sin solicitudes pendientes de coordinación", ctx.es_admin or ctx.tipos_coordinador) }}
         </div>
+        {% if ctx.es_admin or ctx.tipos_coordinador %}
         <div class="planner-tab-content" id="tab-coordinadas">
           {{ tabla_tab(coordinadas, "Sin solicitudes en proceso") }}
         </div>
+        {% endif %}
         {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
         <div class="planner-tab-content {% if tab_default == 'tab-por-aprobar' %}active{% endif %}" id="tab-por-aprobar">
           {% set vuelo_aprobables_jefe = por_aprobar | selectattr('puede_aprobar_jefe_vuelo') | list %}
@@ -877,9 +895,8 @@
             <input type="checkbox" id="chkHotel" class="form-check-input m-0">
             <label class="form-label m-0" for="chkHotel">Incluye reserva de hotel</label>
           </div>
-          <textarea class="form-control textarea-obs-sm" name="datos_hotel" id="txtHotel"
-                    rows="2" placeholder="Nombre del hotel, nro. de reserva, fechas…"
-                    style="display:none"></textarea>
+          <textarea class="form-control textarea-obs-sm d-none" name="datos_hotel" id="txtHotel"
+                    rows="2" placeholder="Nombre del hotel, nro. de reserva, fechas…"></textarea>
         </div>
 
         <div class="mb-2">

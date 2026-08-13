@@ -222,7 +222,7 @@
       var chkH = document.getElementById('chkHotel');
       var txtH = document.getElementById('txtHotel');
       if (chkH) chkH.checked = false;
-      if (txtH) { txtH.style.display = 'none'; txtH.value = ''; txtH.required = false; }
+      if (txtH) { txtH.classList.add('d-none'); txtH.value = ''; txtH.required = false; }
       openModal('modalCoordinarVuelo');
       return;
     }
@@ -898,7 +898,7 @@
     var divFechaReg  = document.getElementById('campoFechaRegularDiv');
     var inpFechaReg  = document.getElementById('nfecha');
     var inpFechaVuelo = document.getElementById('nfechaVuelo');
-    if (divFechaReg)  divFechaReg.style.display = esVuelo ? 'none' : '';
+    if (divFechaReg)  divFechaReg.classList.toggle('d-none', esVuelo);
     if (inpFechaReg) {
       inpFechaReg.required = !esVuelo;
       inpFechaReg.disabled = esVuelo;
@@ -930,13 +930,13 @@
     // Ocultar campos no relevantes para Vuelo
     var campoContactoDiv   = document.getElementById('campoContactoDiv');
     var campoDetalleDirDiv = document.getElementById('campoDetalleDirDiv');
-    if (campoContactoDiv)   campoContactoDiv.style.display   = esVuelo ? 'none' : '';
-    if (campoDetalleDirDiv) campoDetalleDirDiv.style.display = esVuelo ? 'none' : '';
+    if (campoContactoDiv)   campoContactoDiv.classList.toggle('d-none', esVuelo);
+    if (campoDetalleDirDiv) campoDetalleDirDiv.classList.toggle('d-none', esVuelo);
 
     // Campos genéricos que Vuelo NO usa (Prioridad, Lugar/destino)
     CAMPOS_NO_VUELO.forEach(function (c) {
       var div = document.getElementById(c.divId);
-      if (div) div.style.display = esVuelo ? 'none' : '';
+      if (div) div.classList.toggle('d-none', esVuelo);
       if (c.inputId) {
         var inp = document.getElementById(c.inputId);
         if (inp) {
@@ -1020,12 +1020,12 @@
     if (tipoActual !== TIPO_VUELO) {
       ['campoPrioridadDiv', 'campoContactoDiv', 'campoDetalleDirDiv'].forEach(function (id) {
         var el = document.getElementById(id);
-        if (el) el.style.display = esVoucher ? 'none' : '';
+        if (el) el.classList.toggle('d-none', esVoucher);
       });
       // El campo único "Lugar / destino" lo reemplazan las filas por voucher
       var campoLugarDiv = document.getElementById('campoLugarDiv');
       var inpLugar = document.getElementById('nlugar');
-      if (campoLugarDiv) campoLugarDiv.style.display = esVoucher ? 'none' : '';
+      if (campoLugarDiv) campoLugarDiv.classList.toggle('d-none', esVoucher);
       if (inpLugar) inpLugar.required = !esVoucher;
     }
 
@@ -1265,7 +1265,7 @@
     var txtHotel = document.getElementById('txtHotel');
     if (chkHotel && txtHotel) {
       chkHotel.addEventListener('change', function () {
-        txtHotel.style.display = chkHotel.checked ? '' : 'none';
+        txtHotel.classList.toggle('d-none', !chkHotel.checked);
         txtHotel.required = chkHotel.checked;
         if (!chkHotel.checked) txtHotel.value = '';
       });
@@ -1364,13 +1364,11 @@
           // Actualizar borde de la tarjeta
           card.classList.remove('voucher-item--entregado', 'voucher-item--pendiente');
           card.classList.add('voucher-item--confirmado');
-          var hdr = card.querySelector('.voucher-item-header');
-          if (hdr) { hdr.style.background = '#ecfeff'; }
 
           // Mostrar adjunto subido
           var adjRow = card.querySelector('.voucher-adjunto-row');
           if (adjRow) {
-            adjRow.style.display = '';
+            adjRow.classList.remove('d-none');
             var vv = adjRow.querySelector('.vmeta-v');
             if (vv) vv.textContent = data.adjunto_nombre || '';
           }
@@ -1423,8 +1421,6 @@
 
           card.classList.remove('voucher-item--entregado', 'voucher-item--pendiente', 'voucher-item--confirmado');
           card.classList.add('voucher-item--no-utilizado');
-          var hdr = card.querySelector('.voucher-item-header');
-          if (hdr) { hdr.style.background = '#f1f5f9'; }
 
           if (statusEl) { statusEl.className = 'voucher-upload-status ok'; statusEl.textContent = 'Marcado como no utilizado.'; }
           var confirmarForm = card.querySelector('form[data-voucher-form="confirmar"]');

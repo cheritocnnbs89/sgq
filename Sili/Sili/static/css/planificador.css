@@ -1,5 +1,9 @@
 /* ── planificador.css ── */
 
+/* Utilidades de tamaño de fuente (evita style="font-size" inline, bloqueado por CSP) */
+.fs-70 { font-size: .7em; }
+.fs-75 { font-size: .75em; }
+
 /* Encabezados ordenables de tablas */
 .th-sortable {
   cursor: pointer;
@@ -18,6 +22,15 @@ th.sorted-asc .th-sortable i {
 th.sorted-desc .th-sortable i {
   opacity: 1;
   transform: none;
+}
+
+/* ── Barra de usuario/rol (arriba del hero) ── */
+.planner-userbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .5rem;
 }
 
 /* ── Hero ───────────────────────────────── */
