@@ -242,15 +242,26 @@ th.sorted-desc .th-sortable i {
 .recorrido-page { max-width: 1400px; }
 
 /* Modales */
-.sgq-modal-backdrop { position:fixed; inset:0; background:rgba(15,23,42,.52); display:none; align-items:center; justify-content:center; padding:1rem; z-index:2000; }
+.sgq-modal-backdrop { position:fixed; inset:0; background:rgba(15,23,42,.6); backdrop-filter:blur(2px); display:none; align-items:center; justify-content:center; padding:1rem; z-index:2000; }
 .sgq-modal-backdrop.show { display:flex; }
-.sgq-modal { width:min(860px,100%); max-height:92vh; overflow:auto; background:#fff; border-radius:14px; border:1px solid var(--line); box-shadow:0 24px 72px rgba(15,23,42,.28); }
+.sgq-modal { width:min(860px,100%); max-height:92vh; overflow:auto; background:#fff; border-radius:16px; border:1px solid var(--line); box-shadow:0 32px 80px rgba(15,23,42,.32); }
 .sgq-modal.modal-sm { max-width:520px; }
-.sgq-modal-header { background:var(--surface-2); border-bottom:1px solid var(--line); padding:.75rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:.6rem; }
-.sgq-modal-title  { margin:0; color:#0f172a; font-size:1rem; font-weight:700; }
-.sgq-modal-body   { padding:1rem; }
-.sgq-modal-footer { background:var(--surface-2); border-top:1px solid var(--line); padding:.75rem 1rem; display:flex; justify-content:flex-end; gap:.5rem; flex-wrap:wrap; }
-.close-btn { width:32px; height:32px; border-radius:.45rem; border:1px solid var(--line); background:#fff; color:#111827; cursor:pointer; font-size:1.1rem; display:grid; place-items:center; }
+.sgq-modal-header { background:var(--surface-2); border-bottom:1px solid var(--line); padding:1rem 1.25rem; display:flex; justify-content:space-between; align-items:flex-start; gap:.6rem; }
+.sgq-modal-title  { margin:0; color:#0f172a; font-size:1.1rem; font-weight:700; }
+.sgq-modal-subtitle { margin:.2rem 0 0; color:var(--muted); font-size:.8rem; }
+.sgq-modal-body   { padding:1.1rem 1.25rem; }
+.sgq-modal-footer { background:var(--surface-2); border-top:1px solid var(--line); padding:.85rem 1.25rem; display:flex; justify-content:flex-end; gap:.5rem; flex-wrap:wrap; }
+.close-btn { width:32px; height:32px; border-radius:.45rem; border:1px solid var(--line); background:#fff; color:#111827; cursor:pointer; font-size:1.1rem; display:grid; place-items:center; flex-shrink:0; }
+
+/* Modal "Nueva solicitud": botón principal con más peso, cancelar mas neutro */
+#modalNueva .sgq-modal-footer .btn-primary {
+  padding:.6rem 1.4rem; font-weight:600;
+  box-shadow:0 6px 16px rgba(37,99,235,.28);
+}
+#modalNueva .sgq-modal-footer .btn-outline-secondary {
+  border-color:transparent; color:#6b7280; background:transparent;
+}
+#modalNueva .sgq-modal-footer .btn-outline-secondary:hover { background:#f1f5f9; color:#374151; }
 
 /* Form grid */
 .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; }
@@ -258,13 +269,37 @@ th.sorted-desc .th-sortable i {
 .form-label { display:block; color:#111827; font-size:.8rem; font-weight:600; margin-bottom:.3rem; }
 @media (max-width:600px) { .form-grid { grid-template-columns:1fr; } .form-grid .full { grid-column:auto; } }
 
+/* ── Secciones del modal (jerarquía visual) ── */
+.modal-section {
+  background:#f9fafb; border:1px solid #eef0f3; border-radius:14px;
+  padding:1rem 1.1rem; margin-bottom:1rem;
+  box-shadow:0 1px 2px rgba(15,23,42,.04);
+}
+.modal-section:last-child { margin-bottom:0; }
+.modal-section-title {
+  display:flex; align-items:center; gap:.5rem;
+  font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+  color:#64748b; margin-bottom:.85rem;
+}
+.modal-section-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:20px; height:20px; border-radius:50%; flex-shrink:0;
+  background:var(--brand-100); color:var(--brand-600);
+  font-size:.68rem; font-weight:800;
+}
+
 /* Textareas */
 .textarea-obs     { min-height:80px; resize:vertical; }
 .textarea-obs-sm  { min-height:70px; resize:vertical; }
 .textarea-desc    { min-height:80px; resize:vertical; }
 
 /* Notice */
-.rec-notice { margin-top:.75rem; padding:.65rem .75rem; border-radius:.65rem; background:#eef2ff; border:1px solid #c7d2fe; color:#1e3a8a; font-size:.8rem; }
+.rec-notice { margin-top:.75rem; padding:.7rem .85rem; border-radius:.65rem; background:#eef2ff; border:1px solid #c7d2fe; color:#1e3a8a; font-size:.8rem; }
+.modal-section > .rec-notice { margin-top:0; }
+.rec-notice-header { display:flex; align-items:center; gap:.4rem; font-weight:700; font-size:.78rem; color:#3730a3; margin-bottom:.4rem; }
+.rec-notice-list { margin:0; padding-left:1.15rem; }
+.rec-notice-list li { margin-bottom:.3rem; }
+.rec-notice-list li:last-child { margin-bottom:0; }
 
 /* Modal info text */
 .modal-info-text { color: var(--muted); font-size:.85rem; margin-bottom:.75rem; }
@@ -517,38 +552,49 @@ tr.pg-hidden { display:none; }
 .campo-vuelo { display:none; }
 .campo-vuelo.visible { display:block; }
 
-/* ── Selector de tipo de solicitud (iconos) ── */
+/* ── Selector de tipo de solicitud (tarjetas premium) ── */
 .tipo-icon-row { display:flex; gap:.6rem; flex-wrap:wrap; }
 .tipo-icon-btn {
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.4rem;
-  flex:1; min-width:110px; min-height:96px;
-  padding:.85rem .6rem;
-  border:1.5px solid #cbd5e1; border-radius:.85rem;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.3rem;
+  flex:1; min-width:130px; min-height:118px;
+  padding:1rem .75rem;
+  border:1.5px solid #e2e8f0; border-radius:1rem;
   background:#fff; color:#475569; cursor:pointer;
-  transition:background .15s, border-color .15s, box-shadow .15s, color .15s;
+  transition:background .15s, border-color .15s, box-shadow .15s, color .15s, transform .15s;
 }
-.tipo-icon-btn:hover { background:#f8fafc; border-color:#94a3b8; }
+.tipo-icon-btn:hover { background:#f8fafc; border-color:#94a3b8; transform:translateY(-1px); }
 .tipo-icon-btn.active {
-  border-color:var(--brand-600); background:var(--brand-100); color:var(--brand-600);
-  box-shadow:0 0 0 3px rgba(37,99,235,.15);
+  border-color:var(--brand-600); background:#fff;
+  box-shadow:0 0 0 2px var(--brand-600), 0 10px 22px rgba(37,99,235,.16);
 }
-.tipo-icon-emoji { font-size:1.5rem; line-height:1; display:flex; align-items:center; justify-content:center; }
-.tipo-icon-label { font-size:.8rem; font-weight:600; color:#111827; text-align:center; }
+.tipo-icon-circle {
+  width:46px; height:46px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:#eef2ff; color:var(--brand-600); font-size:1.35rem;
+  margin-bottom:.15rem; transition:background .15s, color .15s;
+}
+.tipo-icon-btn.active .tipo-icon-circle { background:var(--brand-600); color:#fff; }
+.tipo-icon-label { font-size:.85rem; font-weight:700; color:#111827; text-align:center; }
 .tipo-icon-btn.active .tipo-icon-label { color:var(--brand-600); }
+.tipo-icon-subtitle { font-size:.7rem; color:#94a3b8; text-align:center; line-height:1.25; }
 @media (max-width:600px) { .tipo-icon-btn { min-width:0; } }
 
-/* ── Selectores rápidos con botones (Fecha, Prioridad) ── */
-.quick-pick-row { display:flex; gap:.5rem; flex-wrap:wrap; }
+/* ── Selectores segmentados (Fecha, Prioridad) ── */
+.quick-pick-row {
+  display:flex; gap:.2rem; flex-wrap:wrap;
+  background:#f1f5f9; border-radius:.7rem; padding:.25rem;
+}
 .quick-pick-btn {
   flex:1; min-width:90px;
-  padding:.45rem .6rem;
-  border:1.5px solid #cbd5e1; border-radius:.6rem;
-  background:#fff; color:#111827; font-size:.82rem; font-weight:600;
-  cursor:pointer; transition:background .15s, border-color .15s;
+  padding:.5rem .6rem;
+  border:none; border-radius:.5rem;
+  background:transparent; color:#64748b; font-size:.82rem; font-weight:600;
+  cursor:pointer; transition:background .15s, box-shadow .15s, color .15s;
 }
-.quick-pick-btn:hover { background:#f8fafc; border-color:#94a3b8; }
+.quick-pick-btn:hover { background:rgba(255,255,255,.65); }
 .quick-pick-btn.active {
-  border-color:var(--brand-600); background:var(--brand-100); color:var(--brand-600);
+  background:#fff; color:var(--brand-600);
+  box-shadow:0 1px 4px rgba(15,23,42,.14), inset 0 0 0 1px rgba(37,99,235,.18);
 }
 
 /* ── Date picker estilo aerolínea ── */
