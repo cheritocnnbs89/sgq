@@ -72,8 +72,8 @@
     </div>
     <div class="planner-kpi-sep"></div>
     <div class="planner-kpi">
-      <span class="planner-kpi-num planner-kpi-num--green">{{ rows|selectattr('estado','eq','APROBADA')|list|length }}</span>
-      <span class="planner-kpi-label">Aprobadas</span>
+      <span class="planner-kpi-num planner-kpi-num--green">{{ por_completar|length }}</span>
+      <span class="planner-kpi-label">Por completar</span>
     </div>
     <div class="planner-kpi-sep"></div>
     <div class="planner-kpi">
