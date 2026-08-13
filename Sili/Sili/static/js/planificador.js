@@ -376,6 +376,30 @@
       });
       _recalcularTotalLiquidacion();
     }
+
+    /* Entrega de vouchers: check por fila + botón deshabilitado hasta completar todos */
+    var seqInputs = container.querySelectorAll('.entrega-seq-input');
+    if (seqInputs.length) {
+      var btnEntregar = container.querySelector('[data-entrega-submit]');
+      var _actualizarEntrega = function () {
+        var total  = seqInputs.length;
+        var llenos = 0;
+        seqInputs.forEach(function (inp) {
+          var ok = inp.value.trim().length > 0;
+          var row = inp.closest('.entrega-voucher-row');
+          if (row) row.classList.toggle('entrega-voucher-row--ok', ok);
+          if (ok) llenos++;
+        });
+        if (btnEntregar) {
+          btnEntregar.disabled = llenos < total;
+          btnEntregar.innerHTML = llenos >= total
+            ? '<i class="bi bi-check2-circle me-1"></i>Entregar ' + total + ' voucher' + (total !== 1 ? 's' : '')
+            : 'Complete los secuenciales';
+        }
+      };
+      seqInputs.forEach(function (inp) { inp.addEventListener('input', _actualizarEntrega); });
+      _actualizarEntrega();
+    }
   }
 
   /* ── Mapa picker ── */

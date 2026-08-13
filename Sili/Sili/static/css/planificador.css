@@ -338,6 +338,33 @@ th.sorted-desc .th-sortable i {
 /* ── Caja "Motivo del rechazo" (revelada al pulsar Rechazar) ── */
 .rechazo-box { border-top:1px dashed #fed7aa; padding-top:.75rem; }
 
+/* ── Encabezado compacto: entrega de vouchers ── */
+.entrega-header { margin-bottom:.75rem; }
+.entrega-header-top { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.entrega-title { margin:0; font-size:1.05rem; font-weight:700; color:#0f172a; }
+.entrega-subtitle { margin:.15rem 0 0; font-size:.8rem; color:var(--muted); }
+
+/* ── Tabla compacta: vouchers a entregar (secuencial por fila) ── */
+.entrega-voucher-table { background:#f9fafb; border:1px solid var(--line); border-radius:.75rem; padding:.75rem .85rem; }
+.entrega-voucher-table-header { font-size:.8rem; font-weight:700; color:#374151; margin-bottom:.5rem; }
+.entrega-voucher-row {
+  display:flex; align-items:center; gap:.6rem;
+  padding:.5rem 0; border-top:1px solid #eef0f3;
+}
+.entrega-voucher-row:first-of-type { border-top:none; }
+.entrega-voucher-num { font-weight:700; color:var(--brand-600); flex-shrink:0; min-width:1.8rem; font-size:.85rem; }
+.entrega-voucher-route { display:flex; align-items:center; gap:.4rem; font-size:.82rem; color:#374151; flex:0 0 auto; min-width:9rem; }
+.entrega-voucher-route i { color:#94a3b8; font-size:.75rem; }
+.entrega-voucher-input-wrap { display:flex; align-items:center; gap:.4rem; flex:1; min-width:0; }
+.entrega-voucher-input-wrap .form-control { flex:1; }
+.entrega-seq-check { color:#16a34a; font-size:1.05rem; opacity:0; transition:opacity .15s; flex-shrink:0; }
+.entrega-voucher-row--ok .entrega-seq-check { opacity:1; }
+.entrega-voucher-row--ok .entrega-seq-input { border-color:#86efac; background:#f0fdf4; }
+@media (max-width:600px) {
+  .entrega-voucher-row { flex-wrap:wrap; }
+  .entrega-voucher-route { min-width:0; }
+}
+
 /* Hint bajo campo lugar */
 .lugar-hint { margin-top:.3rem; font-size:.75rem; color:var(--muted); }
 
