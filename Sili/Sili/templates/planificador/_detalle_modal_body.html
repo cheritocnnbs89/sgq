@@ -27,6 +27,8 @@
 </div>
 {% endif %}
 
+{# Para la pantalla de aprobación del jefe de Voucher, el resumen de arriba ya cubre esta información #}
+{% if not s.puede_aprobar_jefe_voucher %}
 <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
         data-bs-target="#detalleInfoBox{{ s.id }}" aria-expanded="false"
         aria-controls="detalleInfoBox{{ s.id }}">
@@ -138,6 +140,7 @@
   <div class="detail-box detail-full"><span>Observación del aprobador</span><strong>{{ s.observacion_aprobador }}</strong></div>
   {% endif %}
 </div>
+{% endif %}{# /not s.puede_aprobar_jefe_voucher #}
 
 {% if s.grupo_id and grupo_solicitudes %}
 <div class="grupo-detalle-banner mt-3">
