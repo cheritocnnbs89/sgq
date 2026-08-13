@@ -523,7 +523,7 @@
         {% set tipo_icons = {'Voucher': 'bi-ticket-perforated-fill', 'Vuelo': 'bi-airplane-fill'} %}
         {% set tipo_subtitulos = {'Voucher': 'Solicitud y control de vouchers', 'Vuelo': 'Reservas y coordinación de viajes'} %}
         <div class="modal-section">
-        <div class="modal-section-title"><span class="modal-section-num">1</span>Tipo de solicitud *</div>
+        <div class="modal-section-title">Tipo de solicitud *</div>
         <div class="tipo-solicitud-picker" id="tipoSolicitudPicker">
           <div class="tipo-icon-row">
             {% for t in tipos %}
@@ -546,7 +546,7 @@
         <div id="camposSolicitudBody" class="d-none">
 
         <div class="modal-section">
-        <div class="modal-section-title"><span class="modal-section-num">2</span>Fecha y prioridad</div>
+        <div class="modal-section-title">Fecha y prioridad</div>
         <div class="form-grid">
           {% if ctx.es_admin %}
           <div>
@@ -581,7 +581,7 @@
         </div>{# /modal-section 2 #}
 
         <div class="modal-section">
-        <div class="modal-section-title"><span class="modal-section-num">3</span>Datos del recorrido</div>
+        <div class="modal-section-title">Datos del recorrido</div>
         <div class="form-grid">
           <div class="campo-voucher d-none" id="campoNumeroVouchersDiv">
             <label class="form-label">N° de vouchers solicitados *</label>
@@ -734,14 +734,14 @@
         </div>{# /modal-section 3 #}
 
         <div class="modal-section">
-        <div class="modal-section-title"><span class="modal-section-num">4</span>Descripción</div>
+        <div class="modal-section-title">Descripción</div>
         <label class="form-label" id="lblDescripcion">Descripción de la actividad *</label>
         <textarea class="form-control textarea-desc" name="descripcion" id="campoDescripcion" required
                   placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
         </div>{# /modal-section 4 #}
 
         <div class="modal-section">
-        <div class="modal-section-title"><span class="modal-section-num">5</span>Confirmación</div>
+        <div class="modal-section-title">Confirmación</div>
         <div class="rec-notice" id="recNoticeInfo">
           <div class="rec-notice-header"><i class="bi bi-info-circle-fill"></i>Importante</div>
           <ul class="rec-notice-list" id="recNoticeTxt">
