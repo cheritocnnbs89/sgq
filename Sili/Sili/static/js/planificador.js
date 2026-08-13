@@ -1029,11 +1029,23 @@
       if (inpLugar) inpLugar.required = !esVoucher;
     }
 
-    // Para Voucher, la caja "Importante" se reemplaza por una leyenda simple
-    var noticeBox      = document.getElementById('recNoticeInfo');
-    var captionVoucher = document.getElementById('recCaptionVoucher');
-    if (noticeBox)      noticeBox.classList.toggle('d-none', esVoucher);
-    if (captionVoucher) captionVoucher.classList.toggle('d-none', !esVoucher);
+    // Mensaje informativo específico de Voucher (se superpone al de toggleCampoVuelo)
+    var noticeNormal  = document.getElementById('recNoticeTxt');
+    var noticeVoucher = document.getElementById('recNoticeVoucher');
+    if (esVoucher) {
+      if (noticeNormal)  noticeNormal.classList.add('d-none');
+      if (noticeVoucher) noticeVoucher.classList.remove('d-none');
+    } else if (noticeVoucher) {
+      noticeVoucher.classList.add('d-none');
+    }
+
+    // Para el tipo genérico (ni Vuelo ni Voucher, ej. Mensajería), la caja
+    // "Importante" se reemplaza por una leyenda simple de horarios
+    var esGenerico       = !esVoucher && tipoActual !== TIPO_VUELO;
+    var noticeBox        = document.getElementById('recNoticeInfo');
+    var captionGenerico  = document.getElementById('recCaptionGenerico');
+    if (noticeBox)       noticeBox.classList.toggle('d-none', esGenerico);
+    if (captionGenerico) captionGenerico.classList.toggle('d-none', !esGenerico);
   }
 
   function actualizarPlaceholderObservacionPorMotivo() {
