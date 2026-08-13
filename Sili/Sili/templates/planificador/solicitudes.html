@@ -96,10 +96,6 @@
         <option value="">Todos los tipos</option>
         {% for t in tipos %}<option value="{{ t }}" {{ 'selected' if filters.tipo==t }}>{{ t }}</option>{% endfor %}
       </select>
-      <select class="form-select form-select-sm" name="estado">
-        <option value="">Todos los estados</option>
-        {% for k,v in estados.items() %}<option value="{{ k }}" {{ 'selected' if filters.estado==k }}>{{ v }}</option>{% endfor %}
-      </select>
       <input type="date" class="form-control form-control-sm" name="fecha_desde" value="{{ filters.fecha_desde }}" title="Desde">
       <input type="date" class="form-control form-control-sm" name="fecha_hasta" value="{{ filters.fecha_hasta }}" title="Hasta">
       <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search me-1"></i>Filtrar</button>
