@@ -482,6 +482,16 @@
     }
   });
 
+  /* ── data-toggle-rechazo: alterna caja "Motivo del rechazo" ↔ botones de decisión ── */
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-toggle-rechazo]');
+    if (!btn) return;
+    const box     = document.getElementById(btn.dataset.toggleRechazo);
+    const actions = document.getElementById(btn.dataset.toggleActions);
+    if (box) box.classList.toggle('d-none');
+    if (actions) actions.classList.toggle('d-none');
+  });
+
   document.addEventListener('click', function (e) {
     const el = e.target.closest('[data-open-modal]');
     if (el) { openModal(el.dataset.openModal); return; }

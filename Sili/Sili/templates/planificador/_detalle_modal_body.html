@@ -1,4 +1,32 @@
 {# Partial cargado vía AJAX – sin inline scripts ni style= #}
+{# ── Voucher: resumen compacto para la pantalla de aprobación del jefe ── #}
+{% if s.puede_aprobar_jefe_voucher %}
+<div class="aprob-voucher-header">
+  <h2 class="aprob-voucher-title">Aprobación de solicitud de vouchers</h2>
+  <p class="aprob-voucher-subtitle">Solicitud #{{ s.id }} · Pendiente de tu aprobación</p>
+</div>
+
+<div class="detail-grid mb-3">
+  <div class="detail-box"><span>Solicitante</span><strong>{{ s.solicitante_nombre }}</strong></div>
+  <div class="detail-box"><span>Área</span><strong>{{ s.area_solicitante }}</strong></div>
+  <div class="detail-box"><span>Fecha</span><strong>{{ s.fecha_str }}</strong></div>
+  <div class="detail-box detail-full"><span>Descripción</span><strong>{{ s.descripcion }}</strong></div>
+</div>
+
+<div class="voucher-compact-list mb-3">
+  <div class="voucher-compact-header">
+    <i class="bi bi-ticket-perforated-fill me-1"></i>
+    {{ s.numero_vouchers }} voucher{{ 's' if s.numero_vouchers != 1 else '' }} solicitado{{ 's' if s.numero_vouchers != 1 else '' }}
+  </div>
+  {% for item in voucher_items %}
+  <div class="voucher-compact-row">
+    <span class="voucher-compact-num">#{{ item.numero }}</span>
+    <span class="voucher-compact-route">{{ item.origen or '—' }} <i class="bi bi-arrow-right"></i> {{ item.destino or '—' }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
 <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
         data-bs-target="#detalleInfoBox{{ s.id }}" aria-expanded="false"
         aria-controls="detalleInfoBox{{ s.id }}">
@@ -461,7 +489,8 @@
 {% endif %}
 
 {# ── Voucher: detalle de cada voucher individual (confirmación del usuario / liquidación del coordinador) ── #}
-{% if s.tipo == 'Voucher' and voucher_items %}
+{# En la pantalla de aprobación del jefe ya se mostró la lista compacta arriba #}
+{% if s.tipo == 'Voucher' and voucher_items and not s.puede_aprobar_jefe_voucher %}
 <div class="voucher-list mt-3">
   <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
           data-bs-target="#voucherListBox{{ s.id }}" aria-expanded="false"
@@ -608,35 +637,38 @@
 {# ── Voucher: aprobación jefe directo ── #}
 {% if s.puede_aprobar_jefe_voucher %}
 <div class="action-zone action-zone-orange mt-3">
-  <h3><i class="bi bi-person-check me-1"></i>Aprobación — Jefe directo</h3>
-  <p class="small text-muted mb-2">
-    Solicitud de Voucher de <strong>{{ s.solicitante_nombre }}</strong> pendiente de su aprobación.
-    {% if s.numero_vouchers %}
-    <span class="badge bg-secondary ms-1">{{ s.numero_vouchers }} voucher(s)</span>
-    {% endif %}
-  </p>
-  <label class="form-label">Observación</label>
-  <textarea class="form-control form-control-sm textarea-obs" id="obsJefeVoucher{{ s.id }}"
-            placeholder="Opcional para aprobar · Obligatorio para rechazar."></textarea>
-  <div class="d-flex gap-2 justify-content-end mt-2">
+  <h3>Decisión</h3>
+  <p class="small text-muted mb-2">Esta solicitud requiere tu autorización para continuar.</p>
+
+  <div class="d-flex gap-2 justify-content-end" id="aprobVoucherActions{{ s.id }}">
+    <button type="button" class="btn btn-outline-danger btn-sm"
+            data-toggle-rechazo="rechazoVoucherBox{{ s.id }}" data-toggle-actions="aprobVoucherActions{{ s.id }}">
+      <i class="bi bi-x-lg"></i> Rechazar
+    </button>
+    <form method="post" action="{{ url_for('planificador.planificador_voucher_aprobar_jefe', sid=s.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-success btn-sm">
+        <i class="bi bi-check2"></i>
+        Aprobar {{ s.numero_vouchers }} voucher{{ 's' if s.numero_vouchers != 1 else '' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="rechazo-box d-none mt-3" id="rechazoVoucherBox{{ s.id }}">
     <form method="post"
           action="{{ url_for('planificador.planificador_voucher_rechazar_jefe', sid=s.id) }}"
           data-confirm="¿Rechazar esta solicitud de voucher?">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <input type="hidden" name="observacion" id="obsJefeRechVoucher{{ s.id }}">
-      <button type="submit" class="btn btn-danger btn-sm"
-              data-sync-obs="obsJefeVoucher{{ s.id }}" data-target-obs="obsJefeRechVoucher{{ s.id }}">
-        <i class="bi bi-x-lg"></i> Rechazar
-      </button>
-    </form>
-    <form method="post"
-          action="{{ url_for('planificador.planificador_voucher_aprobar_jefe', sid=s.id) }}">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <input type="hidden" name="observacion" id="obsJefeAprobVoucher{{ s.id }}">
-      <button type="submit" class="btn btn-success btn-sm"
-              data-sync-obs="obsJefeVoucher{{ s.id }}" data-target-obs="obsJefeAprobVoucher{{ s.id }}">
-        <i class="bi bi-check2"></i> Aprobar
-      </button>
+      <label class="form-label">Motivo del rechazo *</label>
+      <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
+                placeholder="Indique el motivo..." required></textarea>
+      <div class="d-flex gap-2 justify-content-end mt-2">
+        <button type="button" class="btn btn-outline-secondary btn-sm"
+                data-toggle-rechazo="rechazoVoucherBox{{ s.id }}" data-toggle-actions="aprobVoucherActions{{ s.id }}">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-danger btn-sm">Confirmar rechazo</button>
+      </div>
     </form>
   </div>
 </div>
@@ -844,7 +876,14 @@
 
 {# ── Adjuntos ── #}
 <div class="mt-4">
-  <h6 class="text-muted fw-semibold mb-2"><i class="bi bi-paperclip me-1"></i>Archivos adjuntos</h6>
+  <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
+          data-bs-target="#detalleAdjuntosBox{{ s.id }}" aria-expanded="false"
+          aria-controls="detalleAdjuntosBox{{ s.id }}">
+    <i class="bi bi-paperclip me-1"></i>Archivos adjuntos
+    <span class="badge bg-secondary ms-1">{{ adjuntos|length if adjuntos else 0 }}</span>
+    <i class="bi bi-chevron-down detail-accordion-chevron"></i>
+  </button>
+  <div class="collapse mt-2" id="detalleAdjuntosBox{{ s.id }}">
   {% if adjuntos %}
   <ul class="adjuntos-list">
     {% for a in adjuntos %}
@@ -887,6 +926,7 @@
     <div class="form-text">Máximo 5 MB. Formatos: PDF, Word, Excel, imágenes, ZIP.</div>
   </form>
   {% endif %}
+  </div>{# /collapse adjuntos #}
 </div>
 
 {% if logs %}

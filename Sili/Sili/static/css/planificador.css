@@ -317,6 +317,27 @@ th.sorted-desc .th-sortable i {
 .detail-full { grid-column:1/-1; }
 @media (max-width:600px) { .detail-grid { grid-template-columns:1fr; } .detail-full { grid-column:auto; } }
 
+/* ── Encabezado compacto: aprobación de vouchers ── */
+.aprob-voucher-header { margin-bottom:.75rem; }
+.aprob-voucher-title { margin:0; font-size:1.05rem; font-weight:700; color:#0f172a; }
+.aprob-voucher-subtitle { margin:.15rem 0 0; font-size:.8rem; color:var(--muted); }
+
+/* ── Lista compacta de vouchers (pantalla de aprobación) ── */
+.voucher-compact-list { background:#f9fafb; border:1px solid var(--line); border-radius:.75rem; padding:.75rem .85rem; }
+.voucher-compact-header { font-size:.8rem; font-weight:700; color:#374151; margin-bottom:.5rem; }
+.voucher-compact-row {
+  display:flex; align-items:center; gap:.6rem;
+  padding:.35rem 0; font-size:.85rem; color:#374151;
+  border-top:1px solid #eef0f3;
+}
+.voucher-compact-row:first-of-type { border-top:none; }
+.voucher-compact-num { font-weight:700; color:var(--brand-600); flex-shrink:0; min-width:1.8rem; }
+.voucher-compact-route { display:flex; align-items:center; gap:.4rem; }
+.voucher-compact-route i { color:#94a3b8; font-size:.75rem; }
+
+/* ── Caja "Motivo del rechazo" (revelada al pulsar Rechazar) ── */
+.rechazo-box { border-top:1px dashed #fed7aa; padding-top:.75rem; }
+
 /* Hint bajo campo lugar */
 .lugar-hint { margin-top:.3rem; font-size:.75rem; color:var(--muted); }
 
