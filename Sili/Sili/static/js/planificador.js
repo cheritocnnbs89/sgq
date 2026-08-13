@@ -126,12 +126,73 @@
 
   /* ── Modales ── */
   function openModal(id)  { const m = document.getElementById(id); if (m) m.classList.add('show'); }
-  function closeModal(id) { const m = document.getElementById(id); if (m) m.classList.remove('show'); }
+  function closeModal(id) {
+    const m = document.getElementById(id);
+    if (m) m.classList.remove('show');
+    if (id === 'modalNueva') resetModalNueva();
+  }
+
+  /* ── Selector de tipo de solicitud (iconos) ── */
+  function selectTipoSolicitud(tipoVal) {
+    var tipoInput = document.getElementById('tipoSolicitudInput');
+    if (tipoInput) tipoInput.value = tipoVal;
+    document.querySelectorAll('#tipoSolicitudPicker .tipo-icon-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.tipo === tipoVal);
+    });
+    var body = document.getElementById('camposSolicitudBody');
+    if (body) body.classList.toggle('d-none', !tipoVal);
+    var err = document.getElementById('errorTipoSolicitud');
+    if (err) err.classList.add('d-none');
+    toggleCampoVuelo(tipoVal);
+    toggleCampoVoucher(tipoVal);
+  }
+
+  /* ── Selector rápido de fecha (Hoy / Mañana / Otra fecha) ── */
+  function setFechaQuick(mode) {
+    var nfecha = document.getElementById('nfecha');
+    var picker = document.getElementById('fechaQuickPicker');
+    if (!nfecha || !picker) return;
+    picker.querySelectorAll('.fecha-quick-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.fechaQuick === mode);
+    });
+    if (mode === 'hoy') {
+      nfecha.value = TODAY_STR;
+      nfecha.classList.add('d-none');
+    } else if (mode === 'manana') {
+      nfecha.value = toYMD(addDays(new Date(TODAY_STR + 'T00:00:00'), 1));
+      nfecha.classList.add('d-none');
+    } else if (mode === 'otra') {
+      nfecha.classList.remove('d-none');
+      nfecha.focus();
+      if (typeof nfecha.showPicker === 'function') {
+        try { nfecha.showPicker(); } catch (_) {}
+      }
+    }
+  }
+
+  function resetModalNueva() {
+    var tipoInput = document.getElementById('tipoSolicitudInput');
+    if (tipoInput) tipoInput.value = '';
+    document.querySelectorAll('#tipoSolicitudPicker .tipo-icon-btn').forEach(function (btn) {
+      btn.classList.remove('active');
+    });
+    var body = document.getElementById('camposSolicitudBody');
+    if (body) body.classList.add('d-none');
+    var err = document.getElementById('errorTipoSolicitud');
+    if (err) err.classList.add('d-none');
+    toggleCampoVuelo('');
+    toggleCampoVoucher('');
+    setFechaQuick('hoy');
+  }
 
   /* ── Nueva solicitud con fecha prellenada ── */
   function openModalNuevaWithDate(dateStr) {
-    const f = document.getElementById('nfecha');
-    if (f) f.value = dateStr;
+    var nfecha = document.getElementById('nfecha');
+    if (nfecha) nfecha.value = dateStr;
+    var tomorrow = toYMD(addDays(new Date(TODAY_STR + 'T00:00:00'), 1));
+    if (dateStr === TODAY_STR) setFechaQuick('hoy');
+    else if (dateStr === tomorrow) setFechaQuick('manana');
+    else setFechaQuick('otra');
     openModal('modalNueva');
   }
 
@@ -471,6 +532,7 @@
   document.addEventListener('click', function (e) {
     if (e.target.classList.contains('sgq-modal-backdrop') && _backdropMouseDownEl === e.target) {
       e.target.classList.remove('show');
+      if (e.target.id === 'modalNueva') resetModalNueva();
     }
   });
 
@@ -942,7 +1004,7 @@
 
     // Ocultar campos no aplicables a Voucher
     // Ocultar campos no aplicables a Voucher (sin tocar si el tipo es Vuelo, que los oculta por su cuenta)
-    var tipoActual = (document.querySelector('#modalNueva select[name="tipo"]') || {}).value || '';
+    var tipoActual = (document.getElementById('tipoSolicitudInput') || {}).value || '';
     if (tipoActual !== TIPO_VUELO) {
       ['campoPrioridadDiv', 'campoContactoDiv', 'campoDetalleDirDiv'].forEach(function (id) {
         var el = document.getElementById(id);
@@ -1029,17 +1091,17 @@
     if (!formNueva) return;
     if (alertSinCC) alertSinCC.classList.toggle('visible', bloquear);
 
-    var selectTipo = formNueva.querySelector('select[name="tipo"]');
+    var tipoInput = formNueva.querySelector('input[name="tipo"]');
     if (bloquear) {
       // Bloquea todo el formulario excepto "Tipo de solicitud" y "Cancelar",
       // para que el usuario no pierda tiempo llenando campos que no podrá enviar.
       formNueva.querySelectorAll('input, select, textarea, button').forEach(function (el) {
-        if (el === selectTipo) return;
+        if (el === tipoInput) return;
+        if (el.classList.contains('tipo-icon-btn')) return;
         if (el.hasAttribute('data-close-modal')) return;
         if (!el.disabled) el.setAttribute('data-blocked-by-cc', '1');
         el.disabled = true;
       });
-      if (selectTipo) selectTipo.focus();
     } else {
       formNueva.querySelectorAll('[data-blocked-by-cc]').forEach(function (el) {
         el.disabled = false;
@@ -1084,9 +1146,14 @@
     initAllSortableTables();
     renderCalendar();
 
-    /* Prellenar fecha de hoy en campo fecha regular */
-    var nfecha = document.getElementById('nfecha');
-    if (nfecha && !nfecha.value) nfecha.value = TODAY_STR;
+    /* Prellenar fecha de hoy en campo fecha regular (selector rápido) */
+    setFechaQuick('hoy');
+    var fechaQuickPicker = document.getElementById('fechaQuickPicker');
+    if (fechaQuickPicker) {
+      fechaQuickPicker.querySelectorAll('.fecha-quick-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () { setFechaQuick(btn.dataset.fechaQuick); });
+      });
+    }
     var nfechaVuelo = document.getElementById('nfechaVuelo');
     if (nfechaVuelo) {
       nfechaVuelo.min = TODAY_STR;
@@ -1098,16 +1165,10 @@
       campoFechaRetorno.addEventListener('change', _checkDuplicadoVuelo);
     }
 
-    /* Mostrar/ocultar campos Vuelo según tipo */
-    var selectTipo = document.querySelector('#modalNueva select[name="tipo"]');
-    if (selectTipo) {
-      selectTipo.addEventListener('change', function () {
-        toggleCampoVuelo(this.value);
-        toggleCampoVoucher(this.value);
-      });
-      toggleCampoVuelo(selectTipo.value);
-      toggleCampoVoucher(selectTipo.value);
-    }
+    /* Mostrar/ocultar campos según tipo de solicitud (iconos) */
+    document.querySelectorAll('#tipoSolicitudPicker .tipo-icon-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { selectTipoSolicitud(btn.dataset.tipo); });
+    });
 
     /* N° de vouchers: máximo 6 (clamp silencioso) + sincroniza filas Origen/Destino visibles */
     var inpNumVouchers = document.getElementById('campoNumeroVouchers');
@@ -1148,6 +1209,15 @@
     var formNueva = document.querySelector('#modalNueva form');
     if (formNueva) {
       formNueva.addEventListener('submit', function (e) {
+        var tipoInput = document.getElementById('tipoSolicitudInput');
+        if (tipoInput && !tipoInput.value) {
+          e.preventDefault();
+          var err = document.getElementById('errorTipoSolicitud');
+          if (err) err.classList.remove('d-none');
+          var picker = document.getElementById('tipoSolicitudPicker');
+          if (picker) picker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
         var alertSinCC = document.getElementById('alertSinCCVuelo');
         if (alertSinCC && alertSinCC.classList.contains('visible')) {
           e.preventDefault();
