@@ -67,11 +67,6 @@
     </div>
     <div class="planner-kpi-sep"></div>
     <div class="planner-kpi">
-      <span class="planner-kpi-num">{{ rows|selectattr('estado','eq','PENDIENTE_APROBACION')|list|length }}</span>
-      <span class="planner-kpi-label">Pend. aprobación</span>
-    </div>
-    <div class="planner-kpi-sep"></div>
-    <div class="planner-kpi">
       <span class="planner-kpi-num planner-kpi-num--green">{{ por_completar|length }}</span>
       <span class="planner-kpi-label">Por completar</span>
     </div>
