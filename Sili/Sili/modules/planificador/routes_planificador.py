@@ -103,15 +103,13 @@ def solicitudes():
                    or r.get("puede_aprobar_gg_vuelo")
                    or r.get("puede_aprobar_jefe_voucher")]
 
-    # Enriquecer con jefe_nombre para todas las filas tipo Vuelo o Voucher
+    # Enriquecer con jefe_nombre para todas las filas, cualquier tipo
     con_jefe_sol_ids = list({
-        r["solicitante_id"] for r in rows
-        if r.get("tipo") in ("Vuelo", "Voucher") and r.get("solicitante_id")
+        r["solicitante_id"] for r in rows if r.get("solicitante_id")
     })
     jefe_map = repo.get_jefe_nombre_batch(con_jefe_sol_ids) if con_jefe_sol_ids else {}
     for r in rows:
-        if r.get("tipo") in ("Vuelo", "Voucher"):
-            r["jefe_nombre"] = jefe_map.get(r.get("solicitante_id"), "")
+        r["jefe_nombre"] = jefe_map.get(r.get("solicitante_id"), "")
 
     # Datos de calendario: semana actual ±2 semanas
     today = date.today()

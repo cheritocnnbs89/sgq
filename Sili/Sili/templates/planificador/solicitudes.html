@@ -221,7 +221,7 @@
                 <td class="small">{{ r.solicitante_nombre }}</td>
                 {% endif %}
                 <td class="small text-muted">
-                  {% if r.tipo in ('Vuelo', 'Voucher') %}{{ r.get('jefe_nombre') or '—' }}{% else %}—{% endif %}
+                  {{ r.get('jefe_nombre') or '—' }}
                 </td>
                 <td class="text-end text-nowrap">
                   <button type="button" class="btn btn-sm btn-outline-secondary"
