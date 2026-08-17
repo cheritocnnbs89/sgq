@@ -564,6 +564,12 @@ def crear():
                 )
             except Exception:
                 pass
+            try:
+                notif.notif_voucher_pendiente_entrega(
+                    sid, area, fecha, desc, u["nombre"], aprobador_txt,
+                )
+            except Exception:
+                pass
             msg = "Solicitud de Voucher creada y aprobada. El coordinador debe entregarte los vouchers."
     else:
         try:
@@ -1546,7 +1552,14 @@ def voucher_aprobar_jefe(sid):
         )
     except Exception:
         pass
-    flash("Voucher aprobado. El solicitante fue notificado.", "success")
+    try:
+        notif.notif_voucher_pendiente_entrega(
+            sid, s["area_solicitante"], str(s["fecha"]),
+            s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+        )
+    except Exception:
+        pass
+    flash("Voucher aprobado. El solicitante y el coordinador fueron notificados.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 

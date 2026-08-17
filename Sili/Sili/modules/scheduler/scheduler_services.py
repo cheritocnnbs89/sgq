@@ -230,7 +230,7 @@ def dispatch_notifications():
     def _table_exists(conn, name: str) -> bool:
         try:
             r = conn.execute(
-                "SELECT top 1 1 FROM sqlite_master WHERE type='table' AND name=? ",
+                "SELECT TOP 1 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?",
                 (name,)
             ).fetchone()
             return bool(r)
@@ -239,7 +239,10 @@ def dispatch_notifications():
 
     def _cols(conn, table: str):
         try:
-            return [r["name"] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()]
+            return [r["COLUMN_NAME"] for r in conn.execute(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?",
+                (table,)
+            ).fetchall()]
         except Exception:
             return []
 

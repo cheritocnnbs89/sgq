@@ -838,6 +838,38 @@ def notif_voucher_aprobada_solicitante(solicitud_id: int, area: str, fecha: str,
 
 
 # ──────────────────────────────────────────────────────────
+# Voucher: aprobado → notificar a los coordinadores para que entreguen el secuencial
+# ──────────────────────────────────────────────────────────
+
+def notif_voucher_pendiente_entrega(solicitud_id: int, area: str, fecha: str,
+                                     descripcion: str, solicitante_nombre: str,
+                                     aprobador_nombre: str) -> None:
+    """Avisa a los coordinadores del tipo Voucher que deben entregar el secuencial."""
+    coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Voucher")
+    subject = f"[Planificador] Voucher #{solicitud_id} aprobado — pendiente de entrega"
+    titulo  = f"Voucher #{solicitud_id} — Entregar secuencial"
+    saludo  = (f"La solicitud de Voucher de <strong>{solicitante_nombre}</strong> fue aprobada "
+               f"por <strong>{aprobador_nombre}</strong>. Debes entregar los vouchers y "
+               f"registrar su secuencial.")
+    filas   = [
+        ("N° solicitud",    str(solicitud_id)),
+        ("Área solicitante", area),
+        ("Fecha",           fecha),
+        ("Descripción",     descripcion or "—"),
+        ("Aprobado por",    aprobador_nombre),
+    ]
+    nota = "Ingresa al SGQ → Planificador, abre la solicitud y registra el secuencial de los vouchers entregados."
+    html = _email_html("PLANIFICADOR · VOUCHER — ENTREGA PENDIENTE", titulo, saludo, filas, nota)
+    emails = []
+    for c in coordinadores:
+        _inapp(c["id"], subject,
+               f"Voucher #{solicitud_id} de {solicitante_nombre} aprobado — entrega el secuencial")
+        if c.get("email"):
+            emails.append(c["email"])
+    _email(emails, subject, html)
+
+
+# ──────────────────────────────────────────────────────────
 # Voucher: coordinador entregó los vouchers con secuencial → notificar al solicitante
 # ──────────────────────────────────────────────────────────
 
