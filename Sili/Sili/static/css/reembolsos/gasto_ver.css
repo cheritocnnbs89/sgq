@@ -41,6 +41,10 @@ body.gasto-ver-page {
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1rem;
+  background: linear-gradient(135deg, rgba(37, 99, 235, .08), rgba(29, 78, 216, .04));
+  border: 1px solid rgba(37, 99, 235, .12);
+  border-radius: 14px;
+  padding: .9rem 1.1rem;
 }
 
 .gasto-ver-title {
@@ -114,9 +118,9 @@ body.gasto-ver-page {
 }
 
 .gasto-ver-card-header {
-  background: linear-gradient(180deg, #ffffff, #f8fafc);
-  border-bottom: 1px solid var(--gv-line);
-  color: var(--gv-ink);
+  background: linear-gradient(180deg, rgba(37, 99, 235, .07), rgba(37, 99, 235, .03));
+  border-bottom: 1px solid rgba(37, 99, 235, .12);
+  color: var(--gv-accent-2);
   padding: .9rem 1rem;
 }
 
