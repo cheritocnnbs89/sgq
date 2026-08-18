@@ -56,6 +56,55 @@ body.gasto-ver-page {
   color: var(--gv-muted);
 }
 
+.gasto-ver-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .75rem;
+}
+
+.gasto-ver-summary-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-width: 0;
+  background: var(--gv-card);
+  border: 1px solid var(--gv-line);
+  border-radius: 14px;
+  padding: .8rem 1rem;
+  box-shadow: var(--gv-shadow);
+}
+
+.gasto-ver-summary-item .value-wrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gasto-ver-summary-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 10px;
+  background: rgba(37, 99, 235, .1);
+  color: var(--gv-accent);
+  font-size: 1.05rem;
+}
+
+@media (max-width: 991.98px) {
+  .gasto-ver-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .gasto-ver-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
 .gasto-ver-card {
   background: var(--gv-card);
   border: 1px solid var(--gv-line);

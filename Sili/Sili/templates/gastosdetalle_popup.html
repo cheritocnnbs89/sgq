@@ -21,9 +21,49 @@
         </div>
       </div>
 
+      <div class="gasto-ver-summary mb-3">
+        <div class="gasto-ver-summary-item">
+          <span class="gasto-ver-summary-icon"><i class="bi bi-calendar3"></i></span>
+          <div>
+            <div class="label-lite">Fecha</div>
+            <div class="value-strong">{{ g['fecha'] }}</div>
+          </div>
+        </div>
+
+        <div class="gasto-ver-summary-item">
+          <span class="gasto-ver-summary-icon"><i class="bi bi-shop"></i></span>
+          <div>
+            <div class="label-lite">Proveedor</div>
+            <div class="value-strong value-wrap">{{ g['proveedor'] }}</div>
+          </div>
+        </div>
+
+        <div class="gasto-ver-summary-item">
+          <span class="gasto-ver-summary-icon"><i class="bi bi-file-earmark-text"></i></span>
+          <div>
+            <div class="label-lite"># Factura</div>
+            <div class="value-strong">{{ g['numero_factura'] }}</div>
+          </div>
+        </div>
+
+        <div class="gasto-ver-summary-item">
+          <span class="gasto-ver-summary-icon"><i class="bi bi-shield-check"></i></span>
+          <div>
+            <div class="label-lite">CCB</div>
+            <div class="value-strong">
+              {% if (g['ccb']|default(0))|int == 1 %}
+              <span class="badge text-bg-warning">SI</span>
+              {% else %}
+              <span class="badge text-bg-secondary">NO</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="card shadow-sm border-0 gasto-ver-card mb-3">
         <div class="card-header gasto-ver-card-header">
-          <span class="fw-semibold">Cabecera</span>
+          <span class="fw-semibold"><i class="bi bi-card-list me-2"></i>Cabecera</span>
         </div>
 
         <div class="card-body">
@@ -69,7 +109,7 @@
 
       <div class="card shadow-sm border-0 gasto-ver-card mb-3">
         <div class="card-header gasto-ver-card-header">
-          <span class="fw-semibold">Detalle</span>
+          <span class="fw-semibold"><i class="bi bi-list-ul me-2"></i>Detalle</span>
         </div>
 
         <div class="card-body p-0">
@@ -126,7 +166,7 @@
 
       <div class="card shadow-sm border-0 gasto-ver-card mb-3">
         <div class="card-header gasto-ver-card-header">
-          <span class="fw-semibold">Adjuntos</span>
+          <span class="fw-semibold"><i class="bi bi-paperclip me-2"></i>Adjuntos</span>
         </div>
 
         <div class="card-body">
