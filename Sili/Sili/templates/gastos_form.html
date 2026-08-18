@@ -397,16 +397,20 @@
 
       <input type="hidden" id="adj_count" value="{{ adj_count }}">
 
-      <input type="file" class="form-control" id="archivo" name="archivo" multiple
+      <label for="archivo" class="gasto-dropzone" id="archivoDropzone">
+        <i class="bi bi-cloud-arrow-up gasto-dropzone-icon"></i>
+        <span class="gasto-dropzone-text">
+          <strong>Arrastre archivos aquí</strong> o haga clic para seleccionar
+        </span>
+        <span class="gasto-dropzone-hint">PDF, Word, Excel, Imagen — puede seleccionar varios</span>
+      </label>
+
+      <input type="file" class="visually-hidden" id="archivo" name="archivo" multiple
         accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif">
 
       <div id="archivoInvalid" class="invalid-feedback">
         Debe adjuntar al menos un archivo para guardar.
       </div>
-
-      <small class="text-muted d-block mt-1">
-        Puedes seleccionar uno o varios archivos.
-      </small>
 
       <ul id="selectedFiles" class="mt-2 small"></ul>
 

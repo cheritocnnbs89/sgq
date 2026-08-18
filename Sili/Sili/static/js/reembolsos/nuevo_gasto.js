@@ -1874,20 +1874,74 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('archivo');
     const invalidMsg = document.getElementById('archivoInvalid');
+    const dropzone = document.getElementById('archivoDropzone');
+    const selectedList = document.getElementById('selectedFiles');
 
     if (!form || !fileInput) return;
 
     function setInvalid(on) {
       if (on) {
         fileInput.classList.add('is-invalid');
+        dropzone?.classList.add('is-invalid');
         invalidMsg?.classList.add('d-block');
       } else {
         fileInput.classList.remove('is-invalid');
+        dropzone?.classList.remove('is-invalid');
         invalidMsg?.classList.remove('d-block');
       }
     }
 
-    fileInput.addEventListener('change', () => setInvalid(false));
+    function renderSelectedFiles() {
+      if (!selectedList) return;
+      selectedList.innerHTML = '';
+      Array.from(fileInput.files || []).forEach((f) => {
+        const li = document.createElement('li');
+        li.innerHTML = '<i class="bi bi-file-earmark-check"></i> ' +
+          f.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        selectedList.appendChild(li);
+      });
+    }
+
+    fileInput.addEventListener('change', () => {
+      setInvalid(false);
+      renderSelectedFiles();
+    });
+
+    if (dropzone) {
+      ['dragenter', 'dragover'].forEach((evt) => {
+        dropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add('is-dragover');
+        });
+      });
+
+      ['dragleave', 'dragend'].forEach((evt) => {
+        dropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove('is-dragover');
+        });
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove('is-dragover');
+
+        const dropped = e.dataTransfer?.files;
+        if (!dropped || !dropped.length) return;
+
+        const dt = new DataTransfer();
+        Array.from(fileInput.files || []).forEach((f) => dt.items.add(f));
+        Array.from(dropped).forEach((f) => dt.items.add(f));
+        fileInput.files = dt.files;
+
+        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    }
+
+    renderSelectedFiles();
   });
 
   const Busy = (() => {
@@ -2353,6 +2407,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const fileInput = document.getElementById('archivo');
       const adjCountEl = document.getElementById('adj_count');
       const invalidMsg = document.getElementById('archivoInvalid');
+      const dropzone = document.getElementById('archivoDropzone');
 
       const already = parseInt((adjCountEl?.value || '0'), 10) || 0;
       const selected = (fileInput?.files && fileInput.files.length > 0);
@@ -2360,9 +2415,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const bad = (already <= 0 && !selected);
 
       if (fileInput) fileInput.classList.toggle('is-invalid', bad);
+      if (dropzone) dropzone.classList.toggle('is-invalid', bad);
       if (invalidMsg) invalidMsg.classList.toggle('d-block', bad);
 
-      if (bad) return { ok: false, el: fileInput, msg: 'Debe adjuntar al menos un archivo para guardar.' };
+      if (bad) return { ok: false, el: dropzone || fileInput, msg: 'Debe adjuntar al menos un archivo para guardar.' };
       return { ok: true };
     };
 
