@@ -15,6 +15,7 @@ from .obligaciones_constants import (
     TABLA_TIPO_ENTIDAD,
     TABLA_TIPOS,
     TABLA_ENTIDADES,
+    TABLA_SOLICITUDES_EDICION,
 )
 
 SQL_SCOPE_IDENTITY = "SELECT CAST(SCOPE_IDENTITY() AS INT)"
@@ -44,6 +45,10 @@ SELECT
     o.creado_por,
     o.creado_en,
     o.modificado_en,
+    o.edicion_habilitada,
+    CASE WHEN EXISTS (
+        SELECT 1 FROM oblig_solicitudes_edicion se WHERE se.obligacion_id = o.id AND se.estado = 'pendiente'
+    ) THEN 1 ELSE 0 END AS tiene_solicitud_pendiente,
     (
         SELECT STRING_AGG(ev.nombre_archivo, ', ')
         FROM {TABLA_EVIDENCIAS} ev
@@ -104,6 +109,57 @@ SET estatus = ?, activa = 0, modificado_en = GETDATE()
 WHERE id = ?
 """
 
+# 2026-08-15: Punto 9 -- si el usuario tiene jefe_id, el cumplimiento queda
+# pendiente de aprobación (activa=1 -- sigue "por cumplir" en pastel/dashboard,
+# decisión de Matías; aprobado_por_jefe NULL = pendiente). Si NO tiene jefe_id
+# (nadie que pueda aprobar), se auto-aprueba igual que antes.
+# 2026-08-17: estatus pasa a 'pendiente_aprobacion' (no cumplido/cumplido_fuera_plazo
+# todavia -- confundia en Consultas, ver estatus_pendiente_destino) -- el estatus
+# final ya calculado (a tiempo/fuera de plazo) se guarda en estatus_pendiente_destino
+# hasta que el jefe apruebe.
+SQL_MARCAR_CUMPLIDA_PENDIENTE_JEFE = f"""
+UPDATE {TABLA_OBLIGACIONES}
+SET estatus = 'pendiente_aprobacion', estatus_pendiente_destino = ?,
+    activa = 1, aprobado_por_jefe = NULL, modificado_en = GETDATE()
+WHERE id = ?
+"""
+
+SQL_MARCAR_CUMPLIDA_AUTOAPROBADA = f"""
+UPDATE {TABLA_OBLIGACIONES}
+SET estatus = ?, activa = 0, aprobado_por_jefe = 1, modificado_en = GETDATE()
+WHERE id = ?
+"""
+
+SQL_LIST_PENDIENTES_APROBACION_JEFE = f"""
+SELECT o.id, o.descripcion, o.estatus, o.estatus_pendiente_destino, o.fecha_vencimiento, o.modificado_en,
+       u.id AS usuario_id, u.username AS usuario_username, u.nombre_completo AS usuario_nombre
+FROM {TABLA_OBLIGACIONES} o
+JOIN {TABLA_USUARIOS} u ON u.id = o.usuario_id
+WHERE o.activa = 1
+  AND o.estatus = 'pendiente_aprobacion'
+  AND o.aprobado_por_jefe IS NULL
+  AND u.jefe_id = ?
+ORDER BY o.modificado_en ASC
+"""
+
+# 2026-08-17: estatus final (cumplido/cumplido_fuera_plazo) sale de la columna
+# estatus_pendiente_destino guardada al momento de marcar cumplida -- no se
+# recalcula, ya se decidio "a tiempo/fuera de plazo" contra la fecha real de
+# cumplimiento, no contra la fecha en que el jefe aprueba.
+SQL_APROBAR_CUMPLIMIENTO_JEFE = f"""
+UPDATE {TABLA_OBLIGACIONES}
+SET estatus = estatus_pendiente_destino, estatus_pendiente_destino = NULL,
+    activa = 0, aprobado_por_jefe = 1, jefe_aprobador_id = ?, fecha_aprobacion_jefe = GETDATE()
+WHERE id = ? AND aprobado_por_jefe IS NULL
+"""
+
+SQL_RECHAZAR_CUMPLIMIENTO_JEFE = f"""
+UPDATE {TABLA_OBLIGACIONES}
+SET estatus = ?, estatus_pendiente_destino = NULL, activa = 1, aprobado_por_jefe = 0, jefe_aprobador_id = ?,
+    fecha_aprobacion_jefe = GETDATE(), motivo_rechazo_jefe = ?
+WHERE id = ? AND aprobado_por_jefe IS NULL
+"""
+
 # ------------------------------------------------------------
 # Perfil de usuario (departamento_id / puesto_id / email / jefe)
 # ------------------------------------------------------------
@@ -123,6 +179,15 @@ SQL_GET_USUARIOS_A_CARGO = f"""
 SELECT id, username, nombre_completo
 FROM {TABLA_USUARIOS}
 WHERE jefe_id = ?
+ORDER BY username
+"""
+
+# 2026-08-14: gerente_obligaciones -- "jefe del jefe", alcance 2 niveles
+# (subordinados directos del gerente + subordinados de esos subordinados).
+SQL_GET_USUARIOS_A_CARGO_2NIVELES = f"""
+SELECT id, username, nombre_completo
+FROM {TABLA_USUARIOS}
+WHERE jefe_id = ? OR jefe_id IN (SELECT id FROM {TABLA_USUARIOS} WHERE jefe_id = ?)
 ORDER BY username
 """
 
@@ -435,3 +500,90 @@ SQL_DASHBOARD_POR_ESTATUS_TOTAL_GROUP_BY = (
     "CASE WHEN o.estatus IN ('cumplido', 'cumplido_fuera_plazo') THEN 'cumplida' "
     "WHEN o.estatus = 'atrasado' THEN 'atrasada' ELSE 'por_presentar' END"
 )
+
+# 2026-08-14: desglose del pastel (Punto 4) al hacer click en una seccion --
+# 3 tablas (Tipo / Entidad / Area), cada una con id+nombre+total, filtradas a
+# la seccion clickeada. id incluido para que el click de una fila navegue a
+# Consultas ya filtrado (Punto 5).
+SQL_DESGLOSE_POR_TIPO_SELECT = f"""
+SELECT t.id, t.nombre AS etiqueta, COUNT(*) AS total
+FROM {TABLA_OBLIGACIONES} o
+JOIN {TABLA_TIPOS} t ON t.id = o.tipo_id
+"""
+SQL_DESGLOSE_POR_TIPO_GROUP_BY = " GROUP BY t.id, t.nombre ORDER BY total DESC"
+
+SQL_DESGLOSE_POR_ENTIDAD_SELECT = f"""
+SELECT en.id, en.nombre AS etiqueta, COUNT(*) AS total
+FROM {TABLA_OBLIGACIONES} o
+JOIN {TABLA_ENTIDADES} en ON en.id = o.entidad_id
+"""
+SQL_DESGLOSE_POR_ENTIDAD_GROUP_BY = " GROUP BY en.id, en.nombre ORDER BY total DESC"
+
+SQL_DESGLOSE_POR_AREA_SELECT = """
+SELECT a.id, a.nombre AS etiqueta, COUNT(*) AS total
+FROM oblig_obligaciones o
+JOIN departamentos d ON d.id = o.departamento_id
+JOIN areas a ON a.id = d.area_id
+"""
+SQL_DESGLOSE_POR_AREA_GROUP_BY = " GROUP BY a.id, a.nombre ORDER BY total DESC"
+
+# ------------------------------------------------------------
+# 2026-08-14: Punto 8 -- solicitud de autorizacion para editar obligacion cumplida
+# ------------------------------------------------------------
+SQL_INSERT_SOLICITUD_EDICION = f"""
+INSERT INTO {TABLA_SOLICITUDES_EDICION} (obligacion_id, solicitante_id, motivo, estado)
+OUTPUT INSERTED.id
+VALUES (?, ?, ?, 'pendiente')
+"""
+
+SQL_GET_SOLICITUD_PENDIENTE_BY_OBLIGACION = f"""
+SELECT id FROM {TABLA_SOLICITUDES_EDICION}
+WHERE obligacion_id = ? AND estado = 'pendiente'
+"""
+
+SQL_GET_SOLICITUD_BY_ID = f"""
+SELECT s.id, s.obligacion_id, s.solicitante_id, s.motivo, s.estado,
+       s.resuelto_por, s.fecha_solicitud, s.fecha_resolucion,
+       o.descripcion AS obligacion_descripcion,
+       u.email AS solicitante_email, u.nombre_completo AS solicitante_nombre
+FROM {TABLA_SOLICITUDES_EDICION} s
+JOIN {TABLA_OBLIGACIONES} o ON o.id = s.obligacion_id
+JOIN {TABLA_USUARIOS} u ON u.id = s.solicitante_id
+WHERE s.id = ?
+"""
+
+SQL_LIST_SOLICITUDES_PENDIENTES = f"""
+SELECT s.id, s.obligacion_id, s.motivo, s.fecha_solicitud,
+       o.descripcion AS obligacion_descripcion,
+       u.username AS solicitante_username, u.nombre_completo AS solicitante_nombre
+FROM {TABLA_SOLICITUDES_EDICION} s
+JOIN {TABLA_OBLIGACIONES} o ON o.id = s.obligacion_id
+JOIN {TABLA_USUARIOS} u ON u.id = s.solicitante_id
+WHERE s.estado = 'pendiente'
+ORDER BY s.fecha_solicitud ASC
+"""
+
+SQL_RESOLVER_SOLICITUD = f"""
+UPDATE {TABLA_SOLICITUDES_EDICION}
+SET estado = ?, resuelto_por = ?, fecha_resolucion = GETDATE()
+WHERE id = ? AND estado = 'pendiente'
+"""
+
+SQL_HABILITAR_EDICION_OBLIGACION = f"""
+UPDATE {TABLA_OBLIGACIONES} SET edicion_habilitada = 1 WHERE id = ?
+"""
+
+SQL_DESHABILITAR_EDICION_OBLIGACION = f"""
+UPDATE {TABLA_OBLIGACIONES} SET edicion_habilitada = 0 WHERE id = ?
+"""
+
+# 2026-08-14: emails de rol admin + admin_obligaciones (distinto del existente
+# SQL_LIST_ADMIN_OBLIGACIONES_EMAILS que es solo admin_obligaciones -- Punto 8
+# pide notificar a AMBOS roles, decision explicita de Matias).
+SQL_LIST_ADMIN_Y_ADMIN_OBLIGACIONES_EMAILS = f"""
+SELECT email
+FROM {TABLA_USUARIOS}
+WHERE LOWER(rol) IN ('admin', 'admin_obligaciones')
+  AND COALESCE(disabled, 0) = 0
+  AND email IS NOT NULL AND LTRIM(RTRIM(email)) <> ''
+"""

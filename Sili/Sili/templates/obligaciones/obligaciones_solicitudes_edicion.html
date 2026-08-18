@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - Solicitudes de edición{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/obligaciones.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 title-blue"><i class="bi bi-unlock"></i> Obligaciones - Solicitudes de edición</h4>
+  </div>
+
+  <div class="oblig-section-hero mb-3">
+    <p class="text-muted small mb-0">
+      Solicitudes pendientes de autorización para editar una obligación ya marcada como cumplida.
+      Al aprobar, el usuario puede editar la obligación 1 sola vez — se re-bloquea sola al guardar.
+    </p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-sm align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Obligación</th>
+          <th>Solicitante</th>
+          <th>Motivo</th>
+          <th>Evidencia</th>
+          <th>Fecha</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in solicitudes %}
+        <tr>
+          <td>{{ s.obligacion_descripcion }}</td>
+          <td>{{ s.solicitante_nombre or s.solicitante_username }}</td>
+          <td class="small">{{ s.motivo or '-' }}</td>
+          <td>
+            {% for ev in s.evidencias_list %}
+            <a href="{{ url_for('obligaciones.descargar_evidencia', oblig_id=s.obligacion_id, evidencia_id=ev.id) }}"
+               class="d-block small" target="_blank" rel="noopener">
+              <i class="bi bi-paperclip"></i> {{ ev.nombre_archivo }}
+            </a>
+            {% else %}
+            <span class="text-muted small">Sin evidencia</span>
+            {% endfor %}
+          </td>
+          <td>{{ s.fecha_solicitud.strftime('%Y-%m-%d %H:%M') if s.fecha_solicitud else '-' }}</td>
+          <td class="text-end">
+            <form method="post" action="{{ url_for('obligaciones.resolver_solicitud_edicion', solicitud_id=s.id) }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="accion" value="aprobar">
+              <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Aprobar</button>
+            </form>
+            <form method="post" action="{{ url_for('obligaciones.resolver_solicitud_edicion', solicitud_id=s.id) }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="accion" value="rechazar">
+              <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i> Rechazar</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">Sin solicitudes pendientes.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

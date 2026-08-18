@@ -53,6 +53,15 @@
         {% endfor %}
       </select>
     </div>
+    <div class="col-6 col-md-auto">
+      <!-- 2026-08-14: filtro por Área pedido en reunión -->
+      <select class="form-select form-select-sm" name="area_id">
+        <option value="">-- Área --</option>
+        {% for a in combos.areas %}
+        <option value="{{ a.id }}" {% if filters.area_id|string == a.id|string %}selected{% endif %}>{{ a.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
     <!-- 2026-07-29: rango de fechas (desde/hasta) reemplaza el filtro por mes unico -->
     <!-- 2026-07-29: label visible agregado -- placeholder desaparece con valor y usuario no sabia que campo era -->
     <div class="col-6 col-md-auto">
@@ -102,6 +111,7 @@
           <th>Estatus</th>
           <th>Evidencia</th>
           <th>Usuario</th>
+          <th>Edición</th>
         </tr>
       </thead>
       <tbody>
@@ -132,15 +142,56 @@
             {% else %}-{% endif %}
           </td>
           <td>{{ r.usuario_nombre or r.usuario_username }}</td>
+          <td>
+            {# 2026-08-14: Punto 8 -- autorización para editar obligación cumplida #}
+            {% if r.tiene_solicitud_pendiente %}
+            <span class="badge bg-secondary">Solicitud pendiente</span>
+            {% elif r.edicion_habilitada %}
+            <a class="btn btn-sm btn-success" href="{{ url_for('obligaciones.editar_obligacion', oblig_id=r.id) }}">
+              <i class="bi bi-unlock"></i> Editar ahora
+            </a>
+            {% elif r.usuario_id == session.usuario_id or session.rol in ('admin', 'admin_obligaciones') %}
+            <button type="button" class="btn btn-sm btn-outline-secondary btn-solicitar-edicion"
+                    data-oblig-id="{{ r.id }}" data-bs-toggle="modal" data-bs-target="#modalSolicitarEdicion">
+              <i class="bi bi-pencil-square"></i> Solicitar edición
+            </button>
+            {% else %}-{% endif %}
+          </td>
         </tr>
         {% else %}
-        <tr><td colspan="9" class="text-center text-muted py-4">Sin registros en el historial.</td></tr>
+        <tr><td colspan="10" class="text-center text-muted py-4">Sin registros en el historial.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
   <div id="tableInfoHist" class="text-muted small"></div>
   <nav id="paginationHist"></nav>
+
+  <!-- 2026-08-14: modal compartido -- solicitar edición de obligación cumplida -->
+  <div class="modal fade" id="modalSolicitarEdicion" tabindex="-1" aria-hidden="true"
+       data-url-template="{{ url_for('obligaciones.solicitar_edicion', oblig_id=0) }}">
+    <div class="modal-dialog">
+      <form method="post" id="frmSolicitarEdicion" action="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Solicitar autorización de edición</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <p class="small text-muted">Esta obligación ya fue marcada como cumplida. Un administrador
+              debe autorizar la edición antes de poder modificarla.</p>
+            <label class="form-label">Motivo</label>
+            <textarea class="form-control" name="motivo" rows="3" maxlength="500" required></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Enviar solicitud</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

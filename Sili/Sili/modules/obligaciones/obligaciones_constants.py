@@ -25,6 +25,8 @@ TABLA_ENTIDADES = "oblig_entidades_reguladoras"
 # misma entidad (ej. Municipio, Superintendencia Cias) aplica a varios tipos,
 # y un tipo tiene varias entidades -- parent_id de param_values no alcanza.
 TABLA_TIPO_ENTIDAD = "oblig_tipo_entidad"
+# 2026-08-14: Punto 8 -- solicitud de autorizacion para editar obligacion cumplida
+TABLA_SOLICITUDES_EDICION = "oblig_solicitudes_edicion"
 # Historial de este bloque: #2 (2026-07-14) movio Tipos/Entidades a
 # param_values/terceros; #7 (2026-07-22) unifico Entidades a param_values;
 # #8 (2026-08-07) revierte ambas a tablas propias con pantalla dedicada.
@@ -55,6 +57,13 @@ ACTIVE_KEY_FRECUENCIAS = "obligaciones_frecuencias"
 ACTIVE_KEY_TIPOS = "obligaciones_tipos"
 ACTIVE_KEY_ENTIDADES = "obligaciones_entidades"
 
+# 2026-08-14: Punto 8 -- pantalla de solicitudes de edición (admin), menu_items
+# insertado directo en BD (id child de 51), active_key debe coincidir.
+ACTIVE_KEY_SOLICITUDES = "obligaciones_solicitudes"
+
+# 2026-08-15: Punto 9 -- pantalla de aprobaciones de jefe
+ACTIVE_KEY_APROBACIONES = "obligaciones_aprobaciones"
+
 # ------------------------------------------------------------
 # Permisos (tabla opciones) -- 7 permisos del modulo
 # 2026-07-14 (Ronda 2): obligaciones_configuracion eliminado -- ya no hay
@@ -80,6 +89,12 @@ ROL_ADMIN_SILI       = "admin"
 ROL_ADMIN_OBLIG      = "admin_obligaciones"
 ROL_JEFE_AREA        = "jefe_area_obligaciones"
 ROL_USUARIO_OBLIG    = "usuario_obligaciones"
+# 2026-08-14: rol nuevo pedido en reunión -- "jefe del jefe" (2 saltos de
+# usuarios.jefe_id, misma cadena que resolver_cadena_jefe() ya usaba para email
+# de "gerente"). Solo lectura -- mismos permisos de vista que ROL_JEFE_AREA,
+# alcance ampliado a 2 niveles. Alta del rol en /roles-permisos es manual
+# (ver CLAUDE.md raíz de V2, DEFAULT_ROLES del core no lo crea solo).
+ROL_GERENTE_OBLIG    = "gerente_obligaciones"
 
 ROLES_ADMIN = (ROL_ADMIN_SILI, ROL_ADMIN_OBLIG)
 
@@ -88,12 +103,15 @@ ROLES_ADMIN = (ROL_ADMIN_SILI, ROL_ADMIN_OBLIG)
 # recalculo_tipo/recalculo_cantidad reemplazan el string "M:6" que antes
 # vivia en param_values.valor -- ver obligaciones_services._siguiente_fecha().
 # ------------------------------------------------------------
-RECALCULO_TIPOS = ("M", "A", "D", "NINGUNA")
+RECALCULO_TIPOS = ("M", "A", "D", "NINGUNA", "UNICA")
 RECALCULO_LABELS = {
     "M":       "Meses",
     "A":       "Años",
     "D":       "Días",
     "NINGUNA": "No recalcula",
+    # 2026-08-17: pedido en reunión — tiene fecha_vencimiento (a diferencia de
+    # NINGUNA, que la anula), pero tampoco renueva al cumplirse. Un solo uso.
+    "UNICA":   "Sin frecuencia (un solo uso)",
 }
 TRIGGER_TIPOS = ("dias_antes", "fecha_exacta")
 TRIGGER_LABELS = {
@@ -127,12 +145,22 @@ MSG_CADENA_ROTA = "Esta frecuencia no está disponible en este momento. Contáct
 # ------------------------------------------------------------
 # Valores de negocio
 # ------------------------------------------------------------
-ESTATUS_VALORES = ("por_presentar", "atrasado", "cumplido", "cumplido_fuera_plazo")
+# 2026-08-17: pendiente_aprobacion -- cumplimiento reportado por el usuario pero
+# aun sin aprobar por su jefe (Punto 9). NO es terminal (no cuenta como Historial
+# todavia) -- distinto de cumplido/cumplido_fuera_plazo, que solo se asignan tras
+# la aprobacion del jefe (o de una vez si el usuario no tiene jefe_id).
+ESTATUS_VALORES = ("por_presentar", "atrasado", "pendiente_aprobacion", "cumplido", "cumplido_fuera_plazo")
 ESTATUS_TERMINALES = ("cumplido", "cumplido_fuera_plazo")
+
+# 2026-08-14: Punto 8 -- solicitud de autorizacion para editar obligacion cumplida
+SOLICITUD_PENDIENTE  = "pendiente"
+SOLICITUD_APROBADA   = "aprobada"
+SOLICITUD_RECHAZADA  = "rechazada"
 
 ESTATUS_LABELS = {
     "por_presentar":        "Por presentar a tiempo",
     "atrasado":             "Atrasado",
+    "pendiente_aprobacion": "Pendiente de aprobación",
     "cumplido":             "Cumplido",
     "cumplido_fuera_plazo": "Cumplido fuera de plazo",
 }
@@ -140,6 +168,7 @@ ESTATUS_LABELS = {
 ESTATUS_BADGE_CLASS = {
     "por_presentar":        "bg-warning text-dark",
     "atrasado":             "bg-danger",
+    "pendiente_aprobacion": "bg-info text-dark",
     "cumplido":             "bg-success",
     "cumplido_fuera_plazo": "bg-warning text-dark",
 }

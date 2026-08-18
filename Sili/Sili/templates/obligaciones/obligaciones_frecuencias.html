@@ -45,6 +45,8 @@
               <span class="btn-chip">Años</span> Se repite cada {{ f.recalculo_cantidad }} año(s)
             {% elif f.recalculo_tipo == 'D' %}
               <span class="btn-chip btn-chip-red">Días</span> Se repite cada {{ f.recalculo_cantidad }} día(s)
+            {% elif f.recalculo_tipo == 'UNICA' %}
+              <span class="btn-chip">Sin frecuencia</span> Un solo uso, no renueva
             {% endif %}
           </td>
           <td class="text-end">

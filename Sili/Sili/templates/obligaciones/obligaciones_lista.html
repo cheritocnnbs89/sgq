@@ -18,7 +18,7 @@
     </div>
   </div>
 
-  {% set filtros_activos = filters.empresa_id or filters.tipo_id or filters.entidad_id or filters.frecuencia_id or filters.fecha_desde or filters.fecha_hasta or filters.usuario_id %}
+  {% set filtros_activos = filters.empresa_id or filters.tipo_id or filters.entidad_id or filters.frecuencia_id or filters.fecha_desde or filters.fecha_hasta or filters.usuario_id or filters.area_id %}
   <button class="btn btn-sm btn-outline-secondary mb-2" type="button" data-bs-toggle="collapse"
     data-bs-target="#panelFiltrosLista" aria-expanded="{{ 'true' if filtros_activos else 'false' }}"
     aria-controls="panelFiltrosLista">
@@ -60,6 +60,15 @@
         <option value="">-- Frecuencia --</option>
         {% for f in combos.frecuencias %}
         <option value="{{ f.id }}" {% if filters.frecuencia_id|string == f.id|string %}selected{% endif %}>{{ f.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-auto">
+      <!-- 2026-08-14: filtro por Área pedido en reunión -->
+      <select class="form-select form-select-sm" name="area_id">
+        <option value="">-- Área --</option>
+        {% for a in combos.areas %}
+        <option value="{{ a.id }}" {% if filters.area_id|string == a.id|string %}selected{% endif %}>{{ a.nombre }}</option>
         {% endfor %}
       </select>
     </div>
@@ -130,7 +139,7 @@
             {% endif %}
           </td>
           <td>
-            {% set estatus_badge = {'por_presentar': 'bg-warning text-dark', 'atrasado': 'bg-danger', 'cumplido': 'bg-success', 'cumplido_fuera_plazo': 'bg-warning text-dark'} %}
+            {% set estatus_badge = {'por_presentar': 'bg-warning text-dark', 'atrasado': 'bg-danger', 'pendiente_aprobacion': 'bg-info text-dark', 'cumplido': 'bg-success', 'cumplido_fuera_plazo': 'bg-warning text-dark'} %}
             <span class="badge {{ estatus_badge.get(r.estatus, 'bg-secondary') }}">{{ estatus_labels.get(r.estatus, r.estatus) }}</span>
           </td>
           <td><span class="oblig-truncate-sm" title="{{ r.frecuencia_nombre }}">{{ r.frecuencia_nombre }}</span></td>

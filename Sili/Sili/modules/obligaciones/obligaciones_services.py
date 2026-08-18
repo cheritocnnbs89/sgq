@@ -12,6 +12,7 @@ from . import obligaciones_repository as repo
 from .obligaciones_constants import (
     ROLES_ADMIN,
     ROL_JEFE_AREA,
+    ROL_GERENTE_OBLIG,
     ESTATUS_LABELS,
     EXTENSIONES,
     MAX_BYTES,
@@ -21,6 +22,7 @@ from .obligaciones_constants import (
     MAX_NOTIFICACIONES_POR_FRECUENCIA,
     TIPO_DESTINATARIO_JERARQUICOS,
     MSG_CADENA_ROTA,
+    ESTATUS_TERMINALES,
 )
 
 
@@ -34,12 +36,27 @@ def safe_int(val, default=None):
         return default
 
 
+def _es_subordinado_2niveles(usuario_id, gerente_id):
+    """2026-08-14: gerente_obligaciones -- true si usuario_id reporta directo a
+    gerente_id, o si su jefe_id reporta a gerente_id (2 saltos)."""
+    perfil = repo.get_usuario_perfil(usuario_id)
+    if not perfil:
+        return False
+    if perfil["jefe_id"] == gerente_id:
+        return True
+    if perfil["jefe_id"]:
+        jefe = repo.get_usuario_perfil(perfil["jefe_id"])
+        return bool(jefe and jefe["jefe_id"] == gerente_id)
+    return False
+
+
 def _puede_gestionar(row, session):
-    """Dueno o admin puede editar/eliminar/cumplir. jefe_area_obligaciones es solo lectura (T2)."""
+    """Dueno o admin puede editar/eliminar/cumplir. jefe_area_obligaciones y
+    gerente_obligaciones son solo lectura (T2, ampliado 2026-08-14)."""
     rol = session.get("rol")
     if rol in ROLES_ADMIN:
         return True
-    if rol == ROL_JEFE_AREA:
+    if rol in (ROL_JEFE_AREA, ROL_GERENTE_OBLIG):
         return False
     return row is not None and row["usuario_id"] == session.get("usuario_id")
 
@@ -49,10 +66,10 @@ def assert_puede_acceder_obligacion(obligacion, session):
     MISMA logica de scope de _apply_visibility() (obligaciones_repository.py)
     pero para UN registro puntual en vez de un WHERE de listado. admin/
     admin_obligaciones sin filtro; jefe_area_obligaciones solo si el dueno de
-    la obligacion tiene jefe_id == usuario actual; cualquier otro rol
-    (usuario_obligaciones incluido) solo si es el dueno. abort(403) si no
-    cumple -- se llama al INICIO de las rutas de un solo registro, antes de
-    leer/escribir cualquier dato."""
+    la obligacion tiene jefe_id == usuario actual; gerente_obligaciones igual
+    pero 2 saltos (2026-08-14); cualquier otro rol (usuario_obligaciones
+    incluido) solo si es el dueno. abort(403) si no cumple -- se llama al
+    INICIO de las rutas de un solo registro, antes de leer/escribir cualquier dato."""
     rol = session.get("rol")
     if rol in ROLES_ADMIN:
         return
@@ -61,18 +78,26 @@ def assert_puede_acceder_obligacion(obligacion, session):
         if perfil and perfil["jefe_id"] == session.get("usuario_id"):
             return
         abort(403)
+    if rol == ROL_GERENTE_OBLIG:
+        if _es_subordinado_2niveles(obligacion["usuario_id"], session.get("usuario_id")):
+            return
+        abort(403)
     if obligacion["usuario_id"] == session.get("usuario_id"):
         return
     abort(403)
 
 
 def _puede_ver_evidencia(row, session):
-    """T8: dueno/admin siempre; jefe_area_obligaciones solo si el dueno es su subordinado directo."""
+    """T8: dueno/admin siempre; jefe_area_obligaciones solo si el dueno es su
+    subordinado directo; gerente_obligaciones igual pero 2 saltos (2026-08-14)."""
     if _puede_gestionar(row, session):
         return True
-    if session.get("rol") == ROL_JEFE_AREA:
+    rol = session.get("rol")
+    if rol == ROL_JEFE_AREA:
         perfil = repo.get_usuario_perfil(row["usuario_id"])
         return bool(perfil and perfil["jefe_id"] == session.get("usuario_id"))
+    if rol == ROL_GERENTE_OBLIG:
+        return _es_subordinado_2niveles(row["usuario_id"], session.get("usuario_id"))
     return False
 
 
@@ -154,6 +179,10 @@ def get_subordinados_combo(jefe_id):
     return repo.list_subordinados(jefe_id)
 
 
+def get_subordinados_2niveles_combo(gerente_id):
+    return repo.list_subordinados_2niveles(gerente_id)
+
+
 def collect_filters(args):
     get = lambda k: (args.get(k) or "").strip()
     return {
@@ -165,6 +194,8 @@ def collect_filters(args):
         "fecha_hasta":       get("fecha_hasta"),
         "usuario_id":        get("usuario_id"),
         "estatus":            get("estatus"),
+        "area_id":           get("area_id"),
+        "seccion":           get("seccion"),
     }
 
 
@@ -220,8 +251,8 @@ def validate_obligacion_data(data):
         fecha_venc = _to_date(data["fecha_vencimiento"])
         if fecha_venc is None:
             return False, "La fecha de vencimiento no es válida."
-        if fecha_venc < date.today():
-            return False, "La fecha de vencimiento no puede ser anterior a hoy."
+        # 2026-08-17: pedido en reunión -- se permite fecha ya vencida al crear;
+        # crear_obligacion() la marca 'atrasado' y avisa (usuario + jefe por separado).
 
     return True, None
 
@@ -250,7 +281,7 @@ def _notificar_cadena_rota(perfil, frecuencia_id, faltantes):
         detalle = "; ".join(faltantes)
         subject = "[Obligaciones] Cadena de notificación incompleta"
         message = "\n".join([
-            "Aviso automático del módulo Obligaciones Legales y Regulatorias.",
+            "Aviso automático del módulo Obligaciones con Stakeholder.",  # 2026-08-14: rename visual pedido en reunión
             "",
             f"El usuario \"{nombre}\" intentó crear/editar una obligación con la "
             f"frecuencia \"{frec_nombre}\", que notifica a destinatarios jerárquicos "
@@ -327,15 +358,67 @@ def crear_obligacion(form, session):
     data["departamento_id"] = session.get("departamento_id")
     data["puesto_id"] = perfil["puesto_id"] if perfil else None
     data["creado_por"] = usuario_id
-    data["estatus"] = "por_presentar"
+
+    # 2026-08-17: pedido en reunión -- fecha_vencimiento ya vencida es válida,
+    # la obligación nace directo como 'atrasado' (no 'por_presentar').
+    fecha_venc = _to_date(data.get("fecha_vencimiento"))
+    nace_atrasada = bool(fecha_venc and fecha_venc < date.today())
+    data["estatus"] = "atrasado" if nace_atrasada else "por_presentar"
 
     try:
         new_id = repo.insert(data)
-        return {"ok": True, "flash": ("Obligación creada.", "success"), "id": new_id}
+        if nace_atrasada:
+            _notificar_obligacion_creada_atrasada(new_id, data, perfil)
+            flash_msg = ("Obligación creada — quedó como Atrasada por tener fecha de vencimiento ya pasada.", "warning")
+        else:
+            flash_msg = ("Obligación creada.", "success")
+        return {"ok": True, "flash": flash_msg, "id": new_id}
     except Exception:
         repo.rollback()
         current_app.logger.exception("Error al crear obligación")
         return {"ok": False, "flash": ("No se pudo crear la obligación.", "danger"), "data": data}
+
+
+def _notificar_obligacion_creada_atrasada(oblig_id, data, perfil_creador):
+    """2026-08-17: pedido en reunión -- aviso al usuario (neutro, sin mencionar
+    al jefe) y aviso SEPARADO y silencioso al jefe directo (si existe) de que
+    su subordinado creó una obligación ya atrasada. Nunca rompe el flujo."""
+    try:
+        from modules.email_utils import send_email_async
+        nombre_creador = (perfil_creador["nombre_completo"] or perfil_creador["username"]) if perfil_creador else "el usuario"
+        descripcion = data.get("descripcion") or f"ID {oblig_id}"
+
+        if perfil_creador and perfil_creador.get("email"):
+            subject_usuario = "[Obligaciones] Obligación creada como Atrasada"
+            message_usuario = "\n".join([
+                "Aviso automático del módulo Obligaciones con Stakeholder.",
+                "",
+                f"La obligación \"{descripcion}\" se creó con fecha de vencimiento ya "
+                "pasada, por lo que quedó registrada directamente como Atrasada.",
+                "",
+                "Puede cumplirla desde Obligaciones > Consultas.",
+                "",
+                "-- Este correo es automático, generado por el Sistema de Gestión Quimpac (SGQ). "
+                "Por favor no responda a este mensaje.",
+            ])
+            send_email_async([perfil_creador["email"]], subject_usuario, message_usuario)
+
+        jefe_id = perfil_creador["jefe_id"] if perfil_creador else None
+        jefe_perfil = repo.get_usuario_perfil(jefe_id) if jefe_id else None
+        if jefe_perfil and jefe_perfil.get("email"):
+            subject_jefe = "[Obligaciones] Un subordinado creó una obligación ya atrasada"
+            message_jefe = "\n".join([
+                "Aviso automático del módulo Obligaciones con Stakeholder.",
+                "",
+                f"\"{nombre_creador}\" creó la obligación \"{descripcion}\" con fecha de "
+                "vencimiento ya pasada -- quedó registrada como Atrasada.",
+                "",
+                "-- Este correo es automático, generado por el Sistema de Gestión Quimpac (SGQ). "
+                "Por favor no responda a este mensaje.",
+            ])
+            send_email_async([jefe_perfil["email"]], subject_jefe, message_jefe)
+    except Exception:
+        current_app.logger.exception("Obligaciones: no se pudo enviar aviso de creación atrasada")
 
 
 def editar_obligacion(oblig_id, form, session):
@@ -344,6 +427,13 @@ def editar_obligacion(oblig_id, form, session):
         return {"ok": False, "not_found": True, "flash": ("Obligación no encontrada.", "warning")}
     if not _puede_gestionar(row, session):
         return {"ok": False, "flash": ("No tiene permiso para editar esta obligación.", "danger")}
+    # 2026-08-14: Punto 8 -- obligación cumplida requiere edición habilitada
+    # (aprobada por admin/admin_obligaciones vía solicitud, 1 solo uso).
+    if row["estatus"] in ESTATUS_TERMINALES and not row["edicion_habilitada"]:
+        return {"ok": False, "flash": (
+            "Esta obligación ya fue cumplida — necesita autorización para editarla. "
+            "Solicítela desde Historial.", "warning",
+        )}
 
     data = normalize_obligacion_form(form)
     ok, err = validate_obligacion_data(data)
@@ -361,6 +451,123 @@ def editar_obligacion(oblig_id, form, session):
         repo.rollback()
         current_app.logger.exception("Error al editar obligación")
         return {"ok": False, "flash": ("No se pudo actualizar la obligación.", "danger"), "data": data}
+
+
+# ==================================================================
+# Punto 8 (2026-08-14) -- solicitud de autorizacion para editar obligacion
+# cumplida. Botón en Historial -> aprueba solo admin/admin_obligaciones ->
+# email a ambos roles + email de vuelta al solicitante al resolver.
+# ==================================================================
+def solicitar_edicion(oblig_id, session, motivo):
+    row = repo.get_raw_by_id(oblig_id)
+    if not row:
+        return {"ok": False, "flash": ("Obligación no encontrada.", "warning")}
+    if row["estatus"] not in ESTATUS_TERMINALES:
+        return {"ok": False, "flash": ("Esta obligación no está cumplida — no requiere autorización.", "warning")}
+    if not (row["usuario_id"] == session.get("usuario_id") or session.get("rol") in ROLES_ADMIN):
+        return {"ok": False, "flash": ("No tiene permiso para solicitar edición de esta obligación.", "danger")}
+    if repo.get_solicitud_pendiente(oblig_id):
+        return {"ok": False, "flash": ("Ya hay una solicitud de edición pendiente para esta obligación.", "warning")}
+
+    try:
+        solicitud_id = repo.crear_solicitud_edicion(oblig_id, session.get("usuario_id"), (motivo or "").strip()[:500])
+    except Exception:
+        repo.rollback()
+        current_app.logger.exception("Error al crear solicitud de edición")
+        return {"ok": False, "flash": ("No se pudo crear la solicitud.", "danger")}
+
+    _notificar_solicitud_creada(row, session, motivo)
+    return {"ok": True, "flash": ("Solicitud enviada — un administrador debe autorizarla.", "success")}
+
+
+def _notificar_solicitud_creada(row, session, motivo):
+    try:
+        from modules.email_utils import send_email_async
+        destinatarios = repo.list_admin_y_admin_obligaciones_emails()
+        if not destinatarios:
+            return
+        nombre = session.get("usuario") or "desconocido"
+        subject = "[Obligaciones] Solicitud de edición de obligación cumplida"
+        message = "\n".join([
+            "Aviso automático del módulo Obligaciones con Stakeholder.",
+            "",
+            f"El usuario \"{nombre}\" solicitó autorización para editar la obligación "
+            f"\"{row['descripcion']}\" (ya marcada como cumplida).",
+            "",
+            f"Motivo: {(motivo or '').strip() or '(sin motivo indicado)'}",
+            "",
+            "Revise y apruebe/rechace la solicitud en Obligaciones > Solicitudes de edición.",
+            "",
+            "-- Este correo es automático, generado por el Sistema de Gestión Quimpac (SGQ). "
+            "Por favor no responda a este mensaje.",
+        ])
+        send_email_async(destinatarios, subject, message)
+    except Exception:
+        current_app.logger.exception("Error al notificar solicitud de edición")
+
+
+def list_solicitudes_pendientes():
+    # 2026-08-17: adjunta evidencias -- el admin necesita ver el comprobante
+    # de cumplimiento antes de autorizar la edicion de una obligacion cerrada.
+    solicitudes = repo.list_solicitudes_pendientes()
+    for s in solicitudes:
+        s["evidencias_list"] = [dict(ev) for ev in repo.list_evidencias(s["obligacion_id"])]
+    return solicitudes
+
+
+def resolver_solicitud_edicion(solicitud_id, aprobar, session):
+    if session.get("rol") not in ROLES_ADMIN:
+        return {"ok": False, "flash": ("No tiene permiso para resolver solicitudes.", "danger")}
+
+    solicitud = repo.get_solicitud_by_id(solicitud_id)
+    if not solicitud:
+        return {"ok": False, "flash": ("Solicitud no encontrada.", "warning")}
+    if solicitud["estado"] != "pendiente":
+        return {"ok": False, "flash": ("Esta solicitud ya fue resuelta.", "warning")}
+
+    estado = "aprobada" if aprobar else "rechazada"
+    try:
+        ok = repo.resolver_solicitud(solicitud_id, estado, session.get("usuario_id"))
+    except Exception:
+        repo.rollback()
+        current_app.logger.exception("Error al resolver solicitud de edición")
+        return {"ok": False, "flash": ("No se pudo resolver la solicitud.", "danger")}
+    if not ok:
+        return {"ok": False, "flash": ("La solicitud ya no estaba pendiente.", "warning")}
+
+    _notificar_solicitud_resuelta(solicitud, aprobar)
+    verbo = "aprobada" if aprobar else "rechazada"
+    return {"ok": True, "flash": (f"Solicitud {verbo}.", "success")}
+
+
+def _notificar_solicitud_resuelta(solicitud, aprobado):
+    try:
+        from modules.email_utils import send_email_async
+        if not solicitud["solicitante_email"]:
+            return
+        if aprobado:
+            subject = "[Obligaciones] Solicitud de edición APROBADA"
+            cuerpo_extra = (
+                "Su solicitud fue APROBADA. Ya puede editar la obligación desde Historial — "
+                "la edición se habilita 1 sola vez: una vez guarde los cambios, se re-bloquea "
+                "hasta que solicite una nueva autorización."
+            )
+        else:
+            subject = "[Obligaciones] Solicitud de edición RECHAZADA"
+            cuerpo_extra = "Su solicitud fue RECHAZADA."
+        message = "\n".join([
+            "Aviso automático del módulo Obligaciones con Stakeholder.",
+            "",
+            f"Solicitud de edición para la obligación \"{solicitud['obligacion_descripcion']}\".",
+            "",
+            cuerpo_extra,
+            "",
+            "-- Este correo es automático, generado por el Sistema de Gestión Quimpac (SGQ). "
+            "Por favor no responda a este mensaje.",
+        ])
+        send_email_async([solicitud["solicitante_email"]], subject, message)
+    except Exception:
+        current_app.logger.exception("Error al notificar resolución de solicitud de edición")
 
 
 def eliminar_obligacion(oblig_id, session):
@@ -506,7 +713,11 @@ def cumplir_obligacion(oblig_id, form, files, session):
         repo.insert_historial(
             oblig_id, "estatus", row["estatus"], estatus_final, observacion, usuario_id
         )
-        repo.marcar_cumplida(oblig_id, estatus_final)
+        # 2026-08-15: Punto 9 -- si el dueño tiene jefe, el cumplimiento queda
+        # pendiente de aprobación (no pasa a Historial hasta que el jefe apruebe).
+        perfil_dueno = repo.get_usuario_perfil(row["usuario_id"])
+        jefe_id = perfil_dueno["jefe_id"] if perfil_dueno else None
+        repo.marcar_cumplida_pendiente_jefe(oblig_id, estatus_final, requiere_aprobacion=bool(jefe_id))
 
         # 2026-07-15 (Corrección #3): "repetitiva" ya no se decide por un `valor`
         # de param_value -- se recalcula si recalculo_tipo de la frecuencia no
@@ -514,7 +725,9 @@ def cumplir_obligacion(oblig_id, form, files, session):
         frecuencia = repo.get_frecuencia_by_id(row["frecuencia_id"])
         recalculo_tipo = frecuencia["recalculo_tipo"] if frecuencia else None
         recalculo_cantidad = frecuencia["recalculo_cantidad"] if frecuencia else None
-        if recalculo_tipo and recalculo_tipo != "NINGUNA" and fecha_venc:
+        # 2026-08-17: UNICA (Sin frecuencia) tampoco renueva, igual que NINGUNA,
+        # pero SÍ conservó fecha_vencimiento (a diferencia de NINGUNA que la anula).
+        if recalculo_tipo and recalculo_tipo not in ("NINGUNA", "UNICA") and fecha_venc:
             nueva_fecha = _siguiente_fecha(fecha_venc, recalculo_tipo, recalculo_cantidad)
             nueva_data = {
                 "tipo_id":           row["tipo_id"],
@@ -533,14 +746,116 @@ def cumplir_obligacion(oblig_id, form, files, session):
             repo.insert_no_commit(nueva_data)
 
         repo.commit()
-        return {
-            "ok": True,
-            "flash": (f"Obligación marcada como {ESTATUS_LABELS[estatus_final]}.", "success"),
-        }
+
+        if jefe_id:
+            _notificar_jefe_pendiente_aprobacion(row, perfil_dueno, estatus_final)
+            flash_msg = f"Obligación marcada como {ESTATUS_LABELS[estatus_final]} — pendiente de aprobación de su jefe."
+        else:
+            flash_msg = f"Obligación marcada como {ESTATUS_LABELS[estatus_final]}."
+
+        return {"ok": True, "flash": (flash_msg, "success")}
     except Exception:
         repo.rollback()
         current_app.logger.exception("Error al cumplir obligación")
         return {"ok": False, "flash": ("No se pudo procesar el cumplimiento.", "danger")}
+
+
+# ==================================================================
+# Punto 9 (2026-08-15) -- aprobación del jefe sobre el cumplimiento de sus
+# subordinados directos. Solo email (decisión de Matías: sin notificación
+# in-app nueva).
+# ==================================================================
+def _notificar_jefe_pendiente_aprobacion(row, perfil_dueno, estatus_final):
+    try:
+        from modules.email_utils import send_email_async
+        jefe_perfil = repo.get_usuario_perfil(perfil_dueno["jefe_id"])
+        if not jefe_perfil or not jefe_perfil["email"]:
+            return
+        nombre_dueno = perfil_dueno["nombre_completo"] or perfil_dueno["username"]
+        subject = "[Obligaciones] Cumplimiento pendiente de tu aprobación"
+        message = "\n".join([
+            "Aviso automático del módulo Obligaciones con Stakeholder.",
+            "",
+            f"\"{nombre_dueno}\" marcó como {ESTATUS_LABELS[estatus_final]} la obligación "
+            f"\"{row['descripcion']}\".",
+            "",
+            "Revísala y apruébala en Obligaciones > Aprobaciones de equipo.",
+            "",
+            "-- Este correo es automático, generado por el Sistema de Gestión Quimpac (SGQ). "
+            "Por favor no responda a este mensaje.",
+        ])
+        send_email_async([jefe_perfil["email"]], subject, message)
+    except Exception:
+        current_app.logger.exception("Error al notificar al jefe cumplimiento pendiente")
+
+
+def list_pendientes_aprobacion_jefe(session):
+    # 2026-08-17: adjunta evidencias -- el jefe necesita ver el comprobante de
+    # cumplimiento antes de aprobar/rechazar.
+    pendientes = repo.list_pendientes_aprobacion_jefe(session.get("usuario_id"))
+    for p in pendientes:
+        p["evidencias_list"] = [dict(ev) for ev in repo.list_evidencias(p["id"])]
+    return pendientes
+
+
+def resolver_aprobacion_jefe(oblig_id, aprobar, session, motivo=None):
+    jefe_id = session.get("usuario_id")
+    row = repo.get_raw_by_id(oblig_id)
+    if not row:
+        return {"ok": False, "flash": ("Obligación no encontrada.", "warning")}
+    perfil_dueno = repo.get_usuario_perfil(row["usuario_id"])
+    if not perfil_dueno or perfil_dueno["jefe_id"] != jefe_id:
+        return {"ok": False, "flash": ("No tiene permiso para resolver esta obligación.", "danger")}
+    if row["aprobado_por_jefe"] is not None:
+        return {"ok": False, "flash": ("Esta obligación ya fue resuelta.", "warning")}
+    motivo = (motivo or "").strip()[:500]
+    if not aprobar and not motivo:
+        return {"ok": False, "flash": ("Indique el motivo del rechazo.", "warning")}
+
+    try:
+        if aprobar:
+            ok = repo.aprobar_cumplimiento_jefe(oblig_id, jefe_id)
+        else:
+            ok = repo.rechazar_cumplimiento_jefe(oblig_id, jefe_id, motivo)
+    except Exception:
+        current_app.logger.exception("Error al resolver aprobación de jefe")
+        return {"ok": False, "flash": ("No se pudo resolver.", "danger")}
+    if not ok:
+        return {"ok": False, "flash": ("La obligación ya no estaba pendiente.", "warning")}
+
+    _notificar_resolucion_aprobacion_jefe(row, perfil_dueno, aprobar, motivo)
+    verbo = "aprobado" if aprobar else "rechazado"
+    return {"ok": True, "flash": (f"Cumplimiento {verbo}.", "success")}
+
+
+def _notificar_resolucion_aprobacion_jefe(row, perfil_dueno, aprobado, motivo=None):
+    try:
+        from modules.email_utils import send_email_async
+        if not perfil_dueno or not perfil_dueno["email"]:
+            return
+        if aprobado:
+            subject = "[Obligaciones] Tu jefe aprobó el cumplimiento"
+            cuerpo_extra = "Tu jefe APROBÓ el cumplimiento. La obligación ya quedó registrada en el Historial."
+        else:
+            subject = "[Obligaciones] Tu jefe rechazó el cumplimiento"
+            cuerpo_extra = (
+                "Tu jefe RECHAZÓ el cumplimiento — la obligación volvió a estar pendiente. "
+                "Revísala y vuelve a marcarla como cumplida cuando corresponda.\n\n"
+                f"Motivo indicado por tu jefe: {motivo or '(sin motivo)'}"
+            )
+        message = "\n".join([
+            "Aviso automático del módulo Obligaciones con Stakeholder.",
+            "",
+            f"Obligación \"{row['descripcion']}\".",
+            "",
+            cuerpo_extra,
+            "",
+            "-- Este correo es automático, generado por el Sistema de Gestión Quimpac (SGQ). "
+            "Por favor no responda a este mensaje.",
+        ])
+        send_email_async([perfil_dueno["email"]], subject, message)
+    except Exception:
+        current_app.logger.exception("Error al notificar resolución de aprobación de jefe")
 
 
 def descargar_evidencia(oblig_id, evidencia_id, session):
@@ -601,6 +916,8 @@ def collect_historial_filters(args):
         "fecha_hasta":       get("fecha_hasta"),
         "estatus":            get("estatus"),
         "usuario_id":        get("usuario_id"),
+        "area_id":           get("area_id"),
+        "seccion":           get("seccion"),
     }
 
 
@@ -788,7 +1105,13 @@ def collect_dashboard_filters(args):
         "fecha_hasta":   get("fecha_hasta"),
         # 2026-07-28: agregado filtro usuario_id en Dashboard (admin=todos, jefe_area=solo subordinados)
         "usuario_id":    get("usuario_id"),
+        "area_id":       get("area_id"),
     }
+
+
+def dashboard_desglose_seccion(seccion, user_id, rol, filters):
+    """Punto 5: 3 tablas al hacer click en una seccion del pastel."""
+    return repo.dashboard_desglose_seccion(seccion, rol, user_id, filters)
 
 
 def dashboard_data(user_id, rol, filters):
@@ -804,15 +1127,24 @@ def dashboard_data(user_id, rol, filters):
 
     es_admin = rol in ROLES_ADMIN
 
+    # 2026-08-14: pastel de 4 secciones pedido en reunión -- pendiente_en_plazo se
+    # deriva de kpis existentes (total_activas incluye por_presentar + atrasado,
+    # nunca hizo falta query nueva).
+    pendiente_en_plazo = kpis["total_activas"] - kpis["total_atrasadas"]
+
     return {
         "kpis": kpis,
         "pct_cumplidas": pct_cumplidas,
         "pct_atrasadas": pct_atrasadas,
-        # 2026-07-30: barra empresas ya no gatea por es_admin -- filtro de visibilidad
-        # real vive en repo._apply_visibility(), el gate por rol aqui era redundante.
-        # 2026-08-05: "por_estatus" eliminado -- sin consumidor tras borrar chartEstado.
-        "por_tipo":       repo.dashboard_por_tipo(rol, user_id, filters),
-        "por_estatus_total": repo.dashboard_por_estatus_total(rol, user_id, filters),
+        "pastel_cumplimiento": {
+            "cumplida_a_tiempo":    kpis["a_tiempo"],
+            "cumplida_fuera_plazo": kpis["fuera_plazo"],
+            "pendiente_en_plazo":   pendiente_en_plazo,
+            "pendiente_atrasada":   kpis["total_atrasadas"],
+        },
+        # 2026-08-16: "por_tipo"/"por_estatus_total" eliminados del payload --
+        # sin consumidor tras rediseño dashboard (Matías), quedan solo por_tipo/
+        # por_area vía dashboard_desglose_seccion() para el modal.
     }
 
 

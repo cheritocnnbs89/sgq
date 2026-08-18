@@ -2,140 +2,160 @@ document.addEventListener('DOMContentLoaded', function () {
   var raw = document.getElementById('dashboard-data');
   if (!raw || typeof Chart === 'undefined') { return; }
 
-  // Mapa unico de color por estatus (clave cruda como llega de la BD) --
-  // usado tanto por el donut "Por estatus" como por el bar chart apilado,
-  // para que un mismo estatus se vea siempre del mismo color en todo el dashboard.
-  // 2026-07-27: agregado 'por_presentar' (mismo amarillo que cumplido_fuera_plazo,
-  // pedido de Matias) + 'cumplida'/'atrasada' -- claves fundidas que devuelve
-  // SQL_DASHBOARD_POR_ESTATUS_TOTAL_SELECT para el chart "Por estatus (empresas)".
-  var COLOR_ESTATUS = {
-    'atrasado': '#dc3545',
-    'cumplido': '#198754',
-    'cumplido_fuera_plazo': '#ffc107',
-    'por_presentar': '#ffc107',
-    'activa': '#6c757d',
-    'cumplida': '#198754',
-    'atrasada': '#dc3545'
-  };
-  var ESTATUS_ETIQUETAS = {
-    'atrasado': 'Atrasado',
-    'cumplido': 'Cumplido',
-    'cumplido_fuera_plazo': 'Cumplido fuera de plazo',
-    'por_presentar': 'Por presentar a tiempo',
-    'activa': 'Activa',
-    'cumplida': 'Cumplida',
-    'atrasada': 'Atrasada'
-  };
-
   // Registro de instancias Chart.js vivas -> se destruyen antes de recrear en
   // cada refresco (evita fugas y "canvas already in use").
   var charts = {};
-  var elGaugeLabel = document.getElementById('chartCumplimientoLabel');
 
   function destroyChart(id) {
     if (charts[id]) { charts[id].destroy(); delete charts[id]; }
   }
 
-  function doughnut(canvasId, rows, labelKey, colorMap, labelMap, animate) {
+  // 2026-08-16: gauge (chartCumplimiento), barEstatusTotal (chartEmpresa),
+  // doughnut chartTipo genérico y sus mapas COLOR_ESTATUS/ESTATUS_ETIQUETAS
+  // eliminados -- rediseño pedido por Matías, dashboard principal queda solo
+  // con el pastel "Cumplimiento — detalle" grande.
+
+  // 2026-08-14: pastel de 4 secciones pedido en reunión. Etiquetas/colores fijos
+  // (no vienen de la BD como los otros charts, son las 4 categorías del negocio).
+  // click en sección -> Punto 5 (pendiente, modal con desglose Tipo/Entidad/Área).
+  var PASTEL_ORDEN = ['cumplida_a_tiempo', 'cumplida_fuera_plazo', 'pendiente_en_plazo', 'pendiente_atrasada'];
+  // 2026-08-16: etiquetas alineadas a los estatus reales que ya usa el sistema
+  // (Consultas/Historial/KPI "Total Presentar a Tiempo") -- pedido Matías, evitar
+  // nombres propios del pastel que no coinciden y confunden al usuario.
+  var PASTEL_ETIQUETAS = {
+    'cumplida_a_tiempo':    'Cumplido',
+    'cumplida_fuera_plazo': 'Cumplido fuera de plazo',
+    'pendiente_en_plazo':   'Por presentar a tiempo',
+    'pendiente_atrasada':   'Atrasado'
+  };
+  var PASTEL_COLORES = {
+    'cumplida_a_tiempo':    '#198754',
+    'cumplida_fuera_plazo': '#ffc107',
+    'pendiente_en_plazo':   '#0dcaf0',
+    'pendiente_atrasada':   '#dc3545'
+  };
+
+  function pastel(p, animate) {
+    var el = document.getElementById('chartPastel');
+    destroyChart('chartPastel');
+    if (!el || !p) { return; }
+    charts['chartPastel'] = new Chart(el, {
+      type: 'pie',
+      data: {
+        labels: PASTEL_ORDEN.map(function (k) { return PASTEL_ETIQUETAS[k]; }),
+        datasets: [{
+          data: PASTEL_ORDEN.map(function (k) { return p[k] || 0; }),
+          backgroundColor: PASTEL_ORDEN.map(function (k) { return PASTEL_COLORES[k]; })
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: animate,
+        plugins: { legend: { display: true, position: 'bottom' } },
+        onClick: function (evt, elements) {
+          if (!elements || !elements.length) { return; }
+          abrirDesgloseSeccion(PASTEL_ORDEN[elements[0].index]);
+        },
+        onHover: function (evt, elements) {
+          el.style.cursor = elements && elements.length ? 'pointer' : 'default';
+        }
+      }
+    });
+  }
+
+  // 2026-08-14: Punto 5 -- click en seccion del pastel abre modal con 3 tablas
+  // (Tipo/Entidad/Area), filtradas a esa seccion + filtros actuales del dashboard.
+  var DESGLOSE_URL = raw.getAttribute('data-endpoint-desglose');
+  var modalDesgloseEl = document.getElementById('modalDesglosePastel');
+  var modalDesglose = (modalDesgloseEl && window.bootstrap) ? new bootstrap.Modal(modalDesgloseEl) : null;
+  var URL_CONSULTAS = modalDesgloseEl ? modalDesgloseEl.getAttribute('data-url-consultas') : null;
+  var URL_HISTORIAL = modalDesgloseEl ? modalDesgloseEl.getAttribute('data-url-historial') : null;
+  // 2026-08-14: Punto 6 -- secciones "cumplida_*" son activa=0 (viven en Historial),
+  // "pendiente_*" son activa=1 (viven en Consultas). Mismo mapeo que
+  // SECCION_PASTEL_WHERE del backend, solo para decidir a DONDE navegar.
+  var SECCION_ES_HISTORIAL = { 'cumplida_a_tiempo': true, 'cumplida_fuera_plazo': true };
+  var seccionActual = null;
+
+  function renderTablaDesglose(tbodyId, rows, campoFiltro) {
+    var tbody = document.getElementById(tbodyId);
+    if (!tbody) { return; }
+    tbody.innerHTML = '';
+    if (!rows || !rows.length) {
+      tbody.innerHTML = '<tr><td class="text-muted small">Sin datos</td></tr>';
+      return;
+    }
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      tr.style.cursor = 'pointer';
+      tr.innerHTML = '<td>' + r.etiqueta + '</td><td class="text-end fw-bold">' + r.total + '</td>';
+      tr.addEventListener('click', function () { irAListadoFiltrado(campoFiltro, r.id); });
+      tbody.appendChild(tr);
+    });
+  }
+
+  // 2026-08-16: doughnut Tipo/Area del modal -- click en porcion navega igual
+  // que click en fila de tabla (mismo irAListadoFiltrado, mismo campoFiltro).
+  function doughnutDesglose(canvasId, rows, campoFiltro) {
     var el = document.getElementById(canvasId);
     destroyChart(canvasId);
     if (!el || !rows || !rows.length) { return; }
     charts[canvasId] = new Chart(el, {
       type: 'doughnut',
       data: {
-        labels: rows.map(function (r) { return (labelMap && labelMap[r[labelKey]]) || r[labelKey]; }),
-        datasets: [{
-          data: rows.map(function (r) { return r.total; }),
-          backgroundColor: colorMap ? rows.map(function (r) { return colorMap[r[labelKey]] || '#0d6efd'; }) : undefined
-        }]
+        labels: rows.map(function (r) { return r.etiqueta; }),
+        datasets: [{ data: rows.map(function (r) { return r.total; }) }]
       },
-      options: { responsive: true, maintainAspectRatio: false, animation: animate }
-    });
-  }
-
-  // 2026-07-27: barra APILADA por empresa (reemplaza el bar combinado del
-  // 2026-07-21, pedido de Matias). Filas vienen como {empresa, estatus, total}
-  // con estatus ya fundido en 3 categorias fijas (SQL_DASHBOARD_POR_ESTATUS_TOTAL_SELECT):
-  // cumplida (verde) / atrasada (rojo) / por_presentar (amarillo). Un dataset
-  // por categoria -> Chart.js las apila con scales.x.stacked/y.stacked.
-  var SEGMENTOS_ESTATUS_EMPRESA = ['cumplida', 'atrasada', 'por_presentar'];
-
-  function barEstatusTotal(rows, animate) {
-    var el = document.getElementById('chartEmpresa');
-    destroyChart('chartEmpresa');
-    if (!el || !rows || !rows.length) { return; }
-
-    var empresas = [];
-    rows.forEach(function (r) {
-      if (empresas.indexOf(r.empresa) === -1) { empresas.push(r.empresa); }
-    });
-
-    var datasets = SEGMENTOS_ESTATUS_EMPRESA.map(function (estatus) {
-      return {
-        label: ESTATUS_ETIQUETAS[estatus],
-        backgroundColor: COLOR_ESTATUS[estatus],
-        data: empresas.map(function (empresa) {
-          var fila = rows.find(function (r) { return r.empresa === empresa && r.estatus === estatus; });
-          return fila ? fila.total : 0;
-        })
-      };
-    });
-
-    charts['chartEmpresa'] = new Chart(el, {
-      type: 'bar',
-      data: { labels: empresas, datasets: datasets },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: animate,
         plugins: { legend: { display: true, position: 'bottom' } },
-        scales: {
-          x: { stacked: true },
-          y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
+        onClick: function (evt, elements) {
+          if (!elements || !elements.length) { return; }
+          irAListadoFiltrado(campoFiltro, rows[elements[0].index].id);
+        },
+        onHover: function (evt, elements) {
+          el.style.cursor = elements && elements.length ? 'pointer' : 'default';
         }
       }
     });
   }
 
-  // Posiciona el label EXACTO donde Chart.js dibujo el arco del gauge -- nunca
-  // adivinar un % de CSS: canvas y el div overlay comparten origen (0,0) dentro
-  // de .chart-box (position:relative), asi que meta.y es directamente el "top".
-  // Recibe el chart como parametro (nunca una var externa): onComplete puede
-  // disparar SINCRONICAMENTE durante new Chart(...).
-  function posicionarLabelGauge(chart) {
-    if (!elGaugeLabel || !chart) return;
-    var meta = chart.getDatasetMeta(0).data[0];
-    if (!meta) return;
-    var offset = (meta.innerRadius || 0) * 0.35;
-    elGaugeLabel.style.top = Math.round(meta.y - offset) + 'px';
+  function irAListadoFiltrado(campoFiltro, id) {
+    if (!seccionActual) { return; }
+    var esHistorial = !!SECCION_ES_HISTORIAL[seccionActual];
+    var base = esHistorial ? URL_HISTORIAL : URL_CONSULTAS;
+    if (!base) { return; }
+    var params = new URLSearchParams();
+    params.set(campoFiltro, id);
+    params.set('seccion', seccionActual);
+    window.location.href = base + '?' + params.toString();
   }
 
-  function gauge(pctATiempo, animate) {
-    var el = document.getElementById('chartCumplimiento');
-    destroyChart('chartCumplimiento');
-    if (!el || typeof pctATiempo !== 'number') { return; }
-    var colorGauge = pctATiempo >= 70 ? '#198754' : pctATiempo >= 40 ? '#ffc107' : '#dc3545';
-    charts['chartCumplimiento'] = new Chart(el, {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [pctATiempo, 100 - pctATiempo],
-          backgroundColor: [colorGauge, '#e9ecef'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        rotation: -90,
-        circumference: 180,
-        cutout: '75%',
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: animate ? { onComplete: function (ctx) { posicionarLabelGauge(ctx.chart); } } : false,
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-        onResize: function (chart) { posicionarLabelGauge(chart); }
-      }
-    });
-    if (!animate) { posicionarLabelGauge(charts['chartCumplimiento']); }
+  function abrirDesgloseSeccion(seccion) {
+    if (!DESGLOSE_URL || !modalDesglose) { return; }
+    seccionActual = seccion;
+    var titulo = document.getElementById('modalDesgloseTitulo');
+    if (titulo) { titulo.textContent = 'Desglose — ' + (PASTEL_ETIQUETAS[seccion] || seccion); }
+    var qs = filtrosActuales();
+    var sep = qs ? '&' : '?';
+    fetch(DESGLOSE_URL + qs + sep + 'seccion=' + encodeURIComponent(seccion), {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin'
+    })
+      .then(function (resp) {
+        if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
+        return resp.json();
+      })
+      .then(function (data) {
+        renderTablaDesglose('tablaDesgloseTipo', data.por_tipo, 'tipo_id');
+        renderTablaDesglose('tablaDesgloseArea', data.por_area, 'area_id');
+        // 2026-08-16: 2 graficos del modal, pedido Matías -- mismo click-through que las tablas.
+        doughnutDesglose('chartDesgloseTipo', data.por_tipo, 'tipo_id');
+        doughnutDesglose('chartDesgloseArea', data.por_area, 'area_id');
+        modalDesglose.show();
+      })
+      .catch(function (err) { console.error('Error cargando desglose de sección:', err); });
   }
 
   function setText(id, value) {
@@ -149,16 +169,18 @@ document.addEventListener('DOMContentLoaded', function () {
       setText('kpiActivas', k.total_activas);
       setText('kpiAtrasadas', k.total_atrasadas);
       setText('kpiProximas', k.proximas_vencer);
+      // 2026-08-14: recuadro Cumplidas (a_tiempo + fuera_plazo), pedido en reunión
+      setText('kpiCumplidas', (k.a_tiempo || 0) + (k.fuera_plazo || 0));
+      setText('kpiCumplidasATiempo', k.a_tiempo);
+      setText('kpiCumplidasFueraPlazo', k.fuera_plazo);
     }
     if (typeof pct === 'number') { setText('kpiPct', pct); }
   }
 
   function render(chartData, animate) {
     actualizarKpis(chartData.kpis, chartData.pct_cumplidas);
-    // 2026-08-05: doughnut chartEstado ("Por estatus") eliminado -- pedido Matias en reunion.
-    doughnut('chartTipo', chartData.por_tipo, 'etiqueta', null, null, animate);
-    barEstatusTotal(chartData.por_estatus_total, animate);
-    if (typeof chartData.pct_cumplidas === 'number') { gauge(chartData.pct_cumplidas, animate); }
+    // 2026-08-16: chartTipo/chartEmpresa/chartCumplimiento eliminados -- rediseño Matías, queda solo pastel.
+    pastel(chartData.pastel_cumplimiento, animate);
   }
 
   // Render inicial (con animacion, como siempre).

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Obligaciones - Aprobaciones de equipo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/obligaciones.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 title-blue"><i class="bi bi-person-check"></i> Obligaciones - Aprobaciones de equipo</h4>
+  </div>
+
+  <div class="oblig-section-hero mb-3">
+    <p class="text-muted small mb-0">
+      Cumplimientos reportados por tus subordinados directos, pendientes de tu revisión.
+      Hasta que apruebes, la obligación sigue contando como "por cumplir" en el dashboard.
+    </p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-sm align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Usuario</th>
+          <th>Obligación</th>
+          <th>Estatus a aprobar</th>
+          <th>Evidencia</th>
+          <th>Fecha vencimiento</th>
+          <th>Marcada el</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in pendientes %}
+        <tr>
+          <td>{{ p.usuario_nombre or p.usuario_username }}</td>
+          <td>{{ p.descripcion }}</td>
+          <td>{{ estatus_labels.get(p.estatus_pendiente_destino, p.estatus_pendiente_destino) if estatus_labels else p.estatus_pendiente_destino }}</td>
+          <td>
+            {% for ev in p.evidencias_list %}
+            <a href="{{ url_for('obligaciones.descargar_evidencia', oblig_id=p.id, evidencia_id=ev.id) }}"
+               class="d-block small" target="_blank" rel="noopener">
+              <i class="bi bi-paperclip"></i> {{ ev.nombre_archivo }}
+            </a>
+            {% else %}
+            <span class="text-muted small">Sin evidencia</span>
+            {% endfor %}
+          </td>
+          <td>{{ p.fecha_vencimiento or '-' }}</td>
+          <td>{{ p.modificado_en.strftime('%Y-%m-%d %H:%M') if p.modificado_en else '-' }}</td>
+          <td class="text-end">
+            <form method="post" action="{{ url_for('obligaciones.resolver_aprobacion_jefe', oblig_id=p.id) }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="accion" value="aprobar">
+              <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Aprobar</button>
+            </form>
+            <button type="button" class="btn btn-sm btn-outline-danger btn-rechazar-cumplimiento"
+                    data-oblig-id="{{ p.id }}"><i class="bi bi-x-lg"></i> Rechazar</button>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">Sin cumplimientos pendientes de aprobación.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2026-08-15 (2): rechazar exige motivo -- pedido de Matías, el usuario debe recibir el porqué -->
+  <div class="modal fade" id="modalRechazarCumplimiento" tabindex="-1" aria-hidden="true"
+       data-url-template="{{ url_for('obligaciones.resolver_aprobacion_jefe', oblig_id=0) }}">
+    <div class="modal-dialog">
+      <form method="post" id="frmRechazarCumplimiento" action="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="accion" value="rechazar">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Rechazar cumplimiento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <p class="small text-muted">El usuario recibirá este motivo por email — la obligación
+              vuelve a estar pendiente para que la corrija y la marque cumplida de nuevo.</p>
+            <label class="form-label">Motivo del rechazo</label>
+            <textarea class="form-control" name="motivo" rows="3" maxlength="500" required></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">Rechazar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/obligaciones_aprobaciones_jefe.js') }}"></script>
+{% endblock %}

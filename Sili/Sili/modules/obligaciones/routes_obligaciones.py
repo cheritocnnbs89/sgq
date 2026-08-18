@@ -18,8 +18,12 @@ from .obligaciones_constants import (
     PERM_EXPORTAR,
     PERM_HISTORIAL,
     PERM_DASHBOARD,
+    PERM_CONFIG,
+    ACTIVE_KEY_SOLICITUDES,
+    ACTIVE_KEY_APROBACIONES,
     ROLES_ADMIN,
     ROL_JEFE_AREA,
+    ROL_GERENTE_OBLIG,
     ESTATUS_LABELS,
     HISTORIAL_COLUMNAS,
 )
@@ -69,6 +73,9 @@ def lista_obligaciones():
         # Mejora (Correccion #5): jefe_area_obligaciones filtra Consultas por
         # uno de sus subordinados directos -- combo acotado a su propio equipo.
         usuarios = service.get_subordinados_combo(session.get("usuario_id"))
+    elif rol == ROL_GERENTE_OBLIG:
+        # 2026-08-14: gerente_obligaciones -- mismo patron, combo 2 niveles.
+        usuarios = service.get_subordinados_2niveles_combo(session.get("usuario_id"))
     else:
         usuarios = []
 
@@ -169,6 +176,66 @@ def eliminar_obligacion(oblig_id):
     result = service.eliminar_obligacion(oblig_id, session)
     flash(*result["flash"])
     return redirect(url_for("obligaciones.lista_obligaciones"))
+
+
+# ==================================================================
+# Punto 8 (2026-08-14) -- solicitud de autorizacion para editar cumplida
+# ==================================================================
+@obligaciones_bp.route("/<int:oblig_id>/solicitar-edicion", methods=["POST"], endpoint="solicitar_edicion")
+@require_login
+@require_permission(PERM_HISTORIAL, "ver")
+def solicitar_edicion(oblig_id):
+    result = service.solicitar_edicion(oblig_id, session, request.form.get("motivo"))
+    flash(*result["flash"])
+    return redirect(url_for("obligaciones.historial_obligaciones"))
+
+
+@obligaciones_bp.route("/solicitudes-edicion", methods=["GET"], endpoint="solicitudes_edicion")
+@require_login
+@require_permission(PERM_CONFIG, "ver")
+def solicitudes_edicion():
+    solicitudes = service.list_solicitudes_pendientes()
+    return render_template(
+        "obligaciones/obligaciones_solicitudes_edicion.html",
+        solicitudes=solicitudes,
+        active_page=ACTIVE_KEY_SOLICITUDES,
+    )
+
+
+@obligaciones_bp.route("/solicitudes-edicion/<int:solicitud_id>/resolver", methods=["POST"], endpoint="resolver_solicitud_edicion")
+@require_login
+@require_permission(PERM_CONFIG, "ver")
+def resolver_solicitud_edicion(solicitud_id):
+    aprobar = request.form.get("accion") == "aprobar"
+    result = service.resolver_solicitud_edicion(solicitud_id, aprobar, session)
+    flash(*result["flash"])
+    return redirect(url_for("obligaciones.solicitudes_edicion"))
+
+
+# ==================================================================
+# Punto 9 (2026-08-15) -- aprobación de cumplimiento por el jefe directo
+# ==================================================================
+@obligaciones_bp.route("/aprobaciones-jefe", methods=["GET"], endpoint="aprobaciones_jefe")
+@require_login
+@require_permission(PERM_VER, "ver")
+def aprobaciones_jefe():
+    pendientes = service.list_pendientes_aprobacion_jefe(session)
+    return render_template(
+        "obligaciones/obligaciones_aprobaciones_jefe.html",
+        pendientes=pendientes,
+        estatus_labels=ESTATUS_LABELS,
+        active_page=ACTIVE_KEY_APROBACIONES,
+    )
+
+
+@obligaciones_bp.route("/<int:oblig_id>/aprobar-jefe", methods=["POST"], endpoint="resolver_aprobacion_jefe")
+@require_login
+@require_permission(PERM_VER, "ver")
+def resolver_aprobacion_jefe(oblig_id):
+    aprobar = request.form.get("accion") == "aprobar"
+    result = service.resolver_aprobacion_jefe(oblig_id, aprobar, session, request.form.get("motivo"))
+    flash(*result["flash"])
+    return redirect(url_for("obligaciones.aprobaciones_jefe"))
 
 
 # ==================================================================
@@ -314,6 +381,8 @@ def dashboard_obligaciones():
         usuarios = service.get_usuarios_combo()
     elif rol == ROL_JEFE_AREA:
         usuarios = service.get_subordinados_combo(session.get("usuario_id"))
+    elif rol == ROL_GERENTE_OBLIG:
+        usuarios = service.get_subordinados_2niveles_combo(session.get("usuario_id"))
     else:
         usuarios = []
 
@@ -326,6 +395,18 @@ def dashboard_obligaciones():
         es_admin=rol in ROLES_ADMIN,
         active_page=ACTIVE_KEY,
     )
+
+
+@obligaciones_bp.route("/dashboard/desglose", methods=["GET"], endpoint="dashboard_obligaciones_desglose")
+@require_login
+@require_permission(PERM_DASHBOARD, "ver")
+def dashboard_obligaciones_desglose():
+    # 2026-08-14: Punto 5 -- click en seccion del pastel -> 3 tablas (Tipo/Entidad/Area).
+    seccion = (request.args.get("seccion") or "").strip()
+    filters = service.collect_dashboard_filters(request.args)
+    rol = session.get("rol")
+    data = service.dashboard_desglose_seccion(seccion, session.get("usuario_id"), rol, filters)
+    return jsonify(data)
 
 
 @obligaciones_bp.route("/dashboard/data", methods=["GET"], endpoint="dashboard_obligaciones_data")

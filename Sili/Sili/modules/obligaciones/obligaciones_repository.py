@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from modules.db import get_db
+from modules.users.user_queries import SQL_SELECT_AREAS_ACTIVAS
 from . import obligaciones_queries as q
 from .obligaciones_constants import (
-    ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA, ESTATUS_TERMINALES,
+    ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA, ROL_GERENTE_OBLIG, ESTATUS_TERMINALES,
 )
 
 
@@ -33,6 +34,20 @@ def _apply_visibility(where, params, rol, user_id):
         where.append(
             "o.usuario_id IN (SELECT id FROM usuarios WHERE jefe_id = ?)"
         )
+        params.append(user_id)
+        return
+    if rol == ROL_GERENTE_OBLIG:
+        # 2026-08-14: "jefe del jefe" -- alcance = subordinados directos del gerente
+        # (los jefes que le reportan) MAS los subordinados de esos jefes (2 saltos).
+        # NO es resolver_cadena_jefe() (esa resuelve jefe/gerente DE un usuario dado,
+        # direccion contraria) -- este es el JOIN inverso, subordinados de un gerente.
+        where.append(
+            "o.usuario_id IN ("
+            "SELECT id FROM usuarios WHERE jefe_id = ? "
+            "OR jefe_id IN (SELECT id FROM usuarios WHERE jefe_id = ?)"
+            ")"
+        )
+        params.append(user_id)
         params.append(user_id)
         return
     # usuario_obligaciones (o cualquier otro rol no reconocido) -> solo lo propio
@@ -67,6 +82,15 @@ def list_subordinados(jefe_id):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(q.SQL_GET_USUARIOS_A_CARGO, (jefe_id,))
+    return _rows_to_dicts(cur)
+
+
+def list_subordinados_2niveles(gerente_id):
+    """2026-08-14: gerente_obligaciones -- mismo proposito que list_subordinados()
+    pero 2 saltos de jefe_id (ver _apply_visibility)."""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_GET_USUARIOS_A_CARGO_2NIVELES, (gerente_id, gerente_id))
     return _rows_to_dicts(cur)
 
 
@@ -303,6 +327,74 @@ def list_admin_obligaciones_emails():
     return [r[0] for r in cur.fetchall() if r[0]]
 
 
+# ------------------------------------------------------------
+# 2026-08-14: Punto 8 -- solicitud de autorizacion para editar obligacion cumplida
+# ------------------------------------------------------------
+def get_solicitud_pendiente(obligacion_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    return cur.execute(q.SQL_GET_SOLICITUD_PENDIENTE_BY_OBLIGACION, (obligacion_id,)).fetchone()
+
+
+def crear_solicitud_edicion(obligacion_id, solicitante_id, motivo):
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute(q.SQL_INSERT_SOLICITUD_EDICION, (obligacion_id, solicitante_id, motivo))
+        row = cur.fetchone()
+        conn.commit()
+        return row[0] if row else None
+    except Exception:
+        conn.rollback()
+        raise
+
+
+def get_solicitud_by_id(solicitud_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    return cur.execute(q.SQL_GET_SOLICITUD_BY_ID, (solicitud_id,)).fetchone()
+
+
+def list_solicitudes_pendientes():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_LIST_SOLICITUDES_PENDIENTES)
+    return _rows_to_dicts(cur)
+
+
+def resolver_solicitud(solicitud_id, estado, resuelto_por):
+    """estado: 'aprobada' o 'rechazada'. Si aprobada, habilita edicion en la
+    obligacion (1 sola vez -- se re-bloquea sola al guardar, ver
+    deshabilitar_edicion_obligacion() llamado desde update())."""
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute(q.SQL_RESOLVER_SOLICITUD, (estado, resuelto_por, solicitud_id))
+        filas = cur.rowcount
+        if filas and estado == "aprobada":
+            solicitud = get_solicitud_by_id(solicitud_id)
+            if solicitud:
+                cur.execute(q.SQL_HABILITAR_EDICION_OBLIGACION, (solicitud["obligacion_id"],))
+        conn.commit()
+        return bool(filas)
+    except Exception:
+        conn.rollback()
+        raise
+
+
+def deshabilitar_edicion_obligacion(obligacion_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_DESHABILITAR_EDICION_OBLIGACION, (obligacion_id,))
+
+
+def list_admin_y_admin_obligaciones_emails():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_LIST_ADMIN_Y_ADMIN_OBLIGACIONES_EMAILS)
+    return [r[0] for r in cur.fetchall() if r[0]]
+
+
 def resolver_cadena_jefe(usuario_id):
     """2026-07-22: dado un usuario, devuelve la cadena jerárquica resuelta en
     tiempo real: {jefe_id, jefe_email, gerente_id, gerente_email}. Un eslabón
@@ -332,6 +424,15 @@ def resolver_cadena_jefe(usuario_id):
 # ------------------------------------------------------------
 # Combos para formularios
 # ------------------------------------------------------------
+def list_areas():
+    # 2026-08-14: reusa la query ya existente de modules/users (tabla areas es de ese módulo,
+    # no se duplica aquí) -- filtro por Área pedido en reunión.
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(SQL_SELECT_AREAS_ACTIVAS)
+    return _rows_to_dicts(cur)
+
+
 def get_combos():
     # 2026-07-15: frecuencias viene de oblig_frecuencias (tabla propia), no de param_values
     # 2026-07-21: empresas del combo de FILTROS (Consultas + Historial + Dashboard) =
@@ -342,6 +443,7 @@ def get_combos():
         "frecuencias": list_frecuencias(),
         "empresas": list_empresas_con_obligaciones(),
         "entidades": list_entidades(),
+        "areas": list_areas(),
     }
 
 
@@ -393,12 +495,21 @@ def list_obligaciones(user_id, rol, filters):
     if filters.get("frecuencia_id"):
         where.append("o.frecuencia_id = ?")
         params.append(filters["frecuencia_id"])
+    if filters.get("area_id"):
+        # 2026-08-14: filtro por Área (pedido en reunión) -- o.departamento_id no guarda
+        # area_id directo, se resuelve vía subquery a departamentos.
+        where.append("o.departamento_id IN (SELECT id FROM departamentos WHERE area_id = ?)")
+        params.append(filters["area_id"])
+    if filters.get("seccion") and filters["seccion"] in SECCION_PASTEL_WHERE:
+        # 2026-08-14: Punto 6 -- navegación desde el modal del pastel (Punto 5), mismo
+        # criterio que dashboard_desglose_seccion() para que los conteos cuadren exacto.
+        where.append(SECCION_PASTEL_WHERE[filters["seccion"]])
     _apply_date_range_filter(where, params, filters.get("fecha_desde"), filters.get("fecha_hasta"))
     # Mejora (Correccion #5): jefe_area_obligaciones tambien puede filtrar por
     # usuario -- seguro sin validacion aparte porque _apply_visibility() ya
     # acoto el WHERE a "o.usuario_id IN (subordinados)"; este AND adicional
     # solo puede angostar ese conjunto, nunca ampliarlo a otro jefe/area.
-    if filters.get("usuario_id") and rol in (ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA):
+    if filters.get("usuario_id") and rol in (ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA, ROL_GERENTE_OBLIG):
         where.append("o.usuario_id = ?")
         params.append(filters["usuario_id"])
     if filters.get("estatus"):
@@ -482,6 +593,9 @@ def update(oblig_id, data):
             data["frecuencia_id"],
             oblig_id,
         ))
+        # 2026-08-14: Punto 8 -- re-bloquea edicion tras guardar (autorizacion es
+        # de 1 solo uso). No-op para obligaciones que ya estaban en 0.
+        cur.execute(q.SQL_DESHABILITAR_EDICION_OBLIGACION, (oblig_id,))
         conn.commit()
     except Exception:
         conn.rollback()
@@ -566,6 +680,66 @@ def marcar_cumplida(oblig_id, estatus_final):
     # No hace commit aca -- el service hace commit al final de la transaccion
 
 
+def marcar_cumplida_pendiente_jefe(oblig_id, estatus_final, requiere_aprobacion):
+    """2026-08-15: Punto 9 -- si requiere_aprobacion (usuario tiene jefe_id),
+    queda pendiente de aprobación (activa=1, sigue "por cumplir" en pastel/
+    dashboard -- decisión de Matías). Si no, se auto-aprueba (igual que antes,
+    comportamiento previo a este punto).
+    2026-08-17: si requiere_aprobacion, estatus_final NO se graba en `estatus`
+    todavia -- va a estatus_pendiente_destino (SQL_MARCAR_CUMPLIDA_PENDIENTE_JEFE
+    setea estatus='pendiente_aprobacion' fijo)."""
+    conn = get_connection()
+    cur = conn.cursor()
+    sql = q.SQL_MARCAR_CUMPLIDA_PENDIENTE_JEFE if requiere_aprobacion else q.SQL_MARCAR_CUMPLIDA_AUTOAPROBADA
+    cur.execute(sql, (estatus_final, oblig_id))
+    # No hace commit aca -- el service hace commit al final de la transaccion
+
+
+def list_pendientes_aprobacion_jefe(jefe_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(q.SQL_LIST_PENDIENTES_APROBACION_JEFE, (jefe_id,))
+    return _rows_to_dicts(cur)
+
+
+def aprobar_cumplimiento_jefe(oblig_id, jefe_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute(q.SQL_APROBAR_CUMPLIMIENTO_JEFE, (jefe_id, oblig_id))
+        filas = cur.rowcount
+        conn.commit()
+        return bool(filas)
+    except Exception:
+        conn.rollback()
+        raise
+
+
+def rechazar_cumplimiento_jefe(oblig_id, jefe_id, motivo):
+    """Revierte a no-cumplida (el dueño debe volver a marcarla cumplida) --
+    estatus se recalcula segun fecha_vencimiento (mismo criterio que usa el
+    scheduler para 'atrasado'). Motivo obligatorio -- pedido de Matías,
+    2026-08-15 (2), el usuario debe recibir el porqué por email."""
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        row = get_raw_by_id(oblig_id)
+        if not row:
+            return False
+        from datetime import date
+        fecha_venc = row["fecha_vencimiento"]
+        if hasattr(fecha_venc, "date"):
+            fecha_venc = fecha_venc.date()
+        estatus_revertido = "atrasado" if (fecha_venc and fecha_venc < date.today()) else "por_presentar"
+        cur.execute(q.SQL_RECHAZAR_CUMPLIMIENTO_JEFE, (estatus_revertido, jefe_id, motivo, oblig_id))
+        filas = cur.rowcount
+        conn.commit()
+        return bool(filas)
+    except Exception:
+        conn.rollback()
+        raise
+
+
 def commit():
     get_db().commit()
 
@@ -597,6 +771,13 @@ def list_historial(user_id, rol, filters):
     if filters.get("frecuencia_id"):
         where.append("o.frecuencia_id = ?")
         params.append(filters["frecuencia_id"])
+    if filters.get("area_id"):
+        # 2026-08-14: filtro por Área (pedido en reunión).
+        where.append("o.departamento_id IN (SELECT id FROM departamentos WHERE area_id = ?)")
+        params.append(filters["area_id"])
+    if filters.get("seccion") and filters["seccion"] in SECCION_PASTEL_WHERE:
+        # 2026-08-14: Punto 6 -- navegación desde el modal del pastel (Punto 5).
+        where.append(SECCION_PASTEL_WHERE[filters["seccion"]])
     _apply_date_range_filter(where, params, filters.get("fecha_desde"), filters.get("fecha_hasta"))
     if filters.get("estatus"):
         where.append("o.estatus = ?")
@@ -637,6 +818,10 @@ def _dashboard_common_where(rol, user_id, filters):
     if filters.get("frecuencia_id"):
         where.append("o.frecuencia_id = ?")
         params.append(filters["frecuencia_id"])
+    if filters.get("area_id"):
+        # 2026-08-14: filtro por Área (pedido en reunión).
+        where.append("o.departamento_id IN (SELECT id FROM departamentos WHERE area_id = ?)")
+        params.append(filters["area_id"])
     if filters.get("fecha_desde"):
         where.append("o.fecha_vencimiento >= ?")
         params.append(filters["fecha_desde"])
@@ -646,7 +831,7 @@ def _dashboard_common_where(rol, user_id, filters):
     # 2026-07-28: agregado filtro usuario_id en Dashboard (admin=todos, jefe_area=solo subordinados)
     # -- mismo guard que list_obligaciones: _apply_visibility() ya acoto el WHERE, este AND
     # solo puede angostar el conjunto visible, nunca ampliarlo a otro jefe/area.
-    if filters.get("usuario_id") and rol in (ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA):
+    if filters.get("usuario_id") and rol in (ROL_ADMIN_SILI, ROL_ADMIN_OBLIG, ROL_JEFE_AREA, ROL_GERENTE_OBLIG):
         where.append("o.usuario_id = ?")
         params.append(filters["usuario_id"])
 
@@ -707,6 +892,9 @@ def dashboard_por_estatus(rol, user_id, filters):
     )
 
 
+# 2026-08-16: dashboard_por_tipo() y dashboard_por_estatus_total() sin consumidor
+# tras rediseño dashboard (Matías) -- no borradas sin confirmación explícita, quedan
+# como candidatas a eliminar.
 def dashboard_por_tipo(rol, user_id, filters):
     return _dashboard_group_query(
         q.SQL_DASHBOARD_POR_TIPO_SELECT, q.SQL_DASHBOARD_POR_TIPO_GROUP_BY, rol, user_id, filters
@@ -722,6 +910,42 @@ def dashboard_por_estatus_total(rol, user_id, filters):
 
 # 2026-08-05: dashboard_por_estatus_fundido() eliminada -- sin consumidor tras
 # borrar chartEstado (pedido Matias, sesion revision pendientes).
+
+
+# 2026-08-14: clausula SQL por seccion del pastel (Punto 4) -- MISMO criterio
+# usado en dashboard_data()/services.py para pastel_cumplimiento, para que los
+# conteos del modal (Punto 5) cuadren exacto con las secciones del pastel.
+SECCION_PASTEL_WHERE = {
+    "cumplida_a_tiempo":    "o.activa = 0 AND o.estatus = 'cumplido'",
+    "cumplida_fuera_plazo": "o.activa = 0 AND o.estatus = 'cumplido_fuera_plazo'",
+    "pendiente_en_plazo":   "o.activa = 1 AND o.estatus <> 'atrasado'",
+    "pendiente_atrasada":   "o.activa = 1 AND o.estatus = 'atrasado'",
+}
+
+
+def dashboard_desglose_seccion(seccion, rol, user_id, filters):
+    """Punto 5: 3 tablas (Tipo/Entidad/Area) con id+nombre+total, acotadas a la
+    seccion del pastel clickeada. seccion invalida -> listas vacias (defensivo,
+    el front solo manda valores de SECCION_PASTEL_WHERE)."""
+    extra = SECCION_PASTEL_WHERE.get(seccion)
+    if not extra:
+        return {"por_tipo": [], "por_entidad": [], "por_area": []}
+
+    conn = get_connection()
+    where, params = _dashboard_common_where(rol, user_id, filters)
+    where.append(extra)
+
+    def _grupo(select_sql, group_by_sql):
+        sql = select_sql + " WHERE " + " AND ".join(where) + group_by_sql
+        cur = conn.cursor()
+        cur.execute(sql, params)
+        return _rows_to_dicts(cur)
+
+    return {
+        "por_tipo":    _grupo(q.SQL_DESGLOSE_POR_TIPO_SELECT, q.SQL_DESGLOSE_POR_TIPO_GROUP_BY),
+        "por_entidad": _grupo(q.SQL_DESGLOSE_POR_ENTIDAD_SELECT, q.SQL_DESGLOSE_POR_ENTIDAD_GROUP_BY),
+        "por_area":    _grupo(q.SQL_DESGLOSE_POR_AREA_SELECT, q.SQL_DESGLOSE_POR_AREA_GROUP_BY),
+    }
 
 
 # ------------------------------------------------------------

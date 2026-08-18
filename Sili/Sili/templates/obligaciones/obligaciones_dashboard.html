@@ -15,7 +15,7 @@
   </div>
   {% endif %}
 
-  {% set filtros_activos = filters.empresa_id or filters.tipo_id or filters.entidad_id or filters.fecha_desde or filters.fecha_hasta %}
+  {% set filtros_activos = filters.empresa_id or filters.tipo_id or filters.entidad_id or filters.fecha_desde or filters.fecha_hasta or filters.area_id %}
   <button class="btn btn-sm btn-outline-secondary mb-2" type="button" data-bs-toggle="collapse"
     data-bs-target="#panelFiltrosDashboard" aria-expanded="{{ 'true' if filtros_activos else 'false' }}"
     aria-controls="panelFiltrosDashboard">
@@ -54,6 +54,15 @@
     </div>
     <!-- 2026-07-29: label visible agregado -- placeholder desaparece con valor y usuario no sabia que campo era -->
     <div class="col-md-2">
+      <!-- 2026-08-14: filtro por Área pedido en reunión -->
+      <select class="form-select form-select-sm" name="area_id">
+        <option value="">-- Área --</option>
+        {% for a in combos.areas %}
+        <option value="{{ a.id }}" {% if filters.area_id|string == a.id|string %}selected{% endif %}>{{ a.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
       <small class="text-muted d-block mb-0">Desde</small>
       <input type="date" class="form-control form-control-sm" name="fecha_desde" value="{{ filters.fecha_desde }}">
     </div>
@@ -79,15 +88,26 @@
   </form>
   </div>
 
-  <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  <div class="row row-cols-2 row-cols-md-5 g-3 mb-4">
     <div class="col">
-      <div class="section">
+      <div class="section h-100">
         <div class="section-header small text-uppercase"><i class="bi bi-collection"></i> Total obligaciones</div>
         <div class="fs-2 fw-bold" id="kpiTotal">{{ data.kpis.total_obligaciones }}</div>
       </div>
     </div>
     <div class="col">
-      <div class="section">
+      <!-- 2026-08-14: recuadro Cumplidas con desglose a-tiempo/fuera-plazo, pedido en reunión -->
+      <div class="section section-success h-100">
+        <div class="section-header small text-uppercase"><i class="bi bi-check-circle"></i> Cumplidas</div>
+        <div class="fs-2 fw-bold" id="kpiCumplidas">{{ data.kpis.a_tiempo + data.kpis.fuera_plazo }}</div>
+        <div class="small text-muted">
+          <span id="kpiCumplidasATiempo">{{ data.kpis.a_tiempo }}</span> a tiempo ·
+          <span id="kpiCumplidasFueraPlazo">{{ data.kpis.fuera_plazo }}</span> fuera de plazo
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section h-100">
         <!-- 2026-08-05: label pedido por Matias en reunion -->
         <div class="section-header small text-uppercase"><i class="bi bi-list-check"></i> Total Presentar a Tiempo</div>
         <div class="fs-2 fw-bold" id="kpiActivas">{{ data.kpis.total_activas }}</div>
@@ -95,7 +115,7 @@
     </div>
     <div class="col">
       <a class="text-decoration-none" href="{{ url_for('obligaciones.lista_obligaciones', estatus='atrasado') }}">
-        <div class="section section-danger">
+        <div class="section section-danger h-100">
           <!-- 2026-08-05: label pedido por Matias en reunion -->
           <div class="section-header small text-uppercase"><i class="bi bi-exclamation-triangle-fill"></i> Total Atrasadas</div>
           <div class="fs-2 fw-bold text-danger" id="kpiAtrasadas">{{ data.kpis.total_atrasadas }}</div>
@@ -103,7 +123,7 @@
       </a>
     </div>
     <div class="col">
-      <div class="section section-warning">
+      <div class="section section-warning h-100">
         <div class="section-header small text-uppercase"><i class="bi bi-calendar-x"></i> Próximas a vencer (30 días)</div>
         <div class="fs-2 fw-bold" id="kpiProximas">{{ data.kpis.proximas_vencer }}</div>
       </div>
@@ -114,34 +134,14 @@
        orden: Velocimetro | Por-empresa arriba, Por-estatus-general | Por-tipo
        abajo. Chart "Por frecuencia" eliminado por completo (pedido de
        Matias) -- ver HISTORIAL-CORRECCIONES.md del modulo. -->
+  <!-- 2026-08-16: rediseño dashboard pedido por Matías -- se elimina gauge/barEmpresa/doughnutTipo,
+       queda solo el pastel "Cumplimiento — detalle" a ancho completo. Click en sección abre modal
+       con 2 graficos (Tipo/Area) + tablas (ver más abajo). -->
   <div class="row g-3">
-    <div class="col-md-6">
-      <div class="section section-success">
-        <div class="section-header"><i class="bi bi-check-circle-fill"></i> Cumplidas vs. Atrasadas</div>
-        <div class="chart-box">
-          <canvas id="chartCumplimiento"></canvas>
-          <div id="chartCumplimientoLabel" class="gauge-label">
-            <span class="fs-2 fw-bold"><span id="kpiPct">{{ data.pct_cumplidas }}</span>%</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    {# 2026-07-30: gate es_admin removido -- _apply_visibility() en el repository
-       ya filtra los datos por rol, el gate visual aqui era redundante. #}
-    <div class="col-md-6">
+    <div class="col-12">
       <div class="section">
-        <!-- 2026-08-05: titulo "Por estatus (empresas)" -> "Estatus por Empresa" (pedido Matias) -->
-        <div class="section-header"><i class="bi bi-building"></i> Estatus por Empresa</div>
-        <div class="chart-box"><canvas id="chartEmpresa"></canvas></div>
-      </div>
-    </div>
-    <!-- 2026-08-05: chart "Por estatus" (doughnut, chartEstado) eliminado -- pedido Matias en reunion,
-         se conserva chartEmpresa arriba que ya cubre el desglose por estatus (empresas) -->
-    <div class="col-md-6">
-      <div class="section">
-        <!-- 2026-08-05: label "Por tipo" -> "Entidad", pedido Matias -- SQL sigue agrupando por tipo -->
-        <div class="section-header"><i class="bi bi-bar-chart-fill"></i> Entidad</div>
-        <div class="chart-box"><canvas id="chartTipo"></canvas></div>
+        <div class="section-header"><i class="bi bi-pie-chart-fill"></i> Cumplimiento — detalle</div>
+        <div class="chart-box tall"><canvas id="chartPastel"></canvas></div>
       </div>
     </div>
   </div>
@@ -149,16 +149,56 @@
   <p class="text-muted small mt-3">
     <i class="bi bi-info-circle"></i> Este dashboard es un complemento visual — no reemplaza el Excel exportable del Historial.
   </p>
+
+  <!-- 2026-08-14: modal Punto 5 -- desglose al hacer click en una seccion del pastel -->
+  <div class="modal fade" id="modalDesglosePastel" tabindex="-1" aria-hidden="true"
+       data-url-consultas="{{ url_for('obligaciones.lista_obligaciones') }}"
+       data-url-historial="{{ url_for('obligaciones.historial_obligaciones') }}">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalDesgloseTitulo">Desglose</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- 2026-08-16: 2 graficos (Tipo/Area) arriba de las tablas, pedido Matías -- tabla Entidad eliminada -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <h6 class="small text-uppercase text-muted">Por Tipo</h6>
+              <div class="chart-box"><canvas id="chartDesgloseTipo"></canvas></div>
+            </div>
+            <div class="col-md-6">
+              <h6 class="small text-uppercase text-muted">Por Área</h6>
+              <div class="chart-box"><canvas id="chartDesgloseArea"></canvas></div>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <table class="table table-sm table-hover">
+                <tbody id="tablaDesgloseTipo"></tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-sm table-hover">
+                <tbody id="tablaDesgloseArea"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts_extra %}
-<script id="dashboard-data" type="application/json" data-endpoint="{{ url_for('obligaciones.dashboard_obligaciones_data') }}">
+<script id="dashboard-data" type="application/json"
+        data-endpoint="{{ url_for('obligaciones.dashboard_obligaciones_data') }}"
+        data-endpoint-desglose="{{ url_for('obligaciones.dashboard_obligaciones_desglose') }}">
 {{ {
   "kpis": data.kpis,
-  "por_tipo": data.por_tipo,
-  "por_estatus_total": data.por_estatus_total,
-  "pct_cumplidas": data.pct_cumplidas
+  "pct_cumplidas": data.pct_cumplidas,
+  "pastel_cumplimiento": data.pastel_cumplimiento
 } | tojson }}
 </script>
 <script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>

@@ -26,7 +26,7 @@ def build_email_alerta(obligacion, tipo_alerta):
     subject = f"[Obligaciones] Alerta ({etiqueta_alerta}) -- {obligacion.get('descripcion', '')}"
 
     message = "\n".join([
-        "Alerta automática del módulo Obligaciones Legales y Regulatorias.",
+        "Alerta automática del módulo Obligaciones con Stakeholder.",  # 2026-08-14: rename visual pedido en reunión
         "",
         f"ID obligación:      {obligacion.get('id')}",
         f"Descripción:        {obligacion.get('descripcion')}",

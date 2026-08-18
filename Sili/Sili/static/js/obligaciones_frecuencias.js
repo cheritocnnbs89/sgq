@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var recalculoCantidad = document.getElementById('recalculo_cantidad');
 
   function actualizarRecalculoCantidad() {
-    var sinRecalculo = recalculoTipo.value === 'NINGUNA';
+    // 2026-08-17: UNICA (Sin frecuencia) tampoco usa cantidad -- un solo uso, no repite.
+    var sinRecalculo = recalculoTipo.value === 'NINGUNA' || recalculoTipo.value === 'UNICA';
     recalculoCantidad.disabled = sinRecalculo;
     recalculoCantidad.required = !sinRecalculo;
     if (sinRecalculo) { recalculoCantidad.value = ''; }
