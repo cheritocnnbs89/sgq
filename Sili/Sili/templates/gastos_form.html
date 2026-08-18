@@ -337,47 +337,44 @@
         </table>
       </div>
 
-      <div class="gasto-totales">
-        <div class="gasto-totales-card">
-          <div class="gasto-total-row only-soporte">
-            <span class="gasto-total-label">Gastos con soporte</span>
-            <input type="number" step="0.01" min="0" class="gasto-total-input" id="sum_con_soporte" value="0" readonly>
-          </div>
+      <div class="row g-3 mt-2">
+        <div class="col-md-4 only-soporte">
+          <label class="form-label">Gastos con soporte</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_con_soporte" value="0" readonly>
+        </div>
 
-          <div class="gasto-total-row only-soporte">
-            <span class="gasto-total-label">Gastos sin soporte</span>
-            <input type="number" step="0.01" min="0" class="gasto-total-input" id="sum_sin_soporte" value="0" readonly>
-          </div>
+        <div class="col-md-4 only-soporte">
+          <label class="form-label">Gastos sin soporte</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_sin_soporte" value="0" readonly>
+        </div>
 
-          <div class="gasto-total-row">
-            <span class="gasto-total-label">Subtotal factura</span>
-            <input type="number" step="0.01" min="0" class="gasto-total-input" id="sum_subtotal_factura" value="0" readonly>
-          </div>
+        <div class="col-md-4">
+          <label class="form-label">Subtotal factura</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_subtotal_factura" value="0" readonly>
+        </div>
 
-          <div class="gasto-total-row col-hide-soporte">
-            <span class="gasto-total-label">Servicios y propinas</span>
-            <input type="number" step="0.01" min="0" class="gasto-total-input" id="sum_servicios_10" value="0" readonly>
-          </div>
+        <div class="col-md-4 col-hide-soporte">
+          <label class="form-label">Servicios y propinas</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_servicios_10" value="0" readonly>
+        </div>
 
-          <div class="gasto-total-row col-hide-soporte">
-            <span class="gasto-total-label">Subtotal sin IVA</span>
-            <input type="number" step="0.01" min="0" class="gasto-total-input" id="sum_subtotal_sin_iva" value="0" readonly>
-          </div>
+        <div class="col-md-4 col-hide-soporte">
+          <label class="form-label">Subtotal sin IVA</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_subtotal_sin_iva" value="0" readonly>
+        </div>
 
-          <div class="gasto-total-row">
-            <span class="gasto-total-label">IVA</span>
-            <input type="number" step="0.01" min="0" class="gasto-total-input" id="sum_iva" value="0" readonly>
-          </div>
+        <div class="col-md-4">
+          <label class="form-label">IVA</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_iva" value="0" readonly>
+        </div>
 
-          <div class="gasto-total-row is-total">
-            <span class="gasto-total-label">TOTAL</span>
-            <input type="number" step="0.01" min="0" class="gasto-total-input" id="sum_total_con_iva" value="0" readonly>
+        <div class="col-md-4">
+          <label class="form-label">Total</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="sum_total_con_iva" value="0" readonly>
+          <div id="totInvalid" class="invalid-feedback">
+            El Total (Total con IVA) debe ser mayor a cero.
           </div>
         </div>
-      </div>
-
-      <div id="totInvalid" class="invalid-feedback text-end">
-        El Total (Total con IVA) debe ser mayor a cero.
       </div>
 
       <input type="hidden" name="sum_sin_soporte" id="h_sum_sin_soporte"
