@@ -376,7 +376,7 @@ def ensure_gasto_templates(conn):
                 </div>
                 <div style="font-size:13px;opacity:.92;margin-top:8px;line-height:1.35;">
                   """ + JINJA_LABELS + """
-                  Hola {{ usuario }}, tu gasto fue aprobado por {{ approved_by_user_id }} ({{ area_txt }}).
+                  Hola {{ usuario }}, tu gasto fue aprobado por {{ aprobador_nombre|default(approved_by_user_id, true) }} ({{ area_txt }}).
                 </div>
               </td>
             </tr>
@@ -859,6 +859,16 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
         _log("warning", "[ENQUEUE_GASTO] creator_id no existe en usuarios: %s", creator_id)
         return
 
+    aprobador_nombre = ""
+    if approved_by_user_id:
+        try:
+            cur.execute("SELECT username FROM usuarios WHERE id = ?", (int(approved_by_user_id),))
+            arow = cur.fetchone()
+            if arow:
+                aprobador_nombre = arow["username"] or arow[0] or ""
+        except Exception:
+            aprobador_nombre = ""
+
     area_key = (area or "").lower().strip()
     if area_key == "ga":
         next_roles = (gh.rol_gg(),)
@@ -891,6 +901,7 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
         "gasto_id": int(gasto_id),
         "area": area_key,
         "approved_by_user_id": approved_by_user_id,
+        "aprobador_nombre": aprobador_nombre,
     }, ensure_ascii=False)
 
     # reemplazo de _next_5min_sqlite()
