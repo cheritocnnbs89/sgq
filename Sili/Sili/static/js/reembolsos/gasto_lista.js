@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const listaGastosUrl = cfg?.dataset.listaGastosUrl || '';
   const bulkAprobarUrl = cfg?.dataset.aprobarGastoMasivoUrl || '';
   const bulkSapUrl = cfg?.dataset.enviarGastoSapMasivoUrl || '';
+  const bulkGerenciaUrl = cfg?.dataset.enviarGerenciaMasivoUrl || '';
   const isCoord = (cfg?.dataset.isCoord || '0') === '1';
   const statusDeleted = (cfg?.dataset.statusDeleted || '0') === '1';
 
@@ -404,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (isCoord) {
-          chk.checked = (chk.dataset.canSap === '1');
+          chk.checked = (chk.dataset.canSap === '1' || chk.dataset.canGerencia === '1');
           return;
         }
 
@@ -597,6 +598,56 @@ document.addEventListener('DOMContentLoaded', function () {
       } finally {
         hideBulkOverlay();
         btnSapMasivo.disabled = false;
+      }
+    });
+  }
+
+  const btnGerenciaMasivo = document.getElementById('btnGerenciaMasivo');
+  if (btnGerenciaMasivo) {
+    btnGerenciaMasivo.addEventListener('click', async function () {
+      const ids = Array.from(document.querySelectorAll('.row-select:checked'))
+        .filter(chk => chk.dataset.canGerencia === '1')
+        .map(chk => parseInt(chk.dataset.id, 10))
+        .filter(Boolean);
+
+      if (!ids.length) {
+        return showToast('Selecciona gastos pendientes de revisión (tipo tarjeta, sin enviar a gerencia aún).');
+      }
+
+      if (!window.confirm(`¿Enviar ${ids.length} gasto(s) a gerencia?`)) return;
+
+      btnGerenciaMasivo.disabled = true;
+      showBulkOverlay();
+
+      try {
+        const resp = await fetch(bulkGerenciaUrl, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ ids })
+        });
+
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok || !data.ok) throw new Error(data.msg || `HTTP ${resp.status}`);
+
+        let msg = `Enviados a gerencia: ${data.sent_count || 0}`;
+        if ((data.skipped_count || 0) > 0 && data.skipped?.length) {
+          msg += ` | Saltados: ${data.skipped_count} (Ej: ${data.skipped[0].id}: ${data.skipped[0].msg})`;
+        }
+
+        showToast(msg);
+        window.setTimeout(function () {
+          location.reload();
+        }, 2000);
+      } catch (e) {
+        showToast('Error al enviar a gerencia: ' + e.message);
+      } finally {
+        hideBulkOverlay();
+        btnGerenciaMasivo.disabled = false;
       }
     });
   }

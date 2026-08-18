@@ -13,6 +13,7 @@
   data-lista-gastos-url="{{ url_for('lista_gastos') }}"
   data-aprobar-gasto-masivo-url="{{ url_for('aprobar_gasto_masivo') }}"
   data-enviar-gasto-sap-masivo-url="{{ url_for('enviar_gasto_sap_masivo') }}"
+  data-enviar-gerencia-masivo-url="{{ url_for('enviar_gasto_gerencia_masivo') }}"
   data-is-coord="{{ '1' if is_coord else '0' }}"
   data-status-deleted="{{ '1' if request.args.get('status') == 'deleted' else '0' }}">
 </div>
@@ -258,6 +259,9 @@
     <button type="button" class="btn btn-outline-info btn-sm" id="btnSapMasivo">
       <i class="bi bi-send me-1"></i>Enviar SAP seleccionados
     </button>
+    <button type="button" class="btn btn-outline-primary btn-sm" id="btnGerenciaMasivo">
+      <i class="bi bi-send-check me-1"></i>Enviar a Gerencia seleccionados
+    </button>
     {% endif %}
   </div>
   {% endif %}
@@ -451,7 +455,8 @@
               data-can-gf="{{ 1 if (can_bulk_gf or allow_free_select) else 0 }}"
               data-free-select="{{ 1 if allow_free_select else 0 }}"
               data-can-sap="{{ 1 if can_bulk_sap else 0 }}"
-              {% if not can_select_row %}disabled{% endif %}
+              data-can-gerencia="{{ 1 if g.get('puede_enviar_gerencia') else 0 }}"
+              {% if not can_select_row and not g.get('puede_enviar_gerencia') %}disabled{% endif %}
               title="{% if has_sap %}No editable: ya tiene Doc. SAP
 {% elif is_coord and not sap_ready_row %}No listo para SAP
 {% elif can_approve_gg and (not ga_ok) %}Pendiente aprobación GA

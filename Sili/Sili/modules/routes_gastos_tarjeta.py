@@ -5186,6 +5186,117 @@ def register_gastos_routes(app):
         flash('Gasto enviado a gerencia.', 'success')
         return redirect(url_for('lista_gastos'))
 
+    # ── Enviar a Gerencia masivo (revisión del coordinador) ────────────────────
+    @app.route('/reembolsos/gastos/enviar-gerencia-masivo', methods=['POST'],
+               endpoint='enviar_gasto_gerencia_masivo')
+    @require_login
+    def enviar_gasto_gerencia_masivo():
+        role = (session.get('rol') or '').strip().lower()
+        uid = session.get('usuario_id') or session.get('user_id')
+
+        if not (role == 'admin' or gh.es_coordinador_gastos(uid, role)):
+            return jsonify(ok=False, msg='Sin permiso para enviar gastos a gerencia.'), 403
+
+        payload = request.get_json(silent=True) or {}
+        ids = payload.get('ids') or []
+        if not isinstance(ids, list) or not ids:
+            return jsonify(ok=False, msg='Sin elementos a enviar.'), 400
+
+        ids_int = []
+        failed = []
+        for gid in ids:
+            try:
+                ids_int.append(int(gid))
+            except Exception:
+                failed.append({'id': gid, 'msg': 'ID inválido'})
+        ids_int = list(dict.fromkeys(ids_int))
+        if not ids_int:
+            return jsonify(ok=False, msg='No hay IDs válidos para procesar.', failed=failed[:50]), 400
+
+        conn = get_db()
+        ok_ids = []
+        skipped = []
+        creators = {}
+
+        try:
+            cur = conn.cursor()
+            placeholders = ",".join(["?"] * len(ids_int))
+            cur.execute(f"""
+                SELECT id, usuario_id,
+                       COALESCE(es_caja_chica,0) AS es_caja_chica,
+                       COALESCE(reembolso_vendedor,0) AS reembolso_vendedor,
+                       COALESCE(coord_revisado,0) AS coord_revisado
+                FROM {TABLE_GASTOS}
+                WHERE id IN ({placeholders})
+            """, ids_int)
+            rows = cur.fetchall()
+
+            by_id = {}
+            for r in rows:
+                try:
+                    by_id[int(r['id'])] = dict(r)
+                except Exception:
+                    by_id[int(r[0])] = {
+                        'id': r[0], 'usuario_id': r[1], 'es_caja_chica': r[2],
+                        'reembolso_vendedor': r[3], 'coord_revisado': r[4],
+                    }
+
+            for gid in ids_int:
+                row = by_id.get(gid)
+                if not row:
+                    skipped.append({'id': gid, 'msg': 'Gasto no encontrado'})
+                    continue
+
+                if int(row.get('es_caja_chica') or 0) == 1 or int(row.get('reembolso_vendedor') or 0) == 1:
+                    skipped.append({'id': gid, 'msg': 'No pasa por revisión de coordinador'})
+                    continue
+
+                if int(row.get('coord_revisado') or 0) == 1:
+                    skipped.append({'id': gid, 'msg': 'Ya fue enviado a gerencia'})
+                    continue
+
+                cur.execute(f"""
+                    UPDATE {TABLE_GASTOS}
+                       SET coord_revisado = 1, coord_revisado_por = ?, coord_revisado_at = GETDATE()
+                     WHERE id = ?
+                       AND COALESCE(coord_revisado,0) = 0
+                """, (uid, gid))
+
+                if (cur.rowcount or 0) > 0:
+                    ok_ids.append(gid)
+                    creators[gid] = row.get('usuario_id')
+                else:
+                    skipped.append({'id': gid, 'msg': 'Ya fue enviado a gerencia'})
+
+            conn.commit()
+
+        except Exception as e:
+            conn.rollback()
+            current_app.logger.exception('[ENVIAR_GERENCIA_MASIVO] error')
+            return jsonify(ok=False, msg=str(e)), 500
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+        for gid in ok_ids:
+            try:
+                mail.notify_gasto_created(app, gid, creators.get(gid))
+            except Exception:
+                current_app.logger.exception(
+                    '[ENVIAR_GERENCIA_MASIVO] error notificando gasto_id=%s', gid
+                )
+
+        return jsonify(
+            ok=True,
+            sent_count=len(ok_ids),
+            skipped_count=len(skipped),
+            failed_count=len(failed),
+            skipped=skipped[:100],
+            failed=failed[:50],
+        ), 200
+
      # EDITAR
     @app.route('/reembolsos/gastos/<int:gasto_id>/editar', methods=['GET', 'POST'], endpoint='editar_gasto')
     @require_login
