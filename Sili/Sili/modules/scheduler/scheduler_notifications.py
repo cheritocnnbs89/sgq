@@ -912,55 +912,9 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
 
     # 1) Notificación al creador del gasto
     event_key_user = f"{int(gasto_id)}:{area_key}:user"
+    inserted = 0
 
-    _exec_retry(cur, """
-        IF NOT EXISTS (
-            SELECT 1
-            FROM notify_queue
-            WHERE event_key = ?
-        )
-        BEGIN
-            INSERT INTO notify_queue (
-                user_id,
-                tipo,
-                fecha_obj,
-                canal,
-                template_key,
-                payload_json,
-                estado,
-                scheduled_at,
-                gasto_id,
-                area,
-                event_key
-            )
-            VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-            )
-        END
-    """, (
-        event_key_user,
-        creator_id,
-        TIPO_GASTO_APROBADO_USER,
-        fecha_obj,
-        canal,
-        TPL_GASTO_USER_APPROVED,
-        payload_json,
-        estado,
-        scheduled_at,
-        int(gasto_id),
-        area_key,
-        event_key_user,
-    ))
-
-    # 2) Notificación al siguiente aprobador / grupo siguiente
-    for u in next_users:
-        try:
-            uid = int(u["id"])
-        except Exception:
-            uid = int(u[0])
-
-        event_key_next = f"{int(gasto_id)}:{area_key}:next:{uid}"
-
+    try:
         _exec_retry(cur, """
             IF NOT EXISTS (
                 SELECT 1
@@ -986,22 +940,87 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
                 )
             END
         """, (
-            event_key_next,
-            uid,
-            TIPO_GASTO_APROBADO_NEXT,
+            event_key_user,
+            creator_id,
+            TIPO_GASTO_APROBADO_USER,
             fecha_obj,
             canal,
-            template_next,
+            TPL_GASTO_USER_APPROVED,
             payload_json,
             estado,
             scheduled_at,
             int(gasto_id),
             area_key,
-            event_key_next,
+            event_key_user,
         ))
+        conn.commit()
+        inserted += 1
+    except Exception as exc:
+        conn.rollback()
+        _log("error", "[ENQUEUE_GASTO] error insertando notif usuario gasto_id=%s event_key=%s: %s",
+             gasto_id, event_key_user, exc)
 
-    conn.commit()
-    _log("info", "[ENQUEUE_GASTO] done gasto_id=%s area=%s next_users=%s", gasto_id, area_key, len(next_users))
+    # 2) Notificación al siguiente aprobador / grupo siguiente
+    # Cada insert se confirma por separado: notify_queue tiene un índice único
+    # por gasto_id, así que si dos filas del mismo gasto_id se insertan en la
+    # misma transacción sin commit intermedio, la segunda choca contra la
+    # primera (aún no confirmada) y revienta con IntegrityError.
+    for u in next_users:
+        try:
+            uid = int(u["id"])
+        except Exception:
+            uid = int(u[0])
+
+        event_key_next = f"{int(gasto_id)}:{area_key}:next:{uid}"
+
+        try:
+            _exec_retry(cur, """
+                IF NOT EXISTS (
+                    SELECT 1
+                    FROM notify_queue
+                    WHERE event_key = ?
+                )
+                BEGIN
+                    INSERT INTO notify_queue (
+                        user_id,
+                        tipo,
+                        fecha_obj,
+                        canal,
+                        template_key,
+                        payload_json,
+                        estado,
+                        scheduled_at,
+                        gasto_id,
+                        area,
+                        event_key
+                    )
+                    VALUES (
+                        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    )
+                END
+            """, (
+                event_key_next,
+                uid,
+                TIPO_GASTO_APROBADO_NEXT,
+                fecha_obj,
+                canal,
+                template_next,
+                payload_json,
+                estado,
+                scheduled_at,
+                int(gasto_id),
+                area_key,
+                event_key_next,
+            ))
+            conn.commit()
+            inserted += 1
+        except Exception as exc:
+            conn.rollback()
+            _log("error", "[ENQUEUE_GASTO] error insertando notif next gasto_id=%s uid=%s event_key=%s: %s",
+                 gasto_id, uid, event_key_next, exc)
+
+    _log("info", "[ENQUEUE_GASTO] done gasto_id=%s area=%s next_users=%s insertados=%s",
+         gasto_id, area_key, len(next_users), inserted)
 
 
  
