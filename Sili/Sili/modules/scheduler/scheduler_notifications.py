@@ -838,7 +838,9 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
     _log("info", "[ENQUEUE_GASTO] start gasto_id=%s area=%s approved_by=%s", gasto_id, area, approved_by_user_id)
 
     cur.execute("""
-        SELECT id, usuario_id
+        SELECT id, usuario_id,
+               COALESCE(es_caja_chica,0) AS es_caja_chica,
+               COALESCE(reembolso_vendedor,0) AS reembolso_vendedor
         FROM gastos_tarjeta
         WHERE id = ?
     """, (int(gasto_id),))
@@ -852,6 +854,11 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
         creator_id = int(row["usuario_id"])
     except Exception:
         creator_id = int(row[1])
+
+    try:
+        es_tipo3 = int(row["es_caja_chica"] or 0) == 1 or int(row["reembolso_vendedor"] or 0) == 1
+    except Exception:
+        es_tipo3 = int(row[2] or 0) == 1 or int(row[3] or 0) == 1
 
     cur.execute("SELECT TOP 1 1 FROM usuarios WHERE id = ?", (creator_id,))
     uok = cur.fetchone()
@@ -870,7 +877,13 @@ def enqueue_gasto_approved(conn, gasto_id: int, area: str, approved_by_user_id: 
             aprobador_nombre = ""
 
     area_key = (area or "").lower().strip()
-    if area_key == "ga":
+    if es_tipo3:
+        # Caja chica / Reembolso vendedor: solo requieren aprobación GA.
+        # No hay GG/GF/coordinador en su flujo, así que no se notifica a nadie más.
+        next_roles = ()
+        template_next = TPL_GASTO_NEXT
+        _log("info", "[ENQUEUE_GASTO] gasto_id=%s es tipo3 (caja_chica/reembolso) -> sin siguiente aprobador", gasto_id)
+    elif area_key == "ga":
         next_roles = (gh.rol_gg(),)
         template_next = TPL_GASTO_NEXT_GG
     elif area_key == "gg":
