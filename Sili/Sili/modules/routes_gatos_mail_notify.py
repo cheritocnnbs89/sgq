@@ -6,6 +6,7 @@ import re
 import time
 import json
 import html
+import threading
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from email.message import EmailMessage
@@ -581,21 +582,29 @@ def _send_email(app, subject: str, text_body: str,
     if html_body:
         msg.add_alternative(html_body, subtype="html")
 
-    try:
-        if use_ssl:
-            server = smtplib.SMTP_SSL(host, port, timeout=25)
-        else:
-            server = smtplib.SMTP(host, port, timeout=25)
-            if use_tls:
-                server.starttls(context=ssl.create_default_context())
-        if user and pwd:
-            server.login(user, pwd)
-        server.send_message(msg)
-        server.quit()
-        return True
-    except Exception as e:
-        app.logger.exception(f"Fallo al enviar correo: {e}")
-        return False
+    def _worker():
+        try:
+            if use_ssl:
+                server = smtplib.SMTP_SSL(host, port, timeout=25)
+            else:
+                server = smtplib.SMTP(host, port, timeout=25)
+                if use_tls:
+                    server.starttls(context=ssl.create_default_context())
+            if user and pwd:
+                server.login(user, pwd)
+            server.send_message(msg)
+            server.quit()
+        except Exception as e:
+            app.logger.exception(f"Fallo al enviar correo: {e}")
+
+    # El envío SMTP corre en segundo plano: bloquear la petición HTTP hasta que
+    # el servidor de correo responda hacía que pantallas como "Nuevo gasto"
+    # tardaran varios segundos en grabar. Ningún llamador de este módulo usa
+    # el valor de retorno para decidir algo crítico, así que devolver True
+    # aquí solo significa "encolado", no "entregado".
+    t = threading.Thread(target=_worker, daemon=True)
+    t.start()
+    return True
 
 
 def _send_mail_safe(to_email: str, subject: str, text_body: str, html_body: str | None = None):
