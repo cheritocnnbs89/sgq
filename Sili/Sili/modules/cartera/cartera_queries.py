@@ -103,13 +103,21 @@ _RANKING_SELECT_COLUMNS = """
 
 
 def sql_ranking_clientes(where_sql: str) -> str:
-    """where_sql ya trae los filtros de año/mes/cuenta (o vacío)."""
+    """where_sql ya trae los filtros de año/mes/cuenta (o vacío).
+
+    ORDER BY usa el alias "pelado" (sin envolverlo en ISNULL/expresión):
+    T-SQL permite referenciar un alias del SELECT en ORDER BY tal cual,
+    pero no dentro de una expresión — ahí intenta resolverlo como columna
+    real de la tabla y falla con "nombre de columna no válido". Como
+    ordenamos DESC, los NULL ya quedan al final por default (SQL Server
+    los trata como el valor más bajo), así que no hace falta el ISNULL.
+    """
     return f"""
         SELECT {_RANKING_SELECT_COLUMNS}
         FROM ({SQL_SELECT_CARTERA_FACTURAS_BASE}) f
         {where_sql}
         GROUP BY cuenta
-        ORDER BY ISNULL(prom_factura_pago, -1) DESC
+        ORDER BY prom_factura_pago DESC
     """
 
 
