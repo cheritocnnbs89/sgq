@@ -835,9 +835,17 @@ def _build_gastos_workbook():
                 Retorna (aprobado_por_id, aprobado_at_dt).
 
                 Regla:
-                - caja_chica / reembolso / boletos -> GA
-                - tarjeta normal -> GF
-                - si hay varias filas, toma la fecha más reciente
+                - caja_chica / reembolso / boletos -> normalmente GA, PERO si
+                  el último jefe de ese usuario es Gerente Financiero o
+                  Gerente General (no hay GA intermedio), el flujo de
+                  aprobación de routes_gastos_tarjeta.py graba la aprobación
+                  en gf_aprobado/gg_aprobado en vez de ga_aprobado ("GF/GG
+                  actuando como GA" — ver effective_area en /aprobar y
+                  /aprobar-masivo). Por eso acá se revisan las 3 columnas
+                  para este tipo, no solo GA.
+                - tarjeta normal -> GF (el paso final real de ese flujo)
+                - si hay varias filas o varias columnas con aprobación,
+                  toma la fecha más reciente
                 """
                 best_dt = None
                 best_uid = None
@@ -851,18 +859,20 @@ def _build_gastos_workbook():
                         or int(rd.get("boletos_aereos") or 0) == 1
                     )
 
-                    if es_restringido:
-                        if int(rd.get("ga_aprobado") or 0) == 1:
-                            dt = _parse_dt(rd.get("ga_aprobado_at"))
+                    candidatos = (
+                        (("ga_aprobado", "ga_aprobado_por", "ga_aprobado_at"),
+                         ("gg_aprobado", "gg_aprobado_por", "gg_aprobado_at"),
+                         ("gf_aprobado", "gf_aprobado_por", "gf_aprobado_at"))
+                        if es_restringido else
+                        (("gf_aprobado", "gf_aprobado_por", "gf_aprobado_at"),)
+                    )
+
+                    for flag_col, uid_col, at_col in candidatos:
+                        if int(rd.get(flag_col) or 0) == 1:
+                            dt = _parse_dt(rd.get(at_col))
                             if dt and (best_dt is None or dt > best_dt):
                                 best_dt = dt
-                                best_uid = int(rd.get("ga_aprobado_por") or 0) or None
-                    else:
-                        if int(rd.get("gf_aprobado") or 0) == 1:
-                            dt = _parse_dt(rd.get("gf_aprobado_at"))
-                            if dt and (best_dt is None or dt > best_dt):
-                                best_dt = dt
-                                best_uid = int(rd.get("gf_aprobado_por") or 0) or None
+                                best_uid = int(rd.get(uid_col) or 0) or None
 
                 return best_uid, best_dt
 
