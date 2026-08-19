@@ -68,3 +68,14 @@ def get_dashboard_data():
         "meses": MESES,
         "mes_nombre": dict(MESES).get(filters["mes"]),
     }
+
+
+def get_factura_cobros(doc_facturacion):
+    """Detalle de cobros para el acordeón de una factura en la línea de
+    tiempo. El total abonado sale de cartera_facturas (ya calculado por
+    el pipeline); las filas de detalle son las de cartera_cobros_hist
+    tal cual, para trazabilidad — ver nota en cartera_queries.py sobre
+    por qué no se resuman acá."""
+    resumen = repo.get_factura_resumen(doc_facturacion)
+    cobros = repo.list_cobros_factura(doc_facturacion)
+    return resumen, cobros

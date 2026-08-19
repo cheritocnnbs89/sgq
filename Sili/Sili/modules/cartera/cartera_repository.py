@@ -66,3 +66,14 @@ def list_facturas_cliente(cuenta, filters):
 
     sql = q.sql_facturas_cliente(where_sql)
     return conn.execute(sql, where_params).fetchall()
+
+
+def get_factura_resumen(doc_facturacion):
+    conn = get_connection()
+    cur = conn.cursor()
+    return cur.execute(q.SQL_SELECT_FACTURA_RESUMEN, (doc_facturacion,)).fetchone()
+
+
+def list_cobros_factura(doc_facturacion):
+    conn = get_connection()
+    return conn.execute(q.SQL_SELECT_COBROS_FACTURA, (doc_facturacion,)).fetchall()

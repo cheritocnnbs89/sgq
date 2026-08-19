@@ -236,28 +236,39 @@
         <div class="cartera-timeline">
           {% for fa in facturas_cliente %}
           <div class="cartera-timeline-item">
-            <div class="cartera-timeline-row1">
-              <span class="cartera-timeline-ref">
-                {{ fa.doc_facturacion }}{% if fa.num_documento_origen %} · {{ fa.num_documento_origen }}{% endif %}
-              </span>
-              <span>
-                FF: {{ fa.fecha_factura.strftime('%Y-%m-%d') if fa.fecha_factura else '—' }}
-                · ${{ "{:,.0f}".format(fa.importe_factura or 0) }}
-              </span>
-            </div>
-            <div class="cartera-timeline-row2">
-              <span class="badge {{ 'bg-success' if fa.estado == 'Pagada' else 'bg-warning text-dark' }}">
-                {{ fa.estado }}
-              </span>
-              <div class="cartera-timeline-bar-wrap">
-                <div class="cartera-bar-track">
-                  <div class="cartera-bar-fill"
-                       data-pct="{{ ((fa.dias_totales_guia_pago or 0) * 100 // (credito_pactado * 3)) if fa.dias_totales_guia_pago else 0 }}"></div>
-                </div>
+            <button type="button" class="cartera-timeline-toggle" data-bs-toggle="collapse"
+                    data-bs-target="#carteraCobros{{ loop.index }}" aria-expanded="false">
+              <div class="cartera-timeline-row1">
+                <span class="cartera-timeline-ref">
+                  <i class="bi bi-chevron-right cartera-timeline-caret"></i>
+                  {{ fa.doc_facturacion }}{% if fa.num_documento_origen %} · {{ fa.num_documento_origen }}{% endif %}
+                </span>
+                <span>
+                  FF: {{ fa.fecha_factura.strftime('%Y-%m-%d') if fa.fecha_factura else '—' }}
+                  · ${{ "{:,.0f}".format(fa.importe_factura or 0) }}
+                </span>
               </div>
-              <span class="cartera-timeline-dias">
-                {{ fa.dias_totales_guia_pago if fa.dias_totales_guia_pago is not none else '—' }}d
-              </span>
+              <div class="cartera-timeline-row2">
+                <span class="badge {{ 'bg-success' if fa.estado == 'Pagada' else 'bg-warning text-dark' }}">
+                  {{ fa.estado }}
+                </span>
+                <div class="cartera-timeline-bar-wrap">
+                  <div class="cartera-bar-track">
+                    <div class="cartera-bar-fill"
+                         data-pct="{{ ((fa.dias_totales_guia_pago or 0) * 100 // (credito_pactado * 3)) if fa.dias_totales_guia_pago else 0 }}"></div>
+                  </div>
+                </div>
+                <span class="cartera-timeline-dias">
+                  {{ fa.dias_totales_guia_pago if fa.dias_totales_guia_pago is not none else '—' }}d
+                </span>
+              </div>
+            </button>
+
+            <div class="collapse cartera-timeline-detail" id="carteraCobros{{ loop.index }}"
+                 data-load-url="{{ url_for('cartera.factura_cobros', doc_facturacion=fa.doc_facturacion) }}">
+              <div class="cartera-timeline-detail-body">
+                <div class="text-muted small py-2">Cargando…</div>
+              </div>
             </div>
           </div>
           {% else %}

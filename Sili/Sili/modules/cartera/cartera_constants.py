@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 TABLA_CARTERA_FACTURAS = "cartera_facturas"
+TABLA_CARTERA_COBROS_HIST = "cartera_cobros_hist"
 
 ACTIVE_KEY = "cartera"
 PERM_BASE = "cartera"   # cartera.ver  (primera versión: solo lectura)

@@ -25,7 +25,7 @@
 # alias del SELECT en el WHERE de la misma consulta — así el repository
 # puede filtrar directo por dias_totales_guia_pago sin repetir el CASE.
 
-from .cartera_constants import TABLA_CARTERA_FACTURAS
+from .cartera_constants import TABLA_CARTERA_FACTURAS, TABLA_CARTERA_COBROS_HIST
 
 
 SQL_SELECT_CARTERA_FACTURAS_BASE = f"""
@@ -157,3 +157,45 @@ def sql_facturas_cliente(where_sql: str) -> str:
         {where_sql}
         ORDER BY fecha_factura DESC
     """
+
+
+# ──────────────────────────────────────────────────────────────────────
+# Detalle de cobros de una factura (acordeón en la línea de tiempo)
+# ──────────────────────────────────────────────────────────────────────
+#
+# El total abonado (columna "abono") ya viene calculado y validado por
+# cartera_calculo.py — NO se recalcula acá sumando cartera_cobros_hist a
+# mano, porque esa tabla trae también los pares que se cancelan entre sí
+# (ej. DA/DX) y los eslabones D8 intermedios de una cadena de varios
+# pasos; sumarlos todos sin repetir exactamente la lógica de
+# _calcular_facturas() daría un número distinto (y equivocado) al que ya
+# está guardado en cartera_facturas.abono. Acá solo se muestran las filas
+# crudas para que el usuario vea el detalle, con el total ya confiable
+# aparte.
+
+SQL_SELECT_FACTURA_RESUMEN = f"""
+SELECT
+    doc_facturacion,
+    importe_factura,
+    retencion_d7,
+    abono,
+    saldo,
+    estado,
+    fecha_ultimo_pago
+FROM {TABLA_CARTERA_FACTURAS}
+WHERE doc_facturacion = ?
+"""
+
+SQL_SELECT_COBROS_FACTURA = f"""
+SELECT
+    clase,
+    num_documento,
+    doc_compensacion,
+    fecha_contabilizacion,
+    fecha_compensacion,
+    importe
+FROM {TABLA_CARTERA_COBROS_HIST}
+WHERE doc_facturacion = ?
+  AND clase <> 'D7'
+ORDER BY fecha_contabilizacion, id
+"""

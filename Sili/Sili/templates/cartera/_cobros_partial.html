@@ -1,0 +1,58 @@
+{% if not resumen %}
+<div class="text-muted small py-2">No se encontró información de esta factura.</div>
+{% else %}
+<div class="cartera-cobros-resumen">
+  <div>
+    <div class="cartera-kpi-label">Importe factura</div>
+    <div class="cartera-cobros-resumen-value">${{ "{:,.2f}".format(resumen.importe_factura or 0) }}</div>
+  </div>
+  <div>
+    <div class="cartera-kpi-label">Retención D7</div>
+    <div class="cartera-cobros-resumen-value">${{ "{:,.2f}".format(resumen.retencion_d7 or 0) }}</div>
+  </div>
+  <div>
+    <div class="cartera-kpi-label">Total abonado</div>
+    <div class="cartera-cobros-resumen-value is-accent">${{ "{:,.2f}".format(resumen.abono or 0) }}</div>
+  </div>
+  <div>
+    <div class="cartera-kpi-label">Saldo</div>
+    <div class="cartera-cobros-resumen-value {{ 'is-danger' if (resumen.saldo or 0) > 0 else '' }}">
+      ${{ "{:,.2f}".format(resumen.saldo or 0) }}
+    </div>
+  </div>
+</div>
+
+{% if cobros %}
+<div class="table-responsive">
+  <table class="cartera-cobros-table">
+    <thead>
+      <tr>
+        <th>Clase</th>
+        <th>Documento</th>
+        <th>Fecha contab.</th>
+        <th>Fecha compensación</th>
+        <th class="text-end">Importe</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in cobros %}
+      <tr>
+        <td>{{ c.clase }}</td>
+        <td>{{ c.num_documento }}</td>
+        <td>{{ c.fecha_contabilizacion.strftime('%Y-%m-%d') if c.fecha_contabilizacion else '—' }}</td>
+        <td>{{ c.fecha_compensacion.strftime('%Y-%m-%d') if c.fecha_compensacion else '—' }}</td>
+        <td class="text-end">${{ "{:,.2f}".format(c.importe or 0) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="cartera-cobros-note">
+  El "Total abonado" ya viene calculado por el proceso de cartera — no es la suma
+  directa de estas filas, porque algunas se cancelan entre sí (ej. pares DA/DX de
+  una cadena de compensación en varios pasos).
+</div>
+{% else %}
+<div class="text-muted small py-2">Sin movimientos de cobro registrados para esta factura.</div>
+{% endif %}
+{% endif %}

@@ -41,5 +41,35 @@
         }
       });
     }
+
+    // Detalle de cobros por factura (acordeón en la línea de tiempo): se
+    // carga con fetch la primera vez que se expande, no de entrada — la
+    // mayoría de las facturas nunca se llegan a abrir.
+    document.querySelectorAll('.cartera-timeline-detail').forEach((el) => {
+      el.addEventListener('show.bs.collapse', function () {
+        if (el.dataset.loaded === '1') return;
+        el.dataset.loaded = '1';
+
+        const body = el.querySelector('.cartera-timeline-detail-body');
+        const url = el.dataset.loadUrl;
+        if (!body || !url) return;
+
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+          .then((r) => r.text())
+          .then((html) => {
+            body.innerHTML = html;
+            // Las barras que puedan venir en el HTML cargado también
+            // necesitan su --bar-pct (el listener de DOMContentLoaded ya
+            // pasó, así que se repite acá solo para lo recién insertado).
+            body.querySelectorAll('[data-pct]').forEach((bar) => {
+              const pct = Math.max(0, Math.min(100, parseFloat(bar.dataset.pct) || 0));
+              bar.style.setProperty('--bar-pct', pct + '%');
+            });
+          })
+          .catch(() => {
+            body.innerHTML = '<div class="text-danger small py-2">No se pudo cargar el detalle.</div>';
+          });
+      });
+    });
   });
 })();

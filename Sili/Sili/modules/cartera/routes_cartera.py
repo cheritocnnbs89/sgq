@@ -30,5 +30,18 @@ def lista_facturas():
     )
 
 
+@cartera_bp.route("/factura/<doc_facturacion>/cobros", endpoint="factura_cobros")
+@require_login
+@require_permission(PERM_BASE, "ver")
+def factura_cobros(doc_facturacion):
+    resumen, cobros = service.get_factura_cobros(doc_facturacion)
+
+    return render_template(
+        "cartera/_cobros_partial.html",
+        resumen=resumen,
+        cobros=cobros,
+    )
+
+
 def register_cartera_routes(app):
     app.register_blueprint(cartera_bp)
