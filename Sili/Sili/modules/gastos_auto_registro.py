@@ -336,6 +336,17 @@ def _crear_gasto_desde_factura(conn, factura: dict, regla: dict) -> int:
 def _enqueue_notificacion(conn, gasto_id: int, usuario_id: int, motivo: str, sap_auto: bool = False) -> None:
     tpl = TPL_GASTO_AUTO_REGISTRADO if sap_auto else TPL_PENDIENTE_SAP
     event_key = f"gasto_auto_registrado:{int(gasto_id)}"
+    # notify_queue tiene un índice único uq_notify_hoy(user_id, fecha_obj,
+    # canal, tipo) -- pensado para el recordatorio diario de "tareas de
+    # hoy", no para esto. Si "tipo" se dejara igual a tpl (solo 2 valores
+    # posibles), el segundo gasto auto-registrado del mismo usuario en el
+    # mismo día chocaría contra ese índice y el BEGIN CATCH de abajo lo
+    # descartaría en silencio -- exactamente lo que pasaba en producción.
+    # Se agrega el gasto_id para que "tipo" sea único por gasto, sin tocar
+    # template_key (que es lo que de verdad resuelve la plantilla del
+    # correo) ni el prefijo "gasto_" (scheduler_services.py lo usa para
+    # detectar que debe enriquecer el payload con proveedor/motivo/total).
+    tipo_row = f"{tpl}:{int(gasto_id)}"
     cur = conn.cursor()
 
     cur.execute("""
@@ -376,7 +387,7 @@ def _enqueue_notificacion(conn, gasto_id: int, usuario_id: int, motivo: str, sap
         END CATCH
     """, (
         event_key,
-        usuario_id, tpl, tpl, payload,
+        usuario_id, tipo_row, tpl, payload,
         gasto_id, event_key
     ))
 
