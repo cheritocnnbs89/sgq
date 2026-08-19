@@ -319,7 +319,8 @@ def _crear_gasto_desde_factura(conn, factura: dict, regla: dict) -> int:
                 subtotal_sin_iva, iva, total_con_iva
             ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
         """, (
-            gasto_id, "Auto-registro factura recurrente", "", regla["centro_costo"], regla["motivo"],
+            gasto_id, "Auto-registro factura recurrente", regla.get("detalle") or "",
+            regla["centro_costo"], regla["motivo"],
             r["indicador"], r["con_soporte"], r["sin_soporte"], r["subtotal_factura"],
             r["servicios_10"], r["subtotal_sin_iva"], r["iva"], r["total_con_iva"]
         ))
@@ -410,7 +411,7 @@ def procesar_auto_registro_facturas(conn) -> list[int]:
 
     try:
         cur.execute("""
-            SELECT id, ruc_proveedor, monto, motivo, centro_costo, usuario_id, enviar_sap_auto
+            SELECT id, ruc_proveedor, monto, motivo, detalle, centro_costo, usuario_id, enviar_sap_auto
             FROM gastos_auto_registro_reglas
             WHERE COALESCE(activo, 1) = 1
         """)
@@ -441,7 +442,7 @@ def procesar_auto_registro_facturas(conn) -> list[int]:
               AND TRY_CONVERT(date,
                     SUBSTRING(f.fecha_emision,7,4)+'-'+
                     SUBSTRING(f.fecha_emision,4,2)+'-'+
-                    SUBSTRING(f.fecha_emision,1,2)) >= '2026-06-01'
+                    SUBSTRING(f.fecha_emision,1,2)) >= '2026-08-01'
         """, (regla_d["ruc_proveedor"], regla_d["monto"]))
         facturas = cur.fetchall()
 

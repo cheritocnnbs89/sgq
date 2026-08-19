@@ -7309,6 +7309,14 @@ def register_gastos_routes(app):
             orden_compra = (g.get('orden_compra') or '').strip()
             tiene_oc = bool(orden_compra)
 
+            # La observación real (detalle configurado en la regla de auto-registro,
+            # o lo que el usuario escribió por línea) va antes que "motivo", que en
+            # realidad es la cuenta contable de cabecera, no un texto descriptivo.
+            texto_obs_gasto = next(
+                (str(d.get('observacion') or '').strip() for d in dets if (d.get('observacion') or '').strip()),
+                ''
+            )
+
             # -----------------------------
             # Tipo 1/2 base
             # -----------------------------
@@ -7323,7 +7331,7 @@ def register_gastos_routes(app):
                 "Moneda": "USD",
                 "Clase_Documento": "KR",
                 "Lugar": "0001",
-                "Texto_Cabecera": g.get('motivo') or "",
+                "Texto_Cabecera": texto_obs_gasto or g.get('motivo') or "",
                 "Num_Tienda": "0001",
                 "Clave_Referencia_3": "01",
                 "Via_Pago": "T",
@@ -7346,10 +7354,12 @@ def register_gastos_routes(app):
 
                 pedido_posicion = str(idx * 10) if tiene_oc else ""
 
+                texto_pos_linea = (d.get('observacion') or '').strip() or texto_obs_gasto or g.get('motivo') or ""
+
                 detalle.append({
                     "Cuenta_Mayor": d.get('motivo') or "",
                     "Importe_Posicion": f"{importe_pos:.2f}",
-                    "Texto_Posicion": g.get('motivo') or "",
+                    "Texto_Posicion": texto_pos_linea,
                     "Division": "CORP",
                     "Centro_Costo": d.get('centro_costo') or "",
                     "Indicador_Iva": d.get('indicador') or "",
@@ -7436,7 +7446,7 @@ def register_gastos_routes(app):
                 }
 
                 total_tipo3 = Decimal("0.00")
-                motivo_gasto = (g.get("motivo") or "").strip()
+                motivo_gasto = texto_obs_gasto or (g.get("motivo") or "").strip()
 
                 def _indicador_liquidacion(detalle_linea):
                     """
@@ -7460,6 +7470,7 @@ def register_gastos_routes(app):
                     cuenta_gasto = d.get("motivo") or ""
                     division = "CORP"
                     indicador_iva = _indicador_liquidacion(d)
+                    motivo_detalle_linea = (d.get('observacion') or '').strip() or motivo_gasto
 
                     if es_caja_chica or es_tarjeta_online or es_tipo_4:
                         cc_linea = (d.get('centro_costo') or '').strip()
@@ -7478,7 +7489,7 @@ def register_gastos_routes(app):
                             "Indicador_Iva": indicador_iva,
                             "Centro_Costo": cc_linea,
                             "Importe_Posicion": f"{_q2(monto_linea):.2f}",
-                            "Motivo_Detalle": motivo_gasto
+                            "Motivo_Detalle": motivo_detalle_linea
                         })
 
                         documento["Liquidacion_Documentos"].append(liq_doc)
@@ -7496,7 +7507,7 @@ def register_gastos_routes(app):
                                 "Indicador_Iva": indicador_iva,
                                 "Centro_Costo": cc_row["codigo_cc_sap"],
                                 "Importe_Posicion": f"{m:.2f}",
-                                "Motivo_Detalle": motivo_gasto
+                                "Motivo_Detalle": motivo_detalle_linea
                             })
 
                             documento["Liquidacion_Documentos"].append(liq_doc)
@@ -8130,9 +8141,14 @@ def register_gastos_routes(app):
 
                 for gid in gids:
                     g_head = gastos_by_id[gid]
-                    motivo_gasto = (g_head.get("motivo") or "").strip()
+                    dets_gid = dets_by_gasto.get(gid, [])
+                    texto_obs_gasto = next(
+                        (str(d0.get('observacion') or '').strip() for d0 in dets_gid if (d0.get('observacion') or '').strip()),
+                        ''
+                    )
+                    motivo_gasto = texto_obs_gasto or (g_head.get("motivo") or "").strip()
 
-                    for d in dets_by_gasto.get(gid, []):
+                    for d in dets_gid:
                         monto_linea = _D(d.get("total_con_iva"))
 
                         if monto_linea <= 0:
@@ -8141,6 +8157,7 @@ def register_gastos_routes(app):
                         cuenta_gasto = d.get("motivo") or ""
                         division = "CORP"
                         indicador_iva = _indicador_liquidacion(g_head, d)
+                        motivo_detalle_linea = (d.get('observacion') or '').strip() or motivo_gasto
 
                         if tipo in ("caja_chica", "tarjeta_online", "boletos_aereos"):
                             cc = (d.get("centro_costo") or "").strip()
@@ -8157,7 +8174,7 @@ def register_gastos_routes(app):
                                 "Indicador_Iva": indicador_iva,
                                 "Centro_Costo": cc,
                                 "Importe_Posicion": f"{_q2(monto_linea):.2f}",
-                                "Motivo_Detalle": motivo_gasto
+                                "Motivo_Detalle": motivo_detalle_linea
                             })
 
                             documento["Liquidacion_Documentos"].append(liq_doc)
@@ -8175,7 +8192,7 @@ def register_gastos_routes(app):
                                     "Indicador_Iva": indicador_iva,
                                     "Centro_Costo": cc_row["codigo_cc_sap"],
                                     "Importe_Posicion": f"{m:.2f}",
-                                    "Motivo_Detalle": motivo_gasto
+                                    "Motivo_Detalle": motivo_detalle_linea
                                 })
 
                                 documento["Liquidacion_Documentos"].append(liq_doc)
