@@ -56,17 +56,35 @@
     enviarSap(gastoId, btn);
   });
 
+  // "Seleccionar todas" solo marca las filas que sí tienen checkbox
+  // (las ya enviadas a SAP no lo tienen, no hay nada que seleccionar ahí).
+  var chkAll = document.getElementById('chkSelectAllFacturas');
+  if (chkAll) {
+    chkAll.addEventListener('change', function () {
+      document.querySelectorAll('.row-select-factura').forEach(function (chk) {
+        chk.checked = chkAll.checked;
+      });
+    });
+  }
+
   var btnMasivo = document.getElementById('btnEnviarSapMasivo');
   if (btnMasivo) {
     btnMasivo.addEventListener('click', function () {
-      var pendientes = document.querySelectorAll('.btn-enviar-sap:not(:disabled)');
-      if (!pendientes.length) {
-        alert('No hay gastos pendientes de envío a SAP.');
+      var seleccionados = Array.from(document.querySelectorAll('.row-select-factura:checked'))
+        .map(function (chk) { return chk.dataset.gastoId; })
+        .filter(Boolean);
+
+      if (!seleccionados.length) {
+        alert('Selecciona al menos un gasto pendiente para enviar a SAP.');
         return;
       }
-      if (!confirm('¿Enviar ' + pendientes.length + ' gasto(s) pendiente(s) a SAP?')) return;
-      pendientes.forEach(function (btn) {
-        enviarSap(btn.dataset.gastoId, btn);
+      if (!confirm('¿Enviar ' + seleccionados.length + ' gasto(s) seleccionado(s) a SAP?')) return;
+
+      seleccionados.forEach(function (gastoId) {
+        var btn = document.querySelector('.btn-enviar-sap[data-gasto-id="' + gastoId + '"]');
+        if (btn && !btn.disabled) {
+          enviarSap(gastoId, btn);
+        }
       });
     });
   }

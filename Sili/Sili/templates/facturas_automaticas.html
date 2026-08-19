@@ -84,6 +84,11 @@
     <table class="table table-sm table-hover align-middle">
       <thead class="table-light">
         <tr>
+          <th class="text-center">
+            {% if puede_enviar_sap %}
+            <input type="checkbox" class="form-check-input" id="chkSelectAllFacturas" title="Seleccionar todas las pendientes">
+            {% endif %}
+          </th>
           <th>Fecha</th>
           <th>Proveedor</th>
           <th>Nro. Factura</th>
@@ -101,6 +106,11 @@
         {% for g in gastos %}
         {% set sap_ok = g.sap_contabilizacion and (g.sap_contabilizacion | string).strip() %}
         <tr id="row-{{ g.id }}" class="{{ 'table-success' if sap_ok else '' }}">
+          <td class="text-center">
+            {% if not sap_ok and puede_enviar_sap %}
+            <input type="checkbox" class="form-check-input row-select-factura" data-gasto-id="{{ g.id }}">
+            {% endif %}
+          </td>
           <td class="text-nowrap">{{ g.fecha | string | truncate(10, False, '') if g.fecha else '—' }}</td>
           <td>{{ g.proveedor_nombre or g.proveedor or '—' }}</td>
           <td class="text-nowrap">{{ g.numero_factura or '—' }}</td>
@@ -136,7 +146,7 @@
       </tbody>
       <tfoot class="table-light fw-bold">
         <tr>
-          <td colspan="{{ 7 if is_admin else 6 }}">Totales</td>
+          <td colspan="{{ 8 if is_admin else 7 }}">Totales</td>
           <td class="text-end font-monospace">{{ '%.2f'|format(total_subtotal) }}</td>
           <td class="text-end font-monospace">{{ '%.2f'|format(total_iva) }}</td>
           <td class="text-end font-monospace">{{ '%.2f'|format(total_con_iva) }}</td>
