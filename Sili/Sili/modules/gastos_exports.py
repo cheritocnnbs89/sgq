@@ -830,27 +830,57 @@ def _build_gastos_workbook():
                 except Exception:
                     return None
 
+            def _fila_completamente_aprobada(rd: dict) -> bool:
+                """
+                True si ESTA fila ya completó su flujo de aprobación:
+                - caja_chica / reembolso / boletos: basta una de GA/GG/GF
+                  (por la sustitución "actúa como GA" cuando no hay GA
+                  intermedio en la cadena de jefes — ver effective_area en
+                  /aprobar y /aprobar-masivo).
+                - tarjeta normal: las 3 — GA, GG y GF — el flujo completo
+                  de ese tipo de gasto exige las tres, no basta con una.
+                """
+                es_restringido = (
+                    int(rd.get("es_caja_chica") or 0) == 1
+                    or int(rd.get("reembolso_vendedor") or 0) == 1
+                    or int(rd.get("boletos_aereos") or 0) == 1
+                )
+                ga_ok = int(rd.get("ga_aprobado") or 0) == 1
+                gg_ok = int(rd.get("gg_aprobado") or 0) == 1
+                gf_ok = int(rd.get("gf_aprobado") or 0) == 1
+
+                if es_restringido:
+                    return ga_ok or gg_ok or gf_ok
+                return ga_ok and gg_ok and gf_ok
+
             def _pick_aprobacion_header(rows_in):
                 """
-                Retorna (aprobado_por_id, aprobado_at_dt).
+                Retorna (aprobado_por_id, aprobado_at_dt) — o (None, None)
+                si CUALQUIER gasto del reporte todavía no completó su
+                aprobación (ver _fila_completamente_aprobada). El reporte
+                junta varios gastos del período filtrado; si alguno sigue
+                pendiente, no se debe firmar el período completo con el
+                nombre de quien aprobó otros gastos del mismo rango de
+                fechas — daría la impresión de que todo ya fue revisado.
 
-                Regla:
-                - caja_chica / reembolso / boletos -> normalmente GA, PERO si
-                  el último jefe de ese usuario es Gerente Financiero o
-                  Gerente General (no hay GA intermedio), el flujo de
-                  aprobación de routes_gastos_tarjeta.py graba la aprobación
-                  en gf_aprobado/gg_aprobado en vez de ga_aprobado ("GF/GG
-                  actuando como GA" — ver effective_area en /aprobar y
-                  /aprobar-masivo). Por eso acá se revisan las 3 columnas
-                  para este tipo, no solo GA.
-                - tarjeta normal -> GF (el paso final real de ese flujo)
+                Regla para elegir el nombre a mostrar (una vez que SÍ están
+                todos aprobados):
+                - caja_chica / reembolso / boletos -> GA, o GG/GF si alguno
+                  de esos actuó como GA (ver arriba).
+                - tarjeta normal -> GF (el paso final real de ese flujo).
                 - si hay varias filas o varias columnas con aprobación,
-                  toma la fecha más reciente
+                  toma la fecha más reciente.
                 """
+                if not rows_in:
+                    return None, None
+
+                if not all(_fila_completamente_aprobada(dict(r)) for r in rows_in):
+                    return None, None
+
                 best_dt = None
                 best_uid = None
 
-                for r in rows_in or []:
+                for r in rows_in:
                     rd = dict(r)
 
                     es_restringido = (
