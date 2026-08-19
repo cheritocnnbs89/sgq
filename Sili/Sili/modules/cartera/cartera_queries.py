@@ -57,8 +57,17 @@ SELECT * FROM (
                 THEN DATEDIFF(day, fecha_factura, GETDATE())
         END AS dias_factura_pago,
         CASE
-            WHEN fecha_guia IS NOT NULL
-                THEN DATEDIFF(day, fecha_guia, COALESCE(fecha_ultimo_pago, GETDATE()))
+            WHEN fecha_guia IS NULL THEN NULL
+            -- Ojo: en una factura Abierta con abono parcial, fecha_ultimo_pago
+            -- NO viene NULL — trae la fecha de ESE abono parcial (ver
+            -- cartera_calculo.py: "fecha_ultimo_pago = fecha_compensacion del
+            -- eslabón anterior" para Abierta). Un COALESCE(fecha_ultimo_pago,
+            -- GETDATE()) sin mirar estado se "congelaría" en esa fecha en vez
+            -- de seguir contando en vivo hasta hoy.
+            WHEN estado = 'Pagada' AND fecha_ultimo_pago IS NOT NULL
+                THEN DATEDIFF(day, fecha_guia, fecha_ultimo_pago)
+            WHEN estado = 'Abierta'
+                THEN DATEDIFF(day, fecha_guia, GETDATE())
         END AS dias_totales_guia_pago
     FROM {TABLA_CARTERA_FACTURAS}
 ) AS f
