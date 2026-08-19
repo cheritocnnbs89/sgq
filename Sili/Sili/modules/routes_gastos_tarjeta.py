@@ -4925,6 +4925,7 @@ def register_gastos_routes(app):
         ruc = (request.form.get('ruc_proveedor') or '').strip()
         monto_raw = (request.form.get('monto') or '').strip()
         motivo = (request.form.get('motivo') or '').strip()
+        detalle = (request.form.get('detalle') or '').strip()
         centro_costo = (request.form.get('centro_costo') or '').strip()
         usuario_id_raw = (request.form.get('usuario_id') or '').strip()
         enviar_sap_auto = request.form.get('enviar_sap_auto') == '1'
@@ -4940,7 +4941,7 @@ def register_gastos_routes(app):
             return redirect(url_for('gastos_configuracion'))
 
         try:
-            gh.crear_auto_registro_regla(ruc, monto, motivo, centro_costo, int(usuario_id_raw), enviar_sap_auto)
+            gh.crear_auto_registro_regla(ruc, monto, motivo, centro_costo, int(usuario_id_raw), enviar_sap_auto, detalle)
             flash('Regla de auto-registro creada.', 'success')
         except Exception:
             current_app.logger.exception("Error creando regla de auto-registro")
