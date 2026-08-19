@@ -10,50 +10,59 @@ def get_connection():
     return get_db()
 
 
-def list_facturas(filters):
-    conn = get_connection()
-
-    params = []
+def _build_periodo_where(filters, cuenta=None):
+    """Arma el WHERE de año/mes (sobre fecha_factura) y, opcionalmente,
+    de cuenta — en ese orden, para que coincida con el orden de los ?
+    que arma cada caller."""
     where = []
+    params = []
 
-    if filters["q"]:
-        where.append(
-            "("
-            "cuenta LIKE ? "
-            "OR nombre_cliente LIKE ? "
-            "OR doc_facturacion LIKE ? "
-            "OR referencia LIKE ? "
-            "OR num_documento_origen LIKE ?"
-            ")"
-        )
-        like = f"%{filters['q']}%"
-        params.extend([like, like, like, like, like])
+    if filters.get("anio"):
+        where.append("YEAR(fecha_factura) = ?")
+        params.append(filters["anio"])
 
-    if filters["estado"] in ("Abierta", "Pagada"):
-        where.append("estado = ?")
-        params.append(filters["estado"])
+    if filters.get("mes"):
+        where.append("MONTH(fecha_factura) = ?")
+        params.append(filters["mes"])
 
-    if filters["solo_demoradas"]:
-        where.append("dias_totales_guia_pago > ?")
-        params.append(filters["dias_umbral"])
+    if cuenta:
+        where.append("cuenta = ?")
+        params.append(cuenta)
 
-    sql = q.SQL_SELECT_CARTERA_FACTURAS_BASE
+    where_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    return where_sql, params
 
-    if where:
-        sql += " WHERE " + " AND ".join(where)
 
-    # Abiertas primero (son las que hay que gestionar), y dentro de cada
-    # grupo las más demoradas arriba.
-    sql += """
-        ORDER BY
-            CASE WHEN estado = 'Abierta' THEN 0 ELSE 1 END,
-            ISNULL(dias_totales_guia_pago, -1) DESC
-    """
+def list_anios_disponibles():
+    conn = get_connection()
+    rows = conn.execute(q.SQL_SELECT_ANIOS_DISPONIBLES).fetchall()
+    return [int(r["anio"]) for r in rows if r["anio"] is not None]
+
+
+def list_ranking_clientes(filters):
+    conn = get_connection()
+    where_sql, where_params = _build_periodo_where(filters)
+
+    sql = q.sql_ranking_clientes(where_sql)
+    params = [filters["dias_umbral"]] + where_params
 
     return conn.execute(sql, params).fetchall()
 
 
-def get_resumen():
+def get_cliente_metricas(cuenta, filters):
     conn = get_connection()
+    where_sql, where_params = _build_periodo_where(filters, cuenta=cuenta)
+
+    sql = q.sql_cliente_metricas(where_sql)
+    params = [filters["dias_umbral"]] + where_params
+
     cur = conn.cursor()
-    return cur.execute(q.SQL_SELECT_CARTERA_RESUMEN).fetchone()
+    return cur.execute(sql, params).fetchone()
+
+
+def list_facturas_cliente(cuenta, filters):
+    conn = get_connection()
+    where_sql, where_params = _build_periodo_where(filters, cuenta=cuenta)
+
+    sql = q.sql_facturas_cliente(where_sql)
+    return conn.execute(sql, where_params).fetchall()

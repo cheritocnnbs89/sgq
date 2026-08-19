@@ -1,0 +1,463 @@
+/* ===== Cartera / Días de Crédito ===== */
+
+:root {
+  --cart-accent: #2563eb;
+  --cart-line: #e5e7eb;
+  --cart-muted: #6b7280;
+  --cart-ink: #111827;
+  --cart-danger: #dc3545;
+  --cart-danger-bg: #fdecea;
+}
+
+.cartera-page .card {
+  border-radius: 12px;
+}
+
+/* ---- Encabezado ---- */
+.cartera-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .25rem;
+}
+
+.cartera-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.cartera-subtitle {
+  color: var(--cart-muted);
+  font-size: .88rem;
+}
+
+.cartera-header-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+
+.cartera-header-controls .form-select {
+  width: auto;
+}
+
+.cartera-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: 999px;
+  padding: .35rem .8rem;
+  font-size: .8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cartera-pill.is-muted {
+  background: #f3f4f6;
+  color: var(--cart-muted);
+}
+
+.cartera-metrics-subtitle {
+  font-size: .95rem;
+  color: var(--cart-muted);
+  margin: .75rem 0 1rem;
+}
+
+.cartera-metrics-subtitle strong {
+  color: var(--cart-ink);
+}
+
+/* ---- Grilla de tarjetas KPI ---- */
+.cartera-kpi-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr 1fr;
+  grid-auto-rows: 1fr;
+  gap: .9rem;
+  margin-bottom: 1.25rem;
+}
+
+.cartera-kpi-card {
+  background: #fff;
+  border: 1px solid var(--cart-line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, .05);
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.cartera-kpi-card.hero {
+  grid-row: span 2;
+  background: var(--cart-danger-bg);
+  border-color: #f5c2c0;
+  justify-content: center;
+}
+
+.cartera-kpi-card.hero.is-ok {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.cartera-kpi-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 8px;
+  background: rgba(37, 99, 235, .12);
+  color: var(--cart-accent);
+  font-weight: 700;
+  font-size: .95rem;
+}
+
+.cartera-kpi-card.hero .cartera-kpi-icon {
+  background: rgba(220, 53, 69, .15);
+  color: var(--cart-danger);
+}
+
+.cartera-kpi-card.hero.is-ok .cartera-kpi-icon {
+  background: rgba(25, 135, 84, .15);
+  color: #198754;
+}
+
+.cartera-kpi-label {
+  font-size: .82rem;
+  color: var(--cart-muted);
+}
+
+.cartera-kpi-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--cart-ink);
+  line-height: 1.1;
+}
+
+.cartera-kpi-card.hero .cartera-kpi-value {
+  font-size: 2.4rem;
+}
+
+.cartera-kpi-hint {
+  font-size: .78rem;
+  color: var(--cart-muted);
+}
+
+.cartera-kpi-badge {
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: .25rem;
+  background: var(--cart-danger);
+  color: #fff;
+  font-size: .76rem;
+  font-weight: 600;
+  padding: .25rem .6rem;
+  border-radius: 999px;
+}
+
+.cartera-kpi-badge.is-ok {
+  background: #198754;
+}
+
+/* ---- "De la guía al cobro" ---- */
+.cartera-flow-card {
+  background: #fff;
+  border: 1px solid var(--cart-line);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.cartera-flow-title {
+  font-weight: 700;
+  margin-bottom: .9rem;
+}
+
+.cartera-flow-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.cartera-flow-steps {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 0 auto;
+}
+
+.cartera-flow-step {
+  text-align: center;
+  min-width: 92px;
+}
+
+.cartera-flow-step .cartera-kpi-label {
+  white-space: nowrap;
+}
+
+.cartera-flow-step-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--cart-ink);
+}
+
+.cartera-flow-op {
+  font-size: 1.2rem;
+  color: var(--cart-muted);
+}
+
+.cartera-flow-bar-wrap {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.cartera-flow-bar-caption {
+  font-size: .82rem;
+  color: var(--cart-muted);
+}
+
+.cartera-bar-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.cartera-bar-fill {
+  height: 100%;
+  width: var(--bar-pct, 0%);
+  border-radius: 999px;
+  background: var(--cart-danger);
+  transition: width .4s ease;
+}
+
+.cartera-flow-bar-tail {
+  align-self: flex-end;
+}
+
+/* ---- Ranking de clientes ---- */
+.cartera-ranking-card,
+.cartera-detail-card {
+  background: #fff;
+  border: 1px solid var(--cart-line);
+  border-radius: 12px;
+  padding: 1.1rem 1.1rem 1.3rem;
+  height: 100%;
+}
+
+.cartera-card-title {
+  font-weight: 700;
+  margin-bottom: .8rem;
+}
+
+.cartera-ranking-search {
+  max-width: 260px;
+  margin-bottom: .85rem;
+}
+
+.cartera-ranking-table {
+  width: 100%;
+  font-size: .86rem;
+}
+
+.cartera-ranking-table th {
+  color: var(--cart-muted);
+  font-size: .74rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 1px solid var(--cart-line);
+  padding: 0 .5rem .5rem;
+  text-align: left;
+}
+
+.cartera-ranking-table th.text-end {
+  text-align: right;
+}
+
+.cartera-ranking-row {
+  text-decoration: none;
+  color: inherit;
+  display: table-row;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cartera-ranking-row:hover {
+  background: #f8fafc;
+}
+
+.cartera-ranking-row.is-selected {
+  background: #eff6ff;
+}
+
+.cartera-ranking-row td {
+  padding: .55rem .5rem;
+  vertical-align: middle;
+}
+
+.cartera-cliente-cell {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.cartera-avatar {
+  flex: 0 0 auto;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  font-size: .9rem;
+}
+
+.cartera-avatar.c0 { background: #2563eb; }
+.cartera-avatar.c1 { background: #7c3aed; }
+.cartera-avatar.c2 { background: #059669; }
+.cartera-avatar.c3 { background: #d97706; }
+.cartera-avatar.c4 { background: #db2777; }
+.cartera-avatar.c5 { background: #0891b2; }
+
+.cartera-cliente-nombre {
+  font-weight: 600;
+  color: var(--cart-ink);
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cartera-cliente-cuenta {
+  font-size: .76rem;
+  color: var(--cart-muted);
+}
+
+.cartera-pct-badge {
+  display: inline-block;
+  font-weight: 700;
+  color: var(--cart-danger);
+}
+
+.cartera-ranking-empty {
+  text-align: center;
+  color: var(--cart-muted);
+  padding: 1.5rem 0;
+}
+
+/* ---- Panel de detalle + línea de tiempo ---- */
+.cartera-detail-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+
+.cartera-detail-header .cartera-avatar {
+  width: 2.6rem;
+  height: 2.6rem;
+  font-size: 1.05rem;
+}
+
+.cartera-detail-nombre {
+  font-weight: 700;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cartera-detail-cuenta {
+  font-size: .8rem;
+  color: var(--cart-muted);
+}
+
+.cartera-detail-days {
+  margin-left: auto;
+  text-align: right;
+}
+
+.cartera-detail-days .cartera-kpi-value {
+  font-size: 1.6rem;
+}
+
+.cartera-timeline-title {
+  font-weight: 700;
+  font-size: .88rem;
+  margin: 1rem 0 .6rem;
+}
+
+.cartera-timeline {
+  max-height: 420px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  padding-right: .25rem;
+}
+
+.cartera-timeline-item {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: .6rem;
+}
+
+.cartera-timeline-row1 {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  font-size: .8rem;
+  color: var(--cart-muted);
+  margin-bottom: .3rem;
+}
+
+.cartera-timeline-ref {
+  color: var(--cart-ink);
+  font-weight: 600;
+}
+
+.cartera-timeline-row2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+}
+
+.cartera-timeline-dias {
+  font-size: .78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cartera-timeline-bar-wrap {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 991.98px) {
+  .cartera-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cartera-kpi-card.hero {
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .cartera-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cartera-kpi-card.hero {
+    grid-row: span 1;
+  }
+}

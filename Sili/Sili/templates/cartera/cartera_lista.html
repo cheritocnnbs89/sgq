@@ -1,146 +1,279 @@
 {% extends "base.html" %}
 {% block title %}Cartera / Días de Crédito{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cartera/cartera.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid">
-  <div class="d-flex align-items-center justify-content-between mb-3">
-    <h4 class="mb-0">Cartera / Días de Crédito</h4>
-  </div>
+<div class="container-fluid cartera-page">
 
-  {# ---- Resumen rápido ---- #}
-  <div class="row g-3 mb-3">
-    <div class="col-6 col-md-3">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
-          <div class="text-muted small">Facturas totales</div>
-          <div class="fs-4 fw-semibold">{{ resumen.total_facturas or 0 }}</div>
-        </div>
+  <div class="cartera-header">
+    <div>
+      <h4 class="cartera-title">Días reales de pago</h4>
+      <div class="cartera-subtitle">
+        Guía de despacho → Factura → Pago, por cliente
+        {% if filters.anio %}
+          · {{ filters.anio }}{% if mes_nombre %} · {{ mes_nombre }}{% endif %}
+        {% endif %}
       </div>
     </div>
-    <div class="col-6 col-md-3">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
-          <div class="text-muted small">Abiertas</div>
-          <div class="fs-4 fw-semibold text-warning">{{ resumen.total_abiertas or 0 }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
-          <div class="text-muted small">Pagadas</div>
-          <div class="fs-4 fw-semibold text-success">{{ resumen.total_pagadas or 0 }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
-          <div class="text-muted small">Saldo pendiente</div>
-          <div class="fs-4 fw-semibold">{{ "%.2f"|format(resumen.saldo_pendiente or 0) }}</div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  {# ---- Filtros ---- #}
-  <form class="row g-2 mb-3" method="get" action="{{ url_for('cartera.lista_facturas') }}">
-    <div class="col-md-4">
-      <input type="text" class="form-control" name="q"
-             placeholder="Buscar por cliente, cuenta, factura o referencia" value="{{ f.q }}">
-    </div>
-    <div class="col-md-2">
-      <select class="form-select" name="estado">
-        <option value="" {{ '' == f.estado and 'selected' or '' }}>Todos los estados</option>
-        <option value="Abierta" {{ 'Abierta' == f.estado and 'selected' or '' }}>Abierta</option>
-        <option value="Pagada" {{ 'Pagada' == f.estado and 'selected' or '' }}>Pagada</option>
-      </select>
-    </div>
-    <div class="col-md-3 d-flex align-items-center">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="solo_demoradas" value="1" id="soloDemoradas"
-               {{ 'checked' if f.solo_demoradas else '' }}>
-        <label class="form-check-label" for="soloDemoradas">
-          Solo con más de {{ f.dias_umbral }} días (guía → pago)
-        </label>
-      </div>
-    </div>
-    <div class="col-md-3 d-grid d-md-flex">
-      <button class="btn btn-outline-secondary me-2"><i class="bi bi-search"></i> Filtrar</button>
-      <a class="btn btn-outline-dark" href="{{ url_for('cartera.lista_facturas') }}">
-        <i class="bi bi-x-circle"></i> Limpiar
-      </a>
-    </div>
-  </form>
+    <form class="cartera-header-controls" method="get" action="{{ url_for('cartera.lista_facturas') }}" id="carteraFiltrosForm">
+      {% if cuenta_sel %}<input type="hidden" name="cuenta" value="{{ cuenta_sel }}">{% endif %}
 
-  <div class="table-responsive">
-    <table class="table table-hover align-middle table-sm">
-      <thead class="table-light">
-        <tr>
-          <th>Factura (Doc.facturación)</th>
-          <th>Cliente</th>
-          <th>Fecha guía</th>
-          <th>Fecha factura</th>
-          <th class="text-center">Días guía→factura</th>
-          <th class="text-center">Estado</th>
-          <th class="text-center">Días factura→pago</th>
-          <th class="text-center">Días totales (guía→pago)</th>
-          <th class="text-end">Saldo</th>
-          <th>Último pago</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in rows %}
-        <tr>
-          <td><code>{{ r.doc_facturacion }}</code></td>
-          <td>
-            {{ r.nombre_cliente }}
-            <div class="text-muted small">{{ r.cuenta }}</div>
-          </td>
-          <td>{{ r.fecha_guia.strftime('%d/%m/%Y') if r.fecha_guia else '—' }}</td>
-          <td>{{ r.fecha_factura.strftime('%d/%m/%Y') if r.fecha_factura else '—' }}</td>
-          <td class="text-center">
-            {{ r.dias_guia_factura if r.dias_guia_factura is not none else '—' }}
-          </td>
-          <td class="text-center">
-            {% if r.estado == 'Pagada' %}
-              <span class="badge bg-success">Pagada</span>
-            {% elif r.estado == 'Abierta' %}
-              <span class="badge bg-warning text-dark">Abierta</span>
-            {% else %}
-              <span class="badge bg-secondary">{{ r.estado }}</span>
-            {% endif %}
-          </td>
-          <td class="text-center">
-            {% if r.dias_factura_pago is not none %}
-              {{ r.dias_factura_pago }}{{ ' (en curso)' if r.estado == 'Abierta' else '' }}
-            {% else %}
-              —
-            {% endif %}
-          </td>
-          <td class="text-center">
-            {% if r.dias_totales_guia_pago is not none %}
-              <span class="badge {{ 'bg-danger' if r.dias_totales_guia_pago > f.dias_umbral else 'bg-light text-dark' }}">
-                {{ r.dias_totales_guia_pago }} días
-              </span>
-            {% else %}
-              —
-            {% endif %}
-          </td>
-          <td class="text-end">{{ "%.2f"|format(r.saldo or 0) }}</td>
-          <td>{{ r.fecha_ultimo_pago.strftime('%d/%m/%Y') if r.fecha_ultimo_pago else '—' }}</td>
-        </tr>
-        {% else %}
-        <tr><td colspan="10" class="text-center text-muted py-4">Sin resultados</td></tr>
+      <select class="form-select form-select-sm" name="anio" id="carteraAnio">
+        <option value="">Todos los años</option>
+        {% for a in anios_disponibles %}
+        <option value="{{ a }}" {{ 'selected' if filters.anio == a else '' }}>{{ a }}</option>
         {% endfor %}
-      </tbody>
-    </table>
+      </select>
+
+      <select class="form-select form-select-sm" name="mes" id="carteraMes">
+        <option value="">Todos los meses</option>
+        {% for m, nombre in meses %}
+        <option value="{{ m }}" {{ 'selected' if filters.mes == m else '' }}>{{ nombre }}</option>
+        {% endfor %}
+      </select>
+
+      <noscript><button class="btn btn-sm btn-outline-secondary">Filtrar</button></noscript>
+
+      <span class="cartera-pill">Crédito pactado: {{ credito_pactado }} días</span>
+      <span class="cartera-pill is-muted">Datos al {{ hoy.strftime('%Y-%m-%d') }}</span>
+    </form>
   </div>
 
-  <p class="text-muted small">
-    "Días guía→factura": tiempo entre la emisión de la guía y la refacturación.
-    "Días factura→pago": tiempo entre la factura y el último pago (o días transcurridos si sigue abierta).
-    "Días totales (guía→pago)": el tiempo real de principio a fin — desde que salió la mercadería hasta que se cobró (o lleva corriendo).
-  </p>
+  {% if cliente %}
+  {% set prom_fp = cliente.prom_factura_pago %}
+  {% set diff = (prom_fp - credito_pactado) if prom_fp is not none else none %}
+  {% set es_malo = diff is not none and diff > 0 %}
+  {% set g_f = cliente.prom_guia_factura %}
+  {% set ciclo = cliente.prom_ciclo_total %}
+  {% set concentracion = ((prom_fp / ciclo * 100) if (prom_fp is not none and ciclo) else 0) %}
+
+  <div class="cartera-metrics-subtitle">
+    Métricas de: <strong>{{ cliente.nombre_cliente or '—' }}</strong> · Cuenta {{ cliente.cuenta }}
+  </div>
+
+  <div class="cartera-kpi-grid">
+    <div class="cartera-kpi-card hero {{ '' if es_malo else 'is-ok' }}">
+      <span class="cartera-kpi-icon">{{ '!' if es_malo else '✓' }}</span>
+      <div class="cartera-kpi-value">{{ (prom_fp|round|int) if prom_fp is not none else '—' }} d</div>
+      <div class="cartera-kpi-label">Prom. Factura → Pago</div>
+      <div class="cartera-kpi-hint">vs {{ credito_pactado }}d pactados</div>
+      {% if diff is not none %}
+      <span class="cartera-kpi-badge {{ '' if es_malo else 'is-ok' }}">
+        {% if diff > 0 %}+{{ diff|round|int }} días sobre lo pactado
+        {% elif diff < 0 %}{{ diff|round|int }} días bajo lo pactado
+        {% else %}Justo en lo pactado{% endif %}
+      </span>
+      {% endif %}
+    </div>
+
+    <div class="cartera-kpi-card">
+      <span class="cartera-kpi-icon">N°</span>
+      <div class="cartera-kpi-label">Facturas de este cliente</div>
+      <div class="cartera-kpi-value">{{ cliente.num_facturas }}</div>
+      <div class="cartera-kpi-hint">{{ cliente.num_pagadas }} pagadas · {{ cliente.num_abiertas }} abiertas</div>
+    </div>
+
+    <div class="cartera-kpi-card">
+      <span class="cartera-kpi-icon">$</span>
+      <div class="cartera-kpi-label">Facturado a este cliente</div>
+      <div class="cartera-kpi-value">${{ "{:,.0f}".format(cliente.total_facturado or 0) }}</div>
+      <div class="cartera-kpi-hint">{{ filters.anio if filters.anio else 'Histórico' }}{% if mes_nombre %} · {{ mes_nombre }}{% endif %}</div>
+    </div>
+
+    <div class="cartera-kpi-card">
+      <span class="cartera-kpi-icon">S</span>
+      <div class="cartera-kpi-label">Saldo pendiente</div>
+      <div class="cartera-kpi-value">${{ "{:,.0f}".format(cliente.saldo_pendiente or 0) }}</div>
+      <div class="cartera-kpi-hint">en facturas abiertas de este cliente</div>
+    </div>
+
+    <div class="cartera-kpi-card">
+      <span class="cartera-kpi-icon">%</span>
+      <div class="cartera-kpi-label">Fuera de plazo</div>
+      <div class="cartera-kpi-value">
+        {{ (cliente.pct_fuera_plazo|round|int) if cliente.pct_fuera_plazo is not none else '—' }}%
+      </div>
+      <div class="cartera-kpi-hint">de sus facturas pagadas &gt;{{ credito_pactado }}d</div>
+    </div>
+
+    <div class="cartera-kpi-card">
+      <span class="cartera-kpi-icon">d</span>
+      <div class="cartera-kpi-label">Antigüedad prom. abiertas</div>
+      <div class="cartera-kpi-value">
+        {{ (cliente.antiguedad_prom_abiertas|round|int) if cliente.antiguedad_prom_abiertas is not none else '—' }} d
+      </div>
+      <div class="cartera-kpi-hint">al {{ hoy.strftime('%Y-%m-%d') }}</div>
+    </div>
+  </div>
+
+  <div class="cartera-flow-card">
+    <div class="cartera-flow-title">De la guía al cobro: dónde se acumulan los días</div>
+    <div class="cartera-flow-row">
+      <div class="cartera-flow-steps">
+        <div class="cartera-flow-step">
+          <div class="cartera-kpi-label">Guía → Factura</div>
+          <div class="cartera-flow-step-value">{{ "%.1f"|format(g_f) if g_f is not none else '—' }} d</div>
+        </div>
+        <div class="cartera-flow-op">→</div>
+        <div class="cartera-flow-step">
+          <div class="cartera-kpi-label">Factura → Pago</div>
+          <div class="cartera-flow-step-value">{{ (prom_fp|round|int) if prom_fp is not none else '—' }} d</div>
+        </div>
+        <div class="cartera-flow-op">=</div>
+        <div class="cartera-flow-step">
+          <div class="cartera-kpi-label">Ciclo total (guía → pago)</div>
+          <div class="cartera-flow-step-value">{{ (ciclo|round|int) if ciclo is not none else '—' }} d</div>
+        </div>
+      </div>
+
+      <div class="cartera-flow-bar-wrap">
+        <div class="cartera-flow-bar-caption">
+          {% if concentracion >= 50 %}
+            La desviación se concentra en Factura → Pago
+          {% else %}
+            La desviación se concentra en Guía → Factura
+          {% endif %}
+        </div>
+        <div class="cartera-bar-track">
+          <div class="cartera-bar-fill" data-pct="{{ concentracion|round|int }}"></div>
+        </div>
+      </div>
+
+      {% if es_malo %}
+      <span class="cartera-pill cartera-flow-bar-tail">+{{ diff|round|int }} días sobre lo pactado</span>
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="cartera-ranking-empty">No hay datos de cartera para los filtros seleccionados.</div>
+  {% endif %}
+
+  <div class="row g-3">
+    <div class="col-lg-7">
+      <div class="cartera-ranking-card">
+        <div class="cartera-card-title">Clientes con mayor desviación</div>
+
+        <input type="text" class="form-control form-control-sm cartera-ranking-search"
+               id="carteraRankingSearch" placeholder="Buscar cliente o cuenta...">
+
+        <div class="table-responsive">
+          <table class="cartera-ranking-table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th class="text-end">Fact.</th>
+                <th class="text-end">Abiertas</th>
+                <th class="text-end">Saldo</th>
+                <th class="text-end">Prom. F→P</th>
+                <th class="text-end">&gt;{{ credito_pactado }}D</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in ranking %}
+              <tr class="cartera-ranking-row position-relative {{ 'is-selected' if c.cuenta == cuenta_sel else '' }}"
+                  data-search="{{ (c.nombre_cliente or '')|lower }} {{ c.cuenta }}">
+                <td>
+                  <div class="cartera-cliente-cell">
+                    <span class="cartera-avatar c{{ loop.index0 % 6 }}">
+                      {{ (c.nombre_cliente or '?')|first|upper }}
+                    </span>
+                    <div>
+                      <div class="cartera-cliente-nombre">
+                        <a href="{{ url_for('cartera.lista_facturas', cuenta=c.cuenta, anio=filters.anio or None, mes=filters.mes or None) }}"
+                           class="stretched-link text-reset text-decoration-none">
+                          {{ c.nombre_cliente or '—' }}
+                        </a>
+                      </div>
+                      <div class="cartera-cliente-cuenta">{{ c.cuenta }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-end">{{ c.num_facturas }}</td>
+                <td class="text-end">{{ c.num_abiertas }}</td>
+                <td class="text-end">${{ "{:,.0f}".format(c.saldo_pendiente or 0) }}</td>
+                <td class="text-end">{{ (c.prom_factura_pago|round|int) if c.prom_factura_pago is not none else '—' }}</td>
+                <td class="text-end">
+                  <span class="cartera-pct-badge">
+                    {{ (c.pct_fuera_plazo|round|int) if c.pct_fuera_plazo is not none else '—' }}%
+                  </span>
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="6" class="cartera-ranking-empty">Sin datos para los filtros seleccionados.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div id="carteraRankingEmpty" class="cartera-ranking-empty d-none">
+          Ningún cliente coincide con la búsqueda.
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="cartera-detail-card">
+        {% if cliente %}
+        <div class="cartera-detail-header">
+          <span class="cartera-avatar c0">{{ (cliente.nombre_cliente or '?')|first|upper }}</span>
+          <div>
+            <div class="cartera-detail-nombre">{{ cliente.nombre_cliente or '—' }}</div>
+            <div class="cartera-detail-cuenta">Cuenta {{ cliente.cuenta }}</div>
+          </div>
+          <div class="cartera-detail-days">
+            <div class="cartera-kpi-value">{{ (prom_fp|round|int) if prom_fp is not none else '—' }} d</div>
+            {% if es_malo %}
+            <span class="cartera-kpi-badge">+{{ diff|round|int }} días sobre lo pactado</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="cartera-timeline-title">Línea de tiempo por factura ({{ facturas_cliente|length }})</div>
+        <div class="cartera-timeline">
+          {% for fa in facturas_cliente %}
+          <div class="cartera-timeline-item">
+            <div class="cartera-timeline-row1">
+              <span class="cartera-timeline-ref">
+                {{ fa.doc_facturacion }}{% if fa.num_documento_origen %} · {{ fa.num_documento_origen }}{% endif %}
+              </span>
+              <span>
+                FF: {{ fa.fecha_factura.strftime('%Y-%m-%d') if fa.fecha_factura else '—' }}
+                · ${{ "{:,.0f}".format(fa.importe_factura or 0) }}
+              </span>
+            </div>
+            <div class="cartera-timeline-row2">
+              <span class="badge {{ 'bg-success' if fa.estado == 'Pagada' else 'bg-warning text-dark' }}">
+                {{ fa.estado }}
+              </span>
+              <div class="cartera-timeline-bar-wrap">
+                <div class="cartera-bar-track">
+                  <div class="cartera-bar-fill"
+                       data-pct="{{ ((fa.dias_totales_guia_pago or 0) * 100 // (credito_pactado * 3)) if fa.dias_totales_guia_pago else 0 }}"></div>
+                </div>
+              </div>
+              <span class="cartera-timeline-dias">
+                {{ fa.dias_totales_guia_pago if fa.dias_totales_guia_pago is not none else '—' }}d
+              </span>
+            </div>
+          </div>
+          {% else %}
+          <div class="cartera-ranking-empty">Sin facturas para este cliente en el período.</div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="cartera-ranking-empty">Selecciona un cliente en la tabla de la izquierda.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/cartera/cartera.js') }}"></script>
 {% endblock %}

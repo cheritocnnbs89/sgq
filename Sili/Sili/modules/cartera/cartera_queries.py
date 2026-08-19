@@ -64,11 +64,79 @@ SELECT * FROM (
 ) AS f
 """
 
-SQL_SELECT_CARTERA_RESUMEN = f"""
-SELECT
-    COUNT(*) AS total_facturas,
-    SUM(CASE WHEN estado = 'Abierta' THEN 1 ELSE 0 END) AS total_abiertas,
-    SUM(CASE WHEN estado = 'Pagada' THEN 1 ELSE 0 END) AS total_pagadas,
-    SUM(CASE WHEN estado = 'Abierta' THEN saldo ELSE 0 END) AS saldo_pendiente
+# ──────────────────────────────────────────────────────────────────────
+# Vista "Días reales de pago" (dashboard por cliente)
+# ──────────────────────────────────────────────────────────────────────
+#
+# Reutiliza SQL_SELECT_CARTERA_FACTURAS_BASE (mismos 3 tramos por factura)
+# y agrupa por cliente. El "% fuera de plazo" se calcula solo sobre
+# facturas Pagadas (no tiene sentido penalizar por incumplimiento a algo
+# que todavía no se sabe si va a demorar); la "antigüedad prom. abiertas"
+# es el promedio de días transcurridos (en vivo) de las facturas Abiertas
+# de ese cliente — puede no haber ninguna, en cuyo caso queda NULL.
+
+SQL_SELECT_ANIOS_DISPONIBLES = f"""
+SELECT DISTINCT YEAR(fecha_factura) AS anio
 FROM {TABLA_CARTERA_FACTURAS}
+WHERE fecha_factura IS NOT NULL
+ORDER BY anio DESC
 """
+
+_RANKING_SELECT_COLUMNS = """
+    cuenta,
+    MAX(nombre_cliente) AS nombre_cliente,
+    COUNT(*) AS num_facturas,
+    SUM(CASE WHEN estado = 'Abierta' THEN 1 ELSE 0 END) AS num_abiertas,
+    SUM(CASE WHEN estado = 'Pagada' THEN 1 ELSE 0 END) AS num_pagadas,
+    SUM(importe_factura) AS total_facturado,
+    SUM(CASE WHEN estado = 'Abierta' THEN saldo ELSE 0 END) AS saldo_pendiente,
+    AVG(CAST(dias_guia_factura AS FLOAT)) AS prom_guia_factura,
+    AVG(CAST(dias_factura_pago AS FLOAT)) AS prom_factura_pago,
+    AVG(CAST(dias_totales_guia_pago AS FLOAT)) AS prom_ciclo_total,
+    100.0 * SUM(CASE WHEN estado = 'Pagada' AND dias_factura_pago > ? THEN 1 ELSE 0 END)
+        / NULLIF(SUM(CASE WHEN estado = 'Pagada' THEN 1 ELSE 0 END), 0) AS pct_fuera_plazo,
+    AVG(CASE
+            WHEN estado = 'Abierta'
+                THEN CAST(DATEDIFF(day, fecha_factura, GETDATE()) AS FLOAT)
+        END) AS antiguedad_prom_abiertas
+"""
+
+
+def sql_ranking_clientes(where_sql: str) -> str:
+    """where_sql ya trae los filtros de año/mes/cuenta (o vacío)."""
+    return f"""
+        SELECT {_RANKING_SELECT_COLUMNS}
+        FROM ({SQL_SELECT_CARTERA_FACTURAS_BASE}) f
+        {where_sql}
+        GROUP BY cuenta
+        ORDER BY ISNULL(prom_factura_pago, -1) DESC
+    """
+
+
+def sql_cliente_metricas(where_sql: str) -> str:
+    return f"""
+        SELECT {_RANKING_SELECT_COLUMNS}
+        FROM ({SQL_SELECT_CARTERA_FACTURAS_BASE}) f
+        {where_sql}
+        GROUP BY cuenta
+    """
+
+
+def sql_facturas_cliente(where_sql: str) -> str:
+    return f"""
+        SELECT
+            doc_facturacion,
+            referencia,
+            num_documento_origen,
+            fecha_factura,
+            fecha_ultimo_pago,
+            importe_factura,
+            saldo,
+            estado,
+            dias_guia_factura,
+            dias_factura_pago,
+            dias_totales_guia_pago
+        FROM ({SQL_SELECT_CARTERA_FACTURAS_BASE}) f
+        {where_sql}
+        ORDER BY fecha_factura DESC
+    """

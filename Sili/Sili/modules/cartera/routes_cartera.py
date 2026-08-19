@@ -21,15 +21,12 @@ cartera_bp = Blueprint("cartera", __name__, url_prefix="/cartera")
 @require_login
 @require_permission(PERM_BASE, "ver")
 def lista_facturas():
-    rows, filters = service.list_facturas()
-    resumen = service.get_resumen()
+    data = service.get_dashboard_data()
 
     return render_template(
         "cartera/cartera_lista.html",
-        rows=rows,
-        f=filters,
-        resumen=resumen,
         active_page=ACTIVE_KEY,
+        **data,
     )
 
 
