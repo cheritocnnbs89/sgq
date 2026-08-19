@@ -554,6 +554,10 @@
 
           <td data-th="Acciones" class="text-end sticky-end">
             <div class="actions-wrap">
+              {% if actions_locked %}
+              <i class="bi bi-check-circle-fill text-success gasto-aprobado-icon"
+                 title="Gasto aprobado — no se puede editar ni eliminar"></i>
+              {% endif %}
               {% set is_sender_row = (role_lower == 'admin' or is_coord) %}
               {% set prov_sap = (g.get('proveedor_codigo_sap') or '')|string|trim %}
               {% set proveedor_sin_sap = es_tarjeta_row and (prov_sap == '') %}
