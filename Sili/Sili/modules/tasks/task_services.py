@@ -58,6 +58,20 @@ from modules.tasks.task_utils import parse_dt, _extract_email, _norm_email
 
 
 ESTADOS_NO_EDITABLES = ("Terminado", "Cerrado por sistema")
+
+_MESES_ES_ABBR = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+                  "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+
+
+def _mes_legible(ym: str) -> str:
+    """'2026-07' -> 'Jul 2026'."""
+    try:
+        anio, mes = ym.split("-")
+        return f"{_MESES_ES_ABBR[int(mes) - 1]} {anio}"
+    except Exception:
+        return ym
+
+
 PREGUNTAS_ENCUESTA = [
     "¿Cómo califica la atención recibida?",
     "¿El tiempo de respuesta fue adecuado?",
@@ -798,6 +812,7 @@ def svc_build_dashboard_context(user, request_args=None):
     horas_por_depto_count = defaultdict(float)
     tickets_por_dia_count = defaultdict(int)
     tickets_por_depto_count = defaultdict(int)
+    tickets_por_tecnico_count = defaultdict(int)
     tareas_por_depto_mes_count: dict = defaultdict(lambda: defaultdict(int))
     cumplimiento_mensual_count: dict = defaultdict(lambda: {"abiertas": 0, "cerradas": 0})
 
@@ -847,6 +862,7 @@ def svc_build_dashboard_context(user, request_args=None):
             tickets_por_dia_count[fecha_ref.strftime("%Y-%m-%d")] += 1
 
         tickets_por_depto_count[depto_t] += 1
+        tickets_por_tecnico_count[t.get("propietario") or "—"] += 1
 
         # Abiertas vs cerradas por mes
         if fecha_ref:
@@ -952,7 +968,7 @@ def svc_build_dashboard_context(user, request_args=None):
         "labels": _top_deptos,
         "datasets": [
             {
-                "label": m,
+                "label": _mes_legible(m),
                 "data":  [tareas_por_depto_mes_count[dep].get(m, 0) for dep in _top_deptos],
                 "color": _COLORS[i % len(_COLORS)],
             }
@@ -963,7 +979,7 @@ def svc_build_dashboard_context(user, request_args=None):
     # ── Abiertas vs cerradas por mes ────────────────────────────
     _meses_c = sorted(cumplimiento_mensual_count.keys())
     chart_cumplimiento = {
-        "labels":   _meses_c,
+        "labels":   [_mes_legible(m) for m in _meses_c],
         "abiertas": [cumplimiento_mensual_count[m]["abiertas"] for m in _meses_c],
         "cerradas": [cumplimiento_mensual_count[m]["cerradas"] for m in _meses_c],
     }
@@ -978,6 +994,11 @@ def svc_build_dashboard_context(user, request_args=None):
     # ── Tickets por departamento (ranking) ──────────────────────
     tickets_por_depto = sorted(
         [{"departamento": d, "tickets": c} for d, c in tickets_por_depto_count.items()],
+        key=lambda x: -x["tickets"],
+    )
+
+    tickets_por_tecnico = sorted(
+        [{"tecnico": u, "tickets": c} for u, c in tickets_por_tecnico_count.items()],
         key=lambda x: -x["tickets"],
     )
 
@@ -1033,6 +1054,7 @@ def svc_build_dashboard_context(user, request_args=None):
             "tickets_dia":   chart_tickets_dia,
         },
         "tickets_por_depto": tickets_por_depto,
+        "tickets_por_tecnico": tickets_por_tecnico,
         "active_page": "dashboard",
     }
 
