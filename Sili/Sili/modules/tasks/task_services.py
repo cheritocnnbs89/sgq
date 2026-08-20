@@ -747,6 +747,12 @@ def svc_build_dashboard_context(user, request_args=None):
     fecha_hasta_raw = (request_args.get("fecha_hasta") or "").strip()
     depto_sel = (request_args.get("depto") or "").strip()
 
+    # Sin filtro explícito -> año actual completo por defecto.
+    if not fecha_desde_raw and not fecha_hasta_raw:
+        anio_actual = date.today().year
+        fecha_desde_raw = f"{anio_actual}-01-01"
+        fecha_hasta_raw = f"{anio_actual}-12-31"
+
     fecha_desde = parse_dt(fecha_desde_raw) if fecha_desde_raw else None
     fecha_hasta = parse_dt(fecha_hasta_raw) if fecha_hasta_raw else None
 
