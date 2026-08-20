@@ -327,6 +327,20 @@ def make_contrato_row_back(data: dict):
     }
 
 
+def generar_codigo_contrato(anio, usuario_solicitante_id) -> str:
+    """
+    Código AÑO-ÁREA-SECUENCIAL, ej. 2026-05-0007. El área sale del usuario
+    solicitante (usuario -> departamento -> área); si falta cualquier dato
+    del catálogo (departamento sin área, área sin código todavía) se usa
+    "00" como marcador en vez de bloquear la creación del contrato -- se
+    puede corregir después a mano cuando el catálogo esté completo.
+    """
+    anio_str = str(int(anio)) if anio else "0000"
+    area_codigo = repository.fetch_area_codigo_por_usuario(usuario_solicitante_id) or "00"
+    secuencial = repository.siguiente_secuencia_contrato(f"contrato_{anio_str}_{area_codigo}")
+    return f"{anio_str}-{area_codigo}-{secuencial:04d}"
+
+
 def create_contrato_from_request():
     data = parse_contrato_form()
     ok, mensaje = validate_contrato_payload(data)
@@ -361,6 +375,14 @@ def create_contrato_from_request():
             data["creado_por"],
         )
     )
+
+    try:
+        codigo = generar_codigo_contrato(data["anio"], data["usuario_solicitante_id"])
+        repository.set_codigo_contrato(nuevo_contrato_id, codigo)
+    except Exception:
+        current_app.logger.exception(
+            "No se pudo generar código para el contrato %s", nuevo_contrato_id
+        )
 
     save_contrato_pdfs(nuevo_contrato_id)
 
@@ -650,6 +672,7 @@ def build_contrato_vista(fila):
 
     vista = [
         ("Año", fila["anio"]),
+        ("Código", rowget(fila, "codigo", "") or "-"),
         ("Pedido", fila["pedido"]),
         ("Proveedor", proveedor),
         ("Objeto del contrato", fila["objeto"]),

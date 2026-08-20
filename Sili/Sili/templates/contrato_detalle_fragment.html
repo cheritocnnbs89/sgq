@@ -23,7 +23,7 @@
 
 {# ===== Helper robusto (namespace) ===== #}
 {% set d = namespace(
-  anio='-', pedido='-', proveedor='-', objeto='-',
+  anio='-', codigo='-', pedido='-', proveedor='-', objeto='-',
   vcontrato='-', vanticipo='-', tipopp='-',
   fs='-', ft='-', plazo='-', cron='-',
   fcomp='-', ffirm='-', fsum='-', forig='-',
@@ -36,6 +36,7 @@
 {% for k,v in vista %}
   {# Cabecera #}
   {% if k == 'Año' %}{% set d.anio = v or '-' %}{% endif %}
+  {% if k == 'Código' %}{% set d.codigo = v or '-' %}{% endif %}
   {% if k == 'Pedido' %}{% set d.pedido = v or '-' %}{% endif %}
   {% if k == 'Proveedor' %}{% set d.proveedor = v or '-' %}{% endif %}
   {% if k == 'Objeto del contrato' %}{% set d.objeto = v or '-' %}{% endif %}
@@ -81,6 +82,7 @@
       <div class="detail-body">
         <table class="kv-table">
           <tr><td class="k">Año</td><td class="v">{{ d.anio }}</td></tr>
+          <tr><td class="k">Código</td><td class="v">{{ d.codigo }}</td></tr>
           <tr><td class="k">Pedido</td><td class="v">{{ d.pedido }}</td></tr>
           <tr><td class="k">Proveedor</td><td class="v">{{ d.proveedor }}</td></tr>
           <tr><td class="k">Objeto</td><td class="v">{{ d.objeto }}</td></tr>

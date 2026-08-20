@@ -7,6 +7,8 @@ from .contratos_constants import (
     TABLA_USUARIOS,
     TABLA_TERCEROS,
     TABLA_DEPARTAMENTOS,
+    TABLA_AREAS,
+    TABLA_SECUENCIAS_SAP,
     DIAS_AVISO_VENCIMIENTO_GARANTIA,
 
 )
@@ -231,6 +233,35 @@ VALUES (?,?,?,?,?,?,?,
         ?, ?, ?, GETDATE())
 """
 
+SQL_AREA_CODIGO_POR_USUARIO = f"""
+SELECT a.codigo
+FROM {TABLA_USUARIOS} u
+LEFT JOIN {TABLA_DEPARTAMENTOS} d ON d.id = u.departamento_id
+LEFT JOIN {TABLA_AREAS} a ON a.id = d.area_id
+WHERE u.id = ?
+"""
+
+SQL_SET_CODIGO_CONTRATO = f"""
+UPDATE {TABLA_CONTRATOS}
+SET codigo = ?
+WHERE id = ?
+"""
+
+SQL_ENSURE_SECUENCIA_CONTRATO = f"""
+IF NOT EXISTS (SELECT 1 FROM {TABLA_SECUENCIAS_SAP} WHERE nombre = ?)
+BEGIN
+    INSERT INTO {TABLA_SECUENCIAS_SAP} (nombre, ultimo_valor) VALUES (?, 0)
+END
+"""
+
+SQL_INCREMENTAR_SECUENCIA_CONTRATO = f"""
+UPDATE {TABLA_SECUENCIAS_SAP} SET ultimo_valor = ultimo_valor + 1 WHERE nombre = ?
+"""
+
+SQL_LEER_SECUENCIA_CONTRATO = f"""
+SELECT ultimo_valor FROM {TABLA_SECUENCIAS_SAP} WHERE nombre = ?
+"""
+
 SQL_UPDATE_CONTRATO = f"""
 UPDATE {TABLA_CONTRATOS}
 SET anio=?, pedido=?, proveedor=?, objeto=?, valor_contrato=?, valor_anticipo=?,
@@ -317,7 +348,7 @@ VALUES (?, ?, ?, GETDATE())
 
 SQL_LISTA_CONTRATOS_BASE = f"""
 SELECT TOP 300
-    c.id, c.pedido, c.proveedor, c.objeto, c.valor_contrato, c.tipo_pp,
+    c.id, c.codigo, c.pedido, c.proveedor, c.objeto, c.valor_contrato, c.tipo_pp,
     c.fecha_suscripcion, c.fecha_terminacion, c.status_interno,
     COALESCE(c.aprobado_jefe,0) AS aprobado_jefe,
     COALESCE(c.aprobado,0) AS aprobado,

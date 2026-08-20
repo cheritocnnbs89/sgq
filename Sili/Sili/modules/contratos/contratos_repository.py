@@ -24,6 +24,11 @@ from .contratos_querys import (
     SQL_GARANTIA_ESTADO_APROBACIONES,
     SQL_CONTRATO_ESTADO_APROBACIONES,
     SQL_INSERT_CONTRATO,
+    SQL_AREA_CODIGO_POR_USUARIO,
+    SQL_SET_CODIGO_CONTRATO,
+    SQL_ENSURE_SECUENCIA_CONTRATO,
+    SQL_INCREMENTAR_SECUENCIA_CONTRATO,
+    SQL_LEER_SECUENCIA_CONTRATO,
     SQL_UPDATE_CONTRATO,
     SQL_SOFT_DELETE_CONTRATO,
     SQL_INSERT_GARANTIA,
@@ -202,6 +207,42 @@ def insert_contrato(params: tuple) -> int | None:
     row = cur.fetchone()
     conn.commit()
     return row[0] if row else None
+
+
+def fetch_area_codigo_por_usuario(usuario_id: int | None) -> str | None:
+    """
+    Código de 2 dígitos del área (tabla areas.codigo), resuelto vía
+    usuario -> departamento -> área. Devuelve None si falta cualquier
+    eslabón (usuario sin departamento, departamento sin área, o área sin
+    código asignado todavía) -- el llamador decide el fallback.
+    """
+    if not usuario_id:
+        return None
+    conn = get_conn()
+    row = conn.cursor().execute(SQL_AREA_CODIGO_POR_USUARIO, (usuario_id,)).fetchone()
+    codigo = (row["codigo"] if row else None) or None
+    return (codigo or "").strip() or None
+
+
+def siguiente_secuencia_contrato(nombre_secuencia: str) -> int:
+    """
+    Contador independiente por nombre (ej. 'contrato_2026_05'), reutilizando
+    la misma tabla secuencias_sap que ya usa el envío a SAP de reembolsos.
+    """
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(SQL_ENSURE_SECUENCIA_CONTRATO, (nombre_secuencia, nombre_secuencia))
+    cur.execute(SQL_INCREMENTAR_SECUENCIA_CONTRATO, (nombre_secuencia,))
+    cur.execute(SQL_LEER_SECUENCIA_CONTRATO, (nombre_secuencia,))
+    row = cur.fetchone()
+    conn.commit()
+    return int(row["ultimo_valor"]) if row else 1
+
+
+def set_codigo_contrato(contrato_id: int, codigo: str) -> None:
+    conn = get_conn()
+    conn.cursor().execute(SQL_SET_CODIGO_CONTRATO, (codigo, contrato_id))
+    conn.commit()
 
 
 def update_contrato(params: tuple) -> None:

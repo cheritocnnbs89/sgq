@@ -6,6 +6,8 @@ TABLA_CONTRATO_ARCHIVOS = "contrato_archivos"
 TABLA_USUARIOS = "usuarios"
 TABLA_TERCEROS = "terceros"
 TABLA_DEPARTAMENTOS = "departamentos"
+TABLA_AREAS = "areas"
+TABLA_SECUENCIAS_SAP = "secuencias_sap"
 
 DIAS_AVISO_VENCIMIENTO_GARANTIA = 15
 

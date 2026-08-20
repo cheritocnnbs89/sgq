@@ -119,6 +119,7 @@
         <table class="table table-sm table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
+              <th>Código</th>
               <th>Pedido</th>
               <th>Proveedor</th>
               <th>Objeto</th>
@@ -137,6 +138,7 @@
             {% for r in rows %}
             <tr>
 
+              <td>{{ r.codigo or '-' }}</td>
               <td>
                 {% set fecha_fin = (r.fecha_terminacion|string)[:10] %}
                 {% set cerrado = (r.aprob_gf|int == 1) %}
@@ -228,7 +230,7 @@
             {% endfor %}
             {% else %}
             <tr>
-              <td colspan="10" class="text-center py-4 text-muted">
+              <td colspan="11" class="text-center py-4 text-muted">
                 Sin resultados
               </td>
             </tr>
