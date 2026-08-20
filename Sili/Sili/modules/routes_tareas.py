@@ -331,6 +331,7 @@ Responde SOLO con JSON: {{"texto_mejorado": "..."}}"""
     @app.route('/dashboard')
     @require_login
     def dashboard():
+        session["active_page"] = "tareas_dashboard"
         user = get_user()
         return render_template('dashboard.html', **svc_build_dashboard_context(user, request.args))
 
