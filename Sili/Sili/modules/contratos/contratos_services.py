@@ -1,7 +1,9 @@
 from __future__ import annotations
 from flask import current_app, flash, request, session, url_for
 import os
+import re
 import time
+import unicodedata
 from typing import Any
 
 from flask import current_app, flash, request, session
@@ -327,18 +329,34 @@ def make_contrato_row_back(data: dict):
     }
 
 
+def _normalizar_area_texto(nombre: str) -> str:
+    """
+    Nombre de área a mayúsculas, sin tildes/ñ y sin espacios/puntuación
+    (para que quede como un segmento limpio dentro del código de
+    contrato). Ej. "TTHH y Comunicación" -> "TTHH_Y_COMUNICACION".
+    """
+    if not (nombre or "").strip():
+        return "SINAREA"
+    txt = unicodedata.normalize("NFKD", nombre).encode("ascii", "ignore").decode("ascii")
+    txt = re.sub(r"[^A-Za-z0-9]+", "_", txt).strip("_").upper()
+    return txt or "SINAREA"
+
+
 def generar_codigo_contrato(anio, usuario_solicitante_id) -> str:
     """
-    Código AÑO-ÁREA-SECUENCIAL, ej. 2026-05-0007. El área sale del usuario
-    solicitante (usuario -> departamento -> área); si falta cualquier dato
-    del catálogo (departamento sin área, área sin código todavía) se usa
-    "00" como marcador en vez de bloquear la creación del contrato -- se
-    puede corregir después a mano cuando el catálogo esté completo.
+    Código AÑO-ÁREA-NUMERODEÁREA-SECUENCIAL, ej. 2026-OPERACIONES-04-0005.
+    El área sale del usuario solicitante (usuario -> departamento -> área);
+    si falta cualquier dato del catálogo (departamento sin área, área sin
+    código todavía) se usa "SINAREA"/"00" como marcador en vez de bloquear
+    la creación del contrato -- se puede corregir después a mano cuando el
+    catálogo esté completo.
     """
     anio_str = str(int(anio)) if anio else "0000"
-    area_codigo = repository.fetch_area_codigo_por_usuario(usuario_solicitante_id) or "00"
+    area = repository.fetch_area_por_usuario(usuario_solicitante_id)
+    area_codigo = area["codigo"] or "00"
+    area_texto = _normalizar_area_texto(area["nombre"])
     secuencial = repository.siguiente_secuencia_contrato(f"contrato_{anio_str}_{area_codigo}")
-    return f"{anio_str}-{area_codigo}-{secuencial:04d}"
+    return f"{anio_str}-{area_texto}-{area_codigo}-{secuencial:04d}"
 
 
 def create_contrato_from_request():
