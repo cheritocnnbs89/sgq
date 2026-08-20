@@ -209,19 +209,28 @@ def insert_contrato(params: tuple) -> int | None:
     return row[0] if row else None
 
 
-def fetch_area_codigo_por_usuario(usuario_id: int | None) -> str | None:
+def fetch_area_por_usuario(usuario_id: int | None) -> dict:
     """
-    Código de 2 dígitos del área (tabla areas.codigo), resuelto vía
-    usuario -> departamento -> área. Devuelve None si falta cualquier
+    Código (2 dígitos) y nombre del área, resueltos vía
+    usuario -> departamento -> área. Valores en "" si falta cualquier
     eslabón (usuario sin departamento, departamento sin área, o área sin
     código asignado todavía) -- el llamador decide el fallback.
     """
+    vacio = {"codigo": "", "nombre": ""}
     if not usuario_id:
-        return None
+        return vacio
     conn = get_conn()
     row = conn.cursor().execute(SQL_AREA_CODIGO_POR_USUARIO, (usuario_id,)).fetchone()
-    codigo = (row["codigo"] if row else None) or None
-    return (codigo or "").strip() or None
+    if not row:
+        return vacio
+    return {
+        "codigo": (row["codigo"] or "").strip(),
+        "nombre": (row["nombre"] or "").strip(),
+    }
+
+
+def fetch_area_codigo_por_usuario(usuario_id: int | None) -> str | None:
+    return fetch_area_por_usuario(usuario_id)["codigo"] or None
 
 
 def siguiente_secuencia_contrato(nombre_secuencia: str) -> int:

@@ -28,7 +28,7 @@
   fs='-', ft='-', plazo='-', cron='-',
   fcomp='-', ffirm='-', fsum='-', forig='-',
   fpantic='-', fentrega='-',
-  usol='-', ucomp='-',
+  usol='-', usol_area='-', ucomp='-',
   obs='-',
   aj='No', ag='No', afg='No'
 ) %}
@@ -62,6 +62,7 @@
 
   {# Usuarios #}
   {% if k == 'Usuario solicitante' %}{% set d.usol = v or '-' %}{% endif %}
+  {% if k == 'Área solicitante' %}{% set d.usol_area = v or '-' %}{% endif %}
   {% if k == 'Usuario de Compras' %}{% set d.ucomp = v or '-' %}{% endif %}
 
   {# Observaciones #}
@@ -178,6 +179,7 @@
       <div class="detail-body">
         <table class="kv-table">
           <tr><td class="k">Usuario solicitante</td><td class="v">{{ d.usol }}</td></tr>
+          <tr><td class="k">Área solicitante</td><td class="v">{{ d.usol_area }}</td></tr>
           <tr><td class="k">Usuario de Compras</td><td class="v">{{ d.ucomp }}</td></tr>
         </table>
       </div>

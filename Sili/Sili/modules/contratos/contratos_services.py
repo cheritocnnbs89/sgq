@@ -657,6 +657,7 @@ def build_contrato_vista(fila):
     proveedor = fila["proveedor"] or ""
     usuario_solicitante = repository.fetch_usuario_nombre_por_id(fila["usuario_solicitante_id"])
     usuario_compras = resolve_usuario_compras_nombre(fila)
+    area_solicitante = repository.fetch_area_por_usuario(fila["usuario_solicitante_id"])["nombre"]
 
     tipo_pp = MAPA_TIPO_PP_AMIGABLE.get(
         (fila["tipo_rp" if "tipo_rp" in fila.keys() else "tipo_pp"] or "").upper(),
@@ -690,6 +691,7 @@ def build_contrato_vista(fila):
         ("Fechas de pago de anticipo", fila["fechas_pago_anticipo"]),
         ("Fecha de entrega de pedido", fila["fecha_entrega_pedido"]),
         ("Usuario solicitante", usuario_solicitante),
+        ("Área solicitante", area_solicitante or "-"),
         ("Usuario de Compras", usuario_compras),
         ("Observaciones", fila["observaciones"]),
         ("Aprobación jefatura", _yn(aprobado_jef)),

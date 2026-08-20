@@ -234,7 +234,7 @@ VALUES (?,?,?,?,?,?,?,
 """
 
 SQL_AREA_CODIGO_POR_USUARIO = f"""
-SELECT a.codigo
+SELECT a.codigo, a.nombre
 FROM {TABLA_USUARIOS} u
 LEFT JOIN {TABLA_DEPARTAMENTOS} d ON d.id = u.departamento_id
 LEFT JOIN {TABLA_AREAS} a ON a.id = d.area_id
