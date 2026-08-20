@@ -120,7 +120,6 @@
           <thead class="table-light">
             <tr>
               <th>Código</th>
-              <th>Pedido</th>
               <th>Proveedor</th>
               <th>Objeto</th>
               <th>Valor</th>
@@ -138,7 +137,6 @@
             {% for r in rows %}
             <tr>
 
-              <td>{{ r.codigo or '-' }}</td>
               <td>
                 {% set fecha_fin = (r.fecha_terminacion|string)[:10] %}
                 {% set cerrado = (r.aprob_gf|int == 1) %}
@@ -152,7 +150,7 @@
                   </span>
                   {% endif %}
 
-                  {{ r.pedido }}
+                  {{ r.codigo or '-' }}
               </td>
               <td>{{ r.proveedor }}</td>
               <td class="text-truncate contrato-objeto">{{ r.objeto }}</td>
@@ -230,7 +228,7 @@
             {% endfor %}
             {% else %}
             <tr>
-              <td colspan="11" class="text-center py-4 text-muted">
+              <td colspan="10" class="text-center py-4 text-muted">
                 Sin resultados
               </td>
             </tr>
