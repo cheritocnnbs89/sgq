@@ -935,6 +935,30 @@ def _fecha_sql(col='fecha_emision'):
         f"SUBSTRING({col}, 7, 4) + '-' + SUBSTRING({col}, 4, 2) + '-' + SUBSTRING({col}, 1, 2))"
     )
 
+def _referencia_sap(gasto: dict) -> str:
+    """
+    Referencia (numero_factura) que se envía a SAP.
+
+    Solo para gastos creados por el auto-registro de facturas recurrentes
+    (MDI, auto_registro_regla_id no nulo): el consecutivo que se generaba
+    ahí traía 9 dígitos (ej. 031-001-000027717) en vez de los 8 que maneja
+    SAP (031-001-00027717), y el dígito de más recortaba el último dígito
+    real al llegar a SAP. Se corrige SOLO al armar la trama, sin tocar el
+    valor guardado en BD -> no afecta a los gastos ingresados a mano en
+    Reembolsos, que ya venían con el formato correcto.
+    """
+    numero_factura = (gasto.get('numero_factura') or "").strip()
+
+    if gasto.get('auto_registro_regla_id') is None:
+        return numero_factura
+
+    prefijo, sep, consecutivo = numero_factura.rpartition("-")
+    if sep and consecutivo.isdigit() and len(consecutivo) == 9:
+        return f"{prefijo}-{consecutivo[-8:]}"
+
+    return numero_factura
+
+
 def _extraer_error_sap(resp):
     """
     Busca mensajes de error en la respuesta de SAP.
@@ -7325,7 +7349,7 @@ def register_gastos_routes(app):
                 "Tipo_Ejecucion": "1",
                 "Sociedad": sociedad_sap,
                 "Acreedor": (g.get('proveedor_codigo_sap') or str(g.get('proveedor_id') or "")),
-                "Referencia": g.get('numero_factura') or "",
+                "Referencia": _referencia_sap(g),
                 "Fecha_Documento": fecha_doc_str,
                 "Importe_Total": importe_total_con_iva_str,
                 "Moneda": "USD",
@@ -7433,7 +7457,7 @@ def register_gastos_routes(app):
                     "Tipo_Ejecucion": "3",
                     "Sociedad": sociedad_sap,
                     "Acreedor": acreedor_tipo4 if es_tipo_4 else acreedor_tipo3,
-                    "Referencia": g.get('numero_factura') or "",
+                    "Referencia": _referencia_sap(g),
                     "Importe_Total": importe_total_con_iva_str,
                     "Moneda": "USD",
                     "Clase_Documento": "KP" if es_tipo_4 else "KA",
@@ -8125,7 +8149,7 @@ def register_gastos_routes(app):
                     "Tipo_Ejecucion": "3",
                     "Sociedad": sociedad_sap,
                     "Acreedor": acreedor,
-                    "Referencia": g0.get("numero_factura") or "",
+                    "Referencia": _referencia_sap(g0),
                     "Importe_Total": "0.00",
                     "Moneda": "USD",
                     "Clase_Documento": "KP" if tipo == "boletos_aereos" else "KA",
