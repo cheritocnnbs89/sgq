@@ -50,7 +50,6 @@
   let horasDiaChart = null;
   let horasUsuarioChart = null;
   let horasDeptoChart = null;
-  let deptoMesChart = null;
   let cumplimientoChart = null;
 
   const ctxStatus = document.getElementById("chartStatus");
@@ -304,63 +303,35 @@
       '<div class="empty-state">Sin tickets registrados aún</div>';
   }
 
-  // ── Tareas por departamento por mes (stacked bar) ────────────
-  const ctxDeptoMes = document.getElementById("chartDeptoMes");
-  if (ctxDeptoMes && CHART.depto_mes && CHART.depto_mes.datasets.length) {
-    deptoMesChart = new Chart(ctxDeptoMes, {
-      type: "bar",
-      data: {
-        labels: CHART.depto_mes.labels,
-        datasets: CHART.depto_mes.datasets.map((ds) => ({
-          label: ds.label,
-          data: ds.data,
-          backgroundColor: rgba(ds.color, 0.75),
-          borderColor: ds.color,
-          borderWidth: 1,
-          borderRadius: 3,
-        })),
-      },
-      options: {
-        ...baseOptions,
-        plugins: {
-          ...baseOptions.plugins,
-          legend: { position: "bottom", labels: { boxWidth: 12, padding: 10 } },
-          tooltip: { mode: "index", intersect: false },
-        },
-        scales: {
-          x: { stacked: true, grid: { display: false } },
-          y: { stacked: true, beginAtZero: true },
-        },
-      },
-    });
-  } else if (ctxDeptoMes) {
-    ctxDeptoMes.closest(".chart-box").innerHTML =
-      '<div class="empty-state">Sin datos por departamento</div>';
-  }
-
-  // ── Abiertas vs cerradas por mes (grouped bar) ───────────────
+  // ── Evolución de tareas: abiertas vs cerradas (línea) ────────
   const ctxCumplimiento = document.getElementById("chartCumplimiento");
   if (ctxCumplimiento && CHART.cumplimiento && CHART.cumplimiento.labels.length) {
     cumplimientoChart = new Chart(ctxCumplimiento, {
-      type: "bar",
+      type: "line",
       data: {
         labels: CHART.cumplimiento.labels,
         datasets: [
           {
             label: "Abiertas",
             data: CHART.cumplimiento.abiertas,
-            backgroundColor: rgba("#f59e0b", 0.7),
             borderColor: "#f59e0b",
-            borderWidth: 1,
-            borderRadius: 4,
+            backgroundColor: rgba("#f59e0b", 0.15),
+            tension: 0.35,
+            fill: false,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            pointBackgroundColor: "#f59e0b",
           },
           {
             label: "Cerradas",
             data: CHART.cumplimiento.cerradas,
-            backgroundColor: rgba("#10b981", 0.7),
             borderColor: "#10b981",
-            borderWidth: 1,
-            borderRadius: 4,
+            backgroundColor: rgba("#10b981", 0.15),
+            tension: 0.35,
+            fill: false,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            pointBackgroundColor: "#10b981",
           },
         ],
       },
@@ -373,7 +344,7 @@
         },
         scales: {
           x: { grid: { display: false } },
-          y: { beginAtZero: true },
+          y: { beginAtZero: true, ticks: { precision: 0 } },
         },
       },
     });
@@ -392,7 +363,7 @@
 
     [statusChart, overUserChart, overDeptChart, timelineChart,
      horasUsuarioChart, horasDeptoChart,
-     horasDiaChart, deptoMesChart, cumplimientoChart].forEach((ch) => {
+     horasDiaChart, cumplimientoChart].forEach((ch) => {
       if (!ch) return;
 
       if (ch.options.scales?.x?.ticks) ch.options.scales.x.ticks.color = muted;
@@ -420,7 +391,6 @@
     chartHorasUsuario:  horasUsuarioChart,
     chartHorasDepto:    horasDeptoChart,
     chartHorasDia:      horasDiaChart,
-    chartDeptoMes:      deptoMesChart,
     chartCumplimiento:  cumplimientoChart,
   };
 
@@ -462,7 +432,7 @@
       btnCsv.addEventListener("click", () => {
         let csv;
         if (ch.data.datasets.length > 1) {
-          // Multi-dataset (e.g. depto_mes, cumplimiento)
+          // Multi-dataset (e.g. cumplimiento)
           const head = ["Mes", ...ch.data.datasets.map((d) => d.label)].join(",");
           const rows = ch.data.labels.map((lab, i) =>
             [lab, ...ch.data.datasets.map((d) => d.data[i] ?? "")].join(",")

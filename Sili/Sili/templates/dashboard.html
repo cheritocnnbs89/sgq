@@ -201,28 +201,60 @@
     </div>
   </div>
 
-  {# Tareas por departamento por mes #}
+  {# Distribución mensual por departamento (heatmap) #}
   <div class="col-md-8">
     <div class="section">
       <div class="section-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-bar-chart-steps me-1"></i> Tareas por departamento / mes
-          <small class="text-muted fw-normal ms-1">(top 7 departamentos)</small>
+        <span><i class="bi bi-grid-3x3 me-1"></i> Distribución mensual por departamento
+          <small class="text-muted fw-normal ms-1">Cantidad de tareas</small>
         </span>
-        <div class="chart-toolbar" data-for="chartDeptoMes">
-          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
-        </div>
       </div>
-      <div class="chart-box"><canvas id="chartDeptoMes"></canvas></div>
+
+      {% if depto_mes_heatmap.filas %}
+        <div class="table-responsive">
+          <table class="dpm-heat-table">
+            <thead>
+              <tr>
+                <th>Departamento</th>
+                {% for m in depto_mes_heatmap.meses %}<th>{{ m }}</th>{% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for fila in depto_mes_heatmap.filas %}
+              <tr>
+                <td class="dpm-heat-name" title="{{ fila.departamento }}">{{ fila.departamento }}</td>
+                {% for v in fila.valores %}
+                  {% set pct_h = (v / depto_mes_heatmap.max) if depto_mes_heatmap.max else 0 %}
+                  {% set bucket = 0 if v == 0 else (1 if pct_h <= 0.2 else (2 if pct_h <= 0.4 else (3 if pct_h <= 0.6 else (4 if pct_h <= 0.8 else 5)))) %}
+                  <td class="dpm-heat-cell dpm-heat-{{ bucket }}" title="{{ v }} tarea{{ 's' if v != 1 else '' }}">{{ v }}</td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="dpm-heat-legend">
+          <span>0</span>
+          <span class="dpm-heat-swatch dpm-heat-1"></span>
+          <span class="dpm-heat-swatch dpm-heat-2"></span>
+          <span class="dpm-heat-swatch dpm-heat-3"></span>
+          <span class="dpm-heat-swatch dpm-heat-4"></span>
+          <span class="dpm-heat-swatch dpm-heat-5"></span>
+          <span>Mayor cantidad</span>
+        </div>
+      {% else %}
+        <p class="text-muted text-center small py-3">
+          <i class="bi bi-inbox me-1"></i>Sin datos por departamento.
+        </p>
+      {% endif %}
     </div>
   </div>
 
-  {# Cumplimiento mensual #}
+  {# Evolución de tareas: abiertas vs cerradas #}
   <div class="col-md-4">
     <div class="section">
       <div class="section-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-patch-check me-1"></i> Abiertas vs cerradas por mes</span>
+        <span><i class="bi bi-graph-up-arrow me-1"></i> Evolución: abiertas vs cerradas</span>
         <div class="chart-toolbar" data-for="chartCumplimiento">
           <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
           <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
@@ -233,6 +265,69 @@
     </div>
   </div>
 
+</div>
+
+{# Resumen por departamento #}
+<div class="row g-3 mb-3">
+  <div class="col-12">
+    <div class="section">
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-table me-1"></i> Resumen por departamento</span>
+        <a href="{{ url_for('listar_tareas') }}" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-list-ul me-1"></i>Ver detalle
+        </a>
+      </div>
+
+      {% if resumen_por_depto %}
+        <div class="table-responsive">
+          <table class="table table-sm rpd-table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Departamento</th>
+                <th class="text-end">Total tareas</th>
+                <th class="text-end">Abiertas</th>
+                <th class="text-end">Cerradas</th>
+                <th>% Cumplimiento</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in resumen_por_depto %}
+                {% set pct_bucket_rpd = (((r.pct_cumplimiento / 2)|round(0, 'common'))|int * 2) %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td class="fw-medium">{{ r.departamento }}</td>
+                  <td class="text-end">{{ r.total }}</td>
+                  <td class="text-end text-warning fw-semibold">{{ r.abiertas }}</td>
+                  <td class="text-end text-success fw-semibold">{{ r.cerradas }}</td>
+                  <td>
+                    <div class="rpd-pct-wrap">
+                      <div class="rpd-pct-bar-bg">
+                        <div class="rpd-pct-bar w-pct pct-{{ pct_bucket_rpd }}"></div>
+                      </div>
+                      <span class="rpd-pct-val">{{ r.pct_cumplimiento }}%</span>
+                    </div>
+                  </td>
+                  <td>
+                    {% if r.departamento == 'Sin departamento' %}
+                      <span class="badge rpd-badge-warn">Requiere clasificación</span>
+                    {% else %}
+                      <span class="text-muted">—</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-muted text-center small py-3">
+          <i class="bi bi-inbox me-1"></i>Sin tareas registradas.
+        </p>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
     </div>

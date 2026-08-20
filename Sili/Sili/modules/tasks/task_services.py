@@ -816,6 +816,7 @@ def svc_build_dashboard_context(user, request_args=None):
     tickets_por_tecnico_count = defaultdict(int)
     tareas_por_depto_mes_count: dict = defaultdict(lambda: defaultdict(int))
     cumplimiento_mensual_count: dict = defaultdict(lambda: {"abiertas": 0, "cerradas": 0})
+    resumen_depto_count: dict = defaultdict(lambda: {"total": 0, "abiertas": 0, "cerradas": 0})
 
     # ── Asignación: abiertas asignadas / cerradas / no asignadas ──
     ESTADOS_CERRADOS_SET = {"Terminado", "Cancelada", "Cerrado por sistema"}
@@ -864,6 +865,12 @@ def svc_build_dashboard_context(user, request_args=None):
 
         tickets_por_depto_count[depto_t] += 1
         tickets_por_tecnico_count[t.get("propietario") or "—"] += 1
+
+        resumen_depto_count[depto_t]["total"] += 1
+        if estado in ESTADOS_CERRADOS_SET:
+            resumen_depto_count[depto_t]["cerradas"] += 1
+        else:
+            resumen_depto_count[depto_t]["abiertas"] += 1
 
         if estado in ESTADOS_CERRADOS_SET:
             tickets_por_depto_estado_count[depto_t]["cerradas"] += 1
@@ -967,24 +974,42 @@ def svc_build_dashboard_context(user, request_args=None):
         "data":   [round(horas_por_dia_count[d], 1) for d in dias_sorted],
     }
 
-    # ── Tareas por departamento por mes (top 7 deptos) ─────────
+    # ── Distribución mensual por departamento (heatmap) ─────────
     _all_meses = sorted({m for dv in tareas_por_depto_mes_count.values() for m in dv})
-    _top_deptos = sorted(
+    _heatmap_deptos = sorted(
         tareas_por_depto_mes_count,
         key=lambda d: -sum(tareas_por_depto_mes_count[d].values()),
-    )[:7]
-    _COLORS = ["#3b82f6","#10b981","#f59e0b","#ef4444","#8b5cf6","#ec4899","#06b6d4"]
-    chart_depto_mes = {
-        "labels": _top_deptos,
-        "datasets": [
+    )
+    _heatmap_max = max(
+        (v for dv in tareas_por_depto_mes_count.values() for v in dv.values()),
+        default=0,
+    )
+    depto_mes_heatmap = {
+        "meses": [_mes_legible(m) for m in _all_meses],
+        "max": _heatmap_max,
+        "filas": [
             {
-                "label": _mes_legible(m),
-                "data":  [tareas_por_depto_mes_count[dep].get(m, 0) for dep in _top_deptos],
-                "color": _COLORS[i % len(_COLORS)],
+                "departamento": dep,
+                "valores": [tareas_por_depto_mes_count[dep].get(m, 0) for m in _all_meses],
             }
-            for i, m in enumerate(_all_meses)
+            for dep in _heatmap_deptos
         ],
     }
+
+    # ── Resumen por departamento ─────────────────────────────────
+    resumen_por_depto = sorted(
+        [
+            {
+                "departamento": d,
+                "total": v["total"],
+                "abiertas": v["abiertas"],
+                "cerradas": v["cerradas"],
+                "pct_cumplimiento": round(v["cerradas"] / v["total"] * 100) if v["total"] else 0,
+            }
+            for d, v in resumen_depto_count.items()
+        ],
+        key=lambda x: -x["total"],
+    )
 
     # ── Abiertas vs cerradas por mes ────────────────────────────
     _meses_c = sorted(cumplimiento_mensual_count.keys())
@@ -1074,13 +1099,14 @@ def svc_build_dashboard_context(user, request_args=None):
             "horas_dia":     chart_horas_dia,
             "horas_usuario": chart_horas_usuario,
             "horas_depto":   chart_horas_depto,
-            "depto_mes":     chart_depto_mes,
             "cumplimiento":  chart_cumplimiento,
             "tickets_dia":   chart_tickets_dia,
         },
         "tickets_por_depto_estado": tickets_por_depto_estado,
         "tickets_por_depto_estado_totales": tickets_por_depto_estado_totales,
         "tickets_por_tecnico": tickets_por_tecnico,
+        "depto_mes_heatmap": depto_mes_heatmap,
+        "resumen_por_depto": resumen_por_depto,
         "active_page": "dashboard",
     }
     ctx.update(_construir_seccion_atrasadas(overdue_tasks, request_args))
