@@ -43,59 +43,11 @@
   </div>
 </div>
 
-{# ===== KPIs principales ===== #}
-<div class="row g-3 mb-3">
-  <div class="col-sm-6 col-lg-3">
-    <a href="{{ url_for('listar_tareas') }}?due=overdue" class="kpi-link">
-      <div class="section kpi-card">
-        <div class="section-header"><i class="bi bi-alarm-fill"></i> Tareas atrasadas</div>
-        <div class="d-flex justify-content-between align-items-end">
-          <div class="kpi-value text-danger">{{ overdue_tasks|length }}</div>
-          <div class="kpi-label text-end">Con fecha compromiso vencida</div>
-        </div>
-      </div>
-    </a>
-  </div>
-  <div class="col-sm-6 col-lg-3">
-    <a href="{{ url_for('listar_tareas') }}?due=today" class="kpi-link">
-      <div class="section kpi-card">
-        <div class="section-header"><i class="bi bi-calendar-day"></i> Vencen hoy</div>
-        <div class="d-flex justify-content-between align-items-end">
-          <div class="kpi-value text-warning">{{ today_tasks|length }}</div>
-          <div class="kpi-label text-end">Compromiso hoy</div>
-        </div>
-      </div>
-    </a>
-  </div>
-  <div class="col-sm-6 col-lg-3">
-    <a href="{{ url_for('listar_tareas') }}?due=week" class="kpi-link">
-      <div class="section kpi-card">
-        <div class="section-header"><i class="bi bi-calendar-week"></i> Resto de la semana</div>
-        <div class="d-flex justify-content-between align-items-end">
-          <div class="kpi-value text-primary">{{ week_tasks|length }}</div>
-          <div class="kpi-label text-end">De mañana al domingo</div>
-        </div>
-      </div>
-    </a>
-  </div>
-  <div class="col-sm-6 col-lg-3">
-    <a href="{{ url_for('listar_tareas') }}?due=nodue" class="kpi-link">
-      <div class="section kpi-card">
-        <div class="section-header"><i class="bi bi-list-check"></i> Sin fecha compromiso</div>
-        <div class="d-flex justify-content-between align-items-end">
-          <div class="kpi-value text-secondary">{{ no_due_tasks|length }}</div>
-          <div class="kpi-label text-end">No tienen fecha objetivo</div>
-        </div>
-      </div>
-    </a>
-  </div>
-</div>
-
-{# ===== Tarjetas por estado ===== #}
 {# ===== Tarjetas por estado ===== #}
 <div class="mb-3">
   <div class="state-pills">
     {% for estado in estados %}
+    {% if estado not in ('Cancelada', 'Cerrado por sistema') %}
     <a href="{{ url_for('listar_tareas') }}?estado={{ estado | urlencode }}" class="kpi-link state-pill">
       <div class="card card-custom kpi-card">
         <div class="card-body py-2 d-flex justify-content-between align-items-center">
@@ -104,6 +56,7 @@
         </div>
       </div>
     </a>
+    {% endif %}
     {% endfor %}
   </div>
   <div class="mt-2 small text-muted">
@@ -113,57 +66,8 @@
 
 <div class="row g-3 mb-3">
 
-  {# ── Asignación: abiertas asignadas / no asignadas / cerradas ── #}
-  <div class="col-md-4">
-    <div class="section h-100">
-      <div class="section-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-person-check me-1"></i>Asignación de tareas</span>
-        <div class="chart-toolbar" data-for="chartAsignacion">
-          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
-        </div>
-      </div>
-      <div class="chart-box" style="height:280px;"><canvas id="chartAsignacion"></canvas></div>
-    </div>
-  </div>
-
-</div>
-
-<div class="row g-3 mb-3">
-
-  {# ── Horas por usuario: gráfico de barras horizontales ── #}
-  <div class="col-md-5">
-    <div class="section h-100">
-      <div class="section-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-person-lines-fill me-1"></i>Horas por técnico</span>
-        <div class="chart-toolbar" data-for="chartHorasUsuario">
-          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
-        </div>
-      </div>
-      <div class="chart-box" style="height:280px;"><canvas id="chartHorasUsuario"></canvas></div>
-    </div>
-  </div>
-
-  {# ── Horas por departamento: donut ── #}
-  <div class="col-md-3">
-    <div class="section h-100">
-      <div class="section-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-building me-1"></i>Horas por departamento</span>
-        <div class="chart-toolbar" data-for="chartHorasDepto">
-          <button class="btn btn-light btn-sm ct-full"><i class="bi bi-arrows-fullscreen"></i></button>
-          <button class="btn btn-light btn-sm ct-png"><i class="bi bi-download"></i></button>
-          <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
-        </div>
-      </div>
-      <div class="chart-box" style="height:280px;"><canvas id="chartHorasDepto"></canvas></div>
-    </div>
-  </div>
-
   {# ── Ranking: tickets por departamento ── #}
-  <div class="col-md-4">
+  <div class="col-12">
     <div class="section h-100">
       <div class="section-header d-flex justify-content-between align-items-center">
         <span><i class="bi bi-ticket-perforated me-1"></i>Tickets por departamento</span>
