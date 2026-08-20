@@ -225,3 +225,81 @@ body {
     display: none;
   }
 }
+
+/* ===== Lollipop chart (tickets por técnico) ===== */
+.lollipop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 6px 4px;
+}
+
+.lollipop-row {
+  display: grid;
+  grid-template-columns: 1.4rem 88px 1fr auto;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.lollipop-rank {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+}
+
+.lollipop-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lollipop-track {
+  position: relative;
+  height: 2px;
+  background: var(--line);
+  border-radius: 999px;
+  min-width: 60px;
+}
+
+.lollipop-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: #93c5fd;
+}
+
+.lollipop-line.hi {
+  background: #60a5fa;
+}
+
+.lollipop-dot {
+  position: absolute;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid var(--card);
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, .35);
+  transform: translate(-50%, -50%);
+}
+
+.lollipop-dot.hi {
+  background: #6d28d9;
+  box-shadow: 0 0 0 1px rgba(109, 40, 217, .35);
+}
+
+.lollipop-value {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  text-align: right;
+  min-width: 92px;
+}

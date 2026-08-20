@@ -1402,7 +1402,7 @@ def svc_crear_tarea(user, form):
     )
 
     now = datetime.now()
-    estado = "Por iniciar" if not fi and not fc else ("Atrasada" if fc and fc < now else "En desarrollo")
+    estado = "Atrasada" if fc and fc < now else "En desarrollo"
 
     fi_str = fi.strftime("%Y-%m-%d %H:%M:%S") if fi else None
     fc_str = fc.strftime("%Y-%m-%d %H:%M:%S") if fc else None
@@ -2188,7 +2188,7 @@ def svc_api_inbound_email_create_task(payload):
             {
                 "titulo": subject[:250],
                 "descripcion": body,
-                "estado": "Por iniciar",
+                "estado": "En desarrollo",
                 "fecha_creacion": now.strftime("%Y-%m-%d %H:%M:%S"),
                 "fecha_inicio": None,
                 "fecha_compromiso": None,
