@@ -653,6 +653,12 @@ INSERT INTO notify_templates ([key], tipo, subject, html, text)
 VALUES (?, ?, ?, ?, ?)
 """
 
+SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_UPDATE = """
+UPDATE notify_templates
+SET tipo = ?, subject = ?, html = ?, text = ?
+WHERE [key] = ?
+"""
+
 SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT = """
 SELECT TOP 1 1 AS ok
 FROM dbo.notify_queue

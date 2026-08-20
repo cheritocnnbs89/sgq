@@ -65,8 +65,8 @@ from .contratos_querys import (
     SQL_USUARIO_DEPT_NOMBRE_POR_ID,
     SQL_CONTRATOS_VENCEN_EN_DIAS,
     SQL_JEFES_POR_NOMBRE_DEPARTAMENTO,
-    SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_EXISTS,
     SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT,
+    SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_UPDATE,
 )
 
 
@@ -1031,14 +1031,8 @@ def ensure_contrato_vencimiento_template(conn=None) -> None:
         own_conn = True
 
     cur = conn.cursor()
-    row = cur.execute(
-        SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_EXISTS,
-        (TPL_CONTRATO_VENCE_15,),
-    ).fetchone()
-    if row:
-        return
 
-    subject = "🔔 Contrato por terminar en {{ dias_para_terminar }} día(s): Pedido {{ pedido }}"
+    subject = "🔔 Contrato {{ dias_texto }}: Pedido {{ pedido }}"
 
     html = """<!doctype html>
 <html>
@@ -1094,7 +1088,7 @@ def ensure_contrato_vencimiento_template(conn=None) -> None:
                     <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Días para terminar</td>
                     <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">
                       <span style="display:inline-block;background:#ffedd5;color:#9a3412;padding:4px 10px;border-radius:999px;font-weight:800;">
-                        {{ dias_para_terminar }} día(s)
+                        {{ dias_texto }}
                       </span>
                     </td>
                   </tr>
@@ -1135,10 +1129,15 @@ def ensure_contrato_vencimiento_template(conn=None) -> None:
   </body>
 </html>"""
 
-    text = "Contrato Pedido {{ pedido }} termina en {{ dias_para_terminar }} día(s) el {{ fecha_terminacion }}."
+    text = "Contrato Pedido {{ pedido }} {{ dias_texto }} el {{ fecha_terminacion }}."
 
     cur.execute(
-        SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT,
-        (TPL_CONTRATO_VENCE_15, TIPO_CONTRATO_VENCE_15, subject, html, text),
+        SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_UPDATE,
+        (TIPO_CONTRATO_VENCE_15, subject, html, text, TPL_CONTRATO_VENCE_15),
     )
+    if cur.rowcount == 0:
+        cur.execute(
+            SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT,
+            (TPL_CONTRATO_VENCE_15, TIPO_CONTRATO_VENCE_15, subject, html, text),
+        )
     conn.commit()

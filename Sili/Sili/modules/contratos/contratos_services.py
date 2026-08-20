@@ -989,13 +989,23 @@ def encolar_notificaciones_contratos_por_vencer() -> int:
         contrato_id = row["contrato_id"]
         dias = int(row.get("dias_para_terminar") or 15)
 
-        # Header color según urgencia
-        if dias <= 5:
+        # Header color según urgencia (vencido cuenta como más urgente que
+        # cualquier "próximo a vencer")
+        if dias < 0:
+            header_color, row_bg = "#7f1d1d", "#fef2f2"
+        elif dias <= 5:
             header_color, row_bg = "#dc2626", "#fef2f2"
         elif dias <= 10:
             header_color, row_bg = "#f97316", "#fff7ed"
         else:
             header_color, row_bg = "#eab308", "#fefce8"
+
+        if dias < 0:
+            dias_texto = f"venció hace {abs(dias)} día(s)"
+            header_title = f"Contrato vencido — Pedido {row.get('pedido', '')}"
+        else:
+            dias_texto = f"vence en {dias} día(s)"
+            header_title = f"Contrato próximo a terminar — Pedido {row.get('pedido', '')}"
 
         payload_base = {
             "contrato_id": contrato_id,
@@ -1006,10 +1016,11 @@ def encolar_notificaciones_contratos_por_vencer() -> int:
             "tipo_pp": row.get("tipo_pp") or "",
             "fecha_terminacion": str(row.get("fecha_terminacion") or ""),
             "dias_para_terminar": dias,
+            "dias_texto": dias_texto,
             "header_color": header_color,
             "row_bg": row_bg,
-            "header_title": f"Contrato próximo a terminar — Pedido {row.get('pedido', '')}",
-            "header_subtitle": f"Vence en {dias} día(s) el {row.get('fecha_terminacion', '')}",
+            "header_title": header_title,
+            "header_subtitle": f"{dias_texto.capitalize()} — {row.get('fecha_terminacion', '')}",
             "intro_text": (
                 "Se informa que el siguiente contrato está próximo a su fecha de terminación. "
                 "Por favor, coordinar las acciones necesarias antes del vencimiento."
