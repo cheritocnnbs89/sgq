@@ -47,12 +47,18 @@
 <div class="mb-3">
   <div class="state-pills">
     {% for estado in estados %}
-    {% if estado not in ('Cancelada', 'Cerrado por sistema') %}
+    {% if estado not in ('Cancelada', 'Cerrado por sistema', 'Por iniciar') %}
     <a href="{{ url_for('listar_tareas') }}?estado={{ estado | urlencode }}" class="kpi-link state-pill">
       <div class="card card-custom kpi-card">
         <div class="card-body py-2 d-flex justify-content-between align-items-center">
           <span class="small">{{ estado }}</span>
-          <span class="badge bg-primary">{{ conteos.get(estado, 0) }}</span>
+          <span class="badge bg-primary">
+            {% if estado == 'En desarrollo' %}
+              {{ conteos.get('En desarrollo', 0) + conteos.get('Por iniciar', 0) }}
+            {% else %}
+              {{ conteos.get(estado, 0) }}
+            {% endif %}
+          </span>
         </div>
       </div>
     </a>
