@@ -43,6 +43,7 @@
   };
 
   let statusChart = null;
+  let asignacionChart = null;
   let overUserChart = null;
   let overDeptChart = null;
   let timelineChart = null;
@@ -70,6 +71,47 @@
       },
       options: baseOptions,
     });
+  }
+
+  // ── Asignación de tareas (donut) ──────────────────────────────
+  const ctxAsignacion = document.getElementById("chartAsignacion");
+  if (ctxAsignacion && CHART.asignacion && CHART.asignacion.labels.length) {
+    asignacionChart = new Chart(ctxAsignacion, {
+      type: "doughnut",
+      data: {
+        labels: CHART.asignacion.labels,
+        datasets: [{
+          data: CHART.asignacion.data,
+          backgroundColor: CHART.asignacion.colors,
+          borderColor: "#ffffff",
+          borderWidth: 2,
+          hoverOffset: 8,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "62%",
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: { boxWidth: 10, padding: 8, font: { size: 11 } },
+          },
+          tooltip: {
+            callbacks: {
+              label: (c) => {
+                const total = c.dataset.data.reduce((a, b) => a + b, 0);
+                const pct = total > 0 ? ((c.parsed / total) * 100).toFixed(1) : 0;
+                return ` ${c.label}: ${c.parsed} (${pct}%)`;
+              },
+            },
+          },
+        },
+      },
+    });
+  } else if (ctxAsignacion) {
+    ctxAsignacion.closest(".chart-box").innerHTML =
+      '<div class="empty-state">Sin tareas para mostrar</div>';
   }
 
   const ctxOverUser = document.getElementById("chartOverUser");
@@ -222,16 +264,16 @@
       '<div class="empty-state">Sin horas por departamento</div>';
   }
 
-  // ── Horas de atención por día ────────────────────────────────
+  // ── Tickets por día ─────────────────────────────────────────
   const ctxHorasDia = document.getElementById("chartHorasDia");
-  if (ctxHorasDia && CHART.horas_dia && CHART.horas_dia.labels.length) {
+  if (ctxHorasDia && CHART.tickets_dia && CHART.tickets_dia.labels.length) {
     horasDiaChart = new Chart(ctxHorasDia, {
       type: "line",
       data: {
-        labels: CHART.horas_dia.labels,
+        labels: CHART.tickets_dia.labels,
         datasets: [{
-          label: "Horas de atención",
-          data: CHART.horas_dia.data,
+          label: "Tickets",
+          data: CHART.tickets_dia.data,
           borderColor: "#6366f1",
           backgroundColor: rgba("#6366f1", 0.12),
           borderWidth: 2,
@@ -247,19 +289,19 @@
           ...baseOptions.plugins,
           tooltip: {
             callbacks: {
-              label: (ctx) => ` ${ctx.parsed.y.toFixed(1)} h`,
+              label: (ctx) => ` ${ctx.parsed.y} ticket(s)`,
             },
           },
         },
         scales: {
           x: { grid: { display: false } },
-          y: { beginAtZero: true, ticks: { callback: (v) => v + "h" } },
+          y: { beginAtZero: true, ticks: { precision: 0 } },
         },
       },
     });
   } else if (ctxHorasDia) {
     ctxHorasDia.closest(".chart-box").innerHTML =
-      '<div class="empty-state">Sin datos de horas aún</div>';
+      '<div class="empty-state">Sin tickets registrados aún</div>';
   }
 
   // ── Tareas por departamento por mes (stacked bar) ────────────
@@ -296,7 +338,7 @@
       '<div class="empty-state">Sin datos por departamento</div>';
   }
 
-  // ── Cumplimiento mensual (grouped bar) ───────────────────────
+  // ── Abiertas vs cerradas por mes (grouped bar) ───────────────
   const ctxCumplimiento = document.getElementById("chartCumplimiento");
   if (ctxCumplimiento && CHART.cumplimiento && CHART.cumplimiento.labels.length) {
     cumplimientoChart = new Chart(ctxCumplimiento, {
@@ -305,18 +347,18 @@
         labels: CHART.cumplimiento.labels,
         datasets: [
           {
-            label: "A tiempo",
-            data: CHART.cumplimiento.a_tiempo,
-            backgroundColor: rgba("#10b981", 0.7),
-            borderColor: "#10b981",
+            label: "Abiertas",
+            data: CHART.cumplimiento.abiertas,
+            backgroundColor: rgba("#f59e0b", 0.7),
+            borderColor: "#f59e0b",
             borderWidth: 1,
             borderRadius: 4,
           },
           {
-            label: "Tardías",
-            data: CHART.cumplimiento.atrasadas,
-            backgroundColor: rgba("#ef4444", 0.7),
-            borderColor: "#ef4444",
+            label: "Cerradas",
+            data: CHART.cumplimiento.cerradas,
+            backgroundColor: rgba("#10b981", 0.7),
+            borderColor: "#10b981",
             borderWidth: 1,
             borderRadius: 4,
           },
@@ -337,7 +379,7 @@
     });
   } else if (ctxCumplimiento) {
     ctxCumplimiento.closest(".chart-box").innerHTML =
-      '<div class="empty-state">Sin cierres registrados</div>';
+      '<div class="empty-state">Sin tareas registradas</div>';
   }
 
   const applyTheme = () => {

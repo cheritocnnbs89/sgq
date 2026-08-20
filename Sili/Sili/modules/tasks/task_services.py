@@ -790,8 +790,17 @@ def svc_build_dashboard_context(user, request_args=None):
     tareas_cerradas_por_usuario_count = defaultdict(int)
     horas_por_dia_count = defaultdict(float)
     horas_por_depto_count = defaultdict(float)
+    tickets_por_dia_count = defaultdict(int)
+    tickets_por_depto_count = defaultdict(int)
     tareas_por_depto_mes_count: dict = defaultdict(lambda: defaultdict(int))
-    cumplimiento_mensual_count: dict = defaultdict(lambda: {"a_tiempo": 0, "atrasadas": 0})
+    cumplimiento_mensual_count: dict = defaultdict(lambda: {"abiertas": 0, "cerradas": 0})
+
+    # ── Asignación: abiertas asignadas / cerradas / no asignadas ──
+    ESTADOS_CERRADOS_SET = {"Terminado", "Cancelada", "Cerrado por sistema"}
+    responsables_por_tarea = defaultdict(set)
+    for r in repo_listar_tarea_responsables_map():
+        responsables_por_tarea[r["tarea_id"]].add(r["usuario_id"])
+    asignacion_count = {"Abiertas asignadas": 0, "No asignadas": 0, "Cerradas": 0}
 
     for r in tareas_raw:
         t = dict(r)
@@ -804,6 +813,13 @@ def svc_build_dashboard_context(user, request_args=None):
 
         comp_dt  = parse_dt(t.get("fecha_compromiso"))
         depto_t  = t.get("departamento") or "Sin departamento"
+
+        if estado in ESTADOS_CERRADOS_SET:
+            asignacion_count["Cerradas"] += 1
+        elif responsables_por_tarea.get(t["id"]):
+            asignacion_count["Abiertas asignadas"] += 1
+        else:
+            asignacion_count["No asignadas"] += 1
 
         # Horas = fecha_inicio → fecha_fin (tiempo planificado invertido en la tarea)
         inicio_dt = parse_dt(t.get("fecha_inicio"))
@@ -822,16 +838,17 @@ def svc_build_dashboard_context(user, request_args=None):
         fecha_ref = inicio_dt or parse_dt(str(t.get("fecha_creacion") or "").strip())
         if fecha_ref:
             tareas_por_depto_mes_count[depto_t][fecha_ref.strftime("%Y-%m")] += 1
+            tickets_por_dia_count[fecha_ref.strftime("%Y-%m-%d")] += 1
 
-        # Cumplimiento mensual: cerradas a tiempo vs tardías
-        if estado in ("Terminado", "Cerrado por sistema"):
-            cierre_dt_c = parse_dt(str(t.get("fecha_cierre_real") or "").strip())
-            if cierre_dt_c:
-                mes_c = cierre_dt_c.strftime("%Y-%m")
-                if comp_dt and cierre_dt_c > comp_dt:
-                    cumplimiento_mensual_count[mes_c]["atrasadas"] += 1
-                else:
-                    cumplimiento_mensual_count[mes_c]["a_tiempo"] += 1
+        tickets_por_depto_count[depto_t] += 1
+
+        # Abiertas vs cerradas por mes
+        if fecha_ref:
+            mes_c = fecha_ref.strftime("%Y-%m")
+            if estado in ESTADOS_CERRADOS_SET:
+                cumplimiento_mensual_count[mes_c]["cerradas"] += 1
+            else:
+                cumplimiento_mensual_count[mes_c]["abiertas"] += 1
 
         if comp_dt:
             compromiso_counts[comp_dt.date()] += 1
@@ -926,24 +943,37 @@ def svc_build_dashboard_context(user, request_args=None):
     )[:7]
     _COLORS = ["#3b82f6","#10b981","#f59e0b","#ef4444","#8b5cf6","#ec4899","#06b6d4"]
     chart_depto_mes = {
-        "labels": _all_meses,
+        "labels": _top_deptos,
         "datasets": [
             {
-                "label": dep,
-                "data":  [tareas_por_depto_mes_count[dep].get(m, 0) for m in _all_meses],
+                "label": m,
+                "data":  [tareas_por_depto_mes_count[dep].get(m, 0) for dep in _top_deptos],
                 "color": _COLORS[i % len(_COLORS)],
             }
-            for i, dep in enumerate(_top_deptos)
+            for i, m in enumerate(_all_meses)
         ],
     }
 
-    # ── Cumplimiento mensual ───────────────────────────────────
+    # ── Abiertas vs cerradas por mes ────────────────────────────
     _meses_c = sorted(cumplimiento_mensual_count.keys())
     chart_cumplimiento = {
-        "labels":    _meses_c,
-        "a_tiempo":  [cumplimiento_mensual_count[m]["a_tiempo"]  for m in _meses_c],
-        "atrasadas": [cumplimiento_mensual_count[m]["atrasadas"] for m in _meses_c],
+        "labels":   _meses_c,
+        "abiertas": [cumplimiento_mensual_count[m]["abiertas"] for m in _meses_c],
+        "cerradas": [cumplimiento_mensual_count[m]["cerradas"] for m in _meses_c],
     }
+
+    # ── Tickets por día (todas las tareas) ──────────────────────
+    _dias_tickets_sorted = sorted(tickets_por_dia_count.keys())
+    chart_tickets_dia = {
+        "labels": _dias_tickets_sorted,
+        "data":   [tickets_por_dia_count[d] for d in _dias_tickets_sorted],
+    }
+
+    # ── Tickets por departamento (ranking) ──────────────────────
+    tickets_por_depto = sorted(
+        [{"departamento": d, "tickets": c} for d, c in tickets_por_depto_count.items()],
+        key=lambda x: -x["tickets"],
+    )
 
     return {
         "usuario": user["username"],
@@ -968,6 +998,15 @@ def svc_build_dashboard_context(user, request_args=None):
                 "labels": list(ESTADOS),
                 "data": [conteos.get(e, 0) for e in ESTADOS],
             },
+            "asignacion": {
+                "labels": ["Abiertas asignadas", "No asignadas", "Cerradas"],
+                "data": [
+                    asignacion_count["Abiertas asignadas"],
+                    asignacion_count["No asignadas"],
+                    asignacion_count["Cerradas"],
+                ],
+                "colors": ["#10b981", "#ef4444", "#94a3b8"],
+            },
             "overdue_user": {
                 "labels": [row["usuario"] for row in overdue_by_user],
                 "data": [row["total"] for row in overdue_by_user],
@@ -985,7 +1024,9 @@ def svc_build_dashboard_context(user, request_args=None):
             "horas_depto":   chart_horas_depto,
             "depto_mes":     chart_depto_mes,
             "cumplimiento":  chart_cumplimiento,
+            "tickets_dia":   chart_tickets_dia,
         },
+        "tickets_por_depto": tickets_por_depto,
         "active_page": "dashboard",
     }
 
