@@ -1002,7 +1002,7 @@ def svc_build_dashboard_context(user, request_args=None):
         key=lambda x: -x["tickets"],
     )
 
-    return {
+    ctx = {
         "usuario": user["username"],
         "deptos": repo_obtener_departamentos_tareas(),
         "depto_sel": depto_sel,
@@ -1057,46 +1057,33 @@ def svc_build_dashboard_context(user, request_args=None):
         "tickets_por_tecnico": tickets_por_tecnico,
         "active_page": "dashboard",
     }
+    ctx.update(_construir_seccion_atrasadas(overdue_tasks, request_args))
+    return ctx
 
 
-def svc_build_tareas_atrasadas_context(user, request_args):
+def _construir_seccion_atrasadas(overdue_tasks, request_args):
     """
-    Pantalla dedicada "Tareas atrasadas": KPIs + filtros + tabla paginada.
-    Mismo criterio de "atrasada" que el dashboard: tiene fecha_compromiso,
-    no está Terminada/Cerrada por sistema, y esa fecha ya pasó.
+    Arma los KPIs + filtros + tabla paginada de la sección "Tareas
+    atrasadas" del dashboard, a partir de overdue_tasks (ya calculado en
+    svc_build_dashboard_context, con dias_atraso/fecha_compromiso_fmt y ya
+    respetando el rango de fechas/departamento elegidos arriba en la
+    página). Usa parámetros con prefijo "atr_" para no chocar con los
+    filtros generales del dashboard (fecha_desde, fecha_hasta, depto).
     """
-    tareas_raw = repo_dashboard_tareas(user)
-    hoy = date.today()
-
-    q_txt = (request_args.get("q") or "").strip().lower()
-    responsable_sel = (request_args.get("responsable") or "").strip()
-    depto_sel = (request_args.get("depto") or "").strip()
-    estado_sel = (request_args.get("estado") or "").strip()
-    antiguedad_sel = (request_args.get("antiguedad") or "").strip()
+    q_txt = (request_args.get("atr_q") or "").strip().lower()
+    responsable_sel = (request_args.get("atr_responsable") or "").strip()
+    depto_sel = (request_args.get("atr_depto") or "").strip()
+    estado_sel = (request_args.get("atr_estado") or "").strip()
+    antiguedad_sel = (request_args.get("atr_antiguedad") or "").strip()
 
     try:
-        pagina = max(1, int(request_args.get("pagina") or 1))
+        pagina = max(1, int(request_args.get("atr_pagina") or 1))
     except (TypeError, ValueError):
         pagina = 1
 
     POR_PAGINA = 15
 
-    atrasadas = []
-    for r in tareas_raw:
-        t = dict(r)
-        estado = t.get("estado")
-
-        if estado in ("Terminado", "Cerrado por sistema"):
-            continue
-
-        comp_dt = parse_dt(t.get("fecha_compromiso"))
-        if not comp_dt or comp_dt.date() >= hoy:
-            continue
-
-        t["dias_atraso"] = (hoy - comp_dt.date()).days
-        t["fecha_compromiso_fmt"] = comp_dt.strftime("%Y-%m-%d %H:%M")
-        atrasadas.append(t)
-
+    atrasadas = overdue_tasks
     total_atrasadas = len(atrasadas)
     mas_90_dias = sum(1 for t in atrasadas if t["dias_atraso"] > 90)
     atraso_promedio = (
@@ -1142,7 +1129,7 @@ def svc_build_tareas_atrasadas_context(user, request_args):
     elif antiguedad_sel == "90+":
         filtradas = [t for t in filtradas if t["dias_atraso"] > 90]
 
-    filtradas.sort(key=lambda t: -t["dias_atraso"])
+    filtradas = sorted(filtradas, key=lambda t: -t["dias_atraso"])
 
     total_filtradas = len(filtradas)
     total_paginas = max(1, (total_filtradas + POR_PAGINA - 1) // POR_PAGINA)
@@ -1151,28 +1138,25 @@ def svc_build_tareas_atrasadas_context(user, request_args):
     tareas_pagina = filtradas[inicio:inicio + POR_PAGINA]
 
     return {
-        "usuario": user["username"],
-        "rol": user["rol"],
-        "total_atrasadas": total_atrasadas,
-        "mas_90_dias": mas_90_dias,
-        "atraso_promedio": atraso_promedio,
-        "responsable_top": responsable_top,
-        "responsable_top_count": responsable_top_count,
-        "responsables_disponibles": responsables_disponibles,
-        "deptos_disponibles": deptos_disponibles,
-        "estados_disponibles": estados_disponibles,
-        "q": request_args.get("q") or "",
-        "responsable_sel": responsable_sel,
-        "depto_sel": depto_sel,
-        "estado_sel": estado_sel,
-        "antiguedad_sel": antiguedad_sel,
-        "tareas": tareas_pagina,
-        "pagina": pagina,
-        "total_paginas": total_paginas,
-        "total_filtradas": total_filtradas,
-        "inicio_mostrado": inicio + 1 if total_filtradas else 0,
-        "fin_mostrado": min(inicio + POR_PAGINA, total_filtradas),
-        "active_page": "tareas_atrasadas",
+        "atr_total": total_atrasadas,
+        "atr_mas_90_dias": mas_90_dias,
+        "atr_atraso_promedio": atraso_promedio,
+        "atr_responsable_top": responsable_top,
+        "atr_responsable_top_count": responsable_top_count,
+        "atr_responsables_disponibles": responsables_disponibles,
+        "atr_deptos_disponibles": deptos_disponibles,
+        "atr_estados_disponibles": estados_disponibles,
+        "atr_q": request_args.get("atr_q") or "",
+        "atr_responsable_sel": responsable_sel,
+        "atr_depto_sel": depto_sel,
+        "atr_estado_sel": estado_sel,
+        "atr_antiguedad_sel": antiguedad_sel,
+        "atr_tareas": tareas_pagina,
+        "atr_pagina": pagina,
+        "atr_total_paginas": total_paginas,
+        "atr_total_filtradas": total_filtradas,
+        "atr_inicio_mostrado": inicio + 1 if total_filtradas else 0,
+        "atr_fin_mostrado": min(inicio + POR_PAGINA, total_filtradas),
     }
 
 

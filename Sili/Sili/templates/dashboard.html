@@ -2,6 +2,7 @@
 {% block title %}Panel de tareas{% endblock %}
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tareas_atrasadas.css') }}">
 {% endblock %}
 {% block content %}
 
@@ -249,46 +250,187 @@
 </div>
 
 
-{# ===== Listados detallados ===== #}
+{# ===== Tareas atrasadas ===== #}
+<div class="ta-header">
+  <div>
+    <h5 class="mb-0"><i class="bi bi-alarm-fill text-danger me-1"></i>Tareas atrasadas</h5>
+    <div class="ta-subtitle">Seguimiento de tickets vencidos y pendientes por atender</div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-lg-3">
+    <div class="section kpi-card h-100">
+      <div class="ta-kpi">
+        <div class="ta-kpi-icon danger"><i class="bi bi-clock-history"></i></div>
+        <div>
+          <div class="ta-kpi-value">{{ atr_total }}</div>
+          <div class="ta-kpi-label">Total atrasadas</div>
+          <div class="ta-kpi-hint">Tickets vencidos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="section kpi-card h-100">
+      <div class="ta-kpi">
+        <div class="ta-kpi-icon danger"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        <div>
+          <div class="ta-kpi-value">{{ atr_mas_90_dias }}</div>
+          <div class="ta-kpi-label">Más de 90 días</div>
+          <div class="ta-kpi-hint">Requieren atención urgente</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="section kpi-card h-100">
+      <div class="ta-kpi">
+        <div class="ta-kpi-icon warning"><i class="bi bi-calendar-x"></i></div>
+        <div>
+          <div class="ta-kpi-value">{{ atr_atraso_promedio }} días</div>
+          <div class="ta-kpi-label">Atraso promedio</div>
+          <div class="ta-kpi-hint">Promedio general de atraso</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="section kpi-card h-100">
+      <div class="ta-kpi">
+        <div class="ta-kpi-icon info"><i class="bi bi-person-fill"></i></div>
+        <div>
+          <div class="ta-kpi-value">{{ atr_responsable_top }}</div>
+          <div class="ta-kpi-label">Responsable con más atrasos</div>
+          <div class="ta-kpi-hint">{{ atr_responsable_top_count }} tarea{{ 's' if atr_responsable_top_count != 1 else '' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section mb-3">
+  <form method="get" action="{{ url_for('dashboard') }}" class="ta-filters">
+    <input type="hidden" name="fecha_desde" value="{{ fecha_desde }}">
+    <input type="hidden" name="fecha_hasta" value="{{ fecha_hasta }}">
+    <input type="hidden" name="depto" value="{{ depto_sel }}">
+
+    <div style="min-width:220px;flex:1 1 220px;">
+      <label class="form-label">Buscar</label>
+      <input type="text" name="atr_q" class="form-control form-control-sm" placeholder="Buscar tarea o ticket..."
+             value="{{ atr_q }}">
+    </div>
+    <div style="min-width:160px;">
+      <label class="form-label">Responsable</label>
+      <select name="atr_responsable" class="form-select form-select-sm">
+        <option value="">Todos</option>
+        {% for r in atr_responsables_disponibles %}
+        <option value="{{ r }}" {{ 'selected' if r == atr_responsable_sel else '' }}>{{ r }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="min-width:160px;">
+      <label class="form-label">Departamento</label>
+      <select name="atr_depto" class="form-select form-select-sm">
+        <option value="">Todos</option>
+        {% for d in atr_deptos_disponibles %}
+        <option value="{{ d }}" {{ 'selected' if d == atr_depto_sel else '' }}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="min-width:160px;">
+      <label class="form-label">Estado</label>
+      <select name="atr_estado" class="form-select form-select-sm">
+        <option value="">Todos</option>
+        {% for e in atr_estados_disponibles %}
+        <option value="{{ e }}" {{ 'selected' if e == atr_estado_sel else '' }}>{{ e }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="form-label">Antigüedad (días)</label>
+      <div class="ta-chips">
+        {% set chips = [('', 'Todas'), ('1-30', '1-30'), ('31-60', '31-60'), ('61-90', '61-90'), ('90+', '+90')] %}
+        {% for val, lbl in chips %}
+        <button type="submit" name="atr_antiguedad" value="{{ val }}"
+                class="ta-chip {{ 'active' if atr_antiguedad_sel == val else '' }}">{{ lbl }}</button>
+        {% endfor %}
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm" type="submit"><i class="bi bi-funnel me-1"></i>Filtrar</button>
+    </div>
+  </form>
+</div>
+
 <div class="row g-3">
   <div class="col-12">
     <div class="section">
-      <div class="section-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-exclamation-triangle"></i> Tareas atrasadas</span>
-        <small class="text-muted">Ordenadas por fecha compromiso</small>
-      </div>
       <div class="table-responsive">
-        <table class="table table-sm mb-0">
+        <table class="table table-sm table-hover align-middle ta-table mb-0">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Título</th>
-              <th>Propietario</th>
+              <th>Tarea</th>
+              <th>Responsable</th>
               <th>Departamento</th>
               <th>Fecha compromiso</th>
-              <th class="text-end">Días atraso</th>
+              <th>Atraso</th>
               <th>Estado</th>
+              <th class="text-end">Acción</th>
             </tr>
           </thead>
           <tbody>
-            {% for t in overdue_tasks %}
+            {% for t in atr_tareas %}
             <tr>
-              <td>{{ t.id }}</td>
-              <td>{{ t.titulo }}</td>
-              <td>{{ t.propietario }}</td>
+              <td>
+                <div class="ta-titulo">{{ t.titulo }}</div>
+                <div class="ta-titulo-id">ID {{ t.id }}</div>
+              </td>
+              <td>
+                <span class="ta-avatar me-1">{{ (t.propietario or '—')[:2]|upper }}</span>
+                {{ t.propietario or '—' }}
+              </td>
               <td>{{ t.departamento or '—' }}</td>
               <td>{{ t.fecha_compromiso_fmt or t.fecha_compromiso or '—' }}</td>
-              <td class="text-end">{{ t.dias_atraso }}</td>
-              <td>{{ t.estado }}</td>
+              <td>
+                {% set d = t.dias_atraso %}
+                <span class="ta-badge-atraso {{ 'b90' if d > 90 else ('b60' if d > 60 else ('b30' if d > 30 else 'b0')) }}">
+                  {{ d }} día{{ 's' if d != 1 else '' }}
+                </span>
+              </td>
+              <td><span class="ta-badge-estado">{{ t.estado }}</span></td>
+              <td class="text-end">
+                <a class="btn btn-outline-primary btn-sm" href="{{ url_for('ver_tarea', task_id=t.id) }}">
+                  <i class="bi bi-eye me-1"></i>Ver
+                </a>
+              </td>
             </tr>
             {% else %}
             <tr>
-              <td colspan="7" class="text-muted text-center small">No tienes tareas atrasadas 🎉</td>
+              <td colspan="7" class="text-center text-muted small py-4">
+                <i class="bi bi-check2-circle me-1"></i>No hay tareas atrasadas con estos filtros.
+              </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
+
+      {% if atr_total_filtradas %}
+      <div class="d-flex justify-content-between align-items-center mt-3 px-2 pb-1 small text-muted">
+        <div>Mostrando {{ atr_inicio_mostrado }} a {{ atr_fin_mostrado }} de {{ atr_total_filtradas }} resultados</div>
+        {% if atr_total_paginas > 1 %}
+        <div class="d-flex gap-1">
+          {% set base_args = request.args.to_dict() %}
+          {% for p in range(1, atr_total_paginas + 1) %}
+            {% set _ = base_args.update({'atr_pagina': p}) %}
+            <a class="btn btn-sm {{ 'btn-primary' if p == atr_pagina else 'btn-outline-secondary' }}"
+               href="{{ url_for('dashboard', **base_args) }}">{{ p }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
     </div>
   </div>
 
