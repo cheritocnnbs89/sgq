@@ -6,6 +6,7 @@ from modules.tasks.task_services import (
     TaskServiceError,
     svc_api_inbound_email_create_task,
     svc_build_dashboard_context,
+    svc_build_tareas_atrasadas_context,
     svc_build_listar_tareas_context,
     svc_build_nueva_tarea_context,
     svc_eliminar_tarea,
@@ -334,6 +335,14 @@ Responde SOLO con JSON: {{"texto_mejorado": "..."}}"""
         session["active_page"] = "tareas_dashboard"
         user = get_user()
         return render_template('dashboard.html', **svc_build_dashboard_context(user, request.args))
+
+
+    @app.route('/tareas/atrasadas')
+    @require_login
+    def tareas_atrasadas():
+        session["active_page"] = "tareas_atrasadas"
+        user = get_user()
+        return render_template('tareas_atrasadas.html', **svc_build_tareas_atrasadas_context(user, request.args))
 
 
     @app.route('/encuestas')

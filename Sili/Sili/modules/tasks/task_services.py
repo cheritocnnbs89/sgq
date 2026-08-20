@@ -1058,6 +1058,124 @@ def svc_build_dashboard_context(user, request_args=None):
         "active_page": "dashboard",
     }
 
+
+def svc_build_tareas_atrasadas_context(user, request_args):
+    """
+    Pantalla dedicada "Tareas atrasadas": KPIs + filtros + tabla paginada.
+    Mismo criterio de "atrasada" que el dashboard: tiene fecha_compromiso,
+    no está Terminada/Cerrada por sistema, y esa fecha ya pasó.
+    """
+    tareas_raw = repo_dashboard_tareas(user)
+    hoy = date.today()
+
+    q_txt = (request_args.get("q") or "").strip().lower()
+    responsable_sel = (request_args.get("responsable") or "").strip()
+    depto_sel = (request_args.get("depto") or "").strip()
+    estado_sel = (request_args.get("estado") or "").strip()
+    antiguedad_sel = (request_args.get("antiguedad") or "").strip()
+
+    try:
+        pagina = max(1, int(request_args.get("pagina") or 1))
+    except (TypeError, ValueError):
+        pagina = 1
+
+    POR_PAGINA = 15
+
+    atrasadas = []
+    for r in tareas_raw:
+        t = dict(r)
+        estado = t.get("estado")
+
+        if estado in ("Terminado", "Cerrado por sistema"):
+            continue
+
+        comp_dt = parse_dt(t.get("fecha_compromiso"))
+        if not comp_dt or comp_dt.date() >= hoy:
+            continue
+
+        t["dias_atraso"] = (hoy - comp_dt.date()).days
+        t["fecha_compromiso_fmt"] = comp_dt.strftime("%Y-%m-%d %H:%M")
+        atrasadas.append(t)
+
+    total_atrasadas = len(atrasadas)
+    mas_90_dias = sum(1 for t in atrasadas if t["dias_atraso"] > 90)
+    atraso_promedio = (
+        round(sum(t["dias_atraso"] for t in atrasadas) / total_atrasadas)
+        if total_atrasadas else 0
+    )
+
+    por_responsable_count = defaultdict(int)
+    for t in atrasadas:
+        por_responsable_count[t.get("propietario") or "—"] += 1
+
+    if por_responsable_count:
+        responsable_top, responsable_top_count = max(
+            por_responsable_count.items(), key=lambda x: x[1]
+        )
+    else:
+        responsable_top, responsable_top_count = "—", 0
+
+    responsables_disponibles = sorted({t.get("propietario") or "—" for t in atrasadas})
+    deptos_disponibles = sorted({t.get("departamento") or "Sin departamento" for t in atrasadas})
+    estados_disponibles = sorted({t.get("estado") for t in atrasadas if t.get("estado")})
+
+    filtradas = atrasadas
+
+    if q_txt:
+        filtradas = [
+            t for t in filtradas
+            if q_txt in (t.get("titulo") or "").lower() or q_txt == str(t.get("id"))
+        ]
+    if responsable_sel:
+        filtradas = [t for t in filtradas if (t.get("propietario") or "—") == responsable_sel]
+    if depto_sel:
+        filtradas = [t for t in filtradas if (t.get("departamento") or "Sin departamento") == depto_sel]
+    if estado_sel:
+        filtradas = [t for t in filtradas if t.get("estado") == estado_sel]
+
+    if antiguedad_sel == "1-30":
+        filtradas = [t for t in filtradas if 1 <= t["dias_atraso"] <= 30]
+    elif antiguedad_sel == "31-60":
+        filtradas = [t for t in filtradas if 31 <= t["dias_atraso"] <= 60]
+    elif antiguedad_sel == "61-90":
+        filtradas = [t for t in filtradas if 61 <= t["dias_atraso"] <= 90]
+    elif antiguedad_sel == "90+":
+        filtradas = [t for t in filtradas if t["dias_atraso"] > 90]
+
+    filtradas.sort(key=lambda t: -t["dias_atraso"])
+
+    total_filtradas = len(filtradas)
+    total_paginas = max(1, (total_filtradas + POR_PAGINA - 1) // POR_PAGINA)
+    pagina = min(pagina, total_paginas)
+    inicio = (pagina - 1) * POR_PAGINA
+    tareas_pagina = filtradas[inicio:inicio + POR_PAGINA]
+
+    return {
+        "usuario": user["username"],
+        "rol": user["rol"],
+        "total_atrasadas": total_atrasadas,
+        "mas_90_dias": mas_90_dias,
+        "atraso_promedio": atraso_promedio,
+        "responsable_top": responsable_top,
+        "responsable_top_count": responsable_top_count,
+        "responsables_disponibles": responsables_disponibles,
+        "deptos_disponibles": deptos_disponibles,
+        "estados_disponibles": estados_disponibles,
+        "q": request_args.get("q") or "",
+        "responsable_sel": responsable_sel,
+        "depto_sel": depto_sel,
+        "estado_sel": estado_sel,
+        "antiguedad_sel": antiguedad_sel,
+        "tareas": tareas_pagina,
+        "pagina": pagina,
+        "total_paginas": total_paginas,
+        "total_filtradas": total_filtradas,
+        "inicio_mostrado": inicio + 1 if total_filtradas else 0,
+        "fin_mostrado": min(inicio + POR_PAGINA, total_filtradas),
+        "active_page": "tareas_atrasadas",
+    }
+
+
 def svc_build_listar_tareas_context(user, request_args):
     tareas_raw = repo_listar_tareas_raw()
     resp_rows = repo_listar_tarea_responsables_map()
