@@ -619,7 +619,13 @@ SELECT
 FROM {TABLA_CONTRATOS} c
 WHERE COALESCE(c.disabled, 0) = 0
   AND c.fecha_terminacion IS NOT NULL
-  AND DATEDIFF(DAY, CAST(GETDATE() AS date), CAST(c.fecha_terminacion AS date)) = ?
+  -- <= en vez de = : si el job no corrió justo el día exacto (worker caído,
+  -- deploy, etc.) igual lo atrapa en la próxima corrida diaria, en vez de
+  -- perder la notificación para siempre. No duplica: enqueue_contrato_vence_15
+  -- ya deduplica por event_key (contrato + fecha_terminacion + usuario).
+  -- Tope de -90 para no resucitar contratos vencidos hace años.
+  AND DATEDIFF(DAY, CAST(GETDATE() AS date), CAST(c.fecha_terminacion AS date)) <= ?
+  AND DATEDIFF(DAY, CAST(GETDATE() AS date), CAST(c.fecha_terminacion AS date)) >= -90
   AND COALESCE(c.aprob_gf, 0) = 0
 ORDER BY c.fecha_terminacion ASC, c.id DESC
 """

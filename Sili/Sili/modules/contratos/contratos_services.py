@@ -964,8 +964,10 @@ def encolar_notificaciones_garantias_por_vencer_15_dias():
 # ── Contratos: notificación 15 días antes de fecha_terminacion ────────────
 def encolar_notificaciones_contratos_por_vencer() -> int:
     """
-    Busca contratos que terminan exactamente en 15 días y encola correos
-    para los jefes de COMPRAS E IMPORTACIONES QP y FINANCIERO QP.
+    Busca contratos que terminan en 15 días o menos (hasta 90 días vencidos,
+    para atrapar los que se saltaron por no correr el día exacto) y encola
+    correos para los jefes de COMPRAS E IMPORTACIONES QP y FINANCIERO QP.
+    No duplica: enqueue_contrato_vence_15 deduplica por event_key.
     """
     from .contratos_constants import (
         DEPT_COMPRAS, DEPT_FINANCIERO,
