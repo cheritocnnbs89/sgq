@@ -71,6 +71,15 @@
   </div>
 </div>
 
+<div class="section mb-3">
+  <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseGraficosDashboard" aria-expanded="false" aria-controls="collapseGraficosDashboard">
+    <i class="bi bi-bar-chart-line me-1"></i>Gráficos y estadísticas
+    <i class="bi bi-chevron-down ms-1"></i>
+  </button>
+  <div class="collapse" id="collapseGraficosDashboard">
+    <div class="mt-3">
+
 <div class="row g-3 mb-3">
 
   {# ── Ranking: tickets por departamento ── #}
@@ -89,6 +98,7 @@
 
           {% for r in tickets_por_depto %}
             {% set pct = [[((r.tickets / max_t) * 100)|int, 4]|max, 100]|min %}
+            {% set pct_bucket = (((pct / 2)|round(0, 'common'))|int * 2) %}
             <div class="horas-row">
 
               <div class="horas-rank">
@@ -102,8 +112,7 @@
               <div class="horas-name" title="{{ r.departamento }}">{{ r.departamento }}</div>
 
               <div class="horas-bar-wrap">
-                <div class="horas-bar {% if pct > 66 %}bar-high{% elif pct > 33 %}bar-mid{% else %}bar-low{% endif %}"
-                     style="width:{{ pct }}%"></div>
+                <div class="horas-bar w-pct pct-{{ pct_bucket }} {% if pct > 66 %}bar-high{% elif pct > 33 %}bar-mid{% else %}bar-low{% endif %}"></div>
               </div>
 
               <div class="horas-meta">
@@ -151,14 +160,15 @@
 
         <div class="lollipop-list">
           {% for r in top10 %}
-            {% set pct_pos = [[((r.tickets / max_tt) * 100)|round(1), 4]|max, 100]|min %}
+            {% set pct_pos = [[((r.tickets / max_tt) * 100)|int, 4]|max, 100]|min %}
+            {% set pct_bucket = (((pct_pos / 2)|round(0, 'common'))|int * 2) %}
             {% set pct_total = (r.tickets / total_tt.val * 100)|round(1) if total_tt.val else 0 %}
             <div class="lollipop-row">
               <div class="lollipop-rank">{{ loop.index }}</div>
               <div class="lollipop-name" title="{{ r.tecnico }}">{{ r.tecnico }}</div>
               <div class="lollipop-track">
-                <div class="lollipop-line {% if loop.index <= 3 %}hi{% endif %}" style="width:{{ pct_pos }}%"></div>
-                <div class="lollipop-dot {% if loop.index <= 3 %}hi{% endif %}" style="left:{{ pct_pos }}%"></div>
+                <div class="lollipop-line w-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></div>
+                <div class="lollipop-dot l-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></div>
               </div>
               <div class="lollipop-value">{{ r.tickets }} <span class="text-muted">({{ pct_total }}%)</span></div>
             </div>
@@ -195,7 +205,7 @@
           <button class="btn btn-light btn-sm ct-csv"><i class="bi bi-filetype-csv"></i></button>
         </div>
       </div>
-      <div class="chart-box" style="height:200px;"><canvas id="chartHorasDia"></canvas></div>
+      <div class="chart-box chart-box-200"><canvas id="chartHorasDia"></canvas></div>
     </div>
   </div>
 
@@ -233,6 +243,9 @@
 
 </div>
 
+    </div>
+  </div>
+</div>
 
 {# ===== Tareas atrasadas ===== #}
 <div class="ta-header">
@@ -299,12 +312,12 @@
     <input type="hidden" name="fecha_hasta" value="{{ fecha_hasta }}">
     <input type="hidden" name="depto" value="{{ depto_sel }}">
 
-    <div style="min-width:220px;flex:1 1 220px;">
+    <div class="mw-220">
       <label class="form-label">Buscar</label>
       <input type="text" name="atr_q" class="form-control form-control-sm" placeholder="Buscar tarea o ticket..."
              value="{{ atr_q }}">
     </div>
-    <div style="min-width:160px;">
+    <div class="mw-160">
       <label class="form-label">Responsable</label>
       <select name="atr_responsable" class="form-select form-select-sm">
         <option value="">Todos</option>
@@ -313,7 +326,7 @@
         {% endfor %}
       </select>
     </div>
-    <div style="min-width:160px;">
+    <div class="mw-160">
       <label class="form-label">Departamento</label>
       <select name="atr_depto" class="form-select form-select-sm">
         <option value="">Todos</option>
@@ -322,7 +335,7 @@
         {% endfor %}
       </select>
     </div>
-    <div style="min-width:160px;">
+    <div class="mw-160">
       <label class="form-label">Estado</label>
       <select name="atr_estado" class="form-select form-select-sm">
         <option value="">Todos</option>
@@ -384,9 +397,19 @@
               </td>
               <td><span class="ta-badge-estado">{{ t.estado }}</span></td>
               <td class="text-end">
-                <a class="btn btn-outline-primary btn-sm" href="{{ url_for('ver_tarea', task_id=t.id) }}">
+                <button type="button" class="btn btn-outline-primary btn-sm js-tarea-detalle"
+                        data-tarea-id="{{ t.id }}"
+                        data-tarea-num-id="{{ t.id }}"
+                        data-tarea-titulo="{{ t.titulo }}"
+                        data-tarea-desc="{{ t.descripcion }}"
+                        data-tarea-estado="{{ t.estado }}"
+                        data-tarea-responsable="{{ t.propietario or '—' }}"
+                        data-tarea-depto="{{ t.departamento or '—' }}"
+                        data-tarea-inicio="{{ t.fecha_inicio or '' }}"
+                        data-tarea-fin="{{ t.fecha_fin or '' }}"
+                        data-tarea-url-ver="{{ url_for('ver_tarea', task_id=t.id) }}">
                   <i class="bi bi-eye me-1"></i>Ver
-                </a>
+                </button>
               </td>
             </tr>
             {% else %}
@@ -418,6 +441,47 @@
     </div>
   </div>
 
+</div>
+
+<!-- ── Modal detalle tarea (popup rápido, solo lectura) ── -->
+<div class="bs-modal-backdrop" id="tdModalBackdrop" aria-hidden="true">
+  <div class="bs-modal" role="dialog" aria-modal="true" aria-labelledby="tdModalTitulo">
+
+    <div class="bs-modal-header">
+      <div class="bs-modal-ticket" id="tdModalCodigo"></div>
+      <h5 class="bs-modal-title" id="tdModalTitulo"></h5>
+      <button type="button" class="bs-modal-close" id="tdModalClose" aria-label="Cerrar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="bs-modal-meta" id="tdModalMeta"></div>
+
+    <div class="bs-modal-body">
+
+      <div class="bs-modal-section-label">
+        <i class="bi bi-card-text"></i> Descripción
+      </div>
+      <div class="td-modal-desc" id="tdModalDesc"></div>
+
+      <div class="bs-modal-section-label">
+        <i class="bi bi-people"></i> Personas
+      </div>
+      <div class="td-modal-grid" id="tdModalPersonas"></div>
+
+      <div class="bs-modal-section-label">
+        <i class="bi bi-calendar3"></i> Fechas
+      </div>
+      <div class="td-modal-grid" id="tdModalFechas"></div>
+
+      <div class="td-modal-footer-btns">
+        <a href="#" id="tdBtnVer" class="btn-ver-detalle">
+          <i class="bi bi-eye"></i> Ver detalle completo
+        </a>
+      </div>
+
+    </div>
+  </div>
 </div>
 {% endblock %}
 
