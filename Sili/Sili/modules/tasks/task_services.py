@@ -858,7 +858,9 @@ def svc_build_dashboard_context(user, request_args=None):
                 horas_por_depto_count[depto_t] += horas
 
         # Tareas por departamento por mes (todas las tareas)
-        fecha_ref = inicio_dt or parse_dt(str(t.get("fecha_creacion") or "").strip())
+        # Usa el mismo criterio que el filtro de fechas del dashboard (fecha_cierre_real
+        # o fecha_creacion) para que ninguna tarea caiga fuera del rango seleccionado.
+        fecha_ref = parse_dt(str(t.get("fecha_cierre_real") or t.get("fecha_creacion") or "").strip())
         if fecha_ref:
             tareas_por_depto_mes_count[depto_t][fecha_ref.strftime("%Y-%m")] += 1
             tickets_por_dia_count[fecha_ref.strftime("%Y-%m-%d")] += 1
