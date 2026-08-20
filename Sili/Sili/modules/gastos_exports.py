@@ -684,6 +684,13 @@ def _build_gastos_workbook():
             where.append("COALESCE(g.es_caja_chica,0)=0")
             where.append("COALESCE(g.reembolso_vendedor,0)=0")
 
+        # Los gastos auto-registrados (MDI, gastos_auto_registro_reglas) no
+        # pasan por el flujo manual de revisión/aprobación -> se excluyen del
+        # reporte por rango de fechas/filtros (no aplica al export por ids
+        # explícitos: si el usuario los seleccionó a mano en la pantalla, se
+        # respeta esa selección).
+        where.append("g.auto_registro_regla_id IS NULL")
+
         # ======================================================
         # 4) SELECT común
         # ======================================================
