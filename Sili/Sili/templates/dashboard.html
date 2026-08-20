@@ -82,57 +82,49 @@
 
 <div class="row g-3 mb-3">
 
-  {# ── Ranking: tickets por departamento ── #}
+  {# ── Tickets por departamento vs Estado ── #}
   <div class="col-md-6">
     <div class="section h-100">
       <div class="section-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-ticket-perforated me-1"></i>Tickets por departamento</span>
-        {% if tickets_por_depto %}
-        <span class="badge bg-secondary">{{ tickets_por_depto|length }}</span>
+        <span><i class="bi bi-ticket-perforated me-1"></i>Tickets por departamento vs Estado</span>
+        {% if tickets_por_depto_estado %}
+        <span class="badge bg-secondary">{{ tickets_por_depto_estado|length }}</span>
         {% endif %}
       </div>
 
-      {% if tickets_por_depto %}
-        {% set max_t = tickets_por_depto[0].tickets if tickets_por_depto[0].tickets > 0 else 1 %}
-        <div class="horas-ranking">
-
-          {% for r in tickets_por_depto %}
-            {% set pct = [[((r.tickets / max_t) * 100)|int, 4]|max, 100]|min %}
-            {% set pct_bucket = (((pct / 2)|round(0, 'common'))|int * 2) %}
-            <div class="horas-row">
-
-              <div class="horas-rank">
-                {% if loop.index == 1 %}🥇
-                {% elif loop.index == 2 %}🥈
-                {% elif loop.index == 3 %}🥉
-                {% else %}<span class="rank-num">{{ loop.index }}</span>
-                {% endif %}
-              </div>
-
-              <div class="horas-name" title="{{ r.departamento }}">{{ r.departamento }}</div>
-
-              <div class="horas-bar-wrap">
-                <div class="horas-bar w-pct pct-{{ pct_bucket }} {% if pct > 66 %}bar-high{% elif pct > 33 %}bar-mid{% else %}bar-low{% endif %}"></div>
-              </div>
-
-              <div class="horas-meta">
-                <span class="badge bg-light text-dark border">
-                  {{ r.tickets }} ticket{{ 's' if r.tickets != 1 else '' }}
-                </span>
-              </div>
-
-            </div>
-          {% endfor %}
-
-          {% set total_tickets = namespace(val=0) %}
-          {% for r in tickets_por_depto %}
-            {% set total_tickets.val = total_tickets.val + r.tickets %}
-          {% endfor %}
-          <div class="horas-total-row">
-            <strong>Total</strong>
-            <span><strong>{{ total_tickets.val }}</strong> ticket(s)</span>
-          </div>
-
+      {% if tickets_por_depto_estado %}
+        <div class="table-responsive">
+          <table class="dpe-table">
+            <thead>
+              <tr>
+                <th>Departamento</th>
+                <th><i class="bi bi-arrow-repeat text-primary"></i> Desarrollo</th>
+                <th><i class="bi bi-exclamation-triangle text-danger"></i> +30 días</th>
+                <th><i class="bi bi-check2-circle text-success"></i> Cerradas</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in tickets_por_depto_estado %}
+              <tr>
+                <td class="dpe-name" title="{{ r.departamento }}">{{ r.departamento }}</td>
+                <td><span class="dpe-cell desarrollo">{{ r.desarrollo }}</span></td>
+                <td><span class="dpe-cell mas30">{{ r.mas30 }}</span></td>
+                <td><span class="dpe-cell cerradas">{{ r.cerradas }}</span></td>
+                <td class="dpe-total-cell">{{ r.total }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr class="dpe-total-row">
+                <td>Total</td>
+                <td><span class="dpe-cell desarrollo">{{ tickets_por_depto_estado_totales.desarrollo }}</span></td>
+                <td><span class="dpe-cell mas30">{{ tickets_por_depto_estado_totales.mas30 }}</span></td>
+                <td><span class="dpe-cell cerradas">{{ tickets_por_depto_estado_totales.cerradas }}</span></td>
+                <td class="dpe-total-cell">{{ tickets_por_depto_estado_totales.total }}</td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
       {% else %}
         <p class="text-muted text-center small py-3">

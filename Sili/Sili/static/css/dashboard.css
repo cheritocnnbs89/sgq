@@ -226,6 +226,70 @@ body {
   }
 }
 
+/* ===== Tickets por departamento vs Estado (tabla cruzada) ===== */
+.dpe-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  font-size: 0.82rem;
+}
+
+.dpe-table th {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--muted);
+  font-weight: 700;
+  padding: 4px 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.dpe-table th:first-child,
+.dpe-table td:first-child {
+  text-align: left;
+}
+
+.dpe-table td {
+  padding: 6px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.dpe-name {
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.dpe-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.dpe-cell.desarrollo { background: rgba(59, 130, 246, .14); color: #1d4ed8; }
+.dpe-cell.mas30      { background: rgba(239, 68, 68, .14);  color: #b91c1c; }
+.dpe-cell.cerradas   { background: rgba(16, 185, 129, .14); color: #047857; }
+
+.dpe-total-cell {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dpe-total-row td {
+  border-top: 1px dashed var(--line);
+  font-weight: 700;
+  padding-top: 8px;
+}
+
 /* ===== Lollipop chart (tickets por técnico) ===== */
 .lollipop-list {
   display: flex;

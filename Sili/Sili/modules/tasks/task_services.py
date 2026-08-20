@@ -812,6 +812,7 @@ def svc_build_dashboard_context(user, request_args=None):
     horas_por_depto_count = defaultdict(float)
     tickets_por_dia_count = defaultdict(int)
     tickets_por_depto_count = defaultdict(int)
+    tickets_por_depto_estado_count: dict = defaultdict(lambda: {"desarrollo": 0, "mas30": 0, "cerradas": 0})
     tickets_por_tecnico_count = defaultdict(int)
     tareas_por_depto_mes_count: dict = defaultdict(lambda: defaultdict(int))
     cumplimiento_mensual_count: dict = defaultdict(lambda: {"abiertas": 0, "cerradas": 0})
@@ -863,6 +864,15 @@ def svc_build_dashboard_context(user, request_args=None):
 
         tickets_por_depto_count[depto_t] += 1
         tickets_por_tecnico_count[t.get("propietario") or "—"] += 1
+
+        if estado in ESTADOS_CERRADOS_SET:
+            tickets_por_depto_estado_count[depto_t]["cerradas"] += 1
+        else:
+            dias_atraso_dpe = (hoy - comp_dt.date()).days if comp_dt and comp_dt.date() < hoy else 0
+            if dias_atraso_dpe > 30:
+                tickets_por_depto_estado_count[depto_t]["mas30"] += 1
+            else:
+                tickets_por_depto_estado_count[depto_t]["desarrollo"] += 1
 
         # Abiertas vs cerradas por mes
         if fecha_ref:
@@ -991,11 +1001,26 @@ def svc_build_dashboard_context(user, request_args=None):
         "data":   [tickets_por_dia_count[d] for d in _dias_tickets_sorted],
     }
 
-    # ── Tickets por departamento (ranking) ──────────────────────
-    tickets_por_depto = sorted(
-        [{"departamento": d, "tickets": c} for d, c in tickets_por_depto_count.items()],
-        key=lambda x: -x["tickets"],
+    # ── Tickets por departamento vs Estado (desarrollo / +30 días / cerradas) ──
+    tickets_por_depto_estado = sorted(
+        [
+            {
+                "departamento": d,
+                "desarrollo": v["desarrollo"],
+                "mas30": v["mas30"],
+                "cerradas": v["cerradas"],
+                "total": v["desarrollo"] + v["mas30"] + v["cerradas"],
+            }
+            for d, v in tickets_por_depto_estado_count.items()
+        ],
+        key=lambda x: -x["total"],
     )
+    tickets_por_depto_estado_totales = {
+        "desarrollo": sum(r["desarrollo"] for r in tickets_por_depto_estado),
+        "mas30": sum(r["mas30"] for r in tickets_por_depto_estado),
+        "cerradas": sum(r["cerradas"] for r in tickets_por_depto_estado),
+        "total": sum(r["total"] for r in tickets_por_depto_estado),
+    }
 
     tickets_por_tecnico = sorted(
         [{"tecnico": u, "tickets": c} for u, c in tickets_por_tecnico_count.items()],
@@ -1053,7 +1078,8 @@ def svc_build_dashboard_context(user, request_args=None):
             "cumplimiento":  chart_cumplimiento,
             "tickets_dia":   chart_tickets_dia,
         },
-        "tickets_por_depto": tickets_por_depto,
+        "tickets_por_depto_estado": tickets_por_depto_estado,
+        "tickets_por_depto_estado_totales": tickets_por_depto_estado_totales,
         "tickets_por_tecnico": tickets_por_tecnico,
         "active_page": "dashboard",
     }
