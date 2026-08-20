@@ -236,7 +236,9 @@ def _crear_gasto_desde_factura(conn, factura: dict, regla: dict) -> int:
     numero_factura = "-".join([
         (factura.get("estab") or "").strip(),
         (factura.get("pto_emi") or "").strip(),
-        str(factura.get("secuencial") or "0").strip().zfill(9),
+        # SAP maneja 8 dígitos para el consecutivo (ej. 00027717), no 9 —
+        # con zfill(9) sobraba un cero adelante y se perdía el último dígito.
+        str(factura.get("secuencial") or "0").strip().zfill(8),
     ])
 
     detalle_rows = _detalle_desde_factura(conn, factura["id"])
