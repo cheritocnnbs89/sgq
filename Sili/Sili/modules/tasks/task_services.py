@@ -916,24 +916,6 @@ def svc_build_dashboard_context(user, request_args=None):
         key=lambda x: -x["total"],
     )
 
-    # ── Tareas con más de 30 días de atraso, agrupadas por técnico ──
-    _mas30_por_tecnico: dict = defaultdict(list)
-    for t in overdue_tasks:
-        if t["dias_atraso"] > 30:
-            _mas30_por_tecnico[t.get("propietario") or "—"].append(t)
-
-    tecnicos_mas30 = sorted(
-        [
-            {
-                "tecnico": tec,
-                "total": len(tareas),
-                "tareas": sorted(tareas, key=lambda x: -x["dias_atraso"]),
-            }
-            for tec, tareas in _mas30_por_tecnico.items()
-        ],
-        key=lambda x: -x["total"],
-    )
-
     overdue_by_depto = sorted(
         [{"departamento": d, "total": c} for d, c in overdue_by_depto_count.items()],
         key=lambda x: -x["total"],
@@ -1105,7 +1087,6 @@ def svc_build_dashboard_context(user, request_args=None):
         "tickets_por_depto_estado_totales": tickets_por_depto_estado_totales,
         "tickets_por_tecnico": tickets_por_tecnico,
         "depto_mes_heatmap": depto_mes_heatmap,
-        "tecnicos_mas30": tecnicos_mas30,
         "active_page": "dashboard",
     }
     ctx.update(_construir_seccion_atrasadas(overdue_tasks, request_args))
