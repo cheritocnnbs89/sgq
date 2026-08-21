@@ -826,6 +826,7 @@ def svc_build_dashboard_context(user, request_args=None):
     tickets_por_depto_estado_count: dict = defaultdict(lambda: {"desarrollo": 0, "mas30": 0, "cerradas": 0})
     tickets_por_tecnico_count = defaultdict(int)
     tickets_cerrados_por_tecnico_count = defaultdict(int)
+    tecnico_activo_map = {}
     tareas_por_depto_mes_count: dict = defaultdict(lambda: defaultdict(int))
     cumplimiento_mensual_count: dict = defaultdict(lambda: {"abiertas": 0, "cerradas": 0})
 
@@ -886,12 +887,13 @@ def svc_build_dashboard_context(user, request_args=None):
 
         tickets_por_depto_count[depto_t] += 1
 
-        # "Tickets por técnico": solo cuenta usuarios activos.
-        if bool(t.get("propietario_activo", 1)):
-            tecnico_t = t.get("propietario") or "—"
-            tickets_por_tecnico_count[tecnico_t] += 1
-            if estado in ESTADOS_CERRADOS_SET:
-                tickets_cerrados_por_tecnico_count[tecnico_t] += 1
+        # "Tickets por técnico": incluye usuarios inactivos, pero se marcan
+        # aparte (ver tecnico_activo_map) para poder identificarlos en la UI.
+        tecnico_t = t.get("propietario") or "—"
+        tickets_por_tecnico_count[tecnico_t] += 1
+        tecnico_activo_map[tecnico_t] = bool(t.get("propietario_activo", 1))
+        if estado in ESTADOS_CERRADOS_SET:
+            tickets_cerrados_por_tecnico_count[tecnico_t] += 1
 
         if estado in ESTADOS_CERRADOS_SET:
             tickets_por_depto_estado_count[depto_t]["cerradas"] += 1
@@ -1067,6 +1069,7 @@ def svc_build_dashboard_context(user, request_args=None):
                 "tecnico": u,
                 "tickets": c,
                 "cerrados": tickets_cerrados_por_tecnico_count.get(u, 0),
+                "activo": tecnico_activo_map.get(u, True),
             }
             for u, c in tickets_por_tecnico_count.items()
         ],

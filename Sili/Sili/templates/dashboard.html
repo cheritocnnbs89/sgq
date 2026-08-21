@@ -174,7 +174,10 @@
             {% set pct_total = (r.tickets / total_tt.val * 100)|round(1) if total_tt.val else 0 %}
             <div class="lollipop-row">
               <div class="lollipop-rank">{{ loop.index }}</div>
-              <div class="lollipop-name" title="{{ r.tecnico }}">{{ r.tecnico }}</div>
+              <div class="lollipop-name" title="{{ r.tecnico }}{{ ' (usuario inactivo)' if not r.activo else '' }}">
+                <span class="lollipop-name-text">{{ r.tecnico }}</span>
+                {% if not r.activo %}<span class="lollipop-badge-inactivo">Inactivo</span>{% endif %}
+              </div>
               <div class="lollipop-track">
                 <div class="lollipop-line w-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></div>
                 <div class="lollipop-line lollipop-line-cerrados w-pct pct-{{ pct_bucket_c }}"></div>

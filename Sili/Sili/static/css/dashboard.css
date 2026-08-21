@@ -476,7 +476,7 @@ body {
 
 .lollipop-row {
   display: grid;
-  grid-template-columns: 1.4rem 88px 1fr auto;
+  grid-template-columns: 1.4rem 120px 1fr auto;
   align-items: center;
   gap: 0.7rem;
 }
@@ -489,12 +489,32 @@ body {
 }
 
 .lollipop-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.lollipop-name-text {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.lollipop-badge-inactivo {
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  color: #92400e;
+  background: rgba(245, 158, 11, .16);
+  border-radius: 999px;
+  padding: 1px 6px;
 }
 
 .lollipop-track {
