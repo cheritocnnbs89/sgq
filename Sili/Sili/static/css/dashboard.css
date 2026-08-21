@@ -528,6 +528,50 @@ body {
   text-align: right;
   min-width: 92px;
 }
+
+.lollipop-value-cerrados {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #047857;
+  white-space: nowrap;
+}
+
+/* ===== Segunda serie: tickets cerrados (mismo track, color distinto) ===== */
+.lollipop-line-cerrados {
+  background: #6ee7b7;
+  z-index: 1;
+}
+
+.lollipop-dot-cerrados {
+  background: #10b981;
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, .35);
+  z-index: 1;
+}
+
+.lollipop-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  padding: 0 4px 6px;
+}
+
+.lollipop-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lollipop-legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.lollipop-legend-dot.total { background: #3b82f6; }
+.lollipop-legend-dot.cerrados { background: #10b981; }
 /* ===== Utilidades sin estilos inline (min-width fijos, chart-box) ===== */
 .mw-220 { min-width: 220px; flex: 1 1 220px; }
 .mw-160 { min-width: 160px; }

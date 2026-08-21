@@ -73,6 +73,7 @@ SQL_DASHBOARD_TAREAS_BASE = f"""
            t.fecha_cierre_real,
            t.usuario_id,
            u.username AS propietario,
+           COALESCE(u.activo, 1) AS propietario_activo,
            d.nombre AS departamento,
            t.solicitante_id,
            usol.username AS solicitante
