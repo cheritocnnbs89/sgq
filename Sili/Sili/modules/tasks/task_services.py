@@ -1126,32 +1126,10 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
     estado_sel = (request_args.get("atr_estado") or "").strip()
     antiguedad_sel = (request_args.get("atr_antiguedad") or "").strip()
 
-    try:
-        pagina = max(1, int(request_args.get("atr_pagina") or 1))
-    except (TypeError, ValueError):
-        pagina = 1
-
-    POR_PAGINA = 15
-
     atrasadas = overdue_tasks
-    total_atrasadas = len(atrasadas)
-    mas_90_dias = sum(1 for t in atrasadas if t["dias_atraso"] > 90)
-    atraso_promedio = (
-        round(sum(t["dias_atraso"] for t in atrasadas) / total_atrasadas)
-        if total_atrasadas else 0
-    )
 
-    por_responsable_count = defaultdict(int)
-    for t in atrasadas:
-        por_responsable_count[t.get("propietario") or "—"] += 1
-
-    if por_responsable_count:
-        responsable_top, responsable_top_count = max(
-            por_responsable_count.items(), key=lambda x: x[1]
-        )
-    else:
-        responsable_top, responsable_top_count = "—", 0
-
+    # Opciones de los dropdowns: siempre sobre el universo completo de
+    # atrasadas, para que no se reduzcan al aplicar otros filtros.
     responsables_disponibles = sorted({t.get("propietario") or "—" for t in atrasadas})
     deptos_disponibles = sorted({t.get("departamento") or "Sin departamento" for t in atrasadas})
     estados_disponibles = sorted({t.get("estado") for t in atrasadas if t.get("estado")})
@@ -1180,12 +1158,38 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
         filtradas = [t for t in filtradas if t["dias_atraso"] > 90]
 
     filtradas = sorted(filtradas, key=lambda t: -t["dias_atraso"])
-
     total_filtradas = len(filtradas)
-    total_paginas = max(1, (total_filtradas + POR_PAGINA - 1) // POR_PAGINA)
-    pagina = min(pagina, total_paginas)
-    inicio = (pagina - 1) * POR_PAGINA
-    tareas_pagina = filtradas[inicio:inicio + POR_PAGINA]
+
+    # KPIs: reflejan los filtros aplicados (búsqueda/responsable/depto/estado/antigüedad).
+    total_atrasadas = total_filtradas
+    mas_90_dias = sum(1 for t in filtradas if t["dias_atraso"] > 90)
+    atraso_promedio = (
+        round(sum(t["dias_atraso"] for t in filtradas) / total_filtradas)
+        if total_filtradas else 0
+    )
+
+    por_responsable_count = defaultdict(int)
+    for t in filtradas:
+        por_responsable_count[t.get("propietario") or "—"] += 1
+
+    if por_responsable_count:
+        responsable_top, responsable_top_count = max(
+            por_responsable_count.items(), key=lambda x: x[1]
+        )
+    else:
+        responsable_top, responsable_top_count = "—", 0
+
+    grupos_map = defaultdict(list)
+    for t in filtradas:
+        grupos_map[t.get("propietario") or "—"].append(t)
+
+    atr_grupos = sorted(
+        [
+            {"responsable": r, "total": len(tareas), "tareas": tareas}
+            for r, tareas in grupos_map.items()
+        ],
+        key=lambda x: -x["total"],
+    )
 
     return {
         "atr_total": total_atrasadas,
@@ -1201,12 +1205,8 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
         "atr_depto_sel": depto_sel,
         "atr_estado_sel": estado_sel,
         "atr_antiguedad_sel": antiguedad_sel,
-        "atr_tareas": tareas_pagina,
-        "atr_pagina": pagina,
-        "atr_total_paginas": total_paginas,
+        "atr_grupos": atr_grupos,
         "atr_total_filtradas": total_filtradas,
-        "atr_inicio_mostrado": inicio + 1 if total_filtradas else 0,
-        "atr_fin_mostrado": min(inicio + POR_PAGINA, total_filtradas),
     }
 
 

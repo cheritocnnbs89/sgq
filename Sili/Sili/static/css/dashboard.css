@@ -349,21 +349,21 @@ body {
   border-radius: 3px;
 }
 
-/* ===== Tareas +30 días de atraso por técnico (acordeón) ===== */
-.tm30-list {
+/* ===== Lista agrupada con acordeón + lollipop (reutilizable) ===== */
+.grp-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding-top: 4px;
 }
 
-.tm30-item {
+.grp-item {
   border: 1px solid var(--line);
   border-radius: 10px;
   overflow: hidden;
 }
 
-.tm30-row {
+.grp-row {
   display: grid;
   grid-template-columns: 1.4rem 110px 1fr auto 1.2rem;
   align-items: center;
@@ -377,23 +377,23 @@ body {
   color: var(--ink);
 }
 
-.tm30-row:hover { background: var(--surface-2); }
+.grp-row:hover { background: var(--surface-2); }
 
-.tm30-rank {
+.grp-rank {
   font-weight: 700;
   color: var(--muted);
   font-size: 0.8rem;
   text-align: center;
 }
 
-.tm30-name {
+.grp-name {
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.tm30-track {
+.grp-track {
   position: relative;
   height: 2px;
   background: var(--line);
@@ -401,7 +401,7 @@ body {
   min-width: 60px;
 }
 
-.tm30-line {
+.grp-line {
   position: absolute;
   left: 0;
   top: 0;
@@ -410,9 +410,9 @@ body {
   background: #fca5a5;
 }
 
-.tm30-line.hi { background: #f87171; }
+.grp-line.hi { background: #f87171; }
 
-.tm30-dot {
+.grp-dot {
   position: absolute;
   top: 50%;
   width: 13px;
@@ -424,28 +424,28 @@ body {
   transform: translate(-50%, -50%);
 }
 
-.tm30-dot.hi {
+.grp-dot.hi {
   background: #b91c1c;
   box-shadow: 0 0 0 1px rgba(185, 28, 28, .35);
 }
 
-.tm30-count {
+.grp-count {
   font-weight: 700;
   color: #b91c1c;
   font-size: 0.85rem;
   white-space: nowrap;
 }
 
-.tm30-chevron {
+.grp-chevron {
   color: var(--muted);
   transition: transform 0.15s;
 }
 
-.tm30-row[aria-expanded="true"] .tm30-chevron {
+.grp-row[aria-expanded="true"] .grp-chevron {
   transform: rotate(180deg);
 }
 
-.tm30-item .table-responsive {
+.grp-item .table-responsive {
   border-top: 1px solid var(--line);
   padding: 6px 10px;
   background: var(--surface-2);

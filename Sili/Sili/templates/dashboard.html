@@ -387,80 +387,89 @@
 <div class="row g-3">
   <div class="col-12">
     <div class="section">
-      <div class="table-responsive">
-        <table class="table table-sm table-hover align-middle ta-table mb-0">
-          <thead>
-            <tr>
-              <th>Tarea</th>
-              <th>Responsable</th>
-              <th>Departamento</th>
-              <th>Fecha compromiso</th>
-              <th>Atraso</th>
-              <th>Estado</th>
-              <th class="text-end">Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for t in atr_tareas %}
-            <tr>
-              <td>
-                <div class="ta-titulo">{{ t.titulo }}</div>
-                <div class="ta-titulo-id">ID {{ t.id }}</div>
-              </td>
-              <td>
-                <span class="ta-avatar me-1">{{ (t.propietario or '—')[:2]|upper }}</span>
-                {{ t.propietario or '—' }}
-              </td>
-              <td>{{ t.departamento or '—' }}</td>
-              <td>{{ t.fecha_compromiso_fmt or t.fecha_compromiso or '—' }}</td>
-              <td>
-                {% set d = t.dias_atraso %}
-                <span class="ta-badge-atraso {{ 'b90' if d > 90 else ('b60' if d > 60 else ('b30' if d > 30 else 'b0')) }}">
-                  {{ d }} día{{ 's' if d != 1 else '' }}
-                </span>
-              </td>
-              <td><span class="ta-badge-estado">{{ t.estado }}</span></td>
-              <td class="text-end">
-                <button type="button" class="btn btn-outline-primary btn-sm js-tarea-detalle"
-                        data-tarea-id="{{ t.id }}"
-                        data-tarea-num-id="{{ t.id }}"
-                        data-tarea-titulo="{{ t.titulo }}"
-                        data-tarea-desc="{{ t.descripcion }}"
-                        data-tarea-estado="{{ t.estado }}"
-                        data-tarea-responsable="{{ t.propietario or '—' }}"
-                        data-tarea-depto="{{ t.departamento or '—' }}"
-                        data-tarea-inicio="{{ t.fecha_inicio or '' }}"
-                        data-tarea-fin="{{ t.fecha_fin or '' }}"
-                        data-tarea-url-ver="{{ url_for('ver_tarea', task_id=t.id) }}">
-                  <i class="bi bi-eye me-1"></i>Ver
-                </button>
-              </td>
-            </tr>
-            {% else %}
-            <tr>
-              <td colspan="7" class="text-center text-muted small py-4">
-                <i class="bi bi-check2-circle me-1"></i>No hay tareas atrasadas con estos filtros.
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      {% if atr_total_filtradas %}
-      <div class="d-flex justify-content-between align-items-center mt-3 px-2 pb-1 small text-muted">
-        <div>Mostrando {{ atr_inicio_mostrado }} a {{ atr_fin_mostrado }} de {{ atr_total_filtradas }} resultados</div>
-        {% if atr_total_paginas > 1 %}
-        <div class="d-flex gap-1">
-          {% set base_args = request.args.to_dict() %}
-          {% for p in range(1, atr_total_paginas + 1) %}
-            {% set _ = base_args.update({'atr_pagina': p}) %}
-            <a class="btn btn-sm {{ 'btn-primary' if p == atr_pagina else 'btn-outline-secondary' }}"
-               href="{{ url_for('dashboard', **base_args) }}">{{ p }}</a>
-          {% endfor %}
-        </div>
+      <div class="section-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-people me-1"></i> Tareas atrasadas por responsable</span>
+        {% if atr_grupos %}
+        <span class="badge bg-secondary">{{ atr_total_filtradas }}</span>
         {% endif %}
       </div>
+
+      {% if atr_grupos %}
+        {% set max_atr = atr_grupos[0].total if atr_grupos[0].total > 0 else 1 %}
+        <div class="grp-list">
+          {% for grp in atr_grupos %}
+            {% set collapse_id = 'atrCollapse' ~ loop.index %}
+            {% set pct_pos = [[((grp.total / max_atr) * 100)|int, 4]|max, 100]|min %}
+            {% set pct_bucket = (((pct_pos / 2)|round(0, 'common'))|int * 2) %}
+            <div class="grp-item">
+              <button type="button" class="grp-row" data-bs-toggle="collapse"
+                      data-bs-target="#{{ collapse_id }}" aria-expanded="false" aria-controls="{{ collapse_id }}">
+                <span class="grp-rank">{{ loop.index }}</span>
+                <span class="grp-name" title="{{ grp.responsable }}">{{ grp.responsable }}</span>
+                <span class="grp-track">
+                  <span class="grp-line w-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></span>
+                  <span class="grp-dot l-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></span>
+                </span>
+                <span class="grp-count">{{ grp.total }} tarea{{ 's' if grp.total != 1 else '' }}</span>
+                <i class="bi bi-chevron-down grp-chevron"></i>
+              </button>
+              <div class="collapse" id="{{ collapse_id }}">
+                <div class="table-responsive">
+                  <table class="table table-sm ta-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Tarea</th>
+                        <th>Departamento</th>
+                        <th>Fecha compromiso</th>
+                        <th>Atraso</th>
+                        <th>Estado</th>
+                        <th class="text-end">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for t in grp.tareas %}
+                      <tr>
+                        <td>
+                          <div class="ta-titulo">{{ t.titulo }}</div>
+                          <div class="ta-titulo-id">ID {{ t.id }}</div>
+                        </td>
+                        <td>{{ t.departamento or '—' }}</td>
+                        <td>{{ t.fecha_compromiso_fmt or t.fecha_compromiso or '—' }}</td>
+                        <td>
+                          {% set d = t.dias_atraso %}
+                          <span class="ta-badge-atraso {{ 'b90' if d > 90 else ('b60' if d > 60 else ('b30' if d > 30 else 'b0')) }}">
+                            {{ d }} día{{ 's' if d != 1 else '' }}
+                          </span>
+                        </td>
+                        <td><span class="ta-badge-estado">{{ t.estado }}</span></td>
+                        <td class="text-end">
+                          <button type="button" class="btn btn-outline-primary btn-sm js-tarea-detalle"
+                                  data-tarea-id="{{ t.id }}"
+                                  data-tarea-num-id="{{ t.id }}"
+                                  data-tarea-titulo="{{ t.titulo }}"
+                                  data-tarea-desc="{{ t.descripcion }}"
+                                  data-tarea-estado="{{ t.estado }}"
+                                  data-tarea-responsable="{{ t.propietario or '—' }}"
+                                  data-tarea-depto="{{ t.departamento or '—' }}"
+                                  data-tarea-inicio="{{ t.fecha_inicio or '' }}"
+                                  data-tarea-fin="{{ t.fecha_fin or '' }}"
+                                  data-tarea-url-ver="{{ url_for('ver_tarea', task_id=t.id) }}">
+                            <i class="bi bi-eye me-1"></i>Ver
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted text-center small py-3">
+          <i class="bi bi-check2-circle me-1"></i>No hay tareas atrasadas con estos filtros.
+        </p>
       {% endif %}
     </div>
   </div>
@@ -478,22 +487,22 @@
 
   {% if tecnicos_mas30 %}
     {% set max_m30 = tecnicos_mas30[0].total if tecnicos_mas30[0].total > 0 else 1 %}
-    <div class="tm30-list">
+    <div class="grp-list">
       {% for grp in tecnicos_mas30 %}
         {% set collapse_id = 'tm30Collapse' ~ loop.index %}
         {% set pct_pos = [[((grp.total / max_m30) * 100)|int, 4]|max, 100]|min %}
         {% set pct_bucket = (((pct_pos / 2)|round(0, 'common'))|int * 2) %}
-        <div class="tm30-item">
-          <button type="button" class="tm30-row" data-bs-toggle="collapse"
+        <div class="grp-item">
+          <button type="button" class="grp-row" data-bs-toggle="collapse"
                   data-bs-target="#{{ collapse_id }}" aria-expanded="false" aria-controls="{{ collapse_id }}">
-            <span class="tm30-rank">{{ loop.index }}</span>
-            <span class="tm30-name" title="{{ grp.tecnico }}">{{ grp.tecnico }}</span>
-            <span class="tm30-track">
-              <span class="tm30-line w-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></span>
-              <span class="tm30-dot l-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></span>
+            <span class="grp-rank">{{ loop.index }}</span>
+            <span class="grp-name" title="{{ grp.tecnico }}">{{ grp.tecnico }}</span>
+            <span class="grp-track">
+              <span class="grp-line w-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></span>
+              <span class="grp-dot l-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></span>
             </span>
-            <span class="tm30-count">{{ grp.total }} tarea{{ 's' if grp.total != 1 else '' }}</span>
-            <i class="bi bi-chevron-down tm30-chevron"></i>
+            <span class="grp-count">{{ grp.total }} tarea{{ 's' if grp.total != 1 else '' }}</span>
+            <i class="bi bi-chevron-down grp-chevron"></i>
           </button>
           <div class="collapse" id="{{ collapse_id }}">
             <div class="table-responsive">
