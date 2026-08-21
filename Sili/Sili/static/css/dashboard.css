@@ -349,6 +349,71 @@ body {
   border-radius: 3px;
 }
 
+/* ===== Tareas +30 días de atraso por técnico (acordeón) ===== */
+.tm30-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.tm30-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tm30-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: var(--surface-1);
+  border: none;
+  padding: 10px 14px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+}
+
+.tm30-row:hover { background: var(--surface-2); }
+
+.tm30-rank {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.8rem;
+  width: 1.4rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.tm30-name {
+  font-weight: 600;
+  flex: 1;
+}
+
+.tm30-count {
+  font-weight: 700;
+  color: #b91c1c;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.tm30-chevron {
+  color: var(--muted);
+  transition: transform 0.15s;
+}
+
+.tm30-row[aria-expanded="true"] .tm30-chevron {
+  transform: rotate(180deg);
+}
+
+.tm30-item .table-responsive {
+  border-top: 1px solid var(--line);
+  padding: 6px 10px;
+  background: var(--surface-2);
+}
+
 /* ===== Lollipop chart (tickets por técnico) ===== */
 .lollipop-list {
   display: flex;
