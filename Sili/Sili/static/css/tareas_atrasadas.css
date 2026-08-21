@@ -271,13 +271,6 @@ body.bs-modal-open { overflow: hidden; }
   overflow-y: auto;
 }
 
-.td-modal-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 24px;
-  margin-bottom: 4px;
-}
-.td-modal-item { min-width: 140px; }
 .td-modal-label {
   font-size: 10px;
   font-weight: 700;
@@ -292,26 +285,82 @@ body.bs-modal-open { overflow: hidden; }
   font-weight: 500;
 }
 
-.td-modal-footer-btns {
+/* ── Modal detalle completo (historial + agregar acción + editar) ── */
+.td-detalle-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .50);
+  z-index: 1060;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+.td-detalle-backdrop.visible { display: flex; }
+
+.td-detalle-modal {
+  background: #fff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
   display: flex;
-  gap: 10px;
-  margin-top: 18px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .28);
 }
 
-.btn-ver-detalle {
+.td-detalle-body {
+  overflow-y: auto;
+  max-height: calc(90vh - 60px);
+  padding: 16px 20px 24px;
+}
+
+.td-det-card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.td-det-card-primary { border-color: #0d6efd; }
+.td-det-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: #495057;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.td-detalle-fechas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.td-edit-label {
+  display: block;
   font-size: 11px;
   font-weight: 600;
-  color: #0d6efd;
-  background: none;
-  border: 1px solid #c8d9f8;
-  border-radius: 4px;
-  padding: 2px 9px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: background .12s, color .12s;
-  text-decoration: none;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 4px;
 }
-.btn-ver-detalle:hover { background: #e7f0ff; color: #0a58ca; text-decoration: none; }
+
+html.theme-dark .td-detalle-modal,
+html.theme-dark .td-det-card { background: #0F172A; border-color: #1F2A44; }
+html.theme-dark .td-det-card-title { color: #94A3B8; }
+html.theme-dark .table-light { background: #0B1629 !important; }
+html.theme-dark .table-light th { background: #0B1629 !important; color: #94A3B8; }
+
+/* clases para reemplazar style= inline en JS (CSP) */
+.td-badge-sm    { font-size: 10px; }
+.td-fecha-val   { font-size: 12px; }
+.td-det-pretext { white-space: pre-wrap; }
+.td-col-fecha   { width: 100px; }
+.td-col-reg     { width: 110px; }
+.td-col-asig    { width: 150px; }
+.td-col-fintent { width: 90px; }

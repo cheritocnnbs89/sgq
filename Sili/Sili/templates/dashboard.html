@@ -438,17 +438,8 @@
                         </td>
                         <td><span class="ta-badge-estado">{{ t.estado }}</span></td>
                         <td class="text-end">
-                          <button type="button" class="btn btn-outline-primary btn-sm js-tarea-detalle"
-                                  data-tarea-id="{{ t.id }}"
-                                  data-tarea-num-id="{{ t.id }}"
-                                  data-tarea-titulo="{{ t.titulo }}"
-                                  data-tarea-desc="{{ t.descripcion }}"
-                                  data-tarea-estado="{{ t.estado }}"
-                                  data-tarea-responsable="{{ t.propietario or '—' }}"
-                                  data-tarea-depto="{{ t.departamento or '—' }}"
-                                  data-tarea-inicio="{{ t.fecha_inicio or '' }}"
-                                  data-tarea-fin="{{ t.fecha_fin or '' }}"
-                                  data-tarea-url-ver="{{ url_for('ver_tarea', task_id=t.id) }}">
+                          <button type="button" class="btn btn-outline-primary btn-sm js-abrir-detalle-modal"
+                                  data-task-id="{{ t.id }}" title="Ver detalle y avances">
                             <i class="bi bi-eye me-1"></i>Ver
                           </button>
                         </td>
@@ -471,41 +462,132 @@
 
 </div>
 
-<!-- ── Modal detalle tarea (popup rápido, solo lectura) ── -->
-<div class="bs-modal-backdrop" id="tdModalBackdrop" aria-hidden="true">
-  <div class="bs-modal" role="dialog" aria-modal="true" aria-labelledby="tdModalTitulo">
+<span id="td-csrf-token" class="d-none" data-token="{{ csrf_token() }}"></span>
+
+<!-- ── Modal detalle completo con historial y agregar acción (mismo que /tareas) ── -->
+<div class="td-detalle-backdrop" id="tdDetalleBackdrop" aria-hidden="true">
+  <div class="td-detalle-modal" role="dialog" aria-modal="true" aria-labelledby="tdDetTitulo">
 
     <div class="bs-modal-header">
-      <div class="bs-modal-ticket" id="tdModalCodigo"></div>
-      <h5 class="bs-modal-title" id="tdModalTitulo"></h5>
-      <button type="button" class="bs-modal-close" id="tdModalClose" aria-label="Cerrar">
+      <div class="bs-modal-ticket" id="tdDetCodigo"></div>
+      <h5 class="bs-modal-title" id="tdDetTitulo"></h5>
+      <button type="button" class="bs-modal-close d-none" id="tdDetBtnEditar" title="Editar tarea">
+        <i class="bi bi-pencil-square"></i>
+      </button>
+      <button type="button" class="bs-modal-close" id="tdDetClose" aria-label="Cerrar">
         <i class="bi bi-x-lg"></i>
       </button>
     </div>
 
-    <div class="bs-modal-meta" id="tdModalMeta"></div>
+    <div id="tdDetLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <div class="mt-2 text-muted small">Cargando tarea...</div>
+    </div>
 
-    <div class="bs-modal-body">
+    <div id="tdDetContent" class="td-detalle-body d-none">
 
-      <div class="bs-modal-section-label">
-        <i class="bi bi-card-text"></i> Descripción
+      <div id="tdDetInfo" class="td-det-card mb-3"></div>
+
+      <div id="tdDetEditPanel" class="td-det-card td-det-card-primary mb-3 d-none">
+        <div class="td-det-card-title text-primary">
+          <i class="bi bi-pencil-square"></i> Editar tarea
+        </div>
+        <form id="tdDetEditForm" novalidate>
+          <input type="hidden" name="csrf_token" id="tdDetEditCsrf">
+
+          <div id="tdDetEditError" class="alert alert-danger py-2 d-none"></div>
+          <div id="tdDetEditSuccess" class="alert alert-success py-2 d-none"></div>
+
+          <div class="mb-2">
+            <label class="td-edit-label">Título</label>
+            <input type="text" name="titulo" id="tdDetFTitulo" class="form-control form-control-sm" required>
+          </div>
+
+          <div class="mb-2">
+            <label class="td-edit-label">Descripción</label>
+            <textarea name="descripcion" id="tdDetFDesc" class="form-control form-control-sm" rows="4"></textarea>
+          </div>
+
+          <div id="tdDetSolicitanteWrap" class="mb-2 d-none">
+            <label class="td-edit-label">Solicitante</label>
+            <select name="solicitante_id" id="tdDetFSolicitante" class="form-select form-select-sm"></select>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="td-edit-label">Estado</label>
+              <select name="estado" id="tdDetFEstado" class="form-select form-select-sm"></select>
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Avance (%)</label>
+              <input type="number" name="porcentaje_avance" id="tdDetFAvance" class="form-control form-control-sm" min="0" max="100" step="1">
+            </div>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="td-edit-label">Fecha inicio</label>
+              <input type="datetime-local" name="fecha_inicio" id="tdDetFFechaInicio" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Fecha compromiso</label>
+              <input type="datetime-local" name="fecha_compromiso" id="tdDetFFechaCompromiso" class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="td-edit-label">Fecha fin</label>
+              <input type="datetime-local" name="fecha_fin" id="tdDetFFechaFin" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="td-edit-label">Fecha fin real</label>
+              <input type="datetime-local" name="fecha_cierre_real" id="tdDetFFechaReal" class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm" id="tdDetBtnGuardarEdit">
+              <i class="bi bi-check-circle me-1"></i>Guardar cambios
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="tdDetBtnCancelarEdit">Cancelar</button>
+          </div>
+        </form>
       </div>
-      <div class="td-modal-desc" id="tdModalDesc"></div>
 
-      <div class="bs-modal-section-label">
-        <i class="bi bi-people"></i> Personas
+      <div class="td-det-card mb-3">
+        <div class="td-det-card-title">
+          <i class="bi bi-clock-history"></i> Historial de acciones / pasos
+        </div>
+        <div id="tdDetHistorial"></div>
       </div>
-      <div class="td-modal-grid" id="tdModalPersonas"></div>
 
-      <div class="bs-modal-section-label">
-        <i class="bi bi-calendar3"></i> Fechas
-      </div>
-      <div class="td-modal-grid" id="tdModalFechas"></div>
-
-      <div class="td-modal-footer-btns">
-        <a href="#" id="tdBtnVer" class="btn-ver-detalle">
-          <i class="bi bi-eye"></i> Ver detalle completo
-        </a>
+      <div id="tdDetFormCard" class="td-det-card td-det-card-primary d-none">
+        <div class="td-det-card-title text-primary">
+          <i class="bi bi-plus-circle"></i> Agregar avance / acción
+        </div>
+        <form id="tdDetForm" novalidate>
+          <input type="hidden" name="csrf_token" id="tdDetCsrf">
+          <input type="hidden" name="estado_accion" value="En proceso">
+          <div class="mb-2">
+            <label class="td-edit-label">Detalle de Actividad <span class="text-danger">*</span></label>
+            <textarea name="detalles" id="tdDetDetalles" class="form-control form-control-sm" rows="4" required></textarea>
+            <input type="hidden" name="observacion" id="tdDetObservacion">
+          </div>
+          <div id="tdDetIaMejoraPanel" class="d-none mb-2 p-2 border rounded bg-light td-fecha-val"></div>
+          <div id="tdDetFormMsg" class="d-none mt-2 alert py-2 td-fecha-val"></div>
+          <div class="mt-2 d-flex align-items-center gap-2 flex-wrap">
+            <button type="submit" class="btn btn-primary btn-sm" id="tdDetBtnGuardar">
+              <i class="bi bi-check-circle me-1"></i>Guardar avance
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="tdDetBtnMejorarIA">
+              <i class="bi bi-stars me-1"></i>Mejorar texto
+            </button>
+            <button type="button" class="btn btn-success btn-sm ms-auto" id="tdDetBtnCerrar">
+              <i class="bi bi-flag-fill me-1"></i>Cerrar tarea
+            </button>
+          </div>
+        </form>
       </div>
 
     </div>

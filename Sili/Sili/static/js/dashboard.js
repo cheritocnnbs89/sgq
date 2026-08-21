@@ -452,83 +452,476 @@
   });
 })();
 
-// ── Modal detalle tarea (popup rápido, solo lectura) — sección Tareas atrasadas ──
-(function initTareaModal() {
-  const tdBackdrop = document.getElementById("tdModalBackdrop");
-  const tdClose = document.getElementById("tdModalClose");
-  if (!tdBackdrop) return;
+// ── Modal detalle completo — historial + agregar acción (mismo que /tareas) ──
+(function initDetalleModal() {
+  const backdrop = document.getElementById('tdDetalleBackdrop');
+  if (!backdrop) return;
 
-  function tdOpenModal(btn) {
-    const d = btn.dataset;
+  let currentTaskId = null;
+  let respPopulated = false;
 
-    const setText = (id, val) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = val || "—";
-    };
-    setText("tdModalCodigo", d.tareaId);
-    setText("tdModalTitulo", d.tareaTitulo);
-    setText("tdModalDesc", d.tareaDesc || "(Sin descripción)");
+  const loading    = document.getElementById('tdDetLoading');
+  const content    = document.getElementById('tdDetContent');
+  const infoDiv    = document.getElementById('tdDetInfo');
+  const histDiv    = document.getElementById('tdDetHistorial');
+  const formCard   = document.getElementById('tdDetFormCard');
+  const form       = document.getElementById('tdDetForm');
+  const formMsg    = document.getElementById('tdDetFormMsg');
+  const respSelect = document.getElementById('tdDetRespSelect');
 
-    const meta = document.getElementById("tdModalMeta");
-    if (meta) {
-      meta.innerHTML = "";
-      [["bi-flag", d.tareaEstado]].forEach(([icon, val]) => {
-        if (!val || val === "—") return;
-        const sp = document.createElement("span");
-        sp.innerHTML = '<i class="bi ' + icon + '"></i>';
-        sp.appendChild(document.createTextNode(" " + val));
-        meta.appendChild(sp);
+  const editBtn    = document.getElementById('tdDetBtnEditar');
+  const editPanel  = document.getElementById('tdDetEditPanel');
+  const editForm   = document.getElementById('tdDetEditForm');
+  const editError  = document.getElementById('tdDetEditError');
+  const editSuccess = document.getElementById('tdDetEditSuccess');
+
+  let lastTarea = null;
+  let lastEstados = [];
+  let lastIsAdmin = false;
+  let lastSolicitantes = [];
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function fmtDt(v) {
+    if (!v) return '-';
+    const s = String(v).replace('T',' ');
+    if (s.length < 10) return s;
+    return s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4)+(s.length>10 ? ' '+s.slice(11,16) : '');
+  }
+
+  function estadoBadge(e) {
+    const map = { 'Terminado':'bg-success','Cerrado por sistema':'bg-secondary',
+                  'En desarrollo':'bg-warning text-dark','Atrasada':'bg-danger','Por iniciar':'bg-info text-dark' };
+    return `<span class="badge ${map[e]||'bg-secondary'}">${esc(e)}</span>`;
+  }
+
+  function accionBadge(e) {
+    const map = { 'Finalizado':'bg-success','Bloqueado':'bg-danger','Pendiente':'bg-secondary' };
+    return `<span class="badge td-badge-sm ${map[e]||'bg-info text-dark'}">${esc(e||'En proceso')}</span>`;
+  }
+
+  function renderInfo(t) {
+    infoDiv.innerHTML = `
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+        <div class="small text-muted">
+          Responsable: <strong class="text-body">${esc(t.responsable_nombre||t.responsable_username||'-')}</strong>
+          &nbsp;·&nbsp; Creada por: <strong class="text-body">${esc(t.creador_nombre||t.creador_username||'-')}</strong>
+        </div>
+        ${estadoBadge(t.estado)}
+      </div>
+      ${t.descripcion ? `<div class="td-modal-desc mb-3">${esc(t.descripcion)}</div>` : ''}
+      <div class="td-detalle-fechas">
+        ${[['Creación',t.fecha_creacion],['Inicio',t.fecha_inicio],['Compromiso',t.fecha_compromiso],['Fin Planif.',t.fecha_fin],
+           ...(t.fecha_cierre_real ? [['Cierre Real',t.fecha_cierre_real]] : [])]
+          .map(([l,v])=>`<div><div class="td-modal-label">${l}</div><div class="td-modal-value td-fecha-val">${fmtDt(v)}</div></div>`).join('')}
+      </div>`;
+  }
+
+  function renderHistorial(acciones) {
+    if (!acciones || acciones.length === 0) {
+      histDiv.innerHTML = '<p class="text-muted small mb-0">Aún no se han registrado acciones para esta tarea.</p>';
+      return;
+    }
+    const rows = acciones.map(a => {
+      const csrf = document.getElementById('td-csrf-token')?.dataset.token || '';
+      const btnTerminar = a.estado_accion !== 'Finalizado'
+        ? `<button class="btn btn-outline-success btn-sm p-0 px-1 td-badge-sm js-det-fin-accion"
+             data-accion-id="${a.id}" data-csrf="${esc(csrf)}">
+             <i class="bi bi-check2-all"></i> Terminar
+           </button>` : '';
+      return `<tr>
+        <td class="small">${fmtDt(a.fecha_accion)}</td>
+        <td class="small">${esc(a.nombre_completo||a.username||'-')}</td>
+        <td>
+          <div class="fw-bold small">${esc(a.nombre_asignado||'Sin asignar')}</div>
+          <div class="d-flex gap-1 flex-wrap mt-1">${accionBadge(a.estado_accion)} ${btnTerminar}</div>
+        </td>
+        <td>
+          <div class="fw-semibold small">${esc(a.observacion||'')}</div>
+          <div class="text-muted small td-det-pretext">${esc(a.detalles||'')}</div>
+        </td>
+        <td class="small text-primary">${fmtDt(a.fecha_fin_tentativa)}</td>
+      </tr>`;
+    }).join('');
+
+    histDiv.innerHTML = `
+      <div class="table-responsive">
+        <table class="table table-sm align-middle table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="td-col-fecha">Fecha</th>
+              <th class="td-col-reg">Registrado por</th>
+              <th class="td-col-asig">Asignado / Estado</th>
+              <th>Actividad</th>
+              <th class="td-col-fintent">Fin Tent.</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+
+    histDiv.querySelectorAll('.js-det-fin-accion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const fd = new FormData();
+        fd.append('csrf_token', btn.dataset.csrf);
+        btn.disabled = true;
+        fetch(`/tareas/accion/${btn.dataset.accionId}/finalizar`, { method:'POST', body:fd })
+          .then(() => recargarHistorial(currentTaskId))
+          .catch(() => { btn.disabled = false; });
+      });
+    });
+  }
+
+  function recargarHistorial(taskId) {
+    fetch(`/tareas/${taskId}/detalle-json`)
+      .then(r => r.json())
+      .then(data => { if (data.ok) renderHistorial(data.acciones); });
+  }
+
+  function populateResp(responsables) {
+    if (respPopulated || !respSelect) return;
+    (responsables || []).forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r.id;
+      opt.textContent = r.label || r.username;
+      opt.dataset.search = ((r.label||'') + ' ' + r.username).toLowerCase();
+      respSelect.appendChild(opt);
+    });
+    respPopulated = true;
+  }
+
+  function toDtLocal(v) {
+    if (!v) return '';
+    return String(v).slice(0, 16).replace(' ', 'T');
+  }
+
+  function closeEditMode() {
+    editPanel.classList.add('d-none');
+    infoDiv.classList.remove('d-none');
+  }
+
+  function openEditMode() {
+    if (!lastTarea) return;
+    const t = lastTarea;
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
+
+    set('tdDetFTitulo', t.titulo);
+    set('tdDetFDesc', t.descripcion);
+    set('tdDetFAvance', t.porcentaje_avance ?? 0);
+    set('tdDetFFechaInicio', toDtLocal(t.fecha_inicio));
+    set('tdDetFFechaCompromiso', toDtLocal(t.fecha_compromiso));
+    set('tdDetFFechaFin', toDtLocal(t.fecha_fin));
+    set('tdDetFFechaReal', toDtLocal(t.fecha_cierre_real));
+
+    const fEstado = document.getElementById('tdDetFEstado');
+    if (fEstado) {
+      fEstado.innerHTML = '';
+      lastEstados.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s; opt.textContent = s;
+        if (s === t.estado) opt.selected = true;
+        fEstado.appendChild(opt);
       });
     }
 
-    [
-      ["tdModalPersonas", [["Responsable", d.tareaResponsable], ["Departamento", d.tareaDepto]]],
-      ["tdModalFechas", [["Inicio planificado", d.tareaInicio], ["Fin planificado", d.tareaFin]]],
-    ].forEach(([containerId, items]) => {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = "";
-      items.forEach(([label, val]) => {
-        const div = document.createElement("div");
-        div.className = "td-modal-item";
-        const labelEl = document.createElement("div");
-        labelEl.className = "td-modal-label";
-        labelEl.textContent = label;
-        const valEl = document.createElement("div");
-        valEl.className = "td-modal-value";
-        valEl.textContent = val || "—";
-        div.appendChild(labelEl);
-        div.appendChild(valEl);
-        container.appendChild(div);
+    const solWrap = document.getElementById('tdDetSolicitanteWrap');
+    const fSolicitante = document.getElementById('tdDetFSolicitante');
+    if (solWrap && fSolicitante) {
+      if (lastIsAdmin) {
+        fSolicitante.innerHTML = '';
+        lastSolicitantes.forEach(sol => {
+          const opt = document.createElement('option');
+          opt.value = sol.id; opt.textContent = sol.label;
+          if (String(sol.id) === String(t.solicitante_id)) opt.selected = true;
+          fSolicitante.appendChild(opt);
+        });
+        solWrap.classList.remove('d-none');
+      } else {
+        solWrap.classList.add('d-none');
+      }
+    }
+
+    document.getElementById('tdDetEditCsrf').value =
+      document.getElementById('td-csrf-token')?.dataset.token || '';
+    editError.classList.add('d-none');
+    editSuccess.classList.add('d-none');
+
+    infoDiv.classList.add('d-none');
+    editPanel.classList.remove('d-none');
+  }
+
+  editBtn?.addEventListener('click', openEditMode);
+  document.getElementById('tdDetBtnCancelarEdit')?.addEventListener('click', closeEditMode);
+
+  editForm?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!currentTaskId) return;
+    const btn = document.getElementById('tdDetBtnGuardarEdit');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Guardando...'; }
+    editError.classList.add('d-none');
+    editSuccess.classList.add('d-none');
+
+    fetch(`/tareas/${currentTaskId}/editar-ajax`, { method: 'POST', body: new FormData(editForm) })
+      .then(r => r.json())
+      .then(data => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar cambios'; }
+        if (data.ok) {
+          editSuccess.textContent = data.message || 'Guardado correctamente.';
+          editSuccess.classList.remove('d-none');
+          setTimeout(() => { closeEditMode(); openModal(currentTaskId); }, 900);
+        } else {
+          editError.textContent = data.message || 'Error al guardar.';
+          editError.classList.remove('d-none');
+        }
+      })
+      .catch(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar cambios'; }
+        editError.textContent = 'Error de red al guardar.';
+        editError.classList.remove('d-none');
       });
-    });
+  });
 
-    const btnVer = document.getElementById("tdBtnVer");
-    if (btnVer) btnVer.href = d.tareaUrlVer || "#";
+  function openModal(taskId) {
+    currentTaskId = taskId;
+    loading.classList.remove('d-none');
+    content.classList.add('d-none');
+    formMsg.classList.add('d-none');
+    closeEditMode();
+    backdrop.classList.add('visible');
+    backdrop.setAttribute('aria-hidden','false');
+    document.body.classList.add('bs-modal-open');
 
-    tdBackdrop.classList.add("visible");
-    tdBackdrop.setAttribute("aria-hidden", "false");
-    document.body.classList.add("bs-modal-open");
+    fetch(`/tareas/${taskId}/detalle-json`)
+      .then(r => r.json())
+      .then(data => {
+        loading.classList.add('d-none');
+        if (!data.ok) {
+          content.innerHTML = `<div class="alert alert-danger m-3">${esc(data.error||'Error al cargar')}</div>`;
+          content.classList.remove('d-none');
+          return;
+        }
+        const t = data.tarea;
+        lastTarea = t;
+        lastEstados = data.estados || [];
+        lastIsAdmin = !!data.is_admin;
+        lastSolicitantes = data.solicitantes || [];
+        document.getElementById('tdDetCodigo').textContent = String(t.id||'').padStart(8,'0');
+        document.getElementById('tdDetTitulo').textContent = t.titulo||'';
+        renderInfo(t);
+        renderHistorial(data.acciones);
+        populateResp(data.responsables);
+
+        if (editBtn) editBtn.classList.toggle('d-none', !data.editable);
+
+        if (data.puede_anotar) {
+          formCard.classList.remove('d-none');
+          document.getElementById('tdDetCsrf').value =
+            document.getElementById('td-csrf-token')?.dataset.token || '';
+        } else {
+          formCard.classList.add('d-none');
+        }
+        content.classList.remove('d-none');
+      })
+      .catch(() => {
+        loading.classList.add('d-none');
+        content.innerHTML = '<div class="alert alert-danger m-3">Error de red al cargar la tarea.</div>';
+        content.classList.remove('d-none');
+      });
   }
 
-  function tdCloseModal() {
-    tdBackdrop.classList.remove("visible");
-    tdBackdrop.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("bs-modal-open");
+  function closeModal() {
+    backdrop.classList.remove('visible');
+    backdrop.setAttribute('aria-hidden','true');
+    document.body.classList.remove('bs-modal-open');
+    currentTaskId = null;
   }
 
-  document.querySelectorAll(".js-tarea-detalle").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      tdOpenModal(btn);
-    });
+  document.querySelectorAll('.js-abrir-detalle-modal').forEach(btn => {
+    btn.addEventListener('click', () => openModal(parseInt(btn.dataset.taskId, 10)));
   });
 
-  tdClose?.addEventListener("click", tdCloseModal);
-  tdBackdrop.addEventListener("click", (e) => {
-    if (e.target === tdBackdrop) tdCloseModal();
+  form?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!currentTaskId) return;
+    const detalles = document.getElementById('tdDetDetalles')?.value.trim();
+    if (!detalles) {
+      formMsg.className = 'alert alert-warning mt-2 py-2';
+      formMsg.textContent = 'Escribe al menos una observación.';
+      formMsg.classList.remove('d-none');
+      return;
+    }
+    const obsHidden = document.getElementById('tdDetObservacion');
+    if (obsHidden) obsHidden.value = detalles;
+
+    const btn = document.getElementById('tdDetBtnGuardar');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Guardando...'; }
+    formMsg.classList.add('d-none');
+
+    fetch(`/tareas/${currentTaskId}/accion-ajax`, { method:'POST', body: new FormData(form) })
+      .then(r => r.json())
+      .then(data => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar avance'; }
+        formMsg.className = `alert alert-${data.ok ? 'success' : 'danger'} mt-2 py-2`;
+        formMsg.textContent = data.message || (data.ok ? 'Acción registrada.' : 'Error al guardar.');
+        formMsg.classList.remove('d-none');
+        if (data.ok) {
+          form.reset();
+          if (data.task_closed) {
+            setTimeout(() => { closeModal(); window.location.reload(); }, 1800);
+          } else {
+            recargarHistorial(currentTaskId);
+            setTimeout(() => formMsg.classList.add('d-none'), 3000);
+          }
+        }
+      })
+      .catch(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Guardar avance'; }
+        formMsg.className = 'alert alert-danger mt-2 py-2';
+        formMsg.textContent = 'Error de red al guardar.';
+        formMsg.classList.remove('d-none');
+      });
   });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && tdBackdrop.classList.contains("visible")) tdCloseModal();
+
+  // ── Mejorar texto con IA ─────────────────────────────
+  document.getElementById('tdDetBtnMejorarIA')?.addEventListener('click', async function () {
+    const textarea = document.getElementById('tdDetDetalles');
+    const panel    = document.getElementById('tdDetIaMejoraPanel');
+    const btn      = this;
+    if (!textarea || !panel) return;
+
+    const texto = textarea.value.trim();
+    if (!texto) {
+      alert('Escribe el detalle de actividad antes de mejorar.');
+      return;
+    }
+
+    btn.disabled = true;
+    const spinEl = document.createElement('span');
+    spinEl.className = 'spinner-border spinner-border-sm me-1';
+    btn.textContent = 'Mejorando…';
+    btn.prepend(spinEl);
+
+    panel.classList.remove('d-none');
+    panel.textContent = '';
+
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content
+              || document.querySelector('input[name="csrf_token"]')?.value || '';
+
+    try {
+      const resp = await fetch('/api/tareas/mejorar-comentario', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+        body: JSON.stringify({ texto }),
+      });
+      const data = await resp.json();
+
+      panel.textContent = '';
+
+      if (!data.ok) {
+        const errEl = document.createElement('span');
+        errEl.className = 'text-danger';
+        errEl.textContent = data.error || 'Error al mejorar.';
+        panel.appendChild(errEl);
+        return;
+      }
+
+      const lbl = document.createElement('div');
+      lbl.className = 'mb-1 fw-semibold td-fecha-val';
+      const icoLbl = document.createElement('i');
+      icoLbl.className = 'bi bi-stars text-warning me-1';
+      lbl.appendChild(icoLbl);
+      lbl.appendChild(document.createTextNode('Texto mejorado:'));
+      panel.appendChild(lbl);
+
+      const txt = document.createElement('div');
+      txt.className = 'mb-2 td-fecha-val td-det-pretext';
+      txt.textContent = data.texto_mejorado;
+      panel.appendChild(txt);
+
+      const btnUsar = document.createElement('button');
+      btnUsar.type = 'button';
+      btnUsar.className = 'btn btn-sm btn-outline-primary';
+      const icoUsar = document.createElement('i');
+      icoUsar.className = 'bi bi-clipboard-check me-1';
+      btnUsar.appendChild(icoUsar);
+      btnUsar.appendChild(document.createTextNode('Usar este texto'));
+      btnUsar.addEventListener('click', () => {
+        textarea.value = data.texto_mejorado;
+        panel.classList.add('d-none');
+        panel.textContent = '';
+      });
+      panel.appendChild(btnUsar);
+
+    } catch (e) {
+      panel.textContent = '';
+      const errEl = document.createElement('span');
+      errEl.className = 'text-danger';
+      errEl.textContent = 'Error de conexión al mejorar.';
+      panel.appendChild(errEl);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '';
+      const icoBtn = document.createElement('i');
+      icoBtn.className = 'bi bi-stars me-1';
+      btn.appendChild(icoBtn);
+      btn.appendChild(document.createTextNode('Mejorar texto'));
+    }
   });
+
+  document.getElementById('tdDetBtnCerrar')?.addEventListener('click', () => {
+    if (!currentTaskId) return;
+
+    const textoDetalle = document.getElementById('tdDetDetalles')?.value.trim() || '';
+    if (!textoDetalle) {
+      const msg = document.getElementById('tdDetFormMsg');
+      if (msg) {
+        msg.className = 'alert alert-warning mt-2 py-2';
+        msg.textContent = 'Escribe el detalle de la atención antes de cerrar la tarea.';
+        msg.classList.remove('d-none');
+      }
+      return;
+    }
+
+    if (!confirm('¿Confirmas que deseas cerrar esta tarea? Esta acción actualizará el estado a Terminado.')) return;
+
+    const btn = document.getElementById('tdDetBtnCerrar');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Cerrando...'; }
+
+    const csrfToken = document.getElementById('td-csrf-token')?.dataset.token || '';
+    const fd = new FormData();
+    fd.append('csrf_token', csrfToken);
+    fd.append('estado_accion', 'Finalizado');
+    fd.append('detalles', textoDetalle);
+    fd.append('observacion', textoDetalle);
+    fd.append('cerrar_tarea', '1');
+
+    fetch(`/tareas/${currentTaskId}/accion-ajax`, { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-flag-fill me-1"></i>Cerrar tarea'; }
+        formMsg.className = `alert alert-${data.ok ? 'success' : 'danger'} mt-2 py-2`;
+        formMsg.textContent = data.message || (data.ok ? 'Tarea cerrada correctamente.' : 'Error al cerrar.');
+        formMsg.classList.remove('d-none');
+        if (data.ok) {
+          setTimeout(() => { closeModal(); window.location.reload(); }, 1500);
+        }
+      })
+      .catch(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-flag-fill me-1"></i>Cerrar tarea'; }
+        formMsg.className = 'alert alert-danger mt-2 py-2';
+        formMsg.textContent = 'Error de red al cerrar tarea.';
+        formMsg.classList.remove('d-none');
+      });
+  });
+
+  document.getElementById('tdDetClose')?.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && backdrop.classList.contains('visible')) closeModal();
+  });
+
+  window.tdDetalleModal = { open: openModal, close: closeModal };
 })();
