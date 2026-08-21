@@ -38,6 +38,19 @@ if not AWS_API_URL:
 if not FLASK_TOKEN:
     raise RuntimeError("La variable AWS_FLASK_TOKEN está vacía.")
 
+# ------------------------------------------------------------
+# Interruptor de ambiente: QAS y producción comparten el mismo
+# AWS_API_URL/AWS_FLASK_TOKEN (mismo API Gateway/DynamoDB), así que
+# si QAS también corriera este sync empujaría gastos de prueba a la
+# cola real de aprobaciones que ven los gerentes en el portal AWS.
+# Por defecto queda habilitado (producción no necesita tocar nada);
+# en el .env de QAS basta con AWS_SYNC_ENABLED=false.
+# ------------------------------------------------------------
+AWS_SYNC_ENABLED = (
+    os.environ.get("AWS_SYNC_ENABLED", "1").strip().lower()
+    not in ("0", "false", "no")
+)
+
 HEADERS = {
     "x-flask-token": FLASK_TOKEN,
     "Content-Type": "application/json",
@@ -179,9 +192,10 @@ API_HOST = urlsplit(AWS_API_URL).netloc
 
 logger.info(
     "[AWS SYNC][INIT] Módulo cargado | "
-    "api_host=%s | token_configurado=%s | log=%s",
+    "api_host=%s | token_configurado=%s | sync_enabled=%s | log=%s",
     API_HOST,
     bool(FLASK_TOKEN),
+    AWS_SYNC_ENABLED,
     LOG_FILE,
 )
 
@@ -327,6 +341,12 @@ def push_gastos_a_aws(app=None):
 
     Esta función puede ser llamada desde el scheduler cada N minutos.
     """
+
+    if not AWS_SYNC_ENABLED:
+        logger.debug(
+            "[AWS SYNC][PUSH][SKIP] AWS_SYNC_ENABLED=0 (ambiente sin sync a AWS)"
+        )
+        return
 
     run_id = _new_run_id()
     started_at = perf_counter()
@@ -596,6 +616,12 @@ def push_gerentes_auth_a_aws(app=None):
       desde el último envío exitoso (comparando un hash de ese estado).
     - Nunca se registra en el log la clave, el hash ni el token.
     """
+    if not AWS_SYNC_ENABLED:
+        logger.debug(
+            "[AWS SYNC][AUTH_PUSH][SKIP] AWS_SYNC_ENABLED=0 (ambiente sin sync a AWS)"
+        )
+        return
+
     if not AWS_AUTH_API_URL or not AWS_AUTH_TOKEN:
         logger.debug(
             "[AWS SYNC][AUTH_PUSH][DISABLED] AWS_AUTH_API_URL/AWS_AUTH_TOKEN no configurados todavía."
@@ -818,6 +844,12 @@ def pull_aprobaciones_de_aws(app=None):
     Lee de DynamoDB los gastos aprobados o rechazados y actualiza
     los campos correspondientes en la base local.
     """
+
+    if not AWS_SYNC_ENABLED:
+        logger.debug(
+            "[AWS SYNC][PULL][SKIP] AWS_SYNC_ENABLED=0 (ambiente sin sync a AWS)"
+        )
+        return
 
     run_id = _new_run_id()
     started_at = perf_counter()
