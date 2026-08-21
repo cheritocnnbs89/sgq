@@ -122,32 +122,33 @@ def _telegram(chat_id: str, text: str) -> None:
 
 
 # ── WhatsApp vía AWS (Lambda → Twilio, plantilla ya aprobada) ──────────
-# AWS_NOTIF_WHATSAPP_URL: URL del endpoint /notificaciones/whatsapp-push
-#   en la API Gateway (la misma que usa el sync de reembolsos).
-# AWS_NOTIF_API_TOKEN: token compartido, mismo patrón que SECRET_TOKEN
-#   de aws_sync.py, validado por el Lambda contra el header X-Api-Token.
-_AWS_NOTIF_URL   = os.environ.get("AWS_NOTIF_WHATSAPP_URL", "").strip()
-_AWS_NOTIF_TOKEN = os.environ.get("AWS_NOTIF_API_TOKEN", "").strip()
+# Reutiliza la misma configuración que ya usa modules/aws_sync.py para
+# el sync de reembolsos (AWS_API_URL + AWS_FLASK_TOKEN → header
+# x-flask-token), ya que la ruta nueva /notificaciones/whatsapp-push
+# vive en la misma API Gateway (gastos-aprobacion-api) y reutiliza el
+# mismo authorizer (flask-sync-authorizer). No hace falta ninguna
+# variable de entorno nueva.
+_AWS_API_URL    = (os.environ.get("AWS_API_URL") or "").strip().rstrip("/")
+_AWS_FLASK_TOKEN = (os.environ.get("AWS_FLASK_TOKEN") or "").strip()
 
 
 def _whatsapp_aws(telefono: str, content_sid: str, variables: dict) -> None:
     """
     Envía una notificación WhatsApp vía AWS (Lambda → Twilio Content API),
-    ignorando errores igual que _telegram/_email. No hace nada si el
-    endpoint no está configurado (AWS_NOTIF_WHATSAPP_URL/AWS_NOTIF_API_TOKEN
-    vacíos) o si no hay teléfono.
+    ignorando errores igual que _telegram/_email. No hace nada si
+    AWS_API_URL/AWS_FLASK_TOKEN no están configuradas o si no hay teléfono.
     """
-    if not (_AWS_NOTIF_URL and _AWS_NOTIF_TOKEN and telefono):
+    if not (_AWS_API_URL and _AWS_FLASK_TOKEN and telefono):
         return
     try:
         requests.post(
-            _AWS_NOTIF_URL,
+            f"{_AWS_API_URL}/notificaciones/whatsapp-push",
             json={
                 "to": telefono,
                 "content_sid": content_sid,
                 "variables": variables,
             },
-            headers={"X-Api-Token": _AWS_NOTIF_TOKEN},
+            headers={"x-flask-token": _AWS_FLASK_TOKEN, "Content-Type": "application/json"},
             timeout=10,
         )
     except Exception as exc:
