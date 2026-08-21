@@ -73,10 +73,13 @@ SQL_DASHBOARD_TAREAS_BASE = f"""
            t.fecha_cierre_real,
            t.usuario_id,
            u.username AS propietario,
-           d.nombre AS departamento
+           d.nombre AS departamento,
+           t.solicitante_id,
+           usol.username AS solicitante
     FROM {TABLA_TAREAS} t
     JOIN {TABLA_USUARIOS} u ON t.usuario_id = u.id
     LEFT JOIN {TABLA_DEPARTAMENTOS} d ON u.departamento_id = d.id
+    LEFT JOIN {TABLA_USUARIOS} usol ON usol.id = t.solicitante_id
 """
 
 

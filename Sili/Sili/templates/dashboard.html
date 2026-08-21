@@ -419,7 +419,7 @@
                     <thead>
                       <tr>
                         <th>Tarea</th>
-                        <th>Departamento</th>
+                        <th>Usuario solicitante</th>
                         <th>Fecha compromiso</th>
                         <th>Atraso</th>
                         <th>Estado</th>
@@ -433,7 +433,7 @@
                           <div class="ta-titulo">{{ t.titulo }}</div>
                           <div class="ta-titulo-id">ID {{ t.id }}</div>
                         </td>
-                        <td>{{ t.departamento or '—' }}</td>
+                        <td>{{ t.solicitante or '—' }}</td>
                         <td>{{ t.fecha_compromiso_fmt or t.fecha_compromiso or '—' }}</td>
                         <td>
                           {% set d = t.dias_atraso %}
