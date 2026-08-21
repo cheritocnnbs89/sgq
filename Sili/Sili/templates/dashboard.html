@@ -148,14 +148,14 @@
   <div class="col-md-6">
     <div class="section h-100">
       <div class="section-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-person-lines-fill me-1"></i>Tickets por técnico (Top 10) — Lollipop chart</span>
+        <span><i class="bi bi-person-lines-fill me-1"></i>Tickets por técnico — Lollipop chart</span>
         {% if tickets_por_tecnico %}
         <span class="badge bg-secondary">{{ tickets_por_tecnico|length }}</span>
         {% endif %}
       </div>
 
       {% if tickets_por_tecnico %}
-        {% set top10 = tickets_por_tecnico[:10] %}
+        {% set top10 = tickets_por_tecnico %}
         {% set max_tt = top10[0].tickets if top10[0].tickets > 0 else 1 %}
         {% set total_tt = namespace(val=0) %}
         {% for r in tickets_por_tecnico %}{% set total_tt.val = total_tt.val + r.tickets %}{% endfor %}
