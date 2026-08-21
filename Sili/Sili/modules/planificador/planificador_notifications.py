@@ -7,12 +7,19 @@ Notificaciones del módulo Planificador.
 """
 from __future__ import annotations
 
+import os
+
+import requests
 from flask import current_app
 
 from modules.email_utils import send_email_async as _send_async
 from modules import telegram_utils as _tg
 from modules.db import get_db
 from . import planificador_repository as repo
+
+# Content SID de la plantilla de WhatsApp "servicio_asignado_mensajeria",
+# ya aprobada en Twilio (ver Content Template Builder).
+WHATSAPP_TPL_SERVICIO_ASIGNADO = "HX3e719a4c0121aa9cc23c67af34d969d6"
 from modules.scheduler.scheduler_constants import (
     TPL_PLAN_NUEVA_COORD,
     TPL_PLAN_NUEVA_USER,
@@ -110,6 +117,42 @@ def _telegram(chat_id: str, text: str) -> None:
     except Exception as exc:
         try:
             current_app.logger.warning("Planificador telegram error chat=%s: %s", chat_id, exc)
+        except Exception:
+            pass
+
+
+# ── WhatsApp vía AWS (Lambda → Twilio, plantilla ya aprobada) ──────────
+# AWS_NOTIF_WHATSAPP_URL: URL del endpoint /notificaciones/whatsapp-push
+#   en la API Gateway (la misma que usa el sync de reembolsos).
+# AWS_NOTIF_API_TOKEN: token compartido, mismo patrón que SECRET_TOKEN
+#   de aws_sync.py, validado por el Lambda contra el header X-Api-Token.
+_AWS_NOTIF_URL   = os.environ.get("AWS_NOTIF_WHATSAPP_URL", "").strip()
+_AWS_NOTIF_TOKEN = os.environ.get("AWS_NOTIF_API_TOKEN", "").strip()
+
+
+def _whatsapp_aws(telefono: str, content_sid: str, variables: dict) -> None:
+    """
+    Envía una notificación WhatsApp vía AWS (Lambda → Twilio Content API),
+    ignorando errores igual que _telegram/_email. No hace nada si el
+    endpoint no está configurado (AWS_NOTIF_WHATSAPP_URL/AWS_NOTIF_API_TOKEN
+    vacíos) o si no hay teléfono.
+    """
+    if not (_AWS_NOTIF_URL and _AWS_NOTIF_TOKEN and telefono):
+        return
+    try:
+        requests.post(
+            _AWS_NOTIF_URL,
+            json={
+                "to": telefono,
+                "content_sid": content_sid,
+                "variables": variables,
+            },
+            headers={"X-Api-Token": _AWS_NOTIF_TOKEN},
+            timeout=10,
+        )
+    except Exception as exc:
+        try:
+            current_app.logger.warning("Planificador WhatsApp/AWS error tel=%s: %s", telefono, exc)
         except Exception:
             pass
 
@@ -272,6 +315,22 @@ def notif_aprobada(solicitud_id: int, tipo: str, area: str, fecha: str,
     # Telegram: solo a motorizados con chat_id registrado
     for m in repo.get_telegram_chat_ids_para_tipo(tipo):
         _telegram(m["chat_id"], tg_text)
+
+    # WhatsApp (vía AWS → Twilio): a motorizados con teléfono registrado
+    for m in repo.get_motorizados_para_tipo(tipo):
+        if not m.get("telefono"):
+            continue
+        _whatsapp_aws(m["telefono"], WHATSAPP_TPL_SERVICIO_ASIGNADO, {
+            "1": str(solicitud_id),
+            "2": tipo,
+            "3": area,
+            "4": fecha,
+            "5": f"{hi} - {hf}",
+            "6": lugar or "—",
+            "7": descripcion or "—",
+            "8": maps_url or "—",
+            "9": aprobador_nombre,
+        })
 
     nota = ("El servicio aparece en el calendario. Verifica el lugar de destino "
             "con el enlace a Google Maps.")

@@ -981,7 +981,7 @@ def get_roles_para_tipo(tipo: str) -> dict:
     conn.close()
     coordinadores, aprobadores, motorizados, gerentes_presupuesto = [], [], [], []
     for r in rows:
-        entry = {"id": r[0], "nombre": r[1], "email": r[3]}
+        entry = {"id": r[0], "nombre": r[1], "email": r[3], "telefono": r[4]}
         if   r[2] == ROL_COORDINADOR:         coordinadores.append(entry)
         elif r[2] == ROL_APROBADOR:           aprobadores.append(entry)
         elif r[2] == ROL_MOTORIZADO:          motorizados.append(entry)

@@ -644,7 +644,7 @@ SQL_DELETE_CONFIG = f"""
 """
 
 SQL_GET_ROLES_PARA_TIPO = f"""
-    SELECT pc.usuario_id, pc.usuario_nombre, pc.rol_config, u.email
+    SELECT pc.usuario_id, pc.usuario_nombre, pc.rol_config, u.email, u.telefono
     FROM {TBL_CONFIG} pc
     LEFT JOIN {TBL_USUARIOS} u ON u.id = pc.usuario_id AND u.disabled = 0
     WHERE pc.tipo = ? AND pc.activo = 1
