@@ -1007,16 +1007,22 @@ def svc_build_dashboard_context(user, request_args=None):
         (v for dv in tareas_por_depto_mes_count.values() for v in dv.values()),
         default=0,
     )
+    _heatmap_filas = [
+        {
+            "departamento": dep,
+            "valores": [tareas_por_depto_mes_count[dep].get(m, 0) for m in _all_meses],
+        }
+        for dep in _heatmap_deptos
+    ]
+    for _fila in _heatmap_filas:
+        _fila["total"] = sum(_fila["valores"])
+
     depto_mes_heatmap = {
         "meses": [_mes_legible(m) for m in _all_meses],
         "max": _heatmap_max,
-        "filas": [
-            {
-                "departamento": dep,
-                "valores": [tareas_por_depto_mes_count[dep].get(m, 0) for m in _all_meses],
-            }
-            for dep in _heatmap_deptos
-        ],
+        "filas": _heatmap_filas,
+        "totales_mes": [sum(f["valores"][i] for f in _heatmap_filas) for i in range(len(_all_meses))],
+        "total_general": sum(f["total"] for f in _heatmap_filas),
     }
 
     # ── Abiertas vs cerradas por mes ────────────────────────────

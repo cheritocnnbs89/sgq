@@ -239,6 +239,7 @@
               <tr>
                 <th>Departamento</th>
                 {% for m in depto_mes_heatmap.meses %}<th>{{ m }}</th>{% endfor %}
+                <th>Total</th>
               </tr>
             </thead>
             <tbody>
@@ -250,9 +251,17 @@
                   {% set bucket = 0 if v == 0 else (1 if pct_h <= 0.2 else (2 if pct_h <= 0.4 else (3 if pct_h <= 0.6 else (4 if pct_h <= 0.8 else 5)))) %}
                   <td class="dpm-heat-cell dpm-heat-{{ bucket }}" title="{{ v }} tarea{{ 's' if v != 1 else '' }}">{{ v }}</td>
                 {% endfor %}
+                <td class="dpm-heat-total">{{ fila.total }}</td>
               </tr>
               {% endfor %}
             </tbody>
+            <tfoot>
+              <tr class="dpm-heat-total-row">
+                <td class="dpm-heat-name">Total</td>
+                {% for tm in depto_mes_heatmap.totales_mes %}<td class="dpm-heat-total">{{ tm }}</td>{% endfor %}
+                <td class="dpm-heat-total">{{ depto_mes_heatmap.total_general }}</td>
+              </tr>
+            </tfoot>
           </table>
         </div>
         <div class="dpm-heat-legend">

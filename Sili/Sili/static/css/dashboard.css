@@ -333,6 +333,21 @@ body {
 .dpm-heat-4 { background: #60a5fa; color: #fff; }
 .dpm-heat-5 { background: #2563eb; color: #fff; }
 
+.dpm-heat-total {
+  text-align: center;
+  padding: 8px 6px;
+  font-weight: 700;
+  color: var(--ink);
+  border-left: 1px dashed var(--line);
+}
+
+.dpm-heat-total-row td {
+  border-top: 1px dashed var(--line);
+  font-weight: 700;
+  color: var(--ink);
+  padding-top: 8px;
+}
+
 .dpm-heat-legend {
   display: flex;
   align-items: center;
