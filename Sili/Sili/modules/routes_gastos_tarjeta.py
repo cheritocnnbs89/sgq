@@ -513,6 +513,36 @@ def _can_gastos(action: str) -> bool:
     return False
 
 
+# Content SID de la plantilla de WhatsApp "gasto_aprobado", ya aprobada
+# en Twilio (botón "Ver gasto" con URL fija, sin variable).
+WHATSAPP_TPL_GASTO_APROBADO = "HXa1df198de9afc5ebe110642ccaa2fa6f"
+
+
+def _whatsapp_aws_gasto(telefono: str, content_sid: str, variables: dict) -> None:
+    """
+    Envía una notificación WhatsApp vía AWS (Lambda -> Twilio Content API),
+    ignorando errores (nunca bloquea la respuesta HTTP). Reutiliza el mismo
+    endpoint/token que ya usa modules/aws_sync.py y el módulo Planificador
+    (AWS_API_URL + AWS_FLASK_TOKEN -> header x-flask-token).
+    """
+    aws_api_url = (os.environ.get("AWS_API_URL") or "").strip().rstrip("/")
+    aws_flask_token = (os.environ.get("AWS_FLASK_TOKEN") or "").strip()
+    if not (aws_api_url and aws_flask_token and telefono):
+        return
+    try:
+        requests.post(
+            f"{aws_api_url}/notificaciones/whatsapp-push",
+            json={"to": telefono, "content_sid": content_sid, "variables": variables},
+            headers={"x-flask-token": aws_flask_token, "Content-Type": "application/json"},
+            timeout=10,
+        )
+    except Exception as exc:
+        try:
+            current_app.logger.warning("[GASTOS] WhatsApp/AWS error tel=%s: %s", telefono, exc)
+        except Exception:
+            pass
+
+
 def _aprobar_gasto_core(cur, conn, gasto_id, area, value, uid, rol):
     # Traer metadatos necesarios
     cur.execute(f"""
@@ -3888,7 +3918,54 @@ def register_gastos_routes(app):
                                 pass
 
                     except Exception:
-                        current_app.logger.exception("[APROBAR] Error encolando notificación")               
+                        current_app.logger.exception("[APROBAR] Error encolando notificación")
+
+                    # WhatsApp (vía AWS → Twilio) al vendedor: reembolso de
+                    # vendedor aprobado por GA es la única aprobación de este
+                    # tipo de gasto, así que este es el momento final.
+                    if reembolso_vendedor == 1:
+                        try:
+                            cur.execute(f"""
+                                SELECT g.fecha, g.motivo, g.total_con_iva,
+                                       COALESCE(t.nombre, g.proveedor) AS proveedor_nombre,
+                                       u.telefono,
+                                       COALESCE(u.nombre_completo, u.username) AS vendedor_nombre
+                                FROM {TABLE_GASTOS} g
+                                JOIN usuarios u ON u.id = g.usuario_id
+                                LEFT JOIN terceros t ON t.id = g.proveedor_id
+                                WHERE g.id = ?
+                            """, (gasto_id,))
+                            gd = cur.fetchone()
+                            if gd and gd["telefono"]:
+                                arow = None
+                                try:
+                                    cur.execute(
+                                        "SELECT COALESCE(nombre_completo, username) AS n FROM usuarios WHERE id = ?",
+                                        (uid,)
+                                    )
+                                    arow = cur.fetchone()
+                                except Exception:
+                                    pass
+                                aprobador_nombre_ga = (arow["n"] if arow else "") or ""
+
+                                fecha_val = gd["fecha"]
+                                fecha_str = fecha_val.strftime("%d/%m/%Y") if hasattr(fecha_val, "strftime") else str(fecha_val or "")
+
+                                total_val = gd["total_con_iva"]
+                                total_str = f"${float(total_val):,.2f}" if total_val is not None else "—"
+
+                                _whatsapp_aws_gasto(gd["telefono"], WHATSAPP_TPL_GASTO_APROBADO, {
+                                    "1": str(gasto_id),
+                                    "2": gd["vendedor_nombre"] or "",
+                                    "3": aprobador_nombre_ga,
+                                    "4": "Gerencia de Área",
+                                    "5": fecha_str,
+                                    "6": gd["proveedor_nombre"] or "—",
+                                    "7": gd["motivo"] or "—",
+                                    "8": total_str,
+                                })
+                        except Exception:
+                            current_app.logger.exception("[APROBAR] Error enviando WhatsApp de reembolso aprobado")
 
                 return jsonify(ok=True, value=value)
 
