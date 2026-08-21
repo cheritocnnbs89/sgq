@@ -1104,7 +1104,6 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
     """
     q_txt = (request_args.get("atr_q") or "").strip().lower()
     responsable_sel = (request_args.get("atr_responsable") or "").strip()
-    depto_sel = (request_args.get("atr_depto") or "").strip()
     estado_sel = (request_args.get("atr_estado") or "").strip()
     antiguedad_sel = (request_args.get("atr_antiguedad") or "").strip()
 
@@ -1112,8 +1111,9 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
 
     # Opciones de los dropdowns: siempre sobre el universo completo de
     # atrasadas, para que no se reduzcan al aplicar otros filtros.
+    # El departamento ya se filtró arriba (filtro general "depto" del
+    # dashboard), por eso no hay un segundo filtro de departamento aquí.
     responsables_disponibles = sorted({t.get("propietario") or "—" for t in atrasadas})
-    deptos_disponibles = sorted({t.get("departamento") or "Sin departamento" for t in atrasadas})
     estados_disponibles = sorted({t.get("estado") for t in atrasadas if t.get("estado")})
 
     filtradas = atrasadas
@@ -1125,8 +1125,6 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
         ]
     if responsable_sel:
         filtradas = [t for t in filtradas if (t.get("propietario") or "—") == responsable_sel]
-    if depto_sel:
-        filtradas = [t for t in filtradas if (t.get("departamento") or "Sin departamento") == depto_sel]
     if estado_sel:
         filtradas = [t for t in filtradas if t.get("estado") == estado_sel]
 
@@ -1180,11 +1178,9 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
         "atr_responsable_top": responsable_top,
         "atr_responsable_top_count": responsable_top_count,
         "atr_responsables_disponibles": responsables_disponibles,
-        "atr_deptos_disponibles": deptos_disponibles,
         "atr_estados_disponibles": estados_disponibles,
         "atr_q": request_args.get("atr_q") or "",
         "atr_responsable_sel": responsable_sel,
-        "atr_depto_sel": depto_sel,
         "atr_estado_sel": estado_sel,
         "atr_antiguedad_sel": antiguedad_sel,
         "atr_grupos": atr_grupos,

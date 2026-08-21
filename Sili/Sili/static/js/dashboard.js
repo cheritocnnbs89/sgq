@@ -452,38 +452,6 @@
   });
 })();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const btnFiltrar = document.getElementById("btnFiltrarTareas");
-  const btnReset = document.getElementById("btnResetTareas");
-
-  if (btnFiltrar) {
-    btnFiltrar.addEventListener("click", () => {
-      const params = new URLSearchParams(window.location.search);
-
-      const desde = document.getElementById("fDesde")?.value || "";
-      const hasta = document.getElementById("fHasta")?.value || "";
-      const depto = document.getElementById("fDepto")?.value || "";
-
-      if (desde) params.set("fecha_desde", desde);
-      else params.delete("fecha_desde");
-
-      if (hasta) params.set("fecha_hasta", hasta);
-      else params.delete("fecha_hasta");
-
-      if (depto) params.set("depto", depto);
-      else params.delete("depto");
-
-      window.location.search = params.toString();
-    });
-  }
-
-  if (btnReset) {
-    btnReset.addEventListener("click", () => {
-      window.location.href = window.location.pathname;
-    });
-  }
-});
-
 // ── Modal detalle tarea (popup rápido, solo lectura) — sección Tareas atrasadas ──
 (function initTareaModal() {
   const tdBackdrop = document.getElementById("tdModalBackdrop");

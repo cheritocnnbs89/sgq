@@ -14,18 +14,18 @@
         }}</span></small>
   </div>
 </div>
-<div class="page-toolbar d-flex flex-wrap align-items-end gap-2 mb-3">
+<form method="get" action="{{ url_for('dashboard') }}" class="page-toolbar d-flex flex-wrap align-items-end gap-2 mb-3">
   <div>
     <label class="form-label mb-1">Rango de fechas</label>
     <div class="d-flex gap-1">
-      <input type="date" id="fDesde" class="form-control form-control-sm" value="{{ fecha_desde or '' }}">
-      <input type="date" id="fHasta" class="form-control form-control-sm" value="{{ fecha_hasta or '' }}">
+      <input type="date" name="fecha_desde" class="form-control form-control-sm" value="{{ fecha_desde or '' }}">
+      <input type="date" name="fecha_hasta" class="form-control form-control-sm" value="{{ fecha_hasta or '' }}">
     </div>
   </div>
 
   <div>
     <label class="form-label mb-1">Departamento</label>
-    <select id="fDepto" class="form-select form-select-sm">
+    <select name="depto" class="form-select form-select-sm">
       <option value="">Todos</option>
       {% for d in deptos %}
       <option value="{{ d }}" {{ 'selected' if d == depto_sel else '' }}>{{ d }}</option>
@@ -33,16 +33,53 @@
     </select>
   </div>
 
+  <div class="mw-220">
+    <label class="form-label mb-1">Buscar</label>
+    <input type="text" name="atr_q" class="form-control form-control-sm" placeholder="Buscar tarea o ticket..."
+           value="{{ atr_q }}">
+  </div>
+
+  <div class="mw-160">
+    <label class="form-label mb-1">Responsable</label>
+    <select name="atr_responsable" class="form-select form-select-sm">
+      <option value="">Todos</option>
+      {% for r in atr_responsables_disponibles %}
+      <option value="{{ r }}" {{ 'selected' if r == atr_responsable_sel else '' }}>{{ r }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mw-160">
+    <label class="form-label mb-1">Estado</label>
+    <select name="atr_estado" class="form-select form-select-sm">
+      <option value="">Todos</option>
+      {% for e in atr_estados_disponibles %}
+      <option value="{{ e }}" {{ 'selected' if e == atr_estado_sel else '' }}>{{ e }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="form-label mb-1">Antigüedad (días)</label>
+    <div class="ta-chips">
+      {% set chips = [('', 'Todas'), ('1-30', '1-30'), ('31-60', '31-60'), ('61-90', '61-90'), ('90+', '+90')] %}
+      {% for val, lbl in chips %}
+      <button type="submit" name="atr_antiguedad" value="{{ val }}"
+              class="ta-chip {{ 'active' if atr_antiguedad_sel == val else '' }}">{{ lbl }}</button>
+      {% endfor %}
+    </div>
+  </div>
+
   <div class="d-flex align-items-end gap-2">
-    <button class="btn btn-outline-secondary btn-sm" id="btnFiltrarTareas" type="button">
+    <button class="btn btn-outline-secondary btn-sm" type="submit">
       <i class="bi bi-funnel"></i> Aplicar
     </button>
 
-    <button class="btn btn-outline-secondary btn-sm" id="btnResetTareas" type="button">
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('dashboard') }}">
       <i class="bi bi-arrow-counterclockwise"></i>
-    </button>
+    </a>
   </div>
-</div>
+</form>
 
 {# ===== Tarjetas por estado ===== #}
 <div class="mb-3">
@@ -328,60 +365,6 @@
       </div>
     </div>
   </div>
-</div>
-
-<div class="section mb-3">
-  <form method="get" action="{{ url_for('dashboard') }}" class="ta-filters">
-    <input type="hidden" name="fecha_desde" value="{{ fecha_desde }}">
-    <input type="hidden" name="fecha_hasta" value="{{ fecha_hasta }}">
-    <input type="hidden" name="depto" value="{{ depto_sel }}">
-
-    <div class="mw-220">
-      <label class="form-label">Buscar</label>
-      <input type="text" name="atr_q" class="form-control form-control-sm" placeholder="Buscar tarea o ticket..."
-             value="{{ atr_q }}">
-    </div>
-    <div class="mw-160">
-      <label class="form-label">Responsable</label>
-      <select name="atr_responsable" class="form-select form-select-sm">
-        <option value="">Todos</option>
-        {% for r in atr_responsables_disponibles %}
-        <option value="{{ r }}" {{ 'selected' if r == atr_responsable_sel else '' }}>{{ r }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="mw-160">
-      <label class="form-label">Departamento</label>
-      <select name="atr_depto" class="form-select form-select-sm">
-        <option value="">Todos</option>
-        {% for d in atr_deptos_disponibles %}
-        <option value="{{ d }}" {{ 'selected' if d == atr_depto_sel else '' }}>{{ d }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="mw-160">
-      <label class="form-label">Estado</label>
-      <select name="atr_estado" class="form-select form-select-sm">
-        <option value="">Todos</option>
-        {% for e in atr_estados_disponibles %}
-        <option value="{{ e }}" {{ 'selected' if e == atr_estado_sel else '' }}>{{ e }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div>
-      <label class="form-label">Antigüedad (días)</label>
-      <div class="ta-chips">
-        {% set chips = [('', 'Todas'), ('1-30', '1-30'), ('31-60', '31-60'), ('61-90', '61-90'), ('90+', '+90')] %}
-        {% for val, lbl in chips %}
-        <button type="submit" name="atr_antiguedad" value="{{ val }}"
-                class="ta-chip {{ 'active' if atr_antiguedad_sel == val else '' }}">{{ lbl }}</button>
-        {% endfor %}
-      </div>
-    </div>
-    <div>
-      <button class="btn btn-outline-secondary btn-sm" type="submit"><i class="bi bi-funnel me-1"></i>Filtrar</button>
-    </div>
-  </form>
 </div>
 
 <div class="row g-3">
