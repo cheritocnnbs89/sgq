@@ -477,14 +477,21 @@
   </div>
 
   {% if tecnicos_mas30 %}
+    {% set max_m30 = tecnicos_mas30[0].total if tecnicos_mas30[0].total > 0 else 1 %}
     <div class="tm30-list">
       {% for grp in tecnicos_mas30 %}
         {% set collapse_id = 'tm30Collapse' ~ loop.index %}
+        {% set pct_pos = [[((grp.total / max_m30) * 100)|int, 4]|max, 100]|min %}
+        {% set pct_bucket = (((pct_pos / 2)|round(0, 'common'))|int * 2) %}
         <div class="tm30-item">
           <button type="button" class="tm30-row" data-bs-toggle="collapse"
                   data-bs-target="#{{ collapse_id }}" aria-expanded="false" aria-controls="{{ collapse_id }}">
             <span class="tm30-rank">{{ loop.index }}</span>
-            <span class="tm30-name">{{ grp.tecnico }}</span>
+            <span class="tm30-name" title="{{ grp.tecnico }}">{{ grp.tecnico }}</span>
+            <span class="tm30-track">
+              <span class="tm30-line w-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></span>
+              <span class="tm30-dot l-pct pct-{{ pct_bucket }} {% if loop.index <= 3 %}hi{% endif %}"></span>
+            </span>
             <span class="tm30-count">{{ grp.total }} tarea{{ 's' if grp.total != 1 else '' }}</span>
             <i class="bi bi-chevron-down tm30-chevron"></i>
           </button>
