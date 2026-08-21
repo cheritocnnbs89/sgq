@@ -42,6 +42,7 @@ from .planificador_querys import (
     SQL_UPSERT_CONFIG,
     SQL_DELETE_CONFIG,
     SQL_GET_ROLES_PARA_TIPO,
+    SQL_GET_ADMINS_CON_TELEFONO,
     SQL_GET_TIPOS_SOLICITUD,
     SQL_GET_TIPO_FLAGS,
     SQL_GET_ALL_TIPO_FLAGS,
@@ -1000,6 +1001,19 @@ def get_coordinadores_aprobadores_para_tipo(tipo):
 
 def get_motorizados_para_tipo(tipo: str):
     return get_roles_para_tipo(tipo)["motorizados"]
+
+
+def get_admins_con_telefono() -> list:
+    """Usuarios con rol admin, activos, con teléfono registrado (para copia WhatsApp)."""
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(SQL_GET_ADMINS_CON_TELEFONO)
+        rows = cur.fetchall()
+        conn.close()
+        return [{"id": r[0], "nombre": r[1], "telefono": r[2]} for r in rows]
+    except Exception:
+        return []
 
 
 def get_gerentes_presupuesto_para_tipo(tipo: str):

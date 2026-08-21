@@ -131,13 +131,6 @@ def _telegram(chat_id: str, text: str) -> None:
 _AWS_API_URL    = (os.environ.get("AWS_API_URL") or "").strip().rstrip("/")
 _AWS_FLASK_TOKEN = (os.environ.get("AWS_FLASK_TOKEN") or "").strip()
 
-# Números que reciben copia de la notificación WhatsApp de "servicio
-# aprobado", además del motorizado asignado (opcional, uno o varios
-# separados por coma, ej. "+593999999999,+593888888888").
-_WHATSAPP_NOTIF_CC = [
-    n.strip() for n in (os.environ.get("WHATSAPP_NOTIF_CC") or "").split(",") if n.strip()
-]
-
 
 def _whatsapp_aws(telefono: str, content_sid: str, variables: dict) -> None:
     """
@@ -341,10 +334,10 @@ def notif_aprobada(solicitud_id: int, tipo: str, area: str, fecha: str,
             continue
         _whatsapp_aws(m["telefono"], WHATSAPP_TPL_SERVICIO_ASIGNADO, whatsapp_vars)
 
-    # Copia adicional (WhatsApp) a números fijos configurados en
-    # WHATSAPP_NOTIF_CC (uno o varios, separados por coma).
-    for telefono_cc in _WHATSAPP_NOTIF_CC:
-        _whatsapp_aws(telefono_cc, WHATSAPP_TPL_SERVICIO_ASIGNADO, whatsapp_vars)
+    # Copia adicional (WhatsApp) a los usuarios admin con teléfono
+    # registrado en la tabla usuarios, además del motorizado asignado.
+    for a in repo.get_admins_con_telefono():
+        _whatsapp_aws(a["telefono"], WHATSAPP_TPL_SERVICIO_ASIGNADO, whatsapp_vars)
 
     nota = ("El servicio aparece en el calendario. Verifica el lugar de destino "
             "con el enlace a Google Maps.")

@@ -650,6 +650,15 @@ SQL_GET_ROLES_PARA_TIPO = f"""
     WHERE pc.tipo = ? AND pc.activo = 1
 """
 
+SQL_GET_ADMINS_CON_TELEFONO = f"""
+    SELECT id, nombre_completo, telefono
+    FROM {TBL_USUARIOS}
+    WHERE rol = 'admin'
+      AND disabled = 0
+      AND telefono IS NOT NULL
+      AND LTRIM(RTRIM(telefono)) <> ''
+"""
+
 # ──────────────────────────────────────────────
 # Tipos de solicitud
 # ──────────────────────────────────────────────
