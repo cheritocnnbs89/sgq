@@ -131,6 +131,13 @@ def _telegram(chat_id: str, text: str) -> None:
 _AWS_API_URL    = (os.environ.get("AWS_API_URL") or "").strip().rstrip("/")
 _AWS_FLASK_TOKEN = (os.environ.get("AWS_FLASK_TOKEN") or "").strip()
 
+# Números que reciben copia de la notificación WhatsApp de "servicio
+# aprobado", además del motorizado asignado (opcional, uno o varios
+# separados por coma, ej. "+593999999999,+593888888888").
+_WHATSAPP_NOTIF_CC = [
+    n.strip() for n in (os.environ.get("WHATSAPP_NOTIF_CC") or "").split(",") if n.strip()
+]
+
 
 def _whatsapp_aws(telefono: str, content_sid: str, variables: dict) -> None:
     """
@@ -318,20 +325,26 @@ def notif_aprobada(solicitud_id: int, tipo: str, area: str, fecha: str,
         _telegram(m["chat_id"], tg_text)
 
     # WhatsApp (vía AWS → Twilio): a motorizados con teléfono registrado
+    whatsapp_vars = {
+        "1": str(solicitud_id),
+        "2": tipo,
+        "3": area,
+        "4": fecha,
+        "5": f"{hi} - {hf}",
+        "6": lugar or "—",
+        "7": descripcion or "—",
+        "8": maps_url or "—",
+        "9": aprobador_nombre,
+    }
     for m in repo.get_motorizados_para_tipo(tipo):
         if not m.get("telefono"):
             continue
-        _whatsapp_aws(m["telefono"], WHATSAPP_TPL_SERVICIO_ASIGNADO, {
-            "1": str(solicitud_id),
-            "2": tipo,
-            "3": area,
-            "4": fecha,
-            "5": f"{hi} - {hf}",
-            "6": lugar or "—",
-            "7": descripcion or "—",
-            "8": maps_url or "—",
-            "9": aprobador_nombre,
-        })
+        _whatsapp_aws(m["telefono"], WHATSAPP_TPL_SERVICIO_ASIGNADO, whatsapp_vars)
+
+    # Copia adicional (WhatsApp) a números fijos configurados en
+    # WHATSAPP_NOTIF_CC (uno o varios, separados por coma).
+    for telefono_cc in _WHATSAPP_NOTIF_CC:
+        _whatsapp_aws(telefono_cc, WHATSAPP_TPL_SERVICIO_ASIGNADO, whatsapp_vars)
 
     nota = ("El servicio aparece en el calendario. Verifica el lugar de destino "
             "con el enlace a Google Maps.")
