@@ -349,52 +349,6 @@ body {
   border-radius: 3px;
 }
 
-/* ===== Resumen por departamento (tabla) ===== */
-.rpd-table th {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  color: var(--muted);
-}
-
-.rpd-pct-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 140px;
-}
-
-.rpd-pct-bar-bg {
-  flex: 1;
-  background: var(--surface-2);
-  border-radius: 999px;
-  height: 8px;
-  overflow: hidden;
-  border: 1px solid var(--line);
-}
-
-.rpd-pct-bar {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #10b981, #34d399);
-}
-
-.rpd-pct-val {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--ink);
-  min-width: 2.4rem;
-  text-align: right;
-}
-
-.rpd-badge-warn {
-  background: rgba(239, 68, 68, .12);
-  color: #b91c1c;
-  font-weight: 600;
-  font-size: 0.72rem;
-  padding: 0.3rem 0.6rem;
-}
-
 /* ===== Lollipop chart (tickets por técnico) ===== */
 .lollipop-list {
   display: flex;

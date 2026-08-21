@@ -816,7 +816,6 @@ def svc_build_dashboard_context(user, request_args=None):
     tickets_por_tecnico_count = defaultdict(int)
     tareas_por_depto_mes_count: dict = defaultdict(lambda: defaultdict(int))
     cumplimiento_mensual_count: dict = defaultdict(lambda: {"abiertas": 0, "cerradas": 0})
-    resumen_depto_count: dict = defaultdict(lambda: {"total": 0, "abiertas": 0, "cerradas": 0})
 
     # ── Asignación: abiertas asignadas / cerradas / no asignadas ──
     ESTADOS_CERRADOS_SET = {"Terminado", "Cancelada", "Cerrado por sistema"}
@@ -867,12 +866,6 @@ def svc_build_dashboard_context(user, request_args=None):
 
         tickets_por_depto_count[depto_t] += 1
         tickets_por_tecnico_count[t.get("propietario") or "—"] += 1
-
-        resumen_depto_count[depto_t]["total"] += 1
-        if estado in ESTADOS_CERRADOS_SET:
-            resumen_depto_count[depto_t]["cerradas"] += 1
-        else:
-            resumen_depto_count[depto_t]["abiertas"] += 1
 
         if estado in ESTADOS_CERRADOS_SET:
             tickets_por_depto_estado_count[depto_t]["cerradas"] += 1
@@ -998,21 +991,6 @@ def svc_build_dashboard_context(user, request_args=None):
         ],
     }
 
-    # ── Resumen por departamento ─────────────────────────────────
-    resumen_por_depto = sorted(
-        [
-            {
-                "departamento": d,
-                "total": v["total"],
-                "abiertas": v["abiertas"],
-                "cerradas": v["cerradas"],
-                "pct_cumplimiento": round(v["cerradas"] / v["total"] * 100) if v["total"] else 0,
-            }
-            for d, v in resumen_depto_count.items()
-        ],
-        key=lambda x: -x["total"],
-    )
-
     # ── Abiertas vs cerradas por mes ────────────────────────────
     _meses_c = sorted(cumplimiento_mensual_count.keys())
     chart_cumplimiento = {
@@ -1108,7 +1086,6 @@ def svc_build_dashboard_context(user, request_args=None):
         "tickets_por_depto_estado_totales": tickets_por_depto_estado_totales,
         "tickets_por_tecnico": tickets_por_tecnico,
         "depto_mes_heatmap": depto_mes_heatmap,
-        "resumen_por_depto": resumen_por_depto,
         "active_page": "dashboard",
     }
     ctx.update(_construir_seccion_atrasadas(overdue_tasks, request_args))
