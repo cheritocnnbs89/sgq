@@ -889,6 +889,8 @@ def svc_build_dashboard_context(user, request_args=None):
             compromiso_counts[comp_dt.date()] += 1
 
         t["fecha_compromiso_fmt"] = comp_dt.strftime("%Y-%m-%d %H:%M") if comp_dt else ""
+        creacion_dt = parse_dt(str(t.get("fecha_creacion") or "").strip())
+        t["fecha_creacion_fmt"] = creacion_dt.strftime("%Y-%m-%d %H:%M") if creacion_dt else ""
         no_terminada = estado not in ("Terminado", "Cerrado por sistema")
 
         if comp_dt and no_terminada:

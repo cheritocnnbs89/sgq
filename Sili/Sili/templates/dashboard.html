@@ -403,7 +403,7 @@
                       <tr>
                         <th>Tarea</th>
                         <th>Usuario solicitante</th>
-                        <th>Fecha compromiso</th>
+                        <th>Fecha de creación</th>
                         <th>Atraso</th>
                         <th>Estado</th>
                         <th class="text-end">Acción</th>
@@ -417,7 +417,7 @@
                           <div class="ta-titulo-id">ID {{ t.id }}</div>
                         </td>
                         <td>{{ t.solicitante or '—' }}</td>
-                        <td>{{ t.fecha_compromiso_fmt or t.fecha_compromiso or '—' }}</td>
+                        <td>{{ t.fecha_creacion_fmt or t.fecha_creacion or '—' }}</td>
                         <td>
                           {% set d = t.dias_atraso %}
                           <span class="ta-badge-atraso {{ 'b90' if d > 90 else ('b60' if d > 60 else ('b30' if d > 30 else 'b0')) }}">
