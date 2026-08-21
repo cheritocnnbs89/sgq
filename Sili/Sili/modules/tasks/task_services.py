@@ -782,7 +782,17 @@ def svc_build_dashboard_context(user, request_args=None):
         if depto_sel and (t.get("departamento") or "") != depto_sel:
             continue
 
-        fecha_base = parse_dt(str(t.get("fecha_cierre_real") or t.get("fecha_creacion") or "").strip())
+        # Mismo criterio que svc_build_listar_tareas_context (/tareas), para que
+        # el rango de fechas del dashboard incluya las mismas tareas.
+        fecha_base = parse_dt(
+            str(
+                t.get("fecha_cierre_real")
+                or t.get("fecha_fin")
+                or t.get("fecha_inicio")
+                or t.get("fecha_creacion")
+                or ""
+            ).strip()
+        )
 
         if fecha_desde and (not fecha_base or fecha_base < fecha_desde):
             continue
@@ -859,9 +869,17 @@ def svc_build_dashboard_context(user, request_args=None):
                 horas_por_depto_count[depto_t] += horas
 
         # Tareas por departamento por mes (todas las tareas)
-        # Usa el mismo criterio que el filtro de fechas del dashboard (fecha_cierre_real
-        # o fecha_creacion) para que ninguna tarea caiga fuera del rango seleccionado.
-        fecha_ref = parse_dt(str(t.get("fecha_cierre_real") or t.get("fecha_creacion") or "").strip())
+        # Mismo criterio que el filtro de fechas de arriba, para que ninguna
+        # tarea caiga fuera del rango seleccionado.
+        fecha_ref = parse_dt(
+            str(
+                t.get("fecha_cierre_real")
+                or t.get("fecha_fin")
+                or t.get("fecha_inicio")
+                or t.get("fecha_creacion")
+                or ""
+            ).strip()
+        )
         if fecha_ref:
             tareas_por_depto_mes_count[depto_t][fecha_ref.strftime("%Y-%m")] += 1
             tickets_por_dia_count[fecha_ref.strftime("%Y-%m-%d")] += 1
