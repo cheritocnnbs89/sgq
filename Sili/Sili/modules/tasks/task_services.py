@@ -29,6 +29,7 @@ from modules.tasks.task_repository import (
     repo_listar_encuestas,
     repo_obtener_departamentos_tareas,
     repo_dashboard_tareas,
+    repo_obtener_subordinados_ids,
     repo_eliminar_tarea,
     repo_es_responsable_tarea,
     repo_find_user_id_by_email,
@@ -1275,6 +1276,18 @@ def svc_build_listar_tareas_context(user, request_args):
 
     ESTADOS_CERRADOS = {"Terminado", "Cerrado por sistema"}
 
+    # Alcance de visibilidad: cada usuario ve sus propias tareas más las de
+    # sus subordinados (directos e indirectos) según usuarios.jefe_id. Un
+    # "jefe" ve así a los usuarios que le reportan; un "gerente" ve en
+    # cascada a esos jefes y a los usuarios que les reportan a ellos.
+    # "admin" ve todo, sin restricción.
+    es_admin = user["rol"] == "admin"
+    visible_ids = (
+        set()
+        if es_admin
+        else {user["id"]} | set(repo_obtener_subordinados_ids(user["id"]))
+    )
+
     tareas_filtradas = []
 
     for t in tareas_raw:
@@ -1294,19 +1307,19 @@ def svc_build_listar_tareas_context(user, request_args):
         if fecha_hasta and (not fecha_base or fecha_base > fecha_hasta):
             continue
 
-        if user["rol"] in ("admin", "jefe"):
+        if es_admin:
             pasa_rol = True
         else:
-            pasa_rol = (user["id"] in t["responsable_ids"]) or (t["creador_id"] == user["id"])
+            pasa_rol = bool(t["responsable_ids"] & visible_ids) or (t["creador_id"] in visible_ids)
 
         if not pasa_rol:
             continue
 
         if vista == "realizar":
-            if user["rol"] not in ("admin", "jefe") and user["id"] not in t["responsable_ids"]:
+            if not es_admin and not (t["responsable_ids"] & visible_ids):
                 continue
         else:
-            if user["rol"] not in ("admin", "jefe") and t["creador_id"] != user["id"]:
+            if not es_admin and t["creador_id"] not in visible_ids:
                 continue
 
         tareas_filtradas.append(t)

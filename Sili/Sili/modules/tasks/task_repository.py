@@ -138,6 +138,35 @@ def repo_find_user_id_by_email(cur, email: str):
     return int(_row_get(row, "id")) if row else None
 
 
+def repo_obtener_subordinados_ids(user_id) -> list:
+    """
+    Retorna TODOS los subordinados (directos e indirectos) de un usuario,
+    recorriendo usuarios.jefe_id (misma lógica que _obtener_subordinados
+    en modules/gastos/gastos_exports.py). Un "jefe" ve a los usuarios que
+    le reportan directamente; un "gerente" ve a esos mismos jefes y, en
+    cascada, a los usuarios que reportan a esos jefes.
+    """
+    if not user_id:
+        return []
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    result = set()
+    pendientes = [user_id]
+
+    while pendientes:
+        actual = pendientes.pop()
+        cur.execute("SELECT id FROM usuarios WHERE jefe_id = ?", (actual,))
+        hijos = [row["id"] for row in cur.fetchall()]
+        for h in hijos:
+            if h not in result:
+                result.add(h)
+                pendientes.append(h)
+
+    return list(result)
+
+
 def repo_dashboard_tareas(user):
     conn = get_db()
     cur = conn.cursor()
@@ -148,12 +177,11 @@ def repo_dashboard_tareas(user):
 
     if user["rol"] == "admin":
         pass
-    elif user["rol"] == "jefe":
-        where.append("(u.id = ? OR u.departamento_id = ?)")
-        params.extend([user["id"], user.get("departamento_id")])
     else:
-        where.append("u.id = ?")
-        params.append(user["id"])
+        visibles = [user["id"]] + repo_obtener_subordinados_ids(user["id"])
+        placeholders = ",".join("?" for _ in visibles)
+        where.append(f"t.usuario_id IN ({placeholders})")
+        params.extend(visibles)
 
     if where:
         base_sql += " WHERE " + " AND ".join(where)
