@@ -338,9 +338,10 @@ def _get_aprobador_email(
 # PUSH — Flask → DynamoDB
 # ============================================================
 
-# Límite prudente por archivo, por debajo del máximo de payload de
-# API Gateway (10MB) considerando el ~33% extra que añade base64.
-MAX_ADJUNTO_BYTES = 8 * 1024 * 1024
+# Límite prudente por archivo: el techo real no es el de API Gateway
+# (10MB) sino el de invocación síncrona de Lambda (6MB), y base64 añade
+# ~33% de más -- 4MB de archivo crudo ya deja el body en ~5.3MB.
+MAX_ADJUNTO_BYTES = 4 * 1024 * 1024
 
 
 def _push_adjuntos_gasto(conn, run_id: str, local_id, gasto_id_aws: str) -> None:
