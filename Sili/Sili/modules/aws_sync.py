@@ -12,8 +12,10 @@ Pull:
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import logging
+import mimetypes
 import os
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
@@ -23,6 +25,7 @@ from urllib.parse import urlsplit
 from uuid import uuid4
 
 import requests
+from flask import current_app
 
 
 # ============================================================
@@ -335,6 +338,101 @@ def _get_aprobador_email(
 # PUSH — Flask → DynamoDB
 # ============================================================
 
+# Límite prudente por archivo, por debajo del máximo de payload de
+# API Gateway (10MB) considerando el ~33% extra que añade base64.
+MAX_ADJUNTO_BYTES = 8 * 1024 * 1024
+
+
+def _push_adjuntos_gasto(conn, run_id: str, local_id, gasto_id_aws: str) -> None:
+    """
+    Envía a AWS (endpoint /sync/adjunto, mismo x-flask-token que /sync/push)
+    los archivos adjuntos de un gasto recién sincronizado, para que el
+    portal de aprobación pueda mostrarlos -- el servidor Flask no es
+    accesible desde fuera de la red, así que el archivo no puede quedar
+    solo como una URL a este servidor.
+
+    Best-effort: nunca lanza, nunca bloquea el push del gasto en sí.
+    """
+    try:
+        filenames = []
+
+        rows = conn.execute(
+            "SELECT filename FROM gastos_tarjeta_archivos WHERE gasto_id = ? ORDER BY id",
+            (local_id,),
+        ).fetchall()
+        filenames.extend(
+            (r["filename"] or "").strip()
+            for r in rows
+            if (r["filename"] or "").strip()
+        )
+
+        legacy_row = conn.execute(
+            "SELECT archivo FROM gastos_tarjeta WHERE id = ?",
+            (local_id,),
+        ).fetchone()
+        legacy = (legacy_row["archivo"] or "").strip() if legacy_row else ""
+        if legacy and legacy not in filenames:
+            filenames.insert(0, legacy)
+
+        if not filenames:
+            return
+
+        upload_dir = Path(current_app.root_path) / "static" / "uploads"
+
+        for filename in filenames:
+            file_path = upload_dir / filename
+
+            if not file_path.is_file():
+                logger.warning(
+                    "[AWS SYNC][PUSH_ADJUNTO][SKIP] run_id=%s | gasto_id=%s | "
+                    "archivo=%s | motivo=no_existe_en_disco",
+                    run_id, gasto_id_aws, filename,
+                )
+                continue
+
+            size = file_path.stat().st_size
+            if size > MAX_ADJUNTO_BYTES:
+                logger.warning(
+                    "[AWS SYNC][PUSH_ADJUNTO][SKIP] run_id=%s | gasto_id=%s | "
+                    "archivo=%s | motivo=demasiado_grande | bytes=%d",
+                    run_id, gasto_id_aws, filename, size,
+                )
+                continue
+
+            content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+            data_b64 = base64.b64encode(file_path.read_bytes()).decode("ascii")
+
+            try:
+                res = requests.post(
+                    f"{AWS_API_URL}/sync/adjunto",
+                    json={
+                        "gasto_id": gasto_id_aws,
+                        "filename": filename,
+                        "content_type": content_type,
+                        "data_base64": data_b64,
+                    },
+                    headers=HEADERS,
+                    timeout=60,
+                )
+                logger.info(
+                    "[AWS SYNC][PUSH_ADJUNTO] run_id=%s | gasto_id=%s | "
+                    "archivo=%s | bytes=%d | status=%s",
+                    run_id, gasto_id_aws, filename, size, res.status_code,
+                )
+            except requests.RequestException as exc:
+                logger.warning(
+                    "[AWS SYNC][PUSH_ADJUNTO][ERROR] run_id=%s | gasto_id=%s | "
+                    "archivo=%s | error=%s",
+                    run_id, gasto_id_aws, filename, exc,
+                )
+
+    except Exception as exc:
+        logger.warning(
+            "[AWS SYNC][PUSH_ADJUNTO][ERROR] run_id=%s | local_id=%s | error=%s",
+            run_id, local_id, exc,
+        )
+
+
 def push_gastos_a_aws(app=None):
     """
     Envía a DynamoDB los gastos con aws_enviado=0.
@@ -553,6 +651,14 @@ def push_gastos_a_aws(app=None):
                     for item_id in ids_enviados
                 ),
             )
+
+            for item in gastos_payload:
+                _push_adjuntos_gasto(
+                    conn,
+                    run_id,
+                    int(item["local_id"]),
+                    item["gasto_id"],
+                )
 
         else:
             logger.error(
