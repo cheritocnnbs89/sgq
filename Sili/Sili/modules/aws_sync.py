@@ -77,6 +77,14 @@ AUTH_HEADERS = {
 }
 
 
+# Rol de sistema (usuarios.rol) que tienen los jefes directos en
+# general -- no necesariamente Gerente de Área -- y que necesitan
+# entrar al portal para aprobar vouchers de taxi (Planificador).
+# Reutiliza el nivel "ga" del portal, igual que Gerente de Área en
+# gastos de tarjeta, ya que ambos son aprobación de un solo nivel.
+ROL_JEFE_DIRECTO = "jefe"
+
+
 def _rol_aprobacion(rol_sistema: str) -> str | None:
     """
     Traduce el rol de sistema (usuarios.rol) al nivel de aprobación que
@@ -84,7 +92,8 @@ def _rol_aprobacion(rol_sistema: str) -> str | None:
     gastos_helpers ya usada en el resto de la app (rol_gg()/rol_gf()/roles
     GA), en vez de una lista de nombres literales aparte -- si alguien
     reconfigura quién es GG o GF desde Configuración de Gastos, este mapeo
-    lo respeta automáticamente sin tocar código.
+    lo respeta automáticamente sin tocar código. El rol "jefe" (jefes
+    directos para vouchers de Planificador) mapea también a "GA".
     """
     from . import gastos_helpers as gh
 
@@ -94,6 +103,8 @@ def _rol_aprobacion(rol_sistema: str) -> str | None:
     if gh.es_rol_gf(rol):
         return "GF"
     if gh.es_rol_ga(rol):
+        return "GA"
+    if rol == ROL_JEFE_DIRECTO:
         return "GA"
     return None
 
@@ -105,6 +116,7 @@ def _roles_gerente_auth() -> tuple[str, ...]:
     roles = set(gh.roles_ga())
     roles.add(gh.rol_gg())
     roles.add(gh.rol_gf())
+    roles.add(ROL_JEFE_DIRECTO)
     return tuple(roles)
 
 
