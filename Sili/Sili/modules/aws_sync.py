@@ -825,6 +825,19 @@ def push_vouchers_taxi_a_aws(app=None):
                 p for p in (s["punto_salida"], s["punto_destino"]) if p
             )
 
+            rutas = [
+                {"numero": int(vi["numero"] or 0), "origen": vi["origen"] or "", "destino": vi["destino"] or ""}
+                for vi in conn.execute(
+                    """
+                    SELECT numero, origen, destino
+                    FROM planificador_voucher_items
+                    WHERE solicitud_id = ?
+                    ORDER BY numero
+                    """,
+                    (s["id"],),
+                ).fetchall()
+            ]
+
             payload.append(
                 {
                     "gasto_id": f"voucher_taxi#{s['id']}",
@@ -834,6 +847,7 @@ def push_vouchers_taxi_a_aws(app=None):
                     "descripcion": s["descripcion"] or "",
                     "lugar": destino or "",
                     "numero_vouchers": int(s["numero_vouchers"] or 0),
+                    "rutas": rutas,
                     "usuario_nombre": s["solicitante_nombre"] or "",
                     "usuario_email": s["solicitante_email"] or "",
                     "ga_aprobador_email": jefe_email,
