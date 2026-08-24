@@ -277,6 +277,17 @@ def _tipo_gasto(g: dict) -> str:
     return "tarjeta_credito"
 
 
+def _subtipo_gasto(g: dict) -> str:
+    """Subtipo visual solo para tarjeta_credito (ver gastos_lista.html:
+    tarjeta_boletos / tarjeta_online / tarjeta plana). No aplica a
+    caja_chica/reembolso, que ya se distinguen por 'tipo'."""
+    if int(g.get("boletos_aereos") or 0):
+        return "boletos"
+    if int(g.get("tarjeta_sin_soporte") or 0):
+        return "online"
+    return ""
+
+
 def _get_aprobador_email(
     conn,
     campo: str,
@@ -482,6 +493,8 @@ def push_gastos_a_aws(app=None):
                 g.gg_aprobado,
                 g.usuario_id,
                 COALESCE(g.ccb, 0) AS ccb,
+                COALESCE(g.boletos_aereos, 0) AS boletos_aereos,
+                COALESCE(g.tarjeta_sin_soporte, 0) AS tarjeta_sin_soporte,
                 COALESCE(t.nombre, g.proveedor, '') AS proveedor_nombre,
                 u.nombre_completo AS usuario_nombre,
                 u.email AS usuario_email,
@@ -566,6 +579,7 @@ def push_gastos_a_aws(app=None):
                 {
                     "gasto_id": gasto_id,
                     "tipo": tipo,
+                    "subtipo": _subtipo_gasto(dict(g)),
                     "local_id": str(g["id"]),
                     "fecha": str(g["fecha"] or ""),
                     "descripcion": g["motivo"] or "",
