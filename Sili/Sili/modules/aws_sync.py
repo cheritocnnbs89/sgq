@@ -278,14 +278,22 @@ def _tipo_gasto(g: dict) -> str:
 
 
 # ------------------------------------------------------------
-# WhatsApp: link mágico de aprobación en un click (un solo uso,
-# vence en pocos minutos). SID de Twilio a completar cuando la
-# plantilla "gasto_pendiente_aprobacion" quede aprobada -- mientras
-# esté vacío, _notificar_whatsapp_pendiente() no hace nada (no rompe
-# el push).
+# Notificación de aprobación pendiente: link mágico de un solo uso
+# (vence en pocos minutos) enviado por WhatsApp + correo, en
+# reemplazo del correo "Aprobación requerida" que antes mandaba
+# Flask directamente (ver notify_gasto_created en
+# routes_gatos_mail_notify.py).
+#
+# El correo NO depende de Twilio y sale siempre que haya
+# aprobador_email -- así no se pierde la notificación mientras se
+# espera la aprobación de la plantilla de WhatsApp en Meta. El SID
+# de Twilio se completa aparte cuando esa plantilla quede aprobada;
+# mientras esté vacío, solo se omite el envío por WhatsApp.
 # ------------------------------------------------------------
 WHATSAPP_TPL_GASTO_PENDIENTE = os.environ.get("WHATSAPP_TPL_GASTO_PENDIENTE", "").strip()
 MAGIC_LINK_MINUTOS = int(os.environ.get("MAGIC_LINK_MINUTOS", "5"))
+PORTAL_URL = "https://d2j9p7xrcju8qa.cloudfront.net"
+MAGIC_LINK_BASE_URL = "https://gqt5d309jh.execute-api.us-east-2.amazonaws.com/prod/m"
 
 
 def _telefono_por_email(conn, email: str) -> str:
@@ -314,7 +322,7 @@ def _tipo_label_legible(tipo: str, subtipo: str = "") -> str:
     return tipo or "Solicitud"
 
 
-def _notificar_whatsapp_pendiente(
+def _notificar_aprobacion_pendiente(
     run_id: str,
     conn,
     gasto_id: str,
@@ -326,15 +334,17 @@ def _notificar_whatsapp_pendiente(
 ) -> None:
     """
     Genera un link mágico de un solo uso (aprueba directo, solo nivel
-    GA/jefe directo) y envía la notificación WhatsApp con la plantilla
-    gasto_pendiente_aprobacion. Best-effort: nunca lanza, nunca bloquea
-    el push del gasto/voucher en sí.
-    """
-    if not WHATSAPP_TPL_GASTO_PENDIENTE:
-        return
+    GA/jefe directo) y notifica al aprobador por correo + WhatsApp.
+    Reemplaza al correo "Aprobación requerida" que antes mandaba Flask
+    (notify_gasto_created) -- ahora sale de aquí, con el link directo.
 
-    telefono = _telefono_por_email(conn, aprobador_email)
-    if not telefono:
+    El correo sale siempre que haya aprobador_email (no depende de
+    Twilio). El WhatsApp solo se envía si ya hay plantilla aprobada
+    (WHATSAPP_TPL_GASTO_PENDIENTE) y el usuario tiene teléfono.
+
+    Best-effort: nunca lanza, nunca bloquea el push del gasto/voucher.
+    """
+    if not aprobador_email:
         return
 
     try:
@@ -361,26 +371,72 @@ def _notificar_whatsapp_pendiente(
         if not token:
             return
 
-        wa_res = requests.post(
-            f"{AWS_API_URL}/notificaciones/whatsapp-push",
-            json={
-                "to": telefono,
-                "content_sid": WHATSAPP_TPL_GASTO_PENDIENTE,
-                "variables": {
-                    "1": solicitante or "",
-                    "2": tipo_label or "",
-                    "3": valor_txt or "",
-                    "4": str(MAGIC_LINK_MINUTOS),
-                    "5": token,
-                },
-            },
-            headers=HEADERS,
-            timeout=10,
-        )
-        logger.info(
-            "[AWS SYNC][MAGIC_LINK][WHATSAPP] run_id=%s | gasto_id=%s | status=%s",
-            run_id, gasto_id, wa_res.status_code,
-        )
+        magic_url = f"{MAGIC_LINK_BASE_URL}/{token}"
+
+        try:
+            subject = "[Gastos] ⏳ Aprobación requerida"
+            text = (
+                f"Tienes una nueva solicitud pendiente de aprobación.\n\n"
+                f"Solicitante: {solicitante or ''}\n"
+                f"Tipo: {tipo_label or ''}\n"
+                f"Valor: {valor_txt or ''}\n\n"
+                f"Aprobar directo (válido {MAGIC_LINK_MINUTOS} minutos): {magic_url}\n"
+                f"Ingresar al portal: {PORTAL_URL}\n"
+            )
+            html = (
+                f"<p>Tienes una nueva solicitud pendiente de aprobación.</p>"
+                f"<p><b>Solicitante:</b> {solicitante or ''}<br>"
+                f"<b>Tipo:</b> {tipo_label or ''}<br>"
+                f"<b>Valor:</b> {valor_txt or ''}</p>"
+                f"<p><a href=\"{magic_url}\">Aprobar directo</a> "
+                f"(válido {MAGIC_LINK_MINUTOS} minutos)<br>"
+                f"<a href=\"{PORTAL_URL}\">Ingresar al portal</a></p>"
+            )
+            mail_res = requests.post(
+                f"{AWS_API_URL}/notificaciones/email-push",
+                json={"to": aprobador_email, "subject": subject, "text": text, "html": html},
+                headers=HEADERS,
+                timeout=10,
+            )
+            logger.info(
+                "[AWS SYNC][MAGIC_LINK][EMAIL] run_id=%s | gasto_id=%s | status=%s",
+                run_id, gasto_id, mail_res.status_code,
+            )
+        except Exception as exc:
+            logger.warning(
+                "[AWS SYNC][MAGIC_LINK][EMAIL_ERROR] run_id=%s | gasto_id=%s | error=%s",
+                run_id, gasto_id, exc,
+            )
+
+        if WHATSAPP_TPL_GASTO_PENDIENTE:
+            telefono = _telefono_por_email(conn, aprobador_email)
+            if telefono:
+                try:
+                    wa_res = requests.post(
+                        f"{AWS_API_URL}/notificaciones/whatsapp-push",
+                        json={
+                            "to": telefono,
+                            "content_sid": WHATSAPP_TPL_GASTO_PENDIENTE,
+                            "variables": {
+                                "1": solicitante or "",
+                                "2": tipo_label or "",
+                                "3": valor_txt or "",
+                                "4": str(MAGIC_LINK_MINUTOS),
+                                "5": token,
+                            },
+                        },
+                        headers=HEADERS,
+                        timeout=10,
+                    )
+                    logger.info(
+                        "[AWS SYNC][MAGIC_LINK][WHATSAPP] run_id=%s | gasto_id=%s | status=%s",
+                        run_id, gasto_id, wa_res.status_code,
+                    )
+                except Exception as exc:
+                    logger.warning(
+                        "[AWS SYNC][MAGIC_LINK][WHATSAPP_ERROR] run_id=%s | gasto_id=%s | error=%s",
+                        run_id, gasto_id, exc,
+                    )
     except Exception as exc:
         logger.warning(
             "[AWS SYNC][MAGIC_LINK][ERROR] run_id=%s | gasto_id=%s | error=%s",
@@ -796,7 +852,7 @@ def push_gastos_a_aws(app=None):
                     int(item["local_id"]),
                     item["gasto_id"],
                 )
-                _notificar_whatsapp_pendiente(
+                _notificar_aprobacion_pendiente(
                     run_id,
                     conn,
                     item["gasto_id"],
@@ -1048,7 +1104,7 @@ def push_vouchers_taxi_a_aws(app=None):
 
             for item in payload:
                 nv = int(item["numero_vouchers"] or 0)
-                _notificar_whatsapp_pendiente(
+                _notificar_aprobacion_pendiente(
                     run_id,
                     conn,
                     item["gasto_id"],

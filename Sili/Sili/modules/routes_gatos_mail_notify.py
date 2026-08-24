@@ -903,11 +903,12 @@ def notify_gasto_created(app, gasto_id: int, by_user_id: int | None):
     except Exception:
         app.logger.exception("[GASTOS][MAIL] Error correo creador")
 
-    try:
-        if gerente_email and gerente_email != creator_email:
-            sent_any = _send_manager_gasto_created(app, g, gerente_email) or sent_any
-    except Exception:
-        app.logger.exception("[GASTOS][MAIL] Error correo gerente")
+    # El correo "Aprobación requerida" al gerente ya NO se envía desde aquí:
+    # en el mismo momento en que el gasto queda pendiente de él (creación
+    # para caja chica/reembolso, revisión del coordinador para tarjeta),
+    # aws_sync.py lo empuja al portal AWS, que notifica al gerente por
+    # WhatsApp + correo con el link de aprobación directa. Mandarlo también
+    # desde aquí sería duplicado.
 
     if not sent_any:
         app.logger.info("[GASTOS][MAIL] Notificación omitida: sin destinatarios.")
