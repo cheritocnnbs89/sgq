@@ -77,20 +77,6 @@ AUTH_HEADERS = {
 }
 
 
-# Roles de sistema (usuarios.rol) que en la práctica ejercen de jefe
-# directo -- no necesariamente Gerente de Área -- y que necesitan
-# entrar al portal para aprobar vouchers de taxi (Planificador).
-# Reutiliza el nivel "ga" del portal, igual que Gerente de Área en
-# gastos de tarjeta, ya que ambos son aprobación de un solo nivel.
-#
-# Lista abierta a propósito: un jefe directo puede tener cualquier rol
-# de sistema (Coordinador, Analista, etc.), no solo "jefe" formalmente
-# -- cada vez que aparezca uno nuevo que no entre al portal, agregarlo
-# aquí. Si esto sigue creciendo, conviene cambiar a "cualquier usuario
-# que sea jefe_id de al menos otro usuario activo" en vez de por rol.
-ROLES_JEFE_DIRECTO = {"jefe", "coordinador"}
-
-
 def _rol_aprobacion(rol_sistema: str) -> str | None:
     """
     Traduce el rol de sistema (usuarios.rol) al nivel de aprobación que
@@ -98,9 +84,12 @@ def _rol_aprobacion(rol_sistema: str) -> str | None:
     gastos_helpers ya usada en el resto de la app (rol_gg()/rol_gf()/roles
     GA), en vez de una lista de nombres literales aparte -- si alguien
     reconfigura quién es GG o GF desde Configuración de Gastos, este mapeo
-    lo respeta automáticamente sin tocar código. Los roles en
-    ROLES_JEFE_DIRECTO (jefes directos para vouchers de Planificador)
-    mapean también a "GA".
+    lo respeta automáticamente sin tocar código.
+
+    No cubre jefes directos de vouchers (Planificador): esos no se
+    detectan por rol -- cualquier rol puede ser jefe_id de alguien --
+    sino dinámicamente en push_gerentes_auth_a_aws() vía la columna
+    calculada es_jefe_directo, que siempre mapea a "GA".
     """
     from . import gastos_helpers as gh
 
@@ -110,8 +99,6 @@ def _rol_aprobacion(rol_sistema: str) -> str | None:
     if gh.es_rol_gf(rol):
         return "GF"
     if gh.es_rol_ga(rol):
-        return "GA"
-    if rol in ROLES_JEFE_DIRECTO:
         return "GA"
     return None
 
@@ -123,7 +110,6 @@ def _roles_gerente_auth() -> tuple[str, ...]:
     roles = set(gh.roles_ga())
     roles.add(gh.rol_gg())
     roles.add(gh.rol_gf())
-    roles |= ROLES_JEFE_DIRECTO
     return tuple(roles)
 
 
@@ -995,14 +981,26 @@ def push_gerentes_auth_a_aws(app=None):
 
         roles_gerente_auth = _roles_gerente_auth()
 
+        # Candidatos: roles formales GA/GF/GG, MAS cualquier usuario que
+        # sea jefe_id de al menos otro usuario activo -- un jefe directo
+        # (para vouchers de Planificador) puede tener cualquier rol de
+        # sistema, no solo uno de los roles de aprobación configurados.
         try:
             rows = conn.execute(
                 f"""
                 SELECT id, username, email, nombre_completo, rol,
                        COALESCE(disabled, 0) AS disabled, password,
-                       auth_aws_hash_enviado
+                       auth_aws_hash_enviado,
+                       CASE WHEN id IN (
+                           SELECT DISTINCT jefe_id FROM usuarios
+                           WHERE jefe_id IS NOT NULL AND COALESCE(disabled, 0) = 0
+                       ) THEN 1 ELSE 0 END AS es_jefe_directo
                 FROM usuarios
                 WHERE LOWER(LTRIM(RTRIM(rol))) IN ({",".join("?" for _ in roles_gerente_auth)})
+                   OR id IN (
+                       SELECT DISTINCT jefe_id FROM usuarios
+                       WHERE jefe_id IS NOT NULL AND COALESCE(disabled, 0) = 0
+                   )
                 """,
                 roles_gerente_auth,
             ).fetchall()
@@ -1056,9 +1054,16 @@ def push_gerentes_auth_a_aws(app=None):
                 continue
 
             rol_aprobacion = _rol_aprobacion(u["rol"])
+            if not rol_aprobacion and int(u["es_jefe_directo"] or 0):
+                # No tiene un rol GA/GF/GG formal, pero es jefe_id de al
+                # menos otro usuario activo -- entra como "GA" para poder
+                # aprobar vouchers de taxi (Planificador) desde el portal.
+                rol_aprobacion = "GA"
+
             if not rol_aprobacion:
                 # No calza con GA/GG/GF configurados actualmente (p.ej. quedó
-                # en la lista por una configuración anterior). No se envía.
+                # en la lista por una configuración anterior) ni es jefe_id
+                # de nadie. No se envía.
                 logger.warning(
                     "[AWS SYNC][AUTH_PUSH][SKIP] run_id=%s | usuario_id=%s | "
                     "motivo=sin_nivel_aprobacion",
