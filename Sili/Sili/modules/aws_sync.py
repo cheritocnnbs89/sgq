@@ -481,12 +481,16 @@ def push_gastos_a_aws(app=None):
                 g.gf_aprobado,
                 g.gg_aprobado,
                 g.usuario_id,
+                COALESCE(g.ccb, 0) AS ccb,
+                COALESCE(t.nombre, g.proveedor, '') AS proveedor_nombre,
                 u.nombre_completo AS usuario_nombre,
                 u.email AS usuario_email,
                 u.departamento_id AS dep_id
             FROM gastos_tarjeta g
             LEFT JOIN usuarios u
                 ON u.id = g.usuario_id
+            LEFT JOIN terceros t
+                ON t.id = g.proveedor_id
             WHERE COALESCE(g.aws_enviado, 0) = 0
               AND g.sap_contabilizacion IS NULL
               AND (
@@ -566,6 +570,8 @@ def push_gastos_a_aws(app=None):
                     "fecha": str(g["fecha"] or ""),
                     "descripcion": g["motivo"] or "",
                     "monto": str(g["total_con_iva"] or 0),
+                    "proveedor": g["proveedor_nombre"] or "",
+                    "ccb": int(g["ccb"] or 0),
                     "usuario_nombre": (
                         g["usuario_nombre"] or ""
                     ),
