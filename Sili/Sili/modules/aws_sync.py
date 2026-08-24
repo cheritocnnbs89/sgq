@@ -277,6 +277,117 @@ def _tipo_gasto(g: dict) -> str:
     return "tarjeta_credito"
 
 
+# ------------------------------------------------------------
+# WhatsApp: link mágico de aprobación en un click (un solo uso,
+# vence en pocos minutos). SID de Twilio a completar cuando la
+# plantilla "gasto_pendiente_aprobacion" quede aprobada -- mientras
+# esté vacío, _notificar_whatsapp_pendiente() no hace nada (no rompe
+# el push).
+# ------------------------------------------------------------
+WHATSAPP_TPL_GASTO_PENDIENTE = os.environ.get("WHATSAPP_TPL_GASTO_PENDIENTE", "").strip()
+MAGIC_LINK_MINUTOS = int(os.environ.get("MAGIC_LINK_MINUTOS", "5"))
+
+
+def _telefono_por_email(conn, email: str) -> str:
+    if not email:
+        return ""
+    row = conn.execute(
+        "SELECT telefono FROM usuarios WHERE LOWER(email) = LOWER(?)",
+        (email,),
+    ).fetchone()
+    return (row["telefono"] or "").strip() if row else ""
+
+
+def _tipo_label_legible(tipo: str, subtipo: str = "") -> str:
+    if tipo == "tarjeta_credito":
+        if subtipo == "boletos":
+            return "Tarjeta (Boletos)"
+        if subtipo == "online":
+            return "Tarjeta (Online)"
+        return "Tarjeta crédito"
+    if tipo == "caja_chica":
+        return "Caja chica"
+    if tipo == "reembolso":
+        return "Reembolso de Vendedor"
+    if tipo == "Voucher":
+        return "Voucher de taxi"
+    return tipo or "Solicitud"
+
+
+def _notificar_whatsapp_pendiente(
+    run_id: str,
+    conn,
+    gasto_id: str,
+    tipo: str,
+    aprobador_email: str,
+    solicitante: str,
+    tipo_label: str,
+    valor_txt: str,
+) -> None:
+    """
+    Genera un link mágico de un solo uso (aprueba directo, solo nivel
+    GA/jefe directo) y envía la notificación WhatsApp con la plantilla
+    gasto_pendiente_aprobacion. Best-effort: nunca lanza, nunca bloquea
+    el push del gasto/voucher en sí.
+    """
+    if not WHATSAPP_TPL_GASTO_PENDIENTE:
+        return
+
+    telefono = _telefono_por_email(conn, aprobador_email)
+    if not telefono:
+        return
+
+    try:
+        res = requests.post(
+            f"{AWS_API_URL}/sync/magic-link",
+            json={
+                "gasto_id": gasto_id,
+                "tipo": tipo,
+                "nivel": "ga",
+                "aprobador_email": aprobador_email,
+                "minutos": MAGIC_LINK_MINUTOS,
+            },
+            headers=HEADERS,
+            timeout=10,
+        )
+        if res.status_code != 200:
+            logger.warning(
+                "[AWS SYNC][MAGIC_LINK][ERROR] run_id=%s | gasto_id=%s | status=%s",
+                run_id, gasto_id, res.status_code,
+            )
+            return
+
+        token = (res.json() or {}).get("token")
+        if not token:
+            return
+
+        wa_res = requests.post(
+            f"{AWS_API_URL}/notificaciones/whatsapp-push",
+            json={
+                "to": telefono,
+                "content_sid": WHATSAPP_TPL_GASTO_PENDIENTE,
+                "variables": {
+                    "1": solicitante or "",
+                    "2": tipo_label or "",
+                    "3": valor_txt or "",
+                    "4": str(MAGIC_LINK_MINUTOS),
+                    "5": token,
+                },
+            },
+            headers=HEADERS,
+            timeout=10,
+        )
+        logger.info(
+            "[AWS SYNC][MAGIC_LINK][WHATSAPP] run_id=%s | gasto_id=%s | status=%s",
+            run_id, gasto_id, wa_res.status_code,
+        )
+    except Exception as exc:
+        logger.warning(
+            "[AWS SYNC][MAGIC_LINK][ERROR] run_id=%s | gasto_id=%s | error=%s",
+            run_id, gasto_id, exc,
+        )
+
+
 def _subtipo_gasto(g: dict) -> str:
     """Subtipo visual solo para tarjeta_credito (ver gastos_lista.html:
     tarjeta_boletos / tarjeta_online / tarjeta plana). No aplica a
@@ -685,6 +796,16 @@ def push_gastos_a_aws(app=None):
                     int(item["local_id"]),
                     item["gasto_id"],
                 )
+                _notificar_whatsapp_pendiente(
+                    run_id,
+                    conn,
+                    item["gasto_id"],
+                    item["tipo"],
+                    item["ga_aprobador_email"],
+                    item["usuario_nombre"],
+                    _tipo_label_legible(item["tipo"], item.get("subtipo") or ""),
+                    "$" + f'{float(item["monto"] or 0):,.2f}',
+                )
 
         else:
             logger.error(
@@ -924,6 +1045,19 @@ def push_vouchers_taxi_a_aws(app=None):
                     for item_id in ids_enviados
                 ),
             )
+
+            for item in payload:
+                nv = int(item["numero_vouchers"] or 0)
+                _notificar_whatsapp_pendiente(
+                    run_id,
+                    conn,
+                    item["gasto_id"],
+                    item["tipo"],
+                    item["ga_aprobador_email"],
+                    item["usuario_nombre"],
+                    _tipo_label_legible(item["tipo"]),
+                    f'{nv} voucher' + ('s' if nv != 1 else ''),
+                )
 
         else:
             logger.error(
