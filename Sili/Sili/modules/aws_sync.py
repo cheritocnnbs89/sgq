@@ -706,6 +706,231 @@ def push_gastos_a_aws(app=None):
 
 
 # ============================================================
+# PUSH VOUCHER TAXI — Flask → DynamoDB (Planificador)
+# ============================================================
+
+def push_vouchers_taxi_a_aws(app=None):
+    """
+    Envía a DynamoDB los vouchers de taxi (Planificador) pendientes de
+    aprobación del jefe directo, para que aparezcan en el portal móvil.
+
+    Reutiliza la misma tabla (gastos_aprobacion) que gastos de tarjeta,
+    con gasto_id="voucher_taxi#<id>" / tipo="Voucher", y el nivel "ga"
+    del portal (aprobación de un solo nivel, igual que jefe directo).
+    A diferencia de un gasto, un voucher no tiene monto en esta etapa
+    -- el costo se liquida después -- así que se manda numero_vouchers
+    en vez de monto.
+    """
+
+    if not AWS_SYNC_ENABLED:
+        logger.debug(
+            "[AWS SYNC][PUSH_VOUCHER][SKIP] AWS_SYNC_ENABLED=0 (ambiente sin sync a AWS)"
+        )
+        return
+
+    run_id = _new_run_id()
+    started_at = perf_counter()
+
+    ctx = app.app_context() if app else None
+
+    if ctx:
+        ctx.push()
+
+    logger.info(
+        "[AWS SYNC][PUSH_VOUCHER][START] run_id=%s",
+        run_id,
+    )
+
+    try:
+        conn = _get_db()
+
+        rows = conn.execute(
+            """
+            SELECT
+                s.id, s.fecha, s.descripcion, s.lugar_destino,
+                s.punto_salida, s.punto_destino, s.numero_vouchers,
+                s.solicitante_id, s.solicitante_nombre,
+                s.gerente_id, s.gerente_nombre,
+                u.email AS solicitante_email,
+                jefe.email AS jefe_email
+            FROM planificador_solicitudes s
+            LEFT JOIN usuarios u ON u.id = s.solicitante_id
+            LEFT JOIN usuarios jefe ON jefe.id = s.gerente_id
+            WHERE s.activo = 1
+              AND s.tipo = 'Voucher'
+              AND s.estado = 'PENDIENTE_APROBACION_JEFE'
+              AND COALESCE(s.aws_enviado, 0) = 0
+            """
+        ).fetchall()
+
+        total_candidatos = len(rows)
+
+        logger.info(
+            "[AWS SYNC][PUSH_VOUCHER][DB] run_id=%s | candidatos=%d",
+            run_id,
+            total_candidatos,
+        )
+
+        if not rows:
+            logger.info(
+                "[AWS SYNC][PUSH_VOUCHER][EMPTY] run_id=%s | sin vouchers nuevos",
+                run_id,
+            )
+            return
+
+        payload = []
+        ids_enviados = []
+        omitidos_sin_jefe = 0
+
+        for s in rows:
+            jefe_email = (s["jefe_email"] or "").strip()
+
+            if not jefe_email:
+                omitidos_sin_jefe += 1
+
+                logger.warning(
+                    "[AWS SYNC][PUSH_VOUCHER][SKIP] run_id=%s | "
+                    "solicitud_id=%s | motivo=jefe_sin_email",
+                    run_id,
+                    s["id"],
+                )
+                continue
+
+            destino = s["lugar_destino"] or " / ".join(
+                p for p in (s["punto_salida"], s["punto_destino"]) if p
+            )
+
+            payload.append(
+                {
+                    "gasto_id": f"voucher_taxi#{s['id']}",
+                    "tipo": "Voucher",
+                    "local_id": str(s["id"]),
+                    "fecha": str(s["fecha"] or ""),
+                    "descripcion": s["descripcion"] or "",
+                    "lugar": destino or "",
+                    "numero_vouchers": int(s["numero_vouchers"] or 0),
+                    "usuario_nombre": s["solicitante_nombre"] or "",
+                    "usuario_email": s["solicitante_email"] or "",
+                    "ga_aprobador_email": jefe_email,
+                    "ga_aprobado": 0,
+                    "flask_sincronizado": "true",
+                }
+            )
+
+            ids_enviados.append(s["id"])
+
+        if not payload:
+            logger.warning(
+                "[AWS SYNC][PUSH_VOUCHER][NO_PAYLOAD] run_id=%s | "
+                "candidatos=%d | omitidos_sin_jefe=%d",
+                run_id,
+                total_candidatos,
+                omitidos_sin_jefe,
+            )
+            return
+
+        logger.info(
+            "[AWS SYNC][PUSH_VOUCHER][HTTP] run_id=%s | "
+            "endpoint=/sync/push | registros=%d",
+            run_id,
+            len(payload),
+        )
+
+        http_started_at = perf_counter()
+
+        res = requests.post(
+            f"{AWS_API_URL}/sync/push",
+            json={
+                "gastos": payload,
+            },
+            headers=HEADERS,
+            timeout=30,
+        )
+
+        http_ms = _elapsed_ms(http_started_at)
+
+        logger.info(
+            "[AWS SYNC][PUSH_VOUCHER][HTTP_RESPONSE] run_id=%s | "
+            "status=%s | duration_ms=%d",
+            run_id,
+            res.status_code,
+            http_ms,
+        )
+
+        if res.status_code == 200:
+            placeholders = ",".join(
+                "?"
+                for _ in ids_enviados
+            )
+
+            conn.execute(
+                f"""
+                UPDATE planificador_solicitudes
+                SET aws_enviado = 1
+                WHERE id IN ({placeholders})
+                """,
+                ids_enviados,
+            )
+
+            conn.commit()
+
+            logger.info(
+                "[AWS SYNC][PUSH_VOUCHER][OK] run_id=%s | "
+                "enviados=%d | omitidos_sin_jefe=%d | ids=%s",
+                run_id,
+                len(ids_enviados),
+                omitidos_sin_jefe,
+                ",".join(
+                    str(item_id)
+                    for item_id in ids_enviados
+                ),
+            )
+
+        else:
+            logger.error(
+                "[AWS SYNC][PUSH_VOUCHER][HTTP_ERROR] run_id=%s | "
+                "status=%s | response=%s",
+                run_id,
+                res.status_code,
+                _response_excerpt(res),
+            )
+
+    except requests.Timeout:
+        logger.exception(
+            "[AWS SYNC][PUSH_VOUCHER][TIMEOUT] run_id=%s | "
+            "timeout=30s",
+            run_id,
+        )
+
+    except requests.RequestException as exc:
+        logger.exception(
+            "[AWS SYNC][PUSH_VOUCHER][REQUEST_ERROR] run_id=%s | "
+            "error=%s",
+            run_id,
+            exc,
+        )
+
+    except Exception as exc:
+        logger.exception(
+            "[AWS SYNC][PUSH_VOUCHER][ERROR] run_id=%s | "
+            "error=%s",
+            run_id,
+            exc,
+        )
+
+    finally:
+        logger.info(
+            "[AWS SYNC][PUSH_VOUCHER][END] run_id=%s | "
+            "duration_ms=%d",
+            run_id,
+            _elapsed_ms(started_at),
+        )
+
+        if ctx:
+            ctx.pop()
+
+
+# ============================================================
 # PUSH AUTH — Flask → DynamoDB (aprobadores_auth)
 # ============================================================
 
@@ -946,6 +1171,191 @@ def push_gerentes_auth_a_aws(app=None):
 # PULL — DynamoDB → Flask
 # ============================================================
 
+def _pull_gasto_tarjeta_item(conn, g, local_id, sys_id, now_str, run_id):
+    """
+    Aplica una fila del portal AWS sobre gastos_tarjeta.
+
+    La presencia de "<nivel>_at" (no solo "<nivel>_aprobado"=1) es la
+    señal de que ese nivel ya se decidió en AWS: "<nivel>_aprobado"=0
+    con "<nivel>_at" presente significa rechazo. GA nunca rechaza --
+    eso ya está bloqueado del lado del Lambda gastos-aprobar -- así
+    que ahí solo se mira "ga_aprobado"=1, igual que antes.
+
+    Devuelve "updated", "no_change" o "not_found".
+    """
+    row = conn.execute(
+        """
+        SELECT ga_aprobado, gf_aprobado, gg_aprobado,
+               COALESCE(ga_aws_sync, 0) AS ga_aws_sync,
+               COALESCE(gf_aws_sync, 0) AS gf_aws_sync,
+               COALESCE(gg_aws_sync, 0) AS gg_aws_sync
+        FROM gastos_tarjeta
+        WHERE id = ?
+        """,
+        (local_id,),
+    ).fetchone()
+
+    if not row:
+        logger.warning(
+            "[AWS SYNC][PULL][NOT_FOUND] run_id=%s | tabla=gastos_tarjeta | local_id=%s",
+            run_id, local_id,
+        )
+        return "not_found"
+
+    updates, params, niveles, rechazos = [], [], [], []
+
+    if int(g.get("ga_aprobado") or 0) and not row["ga_aws_sync"]:
+        updates += [
+            "ga_aprobado=1", "ga_aprobado_por=?", "ga_aprobado_at=?",
+            "ga_aprobado_origen='aws'", "ga_aws_sync=1",
+        ]
+        params += [sys_id, g.get("ga_at") or now_str]
+        niveles.append("GA")
+
+    if g.get("gf_at") and not row["gf_aws_sync"] and not int(g.get("gg_aprobado") or 0):
+        if int(g.get("gf_aprobado") or 0):
+            updates += [
+                "gf_aprobado=1", "gf_aprobado_por=?", "gf_aprobado_at=?",
+                "gf_aprobado_origen='aws'", "gf_aws_sync=1",
+            ]
+            params += [sys_id, g.get("gf_at") or now_str]
+        else:
+            updates += ["gf_aws_sync=1"]
+            rechazos.append(("GF", g.get("gf_obs") or ""))
+        niveles.append("GF")
+
+    if g.get("gg_at") and not row["gg_aws_sync"]:
+        if int(g.get("gg_aprobado") or 0):
+            updates += [
+                "gg_aprobado=1", "gg_aprobado_por=?", "gg_aprobado_at=?",
+                "gg_aprobado_origen='aws'", "gg_aws_sync=1",
+            ]
+            params += [sys_id, g.get("gg_at") or now_str]
+        else:
+            updates += ["gg_aws_sync=1"]
+            rechazos.append(("GG", g.get("gg_obs") or ""))
+        niveles.append("GG")
+
+    if not updates:
+        logger.info(
+            "[AWS SYNC][PULL][NO_CHANGE] run_id=%s | tabla=gastos_tarjeta | local_id=%s",
+            run_id, local_id,
+        )
+        return "no_change"
+
+    params.append(local_id)
+    conn.execute(
+        f"UPDATE gastos_tarjeta SET {', '.join(updates)} WHERE id = ?",
+        params,
+    )
+    conn.commit()
+
+    for nivel, comentario in rechazos:
+        try:
+            from modules.scheduler.scheduler_notifications import enqueue_gasto_rejected_gg
+            enqueue_gasto_rejected_gg(
+                conn, gasto_id=local_id, by_user_id=sys_id, comentario=comentario,
+            )
+        except Exception:
+            logger.exception(
+                "[AWS SYNC][PULL][REJECT_NOTIFY_ERROR] run_id=%s | tabla=gastos_tarjeta | "
+                "local_id=%s | nivel=%s",
+                run_id, local_id, nivel,
+            )
+
+    logger.info(
+        "[AWS SYNC][PULL][UPDATED] run_id=%s | tabla=gastos_tarjeta | local_id=%s | niveles=%s",
+        run_id, local_id, ",".join(niveles),
+    )
+    return "updated"
+
+
+def _pull_voucher_item(conn, g, local_id, sys_id, now_str, run_id):
+    """
+    Aplica una fila "voucher_taxi#<id>" del portal AWS sobre
+    planificador_solicitudes, reutilizando las mismas funciones de
+    aprobación/rechazo + notificaciones que usa la ruta en-app del
+    jefe directo (aprobar_jefe_voucher / rechazar_jefe_voucher +
+    notif_voucher_*), para que el resultado sea idéntico sin importar
+    si la decisión vino de Flask o del portal móvil.
+
+    Devuelve "updated", "no_change" o "not_found".
+    """
+    row = conn.execute(
+        """
+        SELECT estado, solicitante_id, solicitante_nombre, area_solicitante,
+               fecha, descripcion, COALESCE(ga_aws_sync, 0) AS ga_aws_sync
+        FROM planificador_solicitudes
+        WHERE id = ? AND tipo = 'Voucher'
+        """,
+        (local_id,),
+    ).fetchone()
+
+    if not row:
+        logger.warning(
+            "[AWS SYNC][PULL][NOT_FOUND] run_id=%s | tabla=planificador_solicitudes | local_id=%s",
+            run_id, local_id,
+        )
+        return "not_found"
+
+    if (
+        row["ga_aws_sync"]
+        or row["estado"] != "PENDIENTE_APROBACION_JEFE"
+        or not g.get("ga_at")
+    ):
+        return "no_change"
+
+    obs = g.get("ga_obs") or ""
+    aprobado = bool(int(g.get("ga_aprobado") or 0))
+
+    from modules.planificador import planificador_repository as prepo
+    from modules.planificador import planificador_notifications as pnotif
+
+    if aprobado:
+        prepo.aprobar_jefe_voucher(local_id, sys_id, "Sistema (AWS)", obs)
+        try:
+            pnotif.notif_voucher_aprobada_solicitante(
+                local_id, row["area_solicitante"], str(row["fecha"]),
+                row["descripcion"], row["solicitante_id"], row["solicitante_nombre"],
+                "Sistema (AWS)",
+            )
+            pnotif.notif_voucher_pendiente_entrega(
+                local_id, row["area_solicitante"], str(row["fecha"]),
+                row["descripcion"], row["solicitante_nombre"], "Sistema (AWS)",
+            )
+        except Exception:
+            logger.exception(
+                "[AWS SYNC][PULL][NOTIFY_ERROR] run_id=%s | tabla=planificador_solicitudes | "
+                "local_id=%s | accion=aprobado",
+                run_id, local_id,
+            )
+    else:
+        prepo.rechazar_jefe_voucher(local_id, sys_id, "Sistema (AWS)", obs)
+        try:
+            pnotif.notif_voucher_rechazada(
+                local_id, row["area_solicitante"], str(row["fecha"]), obs,
+                row["solicitante_nombre"], row["solicitante_id"], "Sistema (AWS)",
+            )
+        except Exception:
+            logger.exception(
+                "[AWS SYNC][PULL][NOTIFY_ERROR] run_id=%s | tabla=planificador_solicitudes | "
+                "local_id=%s | accion=rechazado",
+                run_id, local_id,
+            )
+
+    conn.execute(
+        "UPDATE planificador_solicitudes SET ga_aws_sync = 1 WHERE id = ?",
+        (local_id,),
+    )
+    conn.commit()
+
+    logger.info(
+        "[AWS SYNC][PULL][UPDATED] run_id=%s | tabla=planificador_solicitudes | local_id=%s | accion=%s",
+        run_id, local_id, "aprobado" if aprobado else "rechazado",
+    )
+    return "updated"
+
+
 def pull_aprobaciones_de_aws(app=None):
     """
     Lee de DynamoDB los gastos aprobados o rechazados y actualiza
@@ -1085,131 +1495,19 @@ def pull_aprobaciones_de_aws(app=None):
                 )
                 continue
 
-            row = conn.execute(
-                """
-                SELECT
-                    ga_aprobado,
-                    gf_aprobado,
-                    gg_aprobado,
-                    COALESCE(ga_aws_sync, 0)
-                        AS ga_aws_sync,
-                    COALESCE(gf_aws_sync, 0)
-                        AS gf_aws_sync,
-                    COALESCE(gg_aws_sync, 0)
-                        AS gg_aws_sync
-                FROM gastos_tarjeta
-                WHERE id = ?
-                """,
-                (local_id,),
-            ).fetchone()
+            gasto_id_full = g.get("gasto_id") or ""
 
-            if not row:
-                no_encontrados += 1
+            if gasto_id_full.startswith("voucher_taxi#"):
+                status = _pull_voucher_item(conn, g, local_id, sys_id, now_str, run_id)
+            else:
+                status = _pull_gasto_tarjeta_item(conn, g, local_id, sys_id, now_str, run_id)
 
-                logger.warning(
-                    "[AWS SYNC][PULL][NOT_FOUND] run_id=%s | "
-                    "local_id=%s",
-                    run_id,
-                    local_id,
-                )
-                continue
-
-            updates = []
-            params = []
-            niveles_actualizados = []
-
-            # GA
-            if (
-                int(g.get("ga_aprobado") or 0)
-                and not row["ga_aws_sync"]
-            ):
-                updates += [
-                    "ga_aprobado=1",
-                    "ga_aprobado_por=?",
-                    "ga_aprobado_at=?",
-                    "ga_aprobado_origen='aws'",
-                    "ga_aws_sync=1",
-                ]
-
-                params += [
-                    sys_id,
-                    g.get("ga_at") or now_str,
-                ]
-
-                niveles_actualizados.append("GA")
-
-            # GF
-            if (
-                int(g.get("gf_aprobado") or 0)
-                and not row["gf_aws_sync"]
-                and not int(g.get("gg_aprobado") or 0)
-            ):
-                updates += [
-                    "gf_aprobado=1",
-                    "gf_aprobado_por=?",
-                    "gf_aprobado_at=?",
-                    "gf_aprobado_origen='aws'",
-                    "gf_aws_sync=1",
-                ]
-
-                params += [
-                    sys_id,
-                    g.get("gf_at") or now_str,
-                ]
-
-                niveles_actualizados.append("GF")
-
-            # GG
-            if (
-                int(g.get("gg_aprobado") or 0)
-                and not row["gg_aws_sync"]
-            ):
-                updates += [
-                    "gg_aprobado=1",
-                    "gg_aprobado_por=?",
-                    "gg_aprobado_at=?",
-                    "gg_aprobado_origen='aws'",
-                    "gg_aws_sync=1",
-                ]
-
-                params += [
-                    sys_id,
-                    g.get("gg_at") or now_str,
-                ]
-
-                niveles_actualizados.append("GG")
-
-            if updates:
-                params.append(local_id)
-
-                conn.execute(
-                    f"""
-                    UPDATE gastos_tarjeta
-                    SET {", ".join(updates)}
-                    WHERE id = ?
-                    """,
-                    params,
-                )
-
+            if status == "updated":
                 actualizados += 1
-
-                logger.info(
-                    "[AWS SYNC][PULL][UPDATED] run_id=%s | "
-                    "local_id=%s | niveles=%s",
-                    run_id,
-                    local_id,
-                    ",".join(niveles_actualizados),
-                )
-
+            elif status == "not_found":
+                no_encontrados += 1
             else:
                 sin_cambios += 1
-
-                logger.info(
-                    "[AWS SYNC][PULL][NO_CHANGE] run_id=%s | "
-                    "local_id=%s",
-                    run_id,
-                    local_id,
-                )
 
         conn.commit()
 
