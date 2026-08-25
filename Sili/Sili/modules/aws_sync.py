@@ -293,7 +293,7 @@ def _tipo_gasto(g: dict) -> str:
 WHATSAPP_TPL_GASTO_PENDIENTE = os.environ.get("WHATSAPP_TPL_GASTO_PENDIENTE", "").strip()
 MAGIC_LINK_MINUTOS = int(os.environ.get("MAGIC_LINK_MINUTOS", "5"))
 PORTAL_URL = "https://d2j9p7xrcju8qa.cloudfront.net"
-MAGIC_LINK_BASE_URL = "https://gqt5d309jh.execute-api.us-east-2.amazonaws.com/prod/m"
+MAGIC_LINK_BASE_URL = "https://drz8r9fcp7842.cloudfront.net/m"
 
 
 def _telefono_por_email(conn, email: str) -> str:
