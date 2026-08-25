@@ -1729,6 +1729,8 @@ def pull_aprobaciones_de_aws(app=None):
         no_encontrados = 0
         sin_cambios = 0
         sin_local_id = 0
+        con_error = 0
+        to_ack: list[dict] = []
 
         for g in gastos:
             local_id = g.get("local_id")
@@ -1744,18 +1746,33 @@ def pull_aprobaciones_de_aws(app=None):
                 continue
 
             gasto_id_full = g.get("gasto_id") or ""
+            tipo_full = g.get("tipo") or ""
 
-            if gasto_id_full.startswith("voucher_taxi#"):
-                status = _pull_voucher_item(conn, g, local_id, sys_id, now_str, run_id)
-            else:
-                status = _pull_gasto_tarjeta_item(conn, g, local_id, sys_id, now_str, run_id)
+            try:
+                if gasto_id_full.startswith("voucher_taxi#"):
+                    status = _pull_voucher_item(conn, g, local_id, sys_id, now_str, run_id)
+                else:
+                    status = _pull_gasto_tarjeta_item(conn, g, local_id, sys_id, now_str, run_id)
+            except Exception:
+                # Un ítem con error no debe tumbar el resto del lote ni
+                # marcarse como sincronizado -- se reintenta solo, en el
+                # próximo ciclo, ya que AWS todavía lo tiene como
+                # flask_sincronizado=false (ver /sync/pull/ack más abajo).
+                con_error += 1
+                logger.exception(
+                    "[AWS SYNC][PULL][ITEM_ERROR] run_id=%s | gasto_id=%s",
+                    run_id, gasto_id_full,
+                )
+                continue
 
             if status == "updated":
                 actualizados += 1
+                to_ack.append({"gasto_id": gasto_id_full, "tipo": tipo_full})
             elif status == "not_found":
                 no_encontrados += 1
             else:
                 sin_cambios += 1
+                to_ack.append({"gasto_id": gasto_id_full, "tipo": tipo_full})
 
         conn.commit()
 
@@ -1763,14 +1780,39 @@ def pull_aprobaciones_de_aws(app=None):
             "[AWS SYNC][PULL][OK] run_id=%s | "
             "recibidos=%d | actualizados=%d | "
             "sin_cambios=%d | no_encontrados=%d | "
-            "sin_local_id=%d",
+            "sin_local_id=%d | con_error=%d",
             run_id,
             len(gastos),
             actualizados,
             sin_cambios,
             no_encontrados,
             sin_local_id,
+            con_error,
         )
+
+        # Confirma a AWS solo los ítems que sí se aplicaron localmente
+        # (updated/no_change), para que marque flask_sincronizado=true
+        # recién ahora. Antes, gastos-pull lo marcaba al momento de
+        # entregar el lote, sin esperar confirmación -- si Flask fallaba
+        # a mitad de proceso, el ítem quedaba "entregado" para siempre
+        # sin haberse aplicado nunca localmente.
+        if to_ack:
+            try:
+                ack_res = requests.post(
+                    f"{AWS_API_URL}/sync/pull/ack",
+                    json={"items": to_ack},
+                    headers=HEADERS,
+                    timeout=15,
+                )
+                logger.info(
+                    "[AWS SYNC][PULL][ACK] run_id=%s | items=%d | status=%s",
+                    run_id, len(to_ack), ack_res.status_code,
+                )
+            except Exception as exc:
+                logger.warning(
+                    "[AWS SYNC][PULL][ACK_ERROR] run_id=%s | error=%s",
+                    run_id, exc,
+                )
 
     except requests.Timeout:
         logger.exception(
