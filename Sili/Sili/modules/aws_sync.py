@@ -1555,21 +1555,25 @@ def _pull_voucher_item(conn, g, local_id, sys_id, now_str, run_id):
 
     obs = g.get("ga_obs") or ""
     aprobado = bool(int(g.get("ga_aprobado") or 0))
+    # Nombre para el registro/notificación: el correo real del jefe que
+    # aprobó/rechazó desde AWS (portal o link mágico), en vez del genérico
+    # "Sistema (AWS)" -- así el historial/correo dice quién fue.
+    actor_nombre = g.get("ga_aprobador_email") or "Sistema (AWS)"
 
     from modules.planificador import planificador_repository as prepo
     from modules.planificador import planificador_notifications as pnotif
 
     if aprobado:
-        prepo.aprobar_jefe_voucher(local_id, sys_id, "Sistema (AWS)", obs)
+        prepo.aprobar_jefe_voucher(local_id, sys_id, actor_nombre, obs)
         try:
             pnotif.notif_voucher_aprobada_solicitante(
                 local_id, row["area_solicitante"], str(row["fecha"]),
                 row["descripcion"], row["solicitante_id"], row["solicitante_nombre"],
-                "Sistema (AWS)",
+                actor_nombre,
             )
             pnotif.notif_voucher_pendiente_entrega(
                 local_id, row["area_solicitante"], str(row["fecha"]),
-                row["descripcion"], row["solicitante_nombre"], "Sistema (AWS)",
+                row["descripcion"], row["solicitante_nombre"], actor_nombre,
             )
         except Exception:
             logger.exception(
@@ -1578,11 +1582,11 @@ def _pull_voucher_item(conn, g, local_id, sys_id, now_str, run_id):
                 run_id, local_id,
             )
     else:
-        prepo.rechazar_jefe_voucher(local_id, sys_id, "Sistema (AWS)", obs)
+        prepo.rechazar_jefe_voucher(local_id, sys_id, actor_nombre, obs)
         try:
             pnotif.notif_voucher_rechazada(
                 local_id, row["area_solicitante"], str(row["fecha"]), obs,
-                row["solicitante_nombre"], row["solicitante_id"], "Sistema (AWS)",
+                row["solicitante_nombre"], row["solicitante_id"], actor_nombre,
             )
         except Exception:
             logger.exception(
