@@ -332,6 +332,7 @@
 
   function _setupDetalleBody(container) {
     _setupVoucherAjax(container);
+    _setupCotizarVuelo(container);
     /* min=hoy en inputs con data-min-today (evita inline script) */
     container.querySelectorAll('[data-min-today]').forEach(function (el) {
       el.min = el.dataset.minToday;
@@ -1477,6 +1478,56 @@
         location.reload();
       });
     });
+  }
+
+  // ── Vuelo: cotización del coordinador (total en vivo, obs. plegable) ──
+  function _setupCotizarVuelo(container) {
+    var form = container.querySelector('[data-cotizar-vuelo-form]');
+    if (!form) return;
+
+    var pasajeInp   = form.querySelector('[data-cotizar-pasaje]');
+    var hospedajeInp = form.querySelector('[data-cotizar-hospedaje]');
+    var totalEl     = form.querySelector('[data-cotizar-total]');
+    var totalHintEl = form.querySelector('[data-cotizar-total-hint]');
+    var submitBtn   = form.querySelector('[data-cotizar-submit]');
+    var hintEl      = form.querySelector('[data-cotizar-hint]');
+
+    function _recalcular() {
+      // "Pasaje aéreo" es texto libre (aerolínea, detalle del vuelo, valor…),
+      // no un campo numérico puro: se extrae el primer monto que contenga
+      // como estimado, igual que ya se hace en otros lados del modulo para
+      // sugerir valores desde texto libre similar.
+      var pasajeTxt = (pasajeInp.value || '').trim();
+      var m = pasajeTxt.match(/\d+(?:[.,]\d+)?/);
+      var pasajeNum = m ? parseFloat(m[0].replace(',', '.')) : 0;
+      var hospedajeNum = parseFloat((hospedajeInp.value || '0').replace(',', '.')) || 0;
+      var total = (pasajeNum || 0) + hospedajeNum;
+
+      if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
+      if (totalHintEl) {
+        totalHintEl.textContent = pasajeTxt
+          ? 'Estimado a partir del monto detectado en el pasaje'
+          : 'Ingresa el pasaje para ver el impacto en el presupuesto';
+      }
+
+      var listo = pasajeTxt.length > 0;
+      if (submitBtn) submitBtn.disabled = !listo;
+      if (hintEl) hintEl.textContent = listo ? '' : 'Ingresa el valor del pasaje aéreo.';
+    }
+
+    if (pasajeInp) pasajeInp.addEventListener('input', _recalcular);
+    if (hospedajeInp) hospedajeInp.addEventListener('input', _recalcular);
+    _recalcular();
+
+    var obsToggle = form.querySelector('[data-cotizar-obs-toggle]');
+    var obsField  = form.querySelector('[data-cotizar-obs]');
+    if (obsToggle && obsField) {
+      obsToggle.addEventListener('click', function () {
+        obsField.classList.remove('d-none');
+        obsToggle.classList.add('d-none');
+        obsField.focus();
+      });
+    }
   }
 
   function _setupVoucherAjax(container) {

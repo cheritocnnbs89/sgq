@@ -277,6 +277,20 @@ def detalle(sid):
                 item["puede_confirmar"] and s.get("solicitante_id") != u["id"]
             )
 
+    # Presupuesto anual del CC del solicitante (Ticket aéreo), solo para la
+    # pantalla donde el coordinador cotiza el vuelo — es lo que le da
+    # contexto para decidir si conviene aprobar o no.
+    presupuesto_cc = None
+    if d.get("puede_cotizar_vuelo"):
+        cc_info = repo.get_cc_usuario(s["solicitante_id"])
+        if cc_info:
+            anio_vuelo = s["fecha"].year if s.get("fecha") else date.today().year
+            saldo = repo.get_saldo_anual_presupuesto(
+                cc_info["empresa_id"], cc_info["cc_id"], "Ticket aéreo", anio_vuelo
+            )
+            if saldo["presupuestado"] > 0:
+                presupuesto_cc = saldo
+
     return render_template(
         "planificador/_detalle_modal_body.html",
         s=d,
@@ -293,6 +307,7 @@ def detalle(sid):
         costo_ticket_sugerido=costo_ticket_sugerido,
         voucher_items=voucher_items,
         voucher_es_coordinador_view=(d.get("tipo") == "Voucher" and not _es_solicitante),
+        presupuesto_cc=presupuesto_cc,
     )
 
 
