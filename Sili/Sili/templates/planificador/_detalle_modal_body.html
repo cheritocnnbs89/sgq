@@ -50,7 +50,7 @@
 <div class="detail-grid collapse" id="detalleInfoBox{{ s.id }}">
   <div class="detail-box"><span>Tipo de solicitud</span><strong>{{ s.tipo }}</strong></div>
   <div class="detail-box"><span>Área solicitante</span><strong>{{ s.area_solicitante }}</strong></div>
-  {% if s.tipo != 'Voucher' %}
+  {% if s.tipo != 'Voucher' and s.tipo != 'Vuelo' %}
   <div class="detail-box"><span>Prioridad</span>
     <strong>
       <span class="badge {% if s.prioridad=='Urgente' %}bg-danger{% elif s.prioridad=='Alta' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
@@ -68,7 +68,7 @@
   {% if s.tipo == 'Vuelo' %}
   <div class="detail-box"><span>Fecha de regreso</span><strong>{{ s.get('fecha_retorno') or '—' }}</strong></div>
   {% endif %}
-  {% if s.tipo != 'Voucher' %}
+  {% if s.tipo != 'Voucher' and s.tipo != 'Vuelo' %}
   <div class="detail-box"><span>Horario asignado</span>
     <strong>
       {% if s.hora_inicio %}{{ s.hora_inicio }} – {{ s.hora_fin }}
