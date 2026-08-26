@@ -2517,10 +2517,23 @@ def presupuesto():
             if rows or tipo_gasto:  # si es "Todos" omite secciones vacías
                 presupuesto_secciones.append({"tipo": t, "rows": rows})
 
+    # KPIs agregados de todas las secciones visibles (para las tarjetas de resumen)
+    todas_las_filas = [row for sec in presupuesto_secciones for row in sec["rows"]]
+    kpi_total = sum(r["total_presup"] for r in todas_las_filas)
+    kpi_ejec  = sum(r["total_ejec"] for r in todas_las_filas)
+    kpi = {
+        "total": kpi_total,
+        "ejec": kpi_ejec,
+        "ejec_pct": round(kpi_ejec / kpi_total * 100, 1) if kpi_total > 0 else 0,
+        "disponible": kpi_total - kpi_ejec,
+        "alertas": sum(1 for r in todas_las_filas if r["semaforo"] in ("amarillo", "rojo")),
+    }
+
     return render_template(
         "planificador/presupuesto.html",
         anio=anio,
         presupuesto_secciones=presupuesto_secciones,
+        kpi=kpi,
         anio_actual=anio_actual,
         empresas=empresas,
         empresa_id=empresa_id,

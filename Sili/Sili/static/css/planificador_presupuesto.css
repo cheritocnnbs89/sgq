@@ -33,3 +33,132 @@
 .badge-semaforo.verde    { background: #d1e7dd; color: #0a3622; }
 .badge-semaforo.amarillo { background: #fff3cd; color: #664d03; }
 .badge-semaforo.rojo     { background: #f8d7da; color: #58151c; }
+
+/* ── Punto de semáforo (reemplaza los emojis) ── */
+.presup-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex: none;
+}
+.presup-dot.verde    { background: #15803d; }
+.presup-dot.amarillo { background: #d97706; }
+.presup-dot.rojo     { background: #dc2626; }
+
+/* ── Tarjetas KPI ── */
+.presup-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+@media (max-width: 900px) {
+    .presup-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.presup-kpi-card {
+    background: #fff;
+    border: 1px solid #e4e7ec;
+    border-radius: 10px;
+    padding: 13px 15px;
+}
+.presup-kpi-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+.presup-kpi-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-top: 4px;
+}
+.presup-kpi-value--green { color: #15803d; }
+.presup-kpi-value--amber { color: #b45309; }
+.presup-kpi-sub {
+    font-size: 0.76rem;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+/* ── Barra de avance en la tabla resumen ── */
+.presup-col-avance { min-width: 130px; }
+.presup-avance {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.presup-avance-track {
+    flex: 1;
+    height: 5px;
+    border-radius: 20px;
+    background: #f1f2f5;
+    overflow: hidden;
+    min-width: 44px;
+}
+.presup-avance-fill {
+    height: 100%;
+    border-radius: 20px;
+    transition: width .2s ease;
+}
+.presup-avance-fill.verde    { background: #15803d; }
+.presup-avance-fill.amarillo { background: #d97706; }
+.presup-avance-fill.rojo     { background: #dc2626; }
+.presup-avance-pct {
+    font-size: 0.78rem;
+    font-weight: 600;
+    min-width: 38px;
+    text-align: right;
+}
+
+/* ── Banner de éxito al guardar (reemplaza el alert-success genérico) ── */
+.presup-alert-ok {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: #ecfdf3;
+    border: 1px solid #a7e8c3;
+    border-radius: 9px;
+    padding: 11px 15px;
+    margin-bottom: 14px;
+    font-size: 0.85rem;
+    color: #14532d;
+    font-weight: 500;
+}
+.presup-alert-ok-icon {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    border-radius: 50%;
+    background: #15803d;
+    color: #fff;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.presup-alert-ok-close {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    color: #4d7c5f;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 4px;
+}
+
+/* ── Botón "Ocultar meses en cero" activo ── */
+.presup-toggle-activo { background: #eff4ff; border-color: #1d4ed8 !important; color: #1d4ed8 !important; }
+
+/* ── Modal: acciones rápidas + resumen ── */
+.presup-quick-btn {
+    background: #eff4ff;
+    border: 1px solid #cddcff;
+    color: #1d4ed8;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+.presup-quick-btn:hover { background: #dbe7ff; color: #1d4ed8; }
+.presup-modal-summary { border-top: 1px solid #eef0f4; }
+.presup-modal-total { font-size: 1.3rem; font-weight: 700; }

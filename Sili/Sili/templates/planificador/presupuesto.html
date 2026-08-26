@@ -3,7 +3,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/planificador.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador_presupuesto.css') }}?v=4">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador_presupuesto.css') }}?v=5">
 {% endblock %}
 
 {% block content %}
@@ -63,24 +63,59 @@
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% set last = messages[-1] %}
+      {% if last[0] == 'success' %}
+      <div class="presup-alert-ok" role="alert">
+        <span class="presup-alert-ok-icon">✓</span>
+        <span>{{ last[1] }}</span>
+        <button type="button" class="presup-alert-ok-close" data-bs-dismiss="alert" aria-label="Cerrar">×</button>
+      </div>
+      {% else %}
       <div class="alert alert-{{ last[0] }} alert-dismissible fade show py-2" role="alert">
         {{ last[1] }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
+      {% endif %}
     {% endif %}
   {% endwith %}
 
   {% if empresa_id %}
 
-    {# ── Barra: leyenda + agregar CC (solo cuando hay un tipo seleccionado) ── #}
+    {% if presupuesto_secciones %}
+    {# ── Tarjetas KPI ── #}
+    <div class="presup-kpi-grid mb-3">
+      <div class="presup-kpi-card">
+        <div class="presup-kpi-label">Presupuesto anual</div>
+        <div class="presup-kpi-value">${{ "%.2f"|format(kpi.total) }}</div>
+      </div>
+      <div class="presup-kpi-card">
+        <div class="presup-kpi-label">Ejecutado</div>
+        <div class="presup-kpi-value">${{ "%.2f"|format(kpi.ejec) }}</div>
+        <div class="presup-kpi-sub">{{ kpi.ejec_pct }}% del total</div>
+      </div>
+      <div class="presup-kpi-card">
+        <div class="presup-kpi-label">Disponible</div>
+        <div class="presup-kpi-value presup-kpi-value--green">${{ "%.2f"|format(kpi.disponible) }}</div>
+      </div>
+      <div class="presup-kpi-card">
+        <div class="presup-kpi-label">Centros en alerta</div>
+        <div class="presup-kpi-value presup-kpi-value--amber">{{ kpi.alertas }}</div>
+        <div class="presup-kpi-sub">sobre 50% ejecutado</div>
+      </div>
+    </div>
+    {% endif %}
+
+    {# ── Barra: leyenda + ocultar meses en cero + agregar CC ── #}
     <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
       <div class="d-flex gap-2 small">
-        <span class="badge-semaforo verde">🟢 &lt; 50%</span>
-        <span class="badge-semaforo amarillo">🟡 50–99%</span>
-        <span class="badge-semaforo rojo">🔴 ≥ 100% requiere aprobación GG</span>
+        <span class="badge-semaforo verde"><i class="presup-dot verde"></i> &lt; 50%</span>
+        <span class="badge-semaforo amarillo"><i class="presup-dot amarillo"></i> 50–99%</span>
+        <span class="badge-semaforo rojo"><i class="presup-dot rojo"></i> ≥ 100% requiere aprobación GG</span>
       </div>
-      {% if tipo_gasto and has_permission('planificador.presupuesto', 'editar') %}
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-ocultar-meses-cero">
+          Ocultar meses en cero
+        </button>
+        {% if tipo_gasto and has_permission('planificador.presupuesto', 'editar') %}
         <select class="form-select form-select-sm sel-cc-width" id="sel-nuevo-cc">
           <option value="">+ Seleccione CC para agregar...</option>
           {% for cc in centros_disponibles %}
@@ -99,8 +134,8 @@
           <input type="hidden" name="cc_id" id="form-agregar-cc-id">
           {% for m in range(1, 13) %}<input type="hidden" name="mes_{{ m }}" value="0">{% endfor %}
         </form>
+        {% endif %}
       </div>
-      {% endif %}
     </div>
 
     {# ── Secciones por tipo de gasto ── #}
@@ -119,11 +154,11 @@
                   <th class="col-semaforo"></th>
                   <th>Centro de Costo</th>
                   {% for mn in meses_nombres %}
-                  <th class="text-end">{{ mn }}</th>
+                  <th class="text-end" data-mes="{{ loop.index }}">{{ mn }}</th>
                   {% endfor %}
                   <th class="text-end">Total</th>
                   <th class="text-end">Ejecutado</th>
-                  <th class="text-center">%</th>
+                  <th class="presup-col-avance">Avance</th>
                   {% if has_permission('planificador.presupuesto', 'editar') %}
                   <th></th>
                   {% endif %}
@@ -132,24 +167,25 @@
               <tbody>
                 {% for row in seccion.rows %}
                 <tr>
-                  <td class="text-center">
-                    {% if row.semaforo == 'rojo' %}🔴
-                    {% elif row.semaforo == 'amarillo' %}🟡
-                    {% else %}🟢{% endif %}
-                  </td>
+                  <td class="text-center"><i class="presup-dot {{ row.semaforo }}"></i></td>
                   <td class="small">
                     {% if row.cc_codigo %}<span class="text-muted me-1">{{ row.cc_codigo }}</span>{% endif %}
                     <span class="fw-semibold">{{ row.cc_nombre }}</span>
                   </td>
                   {% for m in row.meses %}
-                  <td class="text-end small">${{ "%.0f"|format(m.monto_presupuestado) }}</td>
+                  <td class="text-end small" data-mes="{{ loop.index }}" data-monto="{{ m.monto_presupuestado }}">
+                    {% if m.monto_presupuestado %}${{ "%.0f"|format(m.monto_presupuestado) }}{% else %}<span class="text-muted">—</span>{% endif %}
+                  </td>
                   {% endfor %}
                   <td class="text-end fw-bold small">${{ "%.2f"|format(row.total_presup) }}</td>
                   <td class="text-end small text-muted">${{ "%.2f"|format(row.total_ejec) }}</td>
-                  <td class="text-center small">
-                    <span class="text-{{ 'danger' if row.semaforo == 'rojo' else ('warning' if row.semaforo == 'amarillo' else 'success') }}">
-                      {{ row.pct }}%
-                    </span>
+                  <td class="presup-col-avance">
+                    <div class="presup-avance">
+                      <div class="presup-avance-track">
+                        <div class="presup-avance-fill {{ row.semaforo }}" style="width: {{ [row.pct, 100]|min }}%"></div>
+                      </div>
+                      <span class="presup-avance-pct text-{{ 'danger' if row.semaforo == 'rojo' else ('warning' if row.semaforo == 'amarillo' else 'success') }}">{{ row.pct }}%</span>
+                    </div>
                   </td>
                   {% if has_permission('planificador.presupuesto', 'editar') %}
                   <td class="text-center">
@@ -210,6 +246,13 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body py-2">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="small fw-semibold text-muted">Distribución mensual</span>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-sm presup-quick-btn" id="btn-repartir-meses">Repartir en 12 meses</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-limpiar-meses">Limpiar</button>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-sm table-bordered mb-0 presupuesto-table">
               <thead class="table-light">
@@ -234,8 +277,18 @@
               </tbody>
             </table>
           </div>
+          <div class="d-flex align-items-center justify-content-between gap-3 mt-3 pt-2 presup-modal-summary">
+            <div class="small text-muted">
+              Ejecutado a la fecha: <strong class="text-dark" id="modal-ejecutado">$0.00</strong>
+            </div>
+            <div class="text-end">
+              <div class="presup-kpi-label">Total anual</div>
+              <div class="presup-modal-total" id="modal-total-anual">$0.00</div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer py-2">
+          <span class="small text-muted me-auto" id="modal-hint"></span>
           <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
           <button type="submit" class="btn btn-primary btn-sm">
             <i class="bi bi-save me-1"></i>Guardar
@@ -250,5 +303,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/planificador/presupuesto.js') }}?v=3"></script>
+<script src="{{ url_for('static', filename='js/planificador/presupuesto.js') }}?v=4"></script>
 {% endblock %}
