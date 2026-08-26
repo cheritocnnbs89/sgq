@@ -499,9 +499,11 @@
           data-bs-target="#voucherListBox{{ s.id }}" aria-expanded="false"
           aria-controls="voucherListBox{{ s.id }}">
     <span class="detail-accordion-label">
-      <i class="bi bi-ticket-perforated-fill me-1"></i>
-      <span>Vouchers de esta solicitud</span>
-      <span class="voucher-count-badge">{{ voucher_items|length }}</span>
+      <span class="voucher-list-title">
+        <span><i class="bi bi-ticket-perforated-fill me-1"></i>Vouchers de esta solicitud</span>
+        <span class="voucher-count-badge">{{ voucher_items|length }}</span>
+      </span>
+      <span class="voucher-list-subtitle">Solicitud #{{ s.id }} · {{ s.solicitante_nombre }}</span>
     </span>
     <span class="detail-accordion-right">
       <span class="cal-expand-hint">Ver detalle <i class="bi bi-chevron-down detail-accordion-chevron"></i></span>
@@ -509,6 +511,26 @@
   </button>
 
   <div class="collapse" id="voucherListBox{{ s.id }}">
+  {% set voucher_total = voucher_items|length %}
+  {% set voucher_resueltos = voucher_items | selectattr('confirmado_usuario') | list | length %}
+  {% set voucher_pendientes = voucher_total - voucher_resueltos %}
+  {% set voucher_alguno_pendiente = voucher_items | selectattr('puede_confirmar') | list | length > 0 %}
+
+  <div class="voucher-progress-wrap">
+    <div class="voucher-progress-track">
+      <div class="voucher-progress-fill" data-voucher-progress-fill
+           style="width: {{ ((voucher_resueltos / voucher_total * 100) if voucher_total else 0)|round|int }}%"></div>
+    </div>
+    <span class="voucher-progress-label" data-voucher-progress-label>{{ voucher_resueltos }} de {{ voucher_total }} resueltos</span>
+  </div>
+
+  {% if voucher_es_coordinador_view and voucher_alguno_pendiente %}
+  <div class="voucher-coordinador-banner">
+    <i class="bi bi-exclamation-circle-fill"></i>
+    <span>Estás resolviendo estos vouchers <strong>en nombre del solicitante</strong>. Cada acción queda registrada con tu usuario y fecha.</span>
+  </div>
+  {% endif %}
+
   {% for item in voucher_items %}
   {% if item.no_utilizado %}
     {% set vstate = 'no_utilizado' %}
@@ -563,55 +585,66 @@
       {% endif %}
 
       {% if item.puede_confirmar %}
-      {% if item.accion_por_coordinador %}
-      <div class="small text-muted mb-1">
-        <i class="bi bi-person-badge me-1"></i>Estás confirmando este voucher en nombre del solicitante.
-      </div>
-      {% endif %}
-      <form class="voucher-confirmar-form mt-2"
-            data-voucher-form="confirmar"
-            action="{{ url_for('planificador.planificador_voucher_confirmar_item', sid=s.id, item_id=item.id) }}"
-            enctype="multipart/form-data">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="voucher-form-fields">
-          <div>
-            <label class="form-label form-label-sm">Observación <span class="text-muted">(opcional)</span></label>
-            <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
-                      rows="2" placeholder="Detalle del uso de este voucher…"></textarea>
-          </div>
-          <div>
-            <label class="form-label form-label-sm">Respaldo *</label>
-            <input class="form-control form-control-sm" type="file" name="adjunto_voucher"
-                   accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required>
-            <div class="form-text">Máx. 10 MB · PDF, Word, imagen</div>
-          </div>
-        </div>
-        <div class="voucher-form-footer">
-          <span class="voucher-upload-status"></span>
-          <button type="submit" class="btn btn-success btn-sm">
-            <i class="bi bi-check2-circle me-1"></i>Confirmar este voucher
+      <div class="voucher-resolve" data-voucher-resolve>
+        <div class="voucher-resolve-question">¿Se utilizó este voucher?</div>
+        <div class="voucher-toggle-group">
+          <button type="button" class="voucher-toggle-btn voucher-toggle-btn--yes" data-voucher-toggle="si">
+            Sí, se utilizó
+          </button>
+          <button type="button" class="voucher-toggle-btn voucher-toggle-btn--no" data-voucher-toggle="no">
+            No se utilizó
           </button>
         </div>
-      </form>
 
-      <form class="voucher-no-utilizado-form mt-2"
-            data-voucher-form="no-utilizado"
-            action="{{ url_for('planificador.planificador_voucher_no_utilizado_item', sid=s.id, item_id=item.id) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="voucher-form-fields">
-          <div>
-            <label class="form-label form-label-sm">¿No usó este voucher? Indique el motivo *</label>
-            <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
-                      rows="2" placeholder="Ej. Se canceló el viaje, no se necesitó…" required></textarea>
+        <form class="voucher-confirmar-form mt-2 d-none"
+              data-voucher-form="confirmar" data-voucher-panel="si"
+              action="{{ url_for('planificador.planificador_voucher_confirmar_item', sid=s.id, item_id=item.id) }}"
+              enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="voucher-form-fields">
+            <div>
+              <label class="form-label form-label-sm">Respaldo *</label>
+              <div class="voucher-dropzone" data-voucher-dropzone>
+                <span class="voucher-dropzone-text"><strong>Arrastra el archivo</strong> o <span class="voucher-dropzone-link">búscalo</span></span>
+                <span class="voucher-dropzone-hint">PDF, Word o imagen · máx. 10 MB</span>
+                <span class="voucher-dropzone-filename" data-voucher-dropzone-filename></span>
+              </div>
+              <input class="d-none" type="file" name="adjunto_voucher"
+                     accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required data-voucher-dropzone-input>
+            </div>
+            <div>
+              <label class="form-label form-label-sm">Observación <span class="text-muted">(opcional)</span></label>
+              <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
+                        rows="3" placeholder="Detalle del uso de este voucher…"></textarea>
+            </div>
           </div>
-        </div>
-        <div class="voucher-form-footer">
-          <span class="voucher-nouse-status"></span>
-          <button type="submit" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-slash-circle me-1"></i>No lo utilicé
-          </button>
-        </div>
-      </form>
+          <div class="voucher-form-footer">
+            <span class="voucher-upload-status"></span>
+            <button type="submit" class="btn btn-success btn-sm">
+              <i class="bi bi-check2-circle me-1"></i>Confirmar voucher
+            </button>
+          </div>
+        </form>
+
+        <form class="voucher-no-utilizado-form mt-2 d-none"
+              data-voucher-form="no-utilizado" data-voucher-panel="no"
+              action="{{ url_for('planificador.planificador_voucher_no_utilizado_item', sid=s.id, item_id=item.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="voucher-form-fields">
+            <div>
+              <label class="form-label form-label-sm">¿Por qué no se utilizó? *</label>
+              <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
+                        rows="2" placeholder="Ej. Se canceló el viaje, no se necesitó…" required></textarea>
+            </div>
+          </div>
+          <div class="voucher-form-footer">
+            <span class="voucher-nouse-status"></span>
+            <button type="submit" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-slash-circle me-1"></i>Marcar como no utilizado
+            </button>
+          </div>
+        </form>
+      </div>
       {% endif %}
 
       {% if item.puede_liquidar %}
@@ -638,6 +671,22 @@
     </div>
   </div>
   {% endfor %}
+
+  {% if voucher_alguno_pendiente %}
+  <div class="voucher-footer-bar" data-voucher-footer data-total="{{ voucher_total }}" data-resueltos="{{ voucher_resueltos }}">
+    <span class="voucher-footer-text" data-voucher-footer-text>
+      {% if voucher_pendientes > 0 %}
+      Faltan {{ voucher_pendientes }} voucher{{ 's' if voucher_pendientes != 1 else '' }} por resolver.
+      {% else %}
+      Todos los vouchers fueron resueltos.
+      {% endif %}
+    </span>
+    <button type="button" class="btn btn-sm voucher-finalizar-btn" data-voucher-finalizar
+            {% if voucher_pendientes > 0 %}disabled{% endif %}>
+      Finalizar solicitud
+    </button>
+  </div>
+  {% endif %}
   </div>
 </div>
 {% endif %}

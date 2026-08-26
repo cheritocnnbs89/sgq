@@ -861,6 +861,160 @@ tr.pg-hidden { display:none; }
 .voucher-upload-status.ok        { color: #16a34a; font-weight:600; }
 .voucher-upload-status.err       { color: #dc2626; }
 
+/* ── Encabezado de la lista: título + subtítulo ── */
+.voucher-list-title {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.voucher-list-subtitle {
+  display: block;
+  font-size: .78rem;
+  font-weight: 400;
+  color: #6b7280;
+  margin-top: .1rem;
+}
+
+/* ── Barra de progreso "X de N resueltos" ── */
+.voucher-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .6rem .1rem .8rem;
+}
+.voucher-progress-track {
+  flex: 1;
+  height: .4rem;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+.voucher-progress-fill {
+  height: 100%;
+  background: #16a34a;
+  border-radius: 999px;
+  transition: width .3s ease;
+}
+.voucher-progress-label {
+  flex-shrink: 0;
+  font-size: .78rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+/* ── Banner "resolviendo en nombre del solicitante" ── */
+.voucher-coordinador-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #78350f;
+  border-radius: .5rem;
+  padding: .6rem .75rem;
+  font-size: .82rem;
+  margin-bottom: .7rem;
+}
+.voucher-coordinador-banner i { margin-top: .1rem; color: #d97706; }
+
+/* ── Pregunta Sí/No y toggles ── */
+.voucher-resolve-question {
+  font-size: .85rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: .4rem;
+}
+.voucher-toggle-group {
+  display: flex;
+  gap: .5rem;
+}
+.voucher-toggle-btn {
+  flex: 1;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  border-radius: .5rem;
+  padding: .45rem .6rem;
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .12s ease;
+}
+.voucher-toggle-btn:hover { border-color: #9ca3af; background: #f9fafb; }
+.voucher-toggle-btn--yes.voucher-toggle-btn--active {
+  border-color: #16a34a;
+  background: #f0fdf4;
+  color: #166534;
+}
+.voucher-toggle-btn--no.voucher-toggle-btn--active {
+  border-color: #6b7280;
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+/* ── Dropzone de respaldo (drag & drop) ── */
+.voucher-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: .15rem;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: .55rem;
+  background: #f9fafb;
+  padding: .8rem .6rem;
+  cursor: pointer;
+  transition: border-color .12s ease, background .12s ease;
+}
+.voucher-dropzone:hover,
+.voucher-dropzone--dragover {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+.voucher-dropzone-text { font-size: .8rem; color: #374151; }
+.voucher-dropzone-link { color: #2563eb; text-decoration: underline; }
+.voucher-dropzone-hint { font-size: .7rem; color: #9ca3af; }
+.voucher-dropzone-filename {
+  font-size: .76rem;
+  font-weight: 600;
+  color: #166534;
+  word-break: break-all;
+}
+
+/* ── Pie: "Faltan N por resolver" + Finalizar ── */
+.voucher-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  margin-top: .5rem;
+  padding: .6rem .75rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: .5rem;
+  font-size: .82rem;
+  color: #4b5563;
+}
+.voucher-finalizar-btn,
+.voucher-finalizar-btn:disabled {
+  /* Bootstrap fuerza background-color en .btn:disabled (misma especificidad);
+     se repite el selector con :disabled para igualarla y ganar por orden. */
+  background: #e5e7eb;
+  color: #9ca3af;
+  border: none;
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 1;
+}
+.voucher-finalizar-btn:not(:disabled) {
+  background: #16a34a;
+  color: #fff;
+  cursor: pointer;
+}
+.voucher-finalizar-btn:not(:disabled):hover { background: #15803d; }
+
 /* ── Calendario acordeón ── */
 .calendar-accordion-card { padding: 0; overflow: hidden; }
 

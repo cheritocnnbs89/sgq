@@ -292,6 +292,7 @@ def detalle(sid):
         aeropuerto_display=aeropuerto_display,
         costo_ticket_sugerido=costo_ticket_sugerido,
         voucher_items=voucher_items,
+        voucher_es_coordinador_view=(d.get("tipo") == "Voucher" and not _es_solicitante),
     )
 
 

@@ -1371,7 +1371,119 @@
   });
 
   // ── Voucher: confirmar sin salir de pantalla (AJAX) ──────────
+
+  // Refleja en la barra de progreso y el pie ("Faltan N por resolver")
+  // que un voucher más quedó resuelto (confirmado o no utilizado).
+  function _avanzarProgresoVouchers(container) {
+    var footer = container.querySelector('[data-voucher-footer]');
+    if (!footer) return;
+
+    var total = parseInt(footer.dataset.total || '0', 10);
+    var resueltos = parseInt(footer.dataset.resueltos || '0', 10) + 1;
+    footer.dataset.resueltos = String(resueltos);
+
+    var pendientes = total - resueltos;
+    var textEl = footer.querySelector('[data-voucher-footer-text]');
+    if (textEl) {
+      textEl.textContent = pendientes > 0
+        ? ('Faltan ' + pendientes + ' voucher' + (pendientes !== 1 ? 's' : '') + ' por resolver.')
+        : 'Todos los vouchers fueron resueltos.';
+    }
+
+    var btn = footer.querySelector('[data-voucher-finalizar]');
+    if (btn && pendientes <= 0) { btn.disabled = false; }
+
+    var fill = container.querySelector('[data-voucher-progress-fill]');
+    if (fill && total > 0) { fill.style.width = Math.round((resueltos / total) * 100) + '%'; }
+
+    var label = container.querySelector('[data-voucher-progress-label]');
+    if (label) { label.textContent = resueltos + ' de ' + total + ' resueltos'; }
+  }
+
+  // Toggle "¿Se utilizó este voucher?" -> Sí / No revela el formulario correspondiente
+  function _setupVoucherToggle(container) {
+    container.querySelectorAll('[data-voucher-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var resolveBox = btn.closest('[data-voucher-resolve]');
+        if (!resolveBox) return;
+
+        var eleccion = btn.dataset.voucherToggle; // 'si' | 'no'
+
+        resolveBox.querySelectorAll('[data-voucher-toggle]').forEach(function (b) {
+          b.classList.toggle('voucher-toggle-btn--active', b === btn);
+        });
+
+        resolveBox.querySelectorAll('[data-voucher-panel]').forEach(function (panel) {
+          panel.classList.toggle('d-none', panel.dataset.voucherPanel !== eleccion);
+        });
+      });
+    });
+  }
+
+  // Dropzone de "Respaldo": clic o arrastrar-soltar un archivo
+  function _setupVoucherDropzone(container) {
+    container.querySelectorAll('[data-voucher-dropzone]').forEach(function (zone) {
+      var input = zone.parentElement.querySelector('[data-voucher-dropzone-input]');
+      var nameEl = zone.querySelector('[data-voucher-dropzone-filename]');
+      if (!input) return;
+
+      function mostrarArchivo() {
+        if (nameEl) {
+          nameEl.textContent = input.files && input.files.length ? input.files[0].name : '';
+        }
+      }
+
+      zone.addEventListener('click', function () { input.click(); });
+      input.addEventListener('change', mostrarArchivo);
+
+      ['dragenter', 'dragover'].forEach(function (evt) {
+        zone.addEventListener(evt, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.add('voucher-dropzone--dragover');
+        });
+      });
+
+      ['dragleave', 'dragend'].forEach(function (evt) {
+        zone.addEventListener(evt, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.remove('voucher-dropzone--dragover');
+        });
+      });
+
+      zone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        zone.classList.remove('voucher-dropzone--dragover');
+
+        var archivos = e.dataTransfer && e.dataTransfer.files;
+        if (archivos && archivos.length) {
+          input.files = archivos;
+          mostrarArchivo();
+        }
+      });
+    });
+  }
+
+  // Botón "Finalizar solicitud": solo queda habilitado cuando ya no
+  // faltan vouchers por resolver; recarga para reflejar el nuevo estado
+  // de la solicitud de inmediato (si no, la propia acción del último
+  // voucher ya dispara la recarga automática un poco después).
+  function _setupVoucherFinalizar(container) {
+    container.querySelectorAll('[data-voucher-finalizar]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (btn.disabled) return;
+        location.reload();
+      });
+    });
+  }
+
   function _setupVoucherAjax(container) {
+    _setupVoucherToggle(container);
+    _setupVoucherDropzone(container);
+    _setupVoucherFinalizar(container);
+
     container.querySelectorAll('form[data-voucher-form="confirmar"]').forEach(function (form) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -1415,11 +1527,12 @@
             if (vv) vv.textContent = data.adjunto_nombre || '';
           }
 
-          // Quitar ambos formularios (confirmar y no-utilizado) y mostrar mensaje inline
+          // Quitar la pregunta Sí/No y ambos formularios; ya no hay nada que resolver en este item
           if (statusEl) { statusEl.className = 'voucher-upload-status ok'; statusEl.textContent = '¡Confirmado!'; }
-          var noUseForm = card.querySelector('form[data-voucher-form="no-utilizado"]');
-          if (noUseForm) noUseForm.remove();
-          setTimeout(function () { form.remove(); }, 1200);
+          var resolveBox = form.closest('[data-voucher-resolve]');
+          setTimeout(function () { if (resolveBox) resolveBox.remove(); }, 1200);
+
+          _avanzarProgresoVouchers(container);
 
           // Si con este ya quedaron todos los vouchers de la solicitud
           // resueltos, el backend movió el estado de la solicitud a
@@ -1475,9 +1588,10 @@
           card.classList.add('voucher-item--no-utilizado');
 
           if (statusEl) { statusEl.className = 'voucher-upload-status ok'; statusEl.textContent = 'Marcado como no utilizado.'; }
-          var confirmarForm = card.querySelector('form[data-voucher-form="confirmar"]');
-          if (confirmarForm) confirmarForm.remove();
-          setTimeout(function () { form.remove(); }, 1200);
+          var resolveBox = form.closest('[data-voucher-resolve]');
+          setTimeout(function () { if (resolveBox) resolveBox.remove(); }, 1200);
+
+          _avanzarProgresoVouchers(container);
 
           // Igual que en "confirmar": si esto dejó todos los vouchers
           // resueltos, el estado de la solicitud avanzó en el backend
