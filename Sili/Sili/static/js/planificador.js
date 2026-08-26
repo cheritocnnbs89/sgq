@@ -333,6 +333,7 @@
   function _setupDetalleBody(container) {
     _setupVoucherAjax(container);
     _setupCotizarVuelo(container);
+    _setupAprobarGGVuelo(container);
     /* min=hoy en inputs con data-min-today (evita inline script) */
     container.querySelectorAll('[data-min-today]').forEach(function (el) {
       el.min = el.dataset.minToday;
@@ -1528,6 +1529,75 @@
         obsField.focus();
       });
     }
+  }
+
+  // ── Vuelo: decisión del Gerente General (aprobar $monto / rechazar) ──
+  function _setupAprobarGGVuelo(container) {
+    var group = container.querySelector('[data-gg-decision-group]');
+    if (!group) return;
+
+    var sid = group.dataset.sid;
+    var submitBtn = container.querySelector('[data-gg-submit]');
+    var hintEl    = container.querySelector('[data-gg-hint]');
+    var obsHintEl = container.querySelector('[data-gg-obs-hint]');
+    var obsTextarea = document.getElementById('obsGGVuelo' + sid);
+    var obsAprobHidden = document.getElementById('obsGGAprobVuelo' + sid);
+    var obsRechHidden  = document.getElementById('obsGGRechVuelo' + sid);
+
+    var decision = 'aprobar';
+
+    function _aplicarDecision() {
+      var btns = group.querySelectorAll('[data-gg-decision]');
+      btns.forEach(function (b) {
+        b.classList.toggle('voucher-toggle-btn--active', b.dataset.ggDecision === decision);
+      });
+
+      if (decision === 'rechazar') {
+        submitBtn.setAttribute('form', 'formGGRechazarVuelo' + sid);
+        submitBtn.classList.remove('btn-success');
+        submitBtn.classList.add('btn-danger');
+        submitBtn.innerHTML = '<i class="bi bi-x-lg me-1"></i>Confirmar rechazo';
+        if (obsHintEl) obsHintEl.textContent = '(obligatorio)';
+        if (hintEl) hintEl.textContent = 'Se notificará al coordinador para que vuelva a cotizar.';
+        submitBtn.disabled = !(obsTextarea && obsTextarea.value.trim());
+      } else {
+        submitBtn.setAttribute('form', 'formGGAprobarVuelo' + sid);
+        submitBtn.classList.remove('btn-danger');
+        submitBtn.classList.add('btn-success');
+        submitBtn.innerHTML = '<i class="bi bi-check2 me-1"></i>Confirmar aprobación';
+        if (obsHintEl) obsHintEl.textContent = '(opcional)';
+        if (hintEl) hintEl.textContent = 'Se emitirán los vouchers del vuelo.';
+        submitBtn.disabled = false;
+      }
+    }
+
+    group.querySelectorAll('[data-gg-decision]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        decision = btn.dataset.ggDecision;
+        _aplicarDecision();
+      });
+    });
+
+    if (obsTextarea) {
+      obsTextarea.addEventListener('input', function () {
+        if (decision === 'rechazar') {
+          submitBtn.disabled = !obsTextarea.value.trim();
+        }
+      });
+    }
+
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function () {
+        var valor = obsTextarea ? obsTextarea.value : '';
+        if (decision === 'rechazar') {
+          if (obsRechHidden) obsRechHidden.value = valor;
+        } else {
+          if (obsAprobHidden) obsAprobHidden.value = valor;
+        }
+      });
+    }
+
+    _aplicarDecision();
   }
 
   function _setupVoucherAjax(container) {

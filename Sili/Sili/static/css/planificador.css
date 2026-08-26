@@ -1239,3 +1239,38 @@ tr.pg-hidden { display:none; }
   color: #6b7280;
   margin-bottom: .3rem;
 }
+
+/* ── Vuelo: pantalla de aprobación del Gerente General ── */
+.gg-monto-box {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .8rem;
+  background: #eef2ff;
+  border-radius: .65rem;
+  padding: .75rem .9rem;
+  margin-bottom: .5rem;
+}
+.gg-monto-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+  margin-top: .1rem;
+}
+.gg-desglose-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  padding: .4rem 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: .85rem;
+}
+.gg-desglose-row span { color: #6b7280; }
+.gg-desglose-row--bar { align-items: flex-start; }
+.gg-desglose-row--bar .presup-mini-bar { justify-content: flex-end; }
+.gg-desglose-detalle {
+  font-size: .78rem;
+  color: #9ca3af;
+  margin: -.25rem 0 .3rem;
+}

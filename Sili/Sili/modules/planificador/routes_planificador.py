@@ -24,6 +24,7 @@ from .planificador_constants import (
     ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR,
     ESTADOS_CONFIRMACION_VOUCHER, ESTADOS_ATENDIDAS,
     MOTIVO_VUELO_OTROS, ROLES_CANDIDATOS_AUTOAPROBAR_VUELO,
+    SEMAFORO_AMARILLO_PCT,
 )
 from flask import Response
 
@@ -277,11 +278,32 @@ def detalle(sid):
                 item["puede_confirmar"] and s.get("solicitante_id") != u["id"]
             )
 
-    # Presupuesto anual del CC del solicitante (Ticket aéreo), solo para la
-    # pantalla donde el coordinador cotiza el vuelo — es lo que le da
-    # contexto para decidir si conviene aprobar o no.
+    # Presupuesto anual del CC del solicitante (Ticket aéreo), para las
+    # pantallas de cotización (coordinador) y aprobación (Gerente General)
+    # de Vuelo — les da contexto para decidir si conviene aprobar o no.
     presupuesto_cc = None
-    if d.get("puede_cotizar_vuelo"):
+    monto_gg = None
+    pasaje_gg = None
+    hospedaje_gg = None
+    datos_ticket_detalle = None
+    fecha_cotizacion_fmt = None
+
+    if d.get("puede_aprobar_gg_vuelo") and d.get("datos_ticket"):
+        import re
+        ticket_txt = str(d["datos_ticket"])
+        m = re.search(r"\d+(?:[.,]\d+)?", ticket_txt)
+        pasaje_gg = float(m.group(0).replace(",", ".")) if m else 0.0
+        hospedaje_gg = float(d.get("cotizacion_hospedaje") or 0)
+        monto_gg = round(pasaje_gg + hospedaje_gg, 2)
+        # "Pasaje aéreo" en el desglose ya muestra el monto limpio; el texto
+        # libre completo (aerolínea, detalle del vuelo) solo se repite si
+        # de verdad trae algo más que el número — evita mostrar "$12.00"
+        # dos veces cuando el coordinador solo tecleó el monto.
+        resto = re.sub(r"[\d.,\s$]", "", ticket_txt)
+        if resto:
+            datos_ticket_detalle = ticket_txt
+
+    if d.get("puede_cotizar_vuelo") or d.get("puede_aprobar_gg_vuelo"):
         cc_info = repo.get_cc_usuario(s["solicitante_id"])
         if cc_info:
             anio_vuelo = s["fecha"].year if s.get("fecha") else date.today().year
@@ -289,7 +311,30 @@ def detalle(sid):
                 cc_info["empresa_id"], cc_info["cc_id"], "Ticket aéreo", anio_vuelo
             )
             if saldo["presupuestado"] > 0:
-                presupuesto_cc = saldo
+                if monto_gg is not None:
+                    # Vista GG: proyecta el presupuesto como quedaría tras
+                    # aprobar este monto (no el saldo actual, sin este vuelo).
+                    ejec_proy = saldo["ejecutado"] + monto_gg
+                    pct_proy = round(ejec_proy / saldo["presupuestado"] * 100, 1)
+                    semaforo_proy = ("rojo" if pct_proy >= 100
+                                     else ("amarillo" if pct_proy >= SEMAFORO_AMARILLO_PCT else "verde"))
+                    presupuesto_cc = {
+                        "presupuestado": saldo["presupuestado"], "ejecutado": ejec_proy,
+                        "pct": pct_proy, "semaforo": semaforo_proy,
+                    }
+                else:
+                    presupuesto_cc = saldo
+
+    if d.get("puede_aprobar_gg_vuelo") and d.get("fecha_actualizacion"):
+        try:
+            _MESES_ABR = ["ene", "feb", "mar", "abr", "may", "jun",
+                          "jul", "ago", "sep", "oct", "nov", "dic"]
+            _f = d["fecha_actualizacion"]
+            if isinstance(_f, str):
+                _f = datetime.strptime(_f[:16], "%Y-%m-%d %H:%M")
+            fecha_cotizacion_fmt = f"{_f.day} {_MESES_ABR[_f.month - 1]} {_f.year}, {_f.strftime('%H:%M')}"
+        except Exception:
+            fecha_cotizacion_fmt = None
 
     return render_template(
         "planificador/_detalle_modal_body.html",
@@ -308,6 +353,11 @@ def detalle(sid):
         voucher_items=voucher_items,
         voucher_es_coordinador_view=(d.get("tipo") == "Voucher" and not _es_solicitante),
         presupuesto_cc=presupuesto_cc,
+        monto_gg=monto_gg,
+        pasaje_gg=pasaje_gg,
+        hospedaje_gg=hospedaje_gg,
+        datos_ticket_detalle=datos_ticket_detalle,
+        fecha_cotizacion_fmt=fecha_cotizacion_fmt,
     )
 
 
