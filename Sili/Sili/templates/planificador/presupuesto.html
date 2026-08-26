@@ -253,29 +253,15 @@
               <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-limpiar-meses">Limpiar</button>
             </div>
           </div>
-          <div class="table-responsive">
-            <table class="table table-sm table-bordered mb-0 presupuesto-table">
-              <thead class="table-light">
-                <tr>
-                  {% for mn in meses_nombres %}
-                  <th class="text-center small">{{ mn }}</th>
-                  {% endfor %}
-                  <th class="text-center small">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {% for m in range(1, 13) %}
-                  <td>
-                    <input type="number" class="form-control form-control-sm text-end presup-input"
-                           name="mes_{{ m }}" id="modal-mes-{{ m }}"
-                           min="0" step="0.01" value="0">
-                  </td>
-                  {% endfor %}
-                  <td class="text-end fw-bold align-middle presup-total small">$0.00</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="presup-modal-grid">
+            {% for mn in meses_nombres %}
+            <div>
+              <label class="form-label form-label-sm text-muted mb-1" for="modal-mes-{{ loop.index }}">{{ mn|upper }}</label>
+              <input type="number" class="form-control form-control-sm text-end presup-input"
+                     name="mes_{{ loop.index }}" id="modal-mes-{{ loop.index }}"
+                     min="0" step="0.01" value="0">
+            </div>
+            {% endfor %}
           </div>
           <div class="d-flex align-items-center justify-content-between gap-3 mt-3 pt-2 presup-modal-summary">
             <div class="small text-muted">

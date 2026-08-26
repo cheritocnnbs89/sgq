@@ -89,15 +89,17 @@
     gap: 7px;
 }
 .presup-avance-track {
-    flex: 1;
+    flex: none;
+    width: 64px;
     height: 5px;
     border-radius: 20px;
     background: #f1f2f5;
     overflow: hidden;
-    min-width: 44px;
 }
 .presup-avance-fill {
+    display: block;
     height: 100%;
+    max-width: 100%;
     border-radius: 20px;
     transition: width .2s ease;
 }
@@ -150,6 +152,16 @@
 
 /* ── Botón "Ocultar meses en cero" activo ── */
 .presup-toggle-activo { background: #eff4ff; border-color: #1d4ed8 !important; color: #1d4ed8 !important; }
+
+/* ── Modal: cuadrícula de meses (4 columnas x 3 filas) ── */
+.presup-modal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 11px;
+}
+@media (max-width: 560px) {
+    .presup-modal-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* ── Modal: acciones rápidas + resumen ── */
 .presup-quick-btn {

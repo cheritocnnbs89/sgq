@@ -56,7 +56,7 @@ document.addEventListener('click', function (e) {
   modal.show();
 });
 
-// ── Recalcular total del modal (celda de la tabla + resumen + hint) ──
+// ── Recalcular total del modal (resumen + hint) ────────────────
 function _recalcularTotalModal() {
   var modal = document.getElementById('modalEditarCC');
   if (!modal) return;
@@ -66,8 +66,6 @@ function _recalcularTotalModal() {
   });
 
   var totalTxt = '$' + total.toFixed(2);
-  var totalCell = modal.querySelector('.presup-total');
-  if (totalCell) totalCell.textContent = totalTxt;
   var totalAnualEl = document.getElementById('modal-total-anual');
   if (totalAnualEl) totalAnualEl.textContent = totalTxt;
 
