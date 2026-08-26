@@ -414,6 +414,16 @@
                             data-open-detalle="{{ r.id }}" title="Ver detalle">
                       <i class="bi bi-eye"></i>
                     </button>
+                    {% if r.puede_aprobar_jefe_voucher %}
+                    <form method="post"
+                          action="{{ url_for('planificador.planificador_voucher_aprobar_jefe', sid=r.id) }}"
+                          class="d-inline" data-confirm="¿Aprobar este voucher de {{ r.solicitante_nombre }}?">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="btn btn-sm btn-outline-success" title="Aprobar voucher">
+                        <i class="bi bi-check2-circle"></i> Aprobar
+                      </button>
+                    </form>
+                    {% endif %}
                     {% if r.puede_coordinar %}
                     <button type="button" class="btn btn-sm btn-outline-warning"
                             data-open-coordinar="1" data-sid="{{ r.id }}"
