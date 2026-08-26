@@ -62,9 +62,13 @@ ESTADOS_POR_COMPLETAR = (
     "COORDINADA",
     "PENDIENTE_LIQUIDACION",
     "PENDIENTE_ENTREGA_VOUCHER",
-    "PENDIENTE_CONFIRMACION_VOUCHER",
     "PENDIENTE_LIQUIDACION_VOUCHER",
 )
+# Aparte de "Por completar": vouchers esperando que el usuario confirme/marque
+# como no utilizado. Se separa en su propia pestaña (solo coordinador) porque
+# mezclado con los demás estados de "Por completar" era carga visual y no es
+# accionable por el coordinador (depende del usuario).
+ESTADOS_CONFIRMACION_VOUCHER = ("PENDIENTE_CONFIRMACION_VOUCHER",)
 ESTADOS_ATENDIDAS     = ("COMPLETADA", "RECHAZADA")
 
 # Roles de sistema considerados gerentes (para aprobación gerencial)

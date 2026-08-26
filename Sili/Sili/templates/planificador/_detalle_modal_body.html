@@ -563,6 +563,11 @@
       {% endif %}
 
       {% if item.puede_confirmar %}
+      {% if item.accion_por_coordinador %}
+      <div class="small text-muted mb-1">
+        <i class="bi bi-person-badge me-1"></i>Estás confirmando este voucher en nombre del solicitante.
+      </div>
+      {% endif %}
       <form class="voucher-confirmar-form mt-2"
             data-voucher-form="confirmar"
             action="{{ url_for('planificador.planificador_voucher_confirmar_item', sid=s.id, item_id=item.id) }}"

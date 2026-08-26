@@ -7,7 +7,8 @@ from . import planificador_repository as repo
 from .planificador_constants import (
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
     ROLES_ADMIN, ROLES_GERENTE, ESTADOS,
-    ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR, ESTADOS_ATENDIDAS,
+    ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR,
+    ESTADOS_CONFIRMACION_VOUCHER, ESTADOS_ATENDIDAS,
 )
 
 
@@ -229,7 +230,10 @@ def puede_entregar_voucher(solicitud, usuario_id, ctx):
 
 
 def puede_confirmar_voucher_item(solicitud, item, usuario_id, ctx):
-    """El propio solicitante confirma UN voucher (adjunto + observación) tras la entrega."""
+    """Confirma UN voucher (adjunto + observación) tras la entrega, o lo marca
+    como no utilizado. Normalmente lo hace el propio solicitante; el
+    coordinador de ese tipo también puede hacerlo en su nombre (p. ej. si el
+    usuario no está disponible), para poder cerrar la solicitud igual."""
     if solicitud.get("tipo") != "Voucher":
         return False
     if solicitud.get("estado") != "PENDIENTE_CONFIRMACION_VOUCHER":
@@ -237,7 +241,8 @@ def puede_confirmar_voucher_item(solicitud, item, usuario_id, ctx):
     if item.get("confirmado_usuario"):
         return False
     es_solicitante = solicitud.get("solicitante_id") == usuario_id
-    return ctx["es_admin"] or es_solicitante
+    es_coordinador = solicitud.get("tipo") in ctx["tipos_coordinador"]
+    return ctx["es_admin"] or es_solicitante or es_coordinador
 
 
 def puede_liquidar_voucher_item(solicitud, item, usuario_id, ctx):
@@ -319,11 +324,12 @@ def agrupar_por_seccion(rows):
             return False
         return True
 
-    reservadas     = [r for r in rows if _va_en_reservadas(r)]
-    coordinadas    = [r for r in rows if r.get("estado") in ESTADOS_COORDINADAS]
-    por_completar  = [r for r in rows if r.get("estado") in ESTADOS_POR_COMPLETAR]
-    atendidas      = [r for r in rows if r.get("estado") in ESTADOS_ATENDIDAS]
-    return reservadas, coordinadas, por_completar, atendidas
+    reservadas          = [r for r in rows if _va_en_reservadas(r)]
+    coordinadas         = [r for r in rows if r.get("estado") in ESTADOS_COORDINADAS]
+    por_completar       = [r for r in rows if r.get("estado") in ESTADOS_POR_COMPLETAR]
+    confirmacion_voucher = [r for r in rows if r.get("estado") in ESTADOS_CONFIRMACION_VOUCHER]
+    atendidas           = [r for r in rows if r.get("estado") in ESTADOS_ATENDIDAS]
+    return reservadas, coordinadas, por_completar, confirmacion_voucher, atendidas
 
 
 def puede_ver_detalle_completo(ctx):

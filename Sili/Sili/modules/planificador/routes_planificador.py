@@ -21,7 +21,8 @@ from .planificador_constants import (
     ACTIVE_KEY, PERM_SOLICITUDES, PERM_CONFIG, PERM_PRESUPUESTO, PERM_INDICADORES,
     ESTADOS, PRIORIDADES,
     ROL_COORDINADOR, ROL_APROBADOR, ROL_MOTORIZADO, ROL_GERENTE_PRESUPUESTO,
-    ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR, ESTADOS_ATENDIDAS,
+    ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR,
+    ESTADOS_CONFIRMACION_VOUCHER, ESTADOS_ATENDIDAS,
     MOTIVO_VUELO_OTROS, ROLES_CANDIDATOS_AUTOAPROBAR_VUELO,
 )
 from flask import Response
@@ -89,10 +90,12 @@ def solicitudes():
         rows.append(d)
 
     # Dividir en secciones
-    reservadas, coordinadas, por_completar, atendidas = svc.agrupar_por_seccion(rows)
+    reservadas, coordinadas, por_completar, confirmacion_voucher, atendidas = svc.agrupar_por_seccion(rows)
     current_app.logger.info(
-        "[PLANIF] secciones reservadas=%d coordinadas=%d por_completar=%d atendidas=%d",
-        len(reservadas), len(coordinadas), len(por_completar), len(atendidas),
+        "[PLANIF] secciones reservadas=%d coordinadas=%d por_completar=%d "
+        "confirmacion_voucher=%d atendidas=%d",
+        len(reservadas), len(coordinadas), len(por_completar),
+        len(confirmacion_voucher), len(atendidas),
     )
     current_app.logger.info(
         "[PLANIF] coordinadas detalle=%s",
@@ -149,6 +152,7 @@ def solicitudes():
         reservadas=reservadas,
         coordinadas=coordinadas,
         por_completar=por_completar,
+        confirmacion_voucher=confirmacion_voucher,
         atendidas=atendidas,
         por_aprobar=por_aprobar,
         filters=filters,
@@ -266,6 +270,12 @@ def detalle(sid):
         for item in voucher_items:
             item["puede_confirmar"] = svc.puede_confirmar_voucher_item(s, item, u["id"], ctx)
             item["puede_liquidar"]  = svc.puede_liquidar_voucher_item(s, item, u["id"], ctx)
+            # El coordinador puede confirmar/marcar-no-utilizado en nombre del
+            # usuario (p. ej. si no está disponible); si el que está viendo
+            # el formulario no es el propio solicitante, se lo dejamos claro.
+            item["accion_por_coordinador"] = (
+                item["puede_confirmar"] and s.get("solicitante_id") != u["id"]
+            )
 
     return render_template(
         "planificador/_detalle_modal_body.html",

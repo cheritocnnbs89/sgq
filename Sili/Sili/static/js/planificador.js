@@ -1420,6 +1420,16 @@
           var noUseForm = card.querySelector('form[data-voucher-form="no-utilizado"]');
           if (noUseForm) noUseForm.remove();
           setTimeout(function () { form.remove(); }, 1200);
+
+          // Si con este ya quedaron todos los vouchers de la solicitud
+          // resueltos, el backend movió el estado de la solicitud a
+          // "Pend. liquidación (coordinador)". El badge de estado (arriba
+          // del modal y en la fila de la tabla) quedaría desactualizado
+          // hasta un refresh manual, así que recargamos para reflejarlo.
+          if (data.todos_confirmados) {
+            if (statusEl) { statusEl.textContent = '¡Confirmado! Actualizando…'; }
+            setTimeout(function () { location.reload(); }, 1400);
+          }
         })
         .catch(function (err) {
           if (statusEl) { statusEl.className = 'voucher-upload-status err'; statusEl.textContent = err.message || 'Error al subir'; }
@@ -1468,6 +1478,18 @@
           var confirmarForm = card.querySelector('form[data-voucher-form="confirmar"]');
           if (confirmarForm) confirmarForm.remove();
           setTimeout(function () { form.remove(); }, 1200);
+
+          // Igual que en "confirmar": si esto dejó todos los vouchers
+          // resueltos, el estado de la solicitud avanzó en el backend
+          // (a liquidación pendiente, o directo a Completada si ninguno
+          // requería costo) y hay que recargar para que el badge de
+          // estado no se quede mostrando "Pend. confirmación (usuario)".
+          if (data.todos_confirmados) {
+            if (statusEl) { statusEl.textContent = data.completada
+              ? 'Listo, la solicitud quedó completada. Actualizando…'
+              : 'Marcado como no utilizado. Actualizando…'; }
+            setTimeout(function () { location.reload(); }, 1400);
+          }
         })
         .catch(function (err) {
           if (statusEl) { statusEl.className = 'voucher-upload-status err'; statusEl.textContent = err.message || 'Error'; }
