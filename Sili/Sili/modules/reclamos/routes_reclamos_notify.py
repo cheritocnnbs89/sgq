@@ -12,6 +12,22 @@ from flask import current_app, url_for
 from .routes_reclamos_querys import *
 from .routes_reclamos_constants import *
 
+# URL pública fija del sistema, usada para armar los links de los correos
+# de notificación. Antes cada función intentaba con
+# url_for("reclamos", _external=True), que arma el host a partir de la
+# request activa en ese momento (p. ej. "localhost:5000" si quien disparó
+# la acción entró así) — no es la URL pública real. Se deja fijo el host
+# y solo se resuelve la ruta con url_for para no hardcodear "/reclamos".
+BASE_URL = "http://bitacoraquimpac.com.ec:5000"
+
+
+def _reclamos_link(tab: str) -> str:
+    try:
+        path = url_for("reclamos")
+    except Exception:
+        path = "/reclamos"
+    return f"{BASE_URL}{path}?tab={tab}"
+
 
 def _notify_sponsor_respuesta_equipo(conn, imputacion_id: int, miembro_id: int, reclamo_codigo: str):
     from modules.routes_reclamos import _send_mail_safe
@@ -60,10 +76,7 @@ def _notify_sponsor_respuesta_equipo(conn, imputacion_id: int, miembro_id: int, 
     if not sponsor_rows:
         return
 
-    try:
-        link_sponsor = url_for("reclamos", _external=True) + "?tab=imputado"
-    except Exception:
-        link_sponsor = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=imputado"
+    link_sponsor = _reclamos_link("imputado")
 
     subject = f"[Oportunidad de Mejora] Respuesta registrada por miembro de equipo en {reclamo_codigo}"
 
@@ -322,10 +335,7 @@ def _notify_colaborador_asignado(
             imputados = row["lista"]
 
     # Link directo a tab "Soy Sponsor"
-    try:
-        link_sponsor = url_for("reclamos", _external=True) + "?tab=sponsor"
-    except Exception:
-        link_sponsor = "https://tu-sistema/reclamos?tab=sponsor"
+    link_sponsor = _reclamos_link("sponsor")
 
     nombre = (u["nombre_completo"] or "").strip() if "nombre_completo" in u.keys() else ""
     if not nombre:
@@ -518,10 +528,7 @@ def _notify_colaborador_aporte_rechazado(conn, colaborador_id: int, reclamo_codi
 
     r = cur.fetchone()
 
-    try:
-        link_sistema = url_for("reclamos", _external=True) + "?tab=sponsor"
-    except Exception:
-        link_sistema = "https://tu-sistema/reclamos?tab=sponsor"
+    link_sistema = _reclamos_link("sponsor")
 
     subject = f"[Oportunidad de Mejora] Aporte de equipo rechazado {reclamo_codigo}"
 
@@ -718,10 +725,7 @@ def _notify_aprobador_imputacion(conn, aprobador_id, reclamo_codigo, imputado_us
             imputados = row["lista"]
 
     # Link directo al tab "Por aprobar (Jefe)"
-    try:
-        link_aprobar = url_for("reclamos", _external=True) + "?tab=aprobar"
-    except Exception:
-        link_aprobar = "https://tu-sistema/reclamos?tab=aprobar"
+    link_aprobar = _reclamos_link("aprobar")
 
     nombre = (
         jefe['nombre_completo']
@@ -862,10 +866,7 @@ def _notify_imputado_aprobado(conn, imputado_id, reclamo_codigo):
     r = cur.fetchone()
 
     # Link directo al tab "Soy responsable"
-    try:
-        link_responder = url_for("reclamos", _external=True) + "?tab=imputado"
-    except Exception:
-        link_responder = "https://tu-sistema/reclamos?tab=imputado"
+    link_responder = _reclamos_link("imputado")
 
     nombre = (
         u['nombre_completo']
@@ -1010,10 +1011,7 @@ def _notify_jefe_respuesta_listo(conn, aprobador_id, reclamo_codigo, imputado_us
             imputados = row["lista"]
 
     # Link directo al tab "Por aprobar (Jefe)" para validar la respuesta técnica
-    try:
-        link_validar = url_for("reclamos", _external=True) + "?tab=aprobar"
-    except Exception:
-        link_validar = "https://tu-sistema/reclamos?tab=aprobar"
+    link_validar = _reclamos_link("aprobar")
 
     nombre = (
         jefe['nombre_completo']
@@ -1170,10 +1168,7 @@ def _notify_imputado_respuesta_rechazada(conn, imputado_id, reclamo_codigo, moti
 
     r = cur.fetchone()
 
-    try:
-        link_responder = url_for("reclamos", _external=True) + "?tab=imputado"
-    except Exception:
-        link_responder = "https://tu-sistema/reclamos?tab=imputado"
+    link_responder = _reclamos_link("imputado")
 
     motivo_txt = (motivo or "Sin detalle").strip()
 
@@ -1376,10 +1371,7 @@ def _notify_creador_respuesta_aprobada(conn, creador_id, reclamo_codigo, imputad
     r = cur.fetchone()
 
     # Link directo a "Mis reclamos"
-    try:
-        link_mis_reclamos = url_for("reclamos", _external=True) + "?tab=mios"
-    except Exception:
-        link_mis_reclamos = "https://tu-sistema/reclamos?tab=mios"
+    link_mis_reclamos = _reclamos_link("mios")
 
     nombre = (
         c['nombre_completo']
@@ -1544,10 +1536,7 @@ def _notify_creador_rechazo_validacion(conn, reclamo_id: int, reclamo_codigo: st
     cur.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (reclamo_codigo,))
     r = cur.fetchone()
 
-    try:
-        link = url_for("reclamos", _external=True) + "?tab=imputado"
-    except Exception:
-        link = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=imputado"
+    link = _reclamos_link("imputado")
 
     subject = f"[Oportunidad de Mejora] Respuesta rechazada por el creador — {reclamo_codigo}"
 

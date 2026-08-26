@@ -311,8 +311,9 @@ def _can_view_all_reclamos_sn_sponsor(conn, uid: int | None) -> bool:
     """
     Regla para la pestaña "Soy Sponsor":
     - Si el rol es 'gerente', NO ve todo
-    - Admin-like sí ve todo, excepto gerente
+    - Admin-like (admin, coordinador) sí ve todo, excepto gerente
     - Gerente financiero sí ve todo
+    - Jefe sí ve todo (no solo las OM donde él es el sponsor asignado)
     - Servicio al Cliente sí ve todo
     """
     role = (session.get("rol") or "").strip().lower()
@@ -323,7 +324,7 @@ def _can_view_all_reclamos_sn_sponsor(conn, uid: int | None) -> bool:
     if _is_admin_like():
         return True
 
-    if role == "gerente financiero":
+    if role in ("gerente financiero", "jefe"):
         return True
 
     if not uid:
