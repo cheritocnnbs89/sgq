@@ -601,7 +601,8 @@
               action="{{ url_for('planificador.planificador_voucher_confirmar_item', sid=s.id, item_id=item.id) }}"
               enctype="multipart/form-data">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <div class="voucher-form-fields">
+          <input type="hidden" name="observacion" value="">
+          <div class="voucher-form-fields voucher-form-fields--single">
             <div>
               <label class="form-label form-label-sm">Respaldo *</label>
               <div class="voucher-dropzone" data-voucher-dropzone>
@@ -611,11 +612,6 @@
               </div>
               <input class="d-none" type="file" name="adjunto_voucher"
                      accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required data-voucher-dropzone-input>
-            </div>
-            <div>
-              <label class="form-label form-label-sm">Observación <span class="text-muted">(opcional)</span></label>
-              <textarea class="form-control form-control-sm textarea-obs-sm" name="observacion"
-                        rows="3" placeholder="Detalle del uso de este voucher…"></textarea>
             </div>
           </div>
           <div class="voucher-form-footer">
