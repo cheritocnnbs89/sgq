@@ -325,9 +325,60 @@
       if (body) {
         body.innerHTML = html;
         _setupDetalleBody(body);
+        _actualizarHeaderDetalle(body);
       }
     })
     .catch(function () { if (body) body.innerHTML = '<div class="text-danger p-3">Error al cargar el detalle.</div>'; });
+  }
+
+  // Título del modal "Detalle de solicitud": algunas pantallas (por ahora,
+  // cotización/aprobación GG de Vuelo) piden un título propio + pastilla de
+  // estado + subtítulo. El resto conserva el título genérico de siempre.
+  // Se reconstruye el DOM con textContent (nunca innerHTML) porque el nombre
+  // del solicitante/área viene de datos de usuario, no de texto propio.
+  function _actualizarHeaderDetalle(body) {
+    var wrap = document.querySelector('#modalDetalle .sgq-modal-title-wrap');
+    if (!wrap) return;
+
+    var info = null;
+    var dataEl = body.querySelector('[data-detalle-header]');
+    if (dataEl) {
+      try { info = JSON.parse(dataEl.textContent); } catch (e) { info = null; }
+    }
+
+    wrap.innerHTML = '';
+
+    if (!info) {
+      var h2Default = document.createElement('h2');
+      h2Default.className = 'sgq-modal-title';
+      h2Default.textContent = 'Detalle de solicitud';
+      wrap.appendChild(h2Default);
+      return;
+    }
+
+    var titleRow = document.createElement('div');
+    titleRow.className = 'd-flex align-items-center gap-2 flex-wrap';
+
+    var h2 = document.createElement('h2');
+    h2.className = 'sgq-modal-title mb-0';
+    h2.textContent = info.titulo || 'Detalle de solicitud';
+    titleRow.appendChild(h2);
+
+    if (info.pill) {
+      var pill = document.createElement('span');
+      pill.className = 'badge ' + (info.pillClass || 'bg-secondary');
+      pill.textContent = info.pill;
+      titleRow.appendChild(pill);
+    }
+
+    wrap.appendChild(titleRow);
+
+    if (info.subtitulo) {
+      var sub = document.createElement('div');
+      sub.className = 'small text-muted mt-1';
+      sub.textContent = info.subtitulo;
+      wrap.appendChild(sub);
+    }
   }
 
   function _setupDetalleBody(container) {

@@ -1,4 +1,18 @@
 {# Partial cargado vía AJAX – sin inline scripts ni style= #}
+
+{# ── Cabecera enriquecida del modal (título + pastilla de estado + subtítulo) ──
+   Solo para las pantallas de Vuelo donde así se pidió; el resto de tipos/estados
+   sigue mostrando el título genérico "Detalle de solicitud" del modal. #}
+{% if s.puede_cotizar_vuelo or s.puede_aprobar_gg_vuelo %}
+{% set _detalle_header = {
+  "titulo": "Solicitud de vuelo",
+  "pill": s.estado_label,
+  "pillClass": s.estado_class,
+  "subtitulo": "#" ~ s.id ~ " · " ~ s.solicitante_nombre ~ " · " ~ s.area_solicitante,
+} %}
+<script type="application/json" data-detalle-header>{{ _detalle_header | tojson }}</script>
+{% endif %}
+
 {# ── Voucher: resumen compacto para la pantalla de aprobación del jefe ── #}
 {% if s.puede_aprobar_jefe_voucher %}
 <div class="aprob-voucher-header">
@@ -84,8 +98,10 @@
     </div>
   </div>
   {% endif %}
+  {% if not s.puede_aprobar_gg_vuelo %}
   <div class="detail-box"><span>Tipo de solicitud</span><strong>{{ s.tipo }}</strong></div>
   <div class="detail-box"><span>Área solicitante</span><strong>{{ s.area_solicitante }}</strong></div>
+  {% endif %}
   {% if s.tipo != 'Voucher' and s.tipo != 'Vuelo' %}
   <div class="detail-box"><span>Prioridad</span>
     <strong>
@@ -95,14 +111,22 @@
     </strong>
   </div>
   {% endif %}
-  {% if not s.puede_completar_vuelo and s.tipo != 'Voucher' %}
+  {% if not s.puede_completar_vuelo and s.tipo != 'Voucher' and not s.puede_aprobar_gg_vuelo %}
   <div class="detail-box"><span>Estado</span>
     <strong><span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span></strong>
   </div>
   {% endif %}
+  {% if s.puede_aprobar_gg_vuelo %}
+  <div class="detail-box detail-full">
+    <span>Fechas del viaje</span>
+    <strong>{{ s.fecha_str }} → {{ s.get('fecha_retorno') or 'Sin definir' }}</strong>
+    <span class="text-muted ms-1 fw-normal">salida · regreso</span>
+  </div>
+  {% else %}
   <div class="detail-box"><span>{{ 'Fecha de salida' if s.tipo == 'Vuelo' else 'Fecha' }}</span><strong>{{ s.fecha_str }}</strong></div>
   {% if s.tipo == 'Vuelo' %}
   <div class="detail-box"><span>Fecha de regreso</span><strong>{{ s.get('fecha_retorno') or '—' }}</strong></div>
+  {% endif %}
   {% endif %}
   {% if s.tipo != 'Voucher' and s.tipo != 'Vuelo' %}
   <div class="detail-box"><span>Horario asignado</span>
@@ -127,12 +151,14 @@
     </a>
   </div>
   {% endif %}
+  {% if not s.puede_aprobar_gg_vuelo %}
   <div class="detail-box"><span>Solicitante</span><strong>{{ s.solicitante_nombre }}</strong></div>
   {% if s.coordinador_nombre %}
   <div class="detail-box"><span>Coordinado por</span><strong>{{ s.coordinador_nombre }}</strong></div>
   {% endif %}
   {% if s.aprobador_nombre %}
   <div class="detail-box"><span>Aprobado/Rechazado por</span><strong>{{ s.aprobador_nombre }}</strong></div>
+  {% endif %}
   {% endif %}
   <div class="detail-box detail-full"><span>Descripción</span><strong>{{ s.descripcion }}</strong></div>
   {% if s.presupuesto_base_cero is not none and s.presupuesto_base_cero != '' %}
@@ -169,10 +195,10 @@
   {% if s.detalle_direccion and s.tipo != 'Voucher' %}
   <div class="detail-box detail-full"><span>Detalle de dirección</span><strong>{{ s.detalle_direccion }}</strong></div>
   {% endif %}
-  {% if s.observacion_coordinador %}
+  {% if s.observacion_coordinador and not s.puede_aprobar_gg_vuelo %}
   <div class="detail-box detail-full"><span>Observación del coordinador</span><strong>{{ s.observacion_coordinador }}</strong></div>
   {% endif %}
-  {% if s.observacion_aprobador %}
+  {% if s.observacion_aprobador and not s.puede_aprobar_gg_vuelo %}
   <div class="detail-box detail-full"><span>Observación del aprobador</span><strong>{{ s.observacion_aprobador }}</strong></div>
   {% endif %}
 </div>
@@ -968,7 +994,7 @@
 </div>
 {% endif %}
 
-{% if s.puede_reagendar %}
+{% if s.puede_reagendar and not s.puede_aprobar_gg_vuelo %}
 {% if s.puede_cotizar_vuelo %}
 <div class="otras-acciones-label mt-3">OTRAS ACCIONES</div>
 <button type="button" class="detail-accordion-toggle collapsed" data-bs-toggle="collapse"
