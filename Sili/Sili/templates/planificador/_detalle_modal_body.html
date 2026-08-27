@@ -3,7 +3,7 @@
 {# ── Cabecera enriquecida del modal (título + pastilla de estado + subtítulo) ──
    Solo para las pantallas de Vuelo donde así se pidió; el resto de tipos/estados
    sigue mostrando el título genérico "Detalle de solicitud" del modal. #}
-{% if s.puede_cotizar_vuelo or s.puede_aprobar_gg_vuelo or s.puede_completar_vuelo %}
+{% if s.puede_cotizar_vuelo or s.puede_aprobar_gg_vuelo or s.puede_completar_vuelo or s.puede_marcar_realizado_vuelo %}
 {% set _detalle_header = {
   "titulo": "Solicitud de vuelo",
   "pill": s.estado_label,
