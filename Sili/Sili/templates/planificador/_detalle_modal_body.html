@@ -119,7 +119,12 @@
   </div>
 </div>
 
-<div class="otras-acciones-label mt-3">Solicitud</div>
+<button type="button" class="detail-accordion-toggle collapsed mt-3" data-bs-toggle="collapse"
+        data-bs-target="#solicitudInfoBox{{ s.id }}" aria-expanded="false" aria-controls="solicitudInfoBox{{ s.id }}">
+  <span class="detail-accordion-label">Solicitud</span>
+  <span class="cal-expand-hint">Ver <i class="bi bi-chevron-down detail-accordion-chevron"></i></span>
+</button>
+<div class="collapse" id="solicitudInfoBox{{ s.id }}">
 <div class="detail-grid mb-2">
   <div class="detail-box"><span>Motivo</span><strong>{{ s.motivo_vuelo or '—' }}</strong></div>
   <div class="detail-box"><span>Descripción</span><strong>{{ s.descripcion or '—' }}</strong></div>
@@ -131,6 +136,7 @@
       {% if fecha_aprobacion_jefe_fmt %}<span class="text-muted fw-normal">· {{ fecha_aprobacion_jefe_fmt }}</span>{% endif %}
     </strong>
   </div>
+</div>
 </div>
 
 {% if monto_gg is not none %}
@@ -1263,7 +1269,6 @@
 </div>
 {% endif %}
 
-{% if s.puede_marcar_realizado_vuelo %}<div class="detalle-attach-row">{% endif %}
 {# ── Adjuntos ── #}
 <div class="mt-4">
   <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
@@ -1342,7 +1347,6 @@
   </div>
 </div>
 {% endif %}
-{% if s.puede_marcar_realizado_vuelo %}</div>{% endif %}
 
 {% if s.puede_marcar_realizado_vuelo and not s.get('fecha_retorno') %}
 <p class="text-muted small mt-2 mb-0">Sin fecha de regreso registrada.</p>

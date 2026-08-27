@@ -1356,10 +1356,7 @@ tr.pg-hidden { display:none; }
 .itinerario-linea-track { width: 100%; height: 1px; background: var(--line); }
 .itinerario-linea-fecha { font-size: .8rem; font-weight: 600; color: #111827; }
 
-.detalle-attach-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; align-items: start; }
-.detalle-attach-row > div { margin-top: 0 !important; }
 @media (max-width: 600px) {
   .itinerario-box { flex-direction: column; align-items: stretch; text-align: center; }
   .itinerario-vuelo { align-items: center; text-align: center; }
-  .detalle-attach-row { grid-template-columns: 1fr; }
 }
