@@ -1274,3 +1274,23 @@ tr.pg-hidden { display:none; }
   color: #9ca3af;
   margin: -.25rem 0 .3rem;
 }
+
+/* ── Vuelo: pantalla "Registrar gestión del vuelo" ── */
+.completar-info-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
+@media (max-width: 600px) { .completar-info-strip { grid-template-columns: 1fr; } }
+
+.otra-accion-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  border-radius: .55rem;
+  padding: .6rem .75rem;
+  margin-top: .5rem;
+  cursor: pointer;
+}
+.otra-accion-row strong { font-size: .85rem; }
+.otra-accion-row .small { opacity: .85; }
+.otra-accion-row--amber { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+.otra-accion-row--red   { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+.otra-accion-toggle-link { font-size: .78rem; font-weight: 600; white-space: nowrap; }

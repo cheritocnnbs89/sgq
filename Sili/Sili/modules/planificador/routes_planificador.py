@@ -288,7 +288,7 @@ def detalle(sid):
     datos_ticket_detalle = None
     fecha_cotizacion_fmt = None
 
-    if d.get("puede_aprobar_gg_vuelo") and d.get("datos_ticket"):
+    if (d.get("puede_aprobar_gg_vuelo") or d.get("puede_completar_vuelo")) and d.get("datos_ticket"):
         import re
         ticket_txt = str(d["datos_ticket"])
         m = re.search(r"\d+(?:[.,]\d+)?", ticket_txt)
@@ -1451,17 +1451,31 @@ def vuelo_completar(sid):
     hora_fin    = request.form.get("hora_fin", "").strip() or None
     aeropuerto  = request.form.get("aeropuerto", "").strip()
 
-    partes = []
-    if aeropuerto:
-        partes.append(f"Aeropuerto: {aeropuerto}")
-    obs_base = request.form.get("observacion_coordinador", "").strip()
-    if obs_base:
-        partes.append(obs_base)
+    aerolinea = request.form.get("aerolinea", "").strip()
+    if aerolinea == "__otra__":
+        aerolinea = request.form.get("aerolinea_otra", "").strip()
+    num_reserva = request.form.get("num_reserva", "").strip()
+    num_vuelo   = request.form.get("num_vuelo", "").strip()
+    obs_extra   = request.form.get("observacion_coordinador", "").strip()
+
+    if not (aerolinea and aeropuerto and num_reserva and num_vuelo):
+        flash("Debe ingresar aerolínea, aeropuerto de destino, N° de reserva y N° de vuelo.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    # No se agregan columnas nuevas: se sigue guardando todo en el mismo
+    # campo de texto libre (observacion_coordinador / datos de gestión),
+    # solo que ahora se arma a partir de campos separados en el formulario
+    # en vez de un único textarea.
+    partes = [
+        f"Aerolínea: {aerolinea}",
+        f"Aeropuerto: {aeropuerto}",
+        f"N° de reserva: {num_reserva}",
+        f"N° de vuelo: {num_vuelo}",
+    ]
+    if obs_extra:
+        partes.append(obs_extra)
     obs = "\n".join(partes)
 
-    if not obs_base and not aeropuerto:
-        flash("Debe ingresar la información de la reservación.", "warning")
-        return redirect(url_for("planificador.planificador_solicitudes"))
     repo.completar_vuelo(sid, u["id"], u["nombre"], obs, hora_inicio, hora_fin)
 
     # Guardar adjunto del ticket/boleto si se subió

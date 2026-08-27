@@ -385,6 +385,7 @@
     _setupVoucherAjax(container);
     _setupCotizarVuelo(container);
     _setupAprobarGGVuelo(container);
+    _setupCompletarVuelo(container);
     /* min=hoy en inputs con data-min-today (evita inline script) */
     container.querySelectorAll('[data-min-today]').forEach(function (el) {
       el.min = el.dataset.minToday;
@@ -1649,6 +1650,35 @@
     }
 
     _aplicarDecision();
+  }
+
+  // ── Vuelo: registrar gestión (aerolínea "Otra" plegable, obs. plegable) ──
+  function _setupCompletarVuelo(container) {
+    var form = container.querySelector('[data-completar-vuelo-form]');
+    if (!form) return;
+
+    var aerolineaSel  = form.querySelector('[data-completar-aerolinea]');
+    var aerolineaOtra = form.querySelector('[data-completar-aerolinea-otra]');
+    if (aerolineaSel && aerolineaOtra) {
+      var _toggleOtra = function () {
+        var esOtra = aerolineaSel.value === '__otra__';
+        aerolineaOtra.classList.toggle('d-none', !esOtra);
+        aerolineaOtra.required = esOtra;
+        if (!esOtra) aerolineaOtra.value = '';
+      };
+      aerolineaSel.addEventListener('change', _toggleOtra);
+      _toggleOtra();
+    }
+
+    var obsToggle = form.querySelector('[data-completar-obs-toggle]');
+    var obsField  = form.querySelector('[data-completar-obs]');
+    if (obsToggle && obsField) {
+      obsToggle.addEventListener('click', function () {
+        obsField.classList.remove('d-none');
+        obsToggle.classList.add('d-none');
+        obsField.focus();
+      });
+    }
   }
 
   function _setupVoucherAjax(container) {
