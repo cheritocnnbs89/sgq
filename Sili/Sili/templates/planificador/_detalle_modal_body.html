@@ -401,9 +401,6 @@
 </div>
 
 <div class="action-zone action-zone-blue mt-3">
-  <h3 class="mb-0">Tu decisión como Gerente General</h3>
-  <p class="small text-muted mb-2">Última aprobación del flujo. Revisa el monto cotizado antes de decidir.</p>
-
   <div class="voucher-toggle-group" data-gg-decision-group data-sid="{{ s.id }}">
     <button type="button" class="voucher-toggle-btn voucher-toggle-btn--yes voucher-toggle-btn--active" data-gg-decision="aprobar">
       Aprobar {{ '$' + '%.2f'|format(monto_gg) if monto_gg is not none else '' }}
