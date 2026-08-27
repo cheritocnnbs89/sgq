@@ -3,7 +3,17 @@
 {# ── Cabecera enriquecida del modal (título + pastilla de estado + subtítulo) ──
    Solo para las pantallas de Vuelo donde así se pidió; el resto de tipos/estados
    sigue mostrando el título genérico "Detalle de solicitud" del modal. #}
-{% if s.puede_cotizar_vuelo or s.puede_aprobar_gg_vuelo or s.puede_completar_vuelo or s.puede_marcar_realizado_vuelo %}
+{% if s.puede_marcar_realizado_vuelo %}
+{% set _detalle_header = {
+  "titulo": s.tipo ~ " #" ~ s.id,
+  "pill": s.estado_label,
+  "pillClass": "sgq-status-pill--green",
+  "pillDot": true,
+  "subtitulo": s.solicitante_nombre ~ " · " ~ s.area_solicitante ~
+    (" · solicitado el " ~ fecha_solicitud_fmt if fecha_solicitud_fmt else ""),
+} %}
+<script type="application/json" data-detalle-header>{{ _detalle_header | tojson }}</script>
+{% elif s.puede_cotizar_vuelo or s.puede_aprobar_gg_vuelo or s.puede_completar_vuelo %}
 {% set _detalle_header = {
   "titulo": "Solicitud de vuelo",
   "pill": s.estado_label,
@@ -75,12 +85,71 @@
 </div>
 {% endif %}
 
+{# ── Vuelo: "Confirma que realizaste el viaje" (estado COORDINADA) ──
+   Reemplaza por completo el bloque "Información general" en esta pantalla:
+   banner de confirmación + itinerario + datos de la solicitud + costos. #}
+{% if s.puede_marcar_realizado_vuelo %}
+<div class="confirmar-vuelo-banner">
+  <div>
+    <strong>Confirma que realizaste el viaje</strong>
+    <div class="small">Al confirmar, el coordinador registra los costos y cierra la solicitud.</div>
+  </div>
+  <form method="post" action="{{ url_for('planificador.planificador_vuelo_marcar_realizado', sid=s.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-success btn-sm">
+      <i class="bi bi-check2-circle me-1"></i>Realicé el vuelo
+    </button>
+  </form>
+</div>
+
+<div class="otras-acciones-label mt-3">Itinerario</div>
+<div class="itinerario-box">
+  <div class="itinerario-aeropuerto">
+    <strong>{{ aeropuerto_display or '—' }}</strong>
+    {% if aeropuerto_ciudad %}<span class="text-muted">{{ aeropuerto_ciudad }}</span>{% endif %}
+  </div>
+  <div class="itinerario-linea">
+    <span class="itinerario-linea-label">{{ 'ida y vuelta' if s.get('fecha_retorno') else 'solo ida' }}</span>
+    <span class="itinerario-linea-track"></span>
+    <span class="itinerario-linea-fecha">{{ itinerario_fecha_fmt or s.fecha_str }}</span>
+  </div>
+  <div class="itinerario-vuelo">
+    <strong>{{ itin_aerolinea or '—' }}{{ ' ' ~ itin_vuelo if itin_vuelo else '' }}</strong>
+    {% if itin_reserva %}<span class="text-muted">Reserva {{ itin_reserva }}</span>{% endif %}
+  </div>
+</div>
+
+<div class="otras-acciones-label mt-3">Solicitud</div>
+<div class="detail-grid mb-2">
+  <div class="detail-box"><span>Motivo</span><strong>{{ s.motivo_vuelo or '—' }}</strong></div>
+  <div class="detail-box"><span>Descripción</span><strong>{{ s.descripcion or '—' }}</strong></div>
+  <div class="detail-box"><span>Coordinado por</span><strong>{{ s.coordinador_nombre or '—' }}</strong></div>
+  <div class="detail-box">
+    <span>Aprobado por</span>
+    <strong>
+      {{ s.aprobador_nombre or '—' }}
+      {% if fecha_aprobacion_jefe_fmt %}<span class="text-muted fw-normal">· {{ fecha_aprobacion_jefe_fmt }}</span>{% endif %}
+    </strong>
+  </div>
+</div>
+
+{% if monto_gg is not none %}
+<div class="otras-acciones-label mt-3">Costos cotizados</div>
+<div class="completar-info-strip mb-2">
+  <div class="detail-box"><span>Pasaje</span><strong>${{ '%.2f'|format(pasaje_gg) if pasaje_gg is not none else '0.00' }}</strong></div>
+  <div class="detail-box"><span>Hospedaje</span><strong>${{ '%.2f'|format(hospedaje_gg) if hospedaje_gg is not none else '0.00' }}</strong></div>
+  <div class="detail-box"><span>Total</span><strong>${{ '%.2f'|format(monto_gg) }}</strong></div>
+</div>
+{% endif %}
+{% endif %}
+
 {# Para la pantalla de aprobación del jefe de Voucher, el resumen de arriba ya cubre esta información.
    Para la aprobación GG de Vuelo, "Detalle del viaje" se arma aparte más abajo, como acordeón
    pegado debajo de "Ver desglose" (mismo estilo, sin ícono ni pastilla).
    Para "Registrar gestión del vuelo", se reemplaza entera por la franja compacta de arriba
-   (fecha del vuelo / monto aprobado / motivo). #}
-{% if not s.puede_aprobar_jefe_voucher and not s.puede_entregar_voucher and not s.puede_aprobar_gg_vuelo and not s.puede_completar_vuelo %}
+   (fecha del vuelo / monto aprobado / motivo). Para "Confirma que realizaste el viaje"
+   (COORDINADA), se reemplaza por el itinerario + datos de la solicitud + costos de arriba. #}
+{% if not s.puede_aprobar_jefe_voucher and not s.puede_entregar_voucher and not s.puede_aprobar_gg_vuelo and not s.puede_completar_vuelo and not s.puede_marcar_realizado_vuelo %}
 {% set _auto_expand_info = s.puede_cotizar_vuelo %}
 <button type="button" class="detail-accordion-toggle {{ 'collapsed' if not _auto_expand_info }}" data-bs-toggle="collapse"
         data-bs-target="#detalleInfoBox{{ s.id }}" aria-expanded="{{ 'true' if _auto_expand_info else 'false' }}"
@@ -596,24 +665,8 @@
 </div>
 {% endif %}
 
-{# ── Vuelo: solicitante confirma que realizó el vuelo ── #}
-{% if s.puede_marcar_realizado_vuelo %}
-<div class="action-zone action-zone-green mt-3">
-  <h3><i class="bi bi-airplane-fill me-1"></i>Confirmar vuelo realizado</h3>
-  <p class="small text-muted mb-2">
-    El vuelo está coordinado. Cuando hayas realizado el viaje, confirma aquí para que
-    el coordinador pueda registrar los costos y completar la solicitud.
-  </p>
-  <form method="post" action="{{ url_for('planificador.planificador_vuelo_marcar_realizado', sid=s.id) }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <div class="d-flex justify-content-end">
-      <button type="submit" class="btn btn-success btn-sm">
-        <i class="bi bi-check2-circle me-1"></i>Realicé el vuelo
-      </button>
-    </div>
-  </form>
-</div>
-{% endif %}
+{# Vuelo: solicitante confirma que realizó el vuelo — el banner y el botón
+   "Realicé el vuelo" ya se muestran arriba, junto al itinerario. #}
 
 {# ── Vuelo: liquidar costos reales ── #}
 {% if s.puede_liquidar_vuelo %}
@@ -1210,6 +1263,7 @@
 </div>
 {% endif %}
 
+{% if s.puede_marcar_realizado_vuelo %}<div class="detalle-attach-row">{% endif %}
 {# ── Adjuntos ── #}
 <div class="mt-4">
   <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
@@ -1287,4 +1341,9 @@
     </div>
   </div>
 </div>
+{% endif %}
+{% if s.puede_marcar_realizado_vuelo %}</div>{% endif %}
+
+{% if s.puede_marcar_realizado_vuelo and not s.get('fecha_retorno') %}
+<p class="text-muted small mt-2 mb-0">Sin fecha de regreso registrada.</p>
 {% endif %}

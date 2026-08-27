@@ -1294,3 +1294,72 @@ tr.pg-hidden { display:none; }
 .otra-accion-row--amber { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
 .otra-accion-row--red   { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
 .otra-accion-toggle-link { font-size: .78rem; font-weight: 600; white-space: nowrap; }
+
+/* ── Vuelo: pastilla de estado con punto, usada en la cabecera enriquecida ── */
+.sgq-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .15rem .6rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+.sgq-status-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sgq-status-pill--green { background: #dcfce7; color: #15803d; }
+.sgq-status-pill--amber { background: #fef3c7; color: #b45309; }
+.sgq-status-pill--blue  { background: #dbeafe; color: #1d4ed8; }
+.sgq-status-pill--red   { background: #fee2e2; color: #b91c1c; }
+.sgq-status-pill--gray  { background: #f1f5f9; color: #475569; }
+
+/* ── Vuelo: pantalla "Confirma que realizaste el viaje" (COORDINADA) ── */
+.confirmar-vuelo-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: .65rem;
+  padding: .75rem .9rem;
+  margin-top: .5rem;
+}
+.confirmar-vuelo-banner strong { color: #166534; }
+.confirmar-vuelo-banner .small { color: #166534; opacity: .85; }
+
+.itinerario-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  background: #f9fafb;
+  border: 1px solid var(--line);
+  border-radius: .65rem;
+  padding: .8rem .9rem;
+}
+.itinerario-aeropuerto, .itinerario-vuelo { display: flex; flex-direction: column; gap: .1rem; }
+.itinerario-aeropuerto strong, .itinerario-vuelo strong { font-size: 1.1rem; }
+.itinerario-aeropuerto span, .itinerario-vuelo span { font-size: .78rem; color: var(--muted); }
+.itinerario-vuelo { align-items: flex-end; text-align: right; }
+.itinerario-linea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+  min-width: 0;
+  padding: 0 .5rem;
+}
+.itinerario-linea-label { font-size: .72rem; color: var(--muted); }
+.itinerario-linea-track { width: 100%; height: 1px; background: var(--line); }
+.itinerario-linea-fecha { font-size: .8rem; font-weight: 600; color: #111827; }
+
+.detalle-attach-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; align-items: start; }
+.detalle-attach-row > div { margin-top: 0 !important; }
+@media (max-width: 600px) {
+  .itinerario-box { flex-direction: column; align-items: stretch; text-align: center; }
+  .itinerario-vuelo { align-items: center; text-align: center; }
+  .detalle-attach-row { grid-template-columns: 1fr; }
+}

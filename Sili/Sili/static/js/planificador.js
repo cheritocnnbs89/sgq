@@ -366,7 +366,9 @@
 
     if (info.pill) {
       var pill = document.createElement('span');
-      pill.className = 'badge ' + (info.pillClass || 'bg-secondary');
+      pill.className = info.pillDot
+        ? ('sgq-status-pill ' + (info.pillClass || 'sgq-status-pill--gray'))
+        : ('badge ' + (info.pillClass || 'bg-secondary'));
       pill.textContent = info.pill;
       titleRow.appendChild(pill);
     }

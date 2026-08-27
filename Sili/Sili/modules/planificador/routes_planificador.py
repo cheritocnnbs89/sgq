@@ -28,6 +28,44 @@ from .planificador_constants import (
 )
 from flask import Response
 
+# Código IATA → ciudad, para mostrar en el itinerario de la pantalla
+# "Confirma que realizaste el viaje" (mismos códigos del <select> de
+# "Registrar gestión del vuelo").
+AEROPUERTOS_CIUDAD = {
+    "UIO": "Quito", "GYE": "Guayaquil", "CUE": "Cuenca", "MEC": "Manta",
+    "LTX": "Latacunga", "GPS": "Galápagos",
+    "BOG": "Bogotá", "LIM": "Lima", "GRU": "São Paulo", "GIG": "Río de Janeiro",
+    "EZE": "Buenos Aires", "SCL": "Santiago", "MVD": "Montevideo",
+    "ASU": "Asunción", "LPB": "La Paz", "VVI": "Santa Cruz", "CCS": "Caracas",
+    "CUZ": "Cusco",
+    "PTY": "Panamá", "MEX": "Ciudad de México", "MIA": "Miami",
+    "JFK": "Nueva York", "LAX": "Los Ángeles", "ORD": "Chicago",
+    "MAD": "Madrid", "CDG": "París", "LHR": "Londres", "FRA": "Frankfurt",
+    "AMS": "Ámsterdam", "FCO": "Roma",
+}
+
+_MESES_ABR = ["ene", "feb", "mar", "abr", "may", "jun",
+              "jul", "ago", "sep", "oct", "nov", "dic"]
+_DIAS_ABR = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"]
+
+
+def _fmt_fecha_corta(dt, con_dia=False):
+    """'12 ago 2026' o, con con_dia=True, 'mié 26 ago 2026'."""
+    if isinstance(dt, str):
+        try:
+            dt = datetime.strptime(dt[:19], "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            try:
+                dt = datetime.strptime(dt[:10], "%Y-%m-%d")
+            except ValueError:
+                return None
+    if not dt:
+        return None
+    texto = f"{dt.day} {_MESES_ABR[dt.month - 1]} {dt.year}"
+    if con_dia:
+        texto = f"{_DIAS_ABR[dt.weekday()]} {texto}"
+    return texto
+
 planificador_bp = Blueprint("planificador", __name__, url_prefix="/planificador")
 
 
@@ -265,6 +303,34 @@ def detalle(sid):
         if m:
             aeropuerto_display = m.group(1)
 
+    # Itinerario (aerolínea / N° de reserva / N° de vuelo / ciudad del
+    # aeropuerto / fechas formateadas), solo para la pantalla del
+    # solicitante "Confirma que realizaste el viaje" (estado COORDINADA).
+    aeropuerto_ciudad = None
+    itin_aerolinea = None
+    itin_reserva = None
+    itin_vuelo = None
+    fecha_solicitud_fmt = None
+    itinerario_fecha_fmt = None
+    fecha_aprobacion_jefe_fmt = None
+    if d.get("puede_marcar_realizado_vuelo"):
+        aeropuerto_ciudad = AEROPUERTOS_CIUDAD.get(aeropuerto_display)
+        if d.get("observacion_coordinador"):
+            import re
+            obs_txt = str(d["observacion_coordinador"])
+            m_a = re.search(r"Aerolínea:\s*(.+)", obs_txt)
+            m_r = re.search(r"N[°º]\s*de reserva:\s*(.+)", obs_txt)
+            m_v = re.search(r"N[°º]\s*de vuelo:\s*(.+)", obs_txt)
+            itin_aerolinea = m_a.group(1).strip() if m_a else None
+            itin_reserva   = m_r.group(1).strip() if m_r else None
+            itin_vuelo     = m_v.group(1).strip() if m_v else None
+        fecha_solicitud_fmt = _fmt_fecha_corta(d.get("fecha_creacion"))
+        itinerario_fecha_fmt = _fmt_fecha_corta(d.get("fecha"), con_dia=True)
+        for log in (logs or []):
+            if log[0] == "APROBADA_JEFE":
+                fecha_aprobacion_jefe_fmt = _fmt_fecha_corta(log[3])
+                break
+
     voucher_items = []
     if d.get("tipo") == "Voucher":
         voucher_items = repo.get_voucher_items(sid)
@@ -288,7 +354,8 @@ def detalle(sid):
     datos_ticket_detalle = None
     fecha_cotizacion_fmt = None
 
-    if (d.get("puede_aprobar_gg_vuelo") or d.get("puede_completar_vuelo")) and d.get("datos_ticket"):
+    if (d.get("puede_aprobar_gg_vuelo") or d.get("puede_completar_vuelo")
+            or d.get("puede_marcar_realizado_vuelo")) and d.get("datos_ticket"):
         import re
         ticket_txt = str(d["datos_ticket"])
         m = re.search(r"\d+(?:[.,]\d+)?", ticket_txt)
@@ -358,6 +425,13 @@ def detalle(sid):
         hospedaje_gg=hospedaje_gg,
         datos_ticket_detalle=datos_ticket_detalle,
         fecha_cotizacion_fmt=fecha_cotizacion_fmt,
+        aeropuerto_ciudad=aeropuerto_ciudad,
+        itin_aerolinea=itin_aerolinea,
+        itin_reserva=itin_reserva,
+        itin_vuelo=itin_vuelo,
+        fecha_solicitud_fmt=fecha_solicitud_fmt,
+        itinerario_fecha_fmt=itinerario_fecha_fmt,
+        fecha_aprobacion_jefe_fmt=fecha_aprobacion_jefe_fmt,
     )
 
 
