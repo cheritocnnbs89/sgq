@@ -121,6 +121,7 @@ def solicitudes():
         d["puede_cotizar_vuelo"]      = svc.puede_cotizar_vuelo(s, u["id"], ctx)
         d["puede_aprobar_gg_vuelo"]   = svc.puede_aprobar_gg_vuelo(s, u["id"], ctx)
         d["puede_completar_vuelo"]    = svc.puede_completar_vuelo(s, u["id"], ctx)
+        d["puede_marcar_realizado_vuelo"] = svc.puede_marcar_realizado_vuelo(s, u["id"], ctx)
         d["puede_aprobar_jefe_voucher"] = svc.puede_aprobar_jefe_voucher(s, u["id"], ctx)
         d["puede_entregar_voucher"]     = svc.puede_entregar_voucher(s, u["id"], ctx)
         d["estado_label"]    = svc.estado_label(s["estado"])
