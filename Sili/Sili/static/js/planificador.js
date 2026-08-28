@@ -181,6 +181,18 @@
     });
   }
 
+  /* Expande el campo Descripción/Observación (plegado por defecto) y,
+     opcionalmente, le da foco (cuando el usuario hace clic en "Agregar"). */
+  function _expandirDescripcion(conFoco) {
+    var btn   = document.getElementById('btnToggleDescripcion');
+    var campo = document.getElementById('campoDescripcion');
+    if (btn) btn.classList.add('d-none');
+    if (campo) {
+      campo.classList.remove('d-none');
+      if (conFoco) campo.focus();
+    }
+  }
+
   function resetModalNueva() {
     var tipoInput = document.getElementById('tipoSolicitudInput');
     if (tipoInput) tipoInput.value = '';
@@ -195,6 +207,11 @@
     toggleCampoVoucher('');
     setFechaQuick('hoy');
     setPrioridad('Normal');
+    var campoDesc = document.getElementById('campoDescripcion');
+    if (campoDesc) campoDesc.value = '';
+    var btnDesc = document.getElementById('btnToggleDescripcion');
+    if (btnDesc) btnDesc.classList.remove('d-none');
+    if (campoDesc) campoDesc.classList.add('d-none');
   }
 
   /* ── Nueva solicitud con fecha prellenada ── */
@@ -1059,6 +1076,16 @@
     var noticeVuelo  = document.getElementById('recNoticeVuelo');
     if (noticeNormal) noticeNormal.classList.toggle('d-none', esVuelo);
     if (noticeVuelo)  noticeVuelo.classList.toggle('d-none', !esVuelo);
+
+    // Para Vuelo se ocultan secciones completas que quedan vacías o
+    // redundantes: "Fecha y prioridad" (la fecha del vuelo ya se pide
+    // dentro de "Datos del recorrido") y "Confirmación" (el flujo de
+    // aprobación se explica en la pantalla de detalle, no hace falta
+    // repetirlo al crear la solicitud).
+    var fechaPrioridadSection = document.getElementById('fechaPrioridadSectionDiv');
+    var confirmacionSection   = document.getElementById('confirmacionSectionDiv');
+    if (fechaPrioridadSection) fechaPrioridadSection.classList.toggle('d-none', esVuelo);
+    if (confirmacionSection)   confirmacionSection.classList.toggle('d-none', esVuelo);
   }
 
   /* ── Campos exclusivos de tipo Voucher (taxi) ── */
@@ -1136,6 +1163,14 @@
     var captionGenerico  = document.getElementById('recCaptionGenerico');
     if (noticeBox)       noticeBox.classList.toggle('d-none', esGenerico);
     if (captionGenerico) captionGenerico.classList.toggle('d-none', !esGenerico);
+
+    // La sección "Confirmación" completa se oculta para Voucher (igual que
+    // para Vuelo, ver toggleCampoVuelo): el flujo de aprobación se explica
+    // en la pantalla de detalle, no hace falta repetirlo al crear.
+    if (tipoActual !== TIPO_VUELO) {
+      var confirmacionSection = document.getElementById('confirmacionSectionDiv');
+      if (confirmacionSection) confirmacionSection.classList.toggle('d-none', esVoucher);
+    }
   }
 
   function actualizarPlaceholderObservacionPorMotivo() {
@@ -1301,6 +1336,14 @@
       });
     }
 
+    /* Descripción / Observación: plegada por defecto, se expande con "Agregar" */
+    var btnToggleDescripcion = document.getElementById('btnToggleDescripcion');
+    if (btnToggleDescripcion) {
+      btnToggleDescripcion.addEventListener('click', function () {
+        _expandirDescripcion(true);
+      });
+    }
+
     /* Motivo de vuelo: pista visual cuando se elige "Otros" */
     var selectMotivoVuelo = document.getElementById('campoMotivoVuelo');
     if (selectMotivoVuelo) {
@@ -1342,7 +1385,18 @@
           e.preventDefault();
           return;
         }
-        if (!validarFechasVuelo()) e.preventDefault();
+        if (!validarFechasVuelo()) { e.preventDefault(); return; }
+        // La Descripción/Observación es obligatoria pero empieza plegada:
+        // un campo oculto (d-none) no se valida solo con el submit nativo
+        // del navegador, así que si sigue vacío hay que expandirlo y
+        // bloquear el envío en vez de dejarlo pasar en blanco.
+        var campoDesc = document.getElementById('campoDescripcion');
+        if (campoDesc && campoDesc.classList.contains('d-none') && !campoDesc.value.trim()) {
+          e.preventDefault();
+          _expandirDescripcion(true);
+          campoDesc.reportValidity();
+          return;
+        }
       });
     }
 

@@ -576,7 +576,7 @@
 
         <div id="camposSolicitudBody" class="d-none">
 
-        <div class="modal-section">
+        <div class="modal-section" id="fechaPrioridadSectionDiv">
         <div class="modal-section-title">Fecha y prioridad</div>
         <div class="form-grid">
           {% if ctx.es_admin %}
@@ -766,12 +766,15 @@
 
         <div class="modal-section">
         <div class="modal-section-title">Descripción</div>
-        <label class="form-label" id="lblDescripcion">Descripción de la actividad *</label>
-        <textarea class="form-control textarea-desc" name="descripcion" id="campoDescripcion" required
+        <div class="cotizar-obs-toggle" id="descripcionToggleWrap">
+          <label class="form-label mb-0" id="lblDescripcion">Descripción de la actividad *</label>
+          <button type="button" class="btn btn-link btn-sm p-0" id="btnToggleDescripcion">Agregar</button>
+        </div>
+        <textarea class="form-control textarea-desc d-none" name="descripcion" id="campoDescripcion" required
                   placeholder="Detalle qué debe entregar, recibir o gestionar."></textarea>
         </div>{# /modal-section 4 #}
 
-        <div class="modal-section">
+        <div class="modal-section" id="confirmacionSectionDiv">
         <div class="modal-section-title">Confirmación</div>
         <div class="rec-notice" id="recNoticeInfo">
           <div class="rec-notice-header"><i class="bi bi-info-circle-fill"></i>Importante</div>
