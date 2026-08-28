@@ -179,42 +179,70 @@
 
         {# Macro tabla interna #}
         {% macro tabla_tab(section_rows, empty_msg, mostrar_area_solicitante=true) %}
+        {% set _tone_map = {'bg-warning text-dark': 'amber', 'bg-success': 'green', 'bg-danger': 'red',
+                             'bg-info text-dark': 'blue', 'bg-primary': 'blue', 'bg-dark': 'gray', 'bg-secondary': 'gray'} %}
         <div class="table-responsive" data-paginated-table>
           <table class="table table-hover align-middle mb-0 table-sm">
             <thead class="table-light">
               <tr>
                 <th data-sort="num"><span class="th-sortable">#<i class="bi bi-arrow-down-up ms-1"></i></span></th>
-                <th data-sort="text"><span class="th-sortable">Tipo<i class="bi bi-arrow-down-up ms-1"></i></span></th>
-                {% if mostrar_area_solicitante %}
-                <th data-sort="text"><span class="th-sortable">Área<i class="bi bi-arrow-down-up ms-1"></i></span></th>
-                {% endif %}
+                <th data-sort="text"><span class="th-sortable">Solicitud<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th data-sort="date"><span class="th-sortable">Fecha<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th data-sort="text"><span class="th-sortable">Horario<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th data-sort="text"><span class="th-sortable">Prioridad<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th data-sort="text"><span class="th-sortable">Estado<i class="bi bi-arrow-down-up ms-1"></i></span></th>
-                {% if mostrar_area_solicitante %}
-                <th data-sort="text"><span class="th-sortable">Solicitante<i class="bi bi-arrow-down-up ms-1"></i></span></th>
-                {% endif %}
                 <th data-sort="text"><span class="th-sortable">Jefe<i class="bi bi-arrow-down-up ms-1"></i></span></th>
                 <th class="text-end">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {% for r in section_rows %}
+              {% set _icon = 'bi-airplane-fill' if r.tipo == 'Vuelo' else ('bi-ticket-perforated-fill' if r.tipo == 'Voucher' else 'bi-taxi-front-fill') %}
+              {% set _tono = 'vuelo' if r.tipo == 'Vuelo' else ('voucher' if r.tipo == 'Voucher' else 'recorrido') %}
+              {% set _jefe = r.get('jefe_nombre') %}
+              {% set _jefe_partes = _jefe.split(' ') if _jefe else [] %}
+              {% set _jefe_ini = ((_jefe_partes[0][:1] ~ (_jefe_partes[1][:1] if _jefe_partes|length > 1 else '')) | upper) if _jefe else '' %}
+              {% set _tiene_secundarias = r.puede_reagendar or (r.puede_aprobar and r.grupo_id) or r.puede_eliminar %}
               <tr>
-                <td class="text-muted small" data-sort-value="{{ r.id }}">
-                  {{ r.id }}
-                  {% if r.grupo_id %}
-                  <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
-                  {% endif %}
+                <td class="text-muted small" data-sort-value="{{ r.id }}">{{ r.id }}</td>
+                <td>
+                  <div class="sol-cell">
+                    <span class="sol-icon cal-pill cal-pill--{{ _tono }}"><i class="bi {{ _icon }}"></i></span>
+                    <div class="sol-cell-text">
+                      <strong>{{ r.tipo }}</strong>
+                      {% if r.grupo_id %}
+                      <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
+                      {% endif %}
+                      <div class="sol-cell-sub">
+                        {%- set _partes_sub = [] -%}
+                        {%- if mostrar_area_solicitante -%}
+                          {%- if r.area_solicitante %}{% set _ = _partes_sub.append(r.area_solicitante) %}{% endif -%}
+                          {%- if r.solicitante_nombre %}{% set _ = _partes_sub.append(r.solicitante_nombre) %}{% endif -%}
+                        {%- elif r.area_solicitante -%}
+                          {% set _ = _partes_sub.append(r.area_solicitante) %}
+                        {%- endif -%}
+                        {%- if r.descripcion %}{% set _ = _partes_sub.append(r.descripcion | truncate(40)) %}{% endif -%}
+                        {{ _partes_sub | join(' · ') }}
+                      </div>
+                    </div>
+                  </div>
                 </td>
-                <td>{{ r.tipo }}</td>
-                {% if mostrar_area_solicitante %}
-                <td>{{ r.area_solicitante }}</td>
-                {% endif %}
-                <td class="text-nowrap">{{ r.fecha_str }}</td>
+                <td class="text-nowrap">
+                  <strong>{{ r.get('fecha_display') or r.fecha_str }}</strong>
+                  {% if r.get('fecha_dow') %}<div class="small text-muted">{{ r.fecha_dow }}</div>{% endif %}
+                </td>
                 <td class="text-nowrap">
                   {% if r.hora_inicio %}{{ r.hora_inicio }}–{{ r.hora_fin }}
+                  {% elif r.estado == 'PENDIENTE_COORDINACION' and r.fecha_str < today and r.puede_reagendar %}
+                  <span class="badge bg-warning text-dark" title="Fecha pasada — use Reagendar">
+                    <i class="bi bi-exclamation-triangle"></i> Fecha pasada
+                  </span>
+                  {% elif r.puede_coordinar %}
+                  <button type="button" class="btn btn-sm btn-outline-secondary horario-asignar-pill"
+                          data-open-coordinar="1" data-sid="{{ r.id }}"
+                          data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}">
+                    <i class="bi bi-clock me-1"></i>Asignar
+                  </button>
                   {% else %}<span class="text-muted">Sin asignar</span>{% endif %}
                 </td>
                 <td>
@@ -222,92 +250,85 @@
                     {{ r.prioridad }}
                   </span>
                 </td>
-                <td><span class="badge {{ r.estado_class }}">{{ r.estado_label }}</span></td>
-                {% if mostrar_area_solicitante %}
-                <td class="small">{{ r.solicitante_nombre }}</td>
-                {% endif %}
-                <td class="small text-muted">
-                  {{ r.get('jefe_nombre') or '—' }}
+                <td><span class="sgq-status-pill sgq-status-pill--{{ _tone_map.get(r.estado_class, 'gray') }}">{{ r.estado_label }}</span></td>
+                <td>
+                  {% if _jefe %}
+                  <span class="jefe-avatar" title="{{ _jefe }}">{{ _jefe_ini }}</span>
+                  {% else %}<span class="text-muted">—</span>{% endif %}
                 </td>
                 <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-sm btn-outline-secondary"
-                          data-open-detalle="{{ r.id }}" title="Ver detalle">
-                    <i class="bi bi-eye"></i>
-                  </button>
                   {% if r.puede_marcar_realizado_vuelo %}
                   <form method="post"
                         action="{{ url_for('planificador.planificador_vuelo_marcar_realizado', sid=r.id) }}"
                         class="d-inline" data-confirm="¿Confirmar que realizaste este vuelo? El coordinador registrará los costos y cerrará la solicitud.">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-outline-success" title="Realicé el vuelo">
-                      <i class="bi bi-check2"></i>
-                    </button>
+                    <button class="btn btn-sm btn-primary"><i class="bi bi-check2 me-1"></i>Realicé el vuelo</button>
                   </form>
-                  {% endif %}
-                  {% if r.puede_coordinar %}
-                  <button type="button" class="btn btn-sm btn-outline-warning"
-                          data-open-coordinar="1" data-sid="{{ r.id }}"
-                          data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}">
-                    <i class="bi bi-clock"></i> Coordinar
-                  </button>
-                  {% elif r.estado == 'PENDIENTE_COORDINACION' and r.fecha_str < today and r.puede_reagendar %}
-                  <span class="badge bg-warning text-dark" title="Fecha pasada — use Reagendar">
-                    <i class="bi bi-exclamation-triangle"></i> Fecha pasada
-                  </span>
-                  {% endif %}
-                  {% if r.puede_reagendar %}
-                  <button type="button" class="btn btn-sm btn-outline-warning"
-                          data-open-reagendar="1" data-sid="{{ r.id }}"
-                          data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}"
-                          title="Reagendar">
-                    <i class="bi bi-calendar-event"></i>
-                  </button>
-                  {% endif %}
-                  {% if r.puede_aprobar %}
-                  <button type="button" class="btn btn-sm btn-outline-success"
-                          data-open-aprobar="1" data-sid="{{ r.id }}" data-tipo="{{ r.tipo }}">
-                    <i class="bi bi-check2-circle"></i> Aprobar
-                  </button>
-                  {% if r.grupo_id %}
-                  <button type="button" class="btn btn-sm btn-success"
-                          data-open-aprobar-grupo="1"
-                          data-grupo-id="{{ r.grupo_id }}"
-                          data-tipo="{{ r.tipo }}"
-                          title="Aprobar todas las solicitudes de este grupo juntas">
-                    <i class="bi bi-collection"></i> Aprobar grupo
-                  </button>
-                  {% endif %}
-                  {% endif %}
-                  {% if r.puede_aprobar_gerente %}
-                  <button type="button" class="btn btn-sm btn-outline-primary"
-                          data-open-detalle="{{ r.id }}" title="Aprobación gerencial">
-                    <i class="bi bi-person-check"></i>
-                  </button>
-                  {% endif %}
-                  {% if r.puede_completar %}
+                  {% elif r.puede_aprobar_jefe_vuelo %}
+                  <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Aprobar</button>
+                  {% elif r.puede_cotizar_vuelo %}
+                  <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Cotizar</button>
+                  {% elif r.puede_aprobar_gg_vuelo %}
+                  <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Aprobar</button>
+                  {% elif r.puede_completar_vuelo %}
+                  <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Registrar</button>
+                  {% elif r.puede_aprobar %}
+                  <button type="button" class="btn btn-sm btn-primary"
+                          data-open-aprobar="1" data-sid="{{ r.id }}" data-tipo="{{ r.tipo }}">Aprobar</button>
+                  {% elif r.puede_aprobar_gerente %}
+                  <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Aprobar</button>
+                  {% elif r.puede_completar %}
                   <form method="post"
                         action="{{ url_for('planificador.planificador_completar', sid=r.id) }}"
                         class="d-inline" data-confirm="¿Marcar como completada?">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-dark">
-                      <i class="bi bi-flag-fill"></i> Completar
-                    </button>
+                    <button class="btn btn-sm btn-primary"><i class="bi bi-flag-fill me-1"></i>Completar</button>
                   </form>
                   {% endif %}
-                  {% if r.puede_eliminar %}
-                  <form method="post"
-                        action="{{ url_for('planificador.planificador_eliminar', sid=r.id) }}"
-                        class="d-inline" data-confirm="¿Eliminar esta solicitud? Esta acción no se puede deshacer.">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-outline-danger" title="Eliminar">
-                      <i class="bi bi-trash"></i>
+                  <button type="button" class="btn btn-sm btn-outline-secondary"
+                          data-open-detalle="{{ r.id }}" title="Ver detalle">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  {% if _tiene_secundarias %}
+                  <div class="dropdown d-inline-block">
+                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Más acciones">
+                      <i class="bi bi-three-dots"></i>
                     </button>
-                  </form>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      {% if r.puede_reagendar %}
+                      <li>
+                        <button type="button" class="dropdown-item"
+                                data-open-reagendar="1" data-sid="{{ r.id }}"
+                                data-fecha="{{ r.fecha_str }}" data-tipo="{{ r.tipo }}">
+                          <i class="bi bi-calendar-event me-2"></i>Reagendar
+                        </button>
+                      </li>
+                      {% endif %}
+                      {% if r.puede_aprobar and r.grupo_id %}
+                      <li>
+                        <button type="button" class="dropdown-item"
+                                data-open-aprobar-grupo="1" data-grupo-id="{{ r.grupo_id }}" data-tipo="{{ r.tipo }}">
+                          <i class="bi bi-collection me-2"></i>Aprobar grupo
+                        </button>
+                      </li>
+                      {% endif %}
+                      {% if r.puede_eliminar %}
+                      <li>
+                        <form method="post"
+                              action="{{ url_for('planificador.planificador_eliminar', sid=r.id) }}"
+                              data-confirm="¿Eliminar esta solicitud? Esta acción no se puede deshacer.">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                          <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash me-2"></i>Eliminar</button>
+                        </form>
+                      </li>
+                      {% endif %}
+                    </ul>
+                  </div>
                   {% endif %}
                 </td>
               </tr>
               {% else %}
-              <tr><td colspan="{{ 10 if mostrar_area_solicitante else 8 }}" class="text-center text-muted py-4">{{ empty_msg }}</td></tr>
+              <tr><td colspan="8" class="text-center text-muted py-4">{{ empty_msg }}</td></tr>
               {% endfor %}
             </tbody>
           </table>

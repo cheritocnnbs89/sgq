@@ -47,6 +47,7 @@ AEROPUERTOS_CIUDAD = {
 _MESES_ABR = ["ene", "feb", "mar", "abr", "may", "jun",
               "jul", "ago", "sep", "oct", "nov", "dic"]
 _DIAS_ABR = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"]
+_DIAS_FULL = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
 
 
 def _fmt_fecha_corta(dt, con_dia=False):
@@ -127,6 +128,12 @@ def solicitudes():
         d["estado_label"]    = svc.estado_label(s["estado"])
         d["estado_class"]    = svc.estado_badge_class(s["estado"])
         d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
+        if s.get("fecha"):
+            d["fecha_display"] = f"{s['fecha'].day} {_MESES_ABR[s['fecha'].month - 1]}"
+            d["fecha_dow"]     = _DIAS_FULL[s["fecha"].weekday()]
+        else:
+            d["fecha_display"] = ""
+            d["fecha_dow"]     = ""
         rows.append(d)
 
     # Dividir en secciones
