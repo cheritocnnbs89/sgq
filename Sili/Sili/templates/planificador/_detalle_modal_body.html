@@ -30,9 +30,19 @@
   <p class="aprob-voucher-subtitle">Solicitud #{{ s.id }} · Pendiente de tu aprobación</p>
 </div>
 
-<div class="detail-grid mb-3">
-  <div class="detail-box"><span>Solicitante</span><strong>{{ s.solicitante_nombre }}</strong></div>
-  <div class="detail-box"><span>Área</span><strong>{{ s.area_solicitante }}</strong></div>
+<button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
+        data-bs-target="#detalleInfoBox{{ s.id }}" aria-expanded="true" aria-controls="detalleInfoBox{{ s.id }}">
+  <span class="detail-accordion-label">
+    <i class="bi bi-info-circle me-1"></i>
+    <span>Información general</span>
+  </span>
+  <span class="detail-accordion-right">
+    <span class="cal-pill cal-pill--voucher"><i class="bi bi-ticket-perforated-fill"></i></span>
+    <span class="cal-expand-hint">Ver detalle <i class="bi bi-chevron-down detail-accordion-chevron"></i></span>
+  </span>
+</button>
+<div class="detail-grid collapse show mb-3" id="detalleInfoBox{{ s.id }}">
+  <div class="detail-box detail-full"><span>Solicitante</span><strong>{{ s.solicitante_nombre }} · {{ s.area_solicitante }}</strong></div>
   <div class="detail-box"><span>Fecha</span><strong>{{ s.fecha_str }}</strong></div>
   <div class="detail-box detail-full"><span>Descripción</span><strong>{{ s.descripcion }}</strong></div>
 </div>
@@ -51,15 +61,10 @@
 </div>
 {% endif %}
 
-{# ── Vuelo: tarjeta del solicitante + aprobación del jefe (solo pantalla de cotización) ── #}
+{# ── Vuelo: aprobación del jefe (solo pantalla de cotización) — la tarjeta del
+   solicitante se quitó de aquí porque la cabecera del modal ya muestra
+   "#id · solicitante · área", quedaba duplicado. ── #}
 {% if s.puede_cotizar_vuelo %}
-<div class="solicitante-card">
-  <span class="solicitante-avatar">{{ (s.solicitante_nombre or '?')[:1] }}{{ (s.solicitante_nombre.split(' ')[1][:1] if s.solicitante_nombre and ' ' in s.solicitante_nombre else '') }}</span>
-  <div>
-    <strong>{{ s.solicitante_nombre }}</strong>
-    <div class="small text-muted">Área solicitante: {{ s.area_solicitante }}</div>
-  </div>
-</div>
 {% if s.aprobador_nombre %}
 <div class="aprob-jefe-banner">
   <i class="bi bi-check-circle-fill"></i>
@@ -597,49 +602,6 @@
       <div class="col-sm-6">
         <label class="form-label">N.º de reserva <span class="text-danger">*</span></label>
         <input class="form-control form-control-sm" type="text" name="num_reserva" required>
-      </div>
-      <div class="col-sm-6">
-        <label class="form-label">N.º de vuelo <span class="text-danger">*</span></label>
-        <input class="form-control form-control-sm" type="text" name="num_vuelo" required>
-      </div>
-    </div>
-
-    <div class="otras-acciones-label">Horarios</div>
-    <div class="row g-2 mb-2">
-      <div class="col-6">
-        <label class="form-label">
-          Hora de salida <span class="text-danger">*</span>
-          {% if s.fecha_str %}
-          <span class="badge bg-secondary ms-1 fw-normal" title="Fecha de salida solicitada">
-            <i class="bi bi-calendar2 me-1"></i>{{ s.fecha_str }}
-          </span>
-          {% endif %}
-        </label>
-        <input class="form-control form-control-sm" type="time" name="hora_inicio"
-               id="vueloHoraInicioDetalle"
-               {% if s.hora_inicio %}value="{{ s.hora_inicio }}"{% endif %} required>
-      </div>
-      <div class="col-6">
-        <label class="form-label">
-          Hora de regreso
-          {% if s.get('fecha_retorno') %}
-          <span class="badge bg-secondary ms-1 fw-normal" title="Fecha de retorno solicitada">
-            <i class="bi bi-calendar2 me-1"></i>{{ s.fecha_retorno }}
-          </span>
-          {% else %}
-          <span class="text-muted small fw-normal">Sin fecha de regreso definida</span>
-          {% endif %}
-        </label>
-        <input class="form-control form-control-sm" type="time" name="hora_fin"
-               id="vueloHoraFinDetalle"
-               {% if s.hora_fin %}value="{{ s.hora_fin }}"{% endif %}>
-      </div>
-      <div class="col-12">
-        <div class="alert alert-info py-1 px-2 small d-none" id="vueloHoraPreviewDetalle"
-             data-fecha="{{ s.fecha_str }}">
-          <i class="bi bi-calendar2-event me-1"></i>
-          <span id="vueloHoraPreviewTextoDetalle"></span>
-        </div>
       </div>
     </div>
 

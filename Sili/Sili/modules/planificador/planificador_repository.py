@@ -1560,7 +1560,8 @@ def delete_adjunto(adjunto_id: int) -> None:
 
 
 def get_jefe_nombre_batch(solicitante_ids: list) -> dict:
-    """Retorna {solicitante_id: jefe_nombre} para una lista de IDs."""
+    """Retorna {solicitante_id: {"nombre": jefe_nombre, "username": jefe_username}}
+    para una lista de IDs."""
     if not solicitante_ids:
         return {}
     conn = get_db()
@@ -1571,9 +1572,12 @@ def get_jefe_nombre_batch(solicitante_ids: list) -> dict:
     result = {}
     for r in cur.fetchall():
         try:
-            result[r["solicitante_id"]] = r["jefe_nombre"] or ""
+            result[r["solicitante_id"]] = {
+                "nombre": r["jefe_nombre"] or "",
+                "username": r["jefe_username"] or "",
+            }
         except Exception:
-            result[r[0]] = r[1] or ""
+            result[r[0]] = {"nombre": r[1] or "", "username": r[2] or ""}
     return result
 
 

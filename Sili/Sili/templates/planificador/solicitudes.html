@@ -200,8 +200,7 @@
               {% set _icon = 'bi-airplane-fill' if r.tipo == 'Vuelo' else ('bi-ticket-perforated-fill' if r.tipo == 'Voucher' else 'bi-taxi-front-fill') %}
               {% set _tono = 'vuelo' if r.tipo == 'Vuelo' else ('voucher' if r.tipo == 'Voucher' else 'recorrido') %}
               {% set _jefe = r.get('jefe_nombre') %}
-              {% set _jefe_partes = _jefe.split(' ') if _jefe else [] %}
-              {% set _jefe_ini = ((_jefe_partes[0][:1] ~ (_jefe_partes[1][:1] if _jefe_partes|length > 1 else '')) | upper) if _jefe else '' %}
+              {% set _jefe_user = r.get('jefe_username') or _jefe %}
               {% set _tiene_secundarias = r.puede_reagendar or (r.puede_aprobar and r.grupo_id) or r.puede_eliminar %}
               <tr>
                 <td class="text-muted small" data-sort-value="{{ r.id }}">{{ r.id }}</td>
@@ -251,9 +250,9 @@
                   </span>
                 </td>
                 <td><span class="sgq-status-pill sgq-status-pill--{{ _tone_map.get(r.estado_class, 'gray') }}">{{ r.estado_label }}</span></td>
-                <td>
-                  {% if _jefe %}
-                  <span class="jefe-avatar" title="{{ _jefe }}">{{ _jefe_ini }}</span>
+                <td class="small">
+                  {% if _jefe_user %}
+                  <span title="{{ _jefe }}">{{ _jefe_user }}</span>
                   {% else %}<span class="text-muted">—</span>{% endif %}
                 </td>
                 <td class="text-end text-nowrap">
@@ -266,12 +265,8 @@
                   </form>
                   {% elif r.puede_aprobar_jefe_vuelo %}
                   <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Aprobar</button>
-                  {% elif r.puede_cotizar_vuelo %}
-                  <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Cotizar</button>
                   {% elif r.puede_aprobar_gg_vuelo %}
                   <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Aprobar</button>
-                  {% elif r.puede_completar_vuelo %}
-                  <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Registrar</button>
                   {% elif r.puede_aprobar %}
                   <button type="button" class="btn btn-sm btn-primary"
                           data-open-aprobar="1" data-sid="{{ r.id }}" data-tipo="{{ r.tipo }}">Aprobar</button>

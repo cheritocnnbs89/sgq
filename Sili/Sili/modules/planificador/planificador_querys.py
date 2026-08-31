@@ -815,7 +815,8 @@ SQL_GET_JEFE_USUARIO = f"""
 
 SQL_GET_JEFE_NOMBRE_BATCH = f"""
     SELECT u.id AS solicitante_id,
-           COALESCE(j.nombre_completo, j.username, '') AS jefe_nombre
+           COALESCE(j.nombre_completo, j.username, '') AS jefe_nombre,
+           COALESCE(j.username, '') AS jefe_username
     FROM {TBL_USUARIOS} u
     LEFT JOIN {TBL_USUARIOS} j ON j.id = u.jefe_id AND COALESCE(j.disabled,0) = 0
     WHERE u.id IN ({{placeholders}})

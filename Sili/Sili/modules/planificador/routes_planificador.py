@@ -159,7 +159,9 @@ def solicitudes():
     })
     jefe_map = repo.get_jefe_nombre_batch(con_jefe_sol_ids) if con_jefe_sol_ids else {}
     for r in rows:
-        r["jefe_nombre"] = jefe_map.get(r.get("solicitante_id"), "")
+        _jefe_info = jefe_map.get(r.get("solicitante_id")) or {}
+        r["jefe_nombre"] = _jefe_info.get("nombre", "")
+        r["jefe_username"] = _jefe_info.get("username", "")
 
     # Datos de calendario: semana actual ±2 semanas
     today = date.today()
@@ -1537,11 +1539,10 @@ def vuelo_completar(sid):
     if aerolinea == "__otra__":
         aerolinea = request.form.get("aerolinea_otra", "").strip()
     num_reserva = request.form.get("num_reserva", "").strip()
-    num_vuelo   = request.form.get("num_vuelo", "").strip()
     obs_extra   = request.form.get("observacion_coordinador", "").strip()
 
-    if not (aerolinea and aeropuerto and num_reserva and num_vuelo):
-        flash("Debe ingresar aerolínea, aeropuerto de destino, N° de reserva y N° de vuelo.", "warning")
+    if not (aerolinea and aeropuerto and num_reserva):
+        flash("Debe ingresar aerolínea, aeropuerto de destino y N° de reserva.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
     # No se agregan columnas nuevas: se sigue guardando todo en el mismo
@@ -1552,7 +1553,6 @@ def vuelo_completar(sid):
         f"Aerolínea: {aerolinea}",
         f"Aeropuerto: {aeropuerto}",
         f"N° de reserva: {num_reserva}",
-        f"N° de vuelo: {num_vuelo}",
     ]
     if obs_extra:
         partes.append(obs_extra)
