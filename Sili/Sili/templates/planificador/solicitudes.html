@@ -449,6 +449,15 @@
                         <i class="bi bi-check2-circle"></i> Aprobar
                       </button>
                     </form>
+                    {% elif r.puede_aprobar_jefe_vuelo %}
+                    <form method="post"
+                          action="{{ url_for('planificador.planificador_vuelo_aprobar_jefe', sid=r.id) }}"
+                          class="d-inline" data-confirm="¿Aprobar este vuelo de {{ r.solicitante_nombre }}?">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button class="btn btn-sm btn-outline-success" title="Aprobar vuelo">
+                        <i class="bi bi-check2-circle"></i> Aprobar
+                      </button>
+                    </form>
                     {% endif %}
                     {% if r.puede_coordinar %}
                     <button type="button" class="btn btn-sm btn-outline-warning"
