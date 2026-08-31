@@ -3772,8 +3772,67 @@ def register_gastos_routes(app):
                 from modules.scheduler_jobs import enqueue_gasto_approved
                 conn2 = get_db()
                 try:
+                    cur2 = conn2.cursor()
                     for gid_int in ok_ids:
                         enqueue_gasto_approved(conn2, int(gid_int), str(area), uid)
+
+                        # WhatsApp (vía AWS → Twilio) al vendedor: mismo criterio
+                        # que el endpoint de aprobación individual (aprobar_gasto).
+                        # Este bloque faltaba aquí por completo — la aprobación
+                        # masiva nunca disparaba el WhatsApp de reembolso aprobado.
+                        row_info = by_id.get(int(gid_int)) or {}
+                        if int(row_info.get("reembolso_vendedor") or 0) == 1:
+                            try:
+                                cur2.execute(f"""
+                                    SELECT g.fecha, g.motivo, g.total_con_iva,
+                                           COALESCE(t.nombre, g.proveedor) AS proveedor_nombre,
+                                           u.telefono,
+                                           COALESCE(u.nombre_completo, u.username) AS vendedor_nombre
+                                    FROM {TABLE_GASTOS} g
+                                    JOIN usuarios u ON u.id = g.usuario_id
+                                    LEFT JOIN terceros t ON t.id = g.proveedor_id
+                                    WHERE g.id = ?
+                                """, (int(gid_int),))
+                                gd = cur2.fetchone()
+                                if not gd or not gd["telefono"]:
+                                    current_app.logger.warning(
+                                        "[GASTOS] WhatsApp de reembolso NO enviado (masivo) gasto_id=%s: %s",
+                                        gid_int,
+                                        "gasto no encontrado" if not gd else "usuario sin teléfono registrado",
+                                    )
+                                if gd and gd["telefono"]:
+                                    arow = None
+                                    try:
+                                        cur2.execute(
+                                            "SELECT COALESCE(nombre_completo, username) AS n FROM usuarios WHERE id = ?",
+                                            (uid,)
+                                        )
+                                        arow = cur2.fetchone()
+                                    except Exception:
+                                        pass
+                                    aprobador_nombre_ga = (arow["n"] if arow else "") or ""
+
+                                    fecha_val = gd["fecha"]
+                                    fecha_str = fecha_val.strftime("%d/%m/%Y") if hasattr(fecha_val, "strftime") else str(fecha_val or "")
+
+                                    total_val = gd["total_con_iva"]
+                                    total_str = f"${float(total_val):,.2f}" if total_val is not None else "—"
+
+                                    _whatsapp_aws_gasto(gd["telefono"], WHATSAPP_TPL_GASTO_APROBADO, {
+                                        "1": str(gid_int),
+                                        "2": gd["vendedor_nombre"] or "",
+                                        "3": aprobador_nombre_ga,
+                                        "4": "Gerencia de Área",
+                                        "5": fecha_str,
+                                        "6": gd["proveedor_nombre"] or "—",
+                                        "7": gd["motivo"] or "—",
+                                        "8": total_str,
+                                    })
+                            except Exception:
+                                current_app.logger.exception(
+                                    "[APROBAR_MASIVO] Error enviando WhatsApp de reembolso aprobado gasto_id=%s",
+                                    gid_int
+                                )
                     conn2.commit()
                 finally:
                     conn2.close()
