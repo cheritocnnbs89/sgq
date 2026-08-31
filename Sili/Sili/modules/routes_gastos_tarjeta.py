@@ -528,14 +528,27 @@ def _whatsapp_aws_gasto(telefono: str, content_sid: str, variables: dict) -> Non
     aws_api_url = (os.environ.get("AWS_API_URL") or "").strip().rstrip("/")
     aws_flask_token = (os.environ.get("AWS_FLASK_TOKEN") or "").strip()
     if not (aws_api_url and aws_flask_token and telefono):
+        try:
+            current_app.logger.warning(
+                "[GASTOS] WhatsApp/AWS no enviado: falta configuración o teléfono "
+                "(aws_api_url=%s aws_flask_token=%s telefono=%s)",
+                bool(aws_api_url), bool(aws_flask_token), bool(telefono),
+            )
+        except Exception:
+            pass
         return
     try:
-        requests.post(
+        resp = requests.post(
             f"{aws_api_url}/notificaciones/whatsapp-push",
             json={"to": telefono, "content_sid": content_sid, "variables": variables},
             headers={"x-flask-token": aws_flask_token, "Content-Type": "application/json"},
             timeout=10,
         )
+        if resp.status_code >= 300:
+            current_app.logger.warning(
+                "[GASTOS] WhatsApp/AWS respuesta no-2xx tel=%s status=%s body=%s",
+                telefono, resp.status_code, resp.text[:500],
+            )
     except Exception as exc:
         try:
             current_app.logger.warning("[GASTOS] WhatsApp/AWS error tel=%s: %s", telefono, exc)
@@ -3936,6 +3949,12 @@ def register_gastos_routes(app):
                                 WHERE g.id = ?
                             """, (gasto_id,))
                             gd = cur.fetchone()
+                            if not gd or not gd["telefono"]:
+                                current_app.logger.warning(
+                                    "[GASTOS] WhatsApp de reembolso NO enviado gasto_id=%s: "
+                                    "%s", gasto_id,
+                                    "gasto no encontrado" if not gd else "usuario sin teléfono registrado",
+                                )
                             if gd and gd["telefono"]:
                                 arow = None
                                 try:
@@ -3966,6 +3985,12 @@ def register_gastos_routes(app):
                                 })
                         except Exception:
                             current_app.logger.exception("[APROBAR] Error enviando WhatsApp de reembolso aprobado")
+                    else:
+                        current_app.logger.info(
+                            "[GASTOS] WhatsApp de reembolso omitido gasto_id=%s: "
+                            "reembolso_vendedor=%s (no es reembolso de vendedor)",
+                            gasto_id, reembolso_vendedor,
+                        )
 
                 return jsonify(ok=True, value=value)
 
