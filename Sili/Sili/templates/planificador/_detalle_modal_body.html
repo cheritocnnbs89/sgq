@@ -161,7 +161,9 @@
    (fecha del vuelo / monto aprobado / motivo). Para "Confirma que realizaste el viaje"
    (COORDINADA), se reemplaza por el itinerario + datos de la solicitud + costos de arriba. #}
 {% if not s.puede_aprobar_jefe_voucher and not s.puede_entregar_voucher and not s.puede_aprobar_gg_vuelo and not s.puede_completar_vuelo and not s.puede_marcar_realizado_vuelo %}
-{% set _auto_expand_info = s.puede_cotizar_vuelo %}
+{# "Información general" siempre arranca contraída en todas las etapas de Vuelo
+   (antes se auto-expandía en Pend. cotización coordinador; se quitó a pedido). #}
+{% set _auto_expand_info = false %}
 <button type="button" class="detail-accordion-toggle {{ 'collapsed' if not _auto_expand_info }}" data-bs-toggle="collapse"
         data-bs-target="#detalleInfoBox{{ s.id }}" aria-expanded="{{ 'true' if _auto_expand_info else 'false' }}"
         aria-controls="detalleInfoBox{{ s.id }}">
