@@ -161,9 +161,8 @@ def _post_soap(url: str, envelope: str, *, soap_action: str = "", timeout: int =
     return resp.text
 
 
-def _build_extraer_envelope(cantidad: int) -> str:
+def _build_extraer_envelope(cantidad: int, tipo_documento: str) -> str:
     suscriptor = _cfg("SEEDBILLING_SUSCRIPTOR", "81")
-    tipo_documento = _cfg("SEEDBILLING_TIPODOCUMENTO", "01")
     usuario = _cfg("SEEDBILLING_USUARIO", "")
     clave = _cfg("SEEDBILLING_CLAVE", "")
     token = _cfg("SEEDBILLING_TOKEN", "")
@@ -184,9 +183,8 @@ def _build_extraer_envelope(cantidad: int) -> str:
 </soapenv:Envelope>"""
 
 
-def _build_marcar_entregados_envelope(claves_acceso: list[str]) -> str:
+def _build_marcar_entregados_envelope(claves_acceso: list[str], tipo_documento: str) -> str:
     suscriptor = _cfg("SEEDBILLING_SUSCRIPTOR", "81")
-    tipo_documento = _cfg("SEEDBILLING_TIPODOCUMENTO", "01")
     usuario = _cfg("SEEDBILLING_USUARIO", "")
     clave = _cfg("SEEDBILLING_CLAVE", "")
     token = _cfg("SEEDBILLING_TOKEN", "")
@@ -394,6 +392,9 @@ def _insert_factura_xml(conn, header: dict, detalles: list[dict], archivo: str) 
         header.get("propina") or 0,
         FACTURA_XML_PENDIENTE,
         archivo,
+        header.get("cod_doc_modificado") or None,
+        header.get("num_doc_modificado") or None,
+        header.get("fecha_emision_doc_sustento") or None,
     ))
 
     row = cur.fetchone()
@@ -438,7 +439,7 @@ def _insert_factura_xml(conn, header: dict, detalles: list[dict], archivo: str) 
 # Marcar entregados
 # ==========================================================
 
-def _marcar_entregados(claves_acceso: list[str], *, motivo: str) -> tuple[int, list[str]]:
+def _marcar_entregados(claves_acceso: list[str], *, motivo: str, tipo_documento: str) -> tuple[int, list[str]]:
     """
     Marca comprobantes como entregados.
     No imprime XML ni claves completas en logs.
@@ -470,7 +471,7 @@ def _marcar_entregados(claves_acceso: list[str], *, motivo: str) -> tuple[int, l
                 len(lote_claves),
             )
 
-            envelope = _build_marcar_entregados_envelope(lote_claves)
+            envelope = _build_marcar_entregados_envelope(lote_claves, tipo_documento)
 
             response_text = _post_soap(
                 mark_url,
@@ -631,68 +632,56 @@ def _send_admin_summary(conn, resumen: dict):
 
 
 # ==========================================================
+# Tipos de documento a consultar
+# ==========================================================
+
+def _tipos_documento() -> list[str]:
+    """
+    Tipos de documento SRI a traer de SeedBilling en cada corrida:
+    01=Factura, 04=Nota de Crédito, 05=Nota de Débito.
+
+    Config nueva SEEDBILLING_TIPOS_DOCUMENTO (lista o "01,04,05") tiene
+    prioridad; si no está seteada, cae a la vieja SEEDBILLING_TIPODOCUMENTO
+    (un solo valor, comportamiento anterior) para no romper ambientes que
+    todavía no actualizaron su config.
+    """
+    tipos = _cfg("SEEDBILLING_TIPOS_DOCUMENTO", None)
+
+    if tipos is None:
+        return [_cfg("SEEDBILLING_TIPODOCUMENTO", "01")]
+
+    if isinstance(tipos, str):
+        tipos = [t.strip() for t in tipos.split(",") if t.strip()]
+
+    return list(tipos) or ["01"]
+
+
+# ==========================================================
 # Proceso principal
 # ==========================================================
 
-def process_seedbilling_facturas_recibidas(conn) -> dict:
-    resumen = {
-        "ok": True,
-        "inicio": datetime.now().isoformat(timespec="seconds"),
-        "lotes": 0,
-        "recibidos": 0,
-        "quimpac": 0,
-        "insertados": 0,
-        "duplicados": 0,
-        "otras_empresas": 0,
-        "marcados_entregados": 0,
-        "marcados_entregados_quimpac": 0,
-        "marcados_entregados_otras": 0,
-        "errores": 0,
-        "procesados_detalle": [],
-        "otras_empresas_detalle": [],
-        "errores_detalle": [],
-    }
-
-    if not _cfg("SEEDBILLING_ENABLED", False):
-        resumen["ok"] = False
-        resumen["skip"] = "SEEDBILLING_ENABLED=False"
-        return resumen
-
-    list_url = _cfg("SEEDBILLING_LIST_URL", "")
-    if not list_url:
-        resumen["ok"] = False
-        resumen["error"] = "No está configurado SEEDBILLING_LIST_URL."
-        return resumen
-
-    target_ruc = _norm_ruc(_cfg("SEEDBILLING_TARGET_RUC", "0990344760001"))
-    cantidad = int(_cfg("SEEDBILLING_CANTIDAD", 1000))
-    timeout = int(_cfg("SEEDBILLING_TIMEOUT", 120))
-    max_loops = int(_cfg("SEEDBILLING_MAX_LOOPS", 10))
-    mark_other_companies = bool(_cfg("SEEDBILLING_MARK_OTHER_COMPANIES", True))
-
-    cur = conn.cursor()
-
-    _log(
-        "info",
-        "[SEEDBILLING] Inicio enabled=True cantidad=%s max_loops=%s target_ruc=%s mark_other_companies=%s",
-        cantidad,
-        max_loops,
-        target_ruc,
-        mark_other_companies,
-    )
-
+def _procesar_tipo_documento(conn, cur, tipo_documento: str, resumen: dict,
+                              *, list_url: str, target_ruc: str, cantidad: int,
+                              timeout: int, max_loops: int,
+                              mark_other_companies: bool) -> None:
+    """
+    Trae y procesa los comprobantes pendientes de UN tipo de documento
+    (01/04/05), acumulando los contadores en `resumen` (compartido entre
+    todos los tipos de la corrida, para mandar un solo correo al final).
+    """
     for lote_num in range(1, max_loops + 1):
         resumen["lotes"] += 1
 
         try:
             _log(
                 "info",
-                "[SEEDBILLING] Consultando lote=%s cantidad=%s",
+                "[SEEDBILLING] Consultando tipo_documento=%s lote=%s cantidad=%s",
+                tipo_documento,
                 lote_num,
                 cantidad,
             )
 
-            envelope = _build_extraer_envelope(cantidad)
+            envelope = _build_extraer_envelope(cantidad, tipo_documento)
 
             response_text = _post_soap(
                 list_url,
@@ -866,6 +855,7 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
         n_ok_quimpac, errs_quimpac = _marcar_entregados(
             claves_quimpac_a_marcar,
             motivo="QUIMPAC",
+            tipo_documento=tipo_documento,
         )
 
         if n_ok_quimpac:
@@ -885,6 +875,7 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
             n_ok_otras, errs_otras = _marcar_entregados(
                 claves_otras_a_marcar,
                 motivo="OTRAS_EMPRESAS",
+                tipo_documento=tipo_documento,
             )
 
             if n_ok_otras:
@@ -900,7 +891,8 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
 
         _log(
             "info",
-            "[SEEDBILLING] Lote=%s resumen recibido=%s quimpac=%s otras=%s marcadas_quimpac=%s marcadas_otras=%s errores=%s",
+            "[SEEDBILLING] tipo_documento=%s lote=%s resumen recibido=%s quimpac=%s otras=%s marcadas_quimpac=%s marcadas_otras=%s errores=%s",
+            tipo_documento,
             lote_num,
             len(items),
             len(claves_quimpac_a_marcar),
@@ -930,6 +922,98 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
             )
             break
 
+    _log(
+        "info",
+        "[SEEDBILLING] FIN tipo_documento=%s lotes=%s recibidos=%s quimpac=%s insertados=%s duplicados=%s otras=%s marcados_quimpac=%s marcados_otras=%s marcados_total=%s errores=%s",
+        tipo_documento,
+        resumen["lotes"],
+        resumen["recibidos"],
+        resumen["quimpac"],
+        resumen["insertados"],
+        resumen["duplicados"],
+        resumen["otras_empresas"],
+        resumen["marcados_entregados_quimpac"],
+        resumen["marcados_entregados_otras"],
+        resumen["marcados_entregados"],
+        resumen["errores"],
+    )
+
+
+# ==========================================================
+# Orquestador: recorre todos los tipos de documento configurados
+# (por defecto 01=Factura, 04=Nota de Crédito, 05=Nota de Débito) y
+# acumula todo en un solo resumen / un solo correo, igual que antes.
+# ==========================================================
+
+def process_seedbilling_facturas_recibidas(conn) -> dict:
+    resumen = {
+        "ok": True,
+        "inicio": datetime.now().isoformat(timespec="seconds"),
+        "lotes": 0,
+        "recibidos": 0,
+        "quimpac": 0,
+        "insertados": 0,
+        "duplicados": 0,
+        "otras_empresas": 0,
+        "marcados_entregados": 0,
+        "marcados_entregados_quimpac": 0,
+        "marcados_entregados_otras": 0,
+        "errores": 0,
+        "procesados_detalle": [],
+        "otras_empresas_detalle": [],
+        "errores_detalle": [],
+    }
+
+    if not _cfg("SEEDBILLING_ENABLED", False):
+        resumen["ok"] = False
+        resumen["skip"] = "SEEDBILLING_ENABLED=False"
+        return resumen
+
+    list_url = _cfg("SEEDBILLING_LIST_URL", "")
+    if not list_url:
+        resumen["ok"] = False
+        resumen["error"] = "No está configurado SEEDBILLING_LIST_URL."
+        return resumen
+
+    target_ruc = _norm_ruc(_cfg("SEEDBILLING_TARGET_RUC", "0990344760001"))
+    cantidad = int(_cfg("SEEDBILLING_CANTIDAD", 1000))
+    timeout = int(_cfg("SEEDBILLING_TIMEOUT", 120))
+    max_loops = int(_cfg("SEEDBILLING_MAX_LOOPS", 10))
+    mark_other_companies = bool(_cfg("SEEDBILLING_MARK_OTHER_COMPANIES", True))
+    tipos = _tipos_documento()
+
+    cur = conn.cursor()
+
+    _log(
+        "info",
+        "[SEEDBILLING] Inicio enabled=True tipos_documento=%s cantidad=%s max_loops=%s "
+        "target_ruc=%s mark_other_companies=%s",
+        tipos,
+        cantidad,
+        max_loops,
+        target_ruc,
+        mark_other_companies,
+    )
+
+    for tipo_documento in tipos:
+        try:
+            _procesar_tipo_documento(
+                conn, cur, tipo_documento, resumen,
+                list_url=list_url, target_ruc=target_ruc, cantidad=cantidad,
+                timeout=timeout, max_loops=max_loops,
+                mark_other_companies=mark_other_companies,
+            )
+        except Exception as e:
+            resumen["ok"] = False
+            resumen["errores"] += 1
+            resumen["errores_detalle"].append({
+                "clave": "",
+                "error": f"Error procesando tipo_documento={tipo_documento}: {e}",
+            })
+            current_app.logger.exception(
+                "[SEEDBILLING] Error procesando tipo_documento=%s", tipo_documento
+            )
+
     resumen["fin"] = datetime.now().isoformat(timespec="seconds")
 
     try:
@@ -939,7 +1023,10 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
 
     _log(
         "info",
-        "[SEEDBILLING] FIN lotes=%s recibidos=%s quimpac=%s insertados=%s duplicados=%s otras=%s marcados_quimpac=%s marcados_otras=%s marcados_total=%s errores=%s",
+        "[SEEDBILLING] FIN GENERAL tipos_documento=%s lotes=%s recibidos=%s quimpac=%s "
+        "insertados=%s duplicados=%s otras=%s marcados_quimpac=%s marcados_otras=%s "
+        "marcados_total=%s errores=%s",
+        tipos,
         resumen["lotes"],
         resumen["recibidos"],
         resumen["quimpac"],

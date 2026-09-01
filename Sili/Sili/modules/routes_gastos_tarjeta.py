@@ -698,15 +698,22 @@ def parse_sri_xml(raw: bytes | str):
     if doc_tag == "factura":
         info = inner.find("./infoFactura")
         detalles_root = inner.find("./detalles")
+    elif doc_tag == "notaCredito":
+        info = inner.find("./infoNotaCredito")
+        detalles_root = inner.find("./detalles")
     elif doc_tag == "notaDebito":
         info = inner.find("./infoNotaDebito")
         detalles_root = inner.find("./motivos")
     else:
-        info = inner.find("./infoFactura") or inner.find("./infoNotaDebito")
+        info = (
+            inner.find("./infoFactura")
+            or inner.find("./infoNotaCredito")
+            or inner.find("./infoNotaDebito")
+        )
         detalles_root = inner.find("./detalles") or inner.find("./motivos")
 
     if info is None:
-        raise ValueError("XML sin infoFactura/infoNotaDebito")
+        raise ValueError("XML sin infoFactura/infoNotaCredito/infoNotaDebito")
 
     h = {
         "clave_acceso": (infoTrib.findtext("claveAcceso") or "").strip(),
@@ -725,7 +732,13 @@ def parse_sri_xml(raw: bytes | str):
         "subtotal": _to_float(info.findtext("totalSinImpuestos")),
         "descuento": _to_float(info.findtext("totalDescuento")),
         "moneda": (info.findtext("moneda") or "").strip(),
-        
+        # Solo presentes en Nota de Crédito / Nota de Débito: a qué documento
+        # (normalmente una factura) corrige esta nota. Ausentes en Factura,
+        # quedan vacíos ("") sin problema -- findtext devuelve None si el tag
+        # no existe.
+        "cod_doc_modificado": (info.findtext("codDocModificado") or "").strip(),
+        "num_doc_modificado": (info.findtext("numDocModificado") or "").strip(),
+        "fecha_emision_doc_sustento": (info.findtext("fechaEmisionDocSustento") or "").strip(),
     }
     # ✅ Propina (viene en infoFactura)
     h["propina"] = _to_float(info.findtext("propina"))  # ej: 33.62
@@ -748,7 +761,16 @@ def parse_sri_xml(raw: bytes | str):
     }
 
 
-    for ti in info.findall("./totalConImpuestos/totalImpuesto"):
+    # Factura y Nota de Crédito traen los impuestos totalizados bajo
+    # <totalConImpuestos><totalImpuesto>. Nota de Débito NO tiene ese wrapper
+    # -- sus <impuesto> van directo bajo <infoNotaDebito><impuestos> -- sin
+    # este branch el IVA de cualquier ND siempre quedaba en 0.
+    if doc_tag == "notaDebito":
+        impuestos_nodos = info.findall("./impuestos/impuesto")
+    else:
+        impuestos_nodos = info.findall("./totalConImpuestos/totalImpuesto")
+
+    for ti in impuestos_nodos:
         codigo = (ti.findtext("codigo") or "").strip()
         if codigo != "2":  # IVA
             continue
@@ -779,17 +801,30 @@ def parse_sri_xml(raw: bytes | str):
     h["subtotal_0"] = base_0
     h["subtotal_15"] = base_15  # ✅ CLAVE para que no quede NULL
     h["iva_tarifa"] = max(tarifas_detectadas) if tarifas_detectadas else 0.0
-    h["total"] = _to_float(info.findtext("importeTotal")) or (
+
+    # El tag del total varía por tipo de documento: Factura usa importeTotal,
+    # Nota de Crédito usa valorModificacion, Nota de Débito usa valorTotal.
+    # Si no viene (o viene vacío), fallback a subtotal+iva.
+    if doc_tag == "notaCredito":
+        total_tag = "valorModificacion"
+    elif doc_tag == "notaDebito":
+        total_tag = "valorTotal"
+    else:
+        total_tag = "importeTotal"
+
+    h["total"] = _to_float(info.findtext(total_tag)) or (
         (h["subtotal"] or 0) + (h["iva"] or 0) + (h.get("propina") or 0)
     )
-
-    # Total (si existe en el XML úsalo; si no, fallback simple)
-    h["total"] = _to_float(info.findtext("importeTotal")) or (h["subtotal"] + h["iva"])
 
     detalles = []
 
     if detalles_root is not None:
-        if doc_tag == "factura":
+        # Nota de Crédito tiene <detalles><detalle> con exactamente la misma
+        # forma que Factura (mismos tags: cantidad/precioUnitario/descuento/
+        # precioTotalSinImpuesto/impuestos) -- reusa la misma rama. Antes solo
+        # se armaban detalles para "factura", así que cualquier Nota de
+        # Crédito quedaba sin líneas.
+        if doc_tag in ("factura", "notaCredito"):
             for d in detalles_root.findall("./detalle"):
                 impuestos = d.findall("./impuestos/impuesto")
 
