@@ -715,19 +715,30 @@ def push_gastos_a_aws(app=None):
         )
 
         for g in rows:
-            tipo = _tipo_gasto(dict(g))
+            g_dict = dict(g)
+            tipo = _tipo_gasto(g_dict)
+            subtipo = _subtipo_gasto(g_dict)
             gasto_id = f"{tipo}#{g['id']}"
 
             uid = g["usuario_id"]
 
-            if uid not in ga_cache:
-                ga_cache[uid] = _get_aprobador_email(
-                    conn,
-                    "ga",
-                    user_id=uid,
-                )
+            # Regla de negocio (routes_gastos_tarjeta.py: "TARJETA ONLINE
+            # => GA efectivo es GG"): una tarjeta sin soporte siempre tiene
+            # a GG como aprobador GA, sin importar la jerarquía jefe_id --
+            # es incondicional, no depende de quién esté viendo la pantalla.
+            # AWS no conocía esta regla y resolvía el GA por jerarquía
+            # normal, mandando (o dejando vacío) el aprobador equivocado.
+            if tipo == "tarjeta_credito" and subtipo == "online":
+                ga_email = gg_email
+            else:
+                if uid not in ga_cache:
+                    ga_cache[uid] = _get_aprobador_email(
+                        conn,
+                        "ga",
+                        user_id=uid,
+                    )
 
-            ga_email = ga_cache[uid]
+                ga_email = ga_cache[uid]
 
             if not ga_email:
                 omitidos_sin_ga += 1
@@ -746,7 +757,7 @@ def push_gastos_a_aws(app=None):
                 {
                     "gasto_id": gasto_id,
                     "tipo": tipo,
-                    "subtipo": _subtipo_gasto(dict(g)),
+                    "subtipo": subtipo,
                     "local_id": str(g["id"]),
                     "fecha": str(g["fecha"] or ""),
                     "descripcion": g["motivo"] or "",
