@@ -553,6 +553,7 @@ def _send_admin_summary(conn, resumen: dict):
         detalles_html += f"""
         <tr>
             <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">{html.escape(str(x.get("estado", "")))}</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">{html.escape(str(x.get("tipo") or "—"))}</td>
             <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">{html.escape(str(x.get("clave", "")))}</td>
             <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">{html.escape(str(x.get("emisor", "")))}</td>
             <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;">{_fmt_money(x.get("total"))}</td>
@@ -595,13 +596,14 @@ def _send_admin_summary(conn, resumen: dict):
             <thead>
                 <tr style="background:#eef2ff;">
                     <th style="text-align:left;padding:8px;">Estado</th>
+                    <th style="text-align:left;padding:8px;">Tipo</th>
                     <th style="text-align:left;padding:8px;">Clave acceso</th>
                     <th style="text-align:left;padding:8px;">Emisor</th>
                     <th style="text-align:right;padding:8px;">Total</th>
                 </tr>
             </thead>
             <tbody>
-                {detalles_html or '<tr><td colspan="4" style="padding:8px;">Sin documentos Quimpac procesados.</td></tr>'}
+                {detalles_html or '<tr><td colspan="5" style="padding:8px;">Sin documentos Quimpac procesados.</td></tr>'}
             </tbody>
         </table>
 
@@ -829,6 +831,7 @@ def _procesar_tipo_documento(conn, cur, tipo_documento: str, resumen: dict,
 
                 resumen["procesados_detalle"].append({
                     "estado": estado_doc,
+                    "tipo": header.get("tipo_comprobante"),
                     "factura_id": factura_id,
                     "clave": clave,
                     "emisor": header.get("razon_social_emisor"),
