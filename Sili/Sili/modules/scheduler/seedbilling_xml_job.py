@@ -65,6 +65,35 @@ def _norm_ruc(x: str | None) -> str:
     return re.sub(r"\D+", "", x or "").strip()
 
 
+def _parse_fecha_ddmmyyyy(s: str | None):
+    """fecha_emision viene del XML del SRI como 'dd/mm/yyyy' -- devuelve
+    datetime.date o None si no se puede parsear."""
+    if not s:
+        return None
+    try:
+        return datetime.strptime(s.strip(), "%d/%m/%Y").date()
+    except Exception:
+        return None
+
+
+def _notas_fecha_desde():
+    """Fecha de corte (config SEEDBILLING_NOTAS_FECHA_DESDE, formato
+    'YYYY-MM-DD') para Notas de Crédito/Débito (04/05): documentos con
+    fecha_emision anterior a esta fecha NO se insertan en facturas_xml,
+    pero sí se marcan como entregados (para que SeedBilling no los siga
+    reofreciendo en cada corrida). No aplica a Factura (01) -- ese tipo
+    sigue trayendo todo lo pendiente, sin filtro de fecha, como siempre.
+    Sin configurar -> None -> sin filtro (trae todo, como hoy)."""
+    raw = (_cfg("SEEDBILLING_NOTAS_FECHA_DESDE", "") or "").strip()
+    if not raw:
+        return None
+    try:
+        return datetime.strptime(raw, "%Y-%m-%d").date()
+    except Exception:
+        _log("warning", "[SEEDBILLING] SEEDBILLING_NOTAS_FECHA_DESDE inválida: %r", raw)
+        return None
+
+
 def _local_name(tag: str) -> str:
     return tag.split("}", 1)[-1] if "}" in tag else tag
 
@@ -584,6 +613,7 @@ def _send_admin_summary(conn, resumen: dict):
             <tr><td style="padding:6px 12px;"><b>Insertados Quimpac</b></td><td>{resumen.get("insertados", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Duplicados Quimpac</b></td><td>{resumen.get("duplicados", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Otras empresas omitidas</b></td><td>{resumen.get("otras_empresas", 0)}</td></tr>
+            <tr><td style="padding:6px 12px;"><b>Notas de Créd./Déb. omitidas (anteriores a la fecha de corte)</b></td><td>{resumen.get("omitidos_por_fecha", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Marcados Quimpac</b></td><td>{resumen.get("marcados_entregados_quimpac", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Marcados otras empresas</b></td><td>{resumen.get("marcados_entregados_otras", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Total marcados</b></td><td>{resumen.get("marcados_entregados", 0)}</td></tr>
@@ -665,11 +695,14 @@ def _tipos_documento() -> list[str]:
 def _procesar_tipo_documento(conn, cur, tipo_documento: str, resumen: dict,
                               *, list_url: str, target_ruc: str, cantidad: int,
                               timeout: int, max_loops: int,
-                              mark_other_companies: bool) -> None:
+                              mark_other_companies: bool, fecha_desde_notas=None) -> None:
     """
     Trae y procesa los comprobantes pendientes de UN tipo de documento
     (01/04/05), acumulando los contadores en `resumen` (compartido entre
     todos los tipos de la corrida, para mandar un solo correo al final).
+
+    fecha_desde_notas: solo aplica a tipo_documento in ("04","05") -- ver
+    _notas_fecha_desde().
     """
     for lote_num in range(1, max_loops + 1):
         resumen["lotes"] += 1
@@ -812,6 +845,28 @@ def _procesar_tipo_documento(conn, cur, tipo_documento: str, resumen: dict,
 
                 # Caso 4: Quimpac.
                 resumen["quimpac"] += 1
+
+                # Caso 4b: Nota de Crédito/Débito (04/05) anterior a la fecha
+                # de corte configurada -- no se inserta (evita traer todo el
+                # historial del año la primera vez que se activan estos
+                # tipos), pero SÍ se marca como entregado para que
+                # SeedBilling no la vuelva a ofrecer en la próxima corrida.
+                if (
+                    tipo_documento in ("04", "05")
+                    and fecha_desde_notas is not None
+                ):
+                    fecha_doc = _parse_fecha_ddmmyyyy(header.get("fecha_emision"))
+                    if fecha_doc is not None and fecha_doc < fecha_desde_notas:
+                        resumen["omitidos_por_fecha"] = resumen.get("omitidos_por_fecha", 0) + 1
+                        resumen.setdefault("omitidos_por_fecha_detalle", []).append({
+                            "tipo": header.get("tipo_comprobante"),
+                            "clave": clave,
+                            "emisor": header.get("razon_social_emisor"),
+                            "fecha_emision": header.get("fecha_emision"),
+                            "total": header.get("total"),
+                        })
+                        claves_quimpac_a_marcar.append(clave)
+                        continue
 
                 factura_existente_id = _exists_factura_xml(cur, clave)
 
@@ -962,8 +1017,10 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
         "marcados_entregados_quimpac": 0,
         "marcados_entregados_otras": 0,
         "errores": 0,
+        "omitidos_por_fecha": 0,
         "procesados_detalle": [],
         "otras_empresas_detalle": [],
+        "omitidos_por_fecha_detalle": [],
         "errores_detalle": [],
     }
 
@@ -984,18 +1041,20 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
     max_loops = int(_cfg("SEEDBILLING_MAX_LOOPS", 10))
     mark_other_companies = bool(_cfg("SEEDBILLING_MARK_OTHER_COMPANIES", True))
     tipos = _tipos_documento()
+    fecha_desde_notas = _notas_fecha_desde()
 
     cur = conn.cursor()
 
     _log(
         "info",
         "[SEEDBILLING] Inicio enabled=True tipos_documento=%s cantidad=%s max_loops=%s "
-        "target_ruc=%s mark_other_companies=%s",
+        "target_ruc=%s mark_other_companies=%s notas_fecha_desde=%s",
         tipos,
         cantidad,
         max_loops,
         target_ruc,
         mark_other_companies,
+        fecha_desde_notas,
     )
 
     for tipo_documento in tipos:
@@ -1005,6 +1064,7 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
                 list_url=list_url, target_ruc=target_ruc, cantidad=cantidad,
                 timeout=timeout, max_loops=max_loops,
                 mark_other_companies=mark_other_companies,
+                fecha_desde_notas=fecha_desde_notas,
             )
         except Exception as e:
             resumen["ok"] = False
