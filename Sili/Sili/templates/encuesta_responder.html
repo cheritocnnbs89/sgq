@@ -29,11 +29,9 @@
         </div>
       {% else %}
         <div class="survey-scale-help">
-          <span><strong>1</strong> Muy malo</span>
-          <span><strong>2</strong> Malo</span>
-          <span><strong>3</strong> Regular</span>
-          <span><strong>4</strong> Bueno</span>
-          <span><strong>5</strong> Excelente</span>
+          <span><strong>1</strong> Malo</span>
+          <span><strong>2</strong> Bueno</span>
+          <span><strong>3</strong> Muy bueno</span>
         </div>
 
         <form method="post" class="survey-form">
@@ -48,7 +46,7 @@
               </label>
 
               <div class="rating-row">
-                {% for n in range(1, 6) %}
+                {% for n in range(1, 4) %}
                   <label class="rating-option">
                     <input
                       type="radio"

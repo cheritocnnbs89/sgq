@@ -77,9 +77,10 @@ PREGUNTAS_ENCUESTA = [
     "¿Cómo califica la atención recibida?",
     "¿El tiempo de respuesta fue adecuado?",
     "¿La solución entregada resolvió su requerimiento?",
-    "¿El técnico comunicó claramente el avance o solución?",
-    "¿Qué tan satisfecho está con la gestión general del ticket?",
 ]
+
+# Escala de la encuesta: 1=Malo, 2=Bueno, 3=Muy bueno.
+ESCALA_ENCUESTA_MAX = 3
 
 
 def svc_crear_y_enviar_encuesta(task_id: int):
@@ -456,36 +457,35 @@ def _fmt_promedio(value):
 
 
 def _color_promedio(promedio):
+    # Escala 1=Malo, 2=Bueno, 3=Muy bueno.
     value = _safe_float(promedio)
 
     if value is None:
         return "#16a34a"
 
-    if value >= 4:
+    if value >= 2.5:
         return "#16a34a"
 
-    if value >= 3:
+    if value >= 1.5:
         return "#f59e0b"
 
     return "#dc2626"
 
 
 def _calificacion_texto(promedio):
+    # Escala 1=Malo, 2=Bueno, 3=Muy bueno.
     value = _safe_float(promedio)
 
     if value is None:
         return "Sin promedio"
 
-    if value >= 4.5:
-        return "Excelente"
-
-    if value >= 4:
+    if value >= 2.5:
         return "Muy bueno"
 
-    if value >= 3:
-        return "Regular"
+    if value >= 1.5:
+        return "Bueno"
 
-    return "Requiere atención"
+    return "Malo"
 
 
 def _build_resultado_encuesta_email(row):
@@ -505,8 +505,6 @@ def _build_resultado_encuesta_email(row):
     p1 = row.get("p1") or "—"
     p2 = row.get("p2") or "—"
     p3 = row.get("p3") or "—"
-    p4 = row.get("p4") or "—"
-    p5 = row.get("p5") or "—"
 
     subject = f"Resultado encuesta de satisfacción — Tarea {codigo}"
 
@@ -590,11 +588,9 @@ def _build_resultado_encuesta_email(row):
                 <tr>
                   <td style="background:#ecfdf5;border-bottom:1px solid #e5e7eb;padding:10px;font-weight:700;color:#064e3b;">Puntuaciones</td>
                   <td style="border-bottom:1px solid #e5e7eb;padding:10px;">
-                    P1: <strong>{p1}</strong> &nbsp; 
-                    P2: <strong>{p2}</strong> &nbsp; 
-                    P3: <strong>{p3}</strong> &nbsp; 
-                    P4: <strong>{p4}</strong> &nbsp; 
-                    P5: <strong>{p5}</strong>
+                    P1: <strong>{p1}</strong> &nbsp;
+                    P2: <strong>{p2}</strong> &nbsp;
+                    P3: <strong>{p3}</strong>
                   </td>
                 </tr>
                 <tr>
@@ -637,7 +633,7 @@ Título: {row.get("titulo") or "—"}
 Solicitante: {row.get("solicitante_nombre") or "—"}
 Responsable: {row.get("responsable_nombre") or "—"}
 Promedio: {promedio_fmt} ({calificacion})
-Puntuaciones: P1={p1}, P2={p2}, P3={p3}, P4={p4}, P5={p5}
+Puntuaciones: P1={p1}, P2={p2}, P3={p3}
 Comentario: {row.get("comentario") or "Sin comentario adicional."}
 Fecha respuesta: {_fmt_fecha_correo(row.get("fecha_respuesta"))}
 
@@ -714,15 +710,19 @@ def svc_guardar_respuesta_encuesta(token: str, form):
     comentario = (form.get("comentario") or "").strip()
     respuestas = []
 
-    for i in range(1, 6):
+    for i in range(1, len(PREGUNTAS_ENCUESTA) + 1):
         raw = (form.get(f"pregunta_{i}") or "").strip()
         try:
             value = int(raw)
         except ValueError:
             return {"ok": False, "message": "Debe responder todas las preguntas.", "category": "warning"}
 
-        if value < 1 or value > 5:
-            return {"ok": False, "message": "Las calificaciones deben estar entre 1 y 5.", "category": "warning"}
+        if value < 1 or value > ESCALA_ENCUESTA_MAX:
+            return {
+                "ok": False,
+                "message": f"Las calificaciones deben estar entre 1 y {ESCALA_ENCUESTA_MAX}.",
+                "category": "warning",
+            }
 
         respuestas.append((i, value))
 
