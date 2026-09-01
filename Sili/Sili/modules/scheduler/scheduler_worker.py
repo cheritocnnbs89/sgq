@@ -285,17 +285,34 @@ def start_scheduler(app=None):
                 _run_tick(target_app, f"TICK {tick_id}", run_om=run_om_now)
 
                 # ==================================================
-                # SeedBilling XML compras - 08:00 y 14:00
+                # SeedBilling XML compras - horarios en SEEDBILLING_RUN_SLOTS
                 # ==================================================
                 try:
                     seed_enabled = bool(target_app.config.get("SEEDBILLING_ENABLED", False))
-                    seed_hours = target_app.config.get("SEEDBILLING_RUN_HOURS", (8, 14))
-                    seed_hours = set(int(h) for h in seed_hours)
+                    seed_slots_raw = target_app.config.get("SEEDBILLING_RUN_SLOTS", ("08:00", "14:00"))
 
-                    if seed_enabled and now.hour in seed_hours:
-                        slot_key = f"{now.strftime('%Y-%m-%d')}:{now.hour:02d}"
+                    seed_slots = []
+                    for s in seed_slots_raw:
+                        hh, mm = str(s).split(":")
+                        seed_slots.append((int(hh), int(mm)))
 
-                        if slot_key not in last_seedbilling_slots:
+                    if seed_enabled:
+                        now_hm = (now.hour, now.minute)
+                        hoy = now.strftime("%Y-%m-%d")
+
+                        for hh, mm in seed_slots:
+                            # >= en vez de == : el tick corre cada ~5 min, así
+                            # que la hora exacta puede no coincidir nunca con
+                            # ningún tick -- dispara en el primer tick que ya
+                            # pasó la hora configurada, una sola vez por día.
+                            if now_hm < (hh, mm):
+                                continue
+
+                            slot_key = f"{hoy}:{hh:02d}{mm:02d}"
+
+                            if slot_key in last_seedbilling_slots:
+                                continue
+
                             _log("info", "Worker: Ejecutando SeedBilling XML slot=%s", slot_key)
 
                             cseed = get_db_standalone()
@@ -309,8 +326,6 @@ def start_scheduler(app=None):
                                     pass
 
                             last_seedbilling_slots.add(slot_key)
-                        else:
-                            _log("debug", "Worker: SeedBilling XML ya ejecutado slot=%s", slot_key)
 
                 except Exception:
                     target_app.logger.exception("Worker: SeedBilling XML falló")

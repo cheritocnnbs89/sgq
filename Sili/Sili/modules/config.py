@@ -69,8 +69,11 @@ GRAPH_API_VERSION = os.getenv(
 
 SEEDBILLING_ENABLED = True
 
-# Horarios de ejecución automática del worker
-SEEDBILLING_RUN_HOURS = (8, 14)
+# Horarios de ejecución automática del worker, formato "HH:MM" (el tick
+# del worker corre cada ~5 min, así que el disparo real puede caer unos
+# minutos después de la hora exacta -- ver _seedbilling_debe_ejecutar en
+# scheduler_worker.py).
+SEEDBILLING_RUN_SLOTS = ("08:00", "14:00", "14:10")
 
 # Empresa que sí se inserta en SQL
 SEEDBILLING_TARGET_RUC = "0990344760001"  # Quimpac Ecuador S.A.
@@ -95,6 +98,16 @@ SEEDBILLING_MARK_URL = (
 
 SEEDBILLING_SUSCRIPTOR = os.getenv("SEEDBILLING_SUSCRIPTOR", "81")
 SEEDBILLING_TIPODOCUMENTO = os.getenv("SEEDBILLING_TIPODOCUMENTO", "01")
+
+# Lista de tipos de documento SRI a traer en cada corrida (ej. "01,04,05").
+# Si no está seteada, seedbilling_xml_job.py cae a SEEDBILLING_TIPODOCUMENTO
+# (comportamiento viejo, un solo tipo) -- no tocar esto no cambia nada.
+SEEDBILLING_TIPOS_DOCUMENTO = os.getenv("SEEDBILLING_TIPOS_DOCUMENTO")
+
+# Fecha de corte ("YYYY-MM-DD") para Notas de Crédito/Débito (04/05): las
+# anteriores a esta fecha se marcan como entregadas en SeedBilling pero NO
+# se insertan en facturas_xml. No aplica a Factura (01). Vacío = sin filtro.
+SEEDBILLING_NOTAS_FECHA_DESDE = os.getenv("SEEDBILLING_NOTAS_FECHA_DESDE", "")
 
 # Para prueba local, quedan igual que SoapUI.
 # En producción es mejor definirlos por variables de entorno.
@@ -262,8 +275,10 @@ def configure_app(app: Flask):
         # SeedBilling
         # ==================================================
         SEEDBILLING_ENABLED=SEEDBILLING_ENABLED,
-        SEEDBILLING_RUN_HOURS=SEEDBILLING_RUN_HOURS,
+        SEEDBILLING_RUN_SLOTS=SEEDBILLING_RUN_SLOTS,
         SEEDBILLING_TARGET_RUC=SEEDBILLING_TARGET_RUC,
+        SEEDBILLING_TIPOS_DOCUMENTO=SEEDBILLING_TIPOS_DOCUMENTO,
+        SEEDBILLING_NOTAS_FECHA_DESDE=SEEDBILLING_NOTAS_FECHA_DESDE,
         SEEDBILLING_CANTIDAD=SEEDBILLING_CANTIDAD,
         SEEDBILLING_MAX_LOOPS=SEEDBILLING_MAX_LOOPS,
         SEEDBILLING_LIST_URL=SEEDBILLING_LIST_URL,
