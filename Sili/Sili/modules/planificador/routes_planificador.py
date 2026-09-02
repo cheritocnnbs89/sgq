@@ -1735,6 +1735,66 @@ def voucher_aprobar_jefe(sid):
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
+@planificador_bp.route("/solicitudes/aprobar-jefe-masivo", methods=["POST"],
+                       endpoint="planificador_aprobar_jefe_masivo")
+@require_login
+def aprobar_jefe_masivo():
+    """
+    Aprobación masiva de jefe directo, para Vuelo y Voucher juntos -- el
+    botón 'Aprobar selec. (jefe)' de la pestaña 'Por aprobar' selecciona
+    filas de ambos tipos indistintamente (mismo checkbox), así que acá se
+    decide por cada id cuál de los dos aplica en vez de tener un botón
+    separado por tipo.
+    """
+    u = _current_user()
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    ids_raw = request.form.getlist("ids[]")
+    try:
+        sids = [int(x) for x in ids_raw if x.strip().isdigit()]
+    except Exception:
+        sids = []
+    if not sids:
+        flash("No se seleccionaron solicitudes.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+    aprobadas = 0
+    for sid in sids:
+        s = repo.get_solicitud_by_id(sid)
+        if not s:
+            continue
+
+        if svc.puede_aprobar_jefe_vuelo(s, u["id"], ctx):
+            repo.aprobar_jefe_vuelo(sid, u["id"], u["nombre"], "")
+            try:
+                notif.notif_vuelo_aprobada_coordinacion(
+                    sid, s["area_solicitante"], str(s["fecha"]),
+                    s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+                )
+            except Exception:
+                pass
+            aprobadas += 1
+
+        elif svc.puede_aprobar_jefe_voucher(s, u["id"], ctx):
+            repo.aprobar_jefe_voucher(sid, u["id"], u["nombre"], "")
+            try:
+                notif.notif_voucher_aprobada_solicitante(
+                    sid, s["area_solicitante"], str(s["fecha"]),
+                    s.get("descripcion", ""), s["solicitante_id"], s["solicitante_nombre"], u["nombre"],
+                )
+            except Exception:
+                pass
+            try:
+                notif.notif_voucher_pendiente_entrega(
+                    sid, s["area_solicitante"], str(s["fecha"]),
+                    s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+                )
+            except Exception:
+                pass
+            aprobadas += 1
+
+    flash(f"{aprobadas} solicitud(es) aprobada(s).", "success")
+    return redirect(url_for("planificador.planificador_solicitudes"))
+
+
 @planificador_bp.route("/solicitudes/<int:sid>/voucher/rechazar-jefe", methods=["POST"],
                        endpoint="planificador_voucher_rechazar_jefe")
 @require_login

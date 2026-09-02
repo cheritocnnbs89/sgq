@@ -353,13 +353,17 @@
         {% endif %}
         {% if ctx.es_gerente or ctx.es_admin or por_aprobar %}
         <div class="planner-tab-content {% if tab_default == 'tab-por-aprobar' %}active{% endif %}" id="tab-por-aprobar">
-          {% set vuelo_aprobables_jefe = por_aprobar | selectattr('puede_aprobar_jefe_vuelo') | list %}
-          {% set vuelo_aprobables_gg   = por_aprobar | selectattr('puede_aprobar_gg_vuelo')   | list %}
-          {% set tiene_checks = vuelo_aprobables_jefe or vuelo_aprobables_gg %}
+          {# Aprobación masiva de "jefe": cubre Vuelo y Voucher juntos (mismo
+             checkbox/botón) -- el backend decide por cada id cuál de los dos
+             aplica, ver planificador_aprobar_jefe_masivo. #}
+          {% set aprobables_jefe = (por_aprobar | selectattr('puede_aprobar_jefe_vuelo') | list)
+                                    + (por_aprobar | selectattr('puede_aprobar_jefe_voucher') | list) %}
+          {% set vuelo_aprobables_gg = por_aprobar | selectattr('puede_aprobar_gg_vuelo') | list %}
+          {% set tiene_checks = aprobables_jefe or vuelo_aprobables_gg %}
           {# Formularios de aprobación masiva #}
-          {% if vuelo_aprobables_jefe %}
+          {% if aprobables_jefe %}
           <form id="form-aprobar-masivo-jefe" method="post"
-                action="{{ url_for('planificador.planificador_vuelo_aprobar_jefe_masivo') }}">
+                action="{{ url_for('planificador.planificador_aprobar_jefe_masivo') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div id="aprobar-masivo-jefe-ids"></div>
           </form>
@@ -373,7 +377,7 @@
           {% endif %}
           {% if tiene_checks %}
           <div class="d-flex align-items-center gap-2 px-2 pt-2 pb-1 flex-wrap">
-            {% if vuelo_aprobables_jefe %}
+            {% if aprobables_jefe %}
             <button type="submit" form="form-aprobar-masivo-jefe"
                     class="btn btn-success btn-sm" id="btn-aprobar-masivo-jefe" disabled>
               <i class="bi bi-check2-all me-1"></i>Aprobar selec. (jefe) <span id="cnt-jefe">0</span>
@@ -408,7 +412,7 @@
                 <tr>
                   {% if tiene_checks %}
                   <td>
-                    {% if r.puede_aprobar_jefe_vuelo %}
+                    {% if r.puede_aprobar_jefe_vuelo or r.puede_aprobar_jefe_voucher %}
                     <input type="checkbox" class="check-aprobar check-jefe" value="{{ r.id }}">
                     {% elif r.puede_aprobar_gg_vuelo %}
                     <input type="checkbox" class="check-aprobar check-gg" value="{{ r.id }}">
