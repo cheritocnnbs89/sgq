@@ -246,11 +246,11 @@ th.sorted-desc .th-sortable i {
 .sgq-modal-backdrop.show { display:flex; }
 .sgq-modal { width:min(860px,100%); max-height:92vh; overflow:auto; background:#fff; border-radius:16px; border:1px solid var(--line); box-shadow:0 32px 80px rgba(15,23,42,.32); }
 .sgq-modal.modal-sm { max-width:520px; }
-.sgq-modal-header { background:var(--surface-2); border-bottom:1px solid var(--line); padding:1rem 1.25rem; display:flex; justify-content:space-between; align-items:flex-start; gap:.6rem; }
+.sgq-modal-header { background:var(--surface-2); border-bottom:1px solid var(--line); padding:.8rem 1.1rem; display:flex; justify-content:space-between; align-items:flex-start; gap:.6rem; }
 .sgq-modal-title  { margin:0; color:#0f172a; font-size:1.1rem; font-weight:700; }
 .sgq-modal-subtitle { margin:.2rem 0 0; color:var(--muted); font-size:.8rem; }
-.sgq-modal-body   { padding:1.1rem 1.25rem; }
-.sgq-modal-footer { background:var(--surface-2); border-top:1px solid var(--line); padding:.85rem 1.25rem; display:flex; justify-content:flex-end; gap:.5rem; flex-wrap:wrap; }
+.sgq-modal-body   { padding:.9rem 1.1rem; }
+.sgq-modal-footer { background:var(--surface-2); border-top:1px solid var(--line); padding:.65rem 1.1rem; display:flex; justify-content:flex-end; gap:.5rem; flex-wrap:wrap; }
 .close-btn { width:32px; height:32px; border-radius:.45rem; border:1px solid var(--line); background:#fff; color:#111827; cursor:pointer; font-size:1.1rem; display:grid; place-items:center; flex-shrink:0; }
 
 /* Modal "Nueva solicitud": botón principal con más peso, cancelar mas neutro */
@@ -264,7 +264,7 @@ th.sorted-desc .th-sortable i {
 #modalNueva .sgq-modal-footer .btn-outline-secondary:hover { background:#f1f5f9; color:#374151; }
 
 /* Form grid */
-.form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; }
+.form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.6rem; }
 .form-grid .full { grid-column:1/-1; }
 .form-label { display:block; color:#111827; font-size:.8rem; font-weight:600; margin-bottom:.3rem; }
 @media (max-width:600px) { .form-grid { grid-template-columns:1fr; } .form-grid .full { grid-column:auto; } }
@@ -272,13 +272,13 @@ th.sorted-desc .th-sortable i {
 /* ── Secciones del modal (jerarquía visual) ── */
 .modal-section {
   background:#f9fafb; border:1px solid #eef0f3; border-radius:14px;
-  padding:1rem 1.1rem; margin-bottom:1rem;
+  padding:.8rem .9rem; margin-bottom:.75rem;
   box-shadow:0 1px 2px rgba(15,23,42,.04);
 }
 .modal-section:last-child { margin-bottom:0; }
 .modal-section-title {
   font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
-  color:#64748b; margin-bottom:.85rem;
+  color:#64748b; margin-bottom:.6rem;
 }
 
 /* Textareas */
@@ -595,11 +595,11 @@ tr.pg-hidden { display:none; }
 .campo-vuelo.visible { display:block; }
 
 /* ── Selector de tipo de solicitud (tarjetas premium) ── */
-.tipo-icon-row { display:flex; gap:.6rem; flex-wrap:wrap; }
+.tipo-icon-row { display:flex; gap:.5rem; flex-wrap:wrap; }
 .tipo-icon-btn {
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.3rem;
-  flex:1; min-width:130px; min-height:118px;
-  padding:1rem .75rem;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.2rem;
+  flex:1; min-width:130px; min-height:92px;
+  padding:.7rem .6rem;
   border:1.5px solid #e2e8f0; border-radius:1rem;
   background:#fff; color:#475569; cursor:pointer;
   transition:background .15s, border-color .15s, box-shadow .15s, color .15s, transform .15s;
@@ -610,10 +610,10 @@ tr.pg-hidden { display:none; }
   box-shadow:0 0 0 2px var(--brand-600), 0 10px 22px rgba(37,99,235,.16);
 }
 .tipo-icon-circle {
-  width:46px; height:46px; border-radius:50%; flex-shrink:0;
+  width:36px; height:36px; border-radius:50%; flex-shrink:0;
   display:flex; align-items:center; justify-content:center;
-  background:#eef2ff; color:var(--brand-600); font-size:1.35rem;
-  margin-bottom:.15rem; transition:background .15s, color .15s;
+  background:#eef2ff; color:var(--brand-600); font-size:1.1rem;
+  margin-bottom:.1rem; transition:background .15s, color .15s;
 }
 .tipo-icon-btn.active .tipo-icon-circle { background:var(--brand-600); color:#fff; }
 .tipo-icon-label { font-size:.85rem; font-weight:700; color:#111827; text-align:center; }
