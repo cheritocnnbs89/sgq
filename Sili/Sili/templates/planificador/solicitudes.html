@@ -165,7 +165,7 @@
             <i class="bi bi-flag-fill me-1"></i>Por completar
             <span class="badge bg-success ms-1">{{ por_completar|length }}</span>
           </button>
-          {% if ctx.es_admin or ctx.tipos_coordinador %}
+          {% if ctx.es_admin or ctx.tipos_coordinador or confirmacion_voucher %}
           <button class="planner-tab" data-tab="tab-confirmacion-voucher">
             <i class="bi bi-hourglass-split me-1"></i>Confirmación pendiente
             <span class="badge bg-warning text-dark ms-1">{{ confirmacion_voucher|length }}</span>
@@ -557,7 +557,7 @@
         <div class="planner-tab-content" id="tab-por-completar">
           {{ tabla_tab(por_completar, "Sin solicitudes aprobadas por completar") }}
         </div>
-        {% if ctx.es_admin or ctx.tipos_coordinador %}
+        {% if ctx.es_admin or ctx.tipos_coordinador or confirmacion_voucher %}
         <div class="planner-tab-content" id="tab-confirmacion-voucher">
           {{ tabla_tab(confirmacion_voucher, "Sin vouchers pendientes de confirmación del usuario") }}
         </div>
