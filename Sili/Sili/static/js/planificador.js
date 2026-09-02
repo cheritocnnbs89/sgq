@@ -189,6 +189,12 @@
     if (btn) btn.classList.add('d-none');
     if (campo) {
       campo.classList.remove('d-none');
+      // Recién ahora es seguro marcarlo required (si aplica al tipo actual)
+      // -- required=true mientras seguía oculto (d-none) es lo que produce
+      // "An invalid form control ... is not focusable" en Chrome y bloquea
+      // el envío sin mostrarle nada al usuario. Ver toggleCampoVoucher.
+      var tipoActual = (document.getElementById('tipoSolicitudInput') || {}).value || '';
+      campo.required = (tipoActual !== TIPO_VOUCHER);
       if (conFoco) campo.focus();
     }
   }
@@ -211,7 +217,13 @@
     if (campoDesc) campoDesc.value = '';
     var btnDesc = document.getElementById('btnToggleDescripcion');
     if (btnDesc) btnDesc.classList.remove('d-none');
-    if (campoDesc) campoDesc.classList.add('d-none');
+    if (campoDesc) {
+      campoDesc.classList.add('d-none');
+      // Vuelve a quedar oculto -- nunca required en ese estado (ver
+      // _expandirDescripcion/toggleCampoVoucher), o queda la misma
+      // combinación rota de una apertura anterior del modal.
+      campoDesc.required = false;
+    }
   }
 
   /* ── Nueva solicitud con fecha prellenada ── */
@@ -1171,6 +1183,33 @@
       var confirmacionSection = document.getElementById('confirmacionSectionDiv');
       if (confirmacionSection) confirmacionSection.classList.toggle('d-none', esVoucher);
     }
+
+    // Descripción/Observación: obligatoria para Mensajería y Vuelo, opcional
+    // para Voucher. El campo arranca plegado (d-none) y con "required" fijo
+    // en el HTML -- si queda vacío y oculto, la validación NATIVA del
+    // navegador (antes de que corra nuestro JS de submit) intenta enfocarlo
+    // para mostrar el globo de error y no puede (está display:none), tira
+    // "An invalid form control ... is not focusable" en consola y bloquea
+    // el envío sin mostrarle nada al usuario. Para Voucher no debe ser
+    // obligatorio, así que se saca "required" del todo en ese caso.
+    if (tipoVal !== TIPO_VUELO) {
+      var campoDescripcion = document.getElementById('campoDescripcion');
+      if (campoDescripcion) {
+        // Nunca required mientras siga oculto (d-none) -- eso es lo que
+        // rompe la validación nativa. Si ya está expandido (el usuario le
+        // dio "Agregar" antes de cambiar de tipo), sí se actualiza según
+        // corresponda al tipo nuevo.
+        var yaVisible = !campoDescripcion.classList.contains('d-none');
+        campoDescripcion.required = !esVoucher && yaVisible;
+      }
+
+      var lblDescripcion = document.getElementById('lblDescripcion');
+      if (lblDescripcion) {
+        lblDescripcion.textContent = esVoucher
+          ? 'Descripción de la actividad (opcional)'
+          : 'Descripción de la actividad *';
+      }
+    }
   }
 
   function actualizarPlaceholderObservacionPorMotivo() {
@@ -1386,12 +1425,14 @@
           return;
         }
         if (!validarFechasVuelo()) { e.preventDefault(); return; }
-        // La Descripción/Observación es obligatoria pero empieza plegada:
-        // un campo oculto (d-none) no se valida solo con el submit nativo
-        // del navegador, así que si sigue vacío hay que expandirlo y
-        // bloquear el envío en vez de dejarlo pasar en blanco.
+        // La Descripción/Observación es obligatoria para Mensajería/Vuelo,
+        // pero empieza plegada -- si sigue vacía hay que expandirla y
+        // bloquear el envío en vez de dejarla pasar en blanco. Para Voucher
+        // es opcional: vacía y oculta es válido, no se debe tocar.
         var campoDesc = document.getElementById('campoDescripcion');
-        if (campoDesc && campoDesc.classList.contains('d-none') && !campoDesc.value.trim()) {
+        var tipoActualSubmit = (document.getElementById('tipoSolicitudInput') || {}).value || '';
+        if (campoDesc && tipoActualSubmit !== TIPO_VOUCHER &&
+            campoDesc.classList.contains('d-none') && !campoDesc.value.trim()) {
           e.preventDefault();
           _expandirDescripcion(true);
           campoDesc.reportValidity();
