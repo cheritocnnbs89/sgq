@@ -41,6 +41,26 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
+  function syncBoletosRow(row) {
+    const check = row.querySelector('.cc-boletos-check');
+    const hidden = row.querySelector('.cc-boletos-hidden');
+    const pctInput = row.querySelector('input[name="cc_pct[]"]');
+
+    if (!check || !hidden) {
+      return;
+    }
+
+    hidden.value = check.checked ? '1' : '0';
+
+    if (pctInput) {
+      pctInput.disabled = check.checked;
+
+      if (check.checked) {
+        pctInput.value = '0.00';
+      }
+    }
+  }
+
   function addCCRow() {
     const tmpl = wrap.querySelector('.cc-row');
 
@@ -50,13 +70,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const clone = tmpl.cloneNode(true);
 
-    clone.querySelectorAll('input').forEach(function (input) {
+    clone.querySelectorAll('input[type="number"], input[type="text"]').forEach(function (input) {
       input.value = '';
     });
 
     clone.querySelectorAll('select').forEach(function (select) {
       select.selectedIndex = 0;
     });
+
+    const cloneCheck = clone.querySelector('.cc-boletos-check');
+    const clonePct = clone.querySelector('input[name="cc_pct[]"]');
+
+    if (cloneCheck) {
+      cloneCheck.checked = false;
+    }
+
+    if (clonePct) {
+      clonePct.disabled = false;
+    }
+
+    syncBoletosRow(clone);
 
     wrap.appendChild(clone);
     checkCCSum();
@@ -65,7 +98,19 @@ document.addEventListener('DOMContentLoaded', function () {
   function ccSum() {
     let total = 0;
 
-    document.querySelectorAll('input[name="cc_pct[]"]').forEach(function (input) {
+    document.querySelectorAll('.cc-row').forEach(function (row) {
+      const check = row.querySelector('.cc-boletos-check');
+
+      if (check && check.checked) {
+        return;
+      }
+
+      const input = row.querySelector('input[name="cc_pct[]"]');
+
+      if (!input) {
+        return;
+      }
+
       const raw = (input.value || '').replace(',', '.');
       const value = parseFloat(raw);
 
@@ -122,6 +167,19 @@ document.addEventListener('DOMContentLoaded', function () {
       checkCCSum();
     }
   });
+
+  wrap.addEventListener('change', function (event) {
+    if (event.target && event.target.classList.contains('cc-boletos-check')) {
+      const row = event.target.closest('.cc-row');
+
+      if (row) {
+        syncBoletosRow(row);
+        checkCCSum();
+      }
+    }
+  });
+
+  wrap.querySelectorAll('.cc-row').forEach(syncBoletosRow);
 
   if (saveButton) {
     saveButton.addEventListener('click', function (event) {

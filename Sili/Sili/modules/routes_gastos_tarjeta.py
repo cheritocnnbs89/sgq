@@ -7615,6 +7615,9 @@ def register_gastos_routes(app):
                             ON pv.id = ucc.centro_costo_id
                         WHERE ucc.usuario_id = ?
                         AND pv.activo = 1
+                        AND ucc.porcentaje > 0
+                        AND COALESCE(ucc.es_boletos_aereos, 0) = 0
+                        ORDER BY ucc.centro_costo_id
                     """, (id_dueno,))
 
                     distribucion_cc = []
@@ -8320,6 +8323,9 @@ def register_gastos_routes(app):
                             ON pv.id = ucc.centro_costo_id
                         WHERE ucc.usuario_id = ?
                         AND pv.activo = 1
+                        AND ucc.porcentaje > 0
+                        AND COALESCE(ucc.es_boletos_aereos, 0) = 0
+                        ORDER BY ucc.centro_costo_id
                     """, (owner_id,))
 
                     distribucion_cc = []

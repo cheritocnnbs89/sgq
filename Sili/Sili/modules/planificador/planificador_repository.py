@@ -1475,7 +1475,13 @@ def get_centros_costo_con_presupuesto(empresa_id: int, anio: int) -> list[dict]:
 
 
 def get_cc_usuario(usuario_id: int) -> dict | None:
-    """Retorna el centro de costo principal del usuario (mayor porcentaje en usuarios_cc)."""
+    """Retorna el centro de costo del usuario marcado como exclusivo de
+    Planificador/Boletos de avión (usuarios_cc.es_boletos_aereos = 1).
+
+    Ya no se elige por "mayor porcentaje": ese campo se fuerza siempre a 0
+    en los CC marcados como boletos aéreos, así que el criterio ahora es
+    explícito (el checkbox en la ficha del usuario), no un heurístico.
+    """
     conn = get_db()
     cur = conn.cursor()
     cur.execute("""
@@ -1488,7 +1494,8 @@ def get_cc_usuario(usuario_id: int) -> dict | None:
         JOIN usuarios u   ON u.id  = uc.usuario_id
         JOIN param_values pv ON pv.id = uc.centro_costo_id
         WHERE uc.usuario_id = ?
-        ORDER BY uc.porcentaje DESC
+          AND uc.es_boletos_aereos = 1
+        ORDER BY uc.centro_costo_id
     """, (usuario_id,))
     row = cur.fetchone()
     if not row:

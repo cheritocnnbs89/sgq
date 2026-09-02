@@ -230,8 +230,9 @@
       <div id="cc-rows" class="row g-2">
         {% if cc_dist and cc_dist|length>0 %}
         {% for r in cc_dist %}
+        {% set es_boletos = (r.get('es_boletos_aereos', 0) or 0)|int == 1 %}
         <div class="cc-row d-flex align-items-end gap-2">
-          <div class="col-md-8">
+          <div class="col-md-6">
             <label class="form-label small">Centro de costo</label>
             <select name="cc_id[]" class="form-select">
               <option value="">-- Seleccione centro de costo --</option>
@@ -241,10 +242,16 @@
             </select>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label class="form-label small">% asignado</label>
             <input type="number" step="0.01" min="0" max="100" name="cc_pct[]" class="form-control"
-              value="{{ '%.2f'|format((r.get('pct', 0) or 0)|float) }}">
+              value="{{ '%.2f'|format((r.get('pct', 0) or 0)|float) }}" {% if es_boletos %}disabled{% endif %}>
+          </div>
+
+          <div class="col-md-3 form-check">
+            <input type="hidden" name="cc_boletos[]" class="cc-boletos-hidden" value="{{ '1' if es_boletos else '0' }}">
+            <input type="checkbox" class="form-check-input cc-boletos-check" {% if es_boletos %}checked{% endif %}>
+            <label class="form-check-label small">Solo boletos aéreos (Planificador)</label>
           </div>
 
           <div class="col-md-1 d-grid">
@@ -254,7 +261,7 @@
         {% endfor %}
         {% else %}
         <div class="cc-row d-flex align-items-end gap-2">
-          <div class="col-md-8">
+          <div class="col-md-6">
             <label class="form-label small">Centro de costo</label>
             <select name="cc_id[]" class="form-select">
               <option value="">-- Seleccione centro de costo --</option>
@@ -264,9 +271,15 @@
             </select>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label class="form-label small">% asignado</label>
             <input type="number" step="0.01" min="0" max="100" name="cc_pct[]" class="form-control" placeholder="%">
+          </div>
+
+          <div class="col-md-3 form-check">
+            <input type="hidden" name="cc_boletos[]" class="cc-boletos-hidden" value="0">
+            <input type="checkbox" class="form-check-input cc-boletos-check">
+            <label class="form-check-label small">Solo boletos aéreos (Planificador)</label>
           </div>
 
           <div class="col-md-1 d-grid">

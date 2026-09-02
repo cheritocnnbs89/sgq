@@ -114,10 +114,11 @@ def load_user_cc_dist(conn, user_id: int):
     return [dict(r) for r in cur.fetchall()]
 
 
-def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str]):
-    items = []
+def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str], cc_boletos: list[str] | None = None):
+    cc_boletos = cc_boletos or []
+    items = []  # (cc_id, pct, es_boletos_aereos)
 
-    for cc_raw, pct_raw in zip(cc_ids, cc_pcts):
+    for idx, (cc_raw, pct_raw) in enumerate(zip(cc_ids, cc_pcts)):
         cc_raw = (cc_raw or "").strip()
         pct_raw = (pct_raw or "").strip()
 
@@ -129,12 +130,23 @@ def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str])
         except ValueError:
             continue
 
-        try:
-            pct = float(pct_raw.replace(",", ".")) if pct_raw else 0.0
-        except ValueError:
-            pct = 0.0
+        es_boletos = (cc_boletos[idx].strip() if idx < len(cc_boletos) else "0") == "1"
 
-        items.append((cc_id, pct))
+        if es_boletos:
+            # Exclusivo de Planificador/Boletos de avión: el % nunca se usa
+            # para reembolso, se fuerza a 0 sin importar lo que llegó del
+            # formulario y no entra en la suma de 100%.
+            pct = 0.0
+        else:
+            try:
+                pct = float(pct_raw.replace(",", ".")) if pct_raw else 0.0
+            except ValueError:
+                pct = 0.0
+
+            if pct <= 0:
+                return False, "Cada centro de costo de reembolso debe tener un % mayor a 0 (o marcarse como exclusivo de boletos aéreos)."
+
+        items.append((cc_id, pct, es_boletos))
 
     cur = conn.cursor()
 
@@ -145,19 +157,20 @@ def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str])
     cur.execute(SQL_SELECT_VALID_CC_IDS, (CC_GROUP_ID,))
     valid_ids = {int(r["id"]) for r in cur.fetchall()}
 
-    for cc_id, _ in items:
+    for cc_id, _, _ in items:
         if cc_id not in valid_ids:
             return False, f"Centro de costo inválido (id={cc_id}). Revise Parametrización (grupo Centro de Costo)."
 
-    total = sum(p for _, p in items)
+    total_reembolso = sum(p for _, p, es_boletos in items if not es_boletos)
+    hay_reembolso = any(not es_boletos for _, _, es_boletos in items)
 
-    if abs(total - 100.0) > 0.01:
-        return False, f"La distribución de centros de costo debe sumar 100%. Actualmente suma: {total:.2f}%"
+    if hay_reembolso and abs(total_reembolso - 100.0) > 0.01:
+        return False, f"La distribución de centros de costo debe sumar 100%. Actualmente suma: {total_reembolso:.2f}%"
 
     cur.execute(SQL_DELETE_USER_CC_DIST, (user_id,))
 
-    for cc_id, pct in items:
-        cur.execute(SQL_INSERT_USER_CC_DIST, (user_id, cc_id, pct))
+    for cc_id, pct, es_boletos in items:
+        cur.execute(SQL_INSERT_USER_CC_DIST, (user_id, cc_id, pct, 1 if es_boletos else 0))
 
     return True, None
 

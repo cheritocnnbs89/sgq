@@ -61,6 +61,7 @@ SQL_SELECT_USER_CC_DIST = f"""
     SELECT
         uc.centro_costo_id AS cc_id,
         uc.porcentaje      AS pct,
+        COALESCE(uc.es_boletos_aereos,0) AS es_boletos_aereos,
         COALESCE(pv.nombre,'') AS cc_nombre
     FROM {TB_USUARIOS_CC} uc
     LEFT JOIN {TB_PARAM_VALUES} pv
@@ -83,8 +84,8 @@ SQL_DELETE_USER_CC_DIST = f"""
 """
 
 SQL_INSERT_USER_CC_DIST = f"""
-    INSERT INTO {TB_USUARIOS_CC}(usuario_id, centro_costo_id, porcentaje)
-    VALUES (?,?,?)
+    INSERT INTO {TB_USUARIOS_CC}(usuario_id, centro_costo_id, porcentaje, es_boletos_aereos)
+    VALUES (?,?,?,?)
 """
 
 SQL_SELECT_USUARIO_EDIT = f"""

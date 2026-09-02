@@ -81,7 +81,8 @@ def build_users_list_filters(q: str, estado: str, sort_col: str, sort_dir: str):
 def save_cc_distribution_or_error(conn, user_id: int, form):
     cc_ids = form.getlist("cc_id[]")
     cc_pcts = form.getlist("cc_pct[]")
-    return save_user_cc_dist(conn, user_id, cc_ids, cc_pcts)
+    cc_boletos = form.getlist("cc_boletos[]")
+    return save_user_cc_dist(conn, user_id, cc_ids, cc_pcts, cc_boletos)
 
 
 def cc_dist_from_post(form):
