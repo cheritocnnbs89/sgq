@@ -4,6 +4,30 @@
 .fs-70 { font-size: .7em; }
 .fs-75 { font-size: .75em; }
 
+/* ── Menú "Más acciones" (···) en las tablas de Solicitudes ── */
+/* .table-responsive (base.css) pone overflow-x:auto sin overflow-y
+   explícito -- el navegador calcula overflow-y:auto también (regla CSS
+   estándar cuando un solo eje queda en "visible"), así que el dropdown
+   de acciones queda recortado por la tabla y aparece un scroll interno
+   feo en vez de flotar libre. Se libera solo el eje vertical, acá y no
+   en base.css, para no tocar el scroll horizontal de otras tablas del
+   sitio que sí lo necesitan. */
+.planner-tab-content .table-responsive {
+  overflow-y: visible;
+}
+
+/* Botón "···" de solo ícono: sin el caret que Bootstrap agrega por
+   defecto a .dropdown-toggle (dos triángulos al lado de los tres
+   puntos se veía recargado) y un poco más angosto, ya que no tiene
+   texto al lado. */
+.acciones-toggle-icon.dropdown-toggle::after {
+  display: none;
+}
+.acciones-toggle-icon {
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
 /* Encabezados ordenables de tablas */
 .th-sortable {
   cursor: pointer;
