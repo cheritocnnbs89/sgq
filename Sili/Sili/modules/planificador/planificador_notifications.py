@@ -614,8 +614,7 @@ def notif_vuelo_enviada_cotizar_info(solicitud_id: int, area: str, fecha: str,
         ("Descripción",      descripcion or "—"),
         ("Solicitante",      solicitante_nombre),
     ]
-    nota = ("Al haber presupuesto disponible en el centro de costo, esta solicitud "
-            "no requirió aprobación del jefe directo y pasó directo al coordinador.")
+    nota = ""
 
     if jefe_id:
         saludo_jefe = (f"Estimado/a <strong>{jefe_nombre}</strong>, la solicitud de Vuelo de "
