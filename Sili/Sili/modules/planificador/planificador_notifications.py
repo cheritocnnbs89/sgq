@@ -562,6 +562,16 @@ def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
                                        descripcion: str, solicitante_nombre: str,
                                        aprobador_nombre: str) -> None:
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
+    if not coordinadores:
+        try:
+            current_app.logger.warning(
+                "[VUELO] Sin coordinadores configurados para tipo=Vuelo — "
+                "nadie recibirá la notificación de solicitud #%s pendiente de cotización. "
+                "Revisar Planificador > Configuración (rol Coordinador).", solicitud_id
+            )
+        except Exception:
+            pass
+        return
     subject = f"[Planificador] Vuelo #{solicitud_id} aprobado — pendiente de cotización"
     titulo  = f"Solicitud de Vuelo #{solicitud_id} aprobada"
     saludo  = (f"La solicitud de Vuelo de <strong>{solicitante_nombre}</strong> fue aprobada "

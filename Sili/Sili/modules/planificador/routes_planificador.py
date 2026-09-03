@@ -713,7 +713,9 @@ def crear():
                     sid, area, fecha, desc, u["nombre"], aprobador_txt,
                 )
             except Exception:
-                pass
+                current_app.logger.exception(
+                    "[VUELO] Error notificando a coordinador sid=%s", sid
+                )
 
             # Si se saltó el paso del jefe por presupuesto disponible (no
             # por rol) y sí tiene jefe configurado, avisarle a él y al
@@ -725,7 +727,9 @@ def crear():
                         jefe_id_vuelo, jefe_nombre_vuelo or "—",
                     )
                 except Exception:
-                    pass
+                    current_app.logger.exception(
+                        "[VUELO] Error notificando jefe/solicitante (enviado a cotizar) sid=%s", sid
+                    )
 
             if autoaprobado_por_rol:
                 msg = "Solicitud de Vuelo creada y auto-aprobada según tu rol. Pasa al coordinador para cotizar."
