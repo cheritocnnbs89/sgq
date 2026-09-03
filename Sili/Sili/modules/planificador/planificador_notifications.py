@@ -609,16 +609,14 @@ def notif_vuelo_enviada_cotizar_info(solicitud_id: int, area: str, fecha: str,
 
     if jefe_id:
         saludo_jefe = (f"Estimado/a <strong>{jefe_nombre}</strong>, la solicitud de Vuelo de "
-                       f"<strong>{solicitante_nombre}</strong> se envió a cotizar directamente "
-                       f"(no requirió su aprobación por tener presupuesto disponible).")
+                       f"<strong>{solicitante_nombre}</strong> se envió a cotizar.")
         html_jefe = _email_html("PLANIFICADOR · VUELO — INFORMATIVO", titulo, saludo_jefe, filas, nota)
         _inapp(jefe_id, subject,
                f"Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} enviado a cotizar (sin requerir su aprobación)")
         email_j = repo.get_email_by_usuario_id(jefe_id)
         _email([email_j] if email_j else [], subject, html_jefe)
 
-    saludo_sol = (f"Tu solicitud de Vuelo fue enviada a cotizar al coordinador "
-                  f"(al haber presupuesto disponible, no requirió aprobación de tu jefe directo).")
+    saludo_sol = "Tu solicitud de Vuelo fue enviada a cotizar al coordinador."
     html_sol = _email_html("PLANIFICADOR · VUELO — INFORMATIVO", titulo, saludo_sol, filas, nota)
     _inapp(solicitante_id, subject,
            f"Tu solicitud de Vuelo #{solicitud_id} — {fecha} fue enviada a cotizar")
