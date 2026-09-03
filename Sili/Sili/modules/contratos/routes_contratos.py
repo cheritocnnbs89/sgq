@@ -17,7 +17,6 @@ from flask import (
     abort,
     get_flashed_messages,
     send_file,
-    jsonify,
 )
 from modules.security import require_login, require_permission
 
@@ -99,24 +98,6 @@ def compras_nuevo():
         post_url=url_for("contratos.compras_nuevo"),
         back_url=request.args.get("next") or url_for("contratos.compras_lista"),
     )
-
-
-@contratos_bp.route("/compras/preview-codigo", methods=["GET"])
-@require_login
-@require_permission("contratos_ingresar", "ver")
-def compras_preview_codigo():
-    """AJAX: vista previa del código de contrato que se generaría con el
-    AÑO y usuario solicitante actuales del formulario -- de solo lectura,
-    no incrementa la secuencia real (ver previsualizar_codigo_contrato)."""
-    anio = (request.args.get("anio") or "").strip()
-    usuario_id_raw = (request.args.get("usuario_solicitante_id") or "").strip()
-    if not anio.isdigit() or not usuario_id_raw.isdigit():
-        return jsonify({"ok": False})
-    try:
-        codigo = services.previsualizar_codigo_contrato(int(anio), int(usuario_id_raw))
-    except Exception:
-        return jsonify({"ok": False})
-    return jsonify({"ok": True, "codigo": codigo})
 
 
 @contratos_bp.route("/compras/<int:contrato_id>/editar", methods=["GET", "POST"])

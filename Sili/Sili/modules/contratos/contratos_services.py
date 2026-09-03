@@ -359,22 +359,6 @@ def generar_codigo_contrato(anio, usuario_solicitante_id) -> str:
     return f"{anio_str}-{area_texto}-{area_codigo}-{secuencial:04d}"
 
 
-def previsualizar_codigo_contrato(anio, usuario_solicitante_id) -> str:
-    """
-    Igual que generar_codigo_contrato(), pero de solo lectura: NO
-    incrementa la secuencia real -- mostrar una vista previa no debe
-    quemar números de contrato que después nadie usa. El secuencial
-    mostrado es un estimado (siguiente_valor + 1); puede correrse si
-    otro usuario guarda un contrato del mismo año/área antes que este.
-    """
-    anio_str = str(int(anio)) if anio else "0000"
-    area = repository.fetch_area_por_usuario(usuario_solicitante_id)
-    area_codigo = area["codigo"] or "00"
-    area_texto = _normalizar_area_texto(area["nombre"])
-    secuencial = repository.peek_secuencia_contrato(f"contrato_{anio_str}_{area_codigo}") + 1
-    return f"{anio_str}-{area_texto}-{area_codigo}-{secuencial:04d}"
-
-
 def create_contrato_from_request():
     data = parse_contrato_form()
     ok, mensaje = validate_contrato_payload(data)
