@@ -248,6 +248,20 @@ def siguiente_secuencia_contrato(nombre_secuencia: str) -> int:
     return int(row["ultimo_valor"]) if row else 1
 
 
+def peek_secuencia_contrato(nombre_secuencia: str) -> int:
+    """
+    Lee el último valor de la secuencia SIN incrementarla -- para
+    previsualizar el código antes de guardar el contrato. Si la
+    secuencia todavía no existe (ningún contrato de ese año/área creado
+    aún), retorna 0 -- igual que el arranque de siguiente_secuencia_contrato.
+    """
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(SQL_LEER_SECUENCIA_CONTRATO, (nombre_secuencia,))
+    row = cur.fetchone()
+    return int(row["ultimo_valor"]) if row else 0
+
+
 def set_codigo_contrato(contrato_id: int, codigo: str) -> None:
     conn = get_conn()
     conn.cursor().execute(SQL_SET_CODIGO_CONTRATO, (codigo, contrato_id))
