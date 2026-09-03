@@ -40,6 +40,7 @@
             <tr>
               <th class="w-110px">ID</th>
               <th>Nombre</th>
+              <th class="w-110px">Código</th>
               <th class="text-end w-220px">Acciones</th>
             </tr>
           </thead>
@@ -48,6 +49,7 @@
             <tr>
               <td class="text-muted">{{ a['id'] }}</td>
               <td>{{ a['nombre'] }}</td>
+              <td>{{ a['codigo'] or '—' }}</td>
               <td class="text-end">
                 {% if can_edit %}
                 <a href="{{ url_for('editar_area', area_id=a['id']) }}"
@@ -69,7 +71,7 @@
             {% endfor %}
             {% if (areas or [])|length == 0 %}
             <tr>
-              <td colspan="3" class="text-center text-muted py-4">No hay áreas registradas.</td>
+              <td colspan="4" class="text-center text-muted py-4">No hay áreas registradas.</td>
             </tr>
             {% endif %}
           </tbody>

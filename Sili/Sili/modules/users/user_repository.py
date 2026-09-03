@@ -386,9 +386,9 @@ def delete_departamento(conn, dep_id: int):
     cur.execute(SQL_DELETE_DEPARTAMENTO, (dep_id,))
 
 
-def insert_area(conn, nombre: str):
+def insert_area(conn, nombre: str, codigo: str | None = None):
     cur = conn.cursor()
-    cur.execute(SQL_INSERT_AREA, (nombre,))
+    cur.execute(SQL_INSERT_AREA, (nombre, codigo))
 
 
 def get_areas_list(conn):
@@ -403,9 +403,9 @@ def get_area_by_id(conn, area_id: int):
     return cur.fetchone()
 
 
-def update_area(conn, area_id: int, nombre: str):
+def update_area(conn, area_id: int, nombre: str, codigo: str | None = None):
     cur = conn.cursor()
-    cur.execute(SQL_UPDATE_AREA, (nombre, area_id))
+    cur.execute(SQL_UPDATE_AREA, (nombre, codigo, area_id))
 
 
 def delete_area(conn, area_id: int):

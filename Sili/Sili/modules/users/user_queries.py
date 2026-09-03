@@ -258,25 +258,25 @@ SQL_DELETE_DEPARTAMENTO = f"""
 """
 
 SQL_INSERT_AREA = f"""
-    INSERT INTO {TB_AREAS}(nombre)
-    VALUES (?)
+    INSERT INTO {TB_AREAS}(nombre, codigo)
+    VALUES (?, ?)
 """
 
 SQL_SELECT_AREAS_LIST = f"""
-    SELECT id, nombre, activo
+    SELECT id, nombre, activo, codigo
     FROM {TB_AREAS}
     ORDER BY nombre
 """
 
 SQL_SELECT_AREA_BY_ID = f"""
-    SELECT id, nombre, activo
+    SELECT id, nombre, activo, codigo
     FROM {TB_AREAS}
     WHERE id=?
 """
 
 SQL_UPDATE_AREA = f"""
     UPDATE {TB_AREAS}
-    SET nombre=?
+    SET nombre=?, codigo=?
     WHERE id=?
 """
 

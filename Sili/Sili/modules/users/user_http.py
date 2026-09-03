@@ -806,12 +806,16 @@ def register_user_routes(app):
     def nueva_area():
         if request.method == "POST":
             nombre = (request.form.get("nombre") or "").strip()
+            codigo = (request.form.get("codigo") or "").strip().upper() or None
             if not nombre:
                 flash("El nombre del área es obligatorio.", "danger")
                 return redirect(url_for("nueva_area"))
+            if codigo and len(codigo) != 2:
+                flash("El código de área debe tener exactamente 2 caracteres.", "danger")
+                return redirect(url_for("nueva_area"))
             conn = get_db()
             try:
-                insert_area(conn, nombre)
+                insert_area(conn, nombre, codigo)
                 conn.commit()
                 flash("Área creada correctamente.", "success")
                 return redirect(url_for("areas"))
@@ -840,11 +844,15 @@ def register_user_routes(app):
 
         if request.method == "POST":
             nombre = (request.form.get("nombre") or "").strip()
+            codigo = (request.form.get("codigo") or "").strip().upper() or None
             if not nombre:
                 flash("El nombre del área es obligatorio.", "danger")
                 return redirect(url_for("editar_area", area_id=area_id))
+            if codigo and len(codigo) != 2:
+                flash("El código de área debe tener exactamente 2 caracteres.", "danger")
+                return redirect(url_for("editar_area", area_id=area_id))
             try:
-                update_area(conn, area_id, nombre)
+                update_area(conn, area_id, nombre, codigo)
                 conn.commit()
                 flash("Área actualizada correctamente.", "success")
             except Exception as e:
