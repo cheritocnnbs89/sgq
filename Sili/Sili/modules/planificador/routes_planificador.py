@@ -577,23 +577,37 @@ def crear():
 
     ciudad = repo.get_ciudad_usuario(u["id"])
 
-    # Para Vuelo: el flujo empieza con aprobación del jefe directo, salvo que
-    # el rol del solicitante esté configurado para auto-aprobar ese paso
-    # (ej. gerentes que hoy no tienen jefe directo, pero podrían tenerlo en
-    # el futuro sin que eso deba forzar el flujo de aprobación).
+    # Para Vuelo: el flujo empieza con aprobación del jefe directo, salvo que:
+    # - el rol del solicitante esté configurado para auto-aprobar ese paso
+    #   (ej. gerentes que hoy no tienen jefe directo, pero podrían tenerlo en
+    #   el futuro sin que eso deba forzar el flujo de aprobación), o
+    # - haya presupuesto disponible en el centro de costo (semáforo verde o
+    #   amarillo): si no falta presupuesto, no tiene sentido bloquear la
+    #   solicitud en el jefe -- se auto-aprueba ese paso y pasa directo a
+    #   cotización del coordinador. Solo en rojo (sin saldo) se exige la
+    #   aprobación del jefe.
     estado_inicial = "PENDIENTE_COORDINACION"
     jefe_id_vuelo   = None
     jefe_nombre_vuelo = None
     autoaprobado_por_rol = False
+    autoaprobado_por_presupuesto = False
     if tipo == "Vuelo":
         roles_autoaprobar = repo.get_roles_autoaprobar_jefe_vuelo()
         autoaprobado_por_rol = svc.debe_autoaprobar_jefe_vuelo(u["rol"], roles_autoaprobar)
-        if autoaprobado_por_rol:
+        autoaprobado_por_presupuesto = saldo["semaforo"] != "rojo"
+
+        if autoaprobado_por_rol or autoaprobado_por_presupuesto:
             current_app.logger.info(
-                "[VUELO] usuario_id=%s rol=%s → autoaprobado por configuración de rol",
-                u["id"], u.get("rol")
+                "[VUELO] usuario_id=%s rol=%s semaforo=%s → autoaprobado (rol=%s, presupuesto=%s)",
+                u["id"], u.get("rol"), saldo["semaforo"], autoaprobado_por_rol, autoaprobado_por_presupuesto
             )
             estado_inicial = "PENDIENTE_COORDINACION"
+            # Igual buscamos el jefe (si existe) solo para avisarle que la
+            # solicitud fue enviada a cotizar -- no tiene que aprobarla.
+            jefe = repo.get_gerente_del_usuario(u["id"])
+            if jefe:
+                jefe_id_vuelo     = jefe["id"]
+                jefe_nombre_vuelo = jefe["nombre"]
         else:
             jefe = repo.get_gerente_del_usuario(u["id"])
             current_app.logger.info(
@@ -685,21 +699,38 @@ def crear():
                 pass
             msg = "Solicitud de Vuelo creada. Pendiente de aprobación de su jefe directo."
         else:
-            # Autoaprobada por rol, o sin jefe directo configurado: pasa
-            # directo a coordinación y hay que notificar al coordinador.
+            # Autoaprobada por rol, por presupuesto disponible (semáforo
+            # verde/amarillo), o sin jefe directo configurado: pasa directo
+            # a coordinación y hay que notificar al coordinador.
             try:
-                aprobador_txt = (
-                    f"Auto-aprobado (rol {u.get('rol') or '—'})"
-                    if autoaprobado_por_rol
-                    else "Auto-aprobado (sin jefe directo configurado)"
-                )
+                if autoaprobado_por_rol:
+                    aprobador_txt = f"Auto-aprobado (rol {u.get('rol') or '—'})"
+                elif jefe_id_vuelo:
+                    aprobador_txt = "Auto-aprobado (presupuesto disponible)"
+                else:
+                    aprobador_txt = "Auto-aprobado (sin jefe directo configurado)"
                 notif.notif_vuelo_aprobada_coordinacion(
                     sid, area, fecha, desc, u["nombre"], aprobador_txt,
                 )
             except Exception:
                 pass
+
+            # Si se saltó el paso del jefe por presupuesto disponible (no
+            # por rol) y sí tiene jefe configurado, avisarle a él y al
+            # solicitante que la solicitud ya fue enviada a cotizar.
+            if not autoaprobado_por_rol and jefe_id_vuelo:
+                try:
+                    notif.notif_vuelo_enviada_cotizar_info(
+                        sid, area, fecha, desc, u["id"], u["nombre"],
+                        jefe_id_vuelo, jefe_nombre_vuelo or "—",
+                    )
+                except Exception:
+                    pass
+
             if autoaprobado_por_rol:
                 msg = "Solicitud de Vuelo creada y auto-aprobada según tu rol. Pasa al coordinador para cotizar."
+            elif jefe_id_vuelo:
+                msg = "Solicitud de Vuelo creada. Presupuesto disponible: se envió directo a cotización del coordinador."
             else:
                 msg = "Solicitud de Vuelo creada. No tiene jefe configurado; pasó a coordinación."
     elif tipo == "Voucher":

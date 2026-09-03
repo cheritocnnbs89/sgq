@@ -586,6 +586,47 @@ def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
 
 
 # ──────────────────────────────────────────────────────────
+# 9a. Vuelo: presupuesto disponible → se saltó la aprobación del jefe,
+#     avisar (informativo, no requiere acción) al jefe y al solicitante
+#     de que la solicitud ya fue enviada a cotización del coordinador.
+# ──────────────────────────────────────────────────────────
+
+def notif_vuelo_enviada_cotizar_info(solicitud_id: int, area: str, fecha: str,
+                                      descripcion: str, solicitante_id: int,
+                                      solicitante_nombre: str,
+                                      jefe_id: int | None, jefe_nombre: str) -> None:
+    subject = f"[Planificador] Vuelo #{solicitud_id} enviado a cotización"
+    titulo  = f"Solicitud de Vuelo #{solicitud_id} enviada a cotización"
+    filas   = [
+        ("N° solicitud",     str(solicitud_id)),
+        ("Área solicitante", area),
+        ("Fecha solicitada", fecha),
+        ("Descripción",      descripcion or "—"),
+        ("Solicitante",      solicitante_nombre),
+    ]
+    nota = ("Al haber presupuesto disponible en el centro de costo, esta solicitud "
+            "no requirió aprobación del jefe directo y pasó directo al coordinador.")
+
+    if jefe_id:
+        saludo_jefe = (f"Estimado/a <strong>{jefe_nombre}</strong>, la solicitud de Vuelo de "
+                       f"<strong>{solicitante_nombre}</strong> se envió a cotizar directamente "
+                       f"(no requirió su aprobación por tener presupuesto disponible).")
+        html_jefe = _email_html("PLANIFICADOR · VUELO — INFORMATIVO", titulo, saludo_jefe, filas, nota)
+        _inapp(jefe_id, subject,
+               f"Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} enviado a cotizar (sin requerir su aprobación)")
+        email_j = repo.get_email_by_usuario_id(jefe_id)
+        _email([email_j] if email_j else [], subject, html_jefe)
+
+    saludo_sol = (f"Tu solicitud de Vuelo fue enviada a cotizar al coordinador "
+                  f"(al haber presupuesto disponible, no requirió aprobación de tu jefe directo).")
+    html_sol = _email_html("PLANIFICADOR · VUELO — INFORMATIVO", titulo, saludo_sol, filas, nota)
+    _inapp(solicitante_id, subject,
+           f"Tu solicitud de Vuelo #{solicitud_id} — {fecha} fue enviada a cotizar")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject, html_sol)
+
+
+# ──────────────────────────────────────────────────────────
 # 9b. Vuelo: GG aprueba la cotización → coordinador ingresa info del vuelo
 # ──────────────────────────────────────────────────────────
 
