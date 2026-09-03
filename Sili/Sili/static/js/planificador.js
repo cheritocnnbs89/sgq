@@ -1319,8 +1319,13 @@
         ind.querySelector('.vuelo-presup-label').textContent = msgs[d.semaforo] || '';
       })
       .catch(function () {
+        // Si la verificación falla (red, error del servidor, etc.) no se
+        // puede confirmar que el usuario tenga presupuesto/CC válido --
+        // debe bloquear igual que "Sin centro de costo asignado" en vez de
+        // dejar el formulario habilitado sin haber podido comprobar nada.
         ind.className = 'vuelo-presup-ind vuelo-presup-sin-cc';
         ind.querySelector('.vuelo-presup-label').textContent = 'No se pudo verificar presupuesto';
+        _setBloqueoSinCC(true);
       });
   }
 
