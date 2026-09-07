@@ -103,6 +103,13 @@
                 value="{{ row.valor_anticipo if row else '' }}">
             </div>
           </div>
+          <div class="col-md-6 col-lg-4 d-flex align-items-end">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" name="lleva_garantia" id="chkLlevaGarantia" value="1"
+                {% if row and row.lleva_garantia %}checked{% endif %}>
+              <label class="form-check-label fw-bold" for="chkLlevaGarantia">¿El contrato lleva garantía?</label>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -26,6 +26,14 @@ TPL_CONTRATO_VENCE_15  = "contrato_vence_15"
 # Departamentos destino de notificaciones de contratos/garantías
 DEPT_COMPRAS       = "compras e importaciones qp"
 DEPT_FINANCIERO    = "financiero qp"
+
+# ── Visibilidad del listado de contratos ──────────────────────────────────
+# Compras (DEPT_COMPRAS, arriba) ve TODOS los contratos sin filtro -- es
+# quien lleva el control. Los roles de acá ven todos los contratos
+# ingresados por creadores de su misma ÁREA (no solo su departamento).
+# Cualquier otro usuario solo ve los que él mismo ingresó, más los de sus
+# reportes directos (si es jefe de alguien vía usuarios.jefe_id).
+ROLES_GERENTE_AREA_CONTRATOS = ("gerente", "gerente financiero", "gerente general")
  
 TIPO_PAGARE = "PAGARE"
 TIPO_POLIZA = "POLIZA"

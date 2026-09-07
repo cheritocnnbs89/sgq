@@ -222,7 +222,7 @@ INSERT INTO {TABLA_CONTRATOS} (
     fecha_entrega_originales_fin, fechas_pago_anticipo, fecha_entrega_pedido,
     observaciones, status_interno,
     usuario_solicitante_id, usuario_compras_nombre,
-    usuario_compras_id, departamento_id, creado_por, actualizado_at
+    usuario_compras_id, departamento_id, creado_por, lleva_garantia, actualizado_at
 )
 OUTPUT inserted.id
 VALUES (?,?,?,?,?,?,?,
@@ -230,7 +230,7 @@ VALUES (?,?,?,?,?,?,?,
         ?,?,?,?,
         ?,?,
         ?,?,
-        ?, ?, ?, GETDATE())
+        ?, ?, ?, ?, GETDATE())
 """
 
 SQL_AREA_CODIGO_POR_USUARIO = f"""
@@ -268,7 +268,7 @@ SET anio=?, pedido=?, proveedor=?, objeto=?, valor_contrato=?, valor_anticipo=?,
     fecha_suscripcion=?, fecha_terminacion=?, plazo_dias=?, cronograma_pagos=?,
     fecha_entrega_compras=?, fecha_firma_gerencia=?, fecha_entrega_finanzas_sumilla=?,
     fecha_entrega_originales_fin=?, fechas_pago_anticipo=?, fecha_entrega_pedido=?,
-    observaciones=?, usuario_solicitante_id=?, usuario_compras_id=?,
+    observaciones=?, usuario_solicitante_id=?, usuario_compras_id=?, lleva_garantia=?,
     actualizado_at=GETDATE()
 WHERE id=?
 """
@@ -346,6 +346,38 @@ INSERT INTO {TABLA_CONTRATO_ARCHIVOS} (contrato_id, filename, original_name, upl
 VALUES (?, ?, ?, GETDATE())
 """
 
+SQL_CONTEXTO_VISIBILIDAD_USUARIO = f"""
+    SELECT
+        u.id,
+        LOWER(TRIM(COALESCE(u.rol,''))) AS rol,
+        u.departamento_id,
+        LOWER(TRIM(COALESCE(d.nombre,''))) AS departamento_nombre,
+        d.area_id
+    FROM {TABLA_USUARIOS} u
+    LEFT JOIN {TABLA_DEPARTAMENTOS} d ON d.id = u.departamento_id
+    WHERE u.id = ?
+"""
+
+# Gerente/gerente financiero/gerente general: ve todos los contratos
+# ingresados por creadores de su misma área (varios departamentos).
+SQL_FILTRO_VISIBILIDAD_GERENTE_AREA = f"""
+    AND c.creado_por IN (
+        SELECT cu.id
+        FROM {TABLA_USUARIOS} cu
+        LEFT JOIN {TABLA_DEPARTAMENTOS} cd ON cd.id = cu.departamento_id
+        WHERE cd.area_id = ?
+    )
+"""
+
+# Usuario regular: lo que él mismo ingresó, más lo de sus reportes
+# directos (si es jefe de alguien vía usuarios.jefe_id).
+SQL_FILTRO_VISIBILIDAD_USUARIO_Y_REPORTES = f"""
+    AND (
+        c.creado_por = ?
+        OR c.creado_por IN (SELECT id FROM {TABLA_USUARIOS} WHERE jefe_id = ?)
+    )
+"""
+
 SQL_LISTA_CONTRATOS_BASE = f"""
 SELECT TOP 300
     c.id, c.codigo, c.pedido, c.proveedor, c.objeto, c.valor_contrato, c.tipo_pp,
@@ -353,6 +385,7 @@ SELECT TOP 300
     COALESCE(c.aprobado_jefe,0) AS aprobado_jefe,
     COALESCE(c.aprobado,0) AS aprobado,
     COALESCE(c.aprob_gf,0) AS aprob_gf,
+    COALESCE(c.lleva_garantia,0) AS lleva_garantia,
     (
         SELECT COUNT(1)
         FROM {TABLA_CONTRATO_ARCHIVOS} a

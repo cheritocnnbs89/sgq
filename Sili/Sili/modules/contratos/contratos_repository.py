@@ -67,7 +67,11 @@ from .contratos_querys import (
     SQL_JEFES_POR_NOMBRE_DEPARTAMENTO,
     SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT,
     SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_UPDATE,
+    SQL_CONTEXTO_VISIBILIDAD_USUARIO,
+    SQL_FILTRO_VISIBILIDAD_GERENTE_AREA,
+    SQL_FILTRO_VISIBILIDAD_USUARIO_Y_REPORTES,
 )
+from .contratos_constants import DEPT_COMPRAS, ROLES_GERENTE_AREA_CONTRATOS
 
 
 def exec_retry(conn, sql: str, params: tuple = (), retries: int = 5, delay: float = 0.25):
@@ -323,12 +327,58 @@ def fetch_dept_nombre_por_usuario_id(usuario_id: int) -> str:
     return (row["dept_nombre"] if hasattr(row, "keys") else row[0]) or ""
 
 
+def fetch_contexto_visibilidad_usuario(usuario_id: int) -> dict:
+    """
+    Contexto de visibilidad del usuario para el listado de contratos:
+    su rol, departamento y área -- de dónde sale si ve todo (Compras),
+    todo su área (gerente/gerente financiero/gerente general), o solo lo
+    suyo + reportes directos (cualquier otro usuario).
+    """
+    conn = get_conn()
+    row = conn.cursor().execute(SQL_CONTEXTO_VISIBILIDAD_USUARIO, (usuario_id,)).fetchone()
+    if not row:
+        return {"id": usuario_id, "rol": "", "departamento_id": None,
+                "departamento_nombre": "", "area_id": None}
+    return {
+        "id": row["id"],
+        "rol": row["rol"] or "",
+        "departamento_id": row["departamento_id"],
+        "departamento_nombre": row["departamento_nombre"] or "",
+        "area_id": row["area_id"],
+    }
+
+
+def _aplicar_filtro_visibilidad_contratos(sql: str, params: list, visibilidad: dict) -> str:
+    """
+    Agrega al WHERE de una consulta de contratos (que ya empieza con
+    "c." como alias) la restricción de visibilidad según jerarquía:
+    Compras ve todo, gerentes ven su área, cualquier otro ve lo suyo +
+    reportes directos. Devuelve el sql con el fragmento agregado (o el
+    mismo sql sin cambios si no aplica ningún filtro).
+    """
+    dept_nombre = (visibilidad.get("departamento_nombre") or "").strip().lower()
+    if dept_nombre == DEPT_COMPRAS:
+        return sql  # Compras lleva el control -- ve todo, sin filtro
+
+    rol = (visibilidad.get("rol") or "").strip().lower()
+    area_id = visibilidad.get("area_id")
+
+    if rol in ROLES_GERENTE_AREA_CONTRATOS and area_id:
+        params.append(area_id)
+        return sql + SQL_FILTRO_VISIBILIDAD_GERENTE_AREA
+
+    uid = visibilidad.get("id")
+    params.extend([uid, uid])
+    return sql + SQL_FILTRO_VISIBILIDAD_USUARIO_Y_REPORTES
+
+
 def list_contratos(
     proveedor: str = "",
     pedido: str = "",
     tipo_pp: str = "",
     fecha_desde: str = "",
     fecha_hasta: str = "",
+    visibilidad: dict | None = None,
 ):
     sql = SQL_LISTA_CONTRATOS_BASE
     params: List[Any] = []
@@ -360,11 +410,14 @@ def list_contratos(
         sql += " AND CAST(c.fecha_suscripcion AS date) <= CAST(? AS date)"
         params.append(fecha_hasta)
 
+    if visibilidad is not None:
+        sql = _aplicar_filtro_visibilidad_contratos(sql, params, visibilidad)
+
     sql += " ORDER BY c.id DESC"
 
     conn = get_conn()
     return conn.cursor().execute(sql, params).fetchall()
- 
+
 
 
 def list_contratos_reporte(
@@ -373,6 +426,7 @@ def list_contratos_reporte(
     tipo_pp: str = "",
     fecha_desde: str = "",
     fecha_hasta: str = "",
+    visibilidad: dict | None = None,
 ):
     sql = """
     SELECT
@@ -412,6 +466,7 @@ def list_contratos_reporte(
         ua.nombre_completo AS aprobado_por_nombre,
         c.aprobado_en,
         COALESCE(c.aprob_gf,0) AS aprob_gf,
+        COALESCE(c.lleva_garantia,0) AS lleva_garantia,
         c.creado_por,
         cr.nombre_completo AS creado_por_nombre,
         c.creado_at,
@@ -458,6 +513,9 @@ def list_contratos_reporte(
     if fecha_hasta:
         sql += " AND CAST(c.fecha_suscripcion AS date) <= CAST(? AS date)"
         params.append(fecha_hasta)
+
+    if visibilidad is not None:
+        sql = _aplicar_filtro_visibilidad_contratos(sql, params, visibilidad)
 
     sql += " ORDER BY c.id DESC"
 

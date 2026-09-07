@@ -22,6 +22,7 @@ from modules.security import require_login, require_permission
 
 from . import contratos_repository as repository
 from . import contratos_services as services
+from .contratos_security import session_user_id
 
 
 contratos_bp = Blueprint(
@@ -200,12 +201,14 @@ def compras_lista():
     fecha_desde = (request.args.get("fecha_desde") or "").strip()
     fecha_hasta = (request.args.get("fecha_hasta") or "").strip()
 
+    visibilidad = repository.fetch_contexto_visibilidad_usuario(session_user_id())
     rows = repository.list_contratos(
         proveedor=prov,
         pedido=pedi,
         tipo_pp=tipo,
         fecha_desde=fecha_desde,
         fecha_hasta=fecha_hasta,
+        visibilidad=visibilidad,
     )
 
     # ── Paginación ──────────────────────────────────────────
@@ -247,7 +250,9 @@ def exportar_contratos_compras():
     fecha_desde = (request.args.get("fecha_desde") or "").strip()
     fecha_hasta = (request.args.get("fecha_hasta") or "").strip()
 
+    visibilidad = repository.fetch_contexto_visibilidad_usuario(session_user_id())
     rows = repository.list_contratos_reporte(
+        visibilidad=visibilidad,
         proveedor=prov,
         pedido=pedi,
         tipo_pp=tipo,

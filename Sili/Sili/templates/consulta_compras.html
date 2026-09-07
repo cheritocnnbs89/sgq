@@ -124,6 +124,7 @@
               <th>Objeto</th>
               <th>Valor</th>
               <th>Tipo</th>
+              <th>Garantía</th>
               <th>F. Suscripción</th>
               <th>F. Terminación</th>
               <th>Estado</th>
@@ -156,6 +157,13 @@
               <td class="text-truncate contrato-objeto">{{ r.objeto }}</td>
               <td>${{ '%.2f'|format(r.valor_contrato or 0) }}</td>
               <td>{{ r.tipo_pp }}</td>
+              <td>
+                {% if r.lleva_garantia|int == 1 %}
+                <span class="badge text-bg-info">Sí</span>
+                {% else %}
+                <span class="badge text-bg-secondary">No</span>
+                {% endif %}
+              </td>
               <td>{{ r.fecha_suscripcion or '' }}</td>
               <td>{{ r.fecha_terminacion or '' }}</td>
               <td>

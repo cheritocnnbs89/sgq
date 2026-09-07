@@ -246,6 +246,7 @@ def parse_contrato_form():
     fechas_pago_anticipo = (request.form.get("fechas_pago_anticipo") or "").strip()
     fecha_entrega_pedido = normalize_date(request.form.get("fecha_entrega_pedido"))
     observaciones = (request.form.get("observaciones") or "").strip()
+    lleva_garantia = bool_to_int(request.form.get("lleva_garantia"))
 
     return {
         "anio": anio,
@@ -272,6 +273,7 @@ def parse_contrato_form():
         "usuario_compras_id": usuario_compras_id,
         "departamento_id": departamento_id,
         "creado_por": creado_por,
+        "lleva_garantia": lleva_garantia,
     }
 
 
@@ -326,6 +328,7 @@ def make_contrato_row_back(data: dict):
         "observaciones": data["observaciones"],
         "usuario_solicitante_id": data["usuario_solicitante_id"],
         "usuario_compras_nombre": data["usuario_compras_nombre"],
+        "lleva_garantia": data["lleva_garantia"],
     }
 
 
@@ -391,6 +394,7 @@ def create_contrato_from_request():
             data["usuario_compras_id"],
             data["departamento_id"],
             data["creado_por"],
+            data["lleva_garantia"],
         )
     )
 
@@ -450,6 +454,7 @@ def update_contrato_from_request(contrato_id: int):
             data["observaciones"],
             data["usuario_solicitante_id"],
             usuario_compras_id,
+            data["lleva_garantia"],
             contrato_id,
         )
     )
