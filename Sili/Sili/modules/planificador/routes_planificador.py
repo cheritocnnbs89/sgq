@@ -524,15 +524,14 @@ def crear():
         for i in range(1, numero_vouchers + 1):
             v_origen  = request.form.get(f"voucher_origen_{i}", "").strip()
             v_destino = request.form.get(f"voucher_destino_{i}", "").strip()
-            if not v_origen or not v_destino:
-                flash(f"Debe indicar origen y destino del voucher #{i}.", "warning")
-                return redirect(url_for("planificador.planificador_solicitudes"))
-            voucher_items_data.append({"origen": v_origen, "destino": v_destino})
+            # Origen/destino por voucher son opcionales: el coordinador puede
+            # completarlos después al momento de entregarlo/liquidarlo.
+            voucher_items_data.append({"origen": v_origen or None, "destino": v_destino or None})
 
         # "lugar_destino" ya no se captura como campo único para Voucher; se
         # deja un resumen legible para listados/notificaciones que lo muestran.
         if len(voucher_items_data) == 1:
-            lugar = voucher_items_data[0]["destino"] or voucher_items_data[0]["origen"]
+            lugar = voucher_items_data[0]["destino"] or voucher_items_data[0]["origen"] or "Voucher de taxi"
         else:
             lugar = f"{len(voucher_items_data)} vouchers — ver detalle"
 

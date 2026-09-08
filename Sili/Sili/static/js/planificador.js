@@ -1114,8 +1114,10 @@
       var inpD = document.getElementById('vDestino' + i);
       var visible = (n > 0) && (i <= n);
       if (row) row.classList.toggle('d-none', !visible);
-      if (inpO) inpO.required = visible;
-      if (inpD) inpD.required = visible;
+      // Origen/destino de cada voucher son opcionales -- nunca required,
+      // solo se muestran/ocultan según cuántos vouchers se pidieron.
+      if (inpO) inpO.required = false;
+      if (inpD) inpD.required = false;
     }
   }
 
