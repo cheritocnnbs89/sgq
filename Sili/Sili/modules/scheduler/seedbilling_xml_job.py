@@ -78,12 +78,12 @@ def _parse_fecha_ddmmyyyy(s: str | None):
 
 def _notas_fecha_desde():
     """Fecha de corte (config SEEDBILLING_NOTAS_FECHA_DESDE, formato
-    'YYYY-MM-DD') para Notas de Crédito/Débito (04/05): documentos con
-    fecha_emision anterior a esta fecha NO se insertan en facturas_xml,
-    pero sí se marcan como entregados (para que SeedBilling no los siga
-    reofreciendo en cada corrida). No aplica a Factura (01) -- ese tipo
-    sigue trayendo todo lo pendiente, sin filtro de fecha, como siempre.
-    Sin configurar -> None -> sin filtro (trae todo, como hoy)."""
+    'YYYY-MM-DD') para Notas de Crédito/Débito/Retenciones (04/05/07):
+    documentos con fecha_emision anterior a esta fecha NO se insertan en
+    facturas_xml, pero sí se marcan como entregados (para que SeedBilling
+    no los siga reofreciendo en cada corrida). No aplica a Factura (01) --
+    ese tipo sigue trayendo todo lo pendiente, sin filtro de fecha, como
+    siempre. Sin configurar -> None -> sin filtro (trae todo, como hoy)."""
     raw = (_cfg("SEEDBILLING_NOTAS_FECHA_DESDE", "") or "").strip()
     if not raw:
         return None
@@ -613,7 +613,7 @@ def _send_admin_summary(conn, resumen: dict):
             <tr><td style="padding:6px 12px;"><b>Insertados Quimpac</b></td><td>{resumen.get("insertados", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Duplicados Quimpac</b></td><td>{resumen.get("duplicados", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Otras empresas omitidas</b></td><td>{resumen.get("otras_empresas", 0)}</td></tr>
-            <tr><td style="padding:6px 12px;"><b>Notas de Créd./Déb. omitidas (anteriores a la fecha de corte)</b></td><td>{resumen.get("omitidos_por_fecha", 0)}</td></tr>
+            <tr><td style="padding:6px 12px;"><b>Notas Créd./Déb./Retenciones omitidas (anteriores a la fecha de corte)</b></td><td>{resumen.get("omitidos_por_fecha", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Marcados Quimpac</b></td><td>{resumen.get("marcados_entregados_quimpac", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Marcados otras empresas</b></td><td>{resumen.get("marcados_entregados_otras", 0)}</td></tr>
             <tr><td style="padding:6px 12px;"><b>Total marcados</b></td><td>{resumen.get("marcados_entregados", 0)}</td></tr>
@@ -846,13 +846,13 @@ def _procesar_tipo_documento(conn, cur, tipo_documento: str, resumen: dict,
                 # Caso 4: Quimpac.
                 resumen["quimpac"] += 1
 
-                # Caso 4b: Nota de Crédito/Débito (04/05) anterior a la fecha
-                # de corte configurada -- no se inserta (evita traer todo el
-                # historial del año la primera vez que se activan estos
+                # Caso 4b: Nota de Crédito/Débito/Retención (04/05/07) anterior
+                # a la fecha de corte configurada -- no se inserta (evita traer
+                # todo el historial del año la primera vez que se activan estos
                 # tipos), pero SÍ se marca como entregado para que
                 # SeedBilling no la vuelva a ofrecer en la próxima corrida.
                 if (
-                    tipo_documento in ("04", "05")
+                    tipo_documento in ("04", "05", "07")
                     and fecha_desde_notas is not None
                 ):
                     fecha_doc = _parse_fecha_ddmmyyyy(header.get("fecha_emision"))

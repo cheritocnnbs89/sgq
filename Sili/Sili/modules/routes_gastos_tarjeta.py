@@ -632,10 +632,12 @@ def parse_sri_xml(raw: bytes | str):
             start = inner_xml.find("<notaCredito")
         if start == -1:
             start = inner_xml.find("<notaDebito")
+        if start == -1:
+            start = inner_xml.find("<comprobanteRetencion")
         if start > 0:
             inner_xml = inner_xml[start:]
 
-        for tag in ("factura", "notaCredito", "notaDebito"):
+        for tag in ("factura", "notaCredito", "notaDebito", "comprobanteRetencion"):
             end_marker = f"</{tag}>"
             end = inner_xml.rfind(end_marker)
             if end != -1:
@@ -693,7 +695,16 @@ def parse_sri_xml(raw: bytes | str):
         "01": "FACTURA",
         "04": "NOTA_CREDITO",
         "05": "NOTA_DEBITO",
+        "07": "RETENCION",
     }.get(cod_doc, doc_tag.upper())
+
+    # Retención: no tiene <detalles> ni <motivos> -- sus líneas viven
+    # anidadas dentro de cada <docSustento> (ver más abajo, se arman aparte
+    # en vez de usar detalles_root como factura/NC/ND).
+    primer_doc_sustento = (
+        inner.find("./docsSustento/docSustento")
+        if doc_tag == "comprobanteRetencion" else None
+    )
 
     if doc_tag == "factura":
         info = inner.find("./infoFactura")
@@ -704,6 +715,9 @@ def parse_sri_xml(raw: bytes | str):
     elif doc_tag == "notaDebito":
         info = inner.find("./infoNotaDebito")
         detalles_root = inner.find("./motivos")
+    elif doc_tag == "comprobanteRetencion":
+        info = inner.find("./infoCompRetencion")
+        detalles_root = None
     else:
         info = (
             inner.find("./infoFactura")
@@ -713,7 +727,36 @@ def parse_sri_xml(raw: bytes | str):
         detalles_root = inner.find("./detalles") or inner.find("./motivos")
 
     if info is None:
-        raise ValueError("XML sin infoFactura/infoNotaCredito/infoNotaDebito")
+        raise ValueError("XML sin infoFactura/infoNotaCredito/infoNotaDebito/infoCompRetencion")
+
+    # Retención: el "cliente" del documento es en realidad el sujeto
+    # retenido (QUIMPAC), y los datos de a qué factura corresponde viven
+    # dentro de <docSustento>, no directo bajo <infoCompRetencion> como en
+    # NC/ND -- por eso se resuelven aparte en vez de leerlos de `info`.
+    if doc_tag == "comprobanteRetencion":
+        ruc_cliente_val = (info.findtext("identificacionSujetoRetenido") or "").strip()
+        razon_cliente_val = (info.findtext("razonSocialSujetoRetenido") or "").strip()
+        ds = primer_doc_sustento
+        subtotal_val = _to_float(ds.findtext("totalSinImpuestos")) if ds is not None else 0.0
+        # "descuento" no aplica a Retención (no tiene totalDescuento) -- se
+        # reutiliza esta columna para guardar el importeTotal del docSustento
+        # (el monto pagado en ESA transacción, que NO siempre es subtotal+iva
+        # -- puede ser un pago parcial de la factura sustento). rutina lo
+        # necesita tal cual para reconstruir <importeTotal> del docSustento.
+        descuento_val = _to_float(ds.findtext("importeTotal")) if ds is not None else 0.0
+        moneda_val = "DOLAR"
+        cod_doc_mod_val = (ds.findtext("codDocSustento") or "").strip() if ds is not None else ""
+        num_doc_mod_val = (ds.findtext("numDocSustento") or "").strip() if ds is not None else ""
+        fecha_doc_sustento_val = (ds.findtext("fechaEmisionDocSustento") or "").strip() if ds is not None else ""
+    else:
+        ruc_cliente_val = (info.findtext("identificacionComprador") or "").strip()
+        razon_cliente_val = (info.findtext("razonSocialComprador") or "").strip()
+        subtotal_val = _to_float(info.findtext("totalSinImpuestos"))
+        descuento_val = _to_float(info.findtext("totalDescuento"))
+        moneda_val = (info.findtext("moneda") or "").strip()
+        cod_doc_mod_val = (info.findtext("codDocModificado") or "").strip()
+        num_doc_mod_val = (info.findtext("numDocModificado") or "").strip()
+        fecha_doc_sustento_val = (info.findtext("fechaEmisionDocSustento") or "").strip()
 
     h = {
         "clave_acceso": (infoTrib.findtext("claveAcceso") or "").strip(),
@@ -724,21 +767,20 @@ def parse_sri_xml(raw: bytes | str):
         "fecha_autorizacion": fecha_aut,
         "ruc_emisor": (infoTrib.findtext("ruc") or "").strip(),
         "razon_social_emisor": (infoTrib.findtext("razonSocial") or "").strip(),
-        "ruc_cliente": (info.findtext("identificacionComprador") or "").strip(),
-        "razon_social_cliente": (info.findtext("razonSocialComprador") or "").strip(),
+        "ruc_cliente": ruc_cliente_val,
+        "razon_social_cliente": razon_cliente_val,
         "estab": (infoTrib.findtext("estab") or "").strip(),
         "pto_emi": (infoTrib.findtext("ptoEmi") or "").strip(),
         "secuencial": (infoTrib.findtext("secuencial") or "").strip(),
-        "subtotal": _to_float(info.findtext("totalSinImpuestos")),
-        "descuento": _to_float(info.findtext("totalDescuento")),
-        "moneda": (info.findtext("moneda") or "").strip(),
-        # Solo presentes en Nota de Crédito / Nota de Débito: a qué documento
-        # (normalmente una factura) corrige esta nota. Ausentes en Factura,
-        # quedan vacíos ("") sin problema -- findtext devuelve None si el tag
-        # no existe.
-        "cod_doc_modificado": (info.findtext("codDocModificado") or "").strip(),
-        "num_doc_modificado": (info.findtext("numDocModificado") or "").strip(),
-        "fecha_emision_doc_sustento": (info.findtext("fechaEmisionDocSustento") or "").strip(),
+        "subtotal": subtotal_val,
+        "descuento": descuento_val,
+        "moneda": moneda_val,
+        # En NC/ND: a qué factura corrige esta nota. En Retención: a qué
+        # factura corresponde el docSustento (mismo propósito -- vínculo
+        # con el documento original). Ausente en Factura ("").
+        "cod_doc_modificado": cod_doc_mod_val,
+        "num_doc_modificado": num_doc_mod_val,
+        "fecha_emision_doc_sustento": fecha_doc_sustento_val,
     }
     # ✅ Propina (viene en infoFactura)
     h["propina"] = _to_float(info.findtext("propina"))  # ej: 33.62
@@ -764,14 +806,27 @@ def parse_sri_xml(raw: bytes | str):
     # Factura y Nota de Crédito traen los impuestos totalizados bajo
     # <totalConImpuestos><totalImpuesto>. Nota de Débito NO tiene ese wrapper
     # -- sus <impuesto> van directo bajo <infoNotaDebito><impuestos> -- sin
-    # este branch el IVA de cualquier ND siempre quedaba en 0.
+    # este branch el IVA de cualquier ND siempre quedaba en 0. Retención
+    # trae el IVA de la factura sustento bajo
+    # <docSustento><impuestosDocSustento><impuestoDocSustento>, con otros
+    # nombres de tag (codImpuestoDocSustento/valorImpuesto en vez de
+    # codigo/valor).
+    codigo_tag = "codigo"
+    valor_tag = "valor"
     if doc_tag == "notaDebito":
         impuestos_nodos = info.findall("./impuestos/impuesto")
+    elif doc_tag == "comprobanteRetencion":
+        impuestos_nodos = (
+            primer_doc_sustento.findall("./impuestosDocSustento/impuestoDocSustento")
+            if primer_doc_sustento is not None else []
+        )
+        codigo_tag = "codImpuestoDocSustento"
+        valor_tag = "valorImpuesto"
     else:
         impuestos_nodos = info.findall("./totalConImpuestos/totalImpuesto")
 
     for ti in impuestos_nodos:
-        codigo = (ti.findtext("codigo") or "").strip()
+        codigo = (ti.findtext(codigo_tag) or "").strip()
         if codigo != "2":  # IVA
             continue
 
@@ -784,7 +839,7 @@ def parse_sri_xml(raw: bytes | str):
             tarifa = MAP_IVA_PORC.get(cp, 0.0)
 
         base = _to_float(ti.findtext("baseImponible"))
-        valor = _to_float(ti.findtext("valor"))
+        valor = _to_float(ti.findtext(valor_tag))
 
         tarifas_detectadas.add(tarifa)
         iva_total += valor
@@ -804,21 +859,55 @@ def parse_sri_xml(raw: bytes | str):
 
     # El tag del total varía por tipo de documento: Factura usa importeTotal,
     # Nota de Crédito usa valorModificacion, Nota de Débito usa valorTotal.
-    # Si no viene (o viene vacío), fallback a subtotal+iva.
-    if doc_tag == "notaCredito":
-        total_tag = "valorModificacion"
-    elif doc_tag == "notaDebito":
-        total_tag = "valorTotal"
-    else:
-        total_tag = "importeTotal"
+    # Si no viene (o viene vacío), fallback a subtotal+iva. Retención no
+    # tiene un tag de total a este nivel -- su "total" natural es la suma
+    # de valorRetenido de cada línea, se calcula más abajo junto con detalles.
+    if doc_tag != "comprobanteRetencion":
+        if doc_tag == "notaCredito":
+            total_tag = "valorModificacion"
+        elif doc_tag == "notaDebito":
+            total_tag = "valorTotal"
+        else:
+            total_tag = "importeTotal"
 
-    h["total"] = _to_float(info.findtext(total_tag)) or (
-        (h["subtotal"] or 0) + (h["iva"] or 0) + (h.get("propina") or 0)
-    )
+        h["total"] = _to_float(info.findtext(total_tag)) or (
+            (h["subtotal"] or 0) + (h["iva"] or 0) + (h.get("propina") or 0)
+        )
 
     detalles = []
 
-    if detalles_root is not None:
+    if doc_tag == "comprobanteRetencion":
+        # Cada <docSustento> puede traer varias <retencion> -- se guarda una
+        # fila de detalle (facturas_xml_det) por cada retención, igual
+        # patrón que ND reutilizando esta tabla para "motivos":
+        #   codigo_principal  = codigoRetencion (código SRI, ej. 332, 9)
+        #   precio_unitario   = porcentajeRetener (no hay columna dedicada
+        #                       para "%", se reutiliza esta)
+        #   base_imponible    = baseImponible (encaja tal cual)
+        #   total_linea       = valorRetenido (encaja tal cual)
+        # rutina reconstruye <retencion> desde estas 4 columnas al armar el
+        # XML de vuelta. Si el comprobante trae más de un <docSustento> (
+        # poco común en la práctica), se aplanan todas sus retenciones en
+        # una sola lista -- el vínculo a "cuál docSustento" no se conserva
+        # por línea, solo el del primero queda en la cabecera.
+        total_retenido = 0.0
+        for ds in inner.findall("./docsSustento/docSustento"):
+            for r in ds.findall("./retenciones/retencion"):
+                valor_ret = _to_float(r.findtext("valorRetenido"))
+                total_retenido += valor_ret
+                detalles.append({
+                    "codigo_principal": (r.findtext("codigoRetencion") or "").strip(),
+                    "descripcion": "",
+                    "cantidad": 1,
+                    "precio_unitario": _to_float(r.findtext("porcentajeRetener")),
+                    "descuento": 0.0,
+                    "base_imponible": _to_float(r.findtext("baseImponible")),
+                    "iva": 0.0,
+                    "total_linea": valor_ret,
+                })
+        h["total"] = total_retenido
+
+    elif detalles_root is not None:
         # Nota de Crédito tiene <detalles><detalle> con exactamente la misma
         # forma que Factura (mismos tags: cantidad/precioUnitario/descuento/
         # precioTotalSinImpuesto/impuestos) -- reusa la misma rama. Antes solo
