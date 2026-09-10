@@ -394,6 +394,21 @@ body {
 
 .grp-row:hover { background: var(--surface-2); }
 
+/* Sub-fila (segundo nivel: agrupación por tipo de tarea dentro de cada
+   responsable). No lleva rank ni barra de progreso, así que usa una
+   grilla propia para que la etiqueta del tipo no quede aplastada. */
+.grp-row-sub {
+  grid-template-columns: 1fr auto 1.2rem;
+  padding-left: 18px;
+}
+.grp-row-sub .grp-name {
+  white-space: normal;
+  font-weight: 500;
+}
+.grp-row-sub .grp-name .bi-tag {
+  color: var(--muted);
+}
+
 .grp-rank {
   font-weight: 700;
   color: var(--muted);

@@ -78,12 +78,18 @@ SQL_DASHBOARD_TAREAS_BASE = f"""
            t.solicitante_id,
            usol.username AS solicitante,
            t.tipo_tarea_id,
-           ptt.nombre AS tipo_tarea_nombre
+           ptt.nombre AS tipo_tarea_nombre,
+           ei.id AS inbox_id
     FROM {TABLA_TAREAS} t
     JOIN {TABLA_USUARIOS} u ON t.usuario_id = u.id
     LEFT JOIN {TABLA_DEPARTAMENTOS} d ON u.departamento_id = d.id
     LEFT JOIN {TABLA_USUARIOS} usol ON usol.id = t.solicitante_id
     LEFT JOIN {TABLA_PARAM_VALUES} ptt ON t.tipo_tarea_id = ptt.id
+    LEFT JOIN email_tickets_inbox ei ON ei.id = (
+        SELECT TOP 1 id FROM email_tickets_inbox
+        WHERE tarea_id = t.id
+        ORDER BY id DESC
+    )
 """
 
 

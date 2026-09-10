@@ -1227,7 +1227,14 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
         # tipo de tarea (para expandir por categoría en el panel).
         tipos_map = defaultdict(list)
         for t in tareas:
-            tipos_map[t.get("tipo_tarea_nombre") or "Sin tipo"].append(t)
+            # Etiqueta del sub-grupo: primero el tipo de tarea explícito
+            # (param_values). Si la tarea no tiene tipo, se clasifica por
+            # origen: las que vienen de la Bandeja de Soporte -> "Soporte",
+            # el resto -> "Desarrollo".
+            etiqueta_tipo = t.get("tipo_tarea_nombre") or (
+                "Soporte" if t.get("inbox_id") else "Desarrollo"
+            )
+            tipos_map[etiqueta_tipo].append(t)
         tipos = sorted(
             [
                 {"tipo": tp, "total": len(ts), "tareas": ts}
