@@ -1219,13 +1219,28 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
     for t in filtradas:
         grupos_map[t.get("propietario") or "—"].append(t)
 
-    atr_grupos = sorted(
-        [
-            {"responsable": r, "total": len(tareas), "tareas": tareas}
-            for r, tareas in grupos_map.items()
-        ],
-        key=lambda x: -x["total"],
-    )
+    atr_grupos = []
+    for r, tareas in grupos_map.items():
+        # Segundo nivel: dentro de cada responsable, sub-agrupar por
+        # tipo de tarea (para expandir por categoría en el panel).
+        tipos_map = defaultdict(list)
+        for t in tareas:
+            tipos_map[t.get("tipo_tarea_nombre") or "Sin tipo"].append(t)
+        tipos = sorted(
+            [
+                {"tipo": tp, "total": len(ts), "tareas": ts}
+                for tp, ts in tipos_map.items()
+            ],
+            key=lambda x: -x["total"],
+        )
+        atr_grupos.append({
+            "responsable": r,
+            "total": len(tareas),
+            "tareas": tareas,
+            "tipos": tipos,
+        })
+
+    atr_grupos = sorted(atr_grupos, key=lambda x: -x["total"])
 
     return {
         "atr_total": total_atrasadas,
@@ -1602,6 +1617,7 @@ def svc_obtener_tarea_para_ver(user, task_id: int):
         "is_admin": (user["rol"] == "admin"),
         "solicitantes": repo_obtener_solicitantes() if user["rol"] == "admin" else [],
         "responsables": repo_obtener_usuarios_activos(),
+        "tipos_tarea": repo_obtener_tipos_tarea(),
         "usuario": user["username"],
         "rol": user["rol"],
         "active_page": "tareas",

@@ -92,6 +92,10 @@ def register_task_routes(app):
             {'id': sol['id'], 'label': (sol.get('nombre_completo') or '') + ' (' + (sol.get('username') or '') + ')'}
             for sol in resultado.get('solicitantes', [])
         ]
+        tipos_tarea = [
+            {'id': tp['id'], 'nombre': tp['nombre']}
+            for tp in resultado.get('tipos_tarea', [])
+        ]
         return jsonify({
             'ok': True,
             'tarea': tarea,
@@ -102,6 +106,7 @@ def register_task_routes(app):
             'is_admin': resultado.get('is_admin', False),
             'solicitantes': solicitantes,
             'responsables': responsables,
+            'tipos_tarea': tipos_tarea,
         })
 
     @app.route('/tareas/<int:task_id>/accion-ajax', methods=['POST'])

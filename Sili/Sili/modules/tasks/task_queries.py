@@ -76,11 +76,14 @@ SQL_DASHBOARD_TAREAS_BASE = f"""
            CASE WHEN u.disabled = 1 THEN 0 ELSE 1 END AS propietario_activo,
            d.nombre AS departamento,
            t.solicitante_id,
-           usol.username AS solicitante
+           usol.username AS solicitante,
+           t.tipo_tarea_id,
+           ptt.nombre AS tipo_tarea_nombre
     FROM {TABLA_TAREAS} t
     JOIN {TABLA_USUARIOS} u ON t.usuario_id = u.id
     LEFT JOIN {TABLA_DEPARTAMENTOS} d ON u.departamento_id = d.id
     LEFT JOIN {TABLA_USUARIOS} usol ON usol.id = t.solicitante_id
+    LEFT JOIN {TABLA_PARAM_VALUES} ptt ON t.tipo_tarea_id = ptt.id
 """
 
 
@@ -222,6 +225,8 @@ SQL_OBTENER_DETALLE_TAREA = f"""
            t.usuario_id,
            t.creador_id,
            t.solicitante_id,
+           t.tipo_tarea_id,
+           ptt.nombre        AS tipo_tarea_nombre,
            u.username        AS responsable_username,
            u.nombre_completo AS responsable_nombre,
            c.username        AS creador_username,
@@ -232,6 +237,7 @@ SQL_OBTENER_DETALLE_TAREA = f"""
     JOIN {TABLA_USUARIOS} u ON t.usuario_id = u.id
     LEFT JOIN {TABLA_USUARIOS} c ON t.creador_id = c.id
     LEFT JOIN {TABLA_USUARIOS} s ON t.solicitante_id = s.id
+    LEFT JOIN {TABLA_PARAM_VALUES} ptt ON t.tipo_tarea_id = ptt.id
     LEFT JOIN email_tickets_inbox ei ON ei.tarea_id = t.id
     WHERE t.id = ?
 """

@@ -480,6 +480,7 @@
   let lastIsAdmin = false;
   let lastSolicitantes = [];
   let lastResponsables = [];
+  let lastTiposTarea = [];
 
   function esc(s) {
     return String(s == null ? '' : s)
@@ -663,6 +664,20 @@
       }
     }
 
+    const fTipoTarea = document.getElementById('tdDetFTipoTarea');
+    if (fTipoTarea) {
+      fTipoTarea.innerHTML = '';
+      const optNone = document.createElement('option');
+      optNone.value = ''; optNone.textContent = '— Sin tipo —';
+      fTipoTarea.appendChild(optNone);
+      lastTiposTarea.forEach(tp => {
+        const opt = document.createElement('option');
+        opt.value = tp.id; opt.textContent = tp.nombre;
+        if (String(tp.id) === String(t.tipo_tarea_id)) opt.selected = true;
+        fTipoTarea.appendChild(opt);
+      });
+    }
+
     document.getElementById('tdDetEditCsrf').value =
       document.getElementById('td-csrf-token')?.dataset.token || '';
     editError.classList.add('d-none');
@@ -728,6 +743,7 @@
         lastIsAdmin = !!data.is_admin;
         lastSolicitantes = data.solicitantes || [];
         lastResponsables = data.responsables || [];
+        lastTiposTarea = data.tipos_tarea || [];
         document.getElementById('tdDetCodigo').textContent = String(t.id||'').padStart(8,'0');
         document.getElementById('tdDetTitulo').textContent = t.titulo||'';
         renderInfo(t);
