@@ -240,11 +240,11 @@ document.addEventListener('DOMContentLoaded', () => {
     currentSortDir = dir;
 
     const idxMap = {
-      id: 1, titulo: 2, tipo: 4, avance: 6,
-      inicio: 7, 'inicio Real': 8, fin: 9, 'Fin Real': 10,
-      horas: 11,          // Horas de atención (col nueva)
-      propietario: 14,    // Responsable (posición corregida)
-      depto: 15,          // Departamento (posición corregida)
+      id: 1, titulo: 2, tipo: 4,
+      inicio: 6, fin: 7,
+      horas: 8,           // Horas de atención
+      propietario: 11,    // Responsable
+      depto: 12,          // Departamento
     };
 
     const idx = idxMap[col] || 1;
@@ -252,13 +252,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     rows.sort((a, b) => {
       let va, vb;
-      if (col === 'id' || col === 'avance') {
+      if (col === 'id') {
         va = parseInt(cellText(a, idx), 10) || 0;
         vb = parseInt(cellText(b, idx), 10) || 0;
       } else if (col === 'horas') {
         va = parseFloat(cellText(a, idx).replace('h', '').replace('min', '')) || 0;
         vb = parseFloat(cellText(b, idx).replace('h', '').replace('min', '')) || 0;
-      } else if (['inicio', 'inicio Real', 'fin', 'Fin Real'].includes(col)) {
+      } else if (['inicio', 'fin'].includes(col)) {
         va = parseDate(cellText(a, idx))?.getTime() || 0;
         vb = parseDate(cellText(b, idx))?.getTime() || 0;
       } else {

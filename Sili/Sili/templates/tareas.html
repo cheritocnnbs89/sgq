@@ -182,21 +182,6 @@
               <!-- Estado -->
               <th>Estado</th>
 
-              {% if tab != 'terminadas' %}
-              <th class="th-filter">
-                <span class="hdr">
-                  <span class="label">Avance</span>
-                  <span class="col-sort">
-                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="avance"
-                      data-sort-dir="asc" title="Ascendente (menor → mayor)">▲</button>
-                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="avance"
-                      data-sort-dir="desc" title="Descendente (mayor → menor)">▼</button>
-                  </span>
-                </span>
-              </th>
-              {% endif %}
-
-
               <!-- Inicio -->
               <th class="th-filter">
                 <span class="hdr">
@@ -209,18 +194,6 @@
                   </span>
                 </span>
               </th>
-              <!-- Inicio -->
-              <th class="th-filter">
-                <span class="hdr">
-                  <span class="label">Inicio Real</span>
-                  <span class="col-sort">
-                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio Real"
-                      data-sort-dir="asc">▲</button>
-                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="inicio Real"
-                      data-sort-dir="desc">▼</button>
-                  </span>
-                </span>
-              </th>
               <!-- Fin -->
               <th class="th-filter">
                 <span class="hdr">
@@ -229,19 +202,6 @@
                     <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="fin"
                       data-sort-dir="asc">▲</button>
                     <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="fin"
-                      data-sort-dir="desc">▼</button>
-                  </span>
-                </span>
-              </th>
-
-              <!-- Fin -->
-              <th class="th-filter">
-                <span class="hdr">
-                  <span class="label">Fin Real</span>
-                  <span class="col-sort">
-                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="Fin Real"
-                      data-sort-dir="asc">▲</button>
-                    <button type="button" class="btn btn-outline-secondary sort-btn" data-sort-col="Fin Real"
                       data-sort-dir="desc">▼</button>
                   </span>
                 </span>
@@ -341,33 +301,6 @@
 
 
 
-              {% if tab != 'terminadas' %}
-              <td data-th="Avance">
-                <div class="d-flex flex-column avance-cell">
-                  {% set avance = t['porcentaje_avance'] %}
-
-                  {% if avance is none %}
-                  <small class="text-danger avance-error">Campo no encontrado en SQL</small>
-                  {% else %}
-                  <div class="d-flex align-items-center">
-                    <div class="wrap-bar flex-grow-1">
-                      <div class="progress progress-avance">
-                        <div
-                          class="progress-bar js-progress-bar avance-w-{{ avance|int }} {% if avance|int == 100 %}bg-success{% else %}bg-primary{% endif %}"
-                          role="progressbar" aria-valuenow="{{ avance|int }}" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                      </div>
-                    </div>
-
-                    <span class="wrap-pct ms-2 fw-bold avance-pct">
-                      {{ avance|int }}%
-                    </span>
-                  </div>
-                  {% endif %}
-                </div>
-              </td>
-              {% endif %}
-
               <td data-th="Inicio">
                 {% set fi = t['fecha_inicio'] %}
                 {% if fi %}
@@ -375,22 +308,8 @@
                 <span class="dt-time">{{ fi[11:16] }}</span>
                 {% endif %}
               </td>
-              <td data-th="Inicio Real">
-                {% set fi = t['fecha_compromiso'] %}
-                {% if fi %}
-                <span class="dt-date">{{ fi[:10] }}</span>
-                <span class="dt-time">{{ fi[11:16] }}</span>
-                {% endif %}
-              </td>
               <td data-th="Fin">
                 {% set ff = t['fecha_fin'] %}
-                {% if ff %}
-                <span class="dt-date">{{ ff[:10] }}</span>
-                <span class="dt-time">{{ ff[11:16] }}</span>
-                {% endif %}
-              </td>
-              <td data-th="Fin Real">
-                {% set ff = t['fecha_cierre_real'] %}
                 {% if ff %}
                 <span class="dt-date">{{ ff[:10] }}</span>
                 <span class="dt-time">{{ ff[11:16] }}</span>

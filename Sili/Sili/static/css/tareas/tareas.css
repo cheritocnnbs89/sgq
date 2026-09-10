@@ -22,12 +22,6 @@
   }
 
   /* En vista gerencial, reduce otras columnas para “ceder espacio” */
-  .table-gerencial th:nth-child(6),
-  .table-gerencial td:nth-child(6) {
-    width: 8% !important;
-    /* Avance */
-  }
-
   .table-gerencial th:nth-child(4),
   .table-gerencial td:nth-child(4) {
     width: 10% !important;
@@ -50,19 +44,6 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
   }
-
-  /* Vista gerencial: mostrar solo % en Avance */
-  .table-gerencial td[data-th="Avance"] .wrap-bar {
-    display: none !important;
-  }
-
-  .table-gerencial td[data-th="Avance"] .avance-pct {
-    margin-left: 0 !important;
-    font-size: .85rem !important;
-    /* opcional */
-  }
-
-
 
   /* Codigo */
   .table-gerencial th:nth-child(1),
