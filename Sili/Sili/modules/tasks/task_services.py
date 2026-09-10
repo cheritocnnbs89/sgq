@@ -50,6 +50,7 @@ from modules.tasks.task_repository import (
     repo_obtener_tipos_tarea,
     repo_obtener_usuarios_activos,
     repo_actualizar_tarea,
+    repo_reasignar_tarea_responsable,
     repo_finalizar_accion,
 )
 from email.message import EmailMessage
@@ -1958,6 +1959,19 @@ def svc_guardar_edicion_tarea(user, task_id: int, form):
     else:
         solicitante_id = tarea.get("solicitante_id")
 
+    # Reasignar técnico (responsable principal): solo admin. Si viene un
+    # tecnico_id válido y distinto, se cambia tareas.usuario_id y se deja
+    # como único responsable en tarea_responsables.
+    tecnico_id_actual = tarea.get("usuario_id")
+    tecnico_id = tecnico_id_actual
+    if user["rol"] == "admin":
+        tecnico_raw = (form.get("tecnico_id") or "").strip()
+        if tecnico_raw:
+            try:
+                tecnico_id = int(tecnico_raw)
+            except ValueError:
+                tecnico_id = tecnico_id_actual
+
     tipo_tarea_raw = (form.get("tipo_tarea_id") or "").strip()
     try:
         tipo_tarea_id = int(tipo_tarea_raw) if tipo_tarea_raw else tarea.get("tipo_tarea_id")
@@ -2015,8 +2029,11 @@ def svc_guardar_edicion_tarea(user, task_id: int, form):
             "solicitante_id": solicitante_id,
             "porcentaje_avance": avance,
             "tipo_tarea_id": tipo_tarea_id,
+            "usuario_id": tecnico_id,
         },
     )
+    if tecnico_id and tecnico_id != tecnico_id_actual:
+        repo_reasignar_tarea_responsable(conn, task_id, tecnico_id)
     conn.commit()
     if estado_anterior != "Terminado" and estado == "Terminado":
         try:

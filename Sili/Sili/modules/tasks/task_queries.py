@@ -357,8 +357,17 @@ SQL_ACTUALIZAR_TAREA = f"""
         fecha_cierre_real = ?,
         solicitante_id = ?,
         porcentaje_avance = ?,
-        tipo_tarea_id = ?
+        tipo_tarea_id = ?,
+        usuario_id = ?
     WHERE id = ?
+"""
+
+# Reasignación de técnico: se borran todos los responsables de la tarea
+# y se deja solo el nuevo (las tareas de soporte tienen un único técnico;
+# si el negocio necesitara varios se agregarían aparte).
+SQL_ELIMINAR_TAREA_RESPONSABLES_TODOS = f"""
+    DELETE FROM {TABLA_TAREA_RESPONSABLES}
+    WHERE tarea_id = ?
 """
 
 SQL_ELIMINAR_TAREA_ADMIN = f"""

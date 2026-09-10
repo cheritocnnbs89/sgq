@@ -695,6 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastEstados = [];
   let lastIsAdmin = false;
   let lastSolicitantes = [];
+  let lastResponsables = [];
 
   function esc(s) {
     return String(s == null ? '' : s)
@@ -860,6 +861,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    const tecWrap = document.getElementById('tdDetTecnicoWrap');
+    const fTecnico = document.getElementById('tdDetFTecnico');
+    if (tecWrap && fTecnico) {
+      if (lastIsAdmin) {
+        fTecnico.innerHTML = '';
+        lastResponsables.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.id;
+          opt.textContent = r.label || r.username;
+          if (String(r.id) === String(t.usuario_id)) opt.selected = true;
+          fTecnico.appendChild(opt);
+        });
+        tecWrap.classList.remove('d-none');
+      } else {
+        tecWrap.classList.add('d-none');
+      }
+    }
+
     document.getElementById('tdDetEditCsrf').value =
       document.getElementById('td-csrf-token')?.dataset.token || '';
     editError.classList.add('d-none');
@@ -924,6 +943,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lastEstados = data.estados || [];
         lastIsAdmin = !!data.is_admin;
         lastSolicitantes = data.solicitantes || [];
+        lastResponsables = data.responsables || [];
         document.getElementById('tdDetCodigo').textContent = String(t.id||'').padStart(8,'0');
         document.getElementById('tdDetTitulo').textContent = t.titulo||'';
         renderInfo(t);
