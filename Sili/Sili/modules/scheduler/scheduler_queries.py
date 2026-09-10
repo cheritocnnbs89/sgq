@@ -244,6 +244,11 @@ SQL_SELECT_OM_CANDIDATOS = f"""
       AND COALESCE(LTRIM(RTRIM(ri.estado_respuesta)), 'sin_respuesta') = 'sin_respuesta'
       AND r.fecha_creacion IS NOT NULL
       AND CONVERT(date, r.fecha_creacion) >= '2026-03-01'
+      -- Excluir OMs inactivadas (soft delete: reclamos.activo = 0) y
+      -- filas de imputación inactivadas. Sin esto seguían llegando
+      -- escalamientos D5/D9/D10 de OMs ya eliminadas.
+      AND COALESCE(r.activo, 1) = 1
+      AND COALESCE(ri.activo, 1) = 1
 """
 
 
@@ -370,6 +375,8 @@ SQL_SELECT_OM_ACCIONES_SEGUIMIENTO = """
     LEFT JOIN usuarios u_imp ON u_imp.id = ri.imputado_id
 
     WHERE COALESCE(a.activo, 1) = 1
+      AND COALESCE(r.activo, 1) = 1
+      AND COALESCE(ri.activo, 1) = 1
       AND COALESCE(a.cumplido, 0) = 0
       AND UPPER(COALESCE(a.tipo, '')) = 'CORRECTIVA'
       AND TRY_CONVERT(date, a.fecha_compromiso) IS NOT NULL
