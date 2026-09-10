@@ -383,8 +383,8 @@ def repo_actualizar_tarea(conn, task_id: int, data: dict):
 
 
 def repo_reasignar_tarea_responsable(conn, task_id: int, usuario_id: int):
-    """Deja a `usuario_id` como único responsable de la tarea (borra los
-    demás). Usado al reasignar el técnico de una tarea mal asignada."""
+    """Deja a `usuario_id` como unico responsable de la tarea (borra los
+    demas). Usado al reasignar el tecnico de una tarea mal asignada."""
     cur = conn.cursor()
     cur.execute(q.SQL_ELIMINAR_TAREA_RESPONSABLES_TODOS, (task_id,))
     cur.execute(q.SQL_INSERTAR_TAREA_RESPONSABLE, (task_id, usuario_id))
