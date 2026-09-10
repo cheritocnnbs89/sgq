@@ -14,7 +14,7 @@
       <button id="themeToggle" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-moon-stars me-1"></i>Tema
       </button>
-      {% if es_sistemas_qp %}
+      {% if es_sistemas_qp or rol == 'admin' %}
       <a href="{{ url_for('bandeja_soporte') }}" class="btn btn-outline-primary btn-sm position-relative">
         <i class="bi bi-inbox me-1"></i>Bandeja Soporte
         {% if bandeja_pendientes > 0 %}
@@ -429,21 +429,13 @@
 
 
               <td data-th="Solicitante">
-                {% if t['solicitante_nombre'] %}
-                {{ t['solicitante_nombre'] }} ({{ t['solicitante_username'] }})
-                {% else %}
                 {{ t['solicitante_username'] or 'N/A' }}
-                {% endif %}
               </td>
 
 
 
               <td data-th="Responsable">
-                {% if t['propietario_nombre'] %}
-                {{ t['propietario_nombre'] }} ({{ t['propietario'] }})
-                {% else %}
-                {{ t['propietario'] }}
-                {% endif %}
+                {{ t['propietario'] or 'N/A' }}
               </td>
               <td data-th="Departamento">{{ t['departamento_nombre'] or 'N/A' }}</td>
 

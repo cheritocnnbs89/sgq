@@ -1397,9 +1397,10 @@ def svc_build_listar_tareas_context(user, request_args):
     except Exception:
         pass
 
-    # Contar correos pendientes en bandeja (solo si es SISTEMAS QP)
+    # Contar correos pendientes en bandeja (SISTEMAS QP o admin -- el admin
+    # también ve el botón de Bandeja Soporte aunque no sea de ese depto).
     bandeja_pendientes = 0
-    if es_sistemas_qp:
+    if es_sistemas_qp or user.get("rol") == "admin":
         try:
             conn = get_db()
             row = conn.execute(
