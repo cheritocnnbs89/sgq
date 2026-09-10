@@ -31,7 +31,11 @@ DEPT_PERMITIDO = "SISTEMAS QP"
 
 
 def _es_sistemas_qp(user: dict) -> bool:
-    """Verifica si el usuario pertenece al departamento SISTEMAS QP."""
+    """Verifica si el usuario puede operar la Bandeja de Soporte: los del
+    departamento SISTEMAS QP, y también el rol admin (que normalmente no
+    tiene departamento asignado y por eso quedaba fuera)."""
+    if (user.get("rol") or "").strip().lower() == "admin":
+        return True
     dep_id = user.get("departamento_id")
     if not dep_id:
         return False

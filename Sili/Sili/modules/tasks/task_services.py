@@ -1263,12 +1263,10 @@ def svc_build_listar_tareas_context(user, request_args):
             if dept_name:
                 deptos.add(dept_name)
 
-            nombre = (r["nombre_completo"] or "").strip()
+            # En el listado se muestra solo el username (el nombre completo
+            # ocupaba mucho espacio en la columna Responsable).
             username = (r["username"] or "").strip()
-
-            if nombre:
-                labels.append(f"{nombre} ({username})")
-            elif username:
+            if username:
                 labels.append(username)
 
         if not ids:
@@ -1276,11 +1274,7 @@ def svc_build_listar_tareas_context(user, request_args):
                 ids.add(t["usuario_id"])
 
             label_base = (t.get("creador_username") or "").strip()
-            nombre_creador = (t.get("creador_nombre") or "").strip()
-
-            if nombre_creador:
-                labels.append(f"{nombre_creador} ({label_base})" if label_base else nombre_creador)
-            elif label_base:
+            if label_base:
                 labels.append(label_base)
 
         t["responsable_ids"] = ids
