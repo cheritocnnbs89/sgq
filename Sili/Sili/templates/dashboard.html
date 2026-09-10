@@ -81,6 +81,27 @@
   </div>
 </form>
 
+{% if soportes_sin_asignar is defined %}
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-lg-4">
+    <a href="{{ url_for('bandeja_soporte', estado='POR_ASIGNAR') }}" class="text-decoration-none">
+      <div class="section kpi-card h-100">
+        <div class="ta-kpi">
+          <div class="ta-kpi-icon {{ 'danger' if soportes_sin_asignar > 0 else 'info' }}">
+            <i class="bi bi-inbox-fill"></i>
+          </div>
+          <div>
+            <div class="ta-kpi-value">{{ soportes_sin_asignar }}</div>
+            <div class="ta-kpi-label">Soportes sin asignar</div>
+            <div class="ta-kpi-hint">Bandeja de Soporte — pendientes de asignar</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+{% endif %}
+
 <div class="section mb-3">
   <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
           data-bs-target="#collapseGraficosDashboard" aria-expanded="false" aria-controls="collapseGraficosDashboard">
@@ -496,6 +517,11 @@
           <div id="tdDetSolicitanteWrap" class="mb-2 d-none">
             <label class="td-edit-label">Solicitante</label>
             <select name="solicitante_id" id="tdDetFSolicitante" class="form-select form-select-sm"></select>
+          </div>
+
+          <div id="tdDetTecnicoWrap" class="mb-2 d-none">
+            <label class="td-edit-label">Responsable / Técnico</label>
+            <select name="tecnico_id" id="tdDetFTecnico" class="form-select form-select-sm"></select>
           </div>
 
           <div class="row g-2 mb-2">

@@ -1077,8 +1077,20 @@ def svc_build_dashboard_context(user, request_args=None):
         key=lambda x: -x["tickets"],
     )
 
+    # Soportes de la Bandeja pendientes de asignar (para la tarjeta del panel).
+    soportes_sin_asignar = 0
+    try:
+        _conn = get_db()
+        _row = _conn.execute(
+            "SELECT COUNT(*) AS c FROM email_tickets_inbox WHERE estado = 'POR_ASIGNAR'"
+        ).fetchone()
+        soportes_sin_asignar = _row["c"] if _row else 0
+    except Exception:
+        soportes_sin_asignar = 0
+
     ctx = {
         "usuario": user["username"],
+        "soportes_sin_asignar": soportes_sin_asignar,
         "deptos": repo_obtener_departamentos_tareas(),
         "depto_sel": depto_sel,
         "fecha_desde": fecha_desde_raw,
