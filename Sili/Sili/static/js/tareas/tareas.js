@@ -882,16 +882,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fTipoTarea = document.getElementById('tdDetFTipoTarea');
     if (fTipoTarea) {
-      fTipoTarea.innerHTML = '';
-      const optNone = document.createElement('option');
-      optNone.value = ''; optNone.textContent = '— Sin tipo —';
-      fTipoTarea.appendChild(optNone);
-      lastTiposTarea.forEach(tp => {
-        const opt = document.createElement('option');
-        opt.value = tp.id; opt.textContent = tp.nombre;
-        if (String(tp.id) === String(t.tipo_tarea_id)) opt.selected = true;
-        fTipoTarea.appendChild(opt);
-      });
+      // El <select> ya trae las opciones renderizadas por el server
+      // (igual que en "Nueva tarea"). Fallback: si el template está
+      // viejo y no las trae pero el JSON sí, se pueblan acá.
+      if (fTipoTarea.options.length <= 1 && lastTiposTarea.length) {
+        lastTiposTarea.forEach(tp => {
+          const opt = document.createElement('option');
+          opt.value = tp.id; opt.textContent = tp.nombre;
+          fTipoTarea.appendChild(opt);
+        });
+      }
+      fTipoTarea.value = (t.tipo_tarea_id == null) ? '' : String(t.tipo_tarea_id);
     }
 
     document.getElementById('tdDetEditCsrf').value =

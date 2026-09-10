@@ -3,7 +3,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/tareas.css') }}">
-<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=19" defer></script>
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=20" defer></script>
 
 <div class="container tasks-page mt-3" data-vista="{{ vista }}">
   <div class="d-flex justify-content-between align-items-center mb-2">
@@ -495,7 +495,12 @@
 
           <div class="mb-2">
             <label class="td-edit-label">Tipo de tarea</label>
-            <select name="tipo_tarea_id" id="tdDetFTipoTarea" class="form-select form-select-sm"></select>
+            <select name="tipo_tarea_id" id="tdDetFTipoTarea" class="form-select form-select-sm">
+              <option value="">— Sin tipo —</option>
+              {% for tipo in tipos_tarea %}
+              <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+              {% endfor %}
+            </select>
           </div>
 
           <div class="row g-2 mb-2">

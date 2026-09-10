@@ -542,7 +542,12 @@
 
           <div class="mb-2">
             <label class="td-edit-label">Tipo de tarea</label>
-            <select name="tipo_tarea_id" id="tdDetFTipoTarea" class="form-select form-select-sm"></select>
+            <select name="tipo_tarea_id" id="tdDetFTipoTarea" class="form-select form-select-sm">
+              <option value="">— Sin tipo —</option>
+              {% for tipo in tipos_tarea %}
+              <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+              {% endfor %}
+            </select>
           </div>
 
           <div class="row g-2 mb-2">
@@ -630,5 +635,5 @@
 {% block scripts_extra %}
 <script id="chart-data" type="application/json">{{ chart|tojson }}</script>
 <script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dashboard.js') }}?v=1"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}?v=2"></script>
 {% endblock %}

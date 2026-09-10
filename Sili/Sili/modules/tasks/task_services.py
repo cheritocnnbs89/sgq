@@ -1091,6 +1091,8 @@ def svc_build_dashboard_context(user, request_args=None):
     ctx = {
         "usuario": user["username"],
         "soportes_sin_asignar": soportes_sin_asignar,
+        # Catálogo de tipos de tarea para el <select> del modal de edición.
+        "tipos_tarea": repo_obtener_tipos_tarea(),
         "deptos": repo_obtener_departamentos_tareas(),
         "depto_sel": depto_sel,
         "fecha_desde": fecha_desde_raw,
@@ -1447,6 +1449,9 @@ def svc_build_listar_tareas_context(user, request_args):
         "fecha_hasta": fecha_hasta_raw,
         "es_sistemas_qp": es_sistemas_qp,
         "bandeja_pendientes": bandeja_pendientes,
+        # Catálogo de tipos de tarea para el <select> del modal de edición
+        # (se renderiza server-side igual que en "Nueva tarea").
+        "tipos_tarea": repo_obtener_tipos_tarea(),
     }
 
 
