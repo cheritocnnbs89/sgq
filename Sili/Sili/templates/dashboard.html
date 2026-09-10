@@ -630,5 +630,5 @@
 {% block scripts_extra %}
 <script id="chart-data" type="application/json">{{ chart|tojson }}</script>
 <script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}?v=1"></script>
 {% endblock %}
