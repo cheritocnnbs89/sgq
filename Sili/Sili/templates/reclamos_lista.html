@@ -307,7 +307,9 @@
                                 {% set es_creador_om = (current_user_id and r.creado_por and current_user_id ==
                                 r.creado_por) %}
                                 {% set validacion = (r.validacion_creador or '') %}
-                                {% set puede_validar = es_creador_om and om_cerrada and validacion != 'aprobado' %}
+                                {% set validacion_vencida = r.validacion_vencida %}
+                                {% set puede_validar = es_creador_om and om_cerrada and validacion != 'aprobado'
+                                and not validacion_vencida %}
 
                                 <div class="btn-group btn-group-sm">
                                     <button class="btn btn-outline-secondary btn-sm js-ver-detalle" type="button"
@@ -335,6 +337,11 @@
                                     <span class="badge recl-badge-validacion-rechazado"
                                         title="Respuesta técnica rechazada por el creador">
                                         <i class="bi bi-x-circle-fill"></i> Rechazada
+                                    </span>
+                                    {% elif es_creador_om and om_cerrada and validacion == '' and validacion_vencida %}
+                                    <span class="badge bg-secondary"
+                                        title="El plazo de 2 días para validar la respuesta ya venció.">
+                                        <i class="bi bi-clock-history"></i> Plazo vencido
                                     </span>
                                     {% endif %}
 

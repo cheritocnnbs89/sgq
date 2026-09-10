@@ -3070,6 +3070,14 @@ def register_reclamos_routes(app):
 
             for r in rows or []:
                 d = dict(r)
+
+                # Plazo de 2 días del creador para validar la respuesta técnica,
+                # contado desde el cierre de la OM (fecha_cierre_respuesta).
+                fcr = _parse_fecha(d.get("fecha_cierre_respuesta"))
+                d["validacion_vencida"] = bool(
+                    fcr and (hoy - fcr).days > PLAZO_VALIDACION_CREADOR_DIAS
+                )
+
                 f = _parse_fecha(d.get("fecha_reclamo"))
 
                 if not f:
@@ -3226,6 +3234,7 @@ def register_reclamos_routes(app):
                     r.carta_cliente_notif_at,
                     r.creado_por,
                     COALESCE(r.validacion_creador, '') AS validacion_creador,
+                    r.fecha_cierre_respuesta,
 
                     (
                         SELECT COUNT(*)
@@ -4835,7 +4844,7 @@ def register_reclamos_routes(app):
         pend = int((rowp["pend"] if rowp else 0) or 0)
 
         if pend == 0:
-            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_71, (reclamo_id,))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_71, (_now_iso(), reclamo_id))
 
         try:
             _notify_creador_respuesta_aprobada(
@@ -5072,7 +5081,7 @@ def register_reclamos_routes(app):
         if accion == "aprobar":
             cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_74, (_now_iso(), imp_id))
 
-            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_71, (row["reclamo_id"],))
+            cur.execute(SQL_REGISTER_RECLAMOS_ROUTES_UPD_71, (_now_iso(), row["reclamo_id"]))
             
             _notify_creador_respuesta_aprobada(
                 conn,
@@ -7746,6 +7755,29 @@ Responde SOLO con JSON:
         if estado_global_actual != "cerrado":
             conn.close()
             return jsonify(ok=False, msg="Solo se puede validar una OM en estado Cerrado."), 400
+
+        # Plazo de 2 días para que el creador confirme/rechace la respuesta
+        # técnica, contado desde el cierre de la OM (fecha_cierre_respuesta).
+        # Las OMs cerradas antes de este cambio no tienen la fecha -> no se
+        # bloquean (fcr None).
+        try:
+            fcr_raw = om["fecha_cierre_respuesta"]
+        except Exception:
+            fcr_raw = None
+        if fcr_raw:
+            if hasattr(fcr_raw, "year"):
+                fcr_dt = fcr_raw
+            else:
+                try:
+                    fcr_dt = datetime.strptime(str(fcr_raw)[:19], "%Y-%m-%d %H:%M:%S")
+                except ValueError:
+                    fcr_dt = None
+            if fcr_dt is not None and (datetime.now() - fcr_dt).days > PLAZO_VALIDACION_CREADOR_DIAS:
+                conn.close()
+                return jsonify(
+                    ok=False,
+                    msg=f"El plazo de {PLAZO_VALIDACION_CREADOR_DIAS} días para validar la respuesta ya venció."
+                ), 400
 
         if accion == "aceptar":
             cur.execute(SQL_VALIDAR_CREADOR_UPD_ESTADO, ("aprobado", "cerrado", reclamo_id))

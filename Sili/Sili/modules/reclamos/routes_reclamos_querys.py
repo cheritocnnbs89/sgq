@@ -1909,7 +1909,8 @@ SQL_REGISTER_RECLAMOS_ROUTES_SEL_70 = f"""
 SQL_REGISTER_RECLAMOS_ROUTES_UPD_71 = f"""
 
                 UPDATE {T_RECLAMOS}
-                SET estado_global = 'cerrado'
+                SET estado_global = 'cerrado',
+                    fecha_cierre_respuesta = ?
                 WHERE id = ?
 """
 
@@ -2397,6 +2398,7 @@ SQL_VALIDAR_CREADOR_SEL_BASE = f"""
         r.proceso_id,
         r.estado_global,
         r.validacion_creador,
+        r.fecha_cierre_respuesta,
         COALESCE(r.proceso_text, '') AS proceso_text
     FROM {T_RECLAMOS} r
     WHERE r.id = ?

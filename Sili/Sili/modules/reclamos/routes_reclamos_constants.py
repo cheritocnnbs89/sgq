@@ -53,3 +53,7 @@ ACCION_CORRECTIVA = "CORRECTIVA"
 
 # ── Codigo de reclamo ───────────────────────────────────────────────────────
 CODIGO_PREFIX = "RECL"
+
+# ── Plazo (días) que tiene el creador de la OM para confirmar/rechazar la
+#    respuesta técnica una vez que la OM se cierra (fecha_cierre_respuesta).
+PLAZO_VALIDACION_CREADOR_DIAS = 2
