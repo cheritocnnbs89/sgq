@@ -806,7 +806,6 @@ def svc_build_dashboard_context(user, request_args=None):
     tareas_raw = tareas_filtradas
 
     hoy = date.today()
-    week_end = hoy + timedelta(days=(6 - hoy.weekday()))
 
     conteos = {estado: 0 for estado in ESTADOS}
 
@@ -919,27 +918,22 @@ def svc_build_dashboard_context(user, request_args=None):
         t["fecha_compromiso_fmt"] = comp_dt.strftime("%Y-%m-%d %H:%M") if comp_dt else ""
         creacion_dt = parse_dt(str(t.get("fecha_creacion") or "").strip())
         t["fecha_creacion_fmt"] = creacion_dt.strftime("%Y-%m-%d %H:%M") if creacion_dt else ""
-        no_terminada = estado not in ("Terminado", "Cerrado por sistema")
+        no_terminada = estado not in ESTADOS_CERRADOS_SET
 
-        if comp_dt and no_terminada:
-            comp_date = comp_dt.date()
-            if comp_date < hoy:
-                t["dias_atraso"] = (hoy - comp_date).days
-                overdue_tasks.append(t)
+        # "Tareas por Cerrar": de momento no hay un SLA fijo para calcular
+        # vencimiento a partir de fecha_compromiso (muchas tareas ni
+        # siquiera la tienen cargada), así que se cuentan TODAS las tareas
+        # sin cerrar (de cualquier tipo), y la "antigüedad" en días se
+        # calcula desde fecha_creacion, que siempre existe.
+        if no_terminada:
+            dias_abierta = (hoy - creacion_dt.date()).days if creacion_dt else 0
+            t["dias_atraso"] = dias_abierta
+            overdue_tasks.append(t)
 
-                owner = t.get("propietario") or "—"
-                depto = t.get("departamento") or "Sin departamento"
-                overdue_by_user_count[owner] += 1
-                overdue_by_depto_count[depto] += 1
-            elif comp_date == hoy:
-                t["dias_atraso"] = 0
-                today_tasks.append(t)
-            elif hoy < comp_date <= week_end:
-                t["dias_atraso"] = 0
-                week_tasks.append(t)
-        elif not comp_dt and no_terminada:
-            t["dias_atraso"] = None
-            no_due_tasks.append(t)
+            owner = t.get("propietario") or "—"
+            depto = t.get("departamento") or "Sin departamento"
+            overdue_by_user_count[owner] += 1
+            overdue_by_depto_count[depto] += 1
 
     overdue_by_user = sorted(
         [{"usuario": u, "total": c} for u, c in overdue_by_user_count.items()],
@@ -1153,12 +1147,13 @@ def svc_build_dashboard_context(user, request_args=None):
 
 def _construir_seccion_atrasadas(overdue_tasks, request_args):
     """
-    Arma los KPIs + filtros + tabla paginada de la sección "Tareas
-    atrasadas" del dashboard, a partir de overdue_tasks (ya calculado en
-    svc_build_dashboard_context, con dias_atraso/fecha_compromiso_fmt y ya
-    respetando el rango de fechas/departamento elegidos arriba en la
-    página). Usa parámetros con prefijo "atr_" para no chocar con los
-    filtros generales del dashboard (fecha_desde, fecha_hasta, depto).
+    Arma los KPIs + filtros + tabla paginada de la sección "Tareas por
+    Cerrar" del dashboard, a partir de overdue_tasks (todas las tareas sin
+    cerrar, ya calculado en svc_build_dashboard_context, con
+    dias_atraso = días desde fecha_creacion y ya respetando el rango de
+    fechas/departamento elegidos arriba en la página). Usa parámetros con
+    prefijo "atr_" para no chocar con los filtros generales del dashboard
+    (fecha_desde, fecha_hasta, depto).
     """
     q_txt = (request_args.get("atr_q") or "").strip().lower()
     responsable_sel = (request_args.get("atr_responsable") or "").strip()
@@ -1200,7 +1195,10 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
 
     # KPIs: reflejan los filtros aplicados (búsqueda/responsable/depto/estado/antigüedad).
     total_atrasadas = total_filtradas
-    mas_90_dias = sum(1 for t in filtradas if t["dias_atraso"] > 90)
+    # Umbral bajado de 90 a 30 días: sin SLA fijo, 30 días sin cerrar ya es
+    # una señal de atención (aplica a cualquier tipo de tarea, no solo
+    # proyectos).
+    mas_30_dias = sum(1 for t in filtradas if t["dias_atraso"] > 30)
     atraso_promedio = (
         round(sum(t["dias_atraso"] for t in filtradas) / total_filtradas)
         if total_filtradas else 0
@@ -1253,7 +1251,7 @@ def _construir_seccion_atrasadas(overdue_tasks, request_args):
 
     return {
         "atr_total": total_atrasadas,
-        "atr_mas_90_dias": mas_90_dias,
+        "atr_mas_30_dias": mas_30_dias,
         "atr_atraso_promedio": atraso_promedio,
         "atr_responsable_top": responsable_top,
         "atr_responsable_top_count": responsable_top_count,
