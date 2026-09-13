@@ -3,7 +3,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tareas/tareas.css') }}">
-<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=20" defer></script>
+<script src="{{ url_for('static', filename='js/tareas/tareas.js') }}?v=21" defer></script>
 
 <div class="container tasks-page mt-3" data-vista="{{ vista }}">
   <div class="d-flex justify-content-between align-items-center mb-2">
@@ -52,7 +52,7 @@
     </a>
     <a class="td-status-tab {% if tab == 'terminadas' %}active{% endif %}"
        href="{{ url_for('listar_tareas', vista=vista, tab='terminadas') }}">
-      <i class="bi bi-check-circle-fill"></i> Terminadas
+      <i class="bi bi-check-circle-fill"></i> Cerradas
       {% if conteo_terminadas > 0 %}
       <span class="td-tab-badge verde">{{ conteo_terminadas }}</span>
       {% endif %}
@@ -81,7 +81,7 @@
       <select id="fEstado" name="estado" class="form-select form-select-sm tareas-maxw-220">
         <option value="" {{ ''==_estado and 'selected' or '' }}>Estado: Todos</option>
         <option {{ 'Por iniciar'==_estado and 'selected' or '' }}>Por iniciar</option>
-        <option {{ 'En desarrollo'==_estado and 'selected' or '' }}>En desarrollo</option>
+        <option {{ 'En Proceso'==_estado and 'selected' or '' }}>En Proceso</option>
         <option {{ 'Atrasada'==_estado and 'selected' or '' }}>Atrasada</option>
         <option {{ 'Terminado'==_estado and 'selected' or '' }}>Terminado</option>
         <option {{ 'Cerrado por sistema'==_estado and 'selected' or '' }}>Cerrado por sistema</option>
@@ -120,12 +120,8 @@
       </div>
     </form>
   </div>
-  <!-- Toggle de densidad + Quitar filtros -->
+  <!-- Quitar filtros (la tabla siempre se muestra en Vista Gerencial) -->
   <div class="d-flex align-items-center gap-2 mb-2 no-print">
-    <div class="btn-group btn-group-sm" aria-label="Densidad de filas">
-      <button class="btn btn-outline-secondary" id="densityCompact" type="button">Compacta</button>
-      <button class="btn btn-outline-primary" id="btnGerencial" type="button">Vista Gerencial</button>
-    </div>
     <button id="btnLimpiarTodo" class="btn btn-outline-secondary btn-sm">
       Quitar filtros
     </button>
@@ -287,7 +283,7 @@
                 <span class="chip
                   {% if estado == 'Terminado' %}
                     chip-done
-                  {% elif estado == 'En desarrollo' %}
+                  {% elif estado == 'En Proceso' %}
                     chip-dev
                   {% elif estado == 'Atrasada' %}
                     chip-block
@@ -366,7 +362,15 @@
                   <i class="bi bi-eye"></i>
                 </button>
 
-                {% if (permissions|default({})).get('tareas', {}).get('eliminar') and tab != 'terminadas' %}
+                {% if t['editable'] and (rol == 'admin' or not t['inbox_id']) and tab != 'terminadas' %}
+                <button type="button" class="btn btn-sm btn-outline-secondary me-1 js-abrir-detalle-modal js-reasignar-tecnico"
+                  data-task-id="{{ t['id'] }}"
+                  title="Reasignar técnico">
+                  <i class="bi bi-arrow-repeat"></i>
+                </button>
+                {% endif %}
+
+                {% if rol == 'admin' and tab != 'terminadas' %}
                 <form method="post" action="{{ url_for('eliminar_tarea', task_id=t['id']) }}"
                   class="form-inline-delete js-delete-tarea-form">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

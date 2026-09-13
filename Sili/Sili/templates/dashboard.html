@@ -81,27 +81,6 @@
   </div>
 </form>
 
-{% if soportes_sin_asignar is defined %}
-<div class="row g-3 mb-3">
-  <div class="col-sm-6 col-lg-4">
-    <a href="{{ url_for('bandeja_soporte', estado='POR_ASIGNAR') }}" class="text-decoration-none">
-      <div class="section kpi-card h-100">
-        <div class="ta-kpi">
-          <div class="ta-kpi-icon {{ 'danger' if soportes_sin_asignar > 0 else 'info' }}">
-            <i class="bi bi-inbox-fill"></i>
-          </div>
-          <div>
-            <div class="ta-kpi-value">{{ soportes_sin_asignar }}</div>
-            <div class="ta-kpi-label">Soportes sin asignar</div>
-            <div class="ta-kpi-hint">Bandeja de Soporte — pendientes de asignar</div>
-          </div>
-        </div>
-      </div>
-    </a>
-  </div>
-</div>
-{% endif %}
-
 <div class="section mb-3">
   <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
           data-bs-target="#collapseGraficosDashboard" aria-expanded="false" aria-controls="collapseGraficosDashboard">
@@ -335,19 +314,37 @@
 </div>
 
 <div class="row g-3 mb-3">
-  <div class="col-sm-6 col-lg-3">
+  {% if soportes_sin_asignar is defined %}
+  <div class="col-sm-6 col-lg-4">
+    <a href="{{ url_for('bandeja_soporte', estado='POR_ASIGNAR') }}" class="text-decoration-none">
+      <div class="section kpi-card h-100">
+        <div class="ta-kpi">
+          <div class="ta-kpi-icon {{ 'danger' if soportes_sin_asignar > 0 else 'info' }}">
+            <i class="bi bi-inbox-fill"></i>
+          </div>
+          <div>
+            <div class="ta-kpi-value">{{ soportes_sin_asignar }}</div>
+            <div class="ta-kpi-label">Soportes sin asignar</div>
+            <div class="ta-kpi-hint">Bandeja de Soporte — pendientes de asignar</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endif %}
+  <div class="col-sm-6 col-lg-4">
     <div class="section kpi-card h-100">
       <div class="ta-kpi">
         <div class="ta-kpi-icon danger"><i class="bi bi-clock-history"></i></div>
         <div>
           <div class="ta-kpi-value">{{ atr_total }}</div>
-          <div class="ta-kpi-label">Total atrasadas</div>
+          <div class="ta-kpi-label">Total Sin Cerrar</div>
           <div class="ta-kpi-hint">Tickets vencidos</div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-sm-6 col-lg-3">
+  <div class="col-sm-6 col-lg-4">
     <div class="section kpi-card h-100">
       <div class="ta-kpi">
         <div class="ta-kpi-icon danger"><i class="bi bi-exclamation-triangle-fill"></i></div>
@@ -355,30 +352,6 @@
           <div class="ta-kpi-value">{{ atr_mas_90_dias }}</div>
           <div class="ta-kpi-label">Más de 90 días</div>
           <div class="ta-kpi-hint">Requieren atención urgente</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-lg-3">
-    <div class="section kpi-card h-100">
-      <div class="ta-kpi">
-        <div class="ta-kpi-icon warning"><i class="bi bi-calendar-x"></i></div>
-        <div>
-          <div class="ta-kpi-value">{{ atr_atraso_promedio }} días</div>
-          <div class="ta-kpi-label">Atraso promedio</div>
-          <div class="ta-kpi-hint">Promedio general de atraso</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-lg-3">
-    <div class="section kpi-card h-100">
-      <div class="ta-kpi">
-        <div class="ta-kpi-icon info"><i class="bi bi-person-fill"></i></div>
-        <div>
-          <div class="ta-kpi-value">{{ atr_responsable_top }}</div>
-          <div class="ta-kpi-label">Responsable con más atrasos</div>
-          <div class="ta-kpi-hint">{{ atr_responsable_top_count }} tarea{{ 's' if atr_responsable_top_count != 1 else '' }}</div>
         </div>
       </div>
     </div>
@@ -635,5 +608,5 @@
 {% block scripts_extra %}
 <script id="chart-data" type="application/json">{{ chart|tojson }}</script>
 <script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dashboard.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}?v=3"></script>
 {% endblock %}

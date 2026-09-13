@@ -102,6 +102,7 @@ def register_task_routes(app):
             'acciones': acciones,
             'puede_anotar': resultado['puede_anotar'],
             'editable': resultado.get('editable', False),
+            'puede_reasignar_tecnico': resultado.get('puede_reasignar_tecnico', False),
             'estados': resultado.get('estados', []),
             'is_admin': resultado.get('is_admin', False),
             'solicitantes': solicitantes,

@@ -21,7 +21,7 @@ APP_SECRET = os.environ.get("BITACORA_SECRET")
 DB_PATH = os.path.join("database", "bitacora1.db")
 
 ESTADOS = [
-    "En desarrollo",
+    "En Proceso",
     "Atrasada",
     "Terminado",
     "Cancelada",

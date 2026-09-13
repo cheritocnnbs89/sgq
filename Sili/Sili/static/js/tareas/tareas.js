@@ -365,25 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('advBox')?.classList.toggle('show');
   });
 
-  document.getElementById('densityNormal')?.addEventListener('click', () => {
-    table.classList.remove('table-compact', 'table-supercompact');
-  });
-
-  document.getElementById('densityCompact')?.addEventListener('click', () => {
-    table.classList.add('table-compact', 'table-supercompact');
-  });
-
-  document.getElementById('btnGerencial')?.addEventListener('click', event => {
-    const button = event.currentTarget;
-    table.classList.toggle('table-gerencial');
-    if (table.classList.contains('table-gerencial')) {
-      button.classList.replace('btn-outline-primary', 'btn-primary');
-      document.getElementById('densityCompact')?.click();
-    } else {
-      button.classList.replace('btn-primary', 'btn-outline-primary');
-    }
-  });
-
   document.querySelectorAll('[data-alert]').forEach(button => {
     button.addEventListener('click', () => { alert(button.dataset.alert); });
   });
@@ -426,8 +407,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Vista compacta por defecto
-  document.getElementById('densityCompact')?.click();
+  // Única vista disponible: Gerencial (compacta). Ya no hay botón de
+  // alternancia, la tabla siempre se muestra así.
+  table.classList.add('table-compact', 'table-supercompact', 'table-gerencial');
 
   applyFilters();
   updateSortButtons();
@@ -694,9 +676,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastTarea = null;
   let lastEstados = [];
   let lastIsAdmin = false;
+  let lastPuedeReasignar = false;
   let lastSolicitantes = [];
   let lastResponsables = [];
   let lastTiposTarea = [];
+  let autoOpenEdit = false;
 
   function esc(s) {
     return String(s == null ? '' : s)
@@ -712,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function estadoBadge(e) {
     const map = { 'Terminado':'bg-success','Cerrado por sistema':'bg-secondary',
-                  'En desarrollo':'bg-warning text-dark','Atrasada':'bg-danger','Por iniciar':'bg-info text-dark' };
+                  'En Proceso':'bg-warning text-dark','Atrasada':'bg-danger','Por iniciar':'bg-info text-dark' };
     return `<span class="badge ${map[e]||'bg-secondary'}">${esc(e)}</span>`;
   }
 
@@ -865,7 +849,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const tecWrap = document.getElementById('tdDetTecnicoWrap');
     const fTecnico = document.getElementById('tdDetFTecnico');
     if (tecWrap && fTecnico) {
-      if (lastIsAdmin) {
+      // Puede reasignar técnico: el admin siempre, y el técnico/responsable
+      // asignado a la tarea (para corregir una asignación errada).
+      if (lastIsAdmin || lastPuedeReasignar) {
         fTecnico.innerHTML = '';
         lastResponsables.forEach(r => {
           const opt = document.createElement('option');
@@ -961,6 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lastSolicitantes = data.solicitantes || [];
         lastResponsables = data.responsables || [];
         lastTiposTarea = data.tipos_tarea || [];
+        lastPuedeReasignar = !!data.puede_reasignar_tecnico;
         document.getElementById('tdDetCodigo').textContent = String(t.id||'').padStart(8,'0');
         document.getElementById('tdDetTitulo').textContent = t.titulo||'';
         renderInfo(t);
@@ -968,6 +955,13 @@ document.addEventListener('DOMContentLoaded', () => {
         populateResp(data.responsables);
 
         if (editBtn) editBtn.classList.toggle('d-none', !data.editable);
+
+        // El botón "Reasignar técnico" de la lista abre el modal directo
+        // en modo edición (en vez de la vista de solo lectura).
+        if (autoOpenEdit) {
+          autoOpenEdit = false;
+          if (data.editable) openEditMode();
+        }
 
         if (data.puede_anotar) {
           formCard.classList.remove('d-none');
@@ -993,7 +987,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.querySelectorAll('.js-abrir-detalle-modal').forEach(btn => {
-    btn.addEventListener('click', () => openModal(parseInt(btn.dataset.taskId, 10)));
+    btn.addEventListener('click', () => {
+      autoOpenEdit = btn.classList.contains('js-reasignar-tecnico');
+      openModal(parseInt(btn.dataset.taskId, 10));
+    });
   });
 
   form?.addEventListener('submit', function(e) {

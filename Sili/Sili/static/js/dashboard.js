@@ -478,6 +478,7 @@
   let lastTarea = null;
   let lastEstados = [];
   let lastIsAdmin = false;
+  let lastPuedeReasignar = false;
   let lastSolicitantes = [];
   let lastResponsables = [];
   let lastTiposTarea = [];
@@ -496,7 +497,7 @@
 
   function estadoBadge(e) {
     const map = { 'Terminado':'bg-success','Cerrado por sistema':'bg-secondary',
-                  'En desarrollo':'bg-warning text-dark','Atrasada':'bg-danger','Por iniciar':'bg-info text-dark' };
+                  'En Proceso':'bg-warning text-dark','Atrasada':'bg-danger','Por iniciar':'bg-info text-dark' };
     return `<span class="badge ${map[e]||'bg-secondary'}">${esc(e)}</span>`;
   }
 
@@ -649,7 +650,9 @@
     const tecWrap = document.getElementById('tdDetTecnicoWrap');
     const fTecnico = document.getElementById('tdDetFTecnico');
     if (tecWrap && fTecnico) {
-      if (lastIsAdmin) {
+      // Puede reasignar técnico: el admin siempre, y el técnico/responsable
+      // asignado a la tarea (para corregir una asignación errada).
+      if (lastIsAdmin || lastPuedeReasignar) {
         fTecnico.innerHTML = '';
         lastResponsables.forEach(r => {
           const opt = document.createElement('option');
@@ -742,6 +745,7 @@
         lastSolicitantes = data.solicitantes || [];
         lastResponsables = data.responsables || [];
         lastTiposTarea = data.tipos_tarea || [];
+        lastPuedeReasignar = !!data.puede_reasignar_tecnico;
         document.getElementById('tdDetCodigo').textContent = String(t.id||'').padStart(8,'0');
         document.getElementById('tdDetTitulo').textContent = t.titulo||'';
         renderInfo(t);

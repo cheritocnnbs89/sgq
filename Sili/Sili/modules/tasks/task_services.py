@@ -1520,7 +1520,7 @@ def svc_crear_tarea(user, form):
     )
 
     now = datetime.now()
-    estado = "Atrasada" if fc and fc < now else "En desarrollo"
+    estado = "Atrasada" if fc and fc < now else "En Proceso"
 
     fi_str = fi.strftime("%Y-%m-%d %H:%M:%S") if fi else None
     fc_str = fc.strftime("%Y-%m-%d %H:%M:%S") if fc else None
@@ -1625,6 +1625,11 @@ def svc_obtener_tarea_para_ver(user, task_id: int):
             or tarea["creador_id"] == user["id"]
         ),
         "editable": editable,
+        # El propio técnico/responsable asignado también puede reasignar el
+        # técnico de su tarea (corregir una asignación errada), no solo el
+        # admin. Reusa la misma condición que ya determina si la tarea es
+        # editable (excluye tareas de Bandeja Soporte y estados cerrados).
+        "puede_reasignar_tecnico": editable,
         "estados": ESTADOS,
         "is_admin": (user["rol"] == "admin"),
         "solicitantes": repo_obtener_solicitantes() if user["rol"] == "admin" else [],
@@ -1993,12 +1998,14 @@ def svc_guardar_edicion_tarea(user, task_id: int, form):
     else:
         solicitante_id = tarea.get("solicitante_id")
 
-    # Reasignar técnico (responsable principal): solo admin. Si viene un
-    # tecnico_id válido y distinto, se cambia tareas.usuario_id y se deja
-    # como único responsable en tarea_responsables.
+    # Reasignar técnico (responsable principal): admin siempre, y también
+    # el propio responsable/técnico asignado (para corregir una asignación
+    # errada). Si viene un tecnico_id válido y distinto, se cambia
+    # tareas.usuario_id y se deja como único responsable en
+    # tarea_responsables.
     tecnico_id_actual = tarea.get("usuario_id")
     tecnico_id = tecnico_id_actual
-    if user["rol"] == "admin":
+    if user["rol"] == "admin" or es_responsable:
         tecnico_raw = (form.get("tecnico_id") or "").strip()
         if tecnico_raw:
             try:
@@ -2323,7 +2330,7 @@ def svc_api_inbound_email_create_task(payload):
             {
                 "titulo": subject[:250],
                 "descripcion": body,
-                "estado": "En desarrollo",
+                "estado": "En Proceso",
                 "fecha_creacion": now.strftime("%Y-%m-%d %H:%M:%S"),
                 "fecha_inicio": None,
                 "fecha_compromiso": None,

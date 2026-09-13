@@ -397,13 +397,13 @@ def _procesar_ticket(conn, ticket: dict):
             fc_str = f"{fecha_aten} {hora_fin}:00"
 
     now = datetime.now()
-    estado = "En desarrollo"
+    estado = "En Proceso"
     if fc_str:
         try:
             if datetime.strptime(fc_str, "%Y-%m-%d %H:%M:%S") < now:
                 estado = "Atrasada"
             else:
-                estado = "En desarrollo"
+                estado = "En Proceso"
         except ValueError:
             pass
 

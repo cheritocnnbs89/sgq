@@ -10,7 +10,7 @@ TABLA_CONFIGURACION = "configuracion"
 GRUPO_TIPO_TAREA_ID = 4945
 
 ESTADO_POR_INICIAR = "Por iniciar"
-ESTADO_EN_DESARROLLO = "En desarrollo"
+ESTADO_EN_DESARROLLO = "En Proceso"
 ESTADO_ATRASADA = "Atrasada"
 ESTADO_TERMINADO = "Terminado"
 ESTADO_CERRADO_SISTEMA = "Cerrado por sistema"

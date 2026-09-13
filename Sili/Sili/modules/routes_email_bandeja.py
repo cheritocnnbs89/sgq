@@ -160,7 +160,7 @@ def _crear_tarea_desde_inbox(inbox_id: int, responsable_id: int, asignado_por_id
             notificado, tipo_tarea_id, empresa_id
         )
         OUTPUT INSERTED.id
-        VALUES (?, ?, 'En desarrollo', ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
+        VALUES (?, ?, 'En Proceso', ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
         """,
         (
             titulo, descripcion,
