@@ -8,6 +8,7 @@ from .security import require_login
 from datetime import datetime
 from flask import jsonify, session
 import os
+import requests
 from openai import OpenAI
  
 # routes_reclamos.py
@@ -1055,6 +1056,50 @@ def _get_user_basic(conn: sqlite3.Connection, uid: int | None):
     cur = conn.cursor()
     cur.execute(SQL__GET_USER_BASIC_SEL_1, (uid,))
     return cur.fetchone()
+
+
+# Content SID de la plantilla de WhatsApp "om_respuesta_final_aprobada",
+# ya aprobada en Twilio.
+WHATSAPP_TPL_OM_RESPUESTA_FINAL_APROBADA = "HXe8d8a4ed1f1191df0ab82dba4492b850"
+
+
+def _whatsapp_aws_reclamo(telefono: str, content_sid: str, variables: dict) -> None:
+    """
+    Envía una notificación WhatsApp vía AWS (Lambda -> Twilio Content API),
+    ignorando errores (nunca bloquea la respuesta HTTP). Mismo endpoint/token
+    que ya usan modules/aws_sync.py, el módulo Planificador y
+    routes_gastos_tarjeta.py (AWS_API_URL + AWS_FLASK_TOKEN -> header
+    x-flask-token).
+    """
+    aws_api_url = (os.environ.get("AWS_API_URL") or "").strip().rstrip("/")
+    aws_flask_token = (os.environ.get("AWS_FLASK_TOKEN") or "").strip()
+    if not (aws_api_url and aws_flask_token and telefono):
+        try:
+            current_app.logger.warning(
+                "[RECLAMOS] WhatsApp/AWS no enviado: falta configuración o teléfono "
+                "(aws_api_url=%s aws_flask_token=%s telefono=%s)",
+                bool(aws_api_url), bool(aws_flask_token), bool(telefono),
+            )
+        except Exception:
+            pass
+        return
+    try:
+        resp = requests.post(
+            f"{aws_api_url}/notificaciones/whatsapp-push",
+            json={"to": telefono, "content_sid": content_sid, "variables": variables},
+            headers={"x-flask-token": aws_flask_token, "Content-Type": "application/json"},
+            timeout=10,
+        )
+        if resp.status_code >= 300:
+            current_app.logger.warning(
+                "[RECLAMOS] WhatsApp/AWS respuesta no-2xx tel=%s status=%s body=%s",
+                telefono, resp.status_code, resp.text[:500],
+            )
+    except Exception as exc:
+        try:
+            current_app.logger.warning("[RECLAMOS] WhatsApp/AWS error tel=%s: %s", telefono, exc)
+        except Exception:
+            pass
 
 
 MAX_FILES_PER_RECLAMO = 5
@@ -7782,6 +7827,46 @@ Responde SOLO con JSON:
         if accion == "aceptar":
             cur.execute(SQL_VALIDAR_CREADOR_UPD_ESTADO, ("aprobado", "cerrado", reclamo_id))
             conn.commit()
+
+            # WhatsApp al/los responsable(s) (imputados) de la OM: la
+            # respuesta técnica que redactaron quedó validada por el creador.
+            try:
+                cur2 = conn.cursor()
+                cur2.execute(SQL__NOTIFY_COLABORADOR_ASIGNADO_SEL_1, (om["codigo"],))
+                r_om = cur2.fetchone()
+
+                try:
+                    cta_url = url_for("reclamos", _external=True) + "?tab=imputado"
+                except Exception:
+                    cta_url = "http://bitacoraquimpac.com.ec:5000/reclamos?tab=imputado"
+
+                fecha_om   = str(r_om["fecha_reclamo"])  if r_om else ""
+                tipo_om    = str(r_om["tipo_reclamo"])   if r_om else ""
+                cliente_om = str(r_om["cliente_nombre"]) if r_om else ""
+                proceso_om = str(r_om["proceso_text"])   if r_om else ""
+
+                cur2.execute(SQL_VALIDAR_CREADOR_SEL_IMPUTADOS, (reclamo_id,))
+                for row_i in cur2.fetchall():
+                    telefono = row_i["imputado_telefono"]
+                    if not telefono:
+                        continue
+                    nombre_resp = row_i["imputado_nombre"] or ""
+                    _whatsapp_aws_reclamo(telefono, WHATSAPP_TPL_OM_RESPUESTA_FINAL_APROBADA, {
+                        "1": nombre_resp,
+                        "2": om["codigo"],
+                        "3": nombre_resp,
+                        "4": fecha_om,
+                        "5": tipo_om,
+                        "6": cliente_om,
+                        "7": proceso_om,
+                        "8": cta_url,
+                    })
+            except Exception:
+                current_app.logger.exception(
+                    "[validar_creador] Error enviando WhatsApp de aprobación reclamo_id=%s",
+                    reclamo_id,
+                )
+
             conn.close()
             return jsonify(ok=True, msg="Respuesta aceptada. La OM permanece cerrada.")
 

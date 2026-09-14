@@ -2409,6 +2409,7 @@ SQL_VALIDAR_CREADOR_SEL_IMPUTADOS = f"""
         ri.id        AS imputacion_id,
         ri.imputado_id,
         u.email      AS imputado_email,
+        u.telefono   AS imputado_telefono,
         COALESCE(u.nombre_completo, u.username) AS imputado_nombre
     FROM {T_RECLAMO_IMPUTADOS} ri
     JOIN {T_USUARIOS} u ON u.id = ri.imputado_id
