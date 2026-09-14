@@ -709,7 +709,7 @@ def crear():
                 else:
                     aprobador_txt = "Auto-aprobado (sin jefe directo configurado)"
                 notif.notif_vuelo_aprobada_coordinacion(
-                    sid, area, fecha, desc, u["nombre"], aprobador_txt,
+                    sid, area, fecha, desc, u["id"], u["nombre"], aprobador_txt,
                 )
             except Exception:
                 current_app.logger.exception(
@@ -1264,7 +1264,7 @@ def vuelo_aprobar_jefe(sid):
     try:
         notif.notif_vuelo_aprobada_coordinacion(
             sid, s["area_solicitante"], str(s["fecha"]),
-            s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+            s.get("descripcion", ""), s["solicitante_id"], s["solicitante_nombre"], u["nombre"],
         )
     except Exception:
         pass
@@ -1320,7 +1320,7 @@ def vuelo_aprobar_jefe_masivo():
         try:
             notif.notif_vuelo_aprobada_coordinacion(
                 sid, s["area_solicitante"], str(s["fecha"]),
-                s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+                s.get("descripcion", ""), s["solicitante_id"], s["solicitante_nombre"], u["nombre"],
             )
         except Exception:
             pass
@@ -1801,7 +1801,7 @@ def aprobar_jefe_masivo():
             try:
                 notif.notif_vuelo_aprobada_coordinacion(
                     sid, s["area_solicitante"], str(s["fecha"]),
-                    s.get("descripcion", ""), s["solicitante_nombre"], u["nombre"],
+                    s.get("descripcion", ""), s["solicitante_id"], s["solicitante_nombre"], u["nombre"],
                 )
             except Exception:
                 pass

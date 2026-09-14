@@ -559,8 +559,18 @@ def notif_vuelo_pendiente_gg(solicitud_id: int, area: str, fecha: str,
 # ──────────────────────────────────────────────────────────
 
 def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
-                                       descripcion: str, solicitante_nombre: str,
+                                       descripcion: str, solicitante_id: int,
+                                       solicitante_nombre: str,
                                        aprobador_nombre: str) -> None:
+    filas = [
+        ("N° solicitud",    str(solicitud_id)),
+        ("Área solicitante", area),
+        ("Fecha",           fecha),
+        ("Descripción",     descripcion or "—"),
+        ("Aprobado por",    aprobador_nombre),
+    ]
+
+    # — Coordinador(es): deben ingresar el valor cotizado del pasaje —
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
     if not coordinadores:
         try:
@@ -571,28 +581,35 @@ def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
             )
         except Exception:
             pass
-        return
-    subject = f"[Planificador] Vuelo #{solicitud_id} aprobado — pendiente de cotización"
-    titulo  = f"Solicitud de Vuelo #{solicitud_id} aprobada"
-    saludo  = (f"La solicitud de Vuelo de <strong>{solicitante_nombre}</strong> fue aprobada "
-               f"por <strong>{aprobador_nombre}</strong> y requiere que ingreses el valor "
-               f"cotizado del pasaje.")
-    filas   = [
-        ("N° solicitud",    str(solicitud_id)),
-        ("Área solicitante", area),
-        ("Fecha",           fecha),
-        ("Descripción",     descripcion or "—"),
-        ("Aprobado por",    aprobador_nombre),
-    ]
-    nota = "Ingresa al SGQ y registra el valor cotizado del pasaje aéreo."
-    html = _email_html("PLANIFICADOR · VUELO — COTIZACIÓN", titulo, saludo, filas, nota)
-    emails = []
-    for c in coordinadores:
-        _inapp(c["id"], subject,
-               f"Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} pendiente de cotización")
-        if c.get("email"):
-            emails.append(c["email"])
-    _email(emails, subject, html)
+    else:
+        subject_c = f"[Planificador] Vuelo #{solicitud_id} aprobado — pendiente de cotización"
+        titulo_c  = f"Solicitud de Vuelo #{solicitud_id} aprobada"
+        saludo_c  = (f"La solicitud de Vuelo de <strong>{solicitante_nombre}</strong> fue aprobada "
+                     f"por <strong>{aprobador_nombre}</strong> y requiere que ingreses el valor "
+                     f"cotizado del pasaje.")
+        nota_c = "Ingresa al SGQ y registra el valor cotizado del pasaje aéreo."
+        html_c = _email_html("PLANIFICADOR · VUELO — COTIZACIÓN", titulo_c, saludo_c, filas, nota_c)
+        emails = []
+        for c in coordinadores:
+            _inapp(c["id"], subject_c,
+                   f"Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} pendiente de cotización")
+            if c.get("email"):
+                emails.append(c["email"])
+        _email(emails, subject_c, html_c)
+
+    # — Solicitante: avisar que su solicitud fue aprobada y ya está en
+    #   manos del coordinador para cotizar el pasaje —
+    subject_s = f"[Planificador] Tu Vuelo #{solicitud_id} fue aprobado"
+    titulo_s  = f"Solicitud de Vuelo #{solicitud_id} aprobada"
+    saludo_s  = (f"Hola <strong>{solicitante_nombre}</strong>, tu solicitud de Vuelo fue "
+                 f"aprobada por <strong>{aprobador_nombre}</strong>. El coordinador ya está "
+                 f"cotizando el pasaje; te avisaremos cuando esté listo.")
+    nota_s = "El coordinador te avisará cuando tenga la cotización del pasaje aéreo."
+    html_s = _email_html("PLANIFICADOR · VUELO — APROBADO", titulo_s, saludo_s, filas, nota_s)
+    _inapp(solicitante_id, subject_s,
+           f"Tu solicitud de Vuelo #{solicitud_id} fue aprobada. El coordinador está cotizando el pasaje.")
+    email_s = repo.get_email_by_usuario_id(solicitante_id)
+    _email([email_s] if email_s else [], subject_s, html_s)
 
 
 # ──────────────────────────────────────────────────────────
