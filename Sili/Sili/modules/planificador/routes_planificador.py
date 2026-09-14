@@ -14,6 +14,7 @@ from flask import (
 )
 
 from modules.auth.routes_auth import require_login, require_permission
+from modules.db import get_config_value
 from . import planificador_repository as repo
 from . import planificador_services as svc
 from . import planificador_notifications as notif
@@ -576,15 +577,21 @@ def crear():
 
     ciudad = repo.get_ciudad_usuario(u["id"])
 
-    # Para Vuelo: el flujo empieza con aprobación del jefe directo, salvo que:
-    # - el rol del solicitante esté configurado para auto-aprobar ese paso
-    #   (ej. gerentes que hoy no tienen jefe directo, pero podrían tenerlo en
-    #   el futuro sin que eso deba forzar el flujo de aprobación), o
-    # - haya presupuesto disponible en el centro de costo (semáforo verde o
-    #   amarillo): si no falta presupuesto, no tiene sentido bloquear la
-    #   solicitud en el jefe -- se auto-aprueba ese paso y pasa directo a
-    #   cotización del coordinador. Solo en rojo (sin saldo) se exige la
-    #   aprobación del jefe.
+    # Para Vuelo: el flujo empieza con aprobación del jefe directo, salvo que
+    # el rol del solicitante esté configurado para auto-aprobar ese paso (ej.
+    # gerentes que hoy no tienen jefe directo, pero podrían tenerlo en el
+    # futuro sin que eso deba forzar el flujo de aprobación).
+    #
+    # Existía además un auto-aprobado por presupuesto disponible (semáforo
+    # verde/amarillo saltaba la aprobación del jefe). Por ahora se exige
+    # siempre la aprobación de jefatura para Vuelo, así que ese bypass queda
+    # detrás de la bandera de configuración "vuelo_autoaprobar_por_presupuesto"
+    # (tabla configuracion), apagada por defecto. Para reactivarlo, setear esa
+    # clave en "1".
+    vuelo_autoaprobar_presupuesto_activo = (
+        (get_config_value("vuelo_autoaprobar_por_presupuesto", "0") or "0").strip() == "1"
+    )
+
     estado_inicial = "PENDIENTE_COORDINACION"
     jefe_id_vuelo   = None
     jefe_nombre_vuelo = None
@@ -593,7 +600,9 @@ def crear():
     if tipo == "Vuelo":
         roles_autoaprobar = repo.get_roles_autoaprobar_jefe_vuelo()
         autoaprobado_por_rol = svc.debe_autoaprobar_jefe_vuelo(u["rol"], roles_autoaprobar)
-        autoaprobado_por_presupuesto = saldo["semaforo"] != "rojo"
+        autoaprobado_por_presupuesto = (
+            vuelo_autoaprobar_presupuesto_activo and saldo["semaforo"] != "rojo"
+        )
 
         if autoaprobado_por_rol or autoaprobado_por_presupuesto:
             current_app.logger.info(
