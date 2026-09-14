@@ -305,7 +305,11 @@ def puede_eliminar(solicitud, usuario_id, ctx):
 
 
 def puede_reagendar(solicitud, usuario_id, ctx):
-    """El coordinador asignado (o admin) puede reagendar solicitudes activas no iniciadas."""
+    """Reagendar es exclusivo de solicitudes tipo Vuelo (los vouchers no se
+    reagendan). El coordinador asignado (o admin) puede reagendar vuelos
+    activos no iniciados."""
+    if solicitud.get("tipo") != "Vuelo":
+        return False
     if solicitud["estado"] in ("COMPLETADA", "RECHAZADA", "COORDINADA", "PENDIENTE_LIQUIDACION",
                                 "PENDIENTE_ENTREGA_VOUCHER", "PENDIENTE_CONFIRMACION_VOUCHER",
                                 "PENDIENTE_LIQUIDACION_VOUCHER"):
