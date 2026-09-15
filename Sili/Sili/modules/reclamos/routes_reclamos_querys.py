@@ -2757,6 +2757,7 @@ SQL__RECLAMOS_EXPORT_MIS_SELECT = f"""
                 r.antecedente AS submotivo,
                 r.procede,
                 r.estado_global,
+                r.requiere_carta_cliente AS lleva_carta_cliente,
 
                 ri.id AS imputacion_id,
                 ui.username AS imputado_username,
