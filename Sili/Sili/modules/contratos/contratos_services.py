@@ -187,7 +187,7 @@ def es_area_comercial(usuario_id: int | None = None) -> bool:
 
 
 def get_row_create_contrato_default():
-    row = {"tipo_contrato": TIPO_CONTRATO_COMPRAS}
+    row = {"tipo_contrato": TIPO_CONTRATO_COMPRAS, "anio": time.localtime().tm_year}
     uid_actual = session_user_id()
     if uid_actual:
         nombre = repository.fetch_usuario_nombre_por_id(uid_actual)
