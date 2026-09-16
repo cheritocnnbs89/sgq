@@ -9,6 +9,7 @@ from datetime import date
 from .contratos_querys import (
     SQL_LISTA_CONTRATOS_APROBADOS_PARA_GARANTIA,
     SQL_USUARIOS_COMBO,
+    SQL_USUARIOS_COMBO_POR_AREA,
     SQL_PROVEEDORES_COMBO,
     SQL_PROVEEDOR_ACTIVO_POR_ID,
     SQL_PROVEEDOR_ID_POR_NOMBRE,
@@ -111,6 +112,11 @@ def get_conn():
 def fetch_usuarios_combo():
     conn = get_conn()
     return conn.cursor().execute(SQL_USUARIOS_COMBO).fetchall()
+
+
+def fetch_usuarios_combo_por_area(usuario_id: int):
+    conn = get_conn()
+    return conn.cursor().execute(SQL_USUARIOS_COMBO_POR_AREA, (usuario_id,)).fetchall()
 
 
 def fetch_proveedores_combo():

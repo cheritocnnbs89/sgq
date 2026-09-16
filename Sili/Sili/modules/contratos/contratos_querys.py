@@ -122,6 +122,27 @@ WHERE COALESCE(u.disabled, 0) = 0
 ORDER BY u.nombre_completo
 """
 
+# Mismo combo, pero restringido a los usuarios cuyo departamento pertenece
+# a la misma ÁREA que el usuario dado (para quien no es de Compras, que
+# solo debe ver gente de su propia área en los combos de contratos).
+SQL_USUARIOS_COMBO_POR_AREA = f"""
+SELECT
+    u.id,
+    u.nombre_completo AS nombre,
+    COALESCE(d.nombre, '') AS departamento
+FROM {TABLA_USUARIOS} u
+LEFT JOIN {TABLA_DEPARTAMENTOS} d ON d.id = u.departamento_id
+WHERE COALESCE(u.disabled, 0) = 0
+  AND TRIM(COALESCE(u.nombre_completo, '')) <> ''
+  AND d.area_id = (
+      SELECT d2.area_id
+      FROM {TABLA_USUARIOS} u2
+      LEFT JOIN {TABLA_DEPARTAMENTOS} d2 ON d2.id = u2.departamento_id
+      WHERE u2.id = ?
+  )
+ORDER BY u.nombre_completo
+"""
+
 SQL_PROVEEDORES_COMBO = f"""
 SELECT id, nombre
 FROM {TABLA_TERCEROS}

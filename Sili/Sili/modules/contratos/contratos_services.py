@@ -36,6 +36,7 @@ from .contratos_constants import (
     TIPO_CONTRATO_COMERCIAL,
     AREA_COMERCIAL_NOMBRE,
     DIAS_AVISO_CONTRATO_COMERCIAL,
+    DEPT_COMPRAS,
 )
 from .contratos_security import rowget, session_dept_id, session_user_id
 from . import contratos_notifications as notifications
@@ -170,8 +171,19 @@ def garantia_editable(row_db) -> bool:
 
 
 def get_compras_combos():
+    uid = session_user_id()
+    dept_nombre = (repository.fetch_dept_nombre_por_usuario_id(uid) or "").strip().lower() if uid else ""
+
+    # Compras ve a todos los usuarios en los combos (Usuario solicitante,
+    # Usuario compras, Ejecutivo comercial responsable); cualquier otra
+    # área solo ve gente de su propia área.
+    if dept_nombre == DEPT_COMPRAS:
+        usuarios = repository.fetch_usuarios_combo()
+    else:
+        usuarios = repository.fetch_usuarios_combo_por_area(uid) if uid else repository.fetch_usuarios_combo()
+
     return (
-        repository.fetch_usuarios_combo(),
+        usuarios,
         repository.fetch_proveedores_combo(),
         repository.fetch_clientes_combo(),
     )
@@ -194,6 +206,7 @@ def get_row_create_contrato_default():
     row = {"tipo_contrato": TIPO_CONTRATO_COMPRAS, "anio": time.localtime().tm_year}
     uid_actual = session_user_id()
     if uid_actual:
+        row["usuario_compras_id"] = uid_actual
         nombre = repository.fetch_usuario_nombre_por_id(uid_actual)
         if nombre:
             row["usuario_compras_nombre"] = nombre
@@ -226,15 +239,11 @@ def get_garantia_for_edit(garantia_id: int):
 def parse_contrato_form():
     usuario_solicitante_id = safe_int(request.form.get("usuario_solicitante_id"))
 
-    usuario_compras_nombre = (request.form.get("usuario_compras_nombre") or "").strip()
-    if not usuario_compras_nombre or usuario_compras_nombre.lower() == "actual":
-        uid_actual = session_user_id()
-        if uid_actual:
-            nombre = repository.fetch_usuario_nombre_por_id(uid_actual)
-            if nombre:
-                usuario_compras_nombre = nombre
+    usuario_compras_id = safe_int(request.form.get("usuario_compras_id"))
+    if not usuario_compras_id or not repository.exists_usuario(usuario_compras_id):
+        usuario_compras_id = session_user_id()
+    usuario_compras_nombre = repository.fetch_usuario_nombre_por_id(usuario_compras_id) or ""
 
-    usuario_compras_id = session_user_id()
     creado_por = session_user_id()
     departamento_id = session_dept_id()
 
@@ -411,6 +420,7 @@ def make_contrato_row_back(data: dict):
         "fecha_entrega_pedido": data["fecha_entrega_pedido"],
         "observaciones": data["observaciones"],
         "usuario_solicitante_id": data["usuario_solicitante_id"],
+        "usuario_compras_id": data["usuario_compras_id"],
         "usuario_compras_nombre": data["usuario_compras_nombre"],
         "lleva_garantia": data["lleva_garantia"],
         "nombre_contrato": data.get("nombre_contrato"),
