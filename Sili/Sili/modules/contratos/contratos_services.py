@@ -233,14 +233,9 @@ def parse_contrato_form():
     creado_por = session_user_id()
     departamento_id = session_dept_id()
 
-    # "Contrato Comercial" solo puede elegirse si el usuario actual es del
-    # área Comercial -- si alguien manipula el POST igual queda forzado a
-    # "COMPRAS" acá, no solo escondido en el HTML.
-    tipo_contrato_raw = (request.form.get("tipo_contrato") or TIPO_CONTRATO_COMPRAS).strip().upper()
-    if tipo_contrato_raw == TIPO_CONTRATO_COMERCIAL and es_area_comercial(creado_por):
-        tipo_contrato = TIPO_CONTRATO_COMERCIAL
-    else:
-        tipo_contrato = TIPO_CONTRATO_COMPRAS
+    # No hay selector en el formulario: la sección Comercial se marca sola
+    # según el área del usuario que crea/edita el contrato.
+    tipo_contrato = TIPO_CONTRATO_COMERCIAL if es_area_comercial(creado_por) else TIPO_CONTRATO_COMPRAS
 
     anio = (request.form.get("anio") or "").strip()
     pedido = (request.form.get("pedido") or "").strip()
@@ -292,21 +287,6 @@ def parse_contrato_form():
     condiciones_pago = (request.form.get("condiciones_pago") or "").strip()
     forma_facturacion = (request.form.get("forma_facturacion") or "").strip()
 
-    if tipo_contrato == TIPO_CONTRATO_COMERCIAL:
-        # Estos campos son propios del flujo de Compras (proveedor, pedido,
-        # usuario solicitante de compras) y no aplican a un contrato
-        # Comercial -- se completan con valores por defecto en vez de
-        # dejarlos vacíos, porque la tabla contratos los usa para el
-        # código/secuencial y algunos son NOT NULL.
-        if not anio and fecha_suscripcion:
-            anio = fecha_suscripcion[:4]
-        if not pedido:
-            pedido = nombre_contrato or cliente or "COMERCIAL"
-        if not proveedor:
-            proveedor = cliente or "—"
-        if not usuario_solicitante_id:
-            usuario_solicitante_id = creado_por
-
     return {
         "tipo_contrato": tipo_contrato,
         "anio": anio,
@@ -357,32 +337,30 @@ def validate_contrato_payload(data: dict):
     missing_required = []
     es_comercial = data.get("tipo_contrato") == TIPO_CONTRATO_COMERCIAL
 
+    # El formulario es el mismo para todos: estos campos siguen siendo
+    # obligatorios sin importar el área del usuario.
+    if not data["anio"]:
+        missing_required.append(REQ_CONTRATO_LABEL_ANIO)
+    if not data["pedido"]:
+        missing_required.append(REQ_CONTRATO_LABEL_PEDIDO)
+    if not data["usuario_solicitante_id"]:
+        missing_required.append(REQ_CONTRATO_LABEL_USUARIO_SOLICITANTE)
+    if not data["objeto"]:
+        missing_required.append(REQ_CONTRATO_LABEL_OBJETO)
+    if data["valor_contrato"] is None or data["valor_contrato"] <= 0:
+        missing_required.append(REQ_CONTRATO_LABEL_VALOR_CONTRATO)
+    if not data["fecha_suscripcion"]:
+        missing_required.append(REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION)
+    if not data["proveedor"]:
+        missing_required.append(REQ_CONTRATO_LABEL_PROVEEDOR)
+
+    # Campos adicionales, solo exigidos cuando el usuario es del área
+    # Comercial (la sección extra del formulario solo se muestra ahí).
     if es_comercial:
         if not data["cliente"]:
             missing_required.append("Cliente")
         if not data["ejecutivo_comercial_id"]:
             missing_required.append("Ejecutivo comercial responsable")
-        if not data["objeto"]:
-            missing_required.append(REQ_CONTRATO_LABEL_OBJETO)
-        if data["valor_contrato"] is None or data["valor_contrato"] <= 0:
-            missing_required.append(REQ_CONTRATO_LABEL_VALOR_CONTRATO)
-        if not data["fecha_suscripcion"]:
-            missing_required.append(REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION)
-    else:
-        if not data["anio"]:
-            missing_required.append(REQ_CONTRATO_LABEL_ANIO)
-        if not data["pedido"]:
-            missing_required.append(REQ_CONTRATO_LABEL_PEDIDO)
-        if not data["usuario_solicitante_id"]:
-            missing_required.append(REQ_CONTRATO_LABEL_USUARIO_SOLICITANTE)
-        if not data["objeto"]:
-            missing_required.append(REQ_CONTRATO_LABEL_OBJETO)
-        if data["valor_contrato"] is None or data["valor_contrato"] <= 0:
-            missing_required.append(REQ_CONTRATO_LABEL_VALOR_CONTRATO)
-        if not data["fecha_suscripcion"]:
-            missing_required.append(REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION)
-        if not data["proveedor"]:
-            missing_required.append(REQ_CONTRATO_LABEL_PROVEEDOR)
 
     if missing_required:
         return False, "Campos obligatorios incompletos: " + ", ".join(missing_required)

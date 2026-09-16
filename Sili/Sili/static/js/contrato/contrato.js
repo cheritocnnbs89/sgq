@@ -80,34 +80,3 @@
     }
   });
 })();
-
-// Alterna las secciones "solo Compras" / "solo Comercial" según el
-// <select name="tipo_contrato"> (visible solo para usuarios del área
-// Comercial; el resto siempre trabaja en modo Compras).
-(() => {
-  const select = document.getElementById('fTipoContrato');
-  const titulo = document.getElementById('tituloFormularioContrato');
-  const secciones = document.querySelectorAll('[data-solo-tipo]');
-
-  function aplicarTipo(tipo) {
-    secciones.forEach((el) => {
-      el.classList.toggle('tipo-oculto', el.dataset.soloTipo !== tipo);
-    });
-    if (titulo) {
-      const esEdit = titulo.textContent.trim().toLowerCase().startsWith('editar');
-      const accion = esEdit ? 'Editar' : 'Nuevo';
-      titulo.textContent = tipo === 'COMERCIAL'
-        ? `${accion} Contrato (Comercial)`
-        : `${accion} Contrato (Compras)`;
-    }
-  }
-
-  if (select) {
-    aplicarTipo(select.value);
-    select.addEventListener('change', () => aplicarTipo(select.value));
-  } else {
-    // No hay selector visible (usuario no es de área Comercial): siempre Compras.
-    aplicarTipo('COMPRAS');
-  }
-})();
-
