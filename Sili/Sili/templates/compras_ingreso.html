@@ -209,10 +209,11 @@
           <div class="col-md-6">
             <label class="form-label req-comercial">Cliente</label>
             {% if clientes %}
-            <select name="cliente_id" data-label="Cliente" class="form-select">
+            <select name="cliente_id" id="selCliente" data-label="Cliente" class="form-select">
               <option value="">Selecciona…</option>
               {% for c in clientes %}
-              <option value="{{ c.id }}" {% if (row.cliente_id and row.cliente_id==c.id) or (row.cliente and
+              <option value="{{ c.id }}" data-identificacion="{{ c.identificacion or '' }}"
+                {% if (row.cliente_id and row.cliente_id==c.id) or (row.cliente and
                 row.cliente==c.nombre) %} selected {% endif %}>
                 {{ c.nombre }}
               </option>
@@ -226,7 +227,7 @@
           </div>
           <div class="col-md-4">
             <label class="form-label">RUC / Identificación del cliente</label>
-            <input name="cliente_ruc" class="form-control" value="{{ row.cliente_ruc if row else '' }}">
+            <input name="cliente_ruc" id="inputClienteRuc" class="form-control" value="{{ row.cliente_ruc if row else '' }}">
           </div>
           <div class="col-md-4">
             <label class="form-label">Tipo de cliente</label>

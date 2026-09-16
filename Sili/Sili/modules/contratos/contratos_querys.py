@@ -142,7 +142,7 @@ WHERE tipo='P' AND COALESCE(activo,1)=1 AND nombre=?
 """
 
 SQL_CLIENTES_COMBO = f"""
-SELECT id, nombre
+SELECT id, nombre, identificacion
 FROM {TABLA_TERCEROS}
 WHERE tipo = 'C' AND COALESCE(activo, 1) = 1
 ORDER BY nombre

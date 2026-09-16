@@ -80,3 +80,16 @@
     }
   });
 })();
+
+// Autocompleta el RUC/identificación al elegir un Cliente del desplegable.
+(() => {
+  const selCliente = document.getElementById('selCliente');
+  const inputRuc = document.getElementById('inputClienteRuc');
+
+  if (!selCliente || !inputRuc) return;
+
+  selCliente.addEventListener('change', () => {
+    const opt = selCliente.selectedOptions[0];
+    inputRuc.value = (opt && opt.dataset.identificacion) || '';
+  });
+})();
