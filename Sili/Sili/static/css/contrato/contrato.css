@@ -30,6 +30,23 @@
       gap: .5rem;
     }
 
+    button.fieldset-toggle {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 0;
+    }
+
+    .fieldset-toggle-icon {
+      margin-left: auto;
+      transition: transform .2s ease;
+    }
+
+    .fieldset-toggle[aria-expanded="true"] .fieldset-toggle-icon {
+      transform: rotate(180deg);
+    }
+
     .accent-left {
       border-left: 6px solid var(--brand-primary);
     }

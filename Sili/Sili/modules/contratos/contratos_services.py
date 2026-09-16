@@ -337,8 +337,8 @@ def validate_contrato_payload(data: dict):
     missing_required = []
     es_comercial = data.get("tipo_contrato") == TIPO_CONTRATO_COMERCIAL
 
-    # El formulario es el mismo para todos: estos campos siguen siendo
-    # obligatorios sin importar el área del usuario.
+    # Estos campos de Cabecera siguen siendo obligatorios sin importar el
+    # área del usuario.
     if not data["anio"]:
         missing_required.append(REQ_CONTRATO_LABEL_ANIO)
     if not data["pedido"]:
@@ -347,20 +347,23 @@ def validate_contrato_payload(data: dict):
         missing_required.append(REQ_CONTRATO_LABEL_USUARIO_SOLICITANTE)
     if not data["objeto"]:
         missing_required.append(REQ_CONTRATO_LABEL_OBJETO)
-    if data["valor_contrato"] is None or data["valor_contrato"] <= 0:
-        missing_required.append(REQ_CONTRATO_LABEL_VALOR_CONTRATO)
-    if not data["fecha_suscripcion"]:
-        missing_required.append(REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION)
-    if not data["proveedor"]:
-        missing_required.append(REQ_CONTRATO_LABEL_PROVEEDOR)
 
-    # Campos adicionales, solo exigidos cuando el usuario es del área
-    # Comercial (la sección extra del formulario solo se muestra ahí).
     if es_comercial:
+        # Un usuario Comercial selecciona Cliente en vez de Proveedor, y las
+        # tarjetas "Valores del contrato"/"Hitos y fechas" son información de
+        # Compras que a Comercial no le corresponde llenar (quedan
+        # colapsadas y opcionales en el formulario).
         if not data["cliente"]:
             missing_required.append("Cliente")
         if not data["ejecutivo_comercial_id"]:
             missing_required.append("Ejecutivo comercial responsable")
+    else:
+        if data["valor_contrato"] is None or data["valor_contrato"] <= 0:
+            missing_required.append(REQ_CONTRATO_LABEL_VALOR_CONTRATO)
+        if not data["fecha_suscripcion"]:
+            missing_required.append(REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION)
+        if not data["proveedor"]:
+            missing_required.append(REQ_CONTRATO_LABEL_PROVEEDOR)
 
     if missing_required:
         return False, "Campos obligatorios incompletos: " + ", ".join(missing_required)
