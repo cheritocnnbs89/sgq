@@ -91,6 +91,13 @@ JOB_REGISTRY: dict[str, dict] = {
         "intervalo_min": 300,
         "hora_inicio": None,
     },
+    "encolar_notificaciones_contratos_comerciales_vencen": {
+        "modulo": "contratos",
+        "descripcion": "Encola alertas de Contratos Comerciales a 90/60/30 días de vencer",
+        "tipo": "intervalo",
+        "intervalo_min": 300,
+        "hora_inicio": None,
+    },
     # ── Planilla ──────────────────────────────────────────
     "send_planilla_weekly_report": {
         "modulo": "planilla",

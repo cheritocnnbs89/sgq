@@ -77,6 +77,7 @@ def compras_nuevo():
                 proveedores=proveedores,
                 archivos=[],
                 can_exportar=can_exportar,
+                es_comercial=services.es_area_comercial(),
                 post_url=url_for("contratos.compras_nuevo"),
                 back_url=request.form.get("next") or url_for("contratos.compras_lista"),
             )
@@ -96,6 +97,7 @@ def compras_nuevo():
         proveedores=proveedores,
         archivos=[],
         can_exportar=can_exportar,
+        es_comercial=services.es_area_comercial(),
         post_url=url_for("contratos.compras_nuevo"),
         back_url=request.args.get("next") or url_for("contratos.compras_lista"),
     )
@@ -149,6 +151,7 @@ def compras_editar(contrato_id: int):
                 proveedores=proveedores,
                 archivos=archivos,
                 can_exportar=can_exportar,
+                es_comercial=services.es_area_comercial(),
                 post_url=url_for("contratos.compras_editar", contrato_id=contrato_id),
                 back_url=request.form.get("next") or url_for("contratos.compras_lista"),
             )
@@ -164,6 +167,7 @@ def compras_editar(contrato_id: int):
         proveedores=proveedores,
         archivos=archivos,
         can_exportar=can_exportar,
+        es_comercial=services.es_area_comercial(),
         post_url=url_for("contratos.compras_editar", contrato_id=contrato_id),
         back_url=request.args.get("next") or url_for("contratos.compras_lista"),
     )
@@ -1013,4 +1017,17 @@ def encolar_vencimientos_contratos():
         flash(f"Se encolaron {total} notificación(es) de contratos próximos a terminar.", "success")
     else:
         flash("No hay contratos que terminen en 15 días o ya fueron encolados.", "info")
+    return redirect(url_for("contratos.compras_lista"))
+
+
+@contratos_bp.route("/compras/encolar-vencimientos-contratos-comerciales", methods=["POST"])
+@require_login
+@require_permission("contratos_ingresar", "exportar")
+def encolar_vencimientos_contratos_comerciales():
+    """Encola notificaciones de Contratos Comerciales a 90/60/30 días para el ejecutivo comercial responsable."""
+    total = services.encolar_notificaciones_contratos_comerciales_vencen()
+    if total:
+        flash(f"Se encolaron {total} notificación(es) de contratos comerciales (90/60/30 días).", "success")
+    else:
+        flash("No hay contratos comerciales en los umbrales de 90/60/30 días o ya fueron encolados.", "info")
     return redirect(url_for("contratos.compras_lista"))

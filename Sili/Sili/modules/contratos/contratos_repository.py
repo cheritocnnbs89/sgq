@@ -70,6 +70,7 @@ from .contratos_querys import (
     SQL_CONTEXTO_VISIBILIDAD_USUARIO,
     SQL_FILTRO_VISIBILIDAD_GERENTE_AREA,
     SQL_FILTRO_VISIBILIDAD_USUARIO_Y_REPORTES,
+    SQL_CONTRATOS_COMERCIALES_VENCEN_EN_DIAS,
 )
 from .contratos_constants import DEPT_COMPRAS, ROLES_GERENTE_AREA_CONTRATOS
 
@@ -1197,5 +1198,161 @@ def ensure_contrato_vencimiento_template(conn=None) -> None:
         cur.execute(
             SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT,
             (TPL_CONTRATO_VENCE_15, TIPO_CONTRATO_VENCE_15, subject, html, text),
+        )
+    conn.commit()
+
+
+# ── Contrato Comercial: vence en exactamente N días (30/60/90) ───────────
+def list_contratos_comerciales_vencen_en_dias(dias: int) -> list:
+    conn = get_conn()
+    cur = conn.cursor()
+    rows = cur.execute(SQL_CONTRATOS_COMERCIALES_VENCEN_EN_DIAS, (dias,)).fetchall()
+    return [dict(r) if hasattr(r, "keys") else dict(zip([c[0] for c in cur.description], r)) for r in rows]
+
+
+def enqueue_contrato_comercial_vence_n(conn, *, user_id: int, contrato_id: int, dias: int, payload: dict) -> bool:
+    from .contratos_constants import TPL_CONTRATO_COMERCIAL_VENCE, TIPO_CONTRATO_COMERCIAL_VENCE
+    if not user_id:
+        return False
+
+    fecha_terminacion = str(payload.get("fecha_terminacion") or "")
+    event_key = f"contrato_comercial_vence_{dias}d:{contrato_id}:{fecha_terminacion}:uid:{user_id}"
+
+    cur = conn.cursor()
+    exists = cur.execute(
+        SQL_NOTIFY_QUEUE_EXISTS_BY_EVENT,
+        (user_id, TPL_CONTRATO_COMERCIAL_VENCE, event_key),
+    ).fetchone()
+    if exists:
+        return False
+
+    cur.execute(
+        SQL_NOTIFY_QUEUE_INSERT_GARANTIA,   # mismo INSERT genérico
+        (
+            user_id,
+            f"{TIPO_CONTRATO_COMERCIAL_VENCE}_{dias}d",
+            fecha_terminacion or date.today().isoformat(),
+            "email",
+            TPL_CONTRATO_COMERCIAL_VENCE,
+            json.dumps(payload, ensure_ascii=False, default=str),
+            "contratos_comercial",
+            event_key,
+        ),
+    )
+    return True
+
+
+def ensure_contrato_comercial_vencimiento_template(conn=None) -> None:
+    from .contratos_constants import TPL_CONTRATO_COMERCIAL_VENCE, TIPO_CONTRATO_COMERCIAL_VENCE
+    own_conn = False
+    if conn is None:
+        conn = get_conn()
+        own_conn = True
+
+    cur = conn.cursor()
+
+    subject = "🔔 Contrato Comercial {{ dias_texto }}: {{ nombre_contrato_o_codigo }}"
+
+    html = """<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="760" cellpadding="0" cellspacing="0"
+                 style="max-width:760px;background:#ffffff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+
+            <tr>
+              <td style="background:{{ header_color }};padding:18px 22px;color:#ffffff;">
+                <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.92;font-weight:700;">
+                  CONTRATOS · ÁREA COMERCIAL
+                </div>
+                <div style="font-size:22px;font-weight:800;margin-top:4px;line-height:1.15;">
+                  {{ header_title }}
+                </div>
+                <div style="font-size:13px;opacity:.95;margin-top:8px;line-height:1.35;">
+                  {{ header_subtitle }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:18px 22px 10px 22px;">
+                <div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
+                  Hola {{ destinatario_nombre or 'Usuario' }},
+                </div>
+                <div style="font-size:14px;color:#111827;line-height:1.6;margin-bottom:14px;">
+                  {{ intro_text }}
+                </div>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                       style="border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:10px;">
+                  <tr>
+                    <td style="width:260px;background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Contrato</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ nombre_contrato_o_codigo }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Cliente</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ cliente }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Producto o servicio</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;white-space:pre-wrap;">{{ objeto }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Fecha de vencimiento</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#b45309;font-weight:800;">{{ fecha_terminacion }}</td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Días para vencer</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">
+                      <span style="display:inline-block;background:#ffedd5;color:#9a3412;padding:4px 10px;border-radius:999px;font-weight:800;">
+                        {{ dias_texto }}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="background:{{ row_bg }};font-weight:700;padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">Valor del contrato</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#111827;">{{ moneda }} {{ valor_contrato }}</td>
+                  </tr>
+                </table>
+
+                <div style="margin-top:18px;">
+                  <a href="{{ cta_url }}"
+                     style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;
+                            padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;">
+                    Ver contratos
+                  </a>
+                </div>
+
+                <div style="font-size:12px;color:#6b7280;margin-top:12px;">
+                  {{ footer_note }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:10px 22px 14px 22px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;">
+                Este es un mensaje automático. No responda a este correo.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>"""
+
+    text = "Contrato Comercial {{ nombre_contrato_o_codigo }} {{ dias_texto }} el {{ fecha_terminacion }}."
+
+    cur.execute(
+        SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_UPDATE,
+        (TIPO_CONTRATO_COMERCIAL_VENCE, subject, html, text, TPL_CONTRATO_COMERCIAL_VENCE),
+    )
+    if cur.rowcount == 0:
+        cur.execute(
+            SQL_NOTIFY_TEMPLATE_CONTRATO_VENCE_INSERT,
+            (TPL_CONTRATO_COMERCIAL_VENCE, TIPO_CONTRATO_COMERCIAL_VENCE, subject, html, text),
         )
     conn.commit()

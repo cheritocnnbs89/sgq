@@ -32,6 +32,10 @@ from .contratos_constants import (
     STATUS_NO_APROBADO,
     TIPO_AMBOS,
     TIPOS_GARANTIA_VALIDOS,
+    TIPO_CONTRATO_COMPRAS,
+    TIPO_CONTRATO_COMERCIAL,
+    AREA_COMERCIAL_NOMBRE,
+    DIAS_AVISO_CONTRATO_COMERCIAL,
 )
 from .contratos_security import rowget, session_dept_id, session_user_id
 from . import contratos_notifications as notifications
@@ -169,8 +173,21 @@ def get_compras_combos():
     return repository.fetch_usuarios_combo(), repository.fetch_proveedores_combo()
 
 
+def es_area_comercial(usuario_id: int | None = None) -> bool:
+    """
+    True si el usuario (por defecto, el de la sesión actual) pertenece al
+    área Comercial (usuario -> departamento -> área). Solo estos usuarios
+    pueden elegir "Contrato Comercial" al crear/editar un contrato.
+    """
+    uid = usuario_id if usuario_id is not None else session_user_id()
+    if not uid:
+        return False
+    area = repository.fetch_area_por_usuario(uid)
+    return (area.get("nombre") or "").strip().upper() == AREA_COMERCIAL_NOMBRE
+
+
 def get_row_create_contrato_default():
-    row = {}
+    row = {"tipo_contrato": TIPO_CONTRATO_COMPRAS}
     uid_actual = session_user_id()
     if uid_actual:
         nombre = repository.fetch_usuario_nombre_por_id(uid_actual)
@@ -216,6 +233,15 @@ def parse_contrato_form():
     creado_por = session_user_id()
     departamento_id = session_dept_id()
 
+    # "Contrato Comercial" solo puede elegirse si el usuario actual es del
+    # área Comercial -- si alguien manipula el POST igual queda forzado a
+    # "COMPRAS" acá, no solo escondido en el HTML.
+    tipo_contrato_raw = (request.form.get("tipo_contrato") or TIPO_CONTRATO_COMPRAS).strip().upper()
+    if tipo_contrato_raw == TIPO_CONTRATO_COMERCIAL and es_area_comercial(creado_por):
+        tipo_contrato = TIPO_CONTRATO_COMERCIAL
+    else:
+        tipo_contrato = TIPO_CONTRATO_COMPRAS
+
     anio = (request.form.get("anio") or "").strip()
     pedido = (request.form.get("pedido") or "").strip()
     tipo_pp = TIPO_AMBOS
@@ -248,7 +274,41 @@ def parse_contrato_form():
     observaciones = (request.form.get("observaciones") or "").strip()
     lleva_garantia = bool_to_int(request.form.get("lleva_garantia"))
 
+    # ── Campos de Contrato Comercial (área Comercial) ──────────────────
+    nombre_contrato = (request.form.get("nombre_contrato") or "").strip()
+    cliente = (request.form.get("cliente") or "").strip()
+    cliente_ruc = (request.form.get("cliente_ruc") or "").strip()
+    tipo_cliente = (request.form.get("tipo_cliente") or "").strip()
+    unidad_negocio = (request.form.get("unidad_negocio") or "").strip()
+    ejecutivo_comercial_id = safe_int(request.form.get("ejecutivo_comercial_id"))
+    estado_contrato = (request.form.get("estado_contrato") or "").strip()
+    fecha_inicio = normalize_date(request.form.get("fecha_inicio"))
+    plazo_valor = safe_int(request.form.get("plazo_valor"))
+    plazo_unidad = (request.form.get("plazo_unidad") or "").strip()
+    renovacion_automatica = bool_to_int(request.form.get("renovacion_automatica"))
+    fecha_notificacion_renovacion = normalize_date(request.form.get("fecha_notificacion_renovacion"))
+    volumen_comprometido = (request.form.get("volumen_comprometido") or "").strip()
+    moneda = (request.form.get("moneda") or "").strip()
+    condiciones_pago = (request.form.get("condiciones_pago") or "").strip()
+    forma_facturacion = (request.form.get("forma_facturacion") or "").strip()
+
+    if tipo_contrato == TIPO_CONTRATO_COMERCIAL:
+        # Estos campos son propios del flujo de Compras (proveedor, pedido,
+        # usuario solicitante de compras) y no aplican a un contrato
+        # Comercial -- se completan con valores por defecto en vez de
+        # dejarlos vacíos, porque la tabla contratos los usa para el
+        # código/secuencial y algunos son NOT NULL.
+        if not anio and fecha_suscripcion:
+            anio = fecha_suscripcion[:4]
+        if not pedido:
+            pedido = nombre_contrato or cliente or "COMERCIAL"
+        if not proveedor:
+            proveedor = cliente or "—"
+        if not usuario_solicitante_id:
+            usuario_solicitante_id = creado_por
+
     return {
+        "tipo_contrato": tipo_contrato,
         "anio": anio,
         "pedido": pedido,
         "tipo_pp": tipo_pp,
@@ -274,25 +334,55 @@ def parse_contrato_form():
         "departamento_id": departamento_id,
         "creado_por": creado_por,
         "lleva_garantia": lleva_garantia,
+        "nombre_contrato": nombre_contrato,
+        "cliente": cliente,
+        "cliente_ruc": cliente_ruc,
+        "tipo_cliente": tipo_cliente,
+        "unidad_negocio": unidad_negocio,
+        "ejecutivo_comercial_id": ejecutivo_comercial_id,
+        "estado_contrato": estado_contrato,
+        "fecha_inicio": fecha_inicio,
+        "plazo_valor": plazo_valor,
+        "plazo_unidad": plazo_unidad,
+        "renovacion_automatica": renovacion_automatica,
+        "fecha_notificacion_renovacion": fecha_notificacion_renovacion,
+        "volumen_comprometido": volumen_comprometido,
+        "moneda": moneda,
+        "condiciones_pago": condiciones_pago,
+        "forma_facturacion": forma_facturacion,
     }
 
 
 def validate_contrato_payload(data: dict):
     missing_required = []
-    if not data["anio"]:
-        missing_required.append(REQ_CONTRATO_LABEL_ANIO)
-    if not data["pedido"]:
-        missing_required.append(REQ_CONTRATO_LABEL_PEDIDO)
-    if not data["usuario_solicitante_id"]:
-        missing_required.append(REQ_CONTRATO_LABEL_USUARIO_SOLICITANTE)
-    if not data["objeto"]:
-        missing_required.append(REQ_CONTRATO_LABEL_OBJETO)
-    if data["valor_contrato"] is None or data["valor_contrato"] <= 0:
-        missing_required.append(REQ_CONTRATO_LABEL_VALOR_CONTRATO)
-    if not data["fecha_suscripcion"]:
-        missing_required.append(REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION)
-    if not data["proveedor"]:
-        missing_required.append(REQ_CONTRATO_LABEL_PROVEEDOR)
+    es_comercial = data.get("tipo_contrato") == TIPO_CONTRATO_COMERCIAL
+
+    if es_comercial:
+        if not data["cliente"]:
+            missing_required.append("Cliente")
+        if not data["ejecutivo_comercial_id"]:
+            missing_required.append("Ejecutivo comercial responsable")
+        if not data["objeto"]:
+            missing_required.append(REQ_CONTRATO_LABEL_OBJETO)
+        if data["valor_contrato"] is None or data["valor_contrato"] <= 0:
+            missing_required.append(REQ_CONTRATO_LABEL_VALOR_CONTRATO)
+        if not data["fecha_suscripcion"]:
+            missing_required.append(REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION)
+    else:
+        if not data["anio"]:
+            missing_required.append(REQ_CONTRATO_LABEL_ANIO)
+        if not data["pedido"]:
+            missing_required.append(REQ_CONTRATO_LABEL_PEDIDO)
+        if not data["usuario_solicitante_id"]:
+            missing_required.append(REQ_CONTRATO_LABEL_USUARIO_SOLICITANTE)
+        if not data["objeto"]:
+            missing_required.append(REQ_CONTRATO_LABEL_OBJETO)
+        if data["valor_contrato"] is None or data["valor_contrato"] <= 0:
+            missing_required.append(REQ_CONTRATO_LABEL_VALOR_CONTRATO)
+        if not data["fecha_suscripcion"]:
+            missing_required.append(REQ_CONTRATO_LABEL_FECHA_SUSCRIPCION)
+        if not data["proveedor"]:
+            missing_required.append(REQ_CONTRATO_LABEL_PROVEEDOR)
 
     if missing_required:
         return False, "Campos obligatorios incompletos: " + ", ".join(missing_required)
@@ -300,14 +390,18 @@ def validate_contrato_payload(data: dict):
     if (data["valor_contrato"] or 0) > 0 and (data["valor_anticipo"] or 0) > data["valor_contrato"]:
         return False, "El valor del anticipo no puede ser mayor que el valor del contrato."
 
-    if not repository.exists_usuario(data["usuario_solicitante_id"]):
+    if data["usuario_solicitante_id"] and not repository.exists_usuario(data["usuario_solicitante_id"]):
         return False, "Revisa IDs relacionados: Usuario solicitante inexistente"
+
+    if es_comercial and not repository.exists_usuario(data["ejecutivo_comercial_id"]):
+        return False, "Revisa IDs relacionados: Ejecutivo comercial inexistente"
 
     return True, ""
 
 
 def make_contrato_row_back(data: dict):
     return {
+        "tipo_contrato": data.get("tipo_contrato", TIPO_CONTRATO_COMPRAS),
         "anio": data["anio"],
         "pedido": data["pedido"],
         "proveedor": data["proveedor"],
@@ -329,6 +423,22 @@ def make_contrato_row_back(data: dict):
         "usuario_solicitante_id": data["usuario_solicitante_id"],
         "usuario_compras_nombre": data["usuario_compras_nombre"],
         "lleva_garantia": data["lleva_garantia"],
+        "nombre_contrato": data.get("nombre_contrato"),
+        "cliente": data.get("cliente"),
+        "cliente_ruc": data.get("cliente_ruc"),
+        "tipo_cliente": data.get("tipo_cliente"),
+        "unidad_negocio": data.get("unidad_negocio"),
+        "ejecutivo_comercial_id": data.get("ejecutivo_comercial_id"),
+        "estado_contrato": data.get("estado_contrato"),
+        "fecha_inicio": data.get("fecha_inicio"),
+        "plazo_valor": data.get("plazo_valor"),
+        "plazo_unidad": data.get("plazo_unidad"),
+        "renovacion_automatica": data.get("renovacion_automatica"),
+        "fecha_notificacion_renovacion": data.get("fecha_notificacion_renovacion"),
+        "volumen_comprometido": data.get("volumen_comprometido"),
+        "moneda": data.get("moneda"),
+        "condiciones_pago": data.get("condiciones_pago"),
+        "forma_facturacion": data.get("forma_facturacion"),
     }
 
 
@@ -395,6 +505,23 @@ def create_contrato_from_request():
             data["departamento_id"],
             data["creado_por"],
             data["lleva_garantia"],
+            data["tipo_contrato"],
+            data["nombre_contrato"] or None,
+            data["cliente"] or None,
+            data["cliente_ruc"] or None,
+            data["tipo_cliente"] or None,
+            data["unidad_negocio"] or None,
+            data["ejecutivo_comercial_id"],
+            data["estado_contrato"] or None,
+            data["fecha_inicio"],
+            data["plazo_valor"],
+            data["plazo_unidad"] or None,
+            data["renovacion_automatica"],
+            data["fecha_notificacion_renovacion"],
+            data["volumen_comprometido"] or None,
+            data["moneda"] or None,
+            data["condiciones_pago"] or None,
+            data["forma_facturacion"] or None,
         )
     )
 
@@ -455,6 +582,23 @@ def update_contrato_from_request(contrato_id: int):
             data["usuario_solicitante_id"],
             usuario_compras_id,
             data["lleva_garantia"],
+            data["tipo_contrato"],
+            data["nombre_contrato"] or None,
+            data["cliente"] or None,
+            data["cliente_ruc"] or None,
+            data["tipo_cliente"] or None,
+            data["unidad_negocio"] or None,
+            data["ejecutivo_comercial_id"],
+            data["estado_contrato"] or None,
+            data["fecha_inicio"],
+            data["plazo_valor"],
+            data["plazo_unidad"] or None,
+            data["renovacion_automatica"],
+            data["fecha_notificacion_renovacion"],
+            data["volumen_comprometido"] or None,
+            data["moneda"] or None,
+            data["condiciones_pago"] or None,
+            data["forma_facturacion"] or None,
             contrato_id,
         )
     )
@@ -1193,6 +1337,83 @@ def encolar_notificaciones_garantias_multi_dia() -> int:
                 )
                 if ok:
                     total += 1
+
+    conn.commit()
+    return total
+
+
+# ── Contrato Comercial: notificación a 90, 60 y 30 días del vencimiento ──
+def encolar_notificaciones_contratos_comerciales_vencen() -> int:
+    """
+    Busca contratos tipo Comercial que vencen en exactamente 90, 60 o 30
+    días y encola un correo para el ejecutivo comercial responsable de
+    cada uno. No duplica: enqueue_contrato_comercial_vence_n deduplica por
+    event_key.
+    """
+    conn = repository.get_conn()
+    repository.ensure_contrato_comercial_vencimiento_template(conn)
+
+    total = 0
+
+    try:
+        cta_url = url_for("contratos.compras_lista", _external=True)
+    except Exception:
+        cta_url = "http://bitacoraquimpac.com.ec:5000/contratos/compras"
+
+    for dias in DIAS_AVISO_CONTRATO_COMERCIAL:
+        rows = repository.list_contratos_comerciales_vencen_en_dias(dias)
+
+        for row in rows:
+            contrato_id = row.get("contrato_id")
+            ejecutivo_id = row.get("ejecutivo_comercial_id")
+            if not ejecutivo_id:
+                continue
+
+            nombre_contrato_o_codigo = row.get("nombre_contrato") or row.get("codigo") or f"#{contrato_id}"
+
+            if dias <= 30:
+                header_color, row_bg = "#dc2626", "#fef2f2"
+            elif dias <= 60:
+                header_color, row_bg = "#f97316", "#fff7ed"
+            else:
+                header_color, row_bg = "#eab308", "#fefce8"
+
+            dias_texto = f"vence en {dias} día(s)"
+
+            payload = {
+                "contrato_id": contrato_id,
+                "nombre_contrato_o_codigo": nombre_contrato_o_codigo,
+                "cliente": row.get("cliente") or "—",
+                "objeto": row.get("objeto") or "",
+                "valor_contrato": f"{float(row.get('valor_contrato') or 0):.2f}",
+                "moneda": row.get("moneda") or "",
+                "fecha_terminacion": str(row.get("fecha_terminacion") or ""),
+                "dias_para_vencer": dias,
+                "dias_texto": dias_texto,
+                "header_color": header_color,
+                "row_bg": row_bg,
+                "header_title": f"Contrato Comercial próximo a vencer — {nombre_contrato_o_codigo}",
+                "header_subtitle": f"{dias_texto.capitalize()} — {row.get('fecha_terminacion', '')}",
+                "intro_text": (
+                    "El siguiente contrato comercial está próximo a su fecha de vencimiento. "
+                    "Por favor, gestiona la renovación o el cierre correspondiente."
+                ),
+                "cta_url": cta_url,
+                "footer_note": "Ingresa al módulo de Contratos para revisar y gestionar la acción correspondiente.",
+            }
+
+            nombre = repository.fetch_usuario_nombre_por_id(ejecutivo_id) or f"Usuario {ejecutivo_id}"
+            payload["destinatario_nombre"] = nombre
+
+            ok = repository.enqueue_contrato_comercial_vence_n(
+                conn,
+                user_id=ejecutivo_id,
+                contrato_id=contrato_id,
+                dias=dias,
+                payload=payload,
+            )
+            if ok:
+                total += 1
 
     conn.commit()
     return total

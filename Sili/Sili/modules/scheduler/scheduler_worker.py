@@ -380,6 +380,14 @@ def start_scheduler(app=None):
                     except Exception:
                         target_app.logger.exception("Worker: encolar_notificaciones_garantias_multi_dia falló")
 
+                    try:
+                        _log("info", "Worker: Encolando notificaciones de Contratos Comerciales por vencer (90/60/30d)...")
+                        from modules.contratos.contratos_services import encolar_notificaciones_contratos_comerciales_vencen
+                        n_contratos_comerciales = encolar_notificaciones_contratos_comerciales_vencen()
+                        _log("info", "Worker: contratos_comerciales_vencen encolados=%s", n_contratos_comerciales)
+                    except Exception:
+                        target_app.logger.exception("Worker: encolar_notificaciones_contratos_comerciales_vencen falló")
+
                     last_contratos_garantias_date = now4.date()
 
                 # ==================================================

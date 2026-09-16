@@ -222,7 +222,13 @@ INSERT INTO {TABLA_CONTRATOS} (
     fecha_entrega_originales_fin, fechas_pago_anticipo, fecha_entrega_pedido,
     observaciones, status_interno,
     usuario_solicitante_id, usuario_compras_nombre,
-    usuario_compras_id, departamento_id, creado_por, lleva_garantia, actualizado_at
+    usuario_compras_id, departamento_id, creado_por, lleva_garantia,
+    tipo_contrato, nombre_contrato, cliente, cliente_ruc, tipo_cliente,
+    unidad_negocio, ejecutivo_comercial_id, estado_contrato,
+    fecha_inicio, plazo_valor, plazo_unidad, renovacion_automatica,
+    fecha_notificacion_renovacion, volumen_comprometido, moneda,
+    condiciones_pago, forma_facturacion,
+    actualizado_at
 )
 OUTPUT inserted.id
 VALUES (?,?,?,?,?,?,?,
@@ -230,7 +236,13 @@ VALUES (?,?,?,?,?,?,?,
         ?,?,?,?,
         ?,?,
         ?,?,
-        ?, ?, ?, ?, GETDATE())
+        ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
+        ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?,
+        ?, ?,
+        GETDATE())
 """
 
 SQL_AREA_CODIGO_POR_USUARIO = f"""
@@ -269,6 +281,11 @@ SET anio=?, pedido=?, proveedor=?, objeto=?, valor_contrato=?, valor_anticipo=?,
     fecha_entrega_compras=?, fecha_firma_gerencia=?, fecha_entrega_finanzas_sumilla=?,
     fecha_entrega_originales_fin=?, fechas_pago_anticipo=?, fecha_entrega_pedido=?,
     observaciones=?, usuario_solicitante_id=?, usuario_compras_id=?, lleva_garantia=?,
+    tipo_contrato=?, nombre_contrato=?, cliente=?, cliente_ruc=?, tipo_cliente=?,
+    unidad_negocio=?, ejecutivo_comercial_id=?, estado_contrato=?,
+    fecha_inicio=?, plazo_valor=?, plazo_unidad=?, renovacion_automatica=?,
+    fecha_notificacion_renovacion=?, volumen_comprometido=?, moneda=?,
+    condiciones_pago=?, forma_facturacion=?,
     actualizado_at=GETDATE()
 WHERE id=?
 """
@@ -386,6 +403,8 @@ SELECT TOP 300
     COALESCE(c.aprobado,0) AS aprobado,
     COALESCE(c.aprob_gf,0) AS aprob_gf,
     COALESCE(c.lleva_garantia,0) AS lleva_garantia,
+    COALESCE(c.tipo_contrato,'COMPRAS') AS tipo_contrato,
+    c.cliente, c.estado_contrato,
     (
         SELECT COUNT(1)
         FROM {TABLA_CONTRATO_ARCHIVOS} a
@@ -660,6 +679,31 @@ WHERE COALESCE(c.disabled, 0) = 0
   AND DATEDIFF(DAY, CAST(GETDATE() AS date), CAST(c.fecha_terminacion AS date)) <= ?
   AND DATEDIFF(DAY, CAST(GETDATE() AS date), CAST(c.fecha_terminacion AS date)) >= -90
   AND COALESCE(c.aprob_gf, 0) = 0
+ORDER BY c.fecha_terminacion ASC, c.id DESC
+"""
+
+# ── Contratos Comerciales que vencen en exactamente N días (30/60/90) ─────
+# Mismo criterio de "exacto" que las garantías (20/10/5/0): el job corre a
+# diario y solo dispara el día justo, sin reenviar en corridas siguientes.
+SQL_CONTRATOS_COMERCIALES_VENCEN_EN_DIAS = f"""
+SELECT
+    c.id AS contrato_id,
+    c.codigo,
+    c.nombre_contrato,
+    c.cliente,
+    c.estado_contrato,
+    c.objeto,
+    c.valor_contrato,
+    c.moneda,
+    c.fecha_terminacion,
+    c.ejecutivo_comercial_id,
+    DATEDIFF(DAY, CAST(GETDATE() AS date), CAST(c.fecha_terminacion AS date)) AS dias_para_vencer
+FROM {TABLA_CONTRATOS} c
+WHERE COALESCE(c.disabled, 0) = 0
+  AND COALESCE(c.tipo_contrato, 'COMPRAS') = 'COMERCIAL'
+  AND c.fecha_terminacion IS NOT NULL
+  AND COALESCE(c.estado_contrato, '') NOT IN ('Vencido', 'Cancelado')
+  AND CAST(c.fecha_terminacion AS date) = DATEADD(DAY, ?, CAST(GETDATE() AS date))
 ORDER BY c.fecha_terminacion ASC, c.id DESC
 """
 

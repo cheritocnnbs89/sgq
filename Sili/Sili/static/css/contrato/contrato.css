@@ -3,9 +3,18 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, .05);
     }
 
-    .req::after {
+    .req::after,
+    .req-compras::after,
+    .req-comercial::after {
       content: " *";
       color: #dc3545;
+    }
+
+    /* Alterna las secciones "solo Compras" / "solo Comercial" del
+       formulario de contratos según el <select name="tipo_contrato">.
+       Ver static/js/contrato/contrato.js */
+    [data-solo-tipo].tipo-oculto {
+      display: none !important;
     }
 
     .hint {

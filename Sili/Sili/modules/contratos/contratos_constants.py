@@ -88,3 +88,35 @@ MAPA_TIPO_PP_AMIGABLE = {
     "PAGARÉ": "Pagaré",
     "POLIZA": "Póliza",
 }
+
+# ── Contrato Comercial (área Comercial) ───────────────────────────────────
+TIPO_CONTRATO_COMPRAS = "COMPRAS"
+TIPO_CONTRATO_COMERCIAL = "COMERCIAL"
+TIPOS_CONTRATO_VALIDOS = (TIPO_CONTRATO_COMPRAS, TIPO_CONTRATO_COMERCIAL)
+
+# Nombre del área (tabla areas.nombre) que habilita el formulario/campos de
+# Contrato Comercial. Comparar siempre en mayúsculas y sin espacios extra.
+AREA_COMERCIAL_NOMBRE = "COMERCIAL"
+
+TIPOS_CLIENTE_VALIDOS = ("Privado", "Público")
+
+ESTADOS_CONTRATO_COMERCIAL_VALIDOS = (
+    "Borrador",
+    "En revisión",
+    "Aprobado",
+    "Vigente",
+    "Vencido",
+    "Cancelado",
+)
+
+PLAZO_UNIDADES_VALIDAS = ("Meses", "Años")
+
+MONEDAS_VALIDAS = ("USD", "EUR")
+
+# Notificaciones de contrato comercial por vencer (30/60/90 días antes de
+# fecha_terminacion), al ejecutivo comercial responsable. Mismo patrón que
+# DIAS_AVISO_GARANTIA (aviso exacto por día, sin reenviar -- deduplicado por
+# event_key en la cola de notificaciones).
+DIAS_AVISO_CONTRATO_COMERCIAL = [90, 60, 30]
+TIPO_CONTRATO_COMERCIAL_VENCE = "contrato_comercial_vence"
+TPL_CONTRATO_COMERCIAL_VENCE = "contrato_comercial_vence"

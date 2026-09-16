@@ -133,6 +133,7 @@ def _run_job(job_key: str) -> str:
         "process_gastos_expiry": _run_gastos_expiry,
         "encolar_notificaciones_contratos_por_vencer": _run_contratos,
         "encolar_notificaciones_garantias_multi_dia": _run_garantias,
+        "encolar_notificaciones_contratos_comerciales_vencen": _run_contratos_comerciales,
         "notify_unassigned_tickets": _run_unassigned_tickets,
     }
 
@@ -223,6 +224,11 @@ def _run_garantias():
     from .contratos.contratos_services import encolar_notificaciones_garantias_multi_dia
     n = encolar_notificaciones_garantias_multi_dia()
     return f"Encoladas: {n}"
+
+def _run_contratos_comerciales():
+    from .contratos.contratos_services import encolar_notificaciones_contratos_comerciales_vencen
+    n = encolar_notificaciones_contratos_comerciales_vencen()
+    return f"Encolados: {n}"
 
 def _run_unassigned_tickets():
     from .email_to_task.email_inbox_service import notify_unassigned_tickets

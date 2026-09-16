@@ -119,8 +119,9 @@
         <table class="table table-sm table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
+              <th>Origen</th>
               <th>Código</th>
-              <th>Proveedor</th>
+              <th>Proveedor / Cliente</th>
               <th>Objeto</th>
               <th>Valor</th>
               <th>Tipo</th>
@@ -139,6 +140,13 @@
             <tr>
 
               <td>
+                {% if r.tipo_contrato == 'COMERCIAL' %}
+                <span class="badge text-bg-primary">Comercial</span>
+                {% else %}
+                <span class="badge text-bg-secondary">Compras</span>
+                {% endif %}
+              </td>
+              <td>
                 {% set fecha_fin = (r.fecha_terminacion|string)[:10] %}
                 {% set cerrado = (r.aprob_gf|int == 1) %}
                 {% set vencido = (fecha_fin and fecha_fin < hoy) %} {% if cerrado %} <span
@@ -153,7 +161,7 @@
 
                   {{ r.codigo or '-' }}
               </td>
-              <td>{{ r.proveedor }}</td>
+              <td>{{ r.proveedor or r.cliente or '—' }}</td>
               <td class="text-truncate contrato-objeto">{{ r.objeto }}</td>
               <td>${{ '%.2f'|format(r.valor_contrato or 0) }}</td>
               <td>{{ r.tipo_pp }}</td>
@@ -236,7 +244,7 @@
             {% endfor %}
             {% else %}
             <tr>
-              <td colspan="10" class="text-center py-4 text-muted">
+              <td colspan="12" class="text-center py-4 text-muted">
                 Sin resultados
               </td>
             </tr>
