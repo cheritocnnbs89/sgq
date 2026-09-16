@@ -12,6 +12,9 @@ from .contratos_querys import (
     SQL_PROVEEDORES_COMBO,
     SQL_PROVEEDOR_ACTIVO_POR_ID,
     SQL_PROVEEDOR_ID_POR_NOMBRE,
+    SQL_CLIENTES_COMBO,
+    SQL_CLIENTE_ACTIVO_POR_ID,
+    SQL_CLIENTE_ID_POR_NOMBRE,
     SQL_USUARIO_NOMBRE_POR_ID,
     SQL_USUARIO_EMAIL_POR_ID,
     SQL_USUARIO_EMAIL_POR_USERNAME_O_EMAIL,
@@ -128,6 +131,27 @@ def fetch_proveedor_id_por_nombre(nombre: str | None) -> int | None:
         return None
     conn = get_conn()
     row = conn.cursor().execute(SQL_PROVEEDOR_ID_POR_NOMBRE, ((nombre or "").strip(),)).fetchone()
+    return row["id"] if row else None
+
+
+def fetch_clientes_combo():
+    conn = get_conn()
+    return conn.cursor().execute(SQL_CLIENTES_COMBO).fetchall()
+
+
+def fetch_cliente_nombre_por_id(cliente_id: int | None) -> str | None:
+    if not cliente_id:
+        return None
+    conn = get_conn()
+    row = conn.cursor().execute(SQL_CLIENTE_ACTIVO_POR_ID, (cliente_id,)).fetchone()
+    return row["nombre"] if row else None
+
+
+def fetch_cliente_id_por_nombre(nombre: str | None) -> int | None:
+    if not nombre:
+        return None
+    conn = get_conn()
+    row = conn.cursor().execute(SQL_CLIENTE_ID_POR_NOMBRE, ((nombre or "").strip(),)).fetchone()
     return row["id"] if row else None
 
 

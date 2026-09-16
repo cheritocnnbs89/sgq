@@ -170,7 +170,11 @@ def garantia_editable(row_db) -> bool:
 
 
 def get_compras_combos():
-    return repository.fetch_usuarios_combo(), repository.fetch_proveedores_combo()
+    return (
+        repository.fetch_usuarios_combo(),
+        repository.fetch_proveedores_combo(),
+        repository.fetch_clientes_combo(),
+    )
 
 
 def es_area_comercial(usuario_id: int | None = None) -> bool:
@@ -203,6 +207,7 @@ def get_contrato_for_edit(contrato_id: int):
 
     row = dict(row_db)
     row["proveedor_id"] = repository.fetch_proveedor_id_por_nombre(row.get("proveedor"))
+    row["cliente_id"] = repository.fetch_cliente_id_por_nombre(row.get("cliente"))
     archivos = repository.fetch_archivos_contrato(row_db["id"])
     return row_db, row, archivos
 
@@ -271,7 +276,10 @@ def parse_contrato_form():
 
     # ── Campos de Contrato Comercial (área Comercial) ──────────────────
     nombre_contrato = (request.form.get("nombre_contrato") or "").strip()
-    cliente = (request.form.get("cliente") or "").strip()
+    cliente_id = safe_int(request.form.get("cliente_id"))
+    cliente = repository.fetch_cliente_nombre_por_id(cliente_id)
+    if not cliente:
+        cliente = (request.form.get("cliente") or "").strip()
     cliente_ruc = (request.form.get("cliente_ruc") or "").strip()
     tipo_cliente = (request.form.get("tipo_cliente") or "").strip()
     unidad_negocio = (request.form.get("unidad_negocio") or "").strip()
@@ -315,6 +323,7 @@ def parse_contrato_form():
         "creado_por": creado_por,
         "lleva_garantia": lleva_garantia,
         "nombre_contrato": nombre_contrato,
+        "cliente_id": cliente_id,
         "cliente": cliente,
         "cliente_ruc": cliente_ruc,
         "tipo_cliente": tipo_cliente,
@@ -406,6 +415,7 @@ def make_contrato_row_back(data: dict):
         "lleva_garantia": data["lleva_garantia"],
         "nombre_contrato": data.get("nombre_contrato"),
         "cliente": data.get("cliente"),
+        "cliente_id": data.get("cliente_id"),
         "cliente_ruc": data.get("cliente_ruc"),
         "tipo_cliente": data.get("tipo_cliente"),
         "unidad_negocio": data.get("unidad_negocio"),

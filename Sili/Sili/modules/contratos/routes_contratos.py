@@ -55,7 +55,7 @@ def compras_nuevo():
     services.ensure_softdelete_columns()
     services.ensure_contrato_archivos_table()
 
-    usuarios, proveedores = services.get_compras_combos()
+    usuarios, proveedores, clientes = services.get_compras_combos()
 
     if request.method == "POST":
         from modules.security import has_permission
@@ -75,6 +75,7 @@ def compras_nuevo():
                 row=result["row_back"],
                 usuarios=usuarios,
                 proveedores=proveedores,
+                clientes=clientes,
                 archivos=[],
                 can_exportar=can_exportar,
                 es_comercial=services.es_area_comercial(),
@@ -95,6 +96,7 @@ def compras_nuevo():
         row=row,
         usuarios=usuarios,
         proveedores=proveedores,
+        clientes=clientes,
         archivos=[],
         can_exportar=can_exportar,
         es_comercial=services.es_area_comercial(),
@@ -112,7 +114,7 @@ def compras_editar(contrato_id: int):
     services.ensure_softdelete_columns()
     services.ensure_contrato_archivos_table()
 
-    usuarios, proveedores = services.get_compras_combos()
+    usuarios, proveedores, clientes = services.get_compras_combos()
     row_db, row, archivos = services.get_contrato_for_edit(contrato_id)
     if not row_db:
         abort(404)
@@ -149,6 +151,7 @@ def compras_editar(contrato_id: int):
                 row=result["row_back"],
                 usuarios=usuarios,
                 proveedores=proveedores,
+                clientes=clientes,
                 archivos=archivos,
                 can_exportar=can_exportar,
                 es_comercial=services.es_area_comercial(),
@@ -165,6 +168,7 @@ def compras_editar(contrato_id: int):
         row=row,
         usuarios=usuarios,
         proveedores=proveedores,
+        clientes=clientes,
         archivos=archivos,
         can_exportar=can_exportar,
         es_comercial=services.es_area_comercial(),

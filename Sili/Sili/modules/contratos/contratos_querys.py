@@ -141,6 +141,25 @@ FROM {TABLA_TERCEROS}
 WHERE tipo='P' AND COALESCE(activo,1)=1 AND nombre=?
 """
 
+SQL_CLIENTES_COMBO = f"""
+SELECT id, nombre
+FROM {TABLA_TERCEROS}
+WHERE tipo = 'C' AND COALESCE(activo, 1) = 1
+ORDER BY nombre
+"""
+
+SQL_CLIENTE_ACTIVO_POR_ID = f"""
+SELECT nombre
+FROM {TABLA_TERCEROS}
+WHERE id=? AND tipo='C' AND COALESCE(activo,1)=1
+"""
+
+SQL_CLIENTE_ID_POR_NOMBRE = f"""
+SELECT id
+FROM {TABLA_TERCEROS}
+WHERE tipo='C' AND COALESCE(activo,1)=1 AND nombre=?
+"""
+
 SQL_USUARIO_NOMBRE_POR_ID = f"""
 SELECT TOP 1 COALESCE(nombre_completo, username) AS nombre
 FROM {TABLA_USUARIOS}
