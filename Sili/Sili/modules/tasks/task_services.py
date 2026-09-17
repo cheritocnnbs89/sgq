@@ -83,6 +83,11 @@ PREGUNTAS_ENCUESTA = [
 # Escala de la encuesta: 1=Malo, 2=Bueno, 3=Muy bueno.
 ESCALA_ENCUESTA_MAX = 3
 
+# Antes de esta fecha hay data de prueba/histórica en producción que no
+# debe verse en la bandeja de encuestas -- filtro por fecha de cierre de
+# la tarea (t.fecha_cierre_real).
+FECHA_MINIMA_ENCUESTAS = "2026-09-01"
+
 
 def svc_crear_y_enviar_encuesta(task_id: int):
     tarea = repo_obtener_tarea_para_encuesta(task_id)
@@ -326,6 +331,10 @@ def svc_build_encuestas_context(user, request_args):
         r = dict(row)
 
         if not _puede_ver_encuesta(user, r):
+            continue
+
+        fecha_cierre = str(r.get("fecha_cierre_real") or "")[:10]
+        if fecha_cierre and fecha_cierre < FECHA_MINIMA_ENCUESTAS:
             continue
 
         if estado and r.get("estado") != estado:
