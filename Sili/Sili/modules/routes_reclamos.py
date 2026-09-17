@@ -5278,7 +5278,7 @@ def register_reclamos_routes(app):
         depto_sel   = (request.args.get("depto") or "").strip()
         proceso_sel = (request.args.get("proceso") or "").strip()
 
-        where = []
+        where = ["COALESCE(r.activo, 1) = 1"]
         params = []
 
         if fecha_desde:
