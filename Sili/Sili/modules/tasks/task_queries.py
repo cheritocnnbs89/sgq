@@ -599,6 +599,51 @@ SQL_LISTAR_ENCUESTAS = f"""
     ORDER BY t.fecha_cierre_real DESC, t.id DESC
 """
 
+SQL_ENCUESTA_DETALLE_POR_ID = f"""
+    SELECT
+        e.id AS encuesta_id,
+        t.id AS tarea_id,
+        COALESCE(e.estado, 'Pendiente') AS estado,
+        e.comentario,
+        e.fecha_respuesta,
+
+        t.titulo,
+        t.solicitante_id,
+        t.usuario_id AS responsable_id,
+
+        COALESCE(s.nombre_completo, s.username) AS solicitante_nombre,
+        COALESCE(u.nombre_completo, u.username) AS responsable_nombre,
+
+        u.jefe_id AS responsable_jefe_id,
+
+        resp.responsable_ids_csv,
+        resp.jefe_ids_csv
+
+    FROM {TABLA_ENCUESTAS_SATISFACCION} e
+    JOIN {TABLA_TAREAS} t ON t.id = e.tarea_id
+
+    LEFT JOIN {TABLA_USUARIOS} s ON s.id = t.solicitante_id
+    LEFT JOIN {TABLA_USUARIOS} u ON u.id = t.usuario_id
+
+    OUTER APPLY (
+        SELECT
+            STRING_AGG(CAST(tr.usuario_id AS VARCHAR(20)), ',') AS responsable_ids_csv,
+            STRING_AGG(CAST(ur.jefe_id AS VARCHAR(20)), ',') AS jefe_ids_csv
+        FROM {TABLA_TAREA_RESPONSABLES} tr
+        INNER JOIN {TABLA_USUARIOS} ur ON ur.id = tr.usuario_id
+        WHERE tr.tarea_id = t.id
+    ) resp
+
+    WHERE e.id = ?
+"""
+
+SQL_RESPUESTAS_ENCUESTA_POR_ID = f"""
+    SELECT pregunta_numero, puntuacion
+    FROM {TABLA_ENCUESTAS_RESPUESTAS}
+    WHERE encuesta_id = ?
+    ORDER BY pregunta_numero
+"""
+
 SQL_OBTENER_RESULTADO_ENCUESTA_EMAIL = f"""
     SELECT
         e.id AS encuesta_id,

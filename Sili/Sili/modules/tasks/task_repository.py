@@ -482,6 +482,21 @@ def repo_listar_encuestas():
 
     return data
 
+
+def repo_obtener_encuesta_detalle(encuesta_id: int):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(q.SQL_ENCUESTA_DETALLE_POR_ID, (encuesta_id,))
+    return _row_to_dict(cur)
+
+
+def repo_listar_respuestas_encuesta(encuesta_id: int):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(q.SQL_RESPUESTAS_ENCUESTA_POR_ID, (encuesta_id,))
+    return _rows_to_dicts(cur)
+
+
 def repo_obtener_resultado_encuesta_email(encuesta_id: int):
     conn = get_db()
     cur = conn.cursor()

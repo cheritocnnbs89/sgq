@@ -21,6 +21,7 @@ from modules.tasks.task_services import (
     svc_build_encuestas_context,
     svc_build_responder_encuesta_context,
     svc_guardar_respuesta_encuesta,
+    svc_build_encuesta_detalle_context,
 )
 
 
@@ -347,7 +348,18 @@ Responde SOLO con JSON: {{"texto_mejorado": "..."}}"""
     def listar_encuestas():
         user = get_user()
         return render_template('encuestas.html', **svc_build_encuestas_context(user, request.args))
-    
+
+
+    @app.route('/encuestas/<int:encuesta_id>/detalle')
+    @require_login
+    def encuesta_detalle_fragment(encuesta_id):
+        user = get_user()
+        resultado = svc_build_encuesta_detalle_context(user, encuesta_id)
+        if not resultado["ok"]:
+            return resultado["message"], 404
+        return render_template('encuesta_detalle_fragment.html', **resultado)
+
+
 
     @app.route('/encuestas/responder/<token>', methods=['GET', 'POST'])
     def responder_encuesta(token):

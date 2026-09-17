@@ -27,6 +27,8 @@ from modules.tasks.task_repository import (
     repo_insertar_respuesta_encuesta,
     repo_finalizar_encuesta,
     repo_listar_encuestas,
+    repo_obtener_encuesta_detalle,
+    repo_listar_respuestas_encuesta,
     repo_obtener_departamentos_tareas,
     repo_dashboard_tareas,
     repo_obtener_subordinados_ids,
@@ -319,12 +321,53 @@ def _puede_ver_encuesta(user, row):
     return False
 
 
+def _construir_ranking_tecnicos_encuestas(rows):
+    """
+    A partir de las encuestas visibles (ya filtradas por permiso y por
+    fecha mínima, SIN el filtro de estado/búsqueda de la bandeja), arma
+    dos rankings por técnico responsable: cantidad de encuestas Realizadas
+    y promedio de calificación más bajo. Solo considera técnicos con al
+    menos una encuesta Realizada -- no tiene sentido "promediar" nada de
+    una encuesta Pendiente.
+    """
+    por_tecnico = defaultdict(lambda: {"realizadas": 0, "promedios": []})
+
+    for r in rows:
+        if r.get("estado") != "Realizada":
+            continue
+        tecnico = r.get("responsable_nombre") or "—"
+        por_tecnico[tecnico]["realizadas"] += 1
+        prom = _safe_float(r.get("promedio"))
+        if prom is not None:
+            por_tecnico[tecnico]["promedios"].append(prom)
+
+    ranking = []
+    for tecnico, data in por_tecnico.items():
+        promedios = data["promedios"]
+        promedio_tecnico = sum(promedios) / len(promedios) if promedios else None
+        ranking.append({
+            "tecnico": tecnico,
+            "realizadas": data["realizadas"],
+            "promedio": promedio_tecnico,
+            "promedio_fmt": f"{promedio_tecnico:.1f}" if promedio_tecnico is not None else "—",
+        })
+
+    top_mas_encuestas = sorted(ranking, key=lambda x: -x["realizadas"])
+    top_menor_promedio = sorted(
+        [x for x in ranking if x["promedio"] is not None],
+        key=lambda x: x["promedio"],
+    )
+
+    return top_mas_encuestas, top_menor_promedio
+
+
 def svc_build_encuestas_context(user, request_args):
     estado = (request_args.get("estado") or "").strip()
     q_text = (request_args.get("q") or "").lower().strip()
+    es_admin = (user.get("rol") or "").strip().lower() == "admin"
 
     encuestas_raw = repo_listar_encuestas()
-    visibles = []
+    visibles_base = []
 
     for row in encuestas_raw:
 
@@ -337,19 +380,12 @@ def svc_build_encuestas_context(user, request_args):
         if fecha_cierre and fecha_cierre < FECHA_MINIMA_ENCUESTAS:
             continue
 
-        if estado and r.get("estado") != estado:
-            continue
-
-        texto = " ".join(str(v or "") for v in r.values()).lower()
-        if q_text and q_text not in texto:
-            continue
-
         promedio = _safe_float(r.get("promedio"))
         r["promedio_fmt"] = f"{promedio:.1f}" if promedio is not None else "—"
 
         if r.get("responsables_nombre_csv"):
             r["responsable_nombre"] = r["responsables_nombre_csv"]
-        
+
 
         tarea_id = _safe_int(r.get("tarea_id"))
         r["tarea_id"] = tarea_id
@@ -372,21 +408,68 @@ def svc_build_encuestas_context(user, request_args):
             and not r.get("encuesta_id")
         )
 
-        visibles.append(r)
+        visibles_base.append(r)
+
+    # La bandeja (tabla) sí respeta el filtro de estado/búsqueda; el
+    # ranking de técnicos (solo admin) se calcula sobre TODO lo visible,
+    # para que no dependa de qué haya elegido el admin en esos filtros.
+    visibles = [
+        r for r in visibles_base
+        if (not estado or r.get("estado") == estado)
+        and (not q_text or q_text in " ".join(str(v or "") for v in r.values()).lower())
+    ]
 
     pendientes = sum(1 for x in visibles if x.get("estado") == "Pendiente")
     realizadas = sum(1 for x in visibles if x.get("estado") == "Realizada")
 
+    ranking_mas_encuestas, ranking_menor_promedio = (
+        _construir_ranking_tecnicos_encuestas(visibles_base) if es_admin else ([], [])
+    )
+
     return {
         "usuario": user["username"],
         "rol": user["rol"],
+        "es_admin": es_admin,
         "encuestas": visibles,
         "estado_sel": estado,
         "q": q_text,
         "total": len(visibles),
         "pendientes": pendientes,
         "realizadas": realizadas,
+        "ranking_mas_encuestas": ranking_mas_encuestas,
+        "ranking_menor_promedio": ranking_menor_promedio,
         "active_page": "encuestas",
+    }
+
+
+def svc_build_encuesta_detalle_context(user, encuesta_id: int):
+    encuesta = repo_obtener_encuesta_detalle(encuesta_id)
+    if not encuesta:
+        return {"ok": False, "message": "Encuesta no encontrada."}
+
+    if not _puede_ver_encuesta(user, encuesta):
+        return {"ok": False, "message": "No tiene permiso para ver esta encuesta."}
+
+    respuestas_raw = repo_listar_respuestas_encuesta(encuesta_id)
+    puntuacion_por_pregunta = {
+        _safe_int(r.get("pregunta_numero")): _safe_int(r.get("puntuacion"))
+        for r in respuestas_raw
+    }
+
+    preguntas = [
+        {
+            "numero": i,
+            "texto": texto,
+            "puntuacion": puntuacion_por_pregunta.get(i),
+        }
+        for i, texto in enumerate(PREGUNTAS_ENCUESTA, start=1)
+    ]
+
+    return {
+        "ok": True,
+        "encuesta": encuesta,
+        "preguntas": preguntas,
+        "escala_max": ESCALA_ENCUESTA_MAX,
     }
 
 def svc_build_responder_encuesta_context(token: str):

@@ -109,4 +109,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = estadoInput.closest('form');
   if (form) form.submit();
 });
+
+  const modalEl = document.getElementById('modalEncuestaDetalle');
+  const modalBody = document.getElementById('modalEncuestaDetalleBody');
+
+  async function openDetalleEncuesta(url) {
+    if (!modalEl || !modalBody) return;
+
+    modalBody.textContent = 'Cargando…';
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+
+    try {
+      const resp = await fetch(url, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        cache: 'no-store',
+      });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      modalBody.innerHTML = await resp.text();
+    } catch (error) {
+      modalBody.innerHTML = '';
+      const errDiv = document.createElement('div');
+      errDiv.className = 'alert alert-danger mb-0';
+      errDiv.textContent = 'No se pudo cargar el detalle de la encuesta.';
+      modalBody.appendChild(errDiv);
+    }
+  }
+
+  document.querySelectorAll('.js-ver-detalle-encuesta').forEach((button) => {
+    button.addEventListener('click', () => openDetalleEncuesta(button.dataset.url));
+  });
 });

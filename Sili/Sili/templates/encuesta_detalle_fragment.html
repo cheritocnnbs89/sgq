@@ -1,0 +1,38 @@
+{% set escala_labels = {1: 'Malo', 2: 'Bueno', 3: 'Muy bueno'} %}
+
+<div class="mb-3">
+  <div><strong>Tarea:</strong> {{ encuesta.titulo or '—' }}</div>
+  <div><strong>Solicitante:</strong> {{ encuesta.solicitante_nombre or '—' }}</div>
+  <div><strong>Responsable:</strong> {{ encuesta.responsable_nombre or '—' }}</div>
+  <div><strong>Respondida:</strong> {{ encuesta.fecha_respuesta or '—' }}</div>
+</div>
+
+<table class="table table-sm table-bordered mb-3">
+  <thead>
+    <tr>
+      <th>Pregunta</th>
+      <th class="text-center" style="width: 140px;">Calificación</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in preguntas %}
+    <tr>
+      <td>{{ p.texto }}</td>
+      <td class="text-center">
+        {% if p.puntuacion %}
+        <span class="badge bg-primary">{{ p.puntuacion }} — {{ escala_labels.get(p.puntuacion, p.puntuacion) }}</span>
+        {% else %}
+        <span class="text-muted">—</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div>
+  <strong>Comentario del solicitante:</strong>
+  <div class="border rounded p-2 mt-1 text-muted">
+    {{ encuesta.comentario or 'Sin comentario.' }}
+  </div>
+</div>
