@@ -7,7 +7,7 @@
 
 from urllib.parse import urlsplit, parse_qsl, urlencode
 
-from flask import current_app, request, abort, Response, redirect, url_for
+from flask import current_app, request, abort, Response, redirect, url_for, session
 from itsdangerous import URLSafeSerializer, BadSignature, BadData
 
 
@@ -167,7 +167,20 @@ def _register_gateway_dispatch(app):
                     getattr(resp, "status", None)
                 )
 
-                return resp if isinstance(resp, Response) else resp
+                # La sesión que quedó mutada (ej. flashes ya consumidos al
+                # renderizar la página real) vive solo en este contexto
+                # interno. Si no se propaga al contexto externo, Flask
+                # guarda la cookie de sesión de ESTE despacho (/g/<token>)
+                # usando el estado externo, que nunca se enteró de la
+                # mutación -- la cookie que le llega al navegador sigue
+                # teniendo los flashes viejos, y reaparecen en la próxima
+                # carga de cualquier página.
+                inner_session_state = dict(session)
+
+            session.clear()
+            session.update(inner_session_state)
+
+            return resp if isinstance(resp, Response) else resp
 
         except Exception:
             current_app.logger.exception("Gateway fallo para path=%s", raw_path)
