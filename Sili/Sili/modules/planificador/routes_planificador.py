@@ -25,7 +25,7 @@ from .planificador_constants import (
     ESTADOS_RESERVADAS, ESTADOS_COORDINADAS, ESTADOS_POR_COMPLETAR,
     ESTADOS_CONFIRMACION_VOUCHER, ESTADOS_ATENDIDAS,
     MOTIVO_VUELO_OTROS, ROLES_CANDIDATOS_AUTOAPROBAR_VUELO,
-    SEMAFORO_AMARILLO_PCT,
+    SEMAFORO_AMARILLO_PCT, MAX_PASAJEROS_ADICIONALES_VUELO,
 )
 from flask import Response
 
@@ -216,6 +216,7 @@ def solicitudes():
         today=str(today),
         departamentos=departamentos,
         usuario_dept=usuario_dept,
+        max_pasajeros_adicionales_vuelo=MAX_PASAJEROS_ADICIONALES_VUELO,
     )
 
 
@@ -342,6 +343,10 @@ def detalle(sid):
                 fecha_aprobacion_jefe_fmt = _fmt_fecha_corta(log[3])
                 break
 
+    pasajeros_adicionales = []
+    if d.get("tipo") == "Vuelo":
+        pasajeros_adicionales = repo.get_pasajeros_solicitud(sid)
+
     voucher_items = []
     if d.get("tipo") == "Voucher":
         voucher_items = repo.get_voucher_items(sid)
@@ -429,6 +434,7 @@ def detalle(sid):
         aeropuerto_display=aeropuerto_display,
         costo_ticket_sugerido=costo_ticket_sugerido,
         voucher_items=voucher_items,
+        pasajeros_adicionales=pasajeros_adicionales,
         voucher_es_coordinador_view=(d.get("tipo") == "Voucher" and not _es_solicitante),
         presupuesto_cc=presupuesto_cc,
         monto_gg=monto_gg,
@@ -466,6 +472,20 @@ def check_duplicado():
                         "estado": conflicto["estado"], "fecha": conflicto["fecha_str"],
                         "fecha_retorno": conflicto["fecha_retorno_str"]})
     return jsonify({"duplicado": False})
+
+
+# ─────────────────────────────────────────────────────────────
+# GET: Usuarios de mi mismo departamento (para "Boleto propio o de
+# personal interno adicional" en solicitudes de Vuelo)
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/usuarios-mi-area", methods=["GET"], endpoint="planificador_usuarios_mi_area")
+@require_login
+@require_permission(PERM_SOLICITUDES, "crear")
+def usuarios_mi_area():
+    u = _current_user()
+    usuarios = repo.get_usuarios_mismo_departamento(u["id"])
+    return jsonify(usuarios)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -559,6 +579,31 @@ def crear():
         punto_destino  = request.form.get("punto_destino", "").strip() or None
         requiere_hosp  = 1 if request.form.get("requiere_hospedaje") else 0
         orden_servicio = request.form.get("orden_servicio", "").strip() or None
+
+        # "Boleto propio o de personal interno adicional": se re-valida en
+        # servidor contra el propio departamento del solicitante, sin
+        # confiar en lo que haya mandado el navegador. No cambia el flujo
+        # de aprobación -- es informativo, ver planificador_solicitud_pasajeros.
+        pasajeros_adicionales = []
+        if request.form.get("boleto_personal_interno"):
+            ids_enviados = []
+            for raw in request.form.getlist("pasajero_adicional_id"):
+                try:
+                    pid = int(raw)
+                except (TypeError, ValueError):
+                    continue
+                if pid != u["id"] and pid not in ids_enviados:
+                    ids_enviados.append(pid)
+
+            if ids_enviados:
+                companeros_map = {
+                    c["id"]: c["nombre"] for c in repo.get_usuarios_mismo_departamento(u["id"])
+                }
+                for pid in ids_enviados:
+                    if pid in companeros_map:
+                        pasajeros_adicionales.append({"usuario_id": pid, "nombre": companeros_map[pid]})
+                    if len(pasajeros_adicionales) >= MAX_PASAJEROS_ADICIONALES_VUELO:
+                        break
 
         # Detectar CC del usuario y validar saldo anual de presupuesto (Ticket aéreo)
         import datetime
@@ -694,6 +739,12 @@ def crear():
             repo.crear_voucher_items(sid, voucher_items_data)
         except Exception:
             current_app.logger.exception("[VOUCHER] Error creando voucher_items sid=%s", sid)
+
+    if tipo == "Vuelo" and sid and pasajeros_adicionales:
+        try:
+            repo.crear_solicitud_pasajeros(sid, pasajeros_adicionales)
+        except Exception:
+            current_app.logger.exception("[VUELO] Error creando pasajeros adicionales sid=%s", sid)
 
     if tipo == "Vuelo":
         if estado_inicial == "PENDIENTE_APROBACION_JEFE":

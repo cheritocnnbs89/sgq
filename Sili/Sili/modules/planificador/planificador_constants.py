@@ -11,6 +11,7 @@ TBL_LOGS         = "planificador_solicitud_logs"
 TBL_TIPO_FLAGS   = "planificador_tipo_flags"
 TBL_ROL_FLAGS    = "planificador_rol_flags"
 TBL_VOUCHER_ITEMS = "planificador_voucher_items"
+TBL_SOLICITUD_PASAJEROS = "planificador_solicitud_pasajeros"
 TBL_NOTIFY_INAPP = "notify_inapp"
 TBL_USUARIOS     = "usuarios"
 TBL_DEPARTAMENTOS = "departamentos"
@@ -128,6 +129,10 @@ MOTIVOS_VUELO_DEFAULT = [
     "Visita planta UIO",
 ]
 MOTIVO_VUELO_OTROS = "Otros"
+
+# "Boleto propio o de personal interno adicional": tope de pasajeros
+# adicionales (aparte del solicitante) por solicitud de Vuelo.
+MAX_PASAJEROS_ADICIONALES_VUELO = 5
 
 # Semáforo: % ejecutado a partir del cual cambia de verde a amarillo
 SEMAFORO_AMARILLO_PCT = 50  # >= 50% usado → amarillo

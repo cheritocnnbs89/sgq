@@ -786,6 +786,30 @@
               </label>
             </div>
           </div>
+          <div class="full campo-vuelo" id="campoBoletoPersonalDiv">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="boleto_personal_interno"
+                     id="campoBoletoPersonalInterno" value="1">
+              <label class="form-check-label" for="campoBoletoPersonalInterno">
+                Boleto propio o de personal interno adicional
+              </label>
+            </div>
+            <div class="d-none mt-2" id="pasajerosAdicionalesWrap">
+              <label class="form-label">Agregar personal de mi área</label>
+              <div class="d-flex gap-2">
+                <select class="form-select" id="selectPasajeroAdicional">
+                  <option value="">Seleccione...</option>
+                </select>
+                <button type="button" class="btn btn-outline-primary btn-sm text-nowrap" id="btnAgregarPasajero">
+                  <i class="bi bi-plus-lg"></i> Agregar
+                </button>
+              </div>
+              <div class="form-text" id="pasajerosAdicionalesHint" data-max="{{ max_pasajeros_adicionales_vuelo }}">
+                Puedes agregar hasta {{ max_pasajeros_adicionales_vuelo }} personas adicionales de tu área.
+              </div>
+              <ul class="list-group mt-2" id="listaPasajerosAdicionales"></ul>
+            </div>
+          </div>
           <div class="full campo-vuelo" id="campoSaldoPresupDiv">
             <div class="vuelo-presup-ind" id="indicadorPresup">
               <span class="vuelo-presup-dot"></span>

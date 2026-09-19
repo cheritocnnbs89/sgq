@@ -14,6 +14,7 @@ from .planificador_constants import (
     TBL_TIPO_FLAGS,
     TBL_ROL_FLAGS,
     TBL_VOUCHER_ITEMS,
+    TBL_SOLICITUD_PASAJEROS,
     TBL_NOTIFY_INAPP,
     TBL_USUARIOS,
     TBL_DEPARTAMENTOS,
@@ -799,6 +800,31 @@ SQL_GET_USUARIO_DEPARTAMENTO = f"""
 
 SQL_GET_EMAIL_BY_USUARIO_ID = f"""
     SELECT email FROM {TBL_USUARIOS} WHERE id = ? AND disabled = 0
+"""
+
+# ──────────────────────────────────────────────
+# "Boleto propio o de personal interno adicional" (solicitudes de Vuelo)
+# ──────────────────────────────────────────────
+
+SQL_USUARIOS_MISMO_DEPARTAMENTO = f"""
+    SELECT id, COALESCE(nombre_completo, username) AS nombre
+    FROM {TBL_USUARIOS}
+    WHERE departamento_id = (SELECT departamento_id FROM {TBL_USUARIOS} WHERE id = ?)
+      AND COALESCE(disabled, 0) = 0
+      AND id <> ?
+    ORDER BY nombre
+"""
+
+SQL_INSERT_SOLICITUD_PASAJERO = f"""
+    INSERT INTO {TBL_SOLICITUD_PASAJEROS} (solicitud_id, usuario_id, nombre)
+    VALUES (?, ?, ?)
+"""
+
+SQL_GET_PASAJEROS_SOLICITUD = f"""
+    SELECT usuario_id, nombre
+    FROM {TBL_SOLICITUD_PASAJEROS}
+    WHERE solicitud_id = ?
+    ORDER BY id
 """
 
 SQL_GET_ROL_USUARIO = f"""

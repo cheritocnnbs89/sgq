@@ -58,6 +58,9 @@ from .planificador_querys import (
     SQL_GET_DEPARTAMENTOS,
     SQL_GET_USUARIO_DEPARTAMENTO,
     SQL_GET_EMAIL_BY_USUARIO_ID,
+    SQL_USUARIOS_MISMO_DEPARTAMENTO,
+    SQL_INSERT_SOLICITUD_PASAJERO,
+    SQL_GET_PASAJEROS_SOLICITUD,
     SQL_GET_ROL_USUARIO,
     SQL_SET_PENALIZACION,
     SQL_CHECK_DUPLICADO_SOLICITUD,
@@ -1199,6 +1202,36 @@ def get_usuario_departamento(usuario_id):
     if row and row[0]:
         return {"dept_id": row[0], "dept_nombre": row[1] or ""}
     return {"dept_id": None, "dept_nombre": ""}
+
+
+def get_usuarios_mismo_departamento(usuario_id):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_USUARIOS_MISMO_DEPARTAMENTO, (usuario_id, usuario_id))
+    rows = cur.fetchall()
+    conn.close()
+    return [{"id": r[0], "nombre": r[1] or ""} for r in rows]
+
+
+def crear_solicitud_pasajeros(solicitud_id, pasajeros):
+    """pasajeros: lista de {"usuario_id": int, "nombre": str}."""
+    if not pasajeros:
+        return
+    conn = get_db()
+    cur = conn.cursor()
+    for p in pasajeros:
+        cur.execute(SQL_INSERT_SOLICITUD_PASAJERO, (solicitud_id, p["usuario_id"], p["nombre"]))
+    conn.commit()
+    conn.close()
+
+
+def get_pasajeros_solicitud(solicitud_id):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(SQL_GET_PASAJEROS_SOLICITUD, (solicitud_id,))
+    rows = cur.fetchall()
+    conn.close()
+    return [{"usuario_id": r[0], "nombre": r[1] or ""} for r in rows]
 
 
 def get_email_by_usuario_id(usuario_id):

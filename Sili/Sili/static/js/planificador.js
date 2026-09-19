@@ -1000,6 +1000,7 @@
     { divId: 'campoPuntoDestinoDiv',  inputId: 'campoPuntoDestino',     required: true  },
     { divId: 'campoOrdenServicioDiv', inputId: 'campoOrdenServicio',    required: false },
     { divId: 'campoHospedajeDiv',     inputId: 'campoRequiereHospedaje',required: false },
+    { divId: 'campoBoletoPersonalDiv',inputId: 'campoBoletoPersonalInterno', required: false },
     { divId: 'campoMotivoVueloDiv',   inputId: 'campoMotivoVuelo',      required: true  },
     { divId: 'campoSaldoPresupDiv',   inputId: null,                    required: false },
   ];
@@ -1098,7 +1099,147 @@
     var confirmacionSection   = document.getElementById('confirmacionSectionDiv');
     if (fechaPrioridadSection) fechaPrioridadSection.classList.toggle('d-none', esVuelo);
     if (confirmacionSection)   confirmacionSection.classList.toggle('d-none', esVuelo);
+
+    if (!esVuelo) resetPasajerosAdicionales();
   }
+
+  /* ── "Boleto propio o de personal interno adicional" (solo Vuelo) ── */
+  var _hintPasajeros = document.getElementById('pasajerosAdicionalesHint');
+  var MAX_PASAJEROS_ADICIONALES = parseInt((_hintPasajeros && _hintPasajeros.dataset.max) || '5', 10) || 5;
+
+  var pasajerosAdicionalesState = [];   // [{id, nombre}]
+  var pasajerosMiAreaCargados = null;   // cache de la lista traída del servidor
+
+  function renderListaPasajeros() {
+    var lista = document.getElementById('listaPasajerosAdicionales');
+    if (!lista) return;
+    lista.innerHTML = '';
+
+    pasajerosAdicionalesState.forEach(function (p) {
+      var li = document.createElement('li');
+      li.className = 'list-group-item d-flex justify-content-between align-items-center py-1 px-2';
+
+      var span = document.createElement('span');
+      span.textContent = p.nombre;
+      li.appendChild(span);
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn-sm btn-outline-danger py-0 px-2';
+      btn.textContent = '×';
+      btn.dataset.quitarPasajeroId = String(p.id);
+      li.appendChild(btn);
+
+      lista.appendChild(li);
+
+      var hidden = document.createElement('input');
+      hidden.type = 'hidden';
+      hidden.name = 'pasajero_adicional_id';
+      hidden.value = String(p.id);
+      hidden.dataset.pasajeroHidden = String(p.id);
+      lista.appendChild(hidden);
+    });
+
+    var selectEl = document.getElementById('selectPasajeroAdicional');
+    var btnEl = document.getElementById('btnAgregarPasajero');
+    var lleno = pasajerosAdicionalesState.length >= MAX_PASAJEROS_ADICIONALES;
+    if (selectEl) selectEl.disabled = lleno;
+    if (btnEl) btnEl.disabled = lleno;
+  }
+
+  function resetPasajerosAdicionales() {
+    pasajerosAdicionalesState = [];
+    var wrap = document.getElementById('pasajerosAdicionalesWrap');
+    var chk = document.getElementById('campoBoletoPersonalInterno');
+    if (wrap) wrap.classList.add('d-none');
+    if (chk) chk.checked = false;
+    renderListaPasajeros();
+  }
+
+  function poblarSelectPasajeros(usuarios) {
+    var selectEl = document.getElementById('selectPasajeroAdicional');
+    if (!selectEl) return;
+    selectEl.innerHTML = '';
+
+    var optDefault = document.createElement('option');
+    optDefault.value = '';
+    optDefault.textContent = 'Seleccione...';
+    selectEl.appendChild(optDefault);
+
+    var idsAgregados = pasajerosAdicionalesState.map(function (p) { return p.id; });
+
+    usuarios.forEach(function (u) {
+      if (idsAgregados.indexOf(u.id) !== -1) return; // ya agregado
+      var opt = document.createElement('option');
+      opt.value = String(u.id);
+      opt.textContent = u.nombre;
+      selectEl.appendChild(opt);
+    });
+  }
+
+  function cargarUsuariosMiArea() {
+    if (pasajerosMiAreaCargados) {
+      poblarSelectPasajeros(pasajerosMiAreaCargados);
+      return;
+    }
+    fetch('/planificador/solicitudes/usuarios-mi-area', {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    })
+      .then(function (resp) { return resp.ok ? resp.json() : []; })
+      .then(function (usuarios) {
+        pasajerosMiAreaCargados = usuarios || [];
+        poblarSelectPasajeros(pasajerosMiAreaCargados);
+      })
+      .catch(function () {
+        pasajerosMiAreaCargados = [];
+      });
+  }
+
+  (function initPasajerosAdicionales() {
+    var chk = document.getElementById('campoBoletoPersonalInterno');
+    var wrap = document.getElementById('pasajerosAdicionalesWrap');
+    var btnAgregar = document.getElementById('btnAgregarPasajero');
+    var selectEl = document.getElementById('selectPasajeroAdicional');
+    var lista = document.getElementById('listaPasajerosAdicionales');
+    if (!chk || !wrap) return;
+
+    chk.addEventListener('change', function () {
+      wrap.classList.toggle('d-none', !chk.checked);
+      if (chk.checked) {
+        cargarUsuariosMiArea();
+      } else {
+        pasajerosAdicionalesState = [];
+        renderListaPasajeros();
+      }
+    });
+
+    if (btnAgregar) {
+      btnAgregar.addEventListener('click', function () {
+        if (!selectEl || !selectEl.value) return;
+        if (pasajerosAdicionalesState.length >= MAX_PASAJEROS_ADICIONALES) return;
+
+        var id = parseInt(selectEl.value, 10);
+        var nombre = selectEl.options[selectEl.selectedIndex].textContent;
+        pasajerosAdicionalesState.push({ id: id, nombre: nombre });
+        renderListaPasajeros();
+        poblarSelectPasajeros(pasajerosMiAreaCargados || []);
+      });
+    }
+
+    if (lista) {
+      lista.addEventListener('click', function (ev) {
+        var btn = ev.target.closest('[data-quitar-pasajero-id]');
+        if (!btn) return;
+        var id = parseInt(btn.dataset.quitarPasajeroId, 10);
+        pasajerosAdicionalesState = pasajerosAdicionalesState.filter(function (p) {
+          return p.id !== id;
+        });
+        renderListaPasajeros();
+        poblarSelectPasajeros(pasajerosMiAreaCargados || []);
+      });
+    }
+  })();
 
   /* ── Campos exclusivos de tipo Voucher (taxi) ── */
   var TIPO_VOUCHER = 'Voucher';

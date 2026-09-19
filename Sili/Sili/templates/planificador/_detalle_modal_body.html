@@ -23,6 +23,17 @@
 <script type="application/json" data-detalle-header>{{ _detalle_header | tojson }}</script>
 {% endif %}
 
+{# ── Vuelo: pasajeros adicionales ("Boleto propio o de personal interno
+   adicional"). Informativo -- no requieren aprobación individual. Se
+   muestra igual en cualquier pantalla/estado, por eso va antes de las
+   secciones que se bifurcan por estado. ── #}
+{% if s.tipo == 'Vuelo' and pasajeros_adicionales %}
+<div class="detail-box detail-full mb-3">
+  <span>Pasajeros adicionales</span>
+  <strong>{{ pasajeros_adicionales | map(attribute='nombre') | join(', ') }}</strong>
+</div>
+{% endif %}
+
 {# ── Voucher: resumen compacto para la pantalla de aprobación del jefe ── #}
 {% if s.puede_aprobar_jefe_voucher %}
 <div class="aprob-voucher-header">
