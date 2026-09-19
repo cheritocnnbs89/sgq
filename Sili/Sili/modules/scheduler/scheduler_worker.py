@@ -192,9 +192,10 @@ def start_scheduler(app=None):
 
         try:
             try:
-                _log("info", "Worker: Ejecutando cierre automático de tareas...")
-                auto_close_expired_tasks()
-                _log("info", "Worker: cierre automático de tareas OK")
+                if _job_activo("auto_close_expired_tasks"):
+                    _log("info", "Worker: Ejecutando cierre automático de tareas...")
+                    auto_close_expired_tasks()
+                    _log("info", "Worker: cierre automático de tareas OK")
             except Exception:
                 target_app.logger.exception("Worker: auto_close_expired_tasks falló")
 
@@ -212,7 +213,7 @@ def start_scheduler(app=None):
             except Exception:
                 target_app.logger.exception("Worker: process_gastos_expiry falló")
 
-            if run_om:
+            if run_om and _job_activo("process_om_notifications"):
                 try:
                     com = get_db_standalone()
                     try:
@@ -227,23 +228,25 @@ def start_scheduler(app=None):
                 except Exception:
                     target_app.logger.exception("Worker: process_om_notifications falló")
             else:
-                _log("debug", "Worker: process_om_notifications omitido (fuera de horario laboral)")
+                _log("debug", "Worker: process_om_notifications omitido (fuera de horario laboral o desactivado)")
 
             try:
-                _log("info", "Worker: Ejecutando plan_notifications...")
-                plan_notifications()
-                _log("info", "Worker: plan_notifications OK")
+                if _job_activo("plan_notifications"):
+                    _log("info", "Worker: Ejecutando plan_notifications...")
+                    plan_notifications()
+                    _log("info", "Worker: plan_notifications OK")
             except Exception:
                 target_app.logger.exception("Worker: plan_notifications falló")
 
             try:
-                _log("info", "Worker: Ejecutando dispatch_notifications...")
-                dispatch_notifications()
-                _log("info", "Worker: dispatch_notifications OK")
+                if _job_activo("dispatch_notifications"):
+                    _log("info", "Worker: Ejecutando dispatch_notifications...")
+                    dispatch_notifications()
+                    _log("info", "Worker: dispatch_notifications OK")
             except Exception:
                 target_app.logger.exception("Worker: dispatch_notifications falló")
 
-            if run_om:
+            if run_om and _job_activo("process_om_acciones_seguimiento"):
                 try:
                     cacc = get_db_standalone()
                     try:
@@ -258,7 +261,7 @@ def start_scheduler(app=None):
                 except Exception:
                     target_app.logger.exception("Worker: process_om_acciones_seguimiento falló")
             else:
-                _log("debug", "Worker: process_om_acciones_seguimiento omitido (fuera de horario laboral)")
+                _log("debug", "Worker: process_om_acciones_seguimiento omitido (fuera de horario laboral o desactivado)")
 
             try:
                 _log("info", "Worker: [MDI] auto-registro de facturas recurrentes...")
@@ -371,7 +374,7 @@ def start_scheduler(app=None):
                 # SeedBilling XML compras - horarios en SEEDBILLING_RUN_SLOTS
                 # ==================================================
                 try:
-                    seed_enabled = bool(target_app.config.get("SEEDBILLING_ENABLED", False))
+                    seed_enabled = bool(target_app.config.get("SEEDBILLING_ENABLED", False)) and _job_activo("seedbilling_xml")
                     seed_slots_raw = target_app.config.get("SEEDBILLING_RUN_SLOTS", ("08:00", "14:00"))
 
                     seed_slots = []
@@ -424,7 +427,7 @@ def start_scheduler(app=None):
                 # notify_overdue - cada 30 min
                 # ==================================================
                 now_ts = time.time()
-                if now_ts - last_overdue >= 1800:
+                if now_ts - last_overdue >= 1800 and _job_activo("notify_overdue"):
                     try:
                         _log("info", "Worker: Ejecutando notify_overdue...")
                         notify_overdue()
@@ -437,7 +440,7 @@ def start_scheduler(app=None):
                 # Reporte diario - 07:30
                 # ==================================================
                 now2 = datetime.now()
-                if now2.hour == 7 and now2.minute == 30:
+                if now2.hour == 7 and now2.minute == 30 and _job_activo("send_daily_report"):
                     if last_daily_date != now2.date():
                         try:
                             _log("info", "Worker: Ejecutando send_daily_report...")
@@ -469,29 +472,32 @@ def start_scheduler(app=None):
                 is_0900 = now4.hour == 9 and now4.minute < 6  # ventana de 5 min
 
                 if is_0900 and last_contratos_garantias_date != now4.date():
-                    try:
-                        _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
-                        from modules.contratos.contratos_services import encolar_notificaciones_contratos_por_vencer
-                        n_contratos = encolar_notificaciones_contratos_por_vencer()
-                        _log("info", "Worker: contratos_por_vencer encolados=%s", n_contratos)
-                    except Exception:
-                        target_app.logger.exception("Worker: encolar_notificaciones_contratos_por_vencer falló")
+                    if _job_activo("encolar_notificaciones_contratos_por_vencer"):
+                        try:
+                            _log("info", "Worker: Encolando notificaciones de contratos por vencer...")
+                            from modules.contratos.contratos_services import encolar_notificaciones_contratos_por_vencer
+                            n_contratos = encolar_notificaciones_contratos_por_vencer()
+                            _log("info", "Worker: contratos_por_vencer encolados=%s", n_contratos)
+                        except Exception:
+                            target_app.logger.exception("Worker: encolar_notificaciones_contratos_por_vencer falló")
 
-                    try:
-                        _log("info", "Worker: Encolando notificaciones de garantías por vencer (20/10/5/0d)...")
-                        from modules.contratos.contratos_services import encolar_notificaciones_garantias_multi_dia
-                        n_garantias = encolar_notificaciones_garantias_multi_dia()
-                        _log("info", "Worker: garantias_multi_dia encoladas=%s", n_garantias)
-                    except Exception:
-                        target_app.logger.exception("Worker: encolar_notificaciones_garantias_multi_dia falló")
+                    if _job_activo("encolar_notificaciones_garantias_multi_dia"):
+                        try:
+                            _log("info", "Worker: Encolando notificaciones de garantías por vencer (20/10/5/0d)...")
+                            from modules.contratos.contratos_services import encolar_notificaciones_garantias_multi_dia
+                            n_garantias = encolar_notificaciones_garantias_multi_dia()
+                            _log("info", "Worker: garantias_multi_dia encoladas=%s", n_garantias)
+                        except Exception:
+                            target_app.logger.exception("Worker: encolar_notificaciones_garantias_multi_dia falló")
 
-                    try:
-                        _log("info", "Worker: Encolando notificaciones de Contratos Comerciales por vencer (90/60/30d)...")
-                        from modules.contratos.contratos_services import encolar_notificaciones_contratos_comerciales_vencen
-                        n_contratos_comerciales = encolar_notificaciones_contratos_comerciales_vencen()
-                        _log("info", "Worker: contratos_comerciales_vencen encolados=%s", n_contratos_comerciales)
-                    except Exception:
-                        target_app.logger.exception("Worker: encolar_notificaciones_contratos_comerciales_vencen falló")
+                    if _job_activo("encolar_notificaciones_contratos_comerciales_vencen"):
+                        try:
+                            _log("info", "Worker: Encolando notificaciones de Contratos Comerciales por vencer (90/60/30d)...")
+                            from modules.contratos.contratos_services import encolar_notificaciones_contratos_comerciales_vencen
+                            n_contratos_comerciales = encolar_notificaciones_contratos_comerciales_vencen()
+                            _log("info", "Worker: contratos_comerciales_vencen encolados=%s", n_contratos_comerciales)
+                        except Exception:
+                            target_app.logger.exception("Worker: encolar_notificaciones_contratos_comerciales_vencen falló")
 
                     last_contratos_garantias_date = now4.date()
 
@@ -503,7 +509,8 @@ def start_scheduler(app=None):
                 is_1700    = now3.hour == 17 and now3.minute < 6  # ventana de 5 min
                 week_key   = now3.strftime("%Y-W%W")              # ej. 2026-W23
 
-                if is_friday and is_1700 and last_weekly_report_date != week_key:
+                if (is_friday and is_1700 and last_weekly_report_date != week_key
+                        and _job_activo("send_planilla_weekly_report")):
                     try:
                         _log("info", "Worker: Ejecutando reporte semanal planilla [%s]...", week_key)
                         result = send_planilla_weekly_report(force=False)
@@ -533,7 +540,8 @@ def start_scheduler(app=None):
                 # Alerta tickets sin asignar +3h - cada 30 min
                 # ==================================================
                 now_ts3 = time.time()
-                if _EMAIL_TO_TASK_ENABLED and (now_ts3 - last_unassigned_check >= 1800):
+                if (_EMAIL_TO_TASK_ENABLED and (now_ts3 - last_unassigned_check >= 1800)
+                        and _job_activo("notify_unassigned_tickets")):
                     try:
                         _log("info", "Worker: Verificando tickets sin asignar +3h...")
                         alertados = notify_unassigned_tickets()
@@ -564,7 +572,8 @@ def start_scheduler(app=None):
                 # AWS Sync DynamoDB — push + pull cada 5 min
                 # ==================================================
                 now_ts4 = time.time()
-                if _AWS_SYNC_ENABLED and (now_ts4 - last_aws_sync >= 300):
+                if (_AWS_SYNC_ENABLED and (now_ts4 - last_aws_sync >= 300)
+                        and _job_activo("aws_sync")):
                     try:
                         _log("info", "Worker: AWS sync — push gastos nuevos...")
                         push_gastos_a_aws(target_app)
@@ -584,7 +593,9 @@ def start_scheduler(app=None):
                 # ==================================================
                 # Auto-confirmar vuelos realizados — diario 09:00
                 # ==================================================
-                if now.hour == 9 and now.minute < 10 and globals().get("_last_vuelo_autoconfirmar") != today_str:
+                if (now.hour == 9 and now.minute < 10
+                        and globals().get("_last_vuelo_autoconfirmar") != today_str
+                        and _job_activo("vuelo_auto_confirmar")):
                     try:
                         from modules.planificador.planificador_auto_jobs import auto_confirmar_vuelos
                         n = auto_confirmar_vuelos(target_app)
@@ -597,7 +608,9 @@ def start_scheduler(app=None):
                 # ==================================================
                 # Auto-liquidar vuelos — diario 09:05
                 # ==================================================
-                if now.hour == 9 and now.minute >= 5 and now.minute < 15 and globals().get("_last_vuelo_autoliquidar") != today_str:
+                if (now.hour == 9 and now.minute >= 5 and now.minute < 15
+                        and globals().get("_last_vuelo_autoliquidar") != today_str
+                        and _job_activo("vuelo_auto_liquidar")):
                     try:
                         from modules.planificador.planificador_auto_jobs import auto_liquidar_vuelos
                         n = auto_liquidar_vuelos(target_app)
@@ -654,6 +667,7 @@ def start_scheduler(app=None):
                     now.weekday() < 5
                     and now.hour == 8
                     and globals().get("_last_om_evidencia_digest") != today_str
+                    and _job_activo("process_om_correctivas_evidencia_digest")
                 ):
                     try:
                         from modules.scheduler.scheduler_services import (
