@@ -22,7 +22,7 @@ from .scheduler_repository import (
     ensure_gastos_expiry_schema,
     ensure_om_notification_schema,
 )
-from .scheduler_config_repo import ensure_scheduler_table
+from .scheduler_config_repo import ensure_scheduler_table, get_job_config
 from .scheduler_notifications import (
     ensure_core_templates,
     ensure_gasto_templates,
@@ -139,6 +139,29 @@ except Exception as _e2t_err:
     )
 
 _worker_started = False
+
+
+def _job_activo(job_key: str, default: bool = True) -> bool:
+    """
+    Consulta scheduler_jobs_config.activo para job_key. El panel
+    /admin/scheduler ya escribe ese flag al togglear un job desde ahí --
+    esta función es la que hacía falta para que el loop automático de
+    verdad lo respete (antes solo se leía para mostrarlo en el panel).
+    Si no hay fila configurada o falla la consulta, no bloquea el job
+    (default=True) para no romper comportamiento existente.
+    """
+    try:
+        conn = get_db_standalone()
+        try:
+            cfg = get_job_config(conn, job_key)
+        finally:
+            conn.close()
+        if cfg is None:
+            return default
+        return bool(cfg.get("activo", default))
+    except Exception:
+        _log("warning", "Worker: no se pudo leer scheduler_jobs_config para job_key=%s", job_key)
+        return default
 
 
 def _is_horario_laboral(dt: datetime) -> bool:
@@ -493,7 +516,8 @@ def start_scheduler(app=None):
                 # Email-to-Task (soporteti@quimpac.com.ec) - cada 2 min
                 # ==================================================
                 now_ts2 = time.time()
-                if _EMAIL_TO_TASK_ENABLED and (now_ts2 - last_email_poll >= 120):
+                if (_EMAIL_TO_TASK_ENABLED and (now_ts2 - last_email_poll >= 120)
+                        and _job_activo("process_incoming_emails")):
                     try:
                         _log("info", "Worker: Ejecutando lectura de correos soporteti@...")
                         count = process_incoming_emails()
