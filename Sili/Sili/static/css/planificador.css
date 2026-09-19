@@ -645,6 +645,24 @@ tr.pg-hidden { display:none; }
 .tipo-icon-subtitle { font-size:.7rem; color:#94a3b8; text-align:center; line-height:1.25; }
 @media (max-width:600px) { .tipo-icon-btn { min-width:0; } }
 
+/* ── Selector "Tipo de reserva" (Viajes / Hospedaje) ── */
+.modo-viaje-picker { display:flex; gap:.5rem; flex-wrap:wrap; }
+.modo-viaje-btn {
+  display:flex; align-items:center; justify-content:center; gap:.5rem;
+  flex:1; min-width:130px; padding:.55rem .8rem;
+  border:1.5px solid #e2e8f0; border-radius:1rem;
+  background:#fff; color:#475569; cursor:pointer;
+  transition:background .15s, border-color .15s, box-shadow .15s, color .15s;
+}
+.modo-viaje-btn:hover { background:#f8fafc; border-color:#94a3b8; }
+.modo-viaje-btn.active {
+  border-color:var(--brand-600); background:#fff;
+  box-shadow:0 0 0 2px var(--brand-600), 0 10px 22px rgba(37,99,235,.16);
+}
+.modo-viaje-icon { font-size:1.2rem; line-height:1; }
+.modo-viaje-label { font-size:.85rem; font-weight:700; color:#111827; }
+.modo-viaje-btn.active .modo-viaje-label { color:var(--brand-600); }
+
 /* ── Selectores segmentados (Fecha, Prioridad) ── */
 .quick-pick-row {
   display:flex; gap:.2rem; flex-wrap:wrap;

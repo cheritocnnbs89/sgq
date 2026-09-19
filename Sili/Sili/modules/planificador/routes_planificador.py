@@ -519,6 +519,7 @@ def crear():
     fecha_retorno    = None
     punto_salida     = None
     punto_destino    = None
+    modo_viaje       = None
     requiere_hosp    = 0
     orden_servicio   = None
     cc_id            = None
@@ -575,7 +576,12 @@ def crear():
             return redirect(url_for("planificador.planificador_solicitudes"))
 
         fecha_retorno  = request.form.get("fecha_retorno", "").strip() or None
+        modo_viaje     = request.form.get("modo_viaje", "vuelo").strip() or "vuelo"
+        if modo_viaje not in ("vuelo", "hospedaje"):
+            modo_viaje = "vuelo"
         punto_salida   = request.form.get("punto_salida", "").strip() or None
+        if modo_viaje == "hospedaje":
+            punto_salida = None
         punto_destino  = request.form.get("punto_destino", "").strip() or None
         requiere_hosp  = 1 if request.form.get("requiere_hospedaje") else 0
         orden_servicio = request.form.get("orden_servicio", "").strip() or None
@@ -724,6 +730,7 @@ def crear():
         "fecha_retorno":                  fecha_retorno,
         "punto_salida":                   punto_salida,
         "punto_destino":                  punto_destino,
+        "modo_viaje":                     modo_viaje,
         "requiere_hospedaje":             requiere_hosp,
         "orden_servicio":                 orden_servicio,
         "centro_costo_id":                cc_id,

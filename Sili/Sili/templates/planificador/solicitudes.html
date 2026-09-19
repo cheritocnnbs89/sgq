@@ -7,6 +7,10 @@
 
 {% block content %}
 
+{# Solo cambia el texto que ve el usuario -- el valor interno de tipo
+   (lo que se guarda en BD y compara el código) sigue siendo "Vuelo". #}
+{% set tipo_labels = {'Vuelo': 'Viajes'} %}
+
 {# Datos para el JS – sin inline script #}
 <div id="planner-data"
      data-today="{{ today }}"
@@ -208,7 +212,7 @@
                   <div class="sol-cell">
                     <span class="sol-icon cal-pill cal-pill--{{ _tono }}"><i class="bi {{ _icon }}"></i></span>
                     <div class="sol-cell-text">
-                      <strong>{{ r.tipo }}</strong>
+                      <strong>{{ tipo_labels.get(r.tipo, r.tipo) }}</strong>
                       {% if r.grupo_id %}
                       <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
                       {% endif %}
@@ -425,7 +429,7 @@
                     <span class="grupo-badge" title="Parte de un grupo coordinado"><i class="bi bi-collection"></i> G{{ r.grupo_id }}</span>
                     {% endif %}
                   </td>
-                  <td>{{ r.tipo }}</td>
+                  <td>{{ tipo_labels.get(r.tipo, r.tipo) }}</td>
                   <td>{{ r.area_solicitante }}</td>
                   <td class="text-nowrap">{{ r.fecha_str }}</td>
                   <td class="text-nowrap">
@@ -598,7 +602,7 @@
             {% for t in tipos %}
             <button type="button" class="tipo-icon-btn" data-tipo="{{ t }}">
               <span class="tipo-icon-circle"><i class="bi {{ tipo_icons.get(t, 'bi-taxi-front-fill') }}"></i></span>
-              <span class="tipo-icon-label">{{ t }}</span>
+              <span class="tipo-icon-label">{{ tipo_labels.get(t, t) }}</span>
               <span class="tipo-icon-subtitle">{{ tipo_subtitulos.get(t, 'Entregas, retiros y gestiones') }}</span>
             </button>
             {% endfor %}
@@ -656,6 +660,23 @@
             <label class="form-label">N° de vouchers solicitados *</label>
             <input class="form-control" type="number" name="numero_vouchers" id="campoNumeroVouchers"
                    min="1" max="6" step="1" value="1">
+          </div>
+          <div class="full campo-vuelo" id="campoModoViajeDiv">
+            <label class="form-label">Tipo de reserva *</label>
+            <div class="modo-viaje-picker" id="modoViajePicker">
+              <button type="button" class="modo-viaje-btn active" data-modo="vuelo">
+                <span class="modo-viaje-icon">✈️</span>
+                <span class="modo-viaje-label">Viajes</span>
+              </button>
+              <button type="button" class="modo-viaje-btn" data-modo="hospedaje">
+                <span class="modo-viaje-icon">🛏️</span>
+                <span class="modo-viaje-label">Hospedaje</span>
+              </button>
+            </div>
+            <input type="hidden" name="modo_viaje" id="modoViajeInput" value="vuelo">
+            <div class="form-text">
+              Elige "Hospedaje" si esta solicitud es solo para reservar hotel, sin boleto de avión — el resto del trámite es igual.
+            </div>
           </div>
           <div class="full campo-vuelo" id="campoMotivoVueloDiv">
             <label class="form-label">Motivo *</label>
@@ -735,7 +756,7 @@
           {# ── Campos exclusivos para Vuelo ── #}
           {# Selector de fechas estilo aerolínea (reemplaza el campo Fecha regular) #}
           <div class="full campo-vuelo" id="campoFechasVueloDiv">
-            <label class="form-label">Fechas del vuelo *</label>
+            <label class="form-label">Fechas de reserva *</label>
             <div class="vuelo-fecha-picker">
               <div class="vuelo-fecha-slot">
                 <span class="vuelo-fecha-icono">✈</span>
@@ -759,7 +780,7 @@
             </div>
             <div class="alert alert-warning py-2 mt-2 d-none" id="alertaDuplicadoVuelo" role="alert">
               <i class="bi bi-exclamation-triangle-fill me-1"></i>
-              Ya tienes una solicitud activa de Vuelo en la fecha seleccionada. No podrás guardar hasta que la anterior sea completada o rechazada.
+              Ya tienes una solicitud activa de Viajes en la fecha seleccionada. No podrás guardar hasta que la anterior sea completada o rechazada.
             </div>
           </div>
           <div class="campo-vuelo" id="campoPuntoSalidaDiv">
@@ -819,7 +840,7 @@
           <div class="full campo-vuelo" id="alertSinCCVuelo">
             <div class="alert alert-danger py-2 px-3 small mb-0">
               <i class="bi bi-exclamation-triangle-fill me-1"></i>
-              No tienes un centro de costo configurado, por lo que no puedes crear solicitudes de tipo Vuelo.
+              No tienes un centro de costo configurado, por lo que no puedes crear solicitudes de tipo Viajes.
               Selecciona otro tipo de solicitud o contacta a Talento Humano/Sistemas para que te asignen uno.
             </div>
           </div>

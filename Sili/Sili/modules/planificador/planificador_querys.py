@@ -174,12 +174,12 @@ SQL_INSERT_SOLICITUD = f"""
          requiere_hospedaje, orden_servicio, centro_costo_id,
          requiere_aprobacion_presupuesto,
          gerente_id, gerente_nombre, motivo_vuelo,
-         numero_vouchers)
+         numero_vouchers, modo_viaje)
     OUTPUT INSERTED.id
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?, ?,
             ?, ?, ?,
-            ?)
+            ?, ?)
 """
 
 SQL_UPDATE_REAGENDAR = f"""

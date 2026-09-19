@@ -995,6 +995,7 @@
   var TIPO_VUELO = 'Vuelo';
 
   var VUELO_CAMPOS = [
+    { divId: 'campoModoViajeDiv',     inputId: null,                    required: false },
     { divId: 'campoFechasVueloDiv',   inputId: null,                    required: false },
     { divId: 'campoPuntoSalidaDiv',   inputId: 'campoPuntoSalida',      required: true  },
     { divId: 'campoPuntoDestinoDiv',  inputId: 'campoPuntoDestino',     required: true  },
@@ -1101,6 +1102,31 @@
     if (confirmacionSection)   confirmacionSection.classList.toggle('d-none', esVuelo);
 
     if (!esVuelo) resetPasajerosAdicionales();
+
+    // El picker "Tipo de reserva" (Viajes/Hospedaje) siempre arranca en
+    // "vuelo" al entrar a este tipo -- setModoViaje se encarga de mostrar
+    // Punto de salida (oculto solo si luego se elige Hospedaje).
+    if (esVuelo) setModoViaje('vuelo');
+  }
+
+  /* ── Selector "Tipo de reserva" (Viajes / Hospedaje, solo Vuelo) ── */
+  function setModoViaje(modo) {
+    var input = document.getElementById('modoViajeInput');
+    if (input) input.value = modo;
+    var picker = document.getElementById('modoViajePicker');
+    if (picker) {
+      picker.querySelectorAll('.modo-viaje-btn').forEach(function (btn) {
+        btn.classList.toggle('active', btn.dataset.modo === modo);
+      });
+    }
+    var esHospedaje = (modo === 'hospedaje');
+    var divSalida = document.getElementById('campoPuntoSalidaDiv');
+    var inpSalida = document.getElementById('campoPuntoSalida');
+    if (divSalida) divSalida.classList.toggle('visible', !esHospedaje);
+    if (inpSalida) {
+      inpSalida.required = !esHospedaje;
+      if (esHospedaje) inpSalida.value = '';
+    }
   }
 
   /* ── "Boleto propio o de personal interno adicional" (solo Vuelo) ── */
@@ -1563,6 +1589,11 @@
     /* Mostrar/ocultar campos según tipo de solicitud (iconos) */
     document.querySelectorAll('#tipoSolicitudPicker .tipo-icon-btn').forEach(function (btn) {
       btn.addEventListener('click', function () { selectTipoSolicitud(btn.dataset.tipo); });
+    });
+
+    /* Selector "Tipo de reserva" (Viajes / Hospedaje) dentro de Vuelo */
+    document.querySelectorAll('#modoViajePicker .modo-viaje-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { setModoViaje(btn.dataset.modo); });
     });
 
     /* N° de vouchers: máximo 6 (clamp silencioso) + sincroniza filas Origen/Destino visibles */
