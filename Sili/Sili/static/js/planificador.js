@@ -1110,6 +1110,46 @@
   var pasajerosAdicionalesState = [];   // [{id, nombre}]
   var pasajerosMiAreaCargados = null;   // cache de la lista traída del servidor
 
+  function _fmtMoneyPresup(v) {
+    return '$' + parseFloat(v).toLocaleString('es-EC', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  // Consulta el CeCo/presupuesto del pasajero agregado (mismo endpoint que
+  // ya usa el solicitante para su propio indicador). Si no tiene CeCo, se
+  // avisa que el costo se descuenta del CeCo de quien registra -- esa
+  // parte no bloquea el guardado, es solo informativa.
+  function fetchPresupuestoPasajero(p) {
+    p.presupuestoTexto = 'Verificando presupuesto...';
+    p.presupuestoClase = 'text-muted';
+    renderListaPasajeros();
+
+    fetch('/planificador/presupuesto/saldo-usuario?usuario_id=' + encodeURIComponent(p.id), {
+      credentials: 'same-origin',
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) {
+          p.presupuestoTexto = 'Sin centro de costo — se descontará del tuyo';
+          p.presupuestoClase = 'text-warning';
+        } else {
+          var msgs = {
+            verde:    'CeCo con saldo disponible: ' + _fmtMoneyPresup(d.saldo),
+            amarillo: 'CeCo con saldo bajo: ' + _fmtMoneyPresup(d.saldo),
+            rojo:     'CeCo sin saldo disponible',
+          };
+          var clases = { verde: 'text-success', amarillo: 'text-warning', rojo: 'text-danger' };
+          p.presupuestoTexto = msgs[d.semaforo] || '';
+          p.presupuestoClase = clases[d.semaforo] || 'text-muted';
+        }
+        renderListaPasajeros();
+      })
+      .catch(function () {
+        p.presupuestoTexto = 'No se pudo verificar el presupuesto';
+        p.presupuestoClase = 'text-muted';
+        renderListaPasajeros();
+      });
+  }
+
   function renderListaPasajeros() {
     var lista = document.getElementById('listaPasajerosAdicionales');
     if (!lista) return;
@@ -1117,18 +1157,30 @@
 
     pasajerosAdicionalesState.forEach(function (p) {
       var li = document.createElement('li');
-      li.className = 'list-group-item d-flex justify-content-between align-items-center py-1 px-2';
+      li.className = 'list-group-item py-1 px-2';
+
+      var row = document.createElement('div');
+      row.className = 'd-flex justify-content-between align-items-center';
 
       var span = document.createElement('span');
       span.textContent = p.nombre;
-      li.appendChild(span);
+      row.appendChild(span);
 
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'btn btn-sm btn-outline-danger py-0 px-2';
       btn.textContent = '×';
       btn.dataset.quitarPasajeroId = String(p.id);
-      li.appendChild(btn);
+      row.appendChild(btn);
+
+      li.appendChild(row);
+
+      if (p.presupuestoTexto) {
+        var info = document.createElement('div');
+        info.className = 'small ' + (p.presupuestoClase || 'text-muted');
+        info.textContent = p.presupuestoTexto;
+        li.appendChild(info);
+      }
 
       lista.appendChild(li);
 
@@ -1221,9 +1273,11 @@
 
         var id = parseInt(selectEl.value, 10);
         var nombre = selectEl.options[selectEl.selectedIndex].textContent;
-        pasajerosAdicionalesState.push({ id: id, nombre: nombre });
+        var nuevoPasajero = { id: id, nombre: nombre };
+        pasajerosAdicionalesState.push(nuevoPasajero);
         renderListaPasajeros();
         poblarSelectPasajeros(pasajerosMiAreaCargados || []);
+        fetchPresupuestoPasajero(nuevoPasajero);
       });
     }
 

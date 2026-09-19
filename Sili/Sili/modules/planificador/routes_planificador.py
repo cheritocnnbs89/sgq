@@ -846,7 +846,26 @@ def crear():
 def presupuesto_saldo_usuario():
     from datetime import date as _date
     u = _current_user()
-    cc_info = repo.get_cc_usuario(u["id"])
+
+    # Parámetro opcional: consultar el CeCo/saldo de OTRO usuario (para el
+    # indicador de "Boleto propio o de personal interno adicional"). Solo
+    # se permite si ese usuario pertenece al mismo departamento que quien
+    # consulta -- mismo criterio server-side que ya se usa para validar la
+    # lista de pasajeros adicionales al guardar la solicitud.
+    usuario_id_raw = request.args.get("usuario_id", "").strip()
+    usuario_id = u["id"]
+    if usuario_id_raw:
+        try:
+            candidato_id = int(usuario_id_raw)
+        except (TypeError, ValueError):
+            candidato_id = None
+        if candidato_id and candidato_id != u["id"]:
+            companeros_ids = {c["id"] for c in repo.get_usuarios_mismo_departamento(u["id"])}
+            if candidato_id not in companeros_ids:
+                return jsonify({"ok": False, "msg": "Usuario fuera de tu departamento."}), 403
+            usuario_id = candidato_id
+
+    cc_info = repo.get_cc_usuario(usuario_id)
     if not cc_info:
         return jsonify({"ok": False, "msg": "Sin centro de costo asignado al usuario."})
     hoy = _date.today()
