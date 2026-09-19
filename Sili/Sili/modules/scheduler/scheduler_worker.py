@@ -47,15 +47,31 @@ from .seedbilling_xml_job import process_seedbilling_facturas_recibidas
 # principal -- antes vivia en modules/obligaciones/obligaciones_scheduler.py
 # con thread propio (lib schedule). Se mueve aqui, mismo patron que los demas
 # jobs de hora fija de este archivo (ver bloque "Reporte diario - 07:30").
-from modules.obligaciones import obligaciones_repository as _oblig_repo
-from modules.obligaciones import obligaciones_services as _oblig_service
-from modules.obligaciones import obligaciones_notifications as _oblig_notifications
+#
+# Igual que AWS Sync / AWS Tickets / Email-to-Task mas abajo: envuelto en
+# try/except porque no todos los entornos (ej. ambientes de prueba) tienen
+# modules/obligaciones/ desplegado -- sin este guard, un ModuleNotFoundError
+# aqui tumba el import de TODO modules.scheduler, y con el, cualquier
+# blueprint que dependa de scheduler (incluido Planificador).
+try:
+    from modules.obligaciones import obligaciones_repository as _oblig_repo
+    from modules.obligaciones import obligaciones_services as _oblig_service
+    from modules.obligaciones import obligaciones_notifications as _oblig_notifications
+    _OBLIGACIONES_ENABLED = True
+except Exception as _oblig_err:
+    _OBLIGACIONES_ENABLED = False
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "[obligaciones] No se pudo importar modules.obligaciones: %s", _oblig_err
+    )
 
 
 def _run_obligaciones_job(target_app):
     """Tarea A: marca atrasadas. Tarea B: envia alertas por correo segun
     frecuencia/destinatarios configurados, sin duplicar. No falla si SMTP no
     esta configurado -- send_email ya degrada a log en ese caso."""
+    if not _OBLIGACIONES_ENABLED:
+        return
     try:
         total_atrasadas = _oblig_service.marcar_obligaciones_atrasadas()
         if total_atrasadas:
@@ -413,7 +429,7 @@ def start_scheduler(app=None):
                 # marca atrasadas + evalua/envia alertas por frecuencia
                 # ==================================================
                 now5 = datetime.now()
-                if now5.hour == 7 and now5.minute < 6:  # ventana de 5 min
+                if _OBLIGACIONES_ENABLED and now5.hour == 7 and now5.minute < 6:  # ventana de 5 min
                     if last_obligaciones_date != now5.date():
                         try:
                             _log("info", "Worker: Ejecutando job Obligaciones...")
