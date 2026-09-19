@@ -13,6 +13,7 @@ from datetime import datetime
 
 from flask import current_app
 
+from modules.db import get_config_value, set_config_values
 from modules.routes_planilla_mensual import ensure_schema
 from .scheduler_security import _log
 from .scheduler_repository import (
@@ -300,6 +301,11 @@ def start_scheduler(app=None):
                         now_hm = (now.hour, now.minute)
                         hoy = now.strftime("%Y-%m-%d")
 
+                        # Persistido en BD (no solo en memoria) para que un
+                        # reinicio del servidor no "olvide" que el horario de
+                        # hoy ya corrió y lo vuelva a disparar de inmediato.
+                        ultimo_slot_bd = get_config_value("seedbilling_ultimo_slot", "") or ""
+
                         for hh, mm in seed_slots:
                             # >= en vez de == : el tick corre cada ~5 min, así
                             # que la hora exacta puede no coincidir nunca con
@@ -310,7 +316,7 @@ def start_scheduler(app=None):
 
                             slot_key = f"{hoy}:{hh:02d}{mm:02d}"
 
-                            if slot_key in last_seedbilling_slots:
+                            if slot_key in last_seedbilling_slots or slot_key <= ultimo_slot_bd:
                                 continue
 
                             _log("info", "Worker: Ejecutando SeedBilling XML slot=%s", slot_key)
@@ -326,6 +332,8 @@ def start_scheduler(app=None):
                                     pass
 
                             last_seedbilling_slots.add(slot_key)
+                            set_config_values({"seedbilling_ultimo_slot": slot_key})
+                            ultimo_slot_bd = slot_key
 
                 except Exception:
                     target_app.logger.exception("Worker: SeedBilling XML falló")

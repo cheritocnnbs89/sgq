@@ -15,6 +15,7 @@ import html
 import os
 import re
 import json
+import socket
 import traceback
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -47,6 +48,27 @@ SEED_NS = "http://webservices.trama.webservices.com/"
 
 def _cfg(name: str, default=None):
     return current_app.config.get(name, default)
+
+
+def _ip_local() -> str:
+    """
+    IP de la máquina que ejecuta esta corrida -- para poder distinguir, en
+    el log y en el correo de resumen, si el consumo vino de producción o
+    de un entorno de pruebas (ambos comparten las mismas credenciales de
+    SeedBilling).
+    """
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            s.connect(("8.8.8.8", 80))
+            return s.getsockname()[0]
+        finally:
+            s.close()
+    except Exception:
+        try:
+            return socket.gethostbyname(socket.gethostname())
+        except Exception:
+            return "desconocida"
 
 
 def _parse_sri_xml(raw):
@@ -480,6 +502,17 @@ def _marcar_entregados(claves_acceso: list[str], *, motivo: str, tipo_documento:
     if not claves_limpias:
         return 0, []
 
+    if not bool(_cfg("SEEDBILLING_PUEDE_MARCAR_ENTREGADOS", True)):
+        _log(
+            "info",
+            "[SEEDBILLING] SEEDBILLING_PUEDE_MARCAR_ENTREGADOS=False -- se omite "
+            "marcar %s comprobante(s) como entregados (motivo=%s). Este entorno "
+            "no es producción, así que no consume la cola compartida de SeedBilling.",
+            len(claves_limpias),
+            motivo,
+        )
+        return 0, []
+
     mark_url = _cfg("SEEDBILLING_MARK_URL", "")
     if not mark_url:
         return 0, ["No está configurado SEEDBILLING_MARK_URL."]
@@ -603,6 +636,7 @@ def _send_admin_summary(conn, resumen: dict):
         <h2>Resumen carga automática XML SeedBilling</h2>
 
         <p><b>Fecha:</b> {now_txt}</p>
+        <p><b>IP que consumió (identifica el entorno: producción vs pruebas):</b> {html.escape(str(resumen.get("ip_origen") or "desconocida"))}</p>
         <p><b>Empresa cargada:</b> Quimpac Ecuador S.A.</p>
         <p><b>RUC cargado:</b> {_cfg("SEEDBILLING_TARGET_RUC", "0990344760001")}</p>
 
@@ -649,7 +683,7 @@ def _send_admin_summary(conn, resumen: dict):
     text_body = json.dumps(resumen, ensure_ascii=False, indent=2)
 
     subject = (
-        f"[SeedBilling] XML compras Quimpac: "
+        f"[SeedBilling ip={resumen.get('ip_origen') or '?'}] XML compras Quimpac: "
         f"{resumen.get('insertados', 0)} insertados, "
         f"{resumen.get('duplicados', 0)} duplicados, "
         f"{resumen.get('marcados_entregados_otras', 0)} otras empresas marcadas, "
@@ -1004,8 +1038,11 @@ def _procesar_tipo_documento(conn, cur, tipo_documento: str, resumen: dict,
 # ==========================================================
 
 def process_seedbilling_facturas_recibidas(conn) -> dict:
+    ip_origen = _ip_local()
+
     resumen = {
         "ok": True,
+        "ip_origen": ip_origen,
         "inicio": datetime.now().isoformat(timespec="seconds"),
         "lotes": 0,
         "recibidos": 0,
@@ -1040,6 +1077,7 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
     timeout = int(_cfg("SEEDBILLING_TIMEOUT", 120))
     max_loops = int(_cfg("SEEDBILLING_MAX_LOOPS", 10))
     mark_other_companies = bool(_cfg("SEEDBILLING_MARK_OTHER_COMPANIES", True))
+    puede_marcar_entregados = bool(_cfg("SEEDBILLING_PUEDE_MARCAR_ENTREGADOS", True))
     tipos = _tipos_documento()
     fecha_desde_notas = _notas_fecha_desde()
 
@@ -1047,13 +1085,16 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
 
     _log(
         "info",
-        "[SEEDBILLING] Inicio enabled=True tipos_documento=%s cantidad=%s max_loops=%s "
-        "target_ruc=%s mark_other_companies=%s notas_fecha_desde=%s",
+        "[SEEDBILLING] Inicio ip_origen=%s enabled=True tipos_documento=%s cantidad=%s "
+        "max_loops=%s target_ruc=%s mark_other_companies=%s puede_marcar_entregados=%s "
+        "notas_fecha_desde=%s",
+        ip_origen,
         tipos,
         cantidad,
         max_loops,
         target_ruc,
         mark_other_companies,
+        puede_marcar_entregados,
         fecha_desde_notas,
     )
 

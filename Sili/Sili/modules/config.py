@@ -126,6 +126,20 @@ SEEDBILLING_VERIFY_SSL = True
 # sin insertarlas en SQL.
 SEEDBILLING_MARK_OTHER_COMPANIES = True
 
+# Control por entorno: producción y pre-producción/pruebas comparten las
+# mismas credenciales de SeedBilling (mismo SUSCRIPTOR). SeedBilling no
+# permite "re-consultar" un comprobante ya marcado como entregado -- en
+# cuanto UN entorno lo marca, el otro deja de verlo para siempre. Por eso
+# solo el entorno que de verdad es producción debe marcar como entregado;
+# los demás pueden seguir extrayendo/insertando en su propia BD para
+# probar, pero sin marcar nada en SeedBilling, así producción siempre
+# alcanza a verlo y procesarlo normalmente.
+# Default True (comportamiento de siempre) -- en el .env de cada entorno
+# que NO sea producción, poner SEEDBILLING_PUEDE_MARCAR_ENTREGADOS=0.
+SEEDBILLING_PUEDE_MARCAR_ENTREGADOS = os.getenv(
+    "SEEDBILLING_PUEDE_MARCAR_ENTREGADOS", "1"
+) not in ("0", "false", "False")
+
 # Cantidad de claves por request al servicio de marcado.
 SEEDBILLING_MARK_CHUNK_SIZE = int(
     os.getenv("SEEDBILLING_MARK_CHUNK_SIZE", "100")
@@ -291,6 +305,7 @@ def configure_app(app: Flask):
         SEEDBILLING_TIMEOUT=SEEDBILLING_TIMEOUT,
         SEEDBILLING_VERIFY_SSL=SEEDBILLING_VERIFY_SSL,
         SEEDBILLING_MARK_OTHER_COMPANIES=SEEDBILLING_MARK_OTHER_COMPANIES,
+        SEEDBILLING_PUEDE_MARCAR_ENTREGADOS=SEEDBILLING_PUEDE_MARCAR_ENTREGADOS,
         SEEDBILLING_MARK_CHUNK_SIZE=SEEDBILLING_MARK_CHUNK_SIZE,
         SEEDBILLING_DEBUG_RESPONSE_SNIPPET=SEEDBILLING_DEBUG_RESPONSE_SNIPPET,
         SEEDBILLING_XML_ARCHIVE_FOLDER=SEEDBILLING_XML_ARCHIVE_FOLDER,
