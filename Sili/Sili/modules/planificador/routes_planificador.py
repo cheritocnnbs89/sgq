@@ -513,7 +513,8 @@ def crear():
     fecha = request.form.get("fecha", "").strip()
 
     if tipo == "Vuelo":
-        campos_base = [tipo, area, desc, fecha]
+        # Observación es opcional para Vuelo/Viajes -- no se incluye "desc" aquí.
+        campos_base = [tipo, area, fecha]
     elif tipo == "Voucher":
         campos_base = [tipo, area, desc, fecha]
     else:
