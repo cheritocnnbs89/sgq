@@ -344,8 +344,16 @@ def detalle(sid):
                 break
 
     pasajeros_adicionales = []
+    pasajeros_sin_ceco = []
     if d.get("tipo") == "Vuelo":
         pasajeros_adicionales = repo.get_pasajeros_solicitud(sid)
+        # Detalle informativo solo para el coordinador en la etapa de
+        # cotización -- no se muestra al solicitante ni en otras pantallas.
+        if d.get("puede_cotizar_vuelo") and pasajeros_adicionales:
+            pasajeros_sin_ceco = [
+                p["nombre"] for p in pasajeros_adicionales
+                if not repo.get_cc_usuario(p["usuario_id"])
+            ]
 
     voucher_items = []
     if d.get("tipo") == "Voucher":
@@ -435,6 +443,7 @@ def detalle(sid):
         costo_ticket_sugerido=costo_ticket_sugerido,
         voucher_items=voucher_items,
         pasajeros_adicionales=pasajeros_adicionales,
+        pasajeros_sin_ceco=pasajeros_sin_ceco,
         voucher_es_coordinador_view=(d.get("tipo") == "Voucher" and not _es_solicitante),
         presupuesto_cc=presupuesto_cc,
         monto_gg=monto_gg,

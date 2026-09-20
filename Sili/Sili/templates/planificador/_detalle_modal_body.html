@@ -379,6 +379,13 @@
     este monto se descontará adicionalmente del presupuesto en la liquidación final.
   </div>
   {% endif %}
+  {% if pasajeros_sin_ceco %}
+  <div class="alert alert-warning py-2 px-3 small mb-2">
+    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+    Pasajero(s) sin centro de costo propio (se descontará del CeCo de <strong>{{ s.solicitante_nombre }}</strong>):
+    <strong>{{ pasajeros_sin_ceco | join(', ') }}</strong>. Ajusta la solicitud si corresponde.
+  </div>
+  {% endif %}
   <form method="post" action="{{ url_for('planificador.planificador_vuelo_cotizar', sid=s.id) }}" data-cotizar-vuelo-form>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="row g-2">

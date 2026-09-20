@@ -194,7 +194,7 @@
       // "An invalid form control ... is not focusable" en Chrome y bloquea
       // el envío sin mostrarle nada al usuario. Ver toggleCampoVoucher.
       var tipoActual = (document.getElementById('tipoSolicitudInput') || {}).value || '';
-      campo.required = (tipoActual !== TIPO_VOUCHER);
+      campo.required = (tipoActual !== TIPO_VOUCHER && tipoActual !== TIPO_VUELO);
       if (conFoco) campo.focus();
     }
   }
@@ -1070,7 +1070,7 @@
     // "Descripción de la actividad" se llama "Observación" para Vuelo
     var lblDescripcion = document.getElementById('lblDescripcion');
     if (lblDescripcion) {
-      lblDescripcion.textContent = esVuelo ? 'Observación *' : 'Descripción de la actividad *';
+      lblDescripcion.textContent = esVuelo ? 'Observación (opcional)' : 'Descripción de la actividad *';
     }
     var campoDescripcion = document.getElementById('campoDescripcion');
     if (campoDescripcion) {
@@ -1143,46 +1143,10 @@
   var pasajerosAdicionalesState = [];   // [{id, nombre}]
   var pasajerosMiAreaCargados = null;   // cache de la lista traída del servidor
 
-  function _fmtMoneyPresup(v) {
-    return '$' + parseFloat(v).toLocaleString('es-EC', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
-  // Consulta el CeCo/presupuesto del pasajero agregado (mismo endpoint que
-  // ya usa el solicitante para su propio indicador). Si no tiene CeCo, se
-  // avisa que el costo se descuenta del CeCo de quien registra -- esa
-  // parte no bloquea el guardado, es solo informativa.
-  function fetchPresupuestoPasajero(p) {
-    p.presupuestoTexto = 'Verificando presupuesto...';
-    p.presupuestoClase = 'text-muted';
-    renderListaPasajeros();
-
-    fetch('/planificador/presupuesto/saldo-usuario?usuario_id=' + encodeURIComponent(p.id), {
-      credentials: 'same-origin',
-    })
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (!d.ok) {
-          p.presupuestoTexto = 'Sin centro de costo — se descontará del tuyo';
-          p.presupuestoClase = 'text-warning';
-        } else {
-          var msgs = {
-            verde:    'CeCo con saldo disponible: ' + _fmtMoneyPresup(d.saldo),
-            amarillo: 'CeCo con saldo bajo: ' + _fmtMoneyPresup(d.saldo),
-            rojo:     'CeCo sin saldo disponible',
-          };
-          var clases = { verde: 'text-success', amarillo: 'text-warning', rojo: 'text-danger' };
-          p.presupuestoTexto = msgs[d.semaforo] || '';
-          p.presupuestoClase = clases[d.semaforo] || 'text-muted';
-        }
-        renderListaPasajeros();
-      })
-      .catch(function () {
-        p.presupuestoTexto = 'No se pudo verificar el presupuesto';
-        p.presupuestoClase = 'text-muted';
-        renderListaPasajeros();
-      });
-  }
-
+  // El estado del CeCo de cada pasajero adicional ya NO se muestra aquí al
+  // solicitante -- se valida en servidor y se informa solo al coordinador
+  // (por correo y en su pantalla de cotización) para que ajuste la
+  // solicitud si corresponde.
   function renderListaPasajeros() {
     var lista = document.getElementById('listaPasajerosAdicionales');
     if (!lista) return;
@@ -1207,13 +1171,6 @@
       row.appendChild(btn);
 
       li.appendChild(row);
-
-      if (p.presupuestoTexto) {
-        var info = document.createElement('div');
-        info.className = 'small ' + (p.presupuestoClase || 'text-muted');
-        info.textContent = p.presupuestoTexto;
-        li.appendChild(info);
-      }
 
       lista.appendChild(li);
 
@@ -1310,7 +1267,6 @@
         pasajerosAdicionalesState.push(nuevoPasajero);
         renderListaPasajeros();
         poblarSelectPasajeros(pasajerosMiAreaCargados || []);
-        fetchPresupuestoPasajero(nuevoPasajero);
       });
     }
 

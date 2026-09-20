@@ -570,6 +570,21 @@ def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
         ("Aprobado por",    aprobador_nombre),
     ]
 
+    # Pasajeros adicionales sin centro de costo propio: detalle solo para
+    # el coordinador (no se muestra al solicitante) para que, si corresponde,
+    # ajuste la solicitud al momento de cotizar.
+    nota_pasajeros = ""
+    try:
+        pasajeros = repo.get_pasajeros_solicitud(solicitud_id)
+        sin_ceco = [p["nombre"] for p in pasajeros if not repo.get_cc_usuario(p["usuario_id"])]
+        if sin_ceco:
+            nota_pasajeros = (
+                "Pasajero(s) sin centro de costo propio (se descontará del CeCo de "
+                f"{solicitante_nombre}): {', '.join(sin_ceco)}. Ajusta la solicitud si corresponde."
+            )
+    except Exception:
+        pass
+
     # — Coordinador(es): deben ingresar el valor cotizado del pasaje —
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
     if not coordinadores:
@@ -588,6 +603,8 @@ def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
                      f"por <strong>{aprobador_nombre}</strong> y requiere que ingreses el valor "
                      f"cotizado del pasaje.")
         nota_c = "Ingresa al SGQ y registra el valor cotizado del pasaje aéreo."
+        if nota_pasajeros:
+            nota_c = nota_c + " " + nota_pasajeros
         html_c = _email_html("PLANIFICADOR · VUELO — COTIZACIÓN", titulo_c, saludo_c, filas, nota_c)
         emails = []
         for c in coordinadores:
