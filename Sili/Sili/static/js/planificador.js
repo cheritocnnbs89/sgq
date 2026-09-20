@@ -1621,13 +1621,13 @@
           return;
         }
         if (!validarFechasVuelo()) { e.preventDefault(); return; }
-        // La Descripción/Observación es obligatoria para Mensajería/Vuelo,
-        // pero empieza plegada -- si sigue vacía hay que expandirla y
-        // bloquear el envío en vez de dejarla pasar en blanco. Para Voucher
-        // es opcional: vacía y oculta es válido, no se debe tocar.
+        // La Descripción es obligatoria para Mensajería, pero empieza plegada
+        // -- si sigue vacía hay que expandirla y bloquear el envío en vez de
+        // dejarla pasar en blanco. Para Voucher y Vuelo/Viajes es opcional
+        // (Observación): vacía y oculta es válido, no se debe tocar.
         var campoDesc = document.getElementById('campoDescripcion');
         var tipoActualSubmit = (document.getElementById('tipoSolicitudInput') || {}).value || '';
-        if (campoDesc && tipoActualSubmit !== TIPO_VOUCHER &&
+        if (campoDesc && tipoActualSubmit !== TIPO_VOUCHER && tipoActualSubmit !== TIPO_VUELO &&
             campoDesc.classList.contains('d-none') && !campoDesc.value.trim()) {
           e.preventDefault();
           _expandirDescripcion(true);
