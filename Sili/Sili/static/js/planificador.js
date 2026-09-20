@@ -1127,6 +1127,13 @@
       inpSalida.required = !esHospedaje;
       if (esHospedaje) inpSalida.value = '';
     }
+
+    // "Requiere hospedaje" ya no aplica: si el modo es Hospedaje, la
+    // solicitud completa ES la reserva de hospedaje.
+    var divHospedaje = document.getElementById('campoHospedajeDiv');
+    var inpHospedaje = document.getElementById('campoRequiereHospedaje');
+    if (divHospedaje) divHospedaje.classList.toggle('visible', !esHospedaje);
+    if (inpHospedaje && esHospedaje) inpHospedaje.checked = false;
   }
 
   /* ── "Boleto propio o de personal interno adicional" (solo Vuelo) ── */
