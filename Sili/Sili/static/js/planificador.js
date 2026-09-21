@@ -671,12 +671,23 @@
   document.addEventListener('submit', function (e) {
     const form = e.target;
 
+    // 0. Si un validador más específico (registrado directamente sobre el
+    //    <form>, ej. el del modal "Nueva solicitud") ya canceló este envío
+    //    con preventDefault(), no hay que mostrar el spinner: ese handler
+    //    corre ANTES que este (fase "target" antes que "bubble"), pero
+    //    preventDefault() no detiene la propagación del evento -- sin este
+    //    check el botón se deshabilita con el spinner puesto y nada vuelve
+    //    a rehabilitarlo, porque el envío real nunca ocurre.
+    if (e.defaultPrevented) return;
+
     // 1. Confirmación
     const msg = form.dataset.confirm;
     if (msg && !confirm(msg)) { e.preventDefault(); return; }
 
     // 2. Validaciones client-side que podrían cancelar
-    //    (se ejecutan en los handlers de abajo; si se cancelan no llegan aquí)
+    //    (se ejecutan en los handlers registrados directamente sobre el
+    //    <form>, que corren antes que este por fase de evento -- el check
+    //    de arriba es el que realmente nos protege de ellas)
 
     // 3. Mostrar overlay de carga
     var overlay = document.getElementById('plannerLoadingOverlay');
@@ -1649,17 +1660,20 @@
           _resetSubmitSpinner(formNueva);
           return;
         }
-        // La Descripción es obligatoria para Mensajería, pero empieza plegada
-        // -- si sigue vacía hay que expandirla y bloquear el envío en vez de
-        // dejarla pasar en blanco. Para Voucher y Vuelo/Viajes es opcional
-        // (Observación): vacía y oculta es válido, no se debe tocar.
+        // La Descripción es obligatoria para Mensajería (Voucher y
+        // Vuelo/Viajes la tienen como Observación opcional). Se valida por
+        // contenido, no por si ya está expandida o no -- así cubre tanto el
+        // primer intento (sigue plegada) como reintentos posteriores (ya
+        // expandida pero el usuario le dio enviar sin escribir nada), sin
+        // depender de que la validación nativa del navegador la detecte.
         var campoDesc = document.getElementById('campoDescripcion');
         var tipoActualSubmit = (document.getElementById('tipoSolicitudInput') || {}).value || '';
-        if (campoDesc && tipoActualSubmit !== TIPO_VOUCHER && tipoActualSubmit !== TIPO_VUELO &&
-            campoDesc.classList.contains('d-none') && !campoDesc.value.trim()) {
+        var descripcionRequerida = (tipoActualSubmit !== TIPO_VOUCHER && tipoActualSubmit !== TIPO_VUELO);
+        if (campoDesc && descripcionRequerida && !campoDesc.value.trim()) {
           e.preventDefault();
           _resetSubmitSpinner(formNueva);
-          _expandirDescripcion(true);
+          if (campoDesc.classList.contains('d-none')) _expandirDescripcion(true);
+          campoDesc.focus();
           campoDesc.reportValidity();
           return;
         }
