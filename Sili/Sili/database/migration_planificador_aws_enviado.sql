@@ -6,3 +6,6 @@
 
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='planificador_solicitudes' AND COLUMN_NAME='aws_enviado')
     ALTER TABLE planificador_solicitudes ADD aws_enviado BIT DEFAULT 0;
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='planificador_solicitudes' AND COLUMN_NAME='ga_aws_sync')
+    ALTER TABLE planificador_solicitudes ADD ga_aws_sync BIT DEFAULT 0;
