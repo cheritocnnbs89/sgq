@@ -685,11 +685,33 @@
     // 4. Deshabilitar el botón submit para evitar doble envío
     var btn = form.querySelector('[type=submit]');
     if (btn) {
+      // Guarda el HTML original (ícono + texto) para poder restaurarlo si
+      // otro listener de submit registrado más abajo (ej. las validaciones
+      // del modal "Nueva solicitud") termina cancelando el envío con
+      // preventDefault() -- si no, el botón se queda con el spinner puesto
+      // y deshabilitado para siempre, sin enviar nada.
+      if (!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;
       btn.classList.add('btn-loading');
       btn.innerHTML = '<span class="btn-spinner"></span>' + btn.textContent.trim();
       btn.disabled = true;
     }
   });
+
+  /* Restaura un botón de submit al estado previo al spinner -- usar
+     siempre que un handler de 'submit' cancele el envío con
+     preventDefault() después de que el listener de arriba ya puso el
+     spinner y deshabilitó el botón. */
+  function _resetSubmitSpinner(form) {
+    var overlay = document.getElementById('plannerLoadingOverlay');
+    if (overlay) overlay.classList.remove('show');
+    if (!form) return;
+    var btn = form.querySelector('[type=submit]');
+    if (btn && btn.classList.contains('btn-loading')) {
+      btn.classList.remove('btn-loading');
+      btn.disabled = false;
+      if (btn.dataset.originalHtml) btn.innerHTML = btn.dataset.originalHtml;
+    }
+  }
 
   /* Sync textarea obs → hidden inputs al aprobar/rechazar (modal principal) */
   document.addEventListener('submit', function (e) {
@@ -1609,6 +1631,7 @@
         var tipoInput = document.getElementById('tipoSolicitudInput');
         if (tipoInput && !tipoInput.value) {
           e.preventDefault();
+          _resetSubmitSpinner(formNueva);
           var err = document.getElementById('errorTipoSolicitud');
           if (err) err.classList.remove('d-none');
           var picker = document.getElementById('tipoSolicitudPicker');
@@ -1618,9 +1641,14 @@
         var alertSinCC = document.getElementById('alertSinCCVuelo');
         if (alertSinCC && alertSinCC.classList.contains('visible')) {
           e.preventDefault();
+          _resetSubmitSpinner(formNueva);
           return;
         }
-        if (!validarFechasVuelo()) { e.preventDefault(); return; }
+        if (!validarFechasVuelo()) {
+          e.preventDefault();
+          _resetSubmitSpinner(formNueva);
+          return;
+        }
         // La Descripción es obligatoria para Mensajería, pero empieza plegada
         // -- si sigue vacía hay que expandirla y bloquear el envío en vez de
         // dejarla pasar en blanco. Para Voucher y Vuelo/Viajes es opcional
@@ -1630,6 +1658,7 @@
         if (campoDesc && tipoActualSubmit !== TIPO_VOUCHER && tipoActualSubmit !== TIPO_VUELO &&
             campoDesc.classList.contains('d-none') && !campoDesc.value.trim()) {
           e.preventDefault();
+          _resetSubmitSpinner(formNueva);
           _expandirDescripcion(true);
           campoDesc.reportValidity();
           return;

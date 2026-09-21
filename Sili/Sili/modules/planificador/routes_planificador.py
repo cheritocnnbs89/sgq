@@ -516,7 +516,9 @@ def crear():
         # Observación es opcional para Vuelo/Viajes -- no se incluye "desc" aquí.
         campos_base = [tipo, area, fecha]
     elif tipo == "Voucher":
-        campos_base = [tipo, area, desc, fecha]
+        # Descripción es opcional para Voucher (ver "(opcional)" en el label
+        # del formulario) -- no se incluye "desc" aquí, igual que Vuelo.
+        campos_base = [tipo, area, fecha]
     else:
         campos_base = [tipo, area, desc, lugar, fecha]
     if not all(campos_base):
