@@ -296,6 +296,19 @@ MAGIC_LINK_MINUTOS = int(os.environ.get("MAGIC_LINK_MINUTOS", "5"))
 PORTAL_URL = "https://d2j9p7xrcju8qa.cloudfront.net"
 MAGIC_LINK_BASE_URL = "https://drz8r9fcp7842.cloudfront.net/m"
 
+# Bandera para el link magico (AWS) de Voucher de taxi -- apagada por
+# defecto si no se define en el .env (mas conservador: hay que
+# prenderla a proposito). Apagada: el voucher nunca se empuja a AWS
+# (ni al crear ni por el ciclo del AwsSyncWorker) y el jefe solo recibe
+# el correo normal de Planificador, sin boton de aprobacion directa ni
+# link de 5 minutos -- el comportamiento que ya tenia el modulo antes
+# de integrar AWS. Prendida: comportamiento actual (push inmediato +
+# correo con boton, con el ciclo de 5 min como respaldo).
+PLANIFICADOR_VOUCHER_MAGIC_LINK_ENABLED = (
+    os.environ.get("PLANIFICADOR_VOUCHER_MAGIC_LINK_ENABLED", "0").strip().lower()
+    in ("1", "true", "yes")
+)
+
 
 def _telefono_por_email(conn, email: str) -> str:
     if not email:
@@ -1015,7 +1028,7 @@ def push_voucher_taxi_inmediato(solicitud_id: int) -> str | None:
     de este cambio, y el usuario simplemente recibe el correo de
     Planificador sin el botón de aprobación directa en ese caso.
     """
-    if not AWS_SYNC_ENABLED:
+    if not AWS_SYNC_ENABLED or not PLANIFICADOR_VOUCHER_MAGIC_LINK_ENABLED:
         return None
 
     run_id = _new_run_id()
@@ -1152,6 +1165,12 @@ def push_vouchers_taxi_a_aws(app=None):
     if not AWS_SYNC_ENABLED:
         logger.debug(
             "[AWS SYNC][PUSH_VOUCHER][SKIP] AWS_SYNC_ENABLED=0 (ambiente sin sync a AWS)"
+        )
+        return
+
+    if not PLANIFICADOR_VOUCHER_MAGIC_LINK_ENABLED:
+        logger.debug(
+            "[AWS SYNC][PUSH_VOUCHER][SKIP] PLANIFICADOR_VOUCHER_MAGIC_LINK_ENABLED=0"
         )
         return
 
