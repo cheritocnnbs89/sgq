@@ -309,6 +309,31 @@ PLANIFICADOR_VOUCHER_MAGIC_LINK_ENABLED = (
     in ("1", "true", "yes")
 )
 
+# Banderas independientes por tipo de gasto para push_gastos_a_aws --
+# encendidas por defecto (mismo comportamiento historico) para no
+# afectar ambientes que ya dependen de que gastos/reembolsos se
+# sincronicen. Se apagan explicitamente en el .env del ambiente que
+# por ahora solo debe empujar Voucher de taxi a AWS.
+# Ojo: esto NO afecta pull_aprobaciones_de_aws -- las aprobaciones que
+# los gerentes ya hicieron (o hagan) en AWS sobre gastos que se
+# alcanzaron a empujar antes de apagar la bandera se siguen trayendo y
+# aplicando normalmente; solo se detiene el empuje de gastos NUEVOS.
+def _flag_env(nombre: str, default: str = "1") -> bool:
+    return (
+        os.environ.get(nombre, default).strip().lower()
+        not in ("0", "false", "no")
+    )
+
+AWS_SYNC_TARJETA_CREDITO_ENABLED = _flag_env("AWS_SYNC_TARJETA_CREDITO_ENABLED")
+AWS_SYNC_CAJA_CHICA_ENABLED      = _flag_env("AWS_SYNC_CAJA_CHICA_ENABLED")
+AWS_SYNC_REEMBOLSO_ENABLED       = _flag_env("AWS_SYNC_REEMBOLSO_ENABLED")
+
+_GASTOS_TIPO_ENABLED = {
+    "tarjeta_credito": AWS_SYNC_TARJETA_CREDITO_ENABLED,
+    "caja_chica":      AWS_SYNC_CAJA_CHICA_ENABLED,
+    "reembolso":       AWS_SYNC_REEMBOLSO_ENABLED,
+}
+
 
 def _telefono_por_email(conn, email: str) -> str:
     if not email:
@@ -786,6 +811,7 @@ def push_gastos_a_aws(app=None):
         gastos_payload = []
         ids_enviados = []
         omitidos_sin_ga = 0
+        omitidos_tipo_desactivado = 0
 
         ga_cache = {}
 
@@ -804,6 +830,15 @@ def push_gastos_a_aws(app=None):
             tipo = _tipo_gasto(g_dict)
             subtipo = _subtipo_gasto(g_dict)
             gasto_id = f"{tipo}#{g['id']}"
+
+            if not _GASTOS_TIPO_ENABLED.get(tipo, True):
+                omitidos_tipo_desactivado += 1
+                logger.debug(
+                    "[AWS SYNC][PUSH][SKIP] run_id=%s | gasto_id=%s | "
+                    "motivo=tipo_desactivado(%s)",
+                    run_id, gasto_id, tipo,
+                )
+                continue
 
             uid = g["usuario_id"]
 
@@ -876,10 +911,11 @@ def push_gastos_a_aws(app=None):
         if not gastos_payload:
             logger.warning(
                 "[AWS SYNC][PUSH][NO_PAYLOAD] run_id=%s | "
-                "candidatos=%d | omitidos_sin_ga=%d",
+                "candidatos=%d | omitidos_sin_ga=%d | omitidos_tipo_desactivado=%d",
                 run_id,
                 total_candidatos,
                 omitidos_sin_ga,
+                omitidos_tipo_desactivado,
             )
             return
 
@@ -930,11 +966,12 @@ def push_gastos_a_aws(app=None):
 
             logger.info(
                 "[AWS SYNC][PUSH][OK] run_id=%s | "
-                "enviados=%d | omitidos_sin_ga=%d | "
+                "enviados=%d | omitidos_sin_ga=%d | omitidos_tipo_desactivado=%d | "
                 "ids=%s",
                 run_id,
                 len(ids_enviados),
                 omitidos_sin_ga,
+                omitidos_tipo_desactivado,
                 ",".join(
                     str(item_id)
                     for item_id in ids_enviados
