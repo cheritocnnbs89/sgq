@@ -396,7 +396,9 @@ def _notificar_aprobacion_pendiente(
     solicitante: str,
     tipo_label: str,
     valor_txt: str,
-) -> None:
+    *,
+    enviar_email: bool = True,
+) -> str | None:
     """
     Genera un link mágico de un solo uso (aprueba directo, solo nivel
     GA/jefe directo) y notifica al aprobador por correo + WhatsApp.
@@ -404,13 +406,19 @@ def _notificar_aprobacion_pendiente(
     (notify_gasto_created) -- ahora sale de aquí, con el link directo.
 
     El correo sale siempre que haya aprobador_email (no depende de
-    Twilio). El WhatsApp solo se envía si ya hay plantilla aprobada
-    (WHATSAPP_TPL_GASTO_PENDIENTE) y el usuario tiene teléfono.
+    Twilio), salvo que enviar_email=False -- lo usa
+    push_voucher_taxi_inmediato() cuando el correo con el botón de
+    aprobación ya lo manda Flask directamente (notif_voucher_pendiente_jefe),
+    para no duplicar: en ese caso solo se genera el link y se devuelve,
+    sin mandar este correo genérico. El WhatsApp sigue enviándose igual
+    en ambos casos (si ya hay plantilla aprobada y el usuario tiene
+    teléfono) ya que ese no se duplica en ningún otro lado.
 
-    Best-effort: nunca lanza, nunca bloquea el push del gasto/voucher.
+    Devuelve la magic_url generada (o None si algo falló). Best-effort:
+    nunca lanza, nunca bloquea el push del gasto/voucher.
     """
     if not aprobador_email:
-        return
+        return None
 
     try:
         res = requests.post(
@@ -430,43 +438,44 @@ def _notificar_aprobacion_pendiente(
                 "[AWS SYNC][MAGIC_LINK][ERROR] run_id=%s | gasto_id=%s | status=%s",
                 run_id, gasto_id, res.status_code,
             )
-            return
+            return None
 
         token = (res.json() or {}).get("token")
         if not token:
-            return
+            return None
 
         magic_url = f"{MAGIC_LINK_BASE_URL}/{token}"
 
-        try:
-            subject = "[Gastos] ⏳ Aprobación requerida"
-            text = (
-                f"Tienes una nueva solicitud pendiente de aprobación.\n\n"
-                f"Solicitante: {solicitante or ''}\n"
-                f"Tipo: {tipo_label or ''}\n"
-                f"Valor: {valor_txt or ''}\n\n"
-                f"Aprobar directo (válido {MAGIC_LINK_MINUTOS} minutos): {magic_url}\n"
-                f"Ingresar al portal: {PORTAL_URL}\n"
-            )
-            html = _magic_link_email_html(
-                solicitante=solicitante, tipo_label=tipo_label, valor_txt=valor_txt,
-                magic_url=magic_url, minutos=MAGIC_LINK_MINUTOS, portal_url=PORTAL_URL,
-            )
-            mail_res = requests.post(
-                f"{AWS_API_URL}/notificaciones/email-push",
-                json={"to": aprobador_email, "subject": subject, "text": text, "html": html},
-                headers=HEADERS,
-                timeout=10,
-            )
-            logger.info(
-                "[AWS SYNC][MAGIC_LINK][EMAIL] run_id=%s | gasto_id=%s | status=%s",
-                run_id, gasto_id, mail_res.status_code,
-            )
-        except Exception as exc:
-            logger.warning(
-                "[AWS SYNC][MAGIC_LINK][EMAIL_ERROR] run_id=%s | gasto_id=%s | error=%s",
-                run_id, gasto_id, exc,
-            )
+        if enviar_email:
+            try:
+                subject = "[Gastos] ⏳ Aprobación requerida"
+                text = (
+                    f"Tienes una nueva solicitud pendiente de aprobación.\n\n"
+                    f"Solicitante: {solicitante or ''}\n"
+                    f"Tipo: {tipo_label or ''}\n"
+                    f"Valor: {valor_txt or ''}\n\n"
+                    f"Aprobar directo (válido {MAGIC_LINK_MINUTOS} minutos): {magic_url}\n"
+                    f"Ingresar al portal: {PORTAL_URL}\n"
+                )
+                html = _magic_link_email_html(
+                    solicitante=solicitante, tipo_label=tipo_label, valor_txt=valor_txt,
+                    magic_url=magic_url, minutos=MAGIC_LINK_MINUTOS, portal_url=PORTAL_URL,
+                )
+                mail_res = requests.post(
+                    f"{AWS_API_URL}/notificaciones/email-push",
+                    json={"to": aprobador_email, "subject": subject, "text": text, "html": html},
+                    headers=HEADERS,
+                    timeout=10,
+                )
+                logger.info(
+                    "[AWS SYNC][MAGIC_LINK][EMAIL] run_id=%s | gasto_id=%s | status=%s",
+                    run_id, gasto_id, mail_res.status_code,
+                )
+            except Exception as exc:
+                logger.warning(
+                    "[AWS SYNC][MAGIC_LINK][EMAIL_ERROR] run_id=%s | gasto_id=%s | error=%s",
+                    run_id, gasto_id, exc,
+                )
 
         if WHATSAPP_TPL_GASTO_PENDIENTE:
             telefono = _telefono_por_email(conn, aprobador_email)
@@ -497,11 +506,14 @@ def _notificar_aprobacion_pendiente(
                         "[AWS SYNC][MAGIC_LINK][WHATSAPP_ERROR] run_id=%s | gasto_id=%s | error=%s",
                         run_id, gasto_id, exc,
                     )
+
+        return magic_url
     except Exception as exc:
         logger.warning(
             "[AWS SYNC][MAGIC_LINK][ERROR] run_id=%s | gasto_id=%s | error=%s",
             run_id, gasto_id, exc,
         )
+        return None
 
 
 def _subtipo_gasto(g: dict) -> str:
@@ -981,6 +993,148 @@ def push_gastos_a_aws(app=None):
 # ============================================================
 # PUSH VOUCHER TAXI — Flask → DynamoDB (Planificador)
 # ============================================================
+
+def push_voucher_taxi_inmediato(solicitud_id: int) -> str | None:
+    """
+    Empuja UN solo voucher de taxi a DynamoDB de inmediato (sin esperar
+    el ciclo de 5 min del AwsSyncWorker) y genera su link mágico de
+    aprobación, para poder incluirlo en el correo instantáneo que ya
+    manda Flask al crear la solicitud (notif_voucher_pendiente_jefe) --
+    así el jefe recibe un solo correo con el botón de aprobar, en vez
+    de dos (el de Planificador al instante + el de AWS unos minutos
+    después).
+
+    Se llama desde routes_planificador.py justo después de
+    crear_solicitud(), dentro de la misma request (usa get_db(), que
+    toma la conexión de la request actual -- requiere contexto Flask).
+
+    Best-effort y con timeouts cortos (no debe demorar el "Enviar
+    solicitud" del usuario más de unos segundos): si AWS no responde o
+    falla cualquier paso, devuelve None y aws_enviado sigue en 0 -- el
+    AwsSyncWorker se hace cargo en su siguiente ciclo, igual que antes
+    de este cambio, y el usuario simplemente recibe el correo de
+    Planificador sin el botón de aprobación directa en ese caso.
+    """
+    if not AWS_SYNC_ENABLED:
+        return None
+
+    run_id = _new_run_id()
+    try:
+        conn = _get_db()
+
+        s = conn.execute(
+            """
+            SELECT
+                s.id, s.fecha, s.descripcion, s.lugar_destino,
+                s.punto_salida, s.punto_destino, s.numero_vouchers,
+                s.solicitante_id, s.solicitante_nombre,
+                s.gerente_id, s.gerente_nombre,
+                u.email AS solicitante_email,
+                jefe.email AS jefe_email
+            FROM planificador_solicitudes s
+            LEFT JOIN usuarios u ON u.id = s.solicitante_id
+            LEFT JOIN usuarios jefe ON jefe.id = s.gerente_id
+            WHERE s.id = ?
+              AND s.activo = 1
+              AND s.tipo = 'Voucher'
+              AND s.estado = 'PENDIENTE_APROBACION_JEFE'
+              AND COALESCE(s.aws_enviado, 0) = 0
+            """,
+            (solicitud_id,),
+        ).fetchone()
+
+        if not s:
+            return None
+
+        jefe_email = (s["jefe_email"] or "").strip()
+        if not jefe_email:
+            logger.warning(
+                "[AWS SYNC][PUSH_VOUCHER_INMEDIATO][SKIP] run_id=%s | "
+                "solicitud_id=%s | motivo=jefe_sin_email",
+                run_id, solicitud_id,
+            )
+            return None
+
+        destino = s["lugar_destino"] or " / ".join(
+            p for p in (s["punto_salida"], s["punto_destino"]) if p
+        )
+        rutas = [
+            {"numero": int(vi["numero"] or 0), "origen": vi["origen"] or "", "destino": vi["destino"] or ""}
+            for vi in conn.execute(
+                """
+                SELECT numero, origen, destino
+                FROM planificador_voucher_items
+                WHERE solicitud_id = ?
+                ORDER BY numero
+                """,
+                (s["id"],),
+            ).fetchall()
+        ]
+
+        item = {
+            "gasto_id": f"voucher_taxi#{s['id']}",
+            "tipo": "Voucher",
+            "local_id": str(s["id"]),
+            "fecha": str(s["fecha"] or ""),
+            "descripcion": s["descripcion"] or "",
+            "lugar": destino or "",
+            "numero_vouchers": int(s["numero_vouchers"] or 0),
+            "rutas": rutas,
+            "usuario_nombre": s["solicitante_nombre"] or "",
+            "usuario_email": s["solicitante_email"] or "",
+            "ga_aprobador_email": jefe_email,
+            "ga_aprobado": 0,
+            "flask_sincronizado": "true",
+        }
+
+        res = requests.post(
+            f"{AWS_API_URL}/sync/push",
+            json={"gastos": [item]},
+            headers=HEADERS,
+            timeout=10,
+        )
+        if res.status_code != 200:
+            logger.warning(
+                "[AWS SYNC][PUSH_VOUCHER_INMEDIATO][HTTP_ERROR] run_id=%s | "
+                "solicitud_id=%s | status=%s",
+                run_id, solicitud_id, res.status_code,
+            )
+            return None
+
+        conn.execute(
+            "UPDATE planificador_solicitudes SET aws_enviado = 1 WHERE id = ?",
+            (solicitud_id,),
+        )
+        conn.commit()
+
+        nv = item["numero_vouchers"]
+        magic_url = _notificar_aprobacion_pendiente(
+            run_id, conn, item["gasto_id"], item["tipo"], jefe_email,
+            item["usuario_nombre"], _tipo_label_legible(item["tipo"]),
+            f'{nv} voucher' + ('s' if nv != 1 else ''),
+            enviar_email=False,
+        )
+
+        logger.info(
+            "[AWS SYNC][PUSH_VOUCHER_INMEDIATO][OK] run_id=%s | solicitud_id=%s | "
+            "magic_link=%s",
+            run_id, solicitud_id, bool(magic_url),
+        )
+        return magic_url
+
+    except requests.Timeout:
+        logger.warning(
+            "[AWS SYNC][PUSH_VOUCHER_INMEDIATO][TIMEOUT] run_id=%s | solicitud_id=%s",
+            run_id, solicitud_id,
+        )
+        return None
+    except Exception:
+        logger.exception(
+            "[AWS SYNC][PUSH_VOUCHER_INMEDIATO][ERROR] run_id=%s | solicitud_id=%s",
+            run_id, solicitud_id,
+        )
+        return None
+
 
 def push_vouchers_taxi_a_aws(app=None):
     """

@@ -817,10 +817,26 @@ def crear():
                 msg = "Solicitud de Vuelo creada. No tiene jefe configurado; pasó a coordinación."
     elif tipo == "Voucher":
         if estado_inicial == "PENDIENTE_APROBACION_JEFE":
+            # Intenta empujar el voucher a AWS de inmediato para incluir el
+            # botón de aprobación directa en este mismo correo -- si AWS no
+            # responde a tiempo, magic_url queda None y el correo sale sin
+            # el botón (el AwsSyncWorker lo reintenta solo, unos minutos
+            # después, con su propio correo de respaldo). Nunca bloquea la
+            # creación de la solicitud.
+            magic_url = None
+            try:
+                from modules.aws_sync import push_voucher_taxi_inmediato, MAGIC_LINK_MINUTOS
+                magic_url = push_voucher_taxi_inmediato(sid)
+            except Exception:
+                current_app.logger.exception(
+                    "[VOUCHER] Error en push inmediato a AWS sid=%s", sid
+                )
             try:
                 notif.notif_voucher_pendiente_jefe(
                     sid, area, fecha, desc, u["nombre"],
                     jefe_id_voucher, jefe_nombre_voucher or "—",
+                    magic_url=magic_url,
+                    magic_minutos=MAGIC_LINK_MINUTOS if magic_url else None,
                 )
             except Exception:
                 pass

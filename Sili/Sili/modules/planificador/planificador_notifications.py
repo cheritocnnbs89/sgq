@@ -63,10 +63,12 @@ def _email(to_list: list[str], subject: str, html: str, attachments=None) -> Non
 # ── HTML email en formato SGQ (igual al estilo OM vencida) ──────────────
 
 def _email_html(categoria: str, titulo: str, saludo: str, filas: list[tuple],
-                nota: str = "") -> str:
+                nota: str = "", boton: tuple[str, str] | None = None) -> str:
     """
     Genera HTML de email con el estilo de las notificaciones SGQ:
     Header azul, tabla con filas (label, valor), pie de página.
+    "boton" es un (texto, url) opcional para un botón de acción (ej.
+    "Aprobar directo" con el link mágico de AWS) entre la tabla y la nota.
     """
     rows_html = "".join(
         f"""<tr>
@@ -77,6 +79,16 @@ def _email_html(categoria: str, titulo: str, saludo: str, filas: list[tuple],
                          border-bottom:1px solid #e2e8f0">{valor}</td>
            </tr>"""
         for label, valor in filas
+    )
+    boton_html = (
+        f"""<div style="text-align:center;margin:20px 0 4px">
+              <a href="{boton[1]}"
+                 style="display:inline-block;background:#17714f;color:#fff;text-decoration:none;
+                        font-weight:700;padding:12px 30px;border-radius:10px;font-size:.9rem">
+                {boton[0]}
+              </a>
+            </div>"""
+        if boton else ""
     )
     nota_html = (
         f'<p style="margin:14px 0 0;font-size:.8rem;color:#64748b">{nota}</p>'
@@ -96,6 +108,7 @@ def _email_html(categoria: str, titulo: str, saludo: str, filas: list[tuple],
                   border-radius:8px;overflow:hidden">
       {rows_html}
     </table>
+    {boton_html}
     {nota_html}
   </div>
   <div style="background:#f1f5f9;padding:10px 20px;border:1px solid #e2e8f0;
@@ -935,7 +948,9 @@ def notif_vuelo_nueva_gerente(solicitud_id: int, area: str, fecha: str,
 
 def notif_voucher_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
                                   descripcion: str, solicitante_nombre: str,
-                                  jefe_id: int | None, jefe_nombre: str) -> None:
+                                  jefe_id: int | None, jefe_nombre: str,
+                                  magic_url: str | None = None,
+                                  magic_minutos: int | None = None) -> None:
     if not jefe_id:
         return
     subject = f"[Planificador] Solicitud de Voucher #{solicitud_id} pendiente de su aprobación"
@@ -950,8 +965,19 @@ def notif_voucher_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
         ("Descripción",       descripcion or "—"),
         ("Solicitante",       solicitante_nombre),
     ]
-    nota = "Ingresa al SGQ para aprobar o rechazar esta solicitud."
-    html = _email_html("PLANIFICADOR · VOUCHER — APROBACIÓN JEFE", titulo, saludo, filas, nota)
+    # Si ya se generó el link mágico de AWS al momento de crear la
+    # solicitud (ver push_voucher_taxi_inmediato en aws_sync.py), se
+    # incluye el botón de aprobación directa aquí mismo -- así el jefe
+    # recibe un solo correo en vez de dos (el de Planificador al
+    # instante + el de AWS unos minutos después).
+    boton = ("Aprobar directo", magic_url) if magic_url else None
+    nota = (
+        f"Este link es válido por {magic_minutos} minutos. Después de eso, "
+        "ingresa al SGQ para aprobar o rechazar esta solicitud."
+        if magic_url else
+        "Ingresa al SGQ para aprobar o rechazar esta solicitud."
+    )
+    html = _email_html("PLANIFICADOR · VOUCHER — APROBACIÓN JEFE", titulo, saludo, filas, nota, boton)
     _inapp(jefe_id, subject,
            f"Solicitud de Voucher #{solicitud_id} de {solicitante_nombre} — {fecha} requiere su aprobación")
     email_j = repo.get_email_by_usuario_id(jefe_id)
