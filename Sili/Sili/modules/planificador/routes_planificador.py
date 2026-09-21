@@ -1988,12 +1988,38 @@ def voucher_entregar(sid):
         return redirect(url_for("planificador.planificador_solicitudes"))
 
     secuenciales = {}
+    vistos_en_form = {}
     for item in items:
         val = request.form.get(f"secuencial_{item['id']}", "").strip()
         if not val:
             flash("Debe indicar el secuencial de todos los vouchers.", "warning")
             return redirect(url_for("planificador.planificador_solicitudes"))
+        # Repetido dentro del mismo formulario (ej. copiar/pegar el mismo
+        # número en dos campos por error) -- se detecta acá antes de
+        # llegar a la base, que solo detectaría el segundo caso más abajo.
+        if val in vistos_en_form:
+            flash(f"El secuencial {val} está repetido en este formulario.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+        vistos_en_form[val] = item["id"]
         secuenciales[item["id"]] = val
+
+    # planificador_voucher_items.secuencial es único en toda la tabla --
+    # si el secuencial ya pertenece a OTRO voucher (típicamente porque
+    # ya se usó antes, por error de tipeo o reutilización de un
+    # talonario), avisar con un mensaje claro en vez de dejar que la
+    # restricción de la base tumbe la request con un 500.
+    en_uso = []
+    for secuencial, item_id in vistos_en_form.items():
+        existente = repo.get_voucher_item_by_secuencial(secuencial)
+        if existente and existente["id"] != item_id:
+            en_uso.append(secuencial)
+    if en_uso:
+        flash(
+            "El secuencial " + ", ".join(en_uso) +
+            " ya está registrado en otro voucher. Verifica el número e intenta de nuevo.",
+            "warning",
+        )
+        return redirect(url_for("planificador.planificador_solicitudes"))
 
     repo.entregar_voucher_items(sid, secuenciales, u["id"], u["nombre"])
     try:
