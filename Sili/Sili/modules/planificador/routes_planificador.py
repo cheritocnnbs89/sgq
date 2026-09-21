@@ -2102,6 +2102,40 @@ def voucher_confirmar_item(sid, item_id):
 
 
 # ─────────────────────────────────────────────────────────────
+# Voucher: descargar el respaldo subido por el solicitante
+# ─────────────────────────────────────────────────────────────
+
+@planificador_bp.route("/solicitudes/<int:sid>/voucher/item/<int:item_id>/adjunto",
+                       endpoint="planificador_voucher_adjunto_descargar")
+@require_login
+def voucher_adjunto_descargar(sid, item_id):
+    import os
+    from flask import send_from_directory
+
+    u = _current_user()
+    s = repo.get_solicitud_by_id(sid)
+    item = repo.get_voucher_item_by_id(item_id)
+    if not s or not item or item.get("solicitud_id") != sid or not item.get("adjunto_nombre_guardado"):
+        abort(404)
+
+    ctx = svc.get_user_context(u["id"], u["rol"])
+    es_involucrado = (
+        ctx["es_admin"] or ctx["es_gerente"]
+        or ctx["tipos_coordinador"] or ctx["tipos_aprobador"]
+        or s["solicitante_id"] == u["id"]
+    )
+    if not es_involucrado:
+        abort(403)
+
+    carpeta = os.path.join(current_app.config["UPLOAD_FOLDER"], "planificador", str(sid), "vouchers")
+    return send_from_directory(
+        carpeta, item["adjunto_nombre_guardado"],
+        as_attachment=True,
+        download_name=item.get("adjunto_nombre_original") or item["adjunto_nombre_guardado"],
+    )
+
+
+# ─────────────────────────────────────────────────────────────
 # Voucher: el solicitante marca UN voucher como no utilizado
 # ─────────────────────────────────────────────────────────────
 
