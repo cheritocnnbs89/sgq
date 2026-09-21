@@ -374,7 +374,7 @@ def crear_solicitud(data):
         data.get("gerente_nombre"),
         data.get("motivo_vuelo"),
         data.get("numero_vouchers"),
-        data.get("modo_viaje", "vuelo"),
+        data.get("modo_viaje") or "vuelo",
     ))
     row = cur.fetchone()
     conn.commit()
