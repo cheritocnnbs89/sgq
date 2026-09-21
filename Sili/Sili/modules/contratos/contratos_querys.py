@@ -445,12 +445,14 @@ SELECT TOP 300
     COALESCE(c.lleva_garantia,0) AS lleva_garantia,
     COALESCE(c.tipo_contrato,'COMPRAS') AS tipo_contrato,
     c.cliente, c.estado_contrato,
+    d.nombre AS departamento_solicitante,
     (
         SELECT COUNT(1)
         FROM {TABLA_CONTRATO_ARCHIVOS} a
         WHERE a.contrato_id = c.id
     ) AS adjuntos_cnt
 FROM {TABLA_CONTRATOS} c
+LEFT JOIN {TABLA_DEPARTAMENTOS} d ON d.id = c.departamento_id
 WHERE COALESCE(c.disabled,0)=0
 """
 
