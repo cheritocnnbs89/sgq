@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import html as html_lib
 import logging
 import mimetypes
 import os
@@ -306,6 +307,70 @@ def _telefono_por_email(conn, email: str) -> str:
     return (row["telefono"] or "").strip() if row else ""
 
 
+def _magic_link_email_html(solicitante: str, tipo_label: str, valor_txt: str,
+                            magic_url: str, minutos: int, portal_url: str) -> str:
+    """
+    HTML del correo de "aprobación requerida" (link mágico), con el mismo
+    estilo (header azul, tabla, pie) que ya usan los correos del
+    Planificador -- antes era un <p> suelto sin formato. Escapa los
+    valores porque solicitante/tipo/valor vienen de datos de usuario.
+    """
+    e = html_lib.escape
+    filas = "".join(
+        f"""<tr>
+              <td style="padding:8px 12px;background:#f1f5f9;font-size:.82rem;
+                         font-weight:600;color:#334155;white-space:nowrap;
+                         border-bottom:1px solid #e2e8f0">{e(label)}</td>
+              <td style="padding:8px 12px;font-size:.82rem;color:#0f172a;
+                         border-bottom:1px solid #e2e8f0">{e(str(valor))}</td>
+           </tr>"""
+        for label, valor in (
+            ("Solicitante", solicitante or "—"),
+            ("Tipo", tipo_label or "—"),
+            ("Valor", valor_txt or "—"),
+        )
+    )
+    return f"""<!DOCTYPE html>
+<html lang="es"><body style="margin:0;padding:0;background:#f8fafc;font-family:Arial,sans-serif">
+<div style="max-width:580px;margin:24px auto">
+  <div style="background:#1e3a8a;padding:16px 20px;border-radius:10px 10px 0 0">
+    <span style="color:#bfdbfe;font-size:.75rem;font-weight:700;text-transform:uppercase;
+                 letter-spacing:.08em">APROBACIÓN RÁPIDA</span>
+    <h1 style="margin:4px 0 0;color:#fff;font-size:1.1rem;font-weight:700">Tienes una solicitud pendiente</h1>
+  </div>
+  <div style="background:#fff;padding:20px;border:1px solid #e2e8f0;border-top:none">
+    <p style="margin:0 0 14px;font-size:.9rem;color:#0f172a">
+      Se registró una nueva solicitud que requiere tu aprobación.
+    </p>
+    <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;
+                  border-radius:8px;overflow:hidden">
+      {filas}
+    </table>
+    <div style="text-align:center;margin:22px 0 8px">
+      <a href="{e(magic_url)}"
+         style="display:inline-block;background:#17714f;color:#fff;text-decoration:none;
+                font-weight:700;padding:12px 30px;border-radius:10px;font-size:.9rem">
+        Aprobar directo
+      </a>
+    </div>
+    <p style="margin:0;text-align:center;font-size:.78rem;color:#64748b">
+      Válido por {e(str(minutos))} minutos
+    </p>
+    <p style="margin:16px 0 0;font-size:.8rem;color:#64748b;text-align:center">
+      <a href="{e(portal_url)}" style="color:#2563eb">Ingresar al portal</a>
+      para ver todas tus aprobaciones pendientes
+    </p>
+  </div>
+  <div style="background:#f1f5f9;padding:10px 20px;border:1px solid #e2e8f0;
+              border-top:none;border-radius:0 0 10px 10px">
+    <p style="margin:0;font-size:.75rem;color:#64748b">
+      Este es un mensaje automático generado por SGQ Quimpac. No responda a este correo.
+    </p>
+  </div>
+</div>
+</body></html>"""
+
+
 def _tipo_label_legible(tipo: str, subtipo: str = "") -> str:
     if tipo == "tarjeta_credito":
         if subtipo == "boletos":
@@ -383,14 +448,9 @@ def _notificar_aprobacion_pendiente(
                 f"Aprobar directo (válido {MAGIC_LINK_MINUTOS} minutos): {magic_url}\n"
                 f"Ingresar al portal: {PORTAL_URL}\n"
             )
-            html = (
-                f"<p>Tienes una nueva solicitud pendiente de aprobación.</p>"
-                f"<p><b>Solicitante:</b> {solicitante or ''}<br>"
-                f"<b>Tipo:</b> {tipo_label or ''}<br>"
-                f"<b>Valor:</b> {valor_txt or ''}</p>"
-                f"<p><a href=\"{magic_url}\">Aprobar directo</a> "
-                f"(válido {MAGIC_LINK_MINUTOS} minutos)<br>"
-                f"<a href=\"{PORTAL_URL}\">Ingresar al portal</a></p>"
+            html = _magic_link_email_html(
+                solicitante=solicitante, tipo_label=tipo_label, valor_txt=valor_txt,
+                magic_url=magic_url, minutos=MAGIC_LINK_MINUTOS, portal_url=PORTAL_URL,
             )
             mail_res = requests.post(
                 f"{AWS_API_URL}/notificaciones/email-push",
