@@ -29,7 +29,11 @@ from modules.app_core.app_logging import (
     attach_file_logger, 
     log_registered_routes,
 )
-from modules.app_core.app_scheduler import start_scheduler_if_enabled, start_email_poller_if_enabled
+from modules.app_core.app_scheduler import (
+    start_scheduler_if_enabled,
+    start_email_poller_if_enabled,
+    start_aws_sync_if_enabled,
+)
 
 
 # ----------------------------------------------------------
@@ -157,9 +161,17 @@ def create_app():
     print(">>> Scheduler llamado")
 
     # ------------------------------------------------------
-    # Poller de correos soporteti@quimpac.com.ec 
+    # Poller de correos soporteti@quimpac.com.ec
     # ------------------------------------------------------
     start_email_poller_if_enabled(app)
+
+    # ------------------------------------------------------
+    # Sync a AWS (gastos, vouchers de taxi, aprobaciones, auth) --
+    # hilo independiente del scheduler principal, ver app_scheduler.py.
+    # ------------------------------------------------------
+    print(">>> Intentando arrancar AWS sync worker...")
+    start_aws_sync_if_enabled(app)
+    print(">>> AWS sync worker llamado")
 
     # ------------------------------------------------------
     # Registro de rutas cargadas al iniciar.
@@ -256,4 +268,8 @@ if __name__ == "__main__":
         port=int(os.environ.get("PORT", 5000)),
         debug=False,
         threaded=True
-    )
+    )   
+
+
+
+    

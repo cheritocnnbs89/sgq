@@ -344,7 +344,6 @@ def start_scheduler(app=None):
             last_contratos_garantias_date = None   # ← control encolado contratos/garantías por vencer (09:00)
             last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
             last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
-            last_aws_sync          = 0.0     # ← control sync AWS DynamoDB (cada 5 min)
             last_aws_tickets       = 0.0     # ← control tickets WhatsApp (cada 2 min)
 
             # Crear tabla email_tickets_inbox si no existe
@@ -568,25 +567,11 @@ def start_scheduler(app=None):
                     except Exception:
                         target_app.logger.exception("Worker: process_whatsapp_tickets falló")
 
-                # ==================================================
-                # AWS Sync DynamoDB — push + pull cada 5 min
-                # ==================================================
-                now_ts4 = time.time()
-                if (_AWS_SYNC_ENABLED and (now_ts4 - last_aws_sync >= 300)
-                        and _job_activo("aws_sync")):
-                    try:
-                        _log("info", "Worker: AWS sync — push gastos nuevos...")
-                        push_gastos_a_aws(target_app)
-                        _log("info", "Worker: AWS sync — push vouchers de taxi...")
-                        push_vouchers_taxi_a_aws(target_app)
-                        _log("info", "Worker: AWS sync — pull aprobaciones...")
-                        pull_aprobaciones_de_aws(target_app)
-                        _log("info", "Worker: AWS sync — push auth gerentes...")
-                        push_gerentes_auth_a_aws(target_app)
-                        last_aws_sync = now_ts4
-                        _log("info", "Worker: AWS sync OK")
-                    except Exception:
-                        target_app.logger.exception("Worker: aws_sync falló")
+                # AWS Sync ya NO corre aquí -- tiene su propio hilo
+                # independiente (ver start_aws_sync_worker más abajo) para
+                # poder activarlo/desactivarlo sin depender de
+                # SCHEDULER_JOBS_ENABLED (el interruptor maestro de este
+                # loop principal).
 
                 today_str = now.strftime("%Y-%m-%d")
 
@@ -699,6 +684,74 @@ def start_scheduler(app=None):
     )
     th.start()
     _log("info", "Worker: hilo lanzado correctamente.")
+    return th
+
+
+# ==========================================================
+# AWS Sync — hilo independiente del loop principal.
+# Se activa/desactiva por su cuenta (SCHEDULER_JOBS_ENABLED, el
+# interruptor maestro de start_scheduler()/NotifyWorker, no lo afecta),
+# para poder tener el push de gastos/vouchers de taxi/auth a AWS
+# funcionando aunque el resto de jobs programados esté apagado.
+# El único on/off que sí respeta es el toggle "aws_sync" del panel
+# /admin/scheduler (scheduler_jobs_config.activo vía _job_activo).
+# ==========================================================
+_aws_sync_worker_started = False
+
+
+def start_aws_sync_worker(app=None):
+    global _aws_sync_worker_started
+
+    if _aws_sync_worker_started:
+        _log("warning", "AwsSyncWorker: start_aws_sync_worker() ignorado porque ya estaba iniciado.")
+        return None
+
+    if not _AWS_SYNC_ENABLED:
+        _log("warning", "AwsSyncWorker: no arranca porque no se pudo importar modules.aws_sync.")
+        return None
+
+    if app is None:
+        try:
+            app = current_app._get_current_object()
+        except Exception:
+            raise RuntimeError("start_aws_sync_worker() requiere app o contexto activo.")
+
+    _aws_sync_worker_started = True
+
+    def _aws_loop(target_app):
+        with target_app.app_context():
+            _log("info", "AwsSyncWorker: hilo iniciado. Esperando 20s antes de la primera corrida...")
+            time.sleep(20)
+            while True:
+                cycle_start = time.time()
+                if _job_activo("aws_sync"):
+                    try:
+                        _log("info", "AwsSyncWorker: push gastos nuevos...")
+                        push_gastos_a_aws(target_app)
+                        _log("info", "AwsSyncWorker: push vouchers de taxi...")
+                        push_vouchers_taxi_a_aws(target_app)
+                        _log("info", "AwsSyncWorker: pull aprobaciones...")
+                        pull_aprobaciones_de_aws(target_app)
+                        _log("info", "AwsSyncWorker: push auth gerentes...")
+                        push_gerentes_auth_a_aws(target_app)
+                        _log("info", "AwsSyncWorker: ciclo OK")
+                    except Exception:
+                        target_app.logger.exception("AwsSyncWorker: aws_sync falló")
+                else:
+                    _log("debug", "AwsSyncWorker: job 'aws_sync' desactivado en /admin/scheduler — se omite este ciclo.")
+
+                elapsed = time.time() - cycle_start
+                sleep_s = max(5, 300 - elapsed)
+                time.sleep(sleep_s)
+
+    th = threading.Thread(
+        target=_aws_loop,
+        args=(app,),
+        daemon=True,
+        name="AwsSyncWorker"
+    )
+    th.start()
+    _log("info", "AwsSyncWorker: hilo lanzado correctamente.")
     return th
 
 

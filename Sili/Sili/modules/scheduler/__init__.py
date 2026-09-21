@@ -4,7 +4,7 @@
 # Reexporta funciones para mantener una API centralizada.
 # ==========================================================
 
-from .scheduler_worker import start_scheduler
+from .scheduler_worker import start_scheduler, start_aws_sync_worker
 
 from .scheduler_services import (
     auto_close_expired_tasks,

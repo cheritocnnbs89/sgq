@@ -46,3 +46,26 @@ def start_scheduler_if_enabled(app):
     except Exception as e:
         app.logger.warning("Scheduler no iniciado (opcional): %s", e)
         print(">>> ERROR scheduler:", e)
+
+
+def start_aws_sync_if_enabled(app):
+    """
+    Hilo de sync a AWS (gastos, vouchers de taxi, aprobaciones, auth de
+    gerentes) -- independiente de SCHEDULER_JOBS_ENABLED (el interruptor
+    maestro del scheduler principal en modules/scheduler_jobs.py), para
+    poder tenerlo funcionando aunque el resto de jobs programados esté
+    apagado. Se sigue pudiendo apagar solo este job desde el toggle
+    "aws_sync" del panel /admin/scheduler.
+    """
+    try:
+        # Solo arrancar en el proceso principal (no en el reloader de Flask)
+        if app.debug and os.environ.get("WERKZEUG_RUN_MAIN") != "true":
+            print(">>> AwsSyncWorker no arranca: modo debug sin reloader principal")
+            return
+
+        from modules.scheduler import start_aws_sync_worker
+        th = start_aws_sync_worker(app)
+        print(">>> AwsSyncWorker retornó:", th)
+    except Exception as e:
+        app.logger.warning("AwsSyncWorker no iniciado (opcional): %s", e)
+        print(">>> ERROR AwsSyncWorker:", e)
