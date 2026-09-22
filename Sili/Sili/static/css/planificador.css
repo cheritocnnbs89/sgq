@@ -1439,42 +1439,64 @@ tr.pg-hidden { display:none; }
   .itinerario-vuelo { align-items: center; text-align: center; }
 }
 
-/* ── Bloque "Información general" amigable para Vuelo (no por bloques) ── */
+/* ── Bloque "Información general" amigable para Vuelo (secciones con
+   fondo suave, no una grilla de cajas ni una lista plana). ── */
+.viaje-resumen-wrap {
+  background: #eef2f7;
+  border: 1px solid var(--line);
+  border-radius: .9rem;
+  padding: .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+.viaje-seccion {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: .7rem;
+  padding: .8rem .9rem;
+}
+.viaje-seccion-titulo {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--muted);
+  margin-bottom: .5rem;
+}
+
 .viaje-resumen-ruta {
   display: flex;
   align-items: center;
   gap: .7rem;
-  background: #f9fafb;
-  border: 1px solid var(--line);
-  border-radius: .75rem;
-  padding: .85rem 1rem;
+  background: #eff6ff;
+  border-radius: .6rem;
+  padding: .7rem .8rem;
 }
 .viaje-resumen-punto { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
 .viaje-resumen-punto--end { text-align: right; align-items: flex-end; }
 .viaje-resumen-punto-lbl { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .viaje-resumen-punto strong { font-size: .95rem; color: #111827; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 .viaje-resumen-aeropuerto { font-size: .72rem; color: var(--muted); }
-.viaje-resumen-linea { flex: 1; display: flex; align-items: center; gap: .35rem; min-width: 0; color: #94a3b8; }
-.viaje-resumen-linea-track { flex: 1; height: 1px; background: var(--line); }
-.viaje-resumen-linea i { font-size: .9rem; flex-shrink: 0; }
+.viaje-resumen-linea { flex: 1; display: flex; align-items: center; gap: .35rem; min-width: 0; color: #93c5fd; }
+.viaje-resumen-linea-track { flex: 1; height: 1px; background: #bfdbfe; }
+.viaje-resumen-linea i { font-size: .9rem; flex-shrink: 0; color: var(--brand-600); }
 
-.viaje-resumen-fechas { display: flex; align-items: stretch; gap: .6rem; margin-top: .55rem; }
-.viaje-resumen-fecha { flex: 1; background: #fff; border: 1px solid var(--line); border-radius: .6rem; padding: .5rem .7rem; display: flex; flex-direction: column; gap: .1rem; }
+.viaje-resumen-fechas { display: flex; align-items: stretch; gap: .6rem; margin-top: .6rem; }
+.viaje-resumen-fecha { flex: 1; background: #f8fafc; border: 1px solid var(--line); border-radius: .6rem; padding: .5rem .7rem; display: flex; flex-direction: column; gap: .1rem; }
 .viaje-resumen-fecha span { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .viaje-resumen-fecha strong { font-size: .85rem; color: #111827; }
 .viaje-resumen-fechas-sep { display: flex; align-items: center; color: #94a3b8; flex-shrink: 0; }
 
-.viaje-meta-chips { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-top: .65rem; }
+.viaje-meta-chips { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-top: .6rem; }
 .viaje-chip { display: inline-flex; align-items: center; gap: .35rem; background: #eef2ff; color: #3730a3; border-radius: 999px; padding: .28rem .65rem; font-size: .75rem; font-weight: 600; }
 .viaje-chip i { font-size: .72rem; }
 
-.viaje-presupuesto-card { margin-top: .65rem; background: #f9fafb; border: 1px solid var(--line); border-radius: .6rem; padding: .6rem .75rem; }
+.viaje-presupuesto-inline { margin-top: .65rem; padding-top: .6rem; border-top: 1px dashed var(--line); }
 .viaje-presupuesto-lbl { display: block; font-size: .72rem; color: var(--muted); font-weight: 600; margin-bottom: .35rem; }
 
-.viaje-personas { margin-top: .75rem; }
-.viaje-personas-titulo { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: .4rem; }
 .viaje-personas-lista { display: flex; flex-direction: column; gap: .4rem; }
-.persona-chip { display: flex; align-items: center; gap: .6rem; background: #f9fafb; border: 1px solid var(--line); border-radius: .6rem; padding: .45rem .65rem; }
+.persona-chip { display: flex; align-items: center; gap: .6rem; background: #f8fafc; border: 1px solid var(--line); border-radius: .6rem; padding: .45rem .65rem; }
 .persona-avatar {
   width: 34px; height: 34px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -1486,8 +1508,8 @@ tr.pg-hidden { display:none; }
 .persona-info strong { font-size: .85rem; color: #111827; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .persona-info span { font-size: .72rem; color: var(--muted); }
 
-.viaje-detalle-rows { margin-top: .75rem; display: flex; flex-direction: column; }
-.viaje-detalle-row { display: flex; justify-content: space-between; align-items: baseline; gap: .75rem; font-size: .82rem; padding: .5rem 0; border-bottom: 1px solid var(--line); }
+.viaje-detalle-rows { display: flex; flex-direction: column; }
+.viaje-detalle-row { display: flex; justify-content: space-between; align-items: baseline; gap: .75rem; font-size: .82rem; padding: .5rem 0; border-bottom: 1px dashed var(--line); }
 .viaje-detalle-row:last-child { border-bottom: none; padding-bottom: 0; }
 .viaje-detalle-row span { color: var(--muted); flex-shrink: 0; }
 .viaje-detalle-row strong { color: #111827; text-align: right; }
