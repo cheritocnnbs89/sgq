@@ -1,5 +1,17 @@
 {# Partial cargado vía AJAX – sin inline scripts ni style= #}
 
+{# Iniciales para los avatares de "Viajan" (bloque Información general de Vuelo) #}
+{% macro iniciales(nombre) -%}
+{%- set _partes = (nombre or '').split() -%}
+{%- if _partes|length >= 2 -%}
+{{ (_partes[0][0] ~ _partes[-1][0])|upper }}
+{%- elif _partes|length == 1 -%}
+{{ _partes[0][:2]|upper }}
+{%- else -%}
+—
+{%- endif -%}
+{%- endmacro %}
+
 {# ── Cabecera enriquecida del modal (título + pastilla de estado + subtítulo) ──
    Solo para las pantallas de Vuelo donde así se pidió; el resto de tipos/estados
    sigue mostrando el título genérico "Detalle de solicitud" del modal. #}
@@ -193,6 +205,121 @@
     <span class="cal-expand-hint">Ver detalle <i class="bi bi-chevron-down detail-accordion-chevron"></i></span>
   </span>
 </button>
+{% if s.tipo == 'Vuelo' %}
+<div class="viaje-resumen-wrap collapse {{ 'show' if _auto_expand_info }}" id="detalleInfoBox{{ s.id }}">
+  <div class="viaje-resumen-ruta">
+    <div class="viaje-resumen-punto">
+      <span class="viaje-resumen-punto-lbl">Desde</span>
+      <strong>{{ s.punto_salida or '—' }}</strong>
+    </div>
+    <div class="viaje-resumen-linea">
+      <span class="viaje-resumen-linea-track"></span>
+      <i class="bi bi-airplane-fill"></i>
+      <span class="viaje-resumen-linea-track"></span>
+    </div>
+    <div class="viaje-resumen-punto viaje-resumen-punto--end">
+      <span class="viaje-resumen-punto-lbl">Hacia</span>
+      <strong>{{ s.punto_destino or '—' }}</strong>
+      {% if aeropuerto_display %}<span class="viaje-resumen-aeropuerto">{{ aeropuerto_display }}</span>{% endif %}
+    </div>
+  </div>
+
+  <div class="viaje-resumen-fechas">
+    <div class="viaje-resumen-fecha">
+      <span>Salida</span>
+      <strong>{{ s.fecha_str }}</strong>
+    </div>
+    <span class="viaje-resumen-fechas-sep">⇄</span>
+    <div class="viaje-resumen-fecha">
+      <span>Regreso</span>
+      <strong>{{ s.get('fecha_retorno') or 'Solo ida' }}</strong>
+    </div>
+  </div>
+
+  <div class="viaje-meta-chips">
+    <span class="viaje-chip"><i class="bi bi-airplane-fill"></i>Vuelo</span>
+    <span class="viaje-chip"><i class="bi bi-building"></i>{{ s.area_solicitante }}</span>
+    <span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span>
+    {% if s.orden_servicio %}<span class="viaje-chip"><i class="bi bi-hash"></i>{{ s.orden_servicio }}</span>{% endif %}
+  </div>
+
+  {% if presupuesto_cc %}
+  <div class="viaje-presupuesto-card">
+    <span class="viaje-presupuesto-lbl">Presupuesto del CC</span>
+    <div class="presup-mini-bar">
+      <div class="presup-mini-track">
+        <div class="presup-mini-fill {{ presupuesto_cc.semaforo }}" style="width: {{ [presupuesto_cc.pct, 100]|min }}%"></div>
+      </div>
+      <strong>{{ presupuesto_cc.pct }}% usado</strong>
+      <span class="text-muted">${{ '%.2f'|format(presupuesto_cc.ejecutado) }} de ${{ '%.2f'|format(presupuesto_cc.presupuestado) }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="viaje-personas">
+    <div class="viaje-personas-titulo">Viajan</div>
+    <div class="viaje-personas-lista">
+      <div class="persona-chip">
+        <span class="persona-avatar persona-avatar--solicitante">{{ iniciales(s.solicitante_nombre) }}</span>
+        <div class="persona-info">
+          <strong>{{ s.solicitante_nombre }}</strong>
+          <span>Solicitante</span>
+        </div>
+      </div>
+      {% for p in pasajeros_adicionales %}
+      <div class="persona-chip">
+        <span class="persona-avatar persona-avatar--pasajero">{{ iniciales(p.nombre) }}</span>
+        <div class="persona-info">
+          <strong>{{ p.nombre }}</strong>
+          <span>Pasajero adicional</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="viaje-detalle-rows">
+    {% if s.motivo_vuelo %}
+    <div class="viaje-detalle-row"><span>Motivo</span><strong>{{ s.motivo_vuelo }}</strong></div>
+    {% endif %}
+    <div class="viaje-detalle-row"><span>Descripción</span><strong>{{ s.descripcion or '—' }}</strong></div>
+    {% if s.presupuesto_base_cero is not none and s.presupuesto_base_cero != '' %}
+    <div class="viaje-detalle-row">
+      <span>Presupuesto Base Cero</span>
+      <strong>{{ s.presupuesto_base_cero | int }}{% if cc_nombre %} — {{ cc_nombre }}{% endif %}</strong>
+    </div>
+    {% endif %}
+    {% if s.coordinador_nombre %}
+    <div class="viaje-detalle-row"><span>Coordinado por</span><strong>{{ s.coordinador_nombre }}</strong></div>
+    {% endif %}
+    {% if s.aprobador_nombre %}
+    <div class="viaje-detalle-row"><span>Aprobado/Rechazado por</span><strong>{{ s.aprobador_nombre }}</strong></div>
+    {% endif %}
+    {% if s.get('datos_ticket') and not s.puede_cotizar_vuelo %}
+    <div class="viaje-detalle-row"><span>Pasaje cotizado</span><strong>{{ s.datos_ticket }}</strong></div>
+    {% endif %}
+    {% if s.get('cotizacion_hospedaje') and s.cotizacion_hospedaje|float > 0 %}
+    <div class="viaje-detalle-row"><span>Hospedaje cotizado</span><strong>${{ '%.2f'|format(s.cotizacion_hospedaje|float) }}</strong></div>
+    {% endif %}
+    {% if s.get('penalizacion') and s.penalizacion|float > 0 %}
+    <div class="viaje-detalle-row"><span>Penalización reagenda</span><strong class="text-danger">${{ '%.2f'|format(s.penalizacion|float) }}</strong></div>
+    {% if s.get('datos_ticket') %}
+    {% set _hospedaje = s.cotizacion_hospedaje|float if s.get('cotizacion_hospedaje') else 0 %}
+    <div class="viaje-detalle-row"><span>Total con penalización</span><strong>${{ '%.2f'|format((s.datos_ticket|float) + _hospedaje + (s.penalizacion|float)) }}</strong></div>
+    {% endif %}
+    {% endif %}
+    {% if s.detalle_direccion %}
+    <div class="viaje-detalle-row"><span>Detalle de dirección</span><strong>{{ s.detalle_direccion }}</strong></div>
+    {% endif %}
+    {% if s.observacion_coordinador %}
+    <div class="viaje-detalle-row"><span>Observación del coordinador</span><strong>{{ s.observacion_coordinador }}</strong></div>
+    {% endif %}
+    {% if s.observacion_aprobador %}
+    <div class="viaje-detalle-row"><span>Observación del aprobador</span><strong>{{ s.observacion_aprobador }}</strong></div>
+    {% endif %}
+  </div>
+</div>
+{% else %}
 <div class="detail-grid collapse {{ 'show' if _auto_expand_info }}" id="detalleInfoBox{{ s.id }}">
   {% if presupuesto_cc and not s.puede_aprobar_gg_vuelo %}
   <div class="detail-box detail-full">
@@ -308,7 +435,7 @@
   <div class="detail-box detail-full"><span>Observación del aprobador</span><strong>{{ s.observacion_aprobador }}</strong></div>
   {% endif %}
 </div>
-{% endif %}{# /not s.puede_aprobar_jefe_voucher and not s.puede_entregar_voucher #}
+{% endif %}{% endif %}{# /not s.puede_aprobar_jefe_voucher and not s.puede_entregar_voucher #}
 
 {% if s.grupo_id and grupo_solicitudes %}
 <div class="grupo-detalle-banner mt-3">
