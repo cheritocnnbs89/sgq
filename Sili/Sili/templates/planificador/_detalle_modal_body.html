@@ -198,7 +198,7 @@
   </span>
   <span class="detail-accordion-right">
     {% if s.tipo == 'Vuelo' and s.modo_viaje == 'hospedaje' %}
-    <span class="cal-pill cal-pill--hospedaje"><i class="bi bi-moon-stars-fill"></i></span>
+    <span class="cal-pill cal-pill--hospedaje">🛏️</span>
     {% elif s.tipo == 'Vuelo' %}
     <span class="cal-pill cal-pill--vuelo"><i class="bi bi-airplane-fill"></i></span>
     {% elif s.tipo == 'Voucher' %}
@@ -215,7 +215,7 @@
   <div class="viaje-seccion viaje-seccion--resumen">
     {% if s.modo_viaje == 'hospedaje' %}
     <div class="viaje-resumen-hospedaje">
-      <span class="viaje-resumen-hospedaje-icono"><i class="bi bi-moon-stars-fill"></i></span>
+      <span class="viaje-resumen-hospedaje-icono">🛏️</span>
       <div class="viaje-resumen-punto">
         <span class="viaje-resumen-punto-lbl">Hospedaje en</span>
         <strong>{{ s.punto_destino or '—' }}</strong>
@@ -254,10 +254,10 @@
 
     <div class="viaje-meta-chips">
       {% if s.modo_viaje == 'hospedaje' %}
-      <span class="viaje-chip viaje-chip--hospedaje"><i class="bi bi-moon-stars-fill"></i>Solo hospedaje</span>
+      <span class="viaje-chip viaje-chip--hospedaje">🛏️ Solo hospedaje</span>
       {% else %}
       <span class="viaje-chip"><i class="bi bi-airplane-fill"></i>Vuelo</span>
-      {% if s.requiere_hospedaje %}<span class="viaje-chip viaje-chip--hospedaje"><i class="bi bi-moon-stars-fill"></i>+ Hospedaje</span>{% endif %}
+      {% if s.requiere_hospedaje %}<span class="viaje-chip viaje-chip--hospedaje">🛏️ + Hospedaje</span>{% endif %}
       {% endif %}
       <span class="viaje-chip"><i class="bi bi-building"></i>{{ s.area_solicitante }}</span>
       <span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span>
