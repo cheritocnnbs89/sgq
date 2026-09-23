@@ -1130,6 +1130,7 @@ tr.pg-hidden { display:none; }
 .cal-pill--vuelo     { background: #e0f2fe; color: #0369a1; }
 .cal-pill--recorrido { background: #dcfce7; color: #15803d; }
 .cal-pill--voucher   { background: #fef9c3; color: #a16207; }
+.cal-pill--hospedaje { background: #f3e8ff; color: #7e22ce; }
 .cal-pill--empty     { background: #f3f4f6; color: #9ca3af; font-weight: 400; font-style: italic; }
 
 /* ── Tabla de Solicitudes: columna "Solicitud" combinada + avatar de jefe ── */
@@ -1482,6 +1483,21 @@ tr.pg-hidden { display:none; }
 .viaje-resumen-linea-track { flex: 1; height: 1px; background: #bfdbfe; }
 .viaje-resumen-linea i { font-size: .9rem; flex-shrink: 0; color: var(--brand-600); }
 
+.viaje-resumen-hospedaje {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  background: #f5f3ff;
+  border-radius: .6rem;
+  padding: .7rem .8rem;
+}
+.viaje-resumen-hospedaje-icono {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #ede9fe; color: #7c3aed;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+}
+
 .viaje-resumen-fechas { display: flex; align-items: stretch; gap: .6rem; margin-top: .6rem; }
 .viaje-resumen-fecha { flex: 1; background: #f8fafc; border: 1px solid var(--line); border-radius: .6rem; padding: .5rem .7rem; display: flex; flex-direction: column; gap: .1rem; }
 .viaje-resumen-fecha span { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
@@ -1491,6 +1507,7 @@ tr.pg-hidden { display:none; }
 .viaje-meta-chips { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-top: .6rem; }
 .viaje-chip { display: inline-flex; align-items: center; gap: .35rem; background: #eef2ff; color: #3730a3; border-radius: 999px; padding: .28rem .65rem; font-size: .75rem; font-weight: 600; }
 .viaje-chip i { font-size: .72rem; }
+.viaje-chip--hospedaje { background: #f3e8ff; color: #7e22ce; }
 
 .viaje-presupuesto-inline { margin-top: .65rem; padding-top: .6rem; border-top: 1px dashed var(--line); }
 .viaje-presupuesto-lbl { display: block; font-size: .72rem; color: var(--muted); font-weight: 600; margin-bottom: .35rem; }

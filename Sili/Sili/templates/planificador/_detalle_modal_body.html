@@ -197,7 +197,9 @@
     <span>{{ 'Detalle del viaje' if s.puede_aprobar_gg_vuelo else 'Información general' }}</span>
   </span>
   <span class="detail-accordion-right">
-    {% if s.tipo == 'Vuelo' %}
+    {% if s.tipo == 'Vuelo' and s.modo_viaje == 'hospedaje' %}
+    <span class="cal-pill cal-pill--hospedaje"><i class="bi bi-moon-stars-fill"></i></span>
+    {% elif s.tipo == 'Vuelo' %}
     <span class="cal-pill cal-pill--vuelo"><i class="bi bi-airplane-fill"></i></span>
     {% elif s.tipo == 'Voucher' %}
     <span class="cal-pill cal-pill--voucher"><i class="bi bi-ticket-perforated-fill"></i></span>
@@ -211,6 +213,15 @@
 <div class="viaje-resumen-wrap collapse {{ 'show' if _auto_expand_info }}" id="detalleInfoBox{{ s.id }}">
 
   <div class="viaje-seccion viaje-seccion--resumen">
+    {% if s.modo_viaje == 'hospedaje' %}
+    <div class="viaje-resumen-hospedaje">
+      <span class="viaje-resumen-hospedaje-icono"><i class="bi bi-moon-stars-fill"></i></span>
+      <div class="viaje-resumen-punto">
+        <span class="viaje-resumen-punto-lbl">Hospedaje en</span>
+        <strong>{{ s.punto_destino or '—' }}</strong>
+      </div>
+    </div>
+    {% else %}
     <div class="viaje-resumen-ruta">
       <div class="viaje-resumen-punto">
         <span class="viaje-resumen-punto-lbl">Desde</span>
@@ -227,21 +238,27 @@
         {% if aeropuerto_display %}<span class="viaje-resumen-aeropuerto">{{ aeropuerto_display }}</span>{% endif %}
       </div>
     </div>
+    {% endif %}
 
     <div class="viaje-resumen-fechas">
       <div class="viaje-resumen-fecha">
-        <span>Salida</span>
+        <span>{{ 'Check-in' if s.modo_viaje == 'hospedaje' else 'Salida' }}</span>
         <strong>{{ s.fecha_str }}</strong>
       </div>
       <span class="viaje-resumen-fechas-sep">⇄</span>
       <div class="viaje-resumen-fecha">
-        <span>Regreso</span>
-        <strong>{{ s.get('fecha_retorno') or 'Solo ida' }}</strong>
+        <span>{{ 'Check-out' if s.modo_viaje == 'hospedaje' else 'Regreso' }}</span>
+        <strong>{{ s.get('fecha_retorno') or ('Sin definir' if s.modo_viaje == 'hospedaje' else 'Solo ida') }}</strong>
       </div>
     </div>
 
     <div class="viaje-meta-chips">
+      {% if s.modo_viaje == 'hospedaje' %}
+      <span class="viaje-chip viaje-chip--hospedaje"><i class="bi bi-moon-stars-fill"></i>Solo hospedaje</span>
+      {% else %}
       <span class="viaje-chip"><i class="bi bi-airplane-fill"></i>Vuelo</span>
+      {% if s.requiere_hospedaje %}<span class="viaje-chip viaje-chip--hospedaje"><i class="bi bi-moon-stars-fill"></i>+ Hospedaje</span>{% endif %}
+      {% endif %}
       <span class="viaje-chip"><i class="bi bi-building"></i>{{ s.area_solicitante }}</span>
       <span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span>
       {% if s.orden_servicio %}<span class="viaje-chip"><i class="bi bi-hash"></i>{{ s.orden_servicio }}</span>{% endif %}
