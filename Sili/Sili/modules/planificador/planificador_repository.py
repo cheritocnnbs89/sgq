@@ -1542,6 +1542,58 @@ def get_cc_usuario(usuario_id: int) -> dict | None:
     }
 
 
+def get_centros_costo_con_usuarios() -> list[dict]:
+    """Catálogo de Centro de Costo (param_values, grupo 7) con los usuarios
+    que lo tienen asignado en su ficha (tabla usuarios_cc). Un usuario puede
+    aparecer en más de un CC -- p.ej. vendedores con su costo distribuido
+    entre varios centros -- y un CC puede no tener nadie asignado todavía.
+    """
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT
+            pv.id                            AS cc_id,
+            pv.nombre                        AS cc_nombre,
+            COALESCE(pv.valor,'')            AS cc_codigo,
+            u.id                              AS usuario_id,
+            u.nombre_completo                AS usuario_nombre,
+            u.username,
+            u.email,
+            uc.porcentaje,
+            COALESCE(uc.es_boletos_aereos,0) AS es_boletos_aereos
+        FROM param_values pv
+        LEFT JOIN usuarios_cc uc ON uc.centro_costo_id = pv.id
+        LEFT JOIN usuarios u     ON u.id = uc.usuario_id AND COALESCE(u.disabled,0) = 0
+        WHERE pv.group_id = 7
+          AND COALESCE(pv.activo,1) = 1
+        ORDER BY COALESCE(pv.orden,1), pv.nombre, u.nombre_completo
+    """)
+    rows = cur.fetchall()
+    conn.close()
+
+    ccs = {}
+    for r in rows:
+        cc_id = r[0]
+        if cc_id not in ccs:
+            ccs[cc_id] = {
+                "cc_id": cc_id,
+                "cc_nombre": r[1],
+                "cc_codigo": r[2],
+                "usuarios": [],
+            }
+        if r[3]:
+            ccs[cc_id]["usuarios"].append({
+                "id": r[3],
+                "nombre": r[4],
+                "username": r[5],
+                "email": r[6],
+                "porcentaje": r[7],
+                "es_boletos_aereos": bool(r[8]),
+            })
+    return list(ccs.values())
+
+
+
 # ──────────────────────────────────────────────
 # Adjuntos de solicitudes
 # ──────────────────────────────────────────────

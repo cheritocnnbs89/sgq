@@ -2552,6 +2552,7 @@ def configuracion():
     tipo_flags      = repo.get_all_tipo_flags()
     motorizados_tg  = repo.get_motorizados_telegram_status()
     rol_flags       = repo.get_all_rol_flags()
+    centros_costo_usuarios = repo.get_centros_costo_con_usuarios()
 
     return render_template(
         "planificador/configuracion.html",
@@ -2564,6 +2565,7 @@ def configuracion():
         motorizados_tg=motorizados_tg,
         rol_flags=rol_flags,
         roles_candidatos_autoaprobar=ROLES_CANDIDATOS_AUTOAPROBAR_VUELO,
+        centros_costo_usuarios=centros_costo_usuarios,
     )
 
 
