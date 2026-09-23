@@ -13,8 +13,10 @@
 {%- endmacro %}
 
 {# ── Cabecera enriquecida del modal (título + pastilla de estado + subtítulo) ──
-   Solo para las pantallas de Vuelo donde así se pidió; el resto de tipos/estados
-   sigue mostrando el título genérico "Detalle de solicitud" del modal. #}
+   Las pantallas de Vuelo con seguimiento propio (cotizar/aprobar GG/completar/
+   marcar realizado) arman un título con más contexto. El resto de tipos/estados
+   usa el título genérico "Detalle de solicitud #<id>", para que el folio
+   siempre sea visible en la cabecera y no haya que repetirlo en el cuerpo. #}
 {% if s.puede_marcar_realizado_vuelo %}
 {% set _detalle_header = {
   "titulo": s.tipo ~ " #" ~ s.id,
@@ -31,6 +33,11 @@
   "pill": s.estado_label,
   "pillClass": s.estado_class,
   "subtitulo": "#" ~ s.id ~ " · " ~ s.solicitante_nombre ~ " · " ~ s.area_solicitante,
+} %}
+<script type="application/json" data-detalle-header>{{ _detalle_header | tojson }}</script>
+{% else %}
+{% set _detalle_header = {
+  "titulo": "Detalle de solicitud #" ~ s.id,
 } %}
 <script type="application/json" data-detalle-header>{{ _detalle_header | tojson }}</script>
 {% endif %}
