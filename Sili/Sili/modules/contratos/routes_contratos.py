@@ -233,6 +233,7 @@ def compras_lista():
 
     return render_template(
         "consulta_compras.html",
+        es_comercial=services.es_area_comercial(),
         rows=rows_page,
         hoy=date.today().isoformat(),
         page=page,

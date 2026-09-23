@@ -126,8 +126,13 @@
               <th>Valor</th>
               <th>Tipo</th>
               <th>Garantía</th>
+              {% if es_comercial %}
+              <th>F. Inicio</th>
+              <th>F. Notif. renovación</th>
+              {% else %}
               <th>F. Suscripción</th>
               <th>F. Terminación</th>
+              {% endif %}
               <th>Estado</th>
               <th>Aprob. J.</th>
               <th class="text-end">Acciones</th>
@@ -172,8 +177,13 @@
                 <span class="badge text-bg-secondary">No</span>
                 {% endif %}
               </td>
+              {% if es_comercial %}
+              <td>{{ r.fecha_inicio or '' }}</td>
+              <td>{{ r.fecha_notificacion_renovacion or '' }}</td>
+              {% else %}
               <td>{{ r.fecha_suscripcion or '' }}</td>
               <td>{{ r.fecha_terminacion or '' }}</td>
+              {% endif %}
               <td>
                 {% if r.aprob_gf|int == 1 %}
                 Aprobado GF

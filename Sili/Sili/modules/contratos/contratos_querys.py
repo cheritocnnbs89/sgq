@@ -439,6 +439,7 @@ SQL_LISTA_CONTRATOS_BASE = f"""
 SELECT TOP 300
     c.id, c.codigo, c.pedido, c.proveedor, c.objeto, c.valor_contrato, c.tipo_pp,
     c.fecha_suscripcion, c.fecha_terminacion, c.status_interno,
+    c.fecha_inicio, c.fecha_notificacion_renovacion,
     COALESCE(c.aprobado_jefe,0) AS aprobado_jefe,
     COALESCE(c.aprobado,0) AS aprobado,
     COALESCE(c.aprob_gf,0) AS aprob_gf,

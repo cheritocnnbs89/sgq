@@ -99,6 +99,7 @@
       </div>
     </div>
 
+    {% if not es_comercial %}
     <!-- Valores -->
     <div class="card card-elev accent-left mb-3">
       <div class="card-body">
@@ -214,6 +215,18 @@
         </div>
       </div>
     </div>
+    {% else %}
+    {# Comercial no ve "Valores del contrato" ni "Hitos y fechas" (datos de Compras). Se conservan
+       en hidden para que al editar el contrato no se borren los valores cargados por Compras. #}
+    {% for f in ['valor_contrato', 'valor_anticipo', 'fecha_suscripcion', 'fecha_terminacion', 'plazo_dias',
+                 'cronograma_pagos', 'fecha_entrega_compras', 'fecha_firma_gerencia',
+                 'fecha_entrega_finanzas_sumilla',
+                 'fechas_pago_anticipo', 'fecha_entrega_pedido'] %}
+    <input type="hidden" name="{{ f }}" value="{{ row[f] if row and row[f] is not none else '' }}">
+    {% endfor %}
+    {# La columna es fecha_entrega_originales_fin, pero el formulario/servidor usan ..._finanzas #}
+    <input type="hidden" name="fecha_entrega_originales_finanzas" value="{{ row.fecha_entrega_originales_fin if row and row.fecha_entrega_originales_fin is not none else '' }}">
+    {% endif %}
 
     {% if es_comercial %}
     <!-- Información Comercial (solo visible para el área Comercial) -->
