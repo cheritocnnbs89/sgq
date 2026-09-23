@@ -59,6 +59,86 @@
     </div>
   </div>
 
+  {# ── Centros de costo y usuarios asignados (colapsable, no depende del filtro) ── #}
+  <div class="accordion mb-3" id="accordionCCUsuariosWrap">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="ccUsuariosWrapHead">
+        <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse" data-bs-target="#ccUsuariosWrapCollapse"
+                aria-expanded="false" aria-controls="ccUsuariosWrapCollapse">
+          <i class="bi bi-diagram-3 me-2"></i>
+          <span class="flex-grow-1">Centros de costo y usuarios asignados</span>
+          <span class="text-muted small me-2">{{ centros_costo_usuarios|length }} centros de costo</span>
+        </button>
+      </h2>
+      <div id="ccUsuariosWrapCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionCCUsuariosWrap">
+        <div class="accordion-body">
+          <p class="text-muted small mb-3">
+            <i class="bi bi-info-circle me-1"></i>
+            Usuarios asignados a cada centro de costo desde su ficha. Un usuario puede aparecer
+            en varios centros a la vez — por ejemplo, vendedores con su costo distribuido entre
+            distintas áreas.
+          </p>
+          <div class="accordion" id="accordionCC">
+            {% for cc in centros_costo_usuarios %}
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="ccHead{{ cc.cc_id }}">
+                <button class="accordion-button collapsed" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#ccCollapse{{ cc.cc_id }}"
+                        aria-expanded="false" aria-controls="ccCollapse{{ cc.cc_id }}">
+                  <span class="flex-grow-1">
+                    {% if cc.cc_codigo %}<span class="text-muted font-monospace me-1">{{ cc.cc_codigo }}</span>{% endif %}
+                    {{ cc.cc_nombre }}
+                  </span>
+                  <span class="badge {{ 'bg-secondary' if not cc.usuarios else 'bg-primary' }} ms-2">
+                    {{ cc.usuarios|length }} usuario{{ 's' if cc.usuarios|length != 1 else '' }}
+                  </span>
+                </button>
+              </h2>
+              <div id="ccCollapse{{ cc.cc_id }}" class="accordion-collapse collapse" data-bs-parent="#accordionCC">
+                <div class="accordion-body p-0">
+                  {% if cc.usuarios %}
+                  <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0 small">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Usuario</th>
+                          <th>Email</th>
+                          <th class="text-end">% asignado</th>
+                          <th class="text-center">Boletos aéreos</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for us in cc.usuarios %}
+                        <tr>
+                          <td>{{ us.nombre }} <span class="text-muted">({{ us.username }})</span></td>
+                          <td class="text-muted">{{ us.email or '—' }}</td>
+                          <td class="text-end">{{ '%.0f'|format(us.porcentaje) if us.porcentaje is not none else '0' }}%</td>
+                          <td class="text-center">
+                            {% if us.es_boletos_aereos %}
+                            <span class="badge bg-info text-dark"><i class="bi bi-airplane-fill me-1"></i>Sí</span>
+                            {% else %}<span class="text-muted">—</span>{% endif %}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  {% else %}
+                  <p class="text-muted small px-3 py-3 mb-0">Ningún usuario tiene este centro de costo asignado todavía.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0">No hay centros de costo configurados.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {# ── Flash: solo el último ── #}
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}

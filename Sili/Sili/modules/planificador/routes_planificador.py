@@ -2886,6 +2886,7 @@ def presupuesto():
     tipo_gasto = request.args.get("tipo_gasto", "")
 
     tipos_gasto = repo.get_tipos_gasto()
+    centros_costo_usuarios = repo.get_centros_costo_con_usuarios()
 
     from modules.db import get_db
     conn = get_db()
@@ -2973,6 +2974,7 @@ def presupuesto():
         centros_disponibles=centros_disponibles,
         meses_nombres=["Ene","Feb","Mar","Abr","May","Jun",
                         "Jul","Ago","Sep","Oct","Nov","Dic"],
+        centros_costo_usuarios=centros_costo_usuarios,
     )
 
 
