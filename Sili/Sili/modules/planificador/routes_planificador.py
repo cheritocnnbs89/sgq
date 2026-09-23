@@ -126,7 +126,7 @@ def solicitudes():
         d["puede_marcar_realizado_vuelo"] = svc.puede_marcar_realizado_vuelo(s, u["id"], ctx)
         d["puede_aprobar_jefe_voucher"] = svc.puede_aprobar_jefe_voucher(s, u["id"], ctx)
         d["puede_entregar_voucher"]     = svc.puede_entregar_voucher(s, u["id"], ctx)
-        d["estado_label"]    = svc.estado_label(s["estado"])
+        d["estado_label"]    = svc.estado_label(s["estado"], s.get("tipo"))
         d["estado_class"]    = svc.estado_badge_class(s["estado"])
         d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
         if s.get("fecha"):
@@ -255,7 +255,7 @@ def detalle(sid):
     d["puede_liquidar_vuelo"]          = svc.puede_liquidar_vuelo(s, u["id"], ctx)
     d["puede_aprobar_jefe_voucher"]    = svc.puede_aprobar_jefe_voucher(s, u["id"], ctx)
     d["puede_entregar_voucher"]        = svc.puede_entregar_voucher(s, u["id"], ctx)
-    d["estado_label"]    = svc.estado_label(s["estado"])
+    d["estado_label"]    = svc.estado_label(s["estado"], s.get("tipo"))
     d["estado_class"]    = svc.estado_badge_class(s["estado"])
     d["fecha_str"]       = str(s["fecha"]) if s["fecha"] else ""
     logs = repo.get_solicitud_logs(sid)

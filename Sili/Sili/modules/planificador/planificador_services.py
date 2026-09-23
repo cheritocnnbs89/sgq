@@ -341,7 +341,12 @@ def puede_ver_detalle_completo(ctx):
             or ctx.get("es_gerente", False))
 
 
-def estado_label(estado):
+def estado_label(estado, tipo=None):
+    # "Pend. cotización coordinador" es el texto del paso de cotización de
+    # Vuelo. PENDIENTE_COORDINACION es el mismo estado para el resto de tipos
+    # (p.ej. Mensajería), donde el coordinador no cotiza sino que coordina.
+    if estado == "PENDIENTE_COORDINACION" and tipo and tipo != "Vuelo":
+        return "Pendiente coordinación"
     return ESTADOS.get(estado, estado)
 
 
