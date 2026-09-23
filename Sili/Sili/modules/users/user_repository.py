@@ -118,9 +118,25 @@ def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str],
     cc_boletos = cc_boletos or []
     items = []  # (cc_id, pct, es_boletos_aereos)
 
-    for idx, (cc_raw, pct_raw) in enumerate(zip(cc_ids, cc_pcts)):
+    # cc_id[] y cc_boletos[] siempre traen un valor por fila (select y hidden
+    # nunca se deshabilitan), pero cc_pct[] NO: editar_usuario.js deshabilita
+    # ese <input> cuando la fila se marca "Solo boletos aéreos", y un input
+    # disabled no se envía en el POST. Antes esto se recorría con
+    # zip(cc_ids, cc_pcts), que desalinea (o directamente descarta) las filas
+    # siguientes apenas aparece una fila de boletos -- por eso una fila nueva
+    # marcada como boletos aéreos podía "guardarse" (return True) sin llegar
+    # a insertarse nada. Se recorre cc_ids/cc_boletos (siempre 1 a 1 con las
+    # filas) y solo se consume cc_pcts para las filas que sí lo enviaron.
+    pct_idx = 0
+    for idx, cc_raw in enumerate(cc_ids):
         cc_raw = (cc_raw or "").strip()
-        pct_raw = (pct_raw or "").strip()
+        es_boletos = (cc_boletos[idx].strip() if idx < len(cc_boletos) else "0") == "1"
+
+        if es_boletos:
+            pct_raw = ""
+        else:
+            pct_raw = (cc_pcts[pct_idx].strip() if pct_idx < len(cc_pcts) else "")
+            pct_idx += 1
 
         if not cc_raw:
             continue
@@ -129,8 +145,6 @@ def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str],
             cc_id = int(cc_raw)
         except ValueError:
             continue
-
-        es_boletos = (cc_boletos[idx].strip() if idx < len(cc_boletos) else "0") == "1"
 
         if es_boletos:
             # Exclusivo de Planificador/Boletos de avión: el % nunca se usa
