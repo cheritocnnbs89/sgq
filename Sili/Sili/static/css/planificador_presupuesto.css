@@ -174,3 +174,22 @@
 .presup-quick-btn:hover { background: #dbe7ff; color: #1d4ed8; }
 .presup-modal-summary { border-top: 1px solid #eef0f4; }
 .presup-modal-total { font-size: 1.3rem; font-weight: 700; }
+
+/* ── Centro de Costo: usuarios asignados (fila expandible dentro de la tabla) ── */
+.presup-cc-usuarios-toggle {
+    color: inherit;
+}
+.presup-cc-usuarios-toggle:hover { color: #1d4ed8; }
+.presup-cc-usuarios-chevron {
+    font-size: .7rem;
+    color: #94a3b8;
+    transition: transform .15s ease;
+}
+.presup-cc-usuarios-toggle[aria-expanded="true"] .presup-cc-usuarios-chevron {
+    transform: rotate(180deg);
+}
+.presup-cc-usuarios-body {
+    background: #f8fafc;
+    padding: .5rem 1rem .5rem 2.25rem;
+    border-top: 1px dashed #e5e7eb;
+}

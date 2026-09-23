@@ -3,7 +3,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/planificador.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador_presupuesto.css') }}?v=5">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planificador_presupuesto.css') }}?v=6">
 {% endblock %}
 
 {% block content %}
@@ -56,86 +56,6 @@
           </button>
         </div>
       </form>
-    </div>
-  </div>
-
-  {# ── Centros de costo y usuarios asignados (colapsable, no depende del filtro) ── #}
-  <div class="accordion mb-3" id="accordionCCUsuariosWrap">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="ccUsuariosWrapHead">
-        <button class="accordion-button collapsed" type="button"
-                data-bs-toggle="collapse" data-bs-target="#ccUsuariosWrapCollapse"
-                aria-expanded="false" aria-controls="ccUsuariosWrapCollapse">
-          <i class="bi bi-diagram-3 me-2"></i>
-          <span class="flex-grow-1">Centros de costo y usuarios asignados</span>
-          <span class="text-muted small me-2">{{ centros_costo_usuarios|length }} centros de costo</span>
-        </button>
-      </h2>
-      <div id="ccUsuariosWrapCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionCCUsuariosWrap">
-        <div class="accordion-body">
-          <p class="text-muted small mb-3">
-            <i class="bi bi-info-circle me-1"></i>
-            Usuarios asignados a cada centro de costo desde su ficha. Un usuario puede aparecer
-            en varios centros a la vez — por ejemplo, vendedores con su costo distribuido entre
-            distintas áreas.
-          </p>
-          <div class="accordion" id="accordionCC">
-            {% for cc in centros_costo_usuarios %}
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="ccHead{{ cc.cc_id }}">
-                <button class="accordion-button collapsed" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#ccCollapse{{ cc.cc_id }}"
-                        aria-expanded="false" aria-controls="ccCollapse{{ cc.cc_id }}">
-                  <span class="flex-grow-1">
-                    {% if cc.cc_codigo %}<span class="text-muted font-monospace me-1">{{ cc.cc_codigo }}</span>{% endif %}
-                    {{ cc.cc_nombre }}
-                  </span>
-                  <span class="badge {{ 'bg-secondary' if not cc.usuarios else 'bg-primary' }} ms-2">
-                    {{ cc.usuarios|length }} usuario{{ 's' if cc.usuarios|length != 1 else '' }}
-                  </span>
-                </button>
-              </h2>
-              <div id="ccCollapse{{ cc.cc_id }}" class="accordion-collapse collapse" data-bs-parent="#accordionCC">
-                <div class="accordion-body p-0">
-                  {% if cc.usuarios %}
-                  <div class="table-responsive">
-                    <table class="table table-sm table-hover align-middle mb-0 small">
-                      <thead class="table-light">
-                        <tr>
-                          <th>Usuario</th>
-                          <th>Email</th>
-                          <th class="text-end">% asignado</th>
-                          <th class="text-center">Boletos aéreos</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for us in cc.usuarios %}
-                        <tr>
-                          <td>{{ us.nombre }} <span class="text-muted">({{ us.username }})</span></td>
-                          <td class="text-muted">{{ us.email or '—' }}</td>
-                          <td class="text-end">{{ '%.0f'|format(us.porcentaje) if us.porcentaje is not none else '0' }}%</td>
-                          <td class="text-center">
-                            {% if us.es_boletos_aereos %}
-                            <span class="badge bg-info text-dark"><i class="bi bi-airplane-fill me-1"></i>Sí</span>
-                            {% else %}<span class="text-muted">—</span>{% endif %}
-                          </td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                  {% else %}
-                  <p class="text-muted small px-3 py-3 mb-0">Ningún usuario tiene este centro de costo asignado todavía.</p>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-            {% else %}
-            <p class="text-muted small mb-0">No hay centros de costo configurados.</p>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -226,6 +146,8 @@
         {% endif %}
 
         {% if seccion.rows %}
+        {% set total_cols = 2 + meses_nombres|length + 3 + (1 if has_permission('planificador.presupuesto', 'editar') else 0) %}
+        {% set sec_key = seccion.tipo|replace(' ', '_')|replace('/', '_') %}
         <div class="card border-0 shadow-sm mb-3">
           <div class="table-responsive">
             <table class="table table-sm table-hover mb-0 align-middle presup-summary-table">
@@ -246,11 +168,21 @@
               </thead>
               <tbody>
                 {% for row in seccion.rows %}
+                {% set cc_usuarios = cc_usuarios_by_id.get(row.cc_id, []) %}
+                {% set row_key = 'ccUsuarios-' ~ sec_key ~ '-' ~ row.cc_id %}
                 <tr>
                   <td class="text-center"><i class="presup-dot {{ row.semaforo }}"></i></td>
                   <td class="small">
-                    {% if row.cc_codigo %}<span class="text-muted me-1">{{ row.cc_codigo }}</span>{% endif %}
-                    <span class="fw-semibold">{{ row.cc_nombre }}</span>
+                    <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none presup-cc-usuarios-toggle collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#{{ row_key }}"
+                            aria-expanded="false" aria-controls="{{ row_key }}">
+                      {% if row.cc_codigo %}<span class="text-muted me-1">{{ row.cc_codigo }}</span>{% endif %}
+                      <span class="fw-semibold text-dark">{{ row.cc_nombre }}</span>
+                      <span class="badge {{ 'bg-secondary' if not cc_usuarios else 'bg-primary' }} ms-1">
+                        <i class="bi bi-people-fill me-1"></i>{{ cc_usuarios|length }}
+                      </span>
+                      <i class="bi bi-chevron-down presup-cc-usuarios-chevron ms-1"></i>
+                    </button>
                   </td>
                   {% for m in row.meses %}
                   <td class="text-end small" data-mes="{{ loop.index }}" data-monto="{{ m.monto_presupuestado }}">
@@ -279,6 +211,40 @@
                     </button>
                   </td>
                   {% endif %}
+                </tr>
+                <tr class="collapse" id="{{ row_key }}">
+                  <td colspan="{{ total_cols }}" class="p-0 border-0">
+                    <div class="presup-cc-usuarios-body">
+                      {% if cc_usuarios %}
+                      <table class="table table-sm table-borderless align-middle mb-0 small">
+                        <thead>
+                          <tr class="text-muted">
+                            <th class="fw-normal">Usuario</th>
+                            <th class="fw-normal">Email</th>
+                            <th class="fw-normal text-end">% asignado</th>
+                            <th class="fw-normal text-center">Boletos aéreos</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for us in cc_usuarios %}
+                          <tr>
+                            <td>{{ us.nombre }} <span class="text-muted">({{ us.username }})</span></td>
+                            <td class="text-muted">{{ us.email or '—' }}</td>
+                            <td class="text-end">{{ '%.0f'|format(us.porcentaje) if us.porcentaje is not none else '0' }}%</td>
+                            <td class="text-center">
+                              {% if us.es_boletos_aereos %}
+                              <span class="badge bg-info text-dark"><i class="bi bi-airplane-fill me-1"></i>Sí</span>
+                              {% else %}<span class="text-muted">—</span>{% endif %}
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      {% else %}
+                      <p class="text-muted small mb-0">Ningún usuario tiene este centro de costo asignado todavía.</p>
+                      {% endif %}
+                    </div>
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
