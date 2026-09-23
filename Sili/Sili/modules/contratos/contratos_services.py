@@ -250,6 +250,11 @@ def parse_contrato_form():
     # No hay selector en el formulario: la sección Comercial se marca sola
     # según el área del usuario que crea/edita el contrato.
     tipo_contrato = TIPO_CONTRATO_COMERCIAL if es_area_comercial(creado_por) else TIPO_CONTRATO_COMPRAS
+    # Comercial no ve el campo "Usuario solicitante" (es dato de Compras): el
+    # solicitante es quien registra el contrato. De ahí salen el código del
+    # contrato (área), los correos y la trazabilidad, igual que antes.
+    if tipo_contrato == TIPO_CONTRATO_COMERCIAL and not usuario_solicitante_id:
+        usuario_solicitante_id = creado_por
 
     anio = (request.form.get("anio") or "").strip()
     pedido = (request.form.get("pedido") or "").strip()
@@ -355,11 +360,12 @@ def validate_contrato_payload(data: dict):
     missing_required = []
     es_comercial = data.get("tipo_contrato") == TIPO_CONTRATO_COMERCIAL
 
-    # Estos campos de Cabecera siguen siendo obligatorios sin importar el
-    # área del usuario.
+    # Año, solicitante y objeto son obligatorios sin importar el área. El
+    # Pedido es dato de Compras: Comercial no lo ve, así que solo se exige
+    # cuando el contrato no es comercial.
     if not data["anio"]:
         missing_required.append(REQ_CONTRATO_LABEL_ANIO)
-    if not data["pedido"]:
+    if not es_comercial and not data["pedido"]:
         missing_required.append(REQ_CONTRATO_LABEL_PEDIDO)
     if not data["usuario_solicitante_id"]:
         missing_required.append(REQ_CONTRATO_LABEL_USUARIO_SOLICITANTE)

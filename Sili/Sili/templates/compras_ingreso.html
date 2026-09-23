@@ -30,6 +30,7 @@
             <input name="anio" data-label="AÑO" type="number" class="form-control" min="2000" max="2100" required
               value="{{ row.anio if row else '' }}">
           </div>
+          {% if not es_comercial %}
           <div class="col-md-3">
             <label class="form-label req">PEDIDO</label>
             <input name="pedido" data-label="PEDIDO" type="text" class="form-control" required
@@ -66,6 +67,15 @@
               {% endfor %}
             </select>
           </div>
+          {% else %}
+          {# Comercial no ve Pedido/Proveedor/Usuario solicitante (datos de Compras). Se conservan
+             en hidden para que al editar no se borren; al crear, el solicitante lo completa el
+             servidor con el usuario en sesión. #}
+          <input type="hidden" name="pedido" value="{{ row.pedido if row and row.pedido else '' }}">
+          <input type="hidden" name="proveedor_id" value="{{ row.proveedor_id if row and row.proveedor_id else '' }}">
+          <input type="hidden" name="proveedor" value="{{ row.proveedor if row and row.proveedor else '' }}">
+          <input type="hidden" name="usuario_solicitante_id" value="{{ row.usuario_solicitante_id if row and row.usuario_solicitante_id else '' }}">
+          {% endif %}
 
           <div class="col-md-6 col-lg-3">
             <label class="form-label req">Usuario compras</label>
@@ -120,6 +130,7 @@
                 value="{{ row.valor_anticipo if row else '' }}">
             </div>
           </div>
+          {% if not es_comercial %}
           <div class="col-md-6 col-lg-4 d-flex align-items-end">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" name="lleva_garantia" id="chkLlevaGarantia" value="1"
@@ -127,6 +138,7 @@
               <label class="form-check-label fw-bold" for="chkLlevaGarantia">¿El contrato lleva garantía?</label>
             </div>
           </div>
+          {% endif %}
         </div>
         </div>
       </div>
@@ -338,6 +350,13 @@
           <div class="col-md-6">
             <label class="form-label">Forma de facturación</label>
             <input name="forma_facturacion" class="form-control" value="{{ row.forma_facturacion if row else '' }}">
+          </div>
+          <div class="col-md-6 d-flex align-items-end">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" name="lleva_garantia" id="chkLlevaGarantia" value="1"
+                {% if row and row.lleva_garantia %}checked{% endif %}>
+              <label class="form-check-label fw-bold" for="chkLlevaGarantia">¿El contrato lleva garantía?</label>
+            </div>
           </div>
         </div>
       </div>
