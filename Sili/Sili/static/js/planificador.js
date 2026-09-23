@@ -237,6 +237,38 @@
     openModal('modalNueva');
   }
 
+  /* ── Agrupar: carga las otras solicitudes pendientes del mismo tipo ── */
+  function cargarGrupoCandidatos(sid, grupoSection, grupoList) {
+    if (!grupoSection || !grupoList) return;
+    fetch('/planificador/solicitudes/' + sid + '/pendientes-mismo-tipo', {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (otros) {
+      if (!otros || otros.length === 0) return;  // nada que agrupar
+
+      grupoSection.classList.remove('grupo-section-hidden');
+
+      var html = '';
+      otros.forEach(function (o) {
+        html += '<label class="grupo-check-item">' +
+          '<input type="checkbox" name="grupo_ids" value="' + o.id + '" class="grupo-check-input">' +
+          '<span class="grupo-check-body">' +
+            '<span class="grupo-check-top">' +
+              '<span class="grupo-check-id">#' + o.id + '</span>' +
+              '<span class="grupo-check-area">' + _esc(o.area) + '</span>' +
+              '<span class="grupo-check-fecha">' + o.fecha + '</span>' +
+            '</span>' +
+            '<span class="grupo-check-lugar"><i class="bi bi-geo-alt-fill"></i> ' + _esc(o.lugar) + '</span>' +
+            (o.descripcion ? '<span class="grupo-check-desc">' + _esc(o.descripcion) + '</span>' : '') +
+          '</span>' +
+        '</label>';
+      });
+      grupoList.innerHTML = html;
+    })
+    .catch(function () { /* silencioso si falla */ });
+  }
+
   /* ── Coordinar ── */
   function openCoordinar(sid, fecha, tipo) {
     /* Para Vuelo: modal especializado */
@@ -270,34 +302,7 @@
     openModal('modalCoordinar');
 
     /* Cargar otras solicitudes pendientes del mismo tipo */
-    fetch('/planificador/solicitudes/' + sid + '/pendientes-mismo-tipo', {
-      headers: { 'X-Requested-With': 'XMLHttpRequest' }
-    })
-    .then(function (r) { return r.json(); })
-    .then(function (otros) {
-      if (!grupoList) return;
-      if (!otros || otros.length === 0) return;  // nada que agrupar
-
-      if (grupoSection) grupoSection.classList.remove('grupo-section-hidden');
-
-      var html = '';
-      otros.forEach(function (o) {
-        html += '<label class="grupo-check-item">' +
-          '<input type="checkbox" name="grupo_ids" value="' + o.id + '" class="grupo-check-input">' +
-          '<span class="grupo-check-body">' +
-            '<span class="grupo-check-top">' +
-              '<span class="grupo-check-id">#' + o.id + '</span>' +
-              '<span class="grupo-check-area">' + _esc(o.area) + '</span>' +
-              '<span class="grupo-check-fecha">' + o.fecha + '</span>' +
-            '</span>' +
-            '<span class="grupo-check-lugar"><i class="bi bi-geo-alt-fill"></i> ' + _esc(o.lugar) + '</span>' +
-            (o.descripcion ? '<span class="grupo-check-desc">' + _esc(o.descripcion) + '</span>' : '') +
-          '</span>' +
-        '</label>';
-      });
-      grupoList.innerHTML = html;
-    })
-    .catch(function () { /* silencioso si falla */ });
+    cargarGrupoCandidatos(sid, grupoSection, grupoList);
   }
 
   /* ── Reagendar ── */
@@ -417,6 +422,7 @@
     _setupCotizarVuelo(container);
     _setupAprobarGGVuelo(container);
     _setupCompletarVuelo(container);
+/* Agrupar otras solicitudes del mismo tipo (formulario Coordinar del detalle) */    var grupoDetalle = container.querySelector('[data-grupo-section]');    if (grupoDetalle) {      cargarGrupoCandidatos(grupoDetalle.dataset.sid, grupoDetalle, grupoDetalle.querySelector('[data-grupo-list]'));    }
     /* min=hoy en inputs con data-min-today (evita inline script) */
     container.querySelectorAll('[data-min-today]').forEach(function (el) {
       el.min = el.dataset.minToday;

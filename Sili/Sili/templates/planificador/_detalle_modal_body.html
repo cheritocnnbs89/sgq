@@ -1216,6 +1216,16 @@
                   placeholder="Instrucciones para el asistente (opcional)"></textarea>
       </div>
     </div>
+    {% if s.tipo != 'Vuelo' and s.tipo != 'Voucher' %}
+    <div class="grupo-section-hidden grupo-section-wrap mb-2" data-grupo-section data-sid="{{ s.id }}">
+      <div class="grupo-section-header">
+        <i class="bi bi-collection-fill"></i>
+        Agrupar otras solicitudes del mismo tipo en este horario
+        <span class="grupo-section-hint">Selecciona las que se atenderán juntos en el mismo recorrido</span>
+      </div>
+      <div class="grupo-check-list" data-grupo-list></div>
+    </div>
+    {% endif %}
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-send"></i> Enviar a aprobación</button>
     </div>
