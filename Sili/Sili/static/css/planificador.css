@@ -1509,6 +1509,36 @@ tr.pg-hidden { display:none; }
 .viaje-chip i { font-size: .72rem; }
 .viaje-chip--hospedaje { background: #f3e8ff; color: #7e22ce; }
 
+/* Información general de Mensajería y Voucher (mismo formato por secciones que Vuelo) */
+.viaje-resumen-destino,
+.viaje-resumen-vouchers {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  border-radius: .6rem;
+  padding: .7rem .8rem;
+}
+.viaje-resumen-destino  { background: #ecfdf5; }
+.viaje-resumen-vouchers { background: #fefce8; }
+.viaje-resumen-destino-icono,
+.viaje-resumen-vouchers-icono {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+}
+.viaje-resumen-destino-icono  { background: #d1fae5; color: #15803d; }
+.viaje-resumen-vouchers-icono { background: #fef08a; color: #a16207; }
+.viaje-resumen-destino .viaje-resumen-punto strong { white-space: normal; }
+.viaje-resumen-destino .maps-link { margin-top: .1rem; }
+.viaje-chip--mensajeria { background: #dcfce7; color: #15803d; }
+.viaje-chip--voucher    { background: #fef9c3; color: #a16207; }
+.viaje-resumen-fechas--una .viaje-resumen-fecha { max-width: 50%; }
+.viaje-seccion > .viaje-resumen-fechas:first-child,
+.viaje-seccion > .viaje-meta-chips:first-child { margin-top: 0; }
+@media (max-width: 600px) {
+  .viaje-resumen-fechas--una .viaje-resumen-fecha { max-width: none; }
+}
+
 .viaje-presupuesto-inline { margin-top: .65rem; padding-top: .6rem; border-top: 1px dashed var(--line); }
 .viaje-presupuesto-lbl { display: block; font-size: .72rem; color: var(--muted); font-weight: 600; margin-bottom: .35rem; }
 
