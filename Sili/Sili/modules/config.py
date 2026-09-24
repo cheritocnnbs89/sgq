@@ -78,6 +78,11 @@ SEEDBILLING_RUN_SLOTS = ("08:00", "14:00", "14:10")
 # Empresa que sí se inserta en SQL
 SEEDBILLING_TARGET_RUC = "0990344760001"  # Quimpac Ecuador S.A.
 
+# Compradores (RUC de a quien el proveedor le emite la factura) cuyos comprobantes
+# NUNCA se procesan, aunque lleguen en la lista de SeedBilling: no se insertan en
+# facturas_xml ni se generan gastos automáticos. rutina aplica la misma exclusión.
+SEEDBILLING_RUCS_CLIENTE_EXCLUIDOS = ("0992863366001",)  # QUIMITRANSPORT S.A.
+
 # Igual que SoapUI
 SEEDBILLING_CANTIDAD = int(os.getenv("SEEDBILLING_CANTIDAD", "1000"))
 

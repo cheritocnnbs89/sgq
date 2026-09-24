@@ -811,7 +811,7 @@ def _procesar_tipo_documento(conn, cur, tipo_documento: str, resumen: dict,
                 # Caso 1: el WS ya indica que es otra empresa.
                 # No leemos XML, no parseamos XML, no insertamos.
                 # Solo acumulamos la clave para marcar entregado.
-                if ruc_dest_item and ruc_dest_item != target_ruc:
+                if ruc_dest_item and (ruc_dest_item != target_ruc or ruc_dest_item in rucs_excluidos):
                     resumen["otras_empresas"] += 1
 
                     if mark_other_companies:
@@ -851,7 +851,7 @@ def _procesar_tipo_documento(conn, cur, tipo_documento: str, resumen: dict,
                     raise RuntimeError("No se encontró clave_acceso en el XML.")
 
                 # Caso 3: el lRucDestinatario venía vacío, pero el XML indica otra empresa.
-                if ruc_cliente != target_ruc:
+                if ruc_cliente != target_ruc or ruc_cliente in rucs_excluidos:
                     resumen["otras_empresas"] += 1
 
                     if mark_other_companies:
@@ -1073,6 +1073,7 @@ def process_seedbilling_facturas_recibidas(conn) -> dict:
         return resumen
 
     target_ruc = _norm_ruc(_cfg("SEEDBILLING_TARGET_RUC", "0990344760001"))
+    rucs_excluidos = {_norm_ruc(x) for x in (_cfg("SEEDBILLING_RUCS_CLIENTE_EXCLUIDOS", ()) or ())}
     cantidad = int(_cfg("SEEDBILLING_CANTIDAD", 1000))
     timeout = int(_cfg("SEEDBILLING_TIMEOUT", 120))
     max_loops = int(_cfg("SEEDBILLING_MAX_LOOPS", 10))

@@ -15,7 +15,15 @@ from datetime import datetime
 from flask import current_app
 
 from . import gastos_helpers as gh
-from .config import TABLE_GASTOS
+from .config import TABLE_GASTOS, SEEDBILLING_RUCS_CLIENTE_EXCLUIDOS
+
+# Facturas cuyo comprador está excluido (ver config.SEEDBILLING_RUCS_CLIENTE_EXCLUIDOS)
+# no generan gastos automáticos.
+_RUCS_CLIENTE_EXCLUIDOS = tuple(SEEDBILLING_RUCS_CLIENTE_EXCLUIDOS or ())
+_SQL_EXCLUIR_COMPRADORES = (
+    "AND COALESCE(f.ruc_cliente, '') NOT IN (" + ",".join("?" for _ in _RUCS_CLIENTE_EXCLUIDOS) + ")"
+    if _RUCS_CLIENTE_EXCLUIDOS else ""
+)
 
 TPL_GASTO_AUTO_REGISTRADO = "gasto_auto_registrado"     # verde — SAP auto enviado
 TPL_PENDIENTE_SAP         = "gasto_auto_pendiente_sap"  # naranja — SAP pendiente manual
@@ -438,6 +446,7 @@ def procesar_auto_registro_facturas(conn) -> list[int]:
                    f.ruc_emisor, f.subtotal, f.iva, f.total
             FROM facturas_xml f
             WHERE f.ruc_emisor = ? AND f.total = ?
+              {_excl_clause}
               AND NOT EXISTS (
                     SELECT 1 FROM gastos_tarjeta g WHERE g.factura_xml_id = f.id
               )
@@ -445,7 +454,8 @@ def procesar_auto_registro_facturas(conn) -> list[int]:
                     SUBSTRING(f.fecha_emision,7,4)+'-'+
                     SUBSTRING(f.fecha_emision,4,2)+'-'+
                     SUBSTRING(f.fecha_emision,1,2)) >= '2026-08-01'
-        """, (regla_d["ruc_proveedor"], regla_d["monto"]))
+        """.replace("{_excl_clause}", _SQL_EXCLUIR_COMPRADORES),
+            (regla_d["ruc_proveedor"], regla_d["monto"], *_RUCS_CLIENTE_EXCLUIDOS))
         facturas = cur.fetchall()
 
         for factura in facturas:
