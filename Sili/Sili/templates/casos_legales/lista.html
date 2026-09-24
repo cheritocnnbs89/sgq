@@ -8,41 +8,37 @@
 {% block content %}
 <div class="container-fluid casos-wrap">
 
-  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+  <div class="casos-hero">
     <div>
-      <h4 class="mb-0"><i class="bi bi-briefcase me-1"></i>Casos Legales</h4>
-      <p class="text-muted mb-0 small">
-        {% if es_admin %}Todos los casos registrados.{% else %}Los casos que registraste y los de tu equipo directo.{% endif %}
-      </p>
+      <div class="casos-hero-kicker">Gestión</div>
+      <h4><i class="bi bi-briefcase me-2"></i>Casos Legales</h4>
+      <p>{% if es_admin %}Todos los casos registrados.{% else %}Los casos que registraste y los de tu equipo directo.{% endif %}</p>
     </div>
     {% if has_permission('casos_legales','crear') %}
-    <a href="{{ url_for('casos_legales.casos_nuevo') }}" class="btn btn-primary btn-sm">
+    <a href="{{ url_for('casos_legales.casos_nuevo') }}" class="btn btn-light">
       <i class="bi bi-plus-lg me-1"></i>Nuevo caso
     </a>
     {% endif %}
   </div>
 
-  <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
-    <div class="btn-group btn-group-sm" role="group" aria-label="Estado">
-      {% for val, lbl in (('ABIERTO','Abiertos'), ('CERRADO','Cerrados'), ('TODOS','Todos')) %}
-      <a class="btn {{ 'btn-primary' if estado == val else 'btn-outline-primary' }}"
-         href="{{ url_for('casos_legales.casos_lista', estado=val, tipo=tipo) }}">{{ lbl }}</a>
-      {% endfor %}
-    </div>
-    <div class="btn-group btn-group-sm" role="group" aria-label="Tipo">
-      <a class="btn {{ 'btn-secondary' if not tipo else 'btn-outline-secondary' }}"
-         href="{{ url_for('casos_legales.casos_lista', estado=estado) }}">Todos los tipos</a>
-      {% for key, t in tipos.items() %}
-      <a class="btn {{ 'btn-secondary' if tipo == key else 'btn-outline-secondary' }}"
-         href="{{ url_for('casos_legales.casos_lista', estado=estado, tipo=key) }}">{{ t.label }}</a>
-      {% endfor %}
-    </div>
+  <div class="casos-filtros">
+    {% for val, lbl in (('ABIERTO','Abiertos'), ('CERRADO','Cerrados'), ('TODOS','Todos')) %}
+    <a class="casos-chip {{ 'activo' if estado == val }}"
+       href="{{ url_for('casos_legales.casos_lista', estado=val, tipo=tipo) }}">{{ lbl }}</a>
+    {% endfor %}
+    <span class="text-muted mx-1">|</span>
+    <a class="casos-chip {{ 'activo' if not tipo }}"
+       href="{{ url_for('casos_legales.casos_lista', estado=estado) }}">Todos los tipos</a>
+    {% for key, t in tipos.items() %}
+    <a class="casos-chip {{ 'activo' if tipo == key }}"
+       href="{{ url_for('casos_legales.casos_lista', estado=estado, tipo=key) }}"><i class="bi {{ t.icon }} me-1"></i>{{ t.label }}</a>
+    {% endfor %}
   </div>
 
-  <div class="card border-0 shadow-sm">
+  <div class="casos-card">
     <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+      <table class="table align-middle casos-tabla">
+        <thead>
           <tr>
             <th>#</th><th>Tipo</th><th>Tipo de trámite</th><th>Estudio jurídico</th>
             <th>F. trámite</th><th>F. fin (tent.)</th><th>Registrado por</th>
@@ -51,31 +47,33 @@
         </thead>
         <tbody>
           {% for c in casos %}
-          <tr>
-            <td>{{ c.id }}</td>
+          <tr class="casos-fila--{{ c.tipo }}">
+            <td class="fw-semibold">{{ c.id }}</td>
             <td><span class="badge casos-badge-{{ c.tipo|lower }}">{{ tipos[c.tipo].label if c.tipo in tipos else c.tipo }}</span></td>
-            <td>{{ c.tipo_tramite }}</td>
+            <td class="fw-semibold">{{ c.tipo_tramite }}</td>
             <td>{{ c.estudio_juridico or '—' }}</td>
             <td class="text-nowrap">{{ c.fecha_tramite }}</td>
             <td class="text-nowrap">
               {% if c.fecha_fin_tentativa %}
                 {% if c.estado == 'ABIERTO' and c.fecha_fin_tentativa < hoy %}
-                  <span class="text-danger fw-semibold" title="Fecha tentativa vencida">{{ c.fecha_fin_tentativa }}</span>
+                  <span class="text-danger fw-semibold" title="Fecha tentativa vencida"><i class="bi bi-exclamation-circle me-1"></i>{{ c.fecha_fin_tentativa }}</span>
                 {% else %}{{ c.fecha_fin_tentativa }}{% endif %}
               {% else %}—{% endif %}
             </td>
             <td>{{ c.creado_por_nombre }}</td>
-            <td class="text-center">{{ c.n_avances }}</td>
+            <td class="text-center"><span class="casos-avances-pill">{{ c.n_avances }}</span></td>
             <td>
-              {% if c.estado == 'ABIERTO' %}<span class="badge bg-success">Abierto</span>
-              {% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
+              {% if c.estado == 'ABIERTO' %}<span class="casos-estado casos-estado--abierto">Abierto</span>
+              {% else %}<span class="casos-estado casos-estado--cerrado">Cerrado</span>{% endif %}
             </td>
             <td class="text-end">
               <a class="btn btn-sm btn-outline-primary" href="{{ url_for('casos_legales.casos_detalle', caso_id=c.id) }}">Detalle</a>
             </td>
           </tr>
           {% else %}
-          <tr><td colspan="10" class="text-center text-muted py-4">No hay casos para mostrar.</td></tr>
+          <tr><td colspan="10" class="text-center text-muted py-5">
+            <i class="bi bi-inbox fs-3 d-block mb-1"></i>No hay casos para mostrar.
+          </td></tr>
           {% endfor %}
         </tbody>
       </table>
