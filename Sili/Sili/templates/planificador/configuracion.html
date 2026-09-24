@@ -291,26 +291,27 @@
     <div class="col-12">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-light fw-bold">
-          <i class="bi bi-airplane me-1"></i>Flujo de Vuelo: omitir aprobación de gerencia
+          <i class="bi bi-airplane me-1"></i>Flujo de Vuelo: tras la aprobación del gerente de presupuesto
         </div>
         <div class="card-body">
           <form method="post" action="{{ url_for('planificador.planificador_vuelo_flujo') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" role="switch"
-                     id="vuelo_omitir_aprobacion_gg" name="vuelo_omitir_aprobacion_gg" value="1"
-                     {% if vuelo_omitir_gg %}checked{% endif %}>
-              <label class="form-check-label fw-semibold" for="vuelo_omitir_aprobacion_gg">
-                Omitir aprobación del gerente de presupuesto y confirmar automáticamente
+                     id="vuelo_gg_directo_liquidacion" name="vuelo_gg_directo_liquidacion" value="1"
+                     {% if vuelo_gg_directo %}checked{% endif %}>
+              <label class="form-check-label fw-semibold" for="vuelo_gg_directo_liquidacion">
+                Al aprobar el gerente de presupuesto, pasar directo a liquidación del coordinador
               </label>
             </div>
             <p class="small text-muted mb-3">
               <i class="bi bi-info-circle me-1"></i>
-              Desactivado (normal): cotización del coordinador → aprobación del gerente de presupuesto
-              → información del vuelo → confirmación del vuelo (solicitante o coordinador) → liquidación.<br>
-              Activado: cotización del coordinador → información del vuelo → la solicitud se confirma
-              sola y pasa directo a <strong>liquidación del coordinador</strong>. Solo afecta a las
-              solicitudes que avancen desde el momento en que se activa.
+              La aprobación del gerente de presupuesto siempre es obligatoria.<br>
+              Desactivado (normal): cotización → aprobación del gerente de presupuesto → información
+              del vuelo → confirmación del vuelo (solicitante o coordinador) → liquidación.<br>
+              Activado: cotización → aprobación del gerente de presupuesto → la solicitud pasa directo
+              a <strong>liquidación del coordinador</strong> (sin información del vuelo ni confirmación).
+              Solo afecta a las aprobaciones que se hagan desde el momento en que se activa.
             </p>
             <div class="d-flex justify-content-end">
               <button type="submit" class="btn btn-primary btn-sm">

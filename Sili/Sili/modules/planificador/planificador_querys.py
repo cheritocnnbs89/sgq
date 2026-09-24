@@ -218,15 +218,15 @@ SQL_VUELO_COTIZAR = f"""
     WHERE id = ? AND activo = 1
 """
 
-# ── Vuelo: cotización sin aprobación GG (bandera de configuración) → info del vuelo
-SQL_VUELO_COTIZAR_SIN_GG = f"""
+# ── Vuelo: GG aprueba la cotización y la solicitud pasa directo a liquidación
+#    (bandera de configuración: sin info del vuelo ni confirmación intermedias)
+SQL_VUELO_APROBAR_GG_A_LIQUIDACION = f"""
     UPDATE {TBL_SOLICITUDES} SET
-        estado                  = 'PENDIENTE_INFO_VUELO',
-        datos_ticket            = ?,
-        observacion_coordinador = ?,
-        coordinador_id          = ?,
-        coordinador_nombre      = ?,
-        fecha_actualizacion     = GETDATE()
+        estado                = 'PENDIENTE_LIQUIDACION',
+        aprobador_id          = ?,
+        aprobador_nombre      = ?,
+        observacion_aprobador = ?,
+        fecha_actualizacion   = GETDATE()
     WHERE id = ? AND activo = 1
 """
 
@@ -256,20 +256,6 @@ SQL_VUELO_RECHAZAR_GG = f"""
 SQL_VUELO_COMPLETAR = f"""
     UPDATE {TBL_SOLICITUDES} SET
         estado                  = 'COORDINADA',
-        coordinador_id          = ?,
-        coordinador_nombre      = ?,
-        hora_inicio             = ?,
-        hora_fin                = ?,
-        observacion_coordinador = ?,
-        fecha_actualizacion     = GETDATE()
-    WHERE id = ? AND activo = 1
-"""
-
-# ── Vuelo: coordinador registra gestión y la solicitud queda confirmada
-#    automáticamente (bandera de configuración) → directo a liquidación
-SQL_VUELO_COMPLETAR_Y_CONFIRMAR = f"""
-    UPDATE {TBL_SOLICITUDES} SET
-        estado                  = 'PENDIENTE_LIQUIDACION',
         coordinador_id          = ?,
         coordinador_nombre      = ?,
         hora_inicio             = ?,

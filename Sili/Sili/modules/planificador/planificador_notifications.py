@@ -712,13 +712,18 @@ def notif_vuelo_enviada_cotizar_info(solicitud_id: int, area: str, fecha: str,
 
 def notif_vuelo_gg_aprobo_pendiente_info(solicitud_id: int, area: str, fecha: str,
                                           descripcion: str, solicitante_nombre: str,
-                                          gg_nombre: str) -> None:
+                                          gg_nombre: str, a_liquidacion: bool = False) -> None:
     coordinadores, _ = repo.get_coordinadores_aprobadores_para_tipo("Vuelo")
     subject = f"[Planificador] Vuelo #{solicitud_id} — cotización aprobada"
     titulo  = f"Solicitud de Vuelo #{solicitud_id} — cotización aprobada"
-    saludo  = (f"El Gerente General <strong>{gg_nombre}</strong> aprobó la cotización "
-               f"del vuelo de <strong>{solicitante_nombre}</strong>. Ya puedes ingresar la "
-               f"información del vuelo y adjuntar los documentos.")
+    if a_liquidacion:
+        saludo = (f"El Gerente General <strong>{gg_nombre}</strong> aprobó la cotización "
+                  f"del vuelo de <strong>{solicitante_nombre}</strong>. La solicitud pasa "
+                  f"directo a liquidación: ya puedes ingresar los costos reales.")
+    else:
+        saludo = (f"El Gerente General <strong>{gg_nombre}</strong> aprobó la cotización "
+                  f"del vuelo de <strong>{solicitante_nombre}</strong>. Ya puedes ingresar la "
+                  f"información del vuelo y adjuntar los documentos.")
     filas   = [
         ("N° solicitud",    str(solicitud_id)),
         _fila_tipo_reserva(solicitud_id),
@@ -727,12 +732,19 @@ def notif_vuelo_gg_aprobo_pendiente_info(solicitud_id: int, area: str, fecha: st
         ("Descripción",     descripcion or "—"),
         ("Aprobado por",    gg_nombre),
     ]
-    nota = "Ingresa al SGQ, registra la reservación y adjunta el boleto."
+    if a_liquidacion:
+        nota = ("Ingresa al SGQ → Planificador → Por completar, abre la solicitud y "
+                "registra los costos por tipo de gasto.")
+        aviso = (f"Vuelo #{solicitud_id} de {solicitante_nombre} — cotización aprobada, "
+                 f"pendiente de liquidación")
+    else:
+        nota = "Ingresa al SGQ, registra la reservación y adjunta el boleto."
+        aviso = (f"Vuelo #{solicitud_id} de {solicitante_nombre} — cotización aprobada, "
+                 f"registra la reservación")
     html = _email_html("PLANIFICADOR · VUELO — INFO DEL VUELO", titulo, saludo, filas, nota)
     emails = []
     for c in coordinadores:
-        _inapp(c["id"], subject,
-               f"Vuelo #{solicitud_id} de {solicitante_nombre} — cotización aprobada, registra la reservación")
+        _inapp(c["id"], subject, aviso)
         if c.get("email"):
             emails.append(c["email"])
     _email(emails, subject, html)
