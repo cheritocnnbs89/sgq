@@ -666,6 +666,17 @@
   </div>
 </div>
 
+<div class="viaje-meta-chips my-2">
+  {% if s.modo_viaje == 'hospedaje' %}
+  <span class="viaje-chip viaje-chip--hospedaje">🛏️ Solo hospedaje</span>
+  {% elif s.requiere_hospedaje %}
+  <span class="viaje-chip"><i class="bi bi-airplane-fill"></i>Vuelo</span>
+  <span class="viaje-chip viaje-chip--hospedaje">🛏️ + Hospedaje</span>
+  {% else %}
+  <span class="viaje-chip"><i class="bi bi-airplane-fill"></i>Solo vuelo</span>
+  {% endif %}
+</div>
+
 <button type="button" class="detail-accordion-toggle" data-bs-toggle="collapse"
         data-bs-target="#ggDesgloseBox{{ s.id }}" aria-expanded="true" aria-controls="ggDesgloseBox{{ s.id }}">
   <span class="detail-accordion-label">Ver desglose</span>
@@ -711,6 +722,10 @@
   <span class="cal-expand-hint">Ver <i class="bi bi-chevron-down detail-accordion-chevron"></i></span>
 </button>
 <div class="collapse" id="ggDetalleViajeBox{{ s.id }}">
+  <div class="gg-desglose-row">
+    <span>Tipo de reserva</span>
+    <strong>{% if s.modo_viaje == 'hospedaje' %}Solo hospedaje{% elif s.requiere_hospedaje %}Viaje y hospedaje{% else %}Solo viaje{% endif %}</strong>
+  </div>
   <div class="gg-desglose-row">
     <span>Fechas del viaje</span>
     <strong>{{ s.fecha_str }} → {{ s.get('fecha_retorno') or 'Sin definir' }} <span class="text-muted fw-normal">salida · regreso</span></strong>
