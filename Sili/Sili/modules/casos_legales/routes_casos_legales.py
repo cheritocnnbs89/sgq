@@ -120,7 +120,6 @@ def _leer_formulario(form):
         "fecha": _parse_fecha(form.get("fecha")),
         "tipo_tarea": (form.get("tipo_tarea") or "").strip(),
         "descripcion": (form.get("descripcion") or "").strip(),
-        "observacion": (form.get("observacion") or "").strip(),
         "tercero_tipo": None, "tercero_id": None, "cliente_proveedor": None,
         "requirente_id": None, "requirente": None,
     }
@@ -346,7 +345,6 @@ def casos_editar(caso_id):
             "proveedor_id": str(caso["tercero_id"] or "") if caso["tercero_tipo"] == "P" else "",
             "tiempo_asignado": f"{float(horas):g}" if horas is not None else "",
             "requirente_id": str(caso["requirente_id"] or ""),
-            "observacion": caso["observacion"] or "",
         }
     return render_template("casos_legales/nuevo.html", active_page=ACTIVE_KEY, tipos=TIPOS_CASO,
                            form=valores, caso=caso, **_combos(), extensiones="")

@@ -21,13 +21,13 @@ def crear_caso(tipo: str, d: dict, usuario_id: int, usuario_nombre: str) -> int:
     cur.execute("""
         INSERT INTO casos_legales
             (tipo, fecha, tipo_tarea, descripcion, tercero_tipo, tercero_id, cliente_proveedor,
-             tiempo_asignado, requirente_id, requirente, observacion, fecha_fin, estado,
+             tiempo_asignado, requirente_id, requirente, fecha_fin, estado,
              creado_por_id, creado_por_nombre)
         OUTPUT INSERTED.id
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CAST(GETDATE() AS DATE), ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CAST(GETDATE() AS DATE), ?, ?, ?)
     """, (tipo, d["fecha"].isoformat(), d["tipo_tarea"], d["descripcion"], d["tercero_tipo"],
           d["tercero_id"], d["cliente_proveedor"], d["tiempo_asignado"], d["requirente_id"],
-          d["requirente"], d["observacion"] or None, ESTADO_ABIERTO, usuario_id, usuario_nombre))
+          d["requirente"], ESTADO_ABIERTO, usuario_id, usuario_nombre))
     row = cur.fetchone()
     conn.commit()
     return int(row[0])
@@ -123,12 +123,11 @@ def actualizar_caso(caso_id: int, d: dict) -> bool:
     cur.execute("""
         UPDATE casos_legales
            SET fecha = ?, tipo_tarea = ?, descripcion = ?, tercero_tipo = ?, tercero_id = ?,
-               cliente_proveedor = ?, tiempo_asignado = ?, requirente_id = ?, requirente = ?,
-               observacion = ?
+               cliente_proveedor = ?, tiempo_asignado = ?, requirente_id = ?, requirente = ?
          WHERE id = ? AND activo = 1 AND estado = ?
     """, (d["fecha"].isoformat(), d["tipo_tarea"], d["descripcion"], d["tercero_tipo"],
           d["tercero_id"], d["cliente_proveedor"], d["tiempo_asignado"], d["requirente_id"],
-          d["requirente"], d["observacion"] or None, caso_id, ESTADO_ABIERTO))
+          d["requirente"], caso_id, ESTADO_ABIERTO))
     ok = cur.rowcount > 0
     conn.commit()
     return ok

@@ -66,7 +66,6 @@
             <dd>{% if caso.tiempo_asignado is not none %}{{ '%g'|format(caso.tiempo_asignado|float) }} h{% else %}—{% endif %}</dd>
             <dt>Registrado por</dt><dd>{{ caso.creado_por_nombre }} · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</dd>
             <dt>Descripción</dt><dd class="casos-texto">{{ caso.descripcion }}</dd>
-            {% if caso.observacion %}<dt>Observaciones</dt><dd class="casos-texto">{{ caso.observacion }}</dd>{% endif %}
             {% if adj_registro %}<dt>Adjuntos</dt><dd>{{ lista_adjuntos(adj_registro) }}</dd>{% endif %}
           </dl>
         </div>

@@ -27,7 +27,6 @@ CREATE TABLE dbo.casos_legales (
     tiempo_asignado    DECIMAL(6,2)  NULL,                -- Tiempo asignado (horas)
     requirente_id      INT           NULL,                -- usuarios.id (Usuario solicitante)
     requirente         NVARCHAR(150) NULL,                -- nombre del usuario solicitante
-    observacion        NVARCHAR(MAX) NULL,                -- Observaciones
     fecha_fin          DATE          NOT NULL CONSTRAINT DF_casos_legales_ffin DEFAULT (CAST(GETDATE() AS DATE)),
     estado             VARCHAR(10)   NOT NULL CONSTRAINT DF_casos_legales_estado DEFAULT 'ABIERTO',
     creado_por_id      INT           NOT NULL,

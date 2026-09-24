@@ -100,7 +100,6 @@ def notif_caso_creado(caso: dict, usuario_id: int, usuario_nombre: str, archivos
         ("Tiempo asignado", _fmt_horas(caso.get("tiempo_asignado"))),
         ("Registrado por", _esc(usuario_nombre)),
         ("Descripción", _esc(caso["descripcion"])),
-        ("Observaciones", _esc(caso.get("observacion"))),
     ]
     return _enviar(
         caso, usuario_id,

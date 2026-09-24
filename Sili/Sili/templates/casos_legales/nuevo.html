@@ -113,15 +113,11 @@
 
       <div class="card card-elev accent-left mb-3">
         <div class="card-body">
-          <div class="fieldset-title"><i class="bi bi-chat-left-text"></i> Descripción y observaciones</div>
+          <div class="fieldset-title"><i class="bi bi-chat-left-text"></i> Descripción</div>
           <div class="row g-3">
             <div class="col-md-12">
               <label class="form-label req" for="descripcion">Descripción</label>
               <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required>{{ form.get('descripcion', '') }}</textarea>
-            </div>
-            <div class="col-md-12">
-              <label class="form-label" for="observacion">Observaciones</label>
-              <textarea class="form-control" id="observacion" name="observacion" rows="3">{{ form.get('observacion', '') }}</textarea>
             </div>
           </div>
         </div>
