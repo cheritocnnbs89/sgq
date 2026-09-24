@@ -1887,12 +1887,16 @@
     var submitBtn   = form.querySelector('[data-cotizar-submit]');
     var hintEl      = form.querySelector('[data-cotizar-hint]');
 
+    // Solicitud de solo hospedaje: no hay pasaje aéreo (el campo ni existe en
+    // el formulario) y lo obligatorio es el valor del hospedaje.
+    var soloHospedaje = form.hasAttribute('data-cotizar-solo-hospedaje');
+
     function _recalcular() {
       // "Pasaje aéreo" es texto libre (aerolínea, detalle del vuelo, valor…),
       // no un campo numérico puro: se extrae el primer monto que contenga
       // como estimado, igual que ya se hace en otros lados del modulo para
       // sugerir valores desde texto libre similar.
-      var pasajeTxt = (pasajeInp.value || '').trim();
+      var pasajeTxt = pasajeInp ? (pasajeInp.value || '').trim() : '';
       var m = pasajeTxt.match(/\d+(?:[.,]\d+)?/);
       var pasajeNum = m ? parseFloat(m[0].replace(',', '.')) : 0;
       var hospedajeNum = parseFloat((hospedajeInp.value || '0').replace(',', '.')) || 0;
@@ -1900,14 +1904,23 @@
 
       if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
       if (totalHintEl) {
-        totalHintEl.textContent = pasajeTxt
-          ? 'Estimado a partir del monto detectado en el pasaje'
-          : 'Ingresa el pasaje para ver el impacto en el presupuesto';
+        if (soloHospedaje) {
+          totalHintEl.textContent = hospedajeNum > 0
+            ? 'Valor cotizado del hospedaje'
+            : 'Ingresa el hospedaje para ver el impacto en el presupuesto';
+        } else {
+          totalHintEl.textContent = pasajeTxt
+            ? 'Estimado a partir del monto detectado en el pasaje'
+            : 'Ingresa el pasaje para ver el impacto en el presupuesto';
+        }
       }
 
-      var listo = pasajeTxt.length > 0;
+      var listo = soloHospedaje ? hospedajeNum > 0 : pasajeTxt.length > 0;
       if (submitBtn) submitBtn.disabled = !listo;
-      if (hintEl) hintEl.textContent = listo ? '' : 'Ingresa el valor del pasaje aéreo.';
+      if (hintEl) {
+        hintEl.textContent = listo ? ''
+          : (soloHospedaje ? 'Ingresa el valor del hospedaje.' : 'Ingresa el valor del pasaje aéreo.');
+      }
     }
 
     if (pasajeInp) pasajeInp.addEventListener('input', _recalcular);

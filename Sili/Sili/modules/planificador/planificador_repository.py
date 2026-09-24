@@ -422,15 +422,18 @@ def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs:
 
 
 def cotizar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
-                  valor_cotizado: str, obs: str = "") -> None:
-    """Coordinador ingresa el valor cotizado del pasaje → pasa a aprobación GG."""
+                  valor_cotizado: str, obs: str = "", solo_hospedaje: bool = False) -> None:
+    """Coordinador ingresa el valor cotizado (pasaje; o solo el hospedaje si la
+    solicitud es de solo hospedaje) → pasa a aprobación GG."""
     conn = get_db()
     cur = conn.cursor()
     cur.execute(SQL_VUELO_COTIZAR,
                (valor_cotizado, obs or "", coordinador_id, coordinador_nombre, solicitud_id))
     conn.commit()
+    detalle = ("Coordinador cotiza el hospedaje (solicitud sin pasaje aéreo). "
+               if solo_hospedaje else f"Coordinador cotiza el pasaje: {valor_cotizado}. ")
     insert_solicitud_log(solicitud_id, "COTIZADA", coordinador_id, coordinador_nombre,
-                         f"Coordinador cotiza el pasaje: {valor_cotizado}. Pasa a aprobación del Gerente General.")
+                         detalle + "Pasa a aprobación del Gerente General.")
 
 
 def aprobar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -> None:

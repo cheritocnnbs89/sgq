@@ -326,7 +326,7 @@
       {% if s.aprobador_nombre %}
       <div class="viaje-detalle-row"><span>Aprobado/Rechazado por</span><strong>{{ s.aprobador_nombre }}</strong></div>
       {% endif %}
-      {% if s.get('datos_ticket') and not s.puede_cotizar_vuelo %}
+      {% if s.modo_viaje != 'hospedaje' and s.get('datos_ticket') and not s.puede_cotizar_vuelo %}
       <div class="viaje-detalle-row"><span>Pasaje cotizado</span><strong>{{ s.datos_ticket }}</strong></div>
       {% endif %}
       {% if s.get('cotizacion_hospedaje') and s.cotizacion_hospedaje|float > 0 %}
@@ -445,7 +445,7 @@
   <div class="detail-box"><span>Costo total</span><strong>${{ '%.2f'|format(s.costo_real|float) }}</strong></div>
   {% endif %}
   {% endif %}
-  {% if s.tipo == 'Vuelo' and s.get('datos_ticket') and not s.puede_cotizar_vuelo and not s.puede_aprobar_gg_vuelo %}
+  {% if s.tipo == 'Vuelo' and s.modo_viaje != 'hospedaje' and s.get('datos_ticket') and not s.puede_cotizar_vuelo and not s.puede_aprobar_gg_vuelo %}
   <div class="detail-box"><span>Pasaje cotizado</span><strong>{{ s.datos_ticket }}</strong></div>
   {% endif %}
   {% if s.tipo == 'Vuelo' and s.get('cotizacion_hospedaje') and s.cotizacion_hospedaje|float > 0 and not s.puede_aprobar_gg_vuelo %}
@@ -524,12 +524,14 @@
 </div>
 {% endif %}
 
-{# ── Vuelo: coordinador ingresa el valor cotizado del pasaje ── #}
+{# ── Vuelo: coordinador ingresa el valor cotizado del pasaje (o del hospedaje, si la
+   solicitud es de solo hospedaje: ahí no hay pasaje aéreo y el hospedaje es obligatorio) ── #}
 {% if s.puede_cotizar_vuelo %}
+{% set _solo_hosp = (s.modo_viaje == 'hospedaje') %}
 <div class="action-zone action-zone-green mt-3">
-  <h3><i class="bi bi-cash-coin me-1"></i>Cotización del vuelo</h3>
+  <h3><i class="bi bi-cash-coin me-1"></i>{{ 'Cotización del hospedaje' if _solo_hosp else 'Cotización del vuelo' }}</h3>
   <p class="small text-muted mb-2">
-    Ingresa el valor cotizado para <strong>{{ s.solicitante_nombre }}</strong>.
+    Ingresa el valor cotizado {{ 'del hospedaje ' if _solo_hosp }}para <strong>{{ s.solicitante_nombre }}</strong>.
     Al guardar, pasará a aprobación del Gerente General.
   </p>
   {% if s.get('penalizacion') and s.penalizacion|float > 0 %}
@@ -546,9 +548,11 @@
     <strong>{{ pasajeros_sin_ceco | join(', ') }}</strong>. Ajusta la solicitud si corresponde.
   </div>
   {% endif %}
-  <form method="post" action="{{ url_for('planificador.planificador_vuelo_cotizar', sid=s.id) }}" data-cotizar-vuelo-form>
+  <form method="post" action="{{ url_for('planificador.planificador_vuelo_cotizar', sid=s.id) }}"
+        data-cotizar-vuelo-form{% if _solo_hosp %} data-cotizar-solo-hospedaje{% endif %}>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="row g-2">
+      {% if not _solo_hosp %}
       <div class="col-sm-6">
         <label class="form-label">Pasaje aéreo <span class="text-danger">*</span></label>
         <div class="input-group input-group-sm">
@@ -559,23 +563,33 @@
         </div>
         <div class="form-text">Obligatorio para enviar</div>
       </div>
-      <div class="col-sm-6">
+      {% endif %}
+      <div class="{{ 'col-12' if _solo_hosp else 'col-sm-6' }}">
+        {% if _solo_hosp %}
+        <label class="form-label">Hospedaje <span class="text-danger">*</span></label>
+        {% else %}
         <label class="form-label">Hospedaje <span class="text-muted">(si aplica)</span></label>
+        {% endif %}
         <div class="input-group input-group-sm">
           <span class="input-group-text">$</span>
           <input class="form-control" type="number" name="cotizacion_hospedaje"
-                 min="0" step="0.01" placeholder="0.00"
+                 min="{{ '0.01' if _solo_hosp else '0' }}" step="0.01" placeholder="0.00"
+                 {% if _solo_hosp %}required{% endif %}
                  value="{{ '%.2f'|format(s.cotizacion_hospedaje|float) if s.get('cotizacion_hospedaje') else '' }}"
                  data-cotizar-hospedaje>
         </div>
+        {% if _solo_hosp %}
+        <div class="form-text">Obligatorio para enviar. Esta solicitud es solo de hospedaje: no lleva pasaje aéreo.</div>
+        {% else %}
         <div class="form-text">Deja en cero si no aplica</div>
+        {% endif %}
       </div>
     </div>
 
     <div class="cotizar-total-box">
       <div>
         <span class="cotizar-total-label">Total cotizado</span>
-        <span class="small text-muted" data-cotizar-total-hint>Ingresa el pasaje para ver el impacto en el presupuesto</span>
+        <span class="small text-muted" data-cotizar-total-hint>{{ 'Ingresa el hospedaje para ver el impacto en el presupuesto' if _solo_hosp else 'Ingresa el pasaje para ver el impacto en el presupuesto' }}</span>
       </div>
       <strong class="cotizar-total-value" data-cotizar-total>$0.00</strong>
     </div>
@@ -588,7 +602,7 @@
               placeholder="Detalle adicional de la cotización." data-cotizar-obs></textarea>
 
     <div class="d-flex align-items-center justify-content-between mt-2">
-      <span class="small text-danger" data-cotizar-hint>Ingresa el valor del pasaje aéreo.</span>
+      <span class="small text-danger" data-cotizar-hint>{{ 'Ingresa el valor del hospedaje.' if _solo_hosp else 'Ingresa el valor del pasaje aéreo.' }}</span>
       <button type="submit" class="btn btn-success btn-sm" data-cotizar-submit disabled>
         <i class="bi bi-send-check me-1"></i>Enviar a aprobación
       </button>
@@ -616,12 +630,14 @@
   <span class="cal-expand-hint">Ocultar <i class="bi bi-chevron-down detail-accordion-chevron"></i></span>
 </button>
 <div class="collapse show" id="ggDesgloseBox{{ s.id }}">
+  {% if s.modo_viaje != 'hospedaje' %}
   <div class="gg-desglose-row">
     <span>Pasaje aéreo</span>
     <strong>${{ '%.2f'|format(pasaje_gg) if pasaje_gg is not none else '0.00' }}</strong>
   </div>
   {% if datos_ticket_detalle %}
   <div class="gg-desglose-detalle">{{ datos_ticket_detalle }}</div>
+  {% endif %}
   {% endif %}
   <div class="gg-desglose-row">
     <span>Hospedaje</span>

@@ -1459,22 +1459,38 @@ def vuelo_cotizar(sid):
     valor = request.form.get("valor_cotizado", "").strip()
     obs   = request.form.get("observacion", "").strip()
     hosp_str = request.form.get("cotizacion_hospedaje", "").strip().replace(",", ".")
-    if not valor:
-        flash("Debe ingresar el valor cotizado del pasaje.", "warning")
-        return redirect(url_for("planificador.planificador_solicitudes"))
-    repo.cotizar_vuelo(sid, u["id"], u["nombre"], valor, obs)
     try:
         hosp_val = float(hosp_str) if hosp_str else 0.0
+    except ValueError:
+        hosp_val = 0.0
+
+    solo_hospedaje = (s.get("modo_viaje") == "hospedaje")
+    if solo_hospedaje:
+        # Solicitud de solo hospedaje: no lleva pasaje aéreo, aunque el
+        # navegador mande algo. El único valor obligatorio es el hospedaje.
+        if hosp_val <= 0:
+            flash("Debe ingresar el valor cotizado del hospedaje.", "warning")
+            return redirect(url_for("planificador.planificador_solicitudes"))
+        # datos_ticket queda en "0" (no vacío) porque la aprobación del GG
+        # calcula el monto (pasaje + hospedaje) solo si hay datos_ticket.
+        valor = "0"
+    elif not valor:
+        flash("Debe ingresar el valor cotizado del pasaje.", "warning")
+        return redirect(url_for("planificador.planificador_solicitudes"))
+
+    repo.cotizar_vuelo(sid, u["id"], u["nombre"], valor, obs, solo_hospedaje=solo_hospedaje)
+    try:
         if hosp_val > 0:
             repo.set_cotizacion_hospedaje(sid, hosp_val)
-    except (ValueError, Exception):
+    except Exception:
         pass
     try:
+        valor_correo = f"Hospedaje ${hosp_val:.2f}" if solo_hospedaje else valor
         gg_lista = repo.get_gerentes_presupuesto_para_tipo("Vuelo")
         for gg in gg_lista:
             notif.notif_vuelo_pendiente_gg(
                 sid, s["area_solicitante"], str(s["fecha"]),
-                s.get("descripcion", ""), valor,
+                s.get("descripcion", ""), valor_correo,
                 s["solicitante_nombre"], u["nombre"],
                 gg.get("id"), gg.get("nombre", "—"),
             )
