@@ -36,5 +36,6 @@ DEFAULT_OPCIONES = (
     "listar_encuestas",
     "planificador.solicitudes",
     "planificador.configuracion",
+    "casos_legales",
 
 )

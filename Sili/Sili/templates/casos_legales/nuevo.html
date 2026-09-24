@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Casos Legales – Nuevo caso{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/casos_legales.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid casos-wrap">
+
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <div>
+      <h4 class="mb-0"><i class="bi bi-briefcase me-1"></i>Nuevo caso legal</h4>
+      <p class="text-muted mb-0 small">Elige el tipo de caso y completa el formulario.</p>
+    </div>
+    <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Volver a Casos
+    </a>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" id="formCasoNuevo" class="card border-0 shadow-sm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="card-body">
+
+      <div class="fw-semibold small text-uppercase text-muted mb-2">Tipo de caso según origen</div>
+      <div class="casos-tipos mb-3">
+        {% for key, t in tipos.items() %}
+        <input type="radio" class="btn-check" name="tipo" id="tipo_{{ key }}" value="{{ key }}"
+               data-definido="{{ '1' if t.definido else '0' }}" data-gestiona="{{ t.gestiona }}"
+               {% if form.get('tipo') == key %}checked{% endif %} required>
+        <label class="casos-tipo-btn" for="tipo_{{ key }}">
+          <i class="bi {{ t.icon }}"></i><span>{{ t.label }}</span>
+        </label>
+        {% endfor %}
+      </div>
+
+      <div id="casoCampos" class="d-none">
+        <div class="alert alert-warning py-2 small d-none" id="casoAvisoPendiente">
+          <i class="bi bi-info-circle me-1"></i>
+          Los campos de este tipo aún se están definiendo con <strong data-aviso-gestiona></strong>;
+          por ahora se usa el formulario base.
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small" for="tipo_tramite">Tipo de trámite / caso *</label>
+            <input type="text" class="form-control" id="tipo_tramite" name="tipo_tramite" maxlength="150"
+                   value="{{ form.get('tipo_tramite', '') }}" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small" for="estudio_juridico">Estudio jurídico</label>
+            <input type="text" class="form-control" id="estudio_juridico" name="estudio_juridico" maxlength="200"
+                   value="{{ form.get('estudio_juridico', '') }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold small" for="fecha_tramite">Fecha de trámite *</label>
+            <input type="date" class="form-control" id="fecha_tramite" name="fecha_tramite"
+                   value="{{ form.get('fecha_tramite', '') }}" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold small" for="fecha_fin_tentativa">Fecha fin (tentativa)</label>
+            <input type="date" class="form-control" id="fecha_fin_tentativa" name="fecha_fin_tentativa"
+                   value="{{ form.get('fecha_fin_tentativa', '') }}">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold small" for="observacion">Observación *</label>
+            <textarea class="form-control" id="observacion" name="observacion" rows="4" required>{{ form.get('observacion', '') }}</textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold small" for="adjuntos">Archivos adjuntos</label>
+            <input type="file" class="form-control" id="adjuntos" name="adjuntos" multiple>
+            <div class="form-text">Hasta 10 archivos de 10 MB. Formatos: {{ extensiones }}.</div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i>Registrar caso</button>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/casos_legales.js') }}"></script>
+{% endblock %}

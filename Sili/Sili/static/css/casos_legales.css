@@ -1,0 +1,31 @@
+/* Casos Legales */
+.casos-tipos { display: flex; flex-wrap: wrap; gap: .75rem; }
+.casos-tipo-btn {
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: .7rem 1.4rem; border: 2px solid #dbe2ea; border-radius: 12px;
+  background: #fff; color: #334155; font-weight: 600; cursor: pointer;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.casos-tipo-btn i { font-size: 1.25rem; }
+.casos-tipo-btn:hover { border-color: #93a4ba; }
+.btn-check:checked + .casos-tipo-btn { border-color: #1e3a8a; background: #eef2ff; color: #1e3a8a; }
+.btn-check:focus-visible + .casos-tipo-btn { outline: 2px solid #1e3a8a; outline-offset: 2px; }
+
+.casos-badge-interno { background: #0f766e; }
+.casos-badge-externo { background: #c2410c; }
+.casos-badge-tth     { background: #6d28d9; }
+
+.casos-dl { display: grid; grid-template-columns: 11rem 1fr; gap: .5rem 1rem; }
+.casos-dl dt { color: #64748b; font-weight: 600; font-size: .85rem; }
+.casos-dl dd { margin: 0; }
+.casos-texto { white-space: pre-wrap; word-break: break-word; }
+
+.casos-avance { padding: .75rem 0; border-bottom: 1px dashed #e2e8f0; }
+.casos-avance:last-child { border-bottom: 0; }
+.casos-avance--cierre { background: #f8fafc; border-radius: 8px; padding: .75rem; margin-top: .5rem; }
+.casos-adjuntos li { margin-top: .25rem; font-size: .875rem; }
+
+@media (max-width: 576px) {
+  .casos-dl { grid-template-columns: 1fr; gap: .1rem; }
+  .casos-dl dd { margin-bottom: .5rem; }
+}
