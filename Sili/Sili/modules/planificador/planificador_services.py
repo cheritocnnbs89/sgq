@@ -65,6 +65,12 @@ def get_solicitudes_for_user(usuario_id, rol, filters=None):
              "PENDIENTE_LIQUIDACION_VOUCHER"],
             filters
         )
+        # El coordinador de Vuelo también confirma el vuelo (estado COORDINADA);
+        # se filtra por tipo Vuelo porque COORDINADA también lo usa Mensajería.
+        extra += [
+            r for r in repo.get_solicitudes_by_tipos(ctx["tipos_coordinador"], ["COORDINADA"], filters)
+            if r.get("tipo") == "Vuelo"
+        ]
     if ctx["tipos_aprobador"]:
         extra += repo.get_solicitudes_by_tipos(
             ctx["tipos_aprobador"],
@@ -189,13 +195,14 @@ def puede_completar_vuelo(solicitud, usuario_id, ctx):
 
 
 def puede_marcar_realizado_vuelo(solicitud, usuario_id, ctx):
-    """Solicitante confirma que realizó el vuelo (pasa a PENDIENTE_LIQUIDACION)."""
+    """Solicitante o coordinador confirman el vuelo (pasa a PENDIENTE_LIQUIDACION)."""
     if solicitud.get("tipo") != "Vuelo":
         return False
     if solicitud.get("estado") != "COORDINADA":
         return False
     es_solicitante = solicitud.get("solicitante_id") == usuario_id
-    return ctx["es_admin"] or es_solicitante
+    es_coordinador = solicitud.get("tipo") in ctx["tipos_coordinador"]
+    return ctx["es_admin"] or es_solicitante or es_coordinador
 
 
 def puede_liquidar_vuelo(solicitud, usuario_id, ctx):

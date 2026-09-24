@@ -78,6 +78,8 @@ from .planificador_querys import (
     SQL_INSERT_NOTIFY_INAPP,
     SQL_VUELO_APROBAR_JEFE_OK,
     SQL_VUELO_COTIZAR,
+    SQL_VUELO_COTIZAR_SIN_GG,
+    SQL_VUELO_COMPLETAR_Y_CONFIRMAR,
     SQL_VUELO_APROBAR_GG,
     SQL_VUELO_RECHAZAR_GG,
     SQL_VUELO_COMPLETAR,
@@ -422,18 +424,23 @@ def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs:
 
 
 def cotizar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
-                  valor_cotizado: str, obs: str = "", solo_hospedaje: bool = False) -> None:
+                  valor_cotizado: str, obs: str = "", solo_hospedaje: bool = False,
+                  omitir_gg: bool = False) -> None:
     """Coordinador ingresa el valor cotizado (pasaje; o solo el hospedaje si la
-    solicitud es de solo hospedaje) → pasa a aprobación GG."""
+    solicitud es de solo hospedaje) → pasa a aprobación GG, o directo a
+    información del vuelo si la configuración omite la aprobación del GG."""
     conn = get_db()
     cur = conn.cursor()
-    cur.execute(SQL_VUELO_COTIZAR,
-               (valor_cotizado, obs or "", coordinador_id, coordinador_nombre, solicitud_id))
+    sql = SQL_VUELO_COTIZAR_SIN_GG if omitir_gg else SQL_VUELO_COTIZAR
+    cur.execute(sql, (valor_cotizado, obs or "", coordinador_id, coordinador_nombre, solicitud_id))
     conn.commit()
     detalle = ("Coordinador cotiza el hospedaje (solicitud sin pasaje aéreo). "
                if solo_hospedaje else f"Coordinador cotiza el pasaje: {valor_cotizado}. ")
+    destino = ("Aprobación del Gerente General omitida por configuración. "
+               "Pasa al coordinador para ingresar la información del vuelo."
+               if omitir_gg else "Pasa a aprobación del Gerente General.")
     insert_solicitud_log(solicitud_id, "COTIZADA", coordinador_id, coordinador_nombre,
-                         detalle + "Pasa a aprobación del Gerente General.")
+                         detalle + destino)
 
 
 def aprobar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -> None:
@@ -456,16 +463,22 @@ def rechazar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -
 
 
 def completar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
-                    obs: str, hora_inicio: str = None, hora_fin: str = None) -> None:
+                    obs: str, hora_inicio: str = None, hora_fin: str = None,
+                    auto_confirmar: bool = False) -> None:
     conn = get_db()
     cur = conn.cursor()
-    cur.execute(SQL_VUELO_COMPLETAR,
+    sql = SQL_VUELO_COMPLETAR_Y_CONFIRMAR if auto_confirmar else SQL_VUELO_COMPLETAR
+    cur.execute(sql,
                 (coordinador_id, coordinador_nombre,
                  hora_inicio or None, hora_fin or None,
                  obs or "", solicitud_id))
     conn.commit()
     insert_solicitud_log(solicitud_id, "COMPLETADA", coordinador_id, coordinador_nombre,
                          f"Coordinador registra gestión. Obs: {obs or '—'}")
+    if auto_confirmar:
+        insert_solicitud_log(solicitud_id, "PENDIENTE_LIQUIDACION", coordinador_id, coordinador_nombre,
+                             "Vuelo confirmado automáticamente por configuración. "
+                             "Pendiente de liquidación de costos.")
 
 
 def get_cc_nombre(cc_id: int) -> str | None:
@@ -494,7 +507,7 @@ def marcar_realizado_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: s
     cur.execute(SQL_VUELO_MARCAR_REALIZADO, (solicitud_id,))
     conn.commit()
     insert_solicitud_log(solicitud_id, "PENDIENTE_LIQUIDACION", usuario_id, usuario_nombre,
-                         "Solicitante confirmó realización del vuelo. Pendiente de liquidación de costos.")
+                         f"Vuelo confirmado por {usuario_nombre}. Pendiente de liquidación de costos.")
 
 
 def liquidar_vuelo(solicitud_id: int, liquidador_id: int, liquidador_nombre: str,

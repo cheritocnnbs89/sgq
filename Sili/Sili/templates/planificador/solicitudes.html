@@ -263,9 +263,9 @@
                   {% if r.puede_marcar_realizado_vuelo %}
                   <form method="post"
                         action="{{ url_for('planificador.planificador_vuelo_marcar_realizado', sid=r.id) }}"
-                        class="d-inline" data-confirm="¿Confirmar que realizaste este vuelo? El coordinador registrará los costos y cerrará la solicitud.">
+                        class="d-inline" data-confirm="¿Confirmar el vuelo? Pasa a liquidación de costos del coordinador.">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-primary"><i class="bi bi-check2 me-1"></i>Realicé el vuelo</button>
+                    <button class="btn btn-sm btn-primary"><i class="bi bi-check2 me-1"></i>Confirmar vuelo</button>
                   </form>
                   {% elif r.puede_aprobar_jefe_vuelo %}
                   <button type="button" class="btn btn-sm btn-primary" data-open-detalle="{{ r.id }}">Aprobar</button>

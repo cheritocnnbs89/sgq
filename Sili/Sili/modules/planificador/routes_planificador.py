@@ -14,7 +14,7 @@ from flask import (
 )
 
 from modules.auth.routes_auth import require_login, require_permission
-from modules.db import get_config_value
+from modules.db import get_config_value, set_config_values
 from . import planificador_repository as repo
 from . import planificador_services as svc
 from . import planificador_notifications as notif
@@ -1447,6 +1447,13 @@ def vuelo_aprobar_jefe_masivo():
 # Vuelo: coordinador ingresa el valor cotizado del pasaje
 # ─────────────────────────────────────────────────────────────
 
+def _vuelo_omitir_aprobacion_gg() -> bool:
+    """Bandera (Planificador > Configuración): con ella activa, Vuelo omite la
+    aprobación del GG/presupuesto y la confirmación del vuelo, y pasa del
+    coordinador directo a liquidación. Apagada por defecto."""
+    return (get_config_value("vuelo_omitir_aprobacion_gg", "0") or "0").strip() == "1"
+
+
 @planificador_bp.route("/solicitudes/<int:sid>/vuelo/cotizar", methods=["POST"],
                        endpoint="planificador_vuelo_cotizar")
 @require_login
@@ -1478,12 +1485,18 @@ def vuelo_cotizar(sid):
         flash("Debe ingresar el valor cotizado del pasaje.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
-    repo.cotizar_vuelo(sid, u["id"], u["nombre"], valor, obs, solo_hospedaje=solo_hospedaje)
+    omitir_gg = _vuelo_omitir_aprobacion_gg()
+    repo.cotizar_vuelo(sid, u["id"], u["nombre"], valor, obs,
+                       solo_hospedaje=solo_hospedaje, omitir_gg=omitir_gg)
     try:
         if hosp_val > 0:
             repo.set_cotizacion_hospedaje(sid, hosp_val)
     except Exception:
         pass
+    if omitir_gg:
+        flash("Cotización registrada. Se omitió la aprobación del Gerente General "
+              "(configuración): ingresa la información del vuelo.", "success")
+        return redirect(url_for("planificador.planificador_solicitudes"))
     try:
         valor_correo = f"Hospedaje ${hosp_val:.2f}" if solo_hospedaje else valor
         gg_lista = repo.get_gerentes_presupuesto_para_tipo("Vuelo")
@@ -1722,7 +1735,9 @@ def vuelo_completar(sid):
         partes.append(obs_extra)
     obs = "\n".join(partes)
 
-    repo.completar_vuelo(sid, u["id"], u["nombre"], obs, hora_inicio, hora_fin)
+    auto_confirmar = _vuelo_omitir_aprobacion_gg()
+    repo.completar_vuelo(sid, u["id"], u["nombre"], obs, hora_inicio, hora_fin,
+                         auto_confirmar=auto_confirmar)
 
     # Guardar adjunto del ticket/boleto si se subió
     import os, uuid
@@ -1754,7 +1769,10 @@ def vuelo_completar(sid):
         )
     except Exception:
         pass
-    flash("Vuelo coordinado. El solicitante fue notificado.", "success")
+    if auto_confirmar:
+        flash("Vuelo coordinado y confirmado automáticamente. Pasa a liquidación de costos.", "success")
+    else:
+        flash("Vuelo coordinado. El solicitante fue notificado.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -1772,15 +1790,16 @@ def vuelo_marcar_realizado(sid):
     if not s or not svc.puede_marcar_realizado_vuelo(s, u["id"], ctx):
         abort(403)
     repo.marcar_realizado_vuelo(sid, u["id"], u["nombre"])
-    try:
-        notif.notif_vuelo_pendiente_liquidacion(
-            sid, s["area_solicitante"], str(s["fecha"]),
-            s["solicitante_nombre"], s["coordinador_id"],
-            s["coordinador_nombre"],
-        )
-    except Exception:
-        pass
-    flash("Vuelo marcado como realizado. El coordinador registrará los costos.", "success")
+    if s.get("coordinador_id") and s["coordinador_id"] != u["id"]:
+        try:
+            notif.notif_vuelo_pendiente_liquidacion(
+                sid, s["area_solicitante"], str(s["fecha"]),
+                u["nombre"], s["coordinador_id"],
+                s["coordinador_nombre"],
+            )
+        except Exception:
+            pass
+    flash("Vuelo confirmado. Pasa a liquidación de costos del coordinador.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -2569,9 +2588,11 @@ def configuracion():
     motorizados_tg  = repo.get_motorizados_telegram_status()
     rol_flags       = repo.get_all_rol_flags()
     centros_costo_usuarios = repo.get_centros_costo_con_usuarios()
+    vuelo_omitir_gg = _vuelo_omitir_aprobacion_gg()
 
     return render_template(
         "planificador/configuracion.html",
+        vuelo_omitir_gg=vuelo_omitir_gg,
         active_page=ACTIVE_KEY,
         config_rows=config_rows,
         usuarios=usuarios,
@@ -2631,6 +2652,24 @@ def tipo_flags_update():
         auto_liquidar  = request.form.get(f"auto_liquidar_{tipo.replace(' ', '_').replace('/', '_')}")  == "1"
         repo.set_tipo_flags(tipo, req_gerente, auto_confirmar, auto_liquidar)
     flash("Configuración de tipos actualizada.", "success")
+    return redirect(url_for("planificador.planificador_configuracion"))
+
+
+@planificador_bp.route("/configuracion/vuelo-flujo", methods=["POST"],
+                       endpoint="planificador_vuelo_flujo")
+@require_login
+@require_permission(PERM_CONFIG, "editar")
+def vuelo_flujo_update():
+    """Activa/desactiva que Vuelo omita la aprobación del GG/presupuesto y la
+    confirmación del vuelo (pasa del coordinador directo a liquidación)."""
+    u = _current_user()
+    if not _check_perm(u["rol"], PERM_CONFIG, "editar"):
+        abort(403)
+    activo = request.form.get("vuelo_omitir_aprobacion_gg") == "1"
+    set_config_values({"vuelo_omitir_aprobacion_gg": "1" if activo else "0"})
+    flash("Flujo de Vuelo actualizado: " +
+          ("se omite la aprobación del GG y la confirmación." if activo
+           else "flujo normal con aprobación del GG y confirmación."), "success")
     return redirect(url_for("planificador.planificador_configuracion"))
 
 

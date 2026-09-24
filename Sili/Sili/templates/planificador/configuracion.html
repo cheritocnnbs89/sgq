@@ -285,6 +285,45 @@
   </div>
   {% endif %}
 
+  {# ── Flujo de Vuelo: omitir aprobación GG/presupuesto y confirmación ── #}
+  {% if has_permission('planificador.configuracion','editar') %}
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+          <i class="bi bi-airplane me-1"></i>Flujo de Vuelo: omitir aprobación de gerencia
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('planificador.planificador_vuelo_flujo') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" role="switch"
+                     id="vuelo_omitir_aprobacion_gg" name="vuelo_omitir_aprobacion_gg" value="1"
+                     {% if vuelo_omitir_gg %}checked{% endif %}>
+              <label class="form-check-label fw-semibold" for="vuelo_omitir_aprobacion_gg">
+                Omitir aprobación del gerente de presupuesto y confirmar automáticamente
+              </label>
+            </div>
+            <p class="small text-muted mb-3">
+              <i class="bi bi-info-circle me-1"></i>
+              Desactivado (normal): cotización del coordinador → aprobación del gerente de presupuesto
+              → información del vuelo → confirmación del vuelo (solicitante o coordinador) → liquidación.<br>
+              Activado: cotización del coordinador → información del vuelo → la solicitud se confirma
+              sola y pasa directo a <strong>liquidación del coordinador</strong>. Solo afecta a las
+              solicitudes que avancen desde el momento en que se activa.
+            </p>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-save me-1"></i>Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   {# ── Roles que auto-aprueban la aprobación del jefe directo (Vuelo y Voucher) ── #}
   {% if has_permission('planificador.configuracion','editar') %}
   <div class="row g-3 mt-2">

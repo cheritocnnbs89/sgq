@@ -140,13 +140,13 @@
 {% if s.puede_marcar_realizado_vuelo %}
 <div class="confirmar-vuelo-banner">
   <div>
-    <strong>Confirma que realizaste el viaje</strong>
-    <div class="small">Al confirmar, el coordinador registra los costos y cierra la solicitud.</div>
+    <strong>Confirma el vuelo</strong>
+    <div class="small">Al confirmar, pasa a liquidación: el coordinador registra los costos y cierra la solicitud.</div>
   </div>
   <form method="post" action="{{ url_for('planificador.planificador_vuelo_marcar_realizado', sid=s.id) }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <button type="submit" class="btn btn-success btn-sm">
-      <i class="bi bi-check2-circle me-1"></i>Realicé el vuelo
+      <i class="bi bi-check2-circle me-1"></i>Confirmar vuelo
     </button>
   </form>
 </div>
