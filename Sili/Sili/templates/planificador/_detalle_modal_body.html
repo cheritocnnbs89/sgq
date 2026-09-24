@@ -120,23 +120,8 @@
 </div>
 {% endif %}
 
-{# ── Vuelo: aprobación del jefe (solo pantalla de cotización) — la tarjeta del
-   solicitante se quitó de aquí porque la cabecera del modal ya muestra
-   "#id · solicitante · área", quedaba duplicado. ── #}
-{% if s.puede_cotizar_vuelo %}
-{% if s.aprobador_nombre %}
-<div class="aprob-jefe-banner">
-  <i class="bi bi-check-circle-fill"></i>
-  <div>
-    <strong>Aprobada por el jefe directo</strong>
-    <div class="small">
-      {{ s.aprobador_nombre }}
-      {% if s.observacion_aprobador %}· observación: “{{ s.observacion_aprobador }}”{% endif %}
-    </div>
-  </div>
-</div>
-{% endif %}
-{% endif %}
+{# Vuelo (pantalla de cotización): el banner "Aprobada por el jefe directo" se quitó; quién aprobó
+   y su observación ya salen en "Información general → Detalle" (Aprobado/Rechazado por). #}
 
 {# ── Vuelo: franja compacta con lo esencial para "Registrar gestión del vuelo" ──
    Reemplaza por completo el bloque "Información general" en esta pantalla: solo
