@@ -40,9 +40,9 @@
       <table class="table align-middle casos-tabla">
         <thead>
           <tr>
-            <th>#</th><th>Tipo</th><th>Tipo de trámite</th><th>Estudio jurídico</th>
-            <th>F. trámite</th><th>F. fin (tent.)</th><th>Registrado por</th>
-            <th class="text-center">Avances</th><th>Estado</th><th></th>
+            <th>#</th><th>Tipo</th><th>Fecha</th><th>Tipo de tarea</th><th>Descripción</th>
+            <th>Cliente / Proveedor</th><th>Requirente</th><th class="text-end">Tiempo</th>
+            <th>Registrado por</th><th class="text-center">Avances</th><th>Estado</th><th></th>
           </tr>
         </thead>
         <tbody>
@@ -50,16 +50,12 @@
           <tr class="casos-fila--{{ c.tipo }}">
             <td class="fw-semibold">{{ c.id }}</td>
             <td><span class="badge casos-badge-{{ c.tipo|lower }}">{{ tipos[c.tipo].label if c.tipo in tipos else c.tipo }}</span></td>
-            <td class="fw-semibold">{{ c.tipo_tramite }}</td>
-            <td>{{ c.estudio_juridico or '—' }}</td>
-            <td class="text-nowrap">{{ c.fecha_tramite }}</td>
-            <td class="text-nowrap">
-              {% if c.fecha_fin_tentativa %}
-                {% if c.estado == 'ABIERTO' and c.fecha_fin_tentativa < hoy %}
-                  <span class="text-danger fw-semibold" title="Fecha tentativa vencida"><i class="bi bi-exclamation-circle me-1"></i>{{ c.fecha_fin_tentativa }}</span>
-                {% else %}{{ c.fecha_fin_tentativa }}{% endif %}
-              {% else %}—{% endif %}
-            </td>
+            <td class="text-nowrap">{{ c.fecha }}</td>
+            <td class="fw-semibold">{{ c.tipo_tarea }}</td>
+            <td class="casos-celda-desc" title="{{ c.descripcion }}">{{ c.descripcion|truncate(70) }}</td>
+            <td>{{ c.cliente_proveedor or '—' }}</td>
+            <td>{{ c.requirente or '—' }}</td>
+            <td class="text-end text-nowrap">{% if c.tiempo_asignado is not none %}{{ '%g'|format(c.tiempo_asignado|float) }} h{% else %}—{% endif %}</td>
             <td>{{ c.creado_por_nombre }}</td>
             <td class="text-center"><span class="casos-avances-pill">{{ c.n_avances }}</span></td>
             <td>
@@ -71,7 +67,7 @@
             </td>
           </tr>
           {% else %}
-          <tr><td colspan="10" class="text-center text-muted py-5">
+          <tr><td colspan="12" class="text-center text-muted py-5">
             <i class="bi bi-inbox fs-3 d-block mb-1"></i>No hay casos para mostrar.
           </td></tr>
           {% endfor %}

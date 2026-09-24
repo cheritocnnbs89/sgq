@@ -14,18 +14,19 @@ def _rows(cur) -> list[dict]:
 
 # ── Casos ────────────────────────────────────────────────────
 
-def crear_caso(tipo, tipo_tramite, estudio_juridico, observacion,
-               fecha_tramite, fecha_fin_tentativa, usuario_id, usuario_nombre) -> int:
+def crear_caso(tipo, fecha, tipo_tarea, descripcion, cliente_proveedor, tiempo_asignado,
+               requirente, observacion, usuario_id, usuario_nombre) -> int:
+    """La fecha fin se guarda con la fecha del día actual (la asigna el servidor)."""
     conn = get_db()
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO casos_legales
-            (tipo, tipo_tramite, estudio_juridico, observacion, fecha_tramite,
-             fecha_fin_tentativa, estado, creado_por_id, creado_por_nombre)
+            (tipo, fecha, tipo_tarea, descripcion, cliente_proveedor, tiempo_asignado,
+             requirente, observacion, fecha_fin, estado, creado_por_id, creado_por_nombre)
         OUTPUT INSERTED.id
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (tipo, tipo_tramite, estudio_juridico or None, observacion, fecha_tramite,
-          fecha_fin_tentativa or None, ESTADO_ABIERTO, usuario_id, usuario_nombre))
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CAST(GETDATE() AS DATE), ?, ?, ?)
+    """, (tipo, fecha, tipo_tarea, descripcion, cliente_proveedor or None, tiempo_asignado,
+          requirente or None, observacion or None, ESTADO_ABIERTO, usuario_id, usuario_nombre))
     row = cur.fetchone()
     conn.commit()
     return int(row[0])
@@ -36,8 +37,8 @@ def get_casos(estado: str | None = None, tipo: str | None = None,
     """visible_para=None -> todos (admin). Si no, casos que registró ese usuario o
     que registraron los usuarios cuyo jefe directo es él."""
     sql = """
-        SELECT c.id, c.tipo, c.tipo_tramite, c.estudio_juridico, c.fecha_tramite,
-               c.fecha_fin_tentativa, c.estado, c.creado_por_nombre, c.fecha_creacion,
+        SELECT c.id, c.tipo, c.fecha, c.tipo_tarea, c.descripcion, c.cliente_proveedor,
+               c.tiempo_asignado, c.requirente, c.estado, c.creado_por_nombre, c.fecha_creacion,
                (SELECT COUNT(*) FROM casos_legales_avances a
                  WHERE a.caso_id = c.id AND a.activo = 1) AS n_avances
         FROM casos_legales c
@@ -60,6 +61,13 @@ def get_casos(estado: str | None = None, tipo: str | None = None,
     return _rows(cur)
 
 
+def get_tipos_tarea() -> list[str]:
+    """Tipos de tarea ya usados (sugerencias del campo)."""
+    cur = get_db().cursor()
+    cur.execute("SELECT DISTINCT TOP 100 tipo_tarea FROM casos_legales WHERE activo = 1 ORDER BY tipo_tarea")
+    return [r[0] for r in cur.fetchall()]
+
+
 def get_caso(caso_id: int) -> dict | None:
     cur = get_db().cursor()
     cur.execute("SELECT * FROM casos_legales WHERE id = ? AND activo = 1", (caso_id,))
@@ -67,17 +75,17 @@ def get_caso(caso_id: int) -> dict | None:
     return dict(row) if row else None
 
 
-def actualizar_caso(caso_id: int, tipo_tramite, estudio_juridico, observacion,
-                    fecha_tramite, fecha_fin_tentativa) -> bool:
+def actualizar_caso(caso_id: int, fecha, tipo_tarea, descripcion, cliente_proveedor,
+                    tiempo_asignado, requirente, observacion) -> bool:
     conn = get_db()
     cur = conn.cursor()
     cur.execute("""
         UPDATE casos_legales
-           SET tipo_tramite = ?, estudio_juridico = ?, observacion = ?,
-               fecha_tramite = ?, fecha_fin_tentativa = ?
+           SET fecha = ?, tipo_tarea = ?, descripcion = ?, cliente_proveedor = ?,
+               tiempo_asignado = ?, requirente = ?, observacion = ?
          WHERE id = ? AND activo = 1 AND estado = ?
-    """, (tipo_tramite, estudio_juridico or None, observacion, fecha_tramite,
-          fecha_fin_tentativa or None, caso_id, ESTADO_ABIERTO))
+    """, (fecha, tipo_tarea, descripcion, cliente_proveedor or None, tiempo_asignado,
+          requirente or None, observacion or None, caso_id, ESTADO_ABIERTO))
     ok = cur.rowcount > 0
     conn.commit()
     return ok

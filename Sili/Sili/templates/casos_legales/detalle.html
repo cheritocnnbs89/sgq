@@ -26,11 +26,11 @@
   <div class="casos-hero casos-hero--tipo-{{ caso.tipo }}">
     <div>
       <div class="casos-hero-kicker">Caso #{{ caso.id }} · {{ tipo_info.label }}</div>
-      <h4><i class="bi {{ tipo_info.icon }} me-2"></i>{{ caso.tipo_tramite }}</h4>
+      <h4><i class="bi {{ tipo_info.icon }} me-2"></i>{{ caso.tipo_tarea }}</h4>
       <div class="casos-hero-chips">
         <span class="casos-hero-chip">{{ 'Abierto' if abierto else 'Cerrado' }}</span>
         <span class="casos-hero-chip"><i class="bi bi-person me-1"></i>{{ caso.creado_por_nombre }}</span>
-        <span class="casos-hero-chip"><i class="bi bi-calendar-event me-1"></i>Trámite {{ caso.fecha_tramite }}</span>
+        <span class="casos-hero-chip"><i class="bi bi-calendar-event me-1"></i>{{ caso.fecha }}</span>
       </div>
     </div>
     <div class="d-flex flex-wrap gap-2">
@@ -61,12 +61,14 @@
         </div>
         <div class="casos-card-body">
           <dl class="casos-dl">
-            <dt>Tipo de trámite / caso</dt><dd>{{ caso.tipo_tramite }}</dd>
-            <dt>Estudio jurídico</dt><dd>{{ caso.estudio_juridico or '—' }}</dd>
-            <dt>Fecha de trámite</dt><dd>{{ caso.fecha_tramite }}</dd>
-            <dt>Fecha fin (tentativa)</dt><dd>{{ caso.fecha_fin_tentativa or '—' }}</dd>
+            <dt>Fecha</dt><dd>{{ caso.fecha }}</dd>
+            <dt>Tipo de tarea</dt><dd>{{ caso.tipo_tarea }}</dd>
+            <dt>Cliente / Proveedor</dt><dd>{{ caso.cliente_proveedor or '—' }}</dd>
+            <dt>Requirente</dt><dd>{{ caso.requirente or '—' }}</dd>
+            <dt>Tiempo asignado</dt><dd>{% if caso.tiempo_asignado is not none %}{{ '%g'|format(caso.tiempo_asignado|float) }} h{% else %}—{% endif %}</dd>
             <dt>Registrado por</dt><dd>{{ caso.creado_por_nombre }} · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</dd>
-            <dt>Observación</dt><dd><div class="casos-obs-box casos-texto">{{ caso.observacion }}</div></dd>
+            <dt>Descripción</dt><dd><div class="casos-obs-box casos-texto">{{ caso.descripcion }}</div></dd>
+            {% if caso.observacion %}<dt>Observaciones</dt><dd><div class="casos-obs-box casos-texto">{{ caso.observacion }}</div></dd>{% endif %}
             {% if adj_registro %}<dt>Adjuntos</dt><dd>{{ lista_adjuntos(adj_registro) }}</dd>{% endif %}
           </dl>
         </div>

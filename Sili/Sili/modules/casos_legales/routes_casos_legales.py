@@ -95,6 +95,40 @@ def _parse_fecha(txt: str):
         return None
 
 
+def _parse_horas(txt: str):
+    """'' -> (None, True); '2,5' -> (2.5, True); inválido -> (None, False)."""
+    txt = (txt or "").strip().replace(",", ".")
+    if not txt:
+        return None, True
+    try:
+        v = float(txt)
+    except ValueError:
+        return None, False
+    return (round(v, 2), True) if 0 <= v <= 9999.99 else (None, False)
+
+
+def _leer_formulario(form):
+    """Valida los campos del formulario (columnas del Excel). Devuelve (error, datos)."""
+    datos = {
+        "fecha": _parse_fecha(form.get("fecha")),
+        "tipo_tarea": (form.get("tipo_tarea") or "").strip(),
+        "descripcion": (form.get("descripcion") or "").strip(),
+        "cliente_proveedor": (form.get("cliente_proveedor") or "").strip(),
+        "requirente": (form.get("requirente") or "").strip(),
+        "observacion": (form.get("observacion") or "").strip(),
+    }
+    datos["tiempo_asignado"], tiempo_ok = _parse_horas(form.get("tiempo_asignado"))
+    if not datos["fecha"]:
+        return "Indica la fecha.", datos
+    if not datos["tipo_tarea"]:
+        return "Indica el tipo de tarea.", datos
+    if not datos["descripcion"]:
+        return "La descripción es obligatoria.", datos
+    if not tiempo_ok:
+        return "El tiempo asignado debe ser un número de horas (ej. 1,5).", datos
+    return None, datos
+
+
 # ── Lista ────────────────────────────────────────────────────
 
 @casos_legales_bp.route("/", endpoint="casos_lista")
@@ -116,7 +150,6 @@ def casos_lista():
     return render_template(
         "casos_legales/lista.html", active_page=ACTIVE_KEY, casos=casos,
         estado=estado, tipo=tipo, tipos=TIPOS_CASO, es_admin=_es_admin(u),
-        hoy=date.today(),
     )
 
 
@@ -127,36 +160,20 @@ def casos_lista():
 @require_permission(PERM_CASOS, "crear")
 def casos_nuevo():
     u = _user()
-    form = request.form if request.method == "POST" else {}
     if request.method == "POST":
+        form = request.form
         tipo = (form.get("tipo") or "").upper()
-        tipo_tramite = (form.get("tipo_tramite") or "").strip()
-        estudio = (form.get("estudio_juridico") or "").strip()
-        observacion = (form.get("observacion") or "").strip()
-        f_tramite = _parse_fecha(form.get("fecha_tramite"))
-        f_fin_txt = (form.get("fecha_fin_tentativa") or "").strip()
-        f_fin = _parse_fecha(f_fin_txt)
-
-        error = None
         if tipo not in TIPOS_CASO:
-            error = "Selecciona el tipo de caso."
-        elif not tipo_tramite:
-            error = "Indica el tipo de trámite/caso."
-        elif not observacion:
-            error = "La observación es obligatoria."
-        elif not f_tramite:
-            error = "Indica la fecha de trámite."
-        elif f_fin_txt and not f_fin:
-            error = "La fecha fin (tentativa) no es válida."
-        elif f_fin and f_fin < f_tramite:
-            error = "La fecha fin (tentativa) no puede ser anterior a la fecha de trámite."
-
+            error, datos = "Selecciona el tipo de caso.", None
+        else:
+            error, datos = _leer_formulario(form)
         if error:
             flash(error, "warning")
         else:
-            caso_id = repo.crear_caso(tipo, tipo_tramite, estudio, observacion,
-                                      f_tramite.isoformat(), f_fin.isoformat() if f_fin else None,
-                                      u["id"], u["nombre"])
+            caso_id = repo.crear_caso(tipo, datos["fecha"].isoformat(), datos["tipo_tarea"],
+                                      datos["descripcion"], datos["cliente_proveedor"],
+                                      datos["tiempo_asignado"], datos["requirente"],
+                                      datos["observacion"], u["id"], u["nombre"])
             archivos, errores = _guardar_adjuntos(caso_id, None, ETAPA_REGISTRO, u)
             for e in errores:
                 flash(e, "warning")
@@ -169,9 +186,12 @@ def casos_nuevo():
                 current_app.logger.exception("Casos legales: fallo al notificar caso %s", caso_id)
             flash(f"Caso #{caso_id} registrado.", "success")
             return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
+    else:
+        form = {"fecha": date.today().isoformat()}
 
     return render_template("casos_legales/nuevo.html", active_page=ACTIVE_KEY,
                            tipos=TIPOS_CASO, form=form, caso=None,
+                           tipos_tarea=repo.get_tipos_tarea(),
                            extensiones=", ".join(sorted(e.lstrip(".") for e in EXTENSIONES_PERMITIDAS)))
 
 
@@ -279,42 +299,29 @@ def casos_editar(caso_id):
         return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
 
     if request.method == "POST":
-        form = request.form
-        tipo_tramite = (form.get("tipo_tramite") or "").strip()
-        estudio = (form.get("estudio_juridico") or "").strip()
-        observacion = (form.get("observacion") or "").strip()
-        f_tramite = _parse_fecha(form.get("fecha_tramite"))
-        f_fin_txt = (form.get("fecha_fin_tentativa") or "").strip()
-        f_fin = _parse_fecha(f_fin_txt)
-        error = None
-        if not tipo_tramite:
-            error = "Indica el tipo de trámite/caso."
-        elif not observacion:
-            error = "La observación es obligatoria."
-        elif not f_tramite:
-            error = "Indica la fecha de trámite."
-        elif f_fin_txt and not f_fin:
-            error = "La fecha fin (tentativa) no es válida."
-        elif f_fin and f_fin < f_tramite:
-            error = "La fecha fin (tentativa) no puede ser anterior a la fecha de trámite."
+        valores = request.form
+        error, datos = _leer_formulario(valores)
         if error:
             flash(error, "warning")
         else:
-            repo.actualizar_caso(caso_id, tipo_tramite, estudio, observacion,
-                                 f_tramite.isoformat(), f_fin.isoformat() if f_fin else None)
+            repo.actualizar_caso(caso_id, datos["fecha"].isoformat(), datos["tipo_tarea"],
+                                 datos["descripcion"], datos["cliente_proveedor"],
+                                 datos["tiempo_asignado"], datos["requirente"], datos["observacion"])
             flash("Caso actualizado.", "success")
             return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
-        valores = form
     else:
+        horas = caso.get("tiempo_asignado")
         valores = {
-            "tipo_tramite": caso["tipo_tramite"] or "",
-            "estudio_juridico": caso["estudio_juridico"] or "",
+            "fecha": str(caso["fecha"] or ""),
+            "tipo_tarea": caso["tipo_tarea"] or "",
+            "descripcion": caso["descripcion"] or "",
+            "cliente_proveedor": caso["cliente_proveedor"] or "",
+            "tiempo_asignado": f"{float(horas):g}" if horas is not None else "",
+            "requirente": caso["requirente"] or "",
             "observacion": caso["observacion"] or "",
-            "fecha_tramite": str(caso["fecha_tramite"] or ""),
-            "fecha_fin_tentativa": str(caso["fecha_fin_tentativa"] or ""),
         }
     return render_template("casos_legales/nuevo.html", active_page=ACTIVE_KEY, tipos=TIPOS_CASO,
-                           form=valores, caso=caso, extensiones="")
+                           form=valores, caso=caso, tipos_tarea=repo.get_tipos_tarea(), extensiones="")
 
 
 @casos_legales_bp.route("/<int:caso_id>/eliminar", methods=["POST"], endpoint="casos_eliminar")
