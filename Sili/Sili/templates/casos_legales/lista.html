@@ -90,7 +90,17 @@
                 {% if c.estado == 'ABIERTO' %}<span class="badge bg-success">Abierto</span>
                 {% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
               </td>
-              <td class="text-end">
+              <td class="text-end text-nowrap">
+                {% if c.puede_cerrar %}
+                <form method="post" class="d-inline" action="{{ url_for('casos_legales.casos_cerrar', caso_id=c.id) }}"
+                      data-casos-confirm="¿Cerrar el caso #{{ c.id }}? Ya no se podrán registrar más avances.">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <input type="hidden" name="next" value="lista">
+                  <button type="submit" class="btn btn-outline-danger btn-sm" title="Cerrar caso">
+                    <i class="bi bi-check2-circle me-1"></i>Cerrar
+                  </button>
+                </form>
+                {% endif %}
                 <a class="btn btn-outline-primary btn-sm" href="{{ url_for('casos_legales.casos_detalle', caso_id=c.id) }}">Detalle</a>
               </td>
             </tr>
@@ -104,4 +114,8 @@
 
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/casos_legales.js') }}"></script>
 {% endblock %}

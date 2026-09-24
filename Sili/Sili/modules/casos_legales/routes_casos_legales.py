@@ -178,6 +178,10 @@ def casos_lista():
         tipo=tipo or None,
         visible_para=None if _es_admin(u) else u["id"],
     )
+    puede_editar_perm = _permiso(u, "editar")
+    for c in casos:
+        c["puede_cerrar"] = (c["estado"] == ESTADO_ABIERTO and puede_editar_perm
+                             and _puede_gestionar(c, u))
     return render_template(
         "casos_legales/lista.html", active_page=ACTIVE_KEY, casos=casos,
         estado=estado, tipo=tipo, tipos=TIPOS_CASO, es_admin=_es_admin(u),
@@ -306,6 +310,8 @@ def casos_cerrar(caso_id):
     except Exception:
         current_app.logger.exception("Casos legales: fallo al notificar cierre del caso %s", caso_id)
     flash(f"Caso #{caso_id} cerrado.", "success")
+    if request.form.get("next") == "lista":
+        return redirect(url_for("casos_legales.casos_lista"))
     return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
 
 

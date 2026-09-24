@@ -39,7 +39,7 @@ def get_casos(estado: str | None = None, tipo: str | None = None,
     que registraron los usuarios cuyo jefe directo es él."""
     sql = """
         SELECT c.id, c.tipo, c.fecha, c.tipo_tarea, c.descripcion, c.tercero_tipo, c.cliente_proveedor,
-               c.tiempo_asignado, c.requirente, c.estado, c.creado_por_nombre, c.fecha_creacion,
+               c.tiempo_asignado, c.requirente, c.estado, c.creado_por_id, c.creado_por_nombre, c.fecha_creacion,
                (SELECT COUNT(*) FROM casos_legales_avances a
                  WHERE a.caso_id = c.id AND a.activo = 1) AS n_avances
         FROM casos_legales c
