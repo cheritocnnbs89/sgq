@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Caso legal #{{ caso.id }}{% endblock %}
 
-{% block head %}
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/casos_legales.css') }}">
 {% endblock %}
 
@@ -10,10 +11,9 @@
   <ul class="casos-adjuntos list-unstyled">
     {% for a in items %}
     <li>
-      <a href="{{ url_for('casos_legales.casos_adjunto', adjunto_id=a.id) }}">
-        <i class="bi bi-paperclip"></i>{{ a.nombre_original }}
-        <span class="text-muted small">({{ (a.tamano / 1024)|round|int }} KB)</span>
-      </a>
+      <i class="bi bi-paperclip"></i>
+      <a href="{{ url_for('casos_legales.casos_adjunto', adjunto_id=a.id) }}">{{ a.nombre_original }}</a>
+      <span class="hint">({{ (a.tamano / 1024)|round|int }} KB)</span>
     </li>
     {% endfor %}
   </ul>
@@ -21,21 +21,17 @@
 {% endmacro %}
 
 {% block content %}
-<div class="container-fluid casos-wrap">
+<div class="theme-compras">
 
-  <div class="casos-hero casos-hero--tipo-{{ caso.tipo }}">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
     <div>
-      <div class="casos-hero-kicker">Caso #{{ caso.id }} · {{ tipo_info.label }}</div>
-      <h4><i class="bi {{ tipo_info.icon }} me-2"></i>{{ caso.tipo_tarea }}</h4>
-      <div class="casos-hero-chips">
-        <span class="casos-hero-chip">{{ 'Abierto' if abierto else 'Cerrado' }}</span>
-        <span class="casos-hero-chip"><i class="bi bi-person me-1"></i>{{ caso.creado_por_nombre }}</span>
-        <span class="casos-hero-chip"><i class="bi bi-calendar-event me-1"></i>{{ caso.fecha }}</span>
-      </div>
+      <h4 class="mb-1">Caso #{{ caso.id }} — {{ caso.tipo_tarea }}</h4>
+      <span class="badge casos-badge-{{ caso.tipo|lower }}"><i class="bi {{ tipo_info.icon }} me-1"></i>{{ tipo_info.label }}</span>
+      {% if abierto %}<span class="badge bg-success">Abierto</span>{% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
     </div>
     <div class="d-flex flex-wrap gap-2">
       {% if puede_editar %}
-      <a href="{{ url_for('casos_legales.casos_editar', caso_id=caso.id) }}" class="btn btn-light btn-sm">
+      <a href="{{ url_for('casos_legales.casos_editar', caso_id=caso.id) }}" class="btn btn-outline-primary btn-sm">
         <i class="bi bi-pencil-square me-1"></i>Editar
       </a>
       {% endif %}
@@ -43,117 +39,108 @@
       <form method="post" action="{{ url_for('casos_legales.casos_eliminar', caso_id=caso.id) }}"
             data-casos-confirm="¿Eliminar el caso #{{ caso.id }}? Dejará de mostrarse en el sistema.">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit" class="btn btn-outline-light btn-sm"><i class="bi bi-trash me-1"></i>Eliminar</button>
+        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Eliminar</button>
       </form>
       {% endif %}
-      <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-light btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>Volver
-      </a>
+      <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-secondary btn-sm">Volver</a>
     </div>
   </div>
 
   <div class="row g-3">
     <div class="col-lg-7">
 
-      <div class="casos-card mb-3">
-        <div class="casos-card-head casos-card-head--verde">
-          <span class="casos-ico"><i class="bi bi-journal-text"></i></span>Información del caso
-        </div>
-        <div class="casos-card-body">
-          <dl class="casos-dl">
+      <div class="card card-elev accent-left mb-3">
+        <div class="card-body">
+          <div class="fieldset-title"><i class="bi bi-view-list"></i> Información del caso</div>
+          <dl class="casos-dl mb-0">
             <dt>Fecha</dt><dd>{{ caso.fecha }}</dd>
             <dt>Tipo de tarea</dt><dd>{{ caso.tipo_tarea }}</dd>
-            <dt>Cliente / Proveedor</dt><dd>{{ caso.cliente_proveedor or '—' }}</dd>
-            <dt>Requirente</dt><dd>{{ caso.requirente or '—' }}</dd>
-            <dt>Tiempo asignado</dt><dd>{% if caso.tiempo_asignado is not none %}{{ '%g'|format(caso.tiempo_asignado|float) }} h{% else %}—{% endif %}</dd>
+            <dt>Usuario solicitante</dt><dd>{{ caso.requirente or '—' }}</dd>
+            <dt>Cliente / Proveedor</dt>
+            <dd>
+              {% if caso.cliente_proveedor %}
+                <span class="badge bg-light text-dark border me-1">{{ 'Cliente' if caso.tercero_tipo == 'C' else 'Proveedor' }}</span>{{ caso.cliente_proveedor }}
+              {% else %}—{% endif %}
+            </dd>
+            <dt>Tiempo asignado</dt>
+            <dd>{% if caso.tiempo_asignado is not none %}{{ '%g'|format(caso.tiempo_asignado|float) }} h{% else %}—{% endif %}</dd>
             <dt>Registrado por</dt><dd>{{ caso.creado_por_nombre }} · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</dd>
-            <dt>Descripción</dt><dd><div class="casos-obs-box casos-texto">{{ caso.descripcion }}</div></dd>
-            {% if caso.observacion %}<dt>Observaciones</dt><dd><div class="casos-obs-box casos-texto">{{ caso.observacion }}</div></dd>{% endif %}
+            <dt>Descripción</dt><dd class="casos-texto">{{ caso.descripcion }}</dd>
+            {% if caso.observacion %}<dt>Observaciones</dt><dd class="casos-texto">{{ caso.observacion }}</dd>{% endif %}
             {% if adj_registro %}<dt>Adjuntos</dt><dd>{{ lista_adjuntos(adj_registro) }}</dd>{% endif %}
           </dl>
         </div>
       </div>
 
-      <div class="casos-card">
-        <div class="casos-card-head casos-card-head--morado">
-          <span class="casos-ico"><i class="bi bi-clock-history"></i></span>
-          Seguimiento <span class="badge rounded-pill bg-secondary ms-1">{{ avances|length }}</span>
-        </div>
-        <div class="casos-card-body">
+      <div class="card card-elev accent-left mb-3">
+        <div class="card-body">
+          <div class="fieldset-title"><i class="bi bi-clock-history"></i> Seguimiento
+            <span class="badge rounded-pill bg-secondary">{{ avances|length }}</span></div>
           <ul class="casos-timeline">
             <li class="casos-avance casos-avance--inicio">
-              <div class="casos-avance-meta"><strong class="text-dark">Caso registrado</strong> · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</div>
+              <div class="hint"><strong class="text-dark">Caso registrado</strong> · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</div>
             </li>
             {% for a in avances %}
             <li class="casos-avance">
-              <div class="casos-avance-meta"><strong class="text-dark">{{ a.usuario_nombre }}</strong> · {{ a.fecha.strftime('%Y-%m-%d %H:%M') }}</div>
-              <div class="casos-avance-cuerpo">
-                <div class="casos-texto">{{ a.observacion }}</div>
-                {{ lista_adjuntos(adj_por_avance.get(a.id)) }}
-              </div>
+              <div class="hint"><strong class="text-dark">{{ a.usuario_nombre }}</strong> · {{ a.fecha.strftime('%Y-%m-%d %H:%M') }}</div>
+              <div class="casos-texto">{{ a.observacion }}</div>
+              {{ lista_adjuntos(adj_por_avance.get(a.id)) }}
             </li>
             {% endfor %}
             {% if not abierto %}
             <li class="casos-avance casos-avance--cierre">
-              <div class="casos-avance-meta"><strong class="text-dark">Caso cerrado</strong> por {{ caso.cerrado_por_nombre }}
+              <div class="hint"><strong class="text-dark">Caso cerrado</strong> por {{ caso.cerrado_por_nombre }}
                 · {{ caso.fecha_cierre.strftime('%Y-%m-%d %H:%M') }}</div>
-              {% if caso.observacion_cierre or adj_cierre %}
-              <div class="casos-avance-cuerpo">
-                {% if caso.observacion_cierre %}<div class="casos-texto">{{ caso.observacion_cierre }}</div>{% endif %}
-                {{ lista_adjuntos(adj_cierre) }}
-              </div>
-              {% endif %}
+              {% if caso.observacion_cierre %}<div class="casos-texto">{{ caso.observacion_cierre }}</div>{% endif %}
+              {{ lista_adjuntos(adj_cierre) }}
             </li>
             {% endif %}
           </ul>
-          {% if not avances and abierto %}<p class="text-muted small mb-0 mt-2">Aún no hay avances registrados.</p>{% endif %}
+          {% if not avances and abierto %}<p class="hint mb-0 mt-2">Aún no hay avances registrados.</p>{% endif %}
         </div>
       </div>
     </div>
 
     {% if puede_avanzar %}
     <div class="col-lg-5">
-      <div class="casos-card mb-3">
-        <div class="casos-card-head casos-card-head--morado">
-          <span class="casos-ico"><i class="bi bi-plus-circle"></i></span>Registrar avance
-        </div>
-        <div class="casos-card-body">
+      <div class="card card-elev accent-left mb-3">
+        <div class="card-body">
+          <div class="fieldset-title"><i class="bi bi-plus-circle"></i> Registrar avance</div>
           <form method="post" enctype="multipart/form-data"
                 action="{{ url_for('casos_legales.casos_avance', caso_id=caso.id) }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="casos-seccion casos-seccion--obs">
-              <label class="form-label small fw-semibold" for="avance_obs">Observación *</label>
+            <div class="mb-2">
+              <label class="form-label req" for="avance_obs">Observación</label>
               <textarea class="form-control" id="avance_obs" name="observacion" rows="3" required></textarea>
             </div>
-            <div class="casos-seccion casos-seccion--adj">
-              <label class="form-label small fw-semibold" for="avance_adj"><i class="bi bi-paperclip me-1"></i>Archivos adjuntos</label>
-              <input type="file" class="form-control form-control-sm" id="avance_adj" name="adjuntos" multiple>
+            <div class="mb-3">
+              <label class="form-label" for="avance_adj">Archivos adjuntos</label>
+              <input type="file" class="form-control" id="avance_adj" name="adjuntos" multiple>
             </div>
-            <button type="submit" class="btn btn-casos-morado w-100"><i class="bi bi-plus-lg me-1"></i>Agregar avance</button>
+            <button type="submit" class="btn btn-primary w-100">Agregar avance</button>
           </form>
         </div>
       </div>
 
-      <div class="casos-card">
-        <div class="casos-card-head casos-card-head--rojo">
-          <span class="casos-ico"><i class="bi bi-check2-circle"></i></span>Cierre del caso
-        </div>
-        <div class="casos-card-body">
+      <div class="card card-elev accent-left mb-3">
+        <div class="card-body">
+          <div class="fieldset-title"><i class="bi bi-check2-circle"></i> Cierre del caso</div>
           <button class="btn btn-outline-danger w-100" type="button" data-bs-toggle="collapse"
                   data-bs-target="#casoCerrarBox" aria-expanded="false" aria-controls="casoCerrarBox">
-            <i class="bi bi-check2-circle me-1"></i>Cerrar caso
+            Cerrar caso
           </button>
           <div class="collapse mt-3" id="casoCerrarBox">
-            <form method="post" enctype="multipart/form-data" data-casos-confirm="¿Cerrar el caso #{{ caso.id }}? Ya no se podrán registrar más avances."
+            <form method="post" enctype="multipart/form-data"
+                  data-casos-confirm="¿Cerrar el caso #{{ caso.id }}? Ya no se podrán registrar más avances."
                   action="{{ url_for('casos_legales.casos_cerrar', caso_id=caso.id) }}">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <div class="casos-seccion casos-seccion--obs">
-                <label class="form-label small fw-semibold" for="cierre_obs">Observación de cierre</label>
+              <div class="mb-2">
+                <label class="form-label" for="cierre_obs">Observación de cierre</label>
                 <textarea class="form-control" id="cierre_obs" name="observacion" rows="3"></textarea>
               </div>
-              <div class="casos-seccion casos-seccion--adj">
-                <label class="form-label small fw-semibold" for="cierre_adj"><i class="bi bi-paperclip me-1"></i>Archivos adjuntos</label>
-                <input type="file" class="form-control form-control-sm" id="cierre_adj" name="adjuntos" multiple>
+              <div class="mb-3">
+                <label class="form-label" for="cierre_adj">Archivos adjuntos</label>
+                <input type="file" class="form-control" id="cierre_adj" name="adjuntos" multiple>
               </div>
               <button type="submit" class="btn btn-danger w-100">Confirmar cierre</button>
             </form>

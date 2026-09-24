@@ -21,9 +21,12 @@ CREATE TABLE dbo.casos_legales (
     fecha              DATE          NOT NULL,            -- Fecha
     tipo_tarea         NVARCHAR(150) NOT NULL,            -- Tipo de Tarea
     descripcion        NVARCHAR(MAX) NOT NULL,            -- Descripción
-    cliente_proveedor  NVARCHAR(200) NULL,                -- Cliente/Proveedor
+    tercero_tipo       CHAR(1)       NULL,                -- C = Cliente, P = Proveedor (terceros.tipo)
+    tercero_id         BIGINT        NULL,                -- terceros.id
+    cliente_proveedor  NVARCHAR(255) NULL,                -- nombre del tercero al momento de registrar
     tiempo_asignado    DECIMAL(6,2)  NULL,                -- Tiempo asignado (horas)
-    requirente         NVARCHAR(150) NULL,                -- Requirente
+    requirente_id      INT           NULL,                -- usuarios.id (Usuario solicitante)
+    requirente         NVARCHAR(150) NULL,                -- nombre del usuario solicitante
     observacion        NVARCHAR(MAX) NULL,                -- Observaciones
     fecha_fin          DATE          NOT NULL CONSTRAINT DF_casos_legales_ffin DEFAULT (CAST(GETDATE() AS DATE)),
     estado             VARCHAR(10)   NOT NULL CONSTRAINT DF_casos_legales_estado DEFAULT 'ABIERTO',
@@ -36,6 +39,14 @@ CREATE TABLE dbo.casos_legales (
     observacion_cierre NVARCHAR(MAX) NULL,
     activo             BIT           NOT NULL CONSTRAINT DF_casos_legales_activo DEFAULT 1
 );
+GO
+
+-- Si ya tenías la versión intermedia (con columnas del Excel), solo se agregan las columnas nuevas (sin perder datos).
+IF OBJECT_ID('dbo.casos_legales', 'U') IS NOT NULL AND COL_LENGTH('dbo.casos_legales', 'tercero_tipo') IS NULL
+BEGIN
+    ALTER TABLE dbo.casos_legales ADD tercero_tipo CHAR(1) NULL, tercero_id BIGINT NULL, requirente_id INT NULL;
+    ALTER TABLE dbo.casos_legales ALTER COLUMN cliente_proveedor NVARCHAR(255) NULL;
+END
 GO
 
 IF OBJECT_ID('dbo.casos_legales_avances', 'U') IS NULL

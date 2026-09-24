@@ -107,15 +107,22 @@ def _parse_horas(txt: str):
     return (round(v, 2), True) if 0 <= v <= 9999.99 else (None, False)
 
 
+def _to_int(txt):
+    try:
+        return int(str(txt).strip())
+    except (TypeError, ValueError):
+        return None
+
+
 def _leer_formulario(form):
-    """Valida los campos del formulario (columnas del Excel). Devuelve (error, datos)."""
+    """Valida los campos del formulario. Devuelve (error, datos)."""
     datos = {
         "fecha": _parse_fecha(form.get("fecha")),
         "tipo_tarea": (form.get("tipo_tarea") or "").strip(),
         "descripcion": (form.get("descripcion") or "").strip(),
-        "cliente_proveedor": (form.get("cliente_proveedor") or "").strip(),
-        "requirente": (form.get("requirente") or "").strip(),
         "observacion": (form.get("observacion") or "").strip(),
+        "tercero_tipo": None, "tercero_id": None, "cliente_proveedor": None,
+        "requirente_id": None, "requirente": None,
     }
     datos["tiempo_asignado"], tiempo_ok = _parse_horas(form.get("tiempo_asignado"))
     if not datos["fecha"]:
@@ -126,7 +133,32 @@ def _leer_formulario(form):
         return "La descripción es obligatoria.", datos
     if not tiempo_ok:
         return "El tiempo asignado debe ser un número de horas (ej. 1,5).", datos
+
+    req_id = _to_int(form.get("requirente_id"))
+    nombre = repo.get_usuario_nombre(req_id) if req_id else None
+    if not nombre:
+        return "Selecciona el usuario solicitante.", datos
+    datos["requirente_id"], datos["requirente"] = req_id, nombre
+
+    tipo_t = (form.get("tercero_tipo") or "").upper()
+    if tipo_t in ("C", "P"):
+        campo = "cliente_id" if tipo_t == "C" else "proveedor_id"
+        tid = _to_int(form.get(campo))
+        if tid:
+            nombre_t = repo.get_tercero_nombre(tipo_t, tid)
+            if not nombre_t:
+                return "El cliente/proveedor seleccionado no es válido.", datos
+            datos["tercero_tipo"], datos["tercero_id"], datos["cliente_proveedor"] = tipo_t, tid, nombre_t
     return None, datos
+
+
+def _combos():
+    return {
+        "usuarios": repo.get_usuarios_combo(),
+        "clientes": repo.get_terceros_combo("C"),
+        "proveedores": repo.get_terceros_combo("P"),
+        "tipos_tarea": repo.get_tipos_tarea(),
+    }
 
 
 # ── Lista ────────────────────────────────────────────────────
@@ -170,10 +202,7 @@ def casos_nuevo():
         if error:
             flash(error, "warning")
         else:
-            caso_id = repo.crear_caso(tipo, datos["fecha"].isoformat(), datos["tipo_tarea"],
-                                      datos["descripcion"], datos["cliente_proveedor"],
-                                      datos["tiempo_asignado"], datos["requirente"],
-                                      datos["observacion"], u["id"], u["nombre"])
+            caso_id = repo.crear_caso(tipo, datos, u["id"], u["nombre"])
             archivos, errores = _guardar_adjuntos(caso_id, None, ETAPA_REGISTRO, u)
             for e in errores:
                 flash(e, "warning")
@@ -190,8 +219,7 @@ def casos_nuevo():
         form = {"fecha": date.today().isoformat()}
 
     return render_template("casos_legales/nuevo.html", active_page=ACTIVE_KEY,
-                           tipos=TIPOS_CASO, form=form, caso=None,
-                           tipos_tarea=repo.get_tipos_tarea(),
+                           tipos=TIPOS_CASO, form=form, caso=None, **_combos(),
                            extensiones=", ".join(sorted(e.lstrip(".") for e in EXTENSIONES_PERMITIDAS)))
 
 
@@ -304,9 +332,7 @@ def casos_editar(caso_id):
         if error:
             flash(error, "warning")
         else:
-            repo.actualizar_caso(caso_id, datos["fecha"].isoformat(), datos["tipo_tarea"],
-                                 datos["descripcion"], datos["cliente_proveedor"],
-                                 datos["tiempo_asignado"], datos["requirente"], datos["observacion"])
+            repo.actualizar_caso(caso_id, datos)
             flash("Caso actualizado.", "success")
             return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
     else:
@@ -315,13 +341,15 @@ def casos_editar(caso_id):
             "fecha": str(caso["fecha"] or ""),
             "tipo_tarea": caso["tipo_tarea"] or "",
             "descripcion": caso["descripcion"] or "",
-            "cliente_proveedor": caso["cliente_proveedor"] or "",
+            "tercero_tipo": caso["tercero_tipo"] or "",
+            "cliente_id": str(caso["tercero_id"] or "") if caso["tercero_tipo"] == "C" else "",
+            "proveedor_id": str(caso["tercero_id"] or "") if caso["tercero_tipo"] == "P" else "",
             "tiempo_asignado": f"{float(horas):g}" if horas is not None else "",
-            "requirente": caso["requirente"] or "",
+            "requirente_id": str(caso["requirente_id"] or ""),
             "observacion": caso["observacion"] or "",
         }
     return render_template("casos_legales/nuevo.html", active_page=ACTIVE_KEY, tipos=TIPOS_CASO,
-                           form=valores, caso=caso, tipos_tarea=repo.get_tipos_tarea(), extensiones="")
+                           form=valores, caso=caso, **_combos(), extensiones="")
 
 
 @casos_legales_bp.route("/<int:caso_id>/eliminar", methods=["POST"], endpoint="casos_eliminar")

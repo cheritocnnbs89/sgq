@@ -1,171 +1,30 @@
-/* Casos Legales — paleta tomada del proceso: Registro (verde) · Seguimiento (morado) · Cierre (rojo) */
-.casos-wrap {
-  --cl-verde: #0f6b57;   --cl-verde-bg: #e6f4f0;
-  --cl-morado: #6b3fa8;  --cl-morado-bg: #f0eafa;
-  --cl-rojo: #d32f3f;    --cl-rojo-bg: #fdeceb;
-  --cl-naranja: #c97a1b; --cl-naranja-bg: #fbf1e2;
-  --cl-azul: #1e3a8a;    --cl-azul-bg: #eef2ff;
-  --cl-borde: #e3e8ef;   --cl-fondo: #f6f8fb;   --cl-texto: #1f2937;   --cl-suave: #64748b;
-  max-width: 1200px;
-}
+/* Casos Legales — extras mínimos; la base visual es la de Contratos (contrato.css / compras_lista.css) */
+.theme-compras .casos-tipo-label { font-size: .8rem; padding: 6px 14px; }
 
-/* ── Banner de página ─────────────────────────────── */
-.casos-hero {
-  position: relative; overflow: hidden;
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
-  padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; border-radius: 16px;
-  background: linear-gradient(120deg, #0f6b57 0%, #1e3a8a 60%, #6b3fa8 100%);
-  color: #fff; box-shadow: 0 6px 20px rgba(30, 58, 138, .18);
-}
-.casos-hero::after {                       /* hexágonos decorativos, como la lámina */
-  content: ""; position: absolute; right: -30px; top: -40px; width: 190px; height: 190px;
-  background: rgba(255, 255, 255, .08);
-  clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%);
-}
-.casos-hero > * { position: relative; z-index: 1; }
-.casos-hero-kicker { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: #ffd5d9; }
-.casos-hero h4 { margin: .1rem 0 0; font-weight: 800; }
-.casos-hero p { margin: .2rem 0 0; color: rgba(255, 255, 255, .85); font-size: .9rem; }
-.casos-hero .btn-light { font-weight: 600; }
-
-/* ── Pasos del proceso (Registro · Seguimiento · Cierre) ── */
-.casos-pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; margin-bottom: 1.25rem; }
-.casos-paso {
-  display: flex; align-items: center; gap: .75rem; padding: .75rem 1rem;
-  background: #fff; border: 1px solid var(--cl-borde); border-radius: 12px; border-bottom: 4px solid var(--c);
-}
-.casos-paso-num {
-  flex: 0 0 auto; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--c); color: #fff; font-weight: 700; font-size: .85rem;
-}
-.casos-paso strong { display: block; font-size: .9rem; color: var(--cl-texto); }
-.casos-paso span { font-size: .75rem; color: var(--cl-suave); }
-.casos-paso--1 { --c: var(--cl-verde); }
-.casos-paso--2 { --c: var(--cl-morado); }
-.casos-paso--3 { --c: var(--cl-rojo); }
-
-/* ── Tarjetas ─────────────────────────────────────── */
-.casos-card { background: #fff; border: 1px solid var(--cl-borde); border-radius: 16px; box-shadow: 0 2px 10px rgba(15, 23, 42, .05); overflow: hidden; }
-.casos-card-head {
-  display: flex; align-items: center; gap: .6rem; padding: .85rem 1.25rem;
-  background: var(--cl-fondo); border-bottom: 1px solid var(--cl-borde); font-weight: 700; color: var(--cl-texto);
-}
-.casos-card-head .casos-ico {
-  width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center;
-  background: var(--cl-azul-bg); color: var(--cl-azul);
-}
-.casos-card-head--verde .casos-ico   { background: var(--cl-verde-bg);   color: var(--cl-verde); }
-.casos-card-head--morado .casos-ico  { background: var(--cl-morado-bg);  color: var(--cl-morado); }
-.casos-card-head--rojo .casos-ico    { background: var(--cl-rojo-bg);    color: var(--cl-rojo); }
-.casos-card-body { padding: 1.25rem; }
-
-/* ── Selector de tipo de caso ─────────────────────── */
-.casos-tipos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
-.casos-tipo-btn {
-  --c: var(--cl-verde); --cbg: var(--cl-verde-bg);
-  display: flex; align-items: center; gap: .9rem; padding: 1rem 1.1rem; cursor: pointer;
-  background: var(--cl-fondo); border: 2px solid var(--cl-borde); border-radius: 14px; color: var(--cl-texto);
-  transition: transform .12s, box-shadow .12s, border-color .12s, background .12s;
-}
-.casos-tipo-btn .casos-tipo-ico {
-  flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
-  background: #fff; border: 2px solid var(--c); color: var(--c); font-size: 1.35rem;
-}
-.casos-tipo-btn strong { display: block; font-size: 1.02rem; }
-.casos-tipo-btn small { display: block; color: var(--cl-suave); font-size: .75rem; }
-.casos-tipo-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15, 23, 42, .1); border-color: var(--c); }
-.btn-check:checked + .casos-tipo-btn { background: var(--cbg); border-color: var(--c); box-shadow: 0 6px 16px rgba(15, 23, 42, .12); }
-.btn-check:checked + .casos-tipo-btn .casos-tipo-ico { background: var(--c); color: #fff; }
-.btn-check:focus-visible + .casos-tipo-btn { outline: 3px solid rgba(30, 58, 138, .35); outline-offset: 2px; }
-.casos-tipo--INTERNO { --c: var(--cl-verde);   --cbg: var(--cl-verde-bg); }
-.casos-tipo--EXTERNO { --c: var(--cl-naranja); --cbg: var(--cl-naranja-bg); }
-.casos-tipo--TTH     { --c: var(--cl-morado);  --cbg: var(--cl-morado-bg); }
-
-/* ── Formulario ───────────────────────────────────── */
-.casos-wrap .form-label { color: #475569; }
-.casos-wrap .form-control, .casos-wrap .form-select {
-  background: #fbfcfe; border-color: #d6dde8; border-radius: 10px;
-}
-.casos-wrap .form-control:focus { background: #fff; border-color: var(--cl-azul); box-shadow: 0 0 0 .2rem rgba(30, 58, 138, .12); }
-.casos-seccion { border-radius: 14px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; }
-.casos-seccion--datos { background: #f5f9ff; border: 1px solid #dbe7fb; }
-.casos-seccion--fechas { background: var(--cl-verde-bg); border: 1px solid #cbe7df; }
-.casos-seccion--obs { background: #faf7ff; border: 1px solid #e6dcf7; }
-.casos-seccion--adj { background: var(--cl-naranja-bg); border: 1px dashed #e3c28f; }
-.casos-seccion-titulo {
-  font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800;
-  color: var(--cl-suave); margin-bottom: .75rem;
-}
-
-/* ── Etiquetas de tipo y estado ───────────────────── */
-.casos-badge-interno, .casos-badge-externo, .casos-badge-tth {
-  color: #fff; font-weight: 600; padding: .4em .8em; border-radius: 999px;
-}
-.casos-badge-interno { background: var(--cl-verde); }
-.casos-badge-externo { background: var(--cl-naranja); }
-.casos-badge-tth     { background: var(--cl-morado); }
-.casos-estado { display: inline-flex; align-items: center; gap: .35rem; padding: .3em .75em; border-radius: 999px; font-size: .78rem; font-weight: 700; }
-.casos-estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-.casos-estado--abierto { background: var(--cl-verde-bg); color: var(--cl-verde); }
-.casos-estado--cerrado { background: #eceff3; color: #56657a; }
-
-/* ── Filtros y lista ──────────────────────────────── */
-.casos-filtros { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: 1rem; }
-.casos-chip {
-  display: inline-block; padding: .4rem .95rem; border-radius: 999px; font-size: .85rem; font-weight: 600;
-  background: #fff; border: 1px solid var(--cl-borde); color: #475569; text-decoration: none;
-}
-.casos-chip:hover { border-color: var(--cl-azul); color: var(--cl-azul); }
-.casos-chip.activo { background: var(--cl-azul); border-color: var(--cl-azul); color: #fff; }
-.casos-tabla { margin: 0; }
-.casos-tabla thead th {
-  background: var(--cl-fondo); color: var(--cl-suave); font-size: .72rem; letter-spacing: .06em;
-  text-transform: uppercase; border-bottom: 1px solid var(--cl-borde); white-space: nowrap;
-}
-.casos-tabla tbody tr { border-left: 4px solid transparent; }
-.casos-tabla tbody tr.casos-fila--INTERNO { border-left-color: var(--cl-verde); }
-.casos-tabla tbody tr.casos-fila--EXTERNO { border-left-color: var(--cl-naranja); }
-.casos-tabla tbody tr.casos-fila--TTH     { border-left-color: var(--cl-morado); }
-.casos-tabla tbody tr:hover { background: #f8fafd; }
-.casos-avances-pill { display: inline-block; min-width: 1.7rem; padding: .15em .5em; border-radius: 999px; background: var(--cl-morado-bg); color: var(--cl-morado); font-weight: 700; }
-
-/* ── Detalle ──────────────────────────────────────── */
-.casos-hero--tipo-INTERNO { background: linear-gradient(120deg, #0f6b57, #128a70); }
-.casos-hero--tipo-EXTERNO { background: linear-gradient(120deg, #a8620f, #c97a1b); }
-.casos-hero--tipo-TTH     { background: linear-gradient(120deg, #55308a, #6b3fa8); }
-.casos-hero .casos-hero-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .55rem; }
-.casos-hero .casos-hero-chip { background: rgba(255, 255, 255, .18); padding: .25em .75em; border-radius: 999px; font-size: .8rem; font-weight: 600; }
-
-.casos-dl { display: grid; grid-template-columns: 11rem 1fr; gap: .65rem 1rem; margin: 0; }
-.casos-dl dt { color: var(--cl-suave); font-weight: 600; font-size: .82rem; }
-.casos-dl dd { margin: 0; color: var(--cl-texto); }
-.casos-texto { white-space: pre-wrap; word-break: break-word; }
-.casos-obs-box { background: #faf7ff; border-left: 4px solid var(--cl-morado); border-radius: 8px; padding: .7rem .9rem; }
-
-.casos-timeline { position: relative; margin: 0; padding: 0 0 0 1.6rem; list-style: none; }
-.casos-timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: #e0d6f2; }
-.casos-avance { position: relative; padding: .2rem 0 1.1rem; }
-.casos-avance::before {
-  content: ""; position: absolute; left: -1.6rem; top: .35rem; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--cl-morado); border: 3px solid #fff; box-shadow: 0 0 0 2px var(--cl-morado);
-}
-.casos-avance--inicio::before { background: var(--cl-verde); box-shadow: 0 0 0 2px var(--cl-verde); }
-.casos-avance--cierre::before { background: var(--cl-rojo);  box-shadow: 0 0 0 2px var(--cl-rojo); }
-.casos-avance-meta { font-size: .8rem; color: var(--cl-suave); }
-.casos-avance-cuerpo { background: var(--cl-fondo); border: 1px solid var(--cl-borde); border-radius: 10px; padding: .6rem .85rem; margin-top: .3rem; }
-.casos-avance--cierre .casos-avance-cuerpo { background: var(--cl-rojo-bg); border-color: #f3c9c6; }
-.casos-adjuntos { margin: .45rem 0 0; padding: 0; }
-.casos-adjuntos li { margin-top: .25rem; font-size: .85rem; }
-.casos-adjuntos a { display: inline-flex; align-items: center; gap: .35rem; padding: .15rem .6rem; border-radius: 8px; background: #fff; border: 1px solid var(--cl-borde); text-decoration: none; }
-.casos-adjuntos a:hover { border-color: var(--cl-azul); }
-
-@media (max-width: 768px) {
-  .casos-tipos, .casos-pasos { grid-template-columns: 1fr; }
-  .casos-dl { grid-template-columns: 1fr; gap: .1rem; }
-  .casos-dl dd { margin-bottom: .6rem; }
-}
-
-.btn-casos-morado { background: #6b3fa8; border-color: #6b3fa8; color: #fff; font-weight: 600; }
-.btn-casos-morado:hover, .btn-casos-morado:focus { background: #55308a; border-color: #55308a; color: #fff; }
+.casos-badge-interno { background: #0f6b57; }
+.casos-badge-externo { background: #c97a1b; }
+.casos-badge-tth     { background: #6b3fa8; }
 
 .casos-celda-desc { max-width: 22rem; color: #475569; }
+
+.casos-dl { display: grid; grid-template-columns: 11rem 1fr; gap: .5rem 1rem; }
+.casos-dl dt { color: #6c757d; font-weight: 600; font-size: .78rem; }
+.casos-dl dd { margin: 0; }
+.casos-texto { white-space: pre-wrap; word-break: break-word; }
+
+.casos-timeline { position: relative; margin: 0; padding: 0 0 0 1.5rem; list-style: none; }
+.casos-timeline::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: #dde3ec; }
+.casos-avance { position: relative; padding: .1rem 0 .9rem; }
+.casos-avance::before {
+  content: ""; position: absolute; left: -1.5rem; top: .3rem; width: 14px; height: 14px; border-radius: 50%;
+  background: #0d6efd; border: 3px solid #fff; box-shadow: 0 0 0 2px #0d6efd;
+}
+.casos-avance--inicio::before { background: #198754; box-shadow: 0 0 0 2px #198754; }
+.casos-avance--cierre::before { background: #dc3545; box-shadow: 0 0 0 2px #dc3545; }
+.casos-adjuntos { margin: .35rem 0 0; padding: 0; }
+.casos-adjuntos li { margin-top: .2rem; }
+
+@media (max-width: 576px) {
+  .casos-dl { grid-template-columns: 1fr; gap: .1rem; }
+  .casos-dl dd { margin-bottom: .5rem; }
+}

@@ -22,6 +22,36 @@
     actualizar();
   }
 
+  // ── Cliente / Proveedor: el check elige qué lista se muestra ──
+  var radiosTercero = document.querySelectorAll('input[name="tercero_tipo"]');
+  var selCliente = document.getElementById('selCliente');
+  var selProveedor = document.getElementById('selProveedor');
+  var selVacio = document.getElementById('selTerceroVacio');
+  if (radiosTercero.length && selCliente && selProveedor && selVacio) {
+    var mostrar = function (el, si) {
+      el.classList.toggle('d-none', !si);
+      el.disabled = !si;
+    };
+    var actualizarTercero = function () {
+      var r = document.querySelector('input[name="tercero_tipo"]:checked');
+      var t = r ? r.value : '';
+      mostrar(selCliente, t === 'C');
+      mostrar(selProveedor, t === 'P');
+      mostrar(selVacio, t === '');
+      selVacio.disabled = true;
+    };
+    radiosTercero.forEach(function (r) { r.addEventListener('change', actualizarTercero); });
+    var limpiar = document.getElementById('terceroLimpiar');
+    if (limpiar) {
+      limpiar.addEventListener('click', function () {
+        radiosTercero.forEach(function (r) { r.checked = false; });
+        selCliente.value = ''; selProveedor.value = '';
+        actualizarTercero();
+      });
+    }
+    actualizarTercero();
+  }
+
   // ── Confirmación antes de enviar (cerrar caso) ──
   document.querySelectorAll('form[data-casos-confirm]').forEach(function (form) {
     form.addEventListener('submit', function (ev) {

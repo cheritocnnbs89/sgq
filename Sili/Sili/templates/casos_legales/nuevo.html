@@ -1,58 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Casos Legales – {{ "Editar caso" if caso else "Nuevo caso" }}{% endblock %}
 
-{% block head %}
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/casos_legales.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid casos-wrap">
-
-  <div class="casos-hero">
-    <div>
-      <div class="casos-hero-kicker">Gestión · Casos Legales</div>
-      {% if caso %}
-      <h4><i class="bi bi-pencil-square me-2"></i>Editar caso #{{ caso.id }}</h4>
-      <p>Tipo: {{ tipos[caso.tipo].label if caso.tipo in tipos else caso.tipo }}</p>
-      {% else %}
-      <h4><i class="bi bi-folder-plus me-2"></i>Nuevo caso legal</h4>
-      <p>Elige el tipo de caso según su origen y completa el formulario.</p>
-      {% endif %}
-    </div>
-    <a href="{{ url_for('casos_legales.casos_detalle', caso_id=caso.id) if caso else url_for('casos_legales.casos_lista') }}"
-       class="btn btn-light btn-sm">
-      <i class="bi bi-arrow-left me-1"></i>{{ 'Volver al caso' if caso else 'Volver a Casos' }}
-    </a>
+<div class="theme-compras">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0">{% if caso %}Editar caso #{{ caso.id }}{% else %}Nuevo caso legal{% endif %}</h4>
+    <span class="section-chip">Registro, seguimiento y cierre</span>
   </div>
 
-  {% if not caso %}
-  <div class="casos-pasos">
-    <div class="casos-paso casos-paso--1"><span class="casos-paso-num">1</span>
-      <div><strong>Registro</strong><span>Creas el caso indicando su origen</span></div></div>
-    <div class="casos-paso casos-paso--2"><span class="casos-paso-num">2</span>
-      <div><strong>Seguimiento</strong><span>Registras avances si los hay</span></div></div>
-    <div class="casos-paso casos-paso--3"><span class="casos-paso-num">3</span>
-      <div><strong>Cierre</strong><span>Marcas el caso como cerrado</span></div></div>
-  </div>
-  {% endif %}
-
-  <form method="post" enctype="multipart/form-data" id="formCasoNuevo">
+  <form id="formCasoNuevo" method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
     {% if not caso %}
-    <div class="casos-card mb-3">
-      <div class="casos-card-head casos-card-head--verde">
-        <span class="casos-ico"><i class="bi bi-diagram-3"></i></span>Tipo de caso según origen
-      </div>
-      <div class="casos-card-body">
-        <div class="casos-tipos">
+    <div class="card card-elev accent-left mb-3">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-diagram-3"></i> Tipo de caso según origen</div>
+        <div class="d-flex flex-wrap gap-2">
           {% for key, t in tipos.items() %}
           <input type="radio" class="btn-check" name="tipo" id="tipo_{{ key }}" value="{{ key }}"
                  data-definido="{{ '1' if t.definido else '0' }}" data-gestiona="{{ t.gestiona }}"
                  {% if form.get('tipo') == key %}checked{% endif %} required>
-          <label class="casos-tipo-btn casos-tipo--{{ key }}" for="tipo_{{ key }}">
-            <span class="casos-tipo-ico"><i class="bi {{ t.icon }}"></i></span>
-            <span><strong>{{ t.label }}</strong><small>Gestiona: {{ t.gestiona }}</small></span>
+          <label class="btn btn-outline-primary casos-tipo-label" for="tipo_{{ key }}">
+            <i class="bi {{ t.icon }} me-1"></i>{{ t.label }}
           </label>
           {% endfor %}
         </div>
@@ -67,79 +41,109 @@
         por ahora se usa el formulario base.
       </div>
 
-      <div class="casos-card">
-        <div class="casos-card-head">
-          <span class="casos-ico"><i class="bi bi-journal-text"></i></span>Detalle de la actividad
-        </div>
-        <div class="casos-card-body">
-
-          <div class="casos-seccion casos-seccion--datos">
-            <div class="casos-seccion-titulo">Actividad</div>
-            <div class="row g-3">
-              <div class="col-md-3">
-                <label class="form-label fw-semibold small" for="fecha">Fecha *</label>
-                <input type="date" class="form-control" id="fecha" name="fecha"
-                       value="{{ form.get('fecha', '') }}" required>
-              </div>
-              <div class="col-md-5">
-                <label class="form-label fw-semibold small" for="tipo_tarea">Tipo de tarea *</label>
-                <input type="text" class="form-control" id="tipo_tarea" name="tipo_tarea" maxlength="150"
-                       list="listaTiposTarea" autocomplete="off" value="{{ form.get('tipo_tarea', '') }}" required>
-                <datalist id="listaTiposTarea">
-                  {% for t in tipos_tarea %}<option value="{{ t }}">{% endfor %}
-                </datalist>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label fw-semibold small" for="tiempo_asignado">Tiempo asignado (horas)</label>
-                <input type="text" inputmode="decimal" class="form-control" id="tiempo_asignado" name="tiempo_asignado"
-                       maxlength="7" placeholder="Ej. 1,5" value="{{ form.get('tiempo_asignado', '') }}">
-              </div>
+      <div class="card card-elev accent-left mb-3">
+        <div class="card-body">
+          <div class="fieldset-title"><i class="bi bi-view-list"></i> Cabecera del registro</div>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label req" for="fecha">Fecha</label>
+              <input type="date" class="form-control" id="fecha" name="fecha" value="{{ form.get('fecha', '') }}" required>
             </div>
-          </div>
-
-          <div class="casos-seccion casos-seccion--fechas">
-            <div class="casos-seccion-titulo">Partes</div>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label fw-semibold small" for="cliente_proveedor">Cliente / Proveedor</label>
-                <input type="text" class="form-control" id="cliente_proveedor" name="cliente_proveedor" maxlength="200"
-                       value="{{ form.get('cliente_proveedor', '') }}">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-semibold small" for="requirente">Requirente</label>
-                <input type="text" class="form-control" id="requirente" name="requirente" maxlength="150"
-                       value="{{ form.get('requirente', '') }}">
-              </div>
+            <div class="col-md-5">
+              <label class="form-label req" for="tipo_tarea">Tipo de tarea</label>
+              <input type="text" class="form-control" id="tipo_tarea" name="tipo_tarea" maxlength="150"
+                     list="listaTiposTarea" autocomplete="off" value="{{ form.get('tipo_tarea', '') }}" required>
+              <datalist id="listaTiposTarea">
+                {% for t in tipos_tarea %}<option value="{{ t }}">{% endfor %}
+              </datalist>
             </div>
-          </div>
+            <div class="col-md-4">
+              <label class="form-label" for="tiempo_asignado">Tiempo asignado (horas)</label>
+              <input type="text" inputmode="decimal" class="form-control" id="tiempo_asignado" name="tiempo_asignado"
+                     maxlength="7" placeholder="Ej. 1,5" value="{{ form.get('tiempo_asignado', '') }}">
+            </div>
 
-          <div class="casos-seccion casos-seccion--obs">
-            <div class="casos-seccion-titulo">Descripción y observaciones</div>
-            <label class="form-label fw-semibold small" for="descripcion">Descripción *</label>
-            <textarea class="form-control mb-3" id="descripcion" name="descripcion" rows="3" required>{{ form.get('descripcion', '') }}</textarea>
-            <label class="form-label fw-semibold small" for="observacion">Observaciones</label>
-            <textarea class="form-control" id="observacion" name="observacion" rows="3">{{ form.get('observacion', '') }}</textarea>
-          </div>
+            <div class="col-md-6">
+              <label class="form-label req" for="requirente_id">Usuario solicitante</label>
+              <select name="requirente_id" id="requirente_id" class="form-select" required>
+                <option value="">Selecciona…</option>
+                {% for u in usuarios %}
+                <option value="{{ u.id }}" {% if form.get('requirente_id') | string == u.id | string %}selected{% endif %}>
+                  {{ u.nombre }}{% if u.departamento %} — {{ u.departamento }}{% endif %}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
 
-          {% if not caso %}
-          <div class="casos-seccion casos-seccion--adj mb-0">
-            <div class="casos-seccion-titulo"><i class="bi bi-paperclip me-1"></i>Archivos adjuntos</div>
-            <input type="file" class="form-control" id="adjuntos" name="adjuntos" multiple aria-label="Archivos adjuntos">
-            <div class="form-text">Hasta 10 archivos de 10 MB. Formatos: {{ extensiones }}.</div>
-          </div>
-          {% endif %}
-
-          <div class="d-flex justify-content-end gap-2 mt-4">
-            <a href="{{ url_for('casos_legales.casos_detalle', caso_id=caso.id) if caso else url_for('casos_legales.casos_lista') }}"
-               class="btn btn-outline-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-success px-4">
-              <i class="bi bi-check2 me-1"></i>{{ 'Guardar cambios' if caso else 'Registrar caso' }}
-            </button>
+            <div class="col-md-6">
+              <label class="form-label">Cliente / Proveedor</label>
+              <div class="d-flex align-items-center gap-3 mb-1">
+                <div class="form-check form-check-inline m-0">
+                  <input class="form-check-input" type="radio" name="tercero_tipo" id="terC" value="C"
+                         {% if form.get('tercero_tipo') == 'C' %}checked{% endif %}>
+                  <label class="form-check-label" for="terC">Cliente</label>
+                </div>
+                <div class="form-check form-check-inline m-0">
+                  <input class="form-check-input" type="radio" name="tercero_tipo" id="terP" value="P"
+                         {% if form.get('tercero_tipo') == 'P' %}checked{% endif %}>
+                  <label class="form-check-label" for="terP">Proveedor</label>
+                </div>
+                <button type="button" class="btn btn-link btn-sm p-0" id="terceroLimpiar">Quitar</button>
+              </div>
+              <select id="selTerceroVacio" class="form-select" disabled>
+                <option>Elige si es cliente o proveedor…</option>
+              </select>
+              <select name="cliente_id" id="selCliente" class="form-select d-none" disabled>
+                <option value="">Selecciona un cliente…</option>
+                {% for c in clientes %}
+                <option value="{{ c.id }}" {% if form.get('cliente_id') | string == c.id | string %}selected{% endif %}>{{ c.nombre }}</option>
+                {% endfor %}
+              </select>
+              <select name="proveedor_id" id="selProveedor" class="form-select d-none" disabled>
+                <option value="">Selecciona un proveedor…</option>
+                {% for p in proveedores %}
+                <option value="{{ p.id }}" {% if form.get('proveedor_id') | string == p.id | string %}selected{% endif %}>{{ p.nombre }}</option>
+                {% endfor %}
+              </select>
+              <div class="hint">Lista desde Clientes/Proveedores.</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
+      <div class="card card-elev accent-left mb-3">
+        <div class="card-body">
+          <div class="fieldset-title"><i class="bi bi-chat-left-text"></i> Descripción y observaciones</div>
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label class="form-label req" for="descripcion">Descripción</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required>{{ form.get('descripcion', '') }}</textarea>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label" for="observacion">Observaciones</label>
+              <textarea class="form-control" id="observacion" name="observacion" rows="3">{{ form.get('observacion', '') }}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if not caso %}
+      <div class="card card-elev accent-left mb-4">
+        <div class="card-body">
+          <div class="fieldset-title"><i class="bi bi-paperclip"></i> Adjuntos</div>
+          <label class="form-label" for="adjuntos">Subir archivos del caso</label>
+          <input type="file" class="form-control" id="adjuntos" name="adjuntos" multiple>
+          <div class="hint mt-1">Hasta 10 archivos de 10 MB. Formatos: {{ extensiones }}.</div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="sticky-actions d-flex gap-2 justify-content-end">
+        <a href="{{ url_for('casos_legales.casos_detalle', caso_id=caso.id) if caso else url_for('casos_legales.casos_lista') }}"
+           class="btn btn-outline-secondary">Volver</a>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
   </form>
 </div>
 {% endblock %}

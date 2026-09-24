@@ -88,8 +88,9 @@ def _filas_base(caso: dict) -> list[tuple]:
         ("N° de caso", f"#{caso['id']}"),
         ("Tipo de caso", _esc(TIPOS_CASO.get(caso["tipo"], {}).get("label", caso["tipo"]))),
         ("Tipo de tarea", _esc(caso["tipo_tarea"])),
-        ("Cliente/Proveedor", _esc(caso.get("cliente_proveedor"))),
-        ("Requirente", _esc(caso.get("requirente"))),
+        ("Cliente" if caso.get("tercero_tipo") == "C" else "Proveedor" if caso.get("tercero_tipo") == "P"
+         else "Cliente/Proveedor", _esc(caso.get("cliente_proveedor"))),
+        ("Usuario solicitante", _esc(caso.get("requirente"))),
     ]
 
 
