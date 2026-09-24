@@ -56,18 +56,12 @@ CREATE INDEX IX_casos_legales_av_caso ON dbo.casos_legales_avances (caso_id);
 CREATE INDEX IX_casos_legales_ad_caso ON dbo.casos_legales_adjuntos (caso_id);
 
 -- ============================================================================
--- Gestores a los que se notifica cada caso nuevo (ids de `usuarios`, separados por coma).
--- Internos -> Sandra Chambers. Busca su id y reemplaza <ID_SANDRA>.
--- ============================================================================
--- SELECT id, username, nombre_completo FROM usuarios WHERE nombre_completo LIKE '%Chambers%';
--- INSERT INTO configuracion (clave, valor) VALUES ('casos_legales_gestores_INTERNO', '<ID_SANDRA>');
--- INSERT INTO configuracion (clave, valor) VALUES ('casos_legales_gestores_EXTERNO', '');   -- Financiero (por definir)
--- INSERT INTO configuracion (clave, valor) VALUES ('casos_legales_gestores_TTH', '');       -- TTH (por definir)
-
--- ============================================================================
 -- Opción de menú (ajusta parent_id si lo quieres dentro de un grupo; NULL = raíz).
 -- El permiso 'casos_legales' aparece solo en Roles y permisos al arrancar la app:
---   ver = lista sus casos · crear = registra casos · editar = gestor (ve todos los casos)
+--   ver = lista/abre casos · crear = registra · editar = editar caso, avances y cierre · eliminar = elimina (lógico)
+-- Cada caso solo lo ve quien lo registró, su jefe directo (usuarios.jefe_id) y admin.
+-- Editar/avances/cierre/eliminar: solo quien lo registró y admin (el jefe directo solo consulta).
+-- Los avisos van al jefe directo de quien registra (y a quien registra cuando actúa otro).
 -- ============================================================================
 -- INSERT INTO dbo.menu_items (parent_id, label, endpoint, icon, order_no, permission, active_key, is_group, is_collaps)
 -- VALUES (NULL, N'Casos Legales', 'casos_legales.casos_lista', 'bi bi-briefcase', 90, 'casos_legales', 'casos_legales', 0, 0);

@@ -21,15 +21,17 @@ def _esc(v) -> str:
     return _html.escape(str(v)) if v not in (None, "") else "—"
 
 
-def _destinatarios(caso: dict, actor_id: int, incluir_creador: bool) -> list[dict]:
-    """Gestores del tipo (+ creador si aplica), sin el usuario que ejecuta la acción."""
+def _destinatarios(caso: dict, actor_id: int) -> list[dict]:
+    """Jefe directo de quien registró el caso + quien lo registró, sin el que ejecuta la acción."""
     vistos, lista = set(), []
-    candidatos = list(repo.get_gestores(caso["tipo"]))
-    if incluir_creador:
-        creador = repo.get_usuario_contacto(caso["creado_por_id"])
-        if creador:
-            candidatos.append(creador)
+    candidatos = []
+    jefe_id = repo.get_jefe_id(caso["creado_por_id"])
+    if jefe_id:
+        candidatos.append(repo.get_usuario_contacto(jefe_id))
+    candidatos.append(repo.get_usuario_contacto(caso["creado_por_id"]))
     for u in candidatos:
+        if not u:
+            continue
         if u["id"] in vistos or u["id"] == actor_id:
             continue
         vistos.add(u["id"])
@@ -54,10 +56,10 @@ def _adjuntos_email(archivos: list[tuple[str, str]] | None):
     return ok or None
 
 
-def _enviar(caso: dict, actor_id: int, incluir_creador: bool, asunto: str, categoria: str,
+def _enviar(caso: dict, actor_id: int, asunto: str, categoria: str,
             titulo: str, saludo: str, filas: list[tuple], aviso_inapp: str,
             archivos: list[tuple[str, str]] | None) -> int:
-    destinatarios = _destinatarios(caso, actor_id, incluir_creador)
+    destinatarios = _destinatarios(caso, actor_id)
     if not destinatarios:
         return 0
     try:
@@ -94,7 +96,7 @@ def notif_caso_creado(caso: dict, usuario_id: int, usuario_nombre: str, archivos
         ("Observación", _esc(caso["observacion"])),
     ]
     return _enviar(
-        caso, usuario_id, False,
+        caso, usuario_id,
         f"[Casos Legales] Nuevo caso #{caso['id']} — {caso['tipo_tramite']}",
         "CASOS LEGALES — NUEVO CASO", f"Caso #{caso['id']} registrado",
         f"<strong>{_esc(usuario_nombre)}</strong> registró un nuevo caso.",
@@ -110,7 +112,7 @@ def notif_caso_avance(caso: dict, usuario_id: int, usuario_nombre: str,
         ("Observación", _esc(observacion)),
     ]
     return _enviar(
-        caso, usuario_id, True,
+        caso, usuario_id,
         f"[Casos Legales] Avance en el caso #{caso['id']}",
         "CASOS LEGALES — AVANCE", f"Nuevo avance en el caso #{caso['id']}",
         f"<strong>{_esc(usuario_nombre)}</strong> registró un avance.",
@@ -126,7 +128,7 @@ def notif_caso_cerrado(caso: dict, usuario_id: int, usuario_nombre: str,
         ("Observación de cierre", _esc(observacion)),
     ]
     return _enviar(
-        caso, usuario_id, True,
+        caso, usuario_id,
         f"[Casos Legales] Caso #{caso['id']} cerrado",
         "CASOS LEGALES — CIERRE", f"Caso #{caso['id']} cerrado",
         f"<strong>{_esc(usuario_nombre)}</strong> cerró el caso.",

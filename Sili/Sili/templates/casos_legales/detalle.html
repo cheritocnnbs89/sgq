@@ -28,9 +28,23 @@
       <span class="badge casos-badge-{{ caso.tipo|lower }}">{{ tipo_info.label }}</span>
       {% if abierto %}<span class="badge bg-success">Abierto</span>{% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
     </div>
-    <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-secondary btn-sm">
-      <i class="bi bi-arrow-left"></i> Volver a Casos
-    </a>
+    <div class="d-flex flex-wrap gap-2">
+      {% if puede_editar %}
+      <a href="{{ url_for('casos_legales.casos_editar', caso_id=caso.id) }}" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-pencil-square me-1"></i>Editar
+      </a>
+      {% endif %}
+      {% if puede_eliminar %}
+      <form method="post" action="{{ url_for('casos_legales.casos_eliminar', caso_id=caso.id) }}"
+            data-casos-confirm="¿Eliminar el caso #{{ caso.id }}? Dejará de mostrarse en el sistema.">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Eliminar</button>
+      </form>
+      {% endif %}
+      <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Volver a Casos
+      </a>
+    </div>
   </div>
 
   <div class="row g-3">
@@ -80,7 +94,7 @@
       </div>
     </div>
 
-    {% if puede_editar %}
+    {% if puede_avanzar %}
     <div class="col-lg-5">
       <div class="card border-0 shadow-sm mb-3">
         <div class="card-header bg-light fw-bold"><i class="bi bi-clock-history me-1"></i>Registrar avance</div>

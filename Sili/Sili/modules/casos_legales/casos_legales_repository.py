@@ -4,10 +4,8 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from modules.db import get_db, get_config_value
-from .casos_legales_constants import (
-    CONFIG_GESTORES_PREFIX, ESTADO_ABIERTO, ESTADO_CERRADO,
-)
+from modules.db import get_db
+from .casos_legales_constants import ESTADO_ABIERTO, ESTADO_CERRADO
 
 
 def _rows(cur) -> list[dict]:
@@ -34,7 +32,9 @@ def crear_caso(tipo, tipo_tramite, estudio_juridico, observacion,
 
 
 def get_casos(estado: str | None = None, tipo: str | None = None,
-              creado_por_id: int | None = None) -> list[dict]:
+              visible_para: int | None = None) -> list[dict]:
+    """visible_para=None -> todos (admin). Si no, casos que registró ese usuario o
+    que registraron los usuarios cuyo jefe directo es él."""
     sql = """
         SELECT c.id, c.tipo, c.tipo_tramite, c.estudio_juridico, c.fecha_tramite,
                c.fecha_fin_tentativa, c.estado, c.creado_por_nombre, c.fecha_creacion,
@@ -50,9 +50,10 @@ def get_casos(estado: str | None = None, tipo: str | None = None,
     if tipo:
         sql += " AND c.tipo = ?"
         params.append(tipo)
-    if creado_por_id:
-        sql += " AND c.creado_por_id = ?"
-        params.append(creado_por_id)
+    if visible_para:
+        sql += (" AND (c.creado_por_id = ? OR c.creado_por_id IN "
+                "(SELECT u.id FROM usuarios u WHERE u.jefe_id = ?))")
+        params += [visible_para, visible_para]
     sql += " ORDER BY c.id DESC"
     cur = get_db().cursor()
     cur.execute(sql, params)
@@ -64,6 +65,32 @@ def get_caso(caso_id: int) -> dict | None:
     cur.execute("SELECT * FROM casos_legales WHERE id = ? AND activo = 1", (caso_id,))
     row = cur.fetchone()
     return dict(row) if row else None
+
+
+def actualizar_caso(caso_id: int, tipo_tramite, estudio_juridico, observacion,
+                    fecha_tramite, fecha_fin_tentativa) -> bool:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE casos_legales
+           SET tipo_tramite = ?, estudio_juridico = ?, observacion = ?,
+               fecha_tramite = ?, fecha_fin_tentativa = ?
+         WHERE id = ? AND activo = 1 AND estado = ?
+    """, (tipo_tramite, estudio_juridico or None, observacion, fecha_tramite,
+          fecha_fin_tentativa or None, caso_id, ESTADO_ABIERTO))
+    ok = cur.rowcount > 0
+    conn.commit()
+    return ok
+
+
+def eliminar_caso(caso_id: int) -> bool:
+    """Eliminación lógica (activo = 0)."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("UPDATE casos_legales SET activo = 0 WHERE id = ? AND activo = 1", (caso_id,))
+    ok = cur.rowcount > 0
+    conn.commit()
+    return ok
 
 
 def cerrar_caso(caso_id: int, observacion: str, usuario_id: int, usuario_nombre: str) -> bool:
@@ -148,22 +175,13 @@ def get_adjunto(adjunto_id: int) -> dict | None:
     return dict(row) if row else None
 
 
-# ── Usuarios / gestores / notificaciones ────────────────────
+# ── Usuarios / notificaciones ───────────────────────────────
 
-def get_gestores(tipo: str) -> list[dict]:
-    """Usuarios gestores configurados para el tipo (clave casos_legales_gestores_<TIPO>)."""
-    raw = get_config_value(f"{CONFIG_GESTORES_PREFIX}{tipo}", "") or ""
-    ids = [int(x) for x in raw.replace(";", ",").split(",") if x.strip().isdigit()]
-    if not ids:
-        return []
-    marcas = ",".join("?" for _ in ids)
+def get_jefe_id(usuario_id: int) -> int | None:
     cur = get_db().cursor()
-    cur.execute(f"""
-        SELECT id, COALESCE(nombre_completo, username) AS nombre, email
-        FROM usuarios
-        WHERE disabled = 0 AND id IN ({marcas})
-    """, ids)
-    return _rows(cur)
+    cur.execute("SELECT jefe_id FROM usuarios WHERE id = ?", (usuario_id,))
+    row = cur.fetchone()
+    return row[0] if row and row[0] else None
 
 
 def get_usuario_contacto(usuario_id: int) -> dict | None:

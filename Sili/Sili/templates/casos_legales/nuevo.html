@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Casos Legales – Nuevo caso{% endblock %}
+{% block title %}Casos Legales – {{ "Editar caso" if caso else "Nuevo caso" }}{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/casos_legales.css') }}">
@@ -10,11 +10,17 @@
 
   <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
     <div>
+      {% if caso %}
+      <h4 class="mb-0"><i class="bi bi-pencil-square me-1"></i>Editar caso #{{ caso.id }}</h4>
+      <p class="text-muted mb-0 small">Tipo: {{ tipos[caso.tipo].label if caso.tipo in tipos else caso.tipo }}</p>
+      {% else %}
       <h4 class="mb-0"><i class="bi bi-briefcase me-1"></i>Nuevo caso legal</h4>
       <p class="text-muted mb-0 small">Elige el tipo de caso y completa el formulario.</p>
+      {% endif %}
     </div>
-    <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-secondary btn-sm">
-      <i class="bi bi-arrow-left"></i> Volver a Casos
+    <a href="{{ url_for('casos_legales.casos_detalle', caso_id=caso.id) if caso else url_for('casos_legales.casos_lista') }}"
+       class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> {{ 'Volver al caso' if caso else 'Volver a Casos' }}
     </a>
   </div>
 
@@ -22,6 +28,7 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="card-body">
 
+      {% if not caso %}
       <div class="fw-semibold small text-uppercase text-muted mb-2">Tipo de caso según origen</div>
       <div class="casos-tipos mb-3">
         {% for key, t in tipos.items() %}
@@ -33,8 +40,9 @@
         </label>
         {% endfor %}
       </div>
+      {% endif %}
 
-      <div id="casoCampos" class="d-none">
+      <div id="casoCampos" class="{{ '' if caso else 'd-none' }}">
         <div class="alert alert-warning py-2 small d-none" id="casoAvisoPendiente">
           <i class="bi bi-info-circle me-1"></i>
           Los campos de este tipo aún se están definiendo con <strong data-aviso-gestiona></strong>;
@@ -66,16 +74,19 @@
             <label class="form-label fw-semibold small" for="observacion">Observación *</label>
             <textarea class="form-control" id="observacion" name="observacion" rows="4" required>{{ form.get('observacion', '') }}</textarea>
           </div>
+          {% if not caso %}
           <div class="col-12">
             <label class="form-label fw-semibold small" for="adjuntos">Archivos adjuntos</label>
             <input type="file" class="form-control" id="adjuntos" name="adjuntos" multiple>
             <div class="form-text">Hasta 10 archivos de 10 MB. Formatos: {{ extensiones }}.</div>
           </div>
+          {% endif %}
         </div>
 
         <div class="d-flex justify-content-end gap-2 mt-4">
-          <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-secondary">Cancelar</a>
-          <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i>Registrar caso</button>
+          <a href="{{ url_for('casos_legales.casos_detalle', caso_id=caso.id) if caso else url_for('casos_legales.casos_lista') }}"
+             class="btn btn-outline-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i>{{ 'Guardar cambios' if caso else 'Registrar caso' }}</button>
         </div>
       </div>
 
