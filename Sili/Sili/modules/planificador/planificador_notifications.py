@@ -179,6 +179,28 @@ def _maps_link(lugar: str) -> str:
             f'<a href="https://www.google.com/maps/search/?api=1&query={encoded}" '
             f'style="color:#2563eb;font-size:.8rem">Ver en mapa</a>')
 
+def _fila_tipo_reserva(solicitud_id: int) -> tuple:
+    """Fila "Tipo de reserva" de los correos de Vuelo: distingue un viaje
+    (vuelo, con o sin hospedaje) de una solicitud de solo hospedaje. Se lee
+    de la propia solicitud (modo_viaje / requiere_hospedaje) para no tener
+    que pasarlo por cada notificación."""
+    modo, requiere_hosp = "vuelo", False
+    try:
+        s = repo.get_solicitud_by_id(solicitud_id)
+        if s:
+            modo = (s["modo_viaje"] or "vuelo")
+            requiere_hosp = bool(s["requiere_hospedaje"])
+    except Exception:
+        pass
+    if modo == "hospedaje":
+        texto = "Solo hospedaje"
+    elif requiere_hosp:
+        texto = "Viaje (vuelo) + hospedaje"
+    else:
+        texto = "Viaje (vuelo)"
+    return ("Tipo de reserva", texto)
+
+
 
 # ──────────────────────────────────────────────────────────
 # 1. Nueva solicitud → notificar coordinadores
@@ -521,6 +543,7 @@ def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
                f"tipo <strong>Vuelo</strong> que requiere su aprobación.")
     filas   = [
         ("N° solicitud",      str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área solicitante",  area),
         ("Fecha solicitada",  fecha),
         ("Descripción",       descripcion or "—"),
@@ -552,6 +575,7 @@ def notif_vuelo_pendiente_gg(solicitud_id: int, area: str, fecha: str,
                f"Requiere su autorización para continuar.")
     filas   = [
         ("N° solicitud",       str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área solicitante",   area),
         ("Fecha solicitada",   fecha),
         ("Descripción",        descripcion or "—"),
@@ -577,6 +601,7 @@ def notif_vuelo_aprobada_coordinacion(solicitud_id: int, area: str, fecha: str,
                                        aprobador_nombre: str) -> None:
     filas = [
         ("N° solicitud",    str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área solicitante", area),
         ("Fecha",           fecha),
         ("Descripción",     descripcion or "—"),
@@ -656,6 +681,7 @@ def notif_vuelo_enviada_cotizar_info(solicitud_id: int, area: str, fecha: str,
     titulo  = f"Solicitud de Vuelo #{solicitud_id} enviada a cotización"
     filas   = [
         ("N° solicitud",     str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área solicitante", area),
         ("Fecha solicitada", fecha),
         ("Descripción",      descripcion or "—"),
@@ -695,6 +721,7 @@ def notif_vuelo_gg_aprobo_pendiente_info(solicitud_id: int, area: str, fecha: st
                f"información del vuelo y adjuntar los documentos.")
     filas   = [
         ("N° solicitud",    str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área solicitante", area),
         ("Fecha",           fecha),
         ("Descripción",     descripcion or "—"),
@@ -726,6 +753,7 @@ def notif_vuelo_gg_rechazo_coordinador(solicitud_id: int, area: str, fecha: str,
                f"busca mejores precios y vuelve a cotizar.")
     filas   = [
         ("N° solicitud",    str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área solicitante", area),
         ("Fecha",           fecha),
         ("Rechazado por",   gg_nombre),
@@ -754,6 +782,7 @@ def notif_vuelo_rechazada(solicitud_id: int, area: str, fecha: str,
     saludo  = "Tu solicitud de Vuelo no fue aprobada."
     filas   = [
         ("N° solicitud",  str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área",          area),
         ("Fecha",         fecha),
         ("Rechazado por", rechazado_por),
@@ -782,6 +811,7 @@ def notif_vuelo_completada(solicitud_id: int, area: str, fecha: str,
                f"<strong>{coordinador_nombre}</strong> ha gestionado tu solicitud de vuelo.")
     filas   = [
         ("N° solicitud",        str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área",                area),
         ("Fecha del vuelo",     fecha),
         ("Descripción",         descripcion or "—"),
@@ -817,6 +847,7 @@ def notif_vuelo_coordinada_solicitante(solicitud_id: int, area: str, fecha: str,
                f"<strong>{coordinador_nombre}</strong> ha gestionado los pasajes de tu solicitud.")
     filas = [
         ("N° solicitud",        str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área",                area),
         ("Fecha del vuelo",     fecha),
         ("Horario asignado",    f"{hora_inicio} – {hora_fin}" if hora_inicio else "—"),
@@ -848,6 +879,7 @@ def notif_vuelo_pendiente_liquidacion(solicitud_id: int, area: str, fecha: str,
                f"Por favor ingresa los costos reales para completar la solicitud.")
     filas   = [
         ("N° solicitud",   str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área",           area),
         ("Fecha del vuelo", fecha),
         ("Confirmado por", solicitante_nombre),
@@ -875,6 +907,7 @@ def notif_vuelo_liquidada(solicitud_id: int, area: str, fecha: str,
                f"ha sido completada y los costos han sido registrados.")
     filas   = [
         ("N° solicitud",  str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área",          area),
         ("Fecha del vuelo", fecha),
         ("Costo registrado", f"${costo_real:,.2f}"),
@@ -899,6 +932,7 @@ def notif_vuelo_recordatorio_coordinador(solicitud_id: int, area: str, fecha: st
                f"pero aún no se han registrado los costos reales del viaje.")
     filas   = [
         ("N° solicitud", str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área",         area),
         ("Fecha vuelo",  fecha),
     ]
@@ -927,6 +961,7 @@ def notif_vuelo_nueva_gerente(solicitud_id: int, area: str, fecha: str,
                f"solicitud de tipo <strong>Vuelo</strong> que requiere su conocimiento.")
     filas   = [
         ("N° solicitud",         str(solicitud_id)),
+        _fila_tipo_reserva(solicitud_id),
         ("Área solicitante",     area),
         ("Fecha solicitada",     fecha),
         ("Descripción",          descripcion or "—"),
