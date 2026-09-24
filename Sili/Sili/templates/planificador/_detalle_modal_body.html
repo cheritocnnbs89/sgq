@@ -279,7 +279,6 @@
       {% if s.requiere_hospedaje %}<span class="viaje-chip viaje-chip--hospedaje">🛏️ + Hospedaje</span>{% endif %}
       {% endif %}
       <span class="viaje-chip"><i class="bi bi-building"></i>{{ s.area_solicitante }}</span>
-      <span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span>
     </div>
 
     {% if presupuesto_cc %}
@@ -466,7 +465,6 @@
       <span class="viaje-chip viaje-chip--mensajeria"><i class="bi bi-taxi-front-fill"></i>{{ s.tipo }}</span>
       <span class="viaje-chip"><i class="bi bi-building"></i>{{ s.area_solicitante }}</span>
       <span class="badge {% if s.prioridad=='Urgente' %}bg-danger{% elif s.prioridad=='Alta' %}bg-warning text-dark{% else %}bg-secondary{% endif %}"><i class="bi bi-flag-fill me-1"></i>{{ s.prioridad }}</span>
-      <span class="badge {{ s.estado_class }}">{{ s.estado_label }}</span>
     </div>
   </div>
 
