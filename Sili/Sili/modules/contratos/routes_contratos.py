@@ -22,6 +22,7 @@ from modules.security import require_login, require_permission
 
 from . import contratos_repository as repository
 from . import contratos_services as services
+from .contratos_constants import TIPO_CONTRATO_COMERCIAL
 from .contratos_security import session_user_id
 
 
@@ -273,82 +274,116 @@ def exportar_contratos_compras():
     ws = wb.active
     ws.title = "Contratos"
 
-    headers = [
-        "ID Contrato",
-        "Año",
-        "Pedido",
-        "Proveedor",
-        "Objeto",
-        "Valor contrato",
-        "Valor anticipo",
-        "Tipo",
-        "Fecha suscripción",
-        "Fecha terminación",
-        "Plazo días",
-        "Cronograma pagos",
-        "Fecha entrega a Compras",
-        "Fecha firma Gerencia",
-        "Fecha entrega Finanzas Sumilla",
-        "Fecha entrega originales Finanzas",
-        "Fechas pago anticipo",
-        "Fecha entrega pedido",
-        "Estado interno",
-        "Observaciones",
-        "Usuario solicitante",
-        "Usuario Compras",
-        "Departamento",
-        "Aprobado Jefatura",
-        "Aprobado por Jefatura",
-        "Fecha aprobación Jefatura",
-        "Aprobado Gerencia",
-        "Aprobado por Gerencia",
-        "Fecha aprobación Gerencia",
-        "Aprobado GF",
-        "Creado por",
-        "Fecha creación",
-        "Fecha actualización",
-        "Cantidad adjuntos",
-    ]
+    def _si_no(v):
+        return "Sí" if int(v or 0) else "No"
 
-    ws.append(headers)
+    def _plazo(row):
+        pv, pu = row["plazo_valor"], (row["plazo_unidad"] or "")
+        return f"{pv} {pu}".strip() if pv else ""
 
-    for row in rows:
+    if services.es_area_comercial():
+        # Comercial no ve datos de Compras (pedido, proveedor, valores, hitos, usuario compras):
+        # su Excel trae solo los campos del contrato comercial.
+        rows = [r for r in rows if r["tipo_contrato"] == TIPO_CONTRATO_COMERCIAL]
         ws.append([
-            row["id"],
-            row["anio"],
-            row["pedido"],
-            row["proveedor"],
-            row["objeto"],
-            float(row["valor_contrato"] or 0),
-            float(row["valor_anticipo"] or 0),
-            row["tipo_pp"],
-            row["fecha_suscripcion"],
-            row["fecha_terminacion"],
-            row["plazo_dias"],
-            row["cronograma_pagos"],
-            row["fecha_entrega_compras"],
-            row["fecha_firma_gerencia"],
-            row["fecha_entrega_finanzas_sumilla"],
-            row["fecha_entrega_originales_fin"],
-            row["fechas_pago_anticipo"],
-            row["fecha_entrega_pedido"],
-            row["status_interno"],
-            row["observaciones"],
-            row["usuario_solicitante"],
-            row["usuario_compras"] or row["usuario_compras_nombre"],
-            row["departamento"],
-            "Sí" if int(row["aprobado_jefe"] or 0) else "No",
-            row["aprobado_jefe_por_nombre"],
-            row["aprobado_jefe_en"],
-            "Sí" if int(row["aprobado"] or 0) else "No",
-            row["aprobado_por_nombre"],
-            row["aprobado_en"],
-            "Sí" if int(row["aprob_gf"] or 0) else "No",
-            row["creado_por_nombre"],
-            row["creado_at"],
-            row["actualizado_at"],
-            row["adjuntos_cnt"],
+            "ID Contrato", "Año", "Nombre del contrato", "Objeto", "Cliente", "RUC / Identificación",
+            "Tipo de cliente", "Unidad de negocio", "Ejecutivo comercial", "Estado del contrato",
+            "Fecha de inicio", "Plazo de vigencia", "Renovación automática",
+            "Fecha notificación renovación", "Volumen comprometido", "Moneda",
+            "Condiciones de pago", "Forma de facturación", "¿Lleva garantía?", "Observaciones",
+            "Usuario solicitante", "Departamento", "Aprobado Jefatura", "Aprobado por Jefatura",
+            "Fecha aprobación Jefatura", "Creado por", "Fecha creación", "Fecha actualización",
+            "Cantidad adjuntos",
         ])
+        for row in rows:
+            ws.append([
+                row["id"], row["anio"], row["nombre_contrato"], row["objeto"], row["cliente"],
+                row["cliente_ruc"], row["tipo_cliente"], row["unidad_negocio"],
+                row["ejecutivo_comercial"], row["estado_contrato"], row["fecha_inicio"], _plazo(row),
+                _si_no(row["renovacion_automatica"]), row["fecha_notificacion_renovacion"],
+                row["volumen_comprometido"], row["moneda"], row["condiciones_pago"],
+                row["forma_facturacion"], _si_no(row["lleva_garantia"]), row["observaciones"],
+                row["usuario_solicitante"], row["departamento"], _si_no(row["aprobado_jefe"]),
+                row["aprobado_jefe_por_nombre"], row["aprobado_jefe_en"], row["creado_por_nombre"],
+                row["creado_at"], row["actualizado_at"], row["adjuntos_cnt"],
+            ])
+    else:
+        headers = [
+            "ID Contrato",
+            "Año",
+            "Pedido",
+            "Proveedor",
+            "Objeto",
+            "Valor contrato",
+            "Valor anticipo",
+            "Tipo",
+            "Fecha suscripción",
+            "Fecha terminación",
+            "Plazo días",
+            "Cronograma pagos",
+            "Fecha entrega a Compras",
+            "Fecha firma Gerencia",
+            "Fecha entrega Finanzas Sumilla",
+            "Fecha entrega originales Finanzas",
+            "Fechas pago anticipo",
+            "Fecha entrega pedido",
+            "Estado interno",
+            "Observaciones",
+            "Usuario solicitante",
+            "Usuario Compras",
+            "Departamento",
+            "Aprobado Jefatura",
+            "Aprobado por Jefatura",
+            "Fecha aprobación Jefatura",
+            "Aprobado Gerencia",
+            "Aprobado por Gerencia",
+            "Fecha aprobación Gerencia",
+            "Aprobado GF",
+            "Creado por",
+            "Fecha creación",
+            "Fecha actualización",
+            "Cantidad adjuntos",
+        ]
+
+        ws.append(headers)
+
+        for row in rows:
+            ws.append([
+                row["id"],
+                row["anio"],
+                row["pedido"],
+                row["proveedor"],
+                row["objeto"],
+                float(row["valor_contrato"] or 0),
+                float(row["valor_anticipo"] or 0),
+                row["tipo_pp"],
+                row["fecha_suscripcion"],
+                row["fecha_terminacion"],
+                row["plazo_dias"],
+                row["cronograma_pagos"],
+                row["fecha_entrega_compras"],
+                row["fecha_firma_gerencia"],
+                row["fecha_entrega_finanzas_sumilla"],
+                row["fecha_entrega_originales_fin"],
+                row["fechas_pago_anticipo"],
+                row["fecha_entrega_pedido"],
+                row["status_interno"],
+                row["observaciones"],
+                row["usuario_solicitante"],
+                row["usuario_compras"] or row["usuario_compras_nombre"],
+                row["departamento"],
+                "Sí" if int(row["aprobado_jefe"] or 0) else "No",
+                row["aprobado_jefe_por_nombre"],
+                row["aprobado_jefe_en"],
+                "Sí" if int(row["aprobado"] or 0) else "No",
+                row["aprobado_por_nombre"],
+                row["aprobado_en"],
+                "Sí" if int(row["aprob_gf"] or 0) else "No",
+                row["creado_por_nombre"],
+                row["creado_at"],
+                row["actualizado_at"],
+                row["adjuntos_cnt"],
+            ])
 
     header_fill = PatternFill("solid", fgColor="D9EAF7")
     header_font = Font(bold=True)

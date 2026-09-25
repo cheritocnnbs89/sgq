@@ -498,6 +498,23 @@ def list_contratos_reporte(
         c.aprobado_en,
         COALESCE(c.aprob_gf,0) AS aprob_gf,
         COALESCE(c.lleva_garantia,0) AS lleva_garantia,
+        COALESCE(c.tipo_contrato,'COMPRAS') AS tipo_contrato,
+        c.nombre_contrato,
+        c.cliente,
+        c.cliente_ruc,
+        c.tipo_cliente,
+        c.unidad_negocio,
+        ue.nombre_completo AS ejecutivo_comercial,
+        c.estado_contrato,
+        c.fecha_inicio,
+        c.plazo_valor,
+        c.plazo_unidad,
+        c.renovacion_automatica,
+        c.fecha_notificacion_renovacion,
+        c.volumen_comprometido,
+        c.moneda,
+        c.condiciones_pago,
+        c.forma_facturacion,
         c.creado_por,
         cr.nombre_completo AS creado_por_nombre,
         c.creado_at,
@@ -508,6 +525,7 @@ def list_contratos_reporte(
             WHERE a.contrato_id = c.id
         ) AS adjuntos_cnt
     FROM contratos c
+    LEFT JOIN usuarios ue ON ue.id = c.ejecutivo_comercial_id
     LEFT JOIN usuarios us ON us.id = c.usuario_solicitante_id
     LEFT JOIN usuarios uc ON uc.id = c.usuario_compras_id
     LEFT JOIN usuarios uj ON uj.id = c.aprobado_jefe_por
