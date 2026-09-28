@@ -19,7 +19,22 @@
       </div>
     </div>
 
-    {% set filtros_abiertos = request.args.get('estado') or request.args.get('tipo') %}
+    <ul class="nav nav-tabs casos-tabs mb-3">
+      <li class="nav-item">
+        <a class="nav-link {{ 'active' if estado == 'ABIERTO' else '' }}"
+           href="{{ url_for('casos_legales.casos_lista', estado='ABIERTO', tipo=tipo) }}">
+          <i class="bi bi-folder2-open me-1"></i>Abiertos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ 'active' if estado == 'CERRADO' else '' }}"
+           href="{{ url_for('casos_legales.casos_lista', estado='CERRADO', tipo=tipo) }}">
+          <i class="bi bi-folder2 me-1"></i>Cerrados
+        </a>
+      </li>
+    </ul>
+
+    {% set filtros_abiertos = request.args.get('tipo') %}
     <div class="card card-elev mb-3">
       <div class="card-body">
         <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
@@ -29,15 +44,8 @@
         </button>
         <div class="collapse {% if filtros_abiertos %}show{% endif %} mt-3" id="collapseFiltrosCasos">
           <form class="filters-panel" method="GET">
+            <input type="hidden" name="estado" value="{{ estado }}">
             <div class="row g-3 align-items-end">
-              <div class="col-lg-3 col-md-6">
-                <label class="form-label">Estado</label>
-                <select name="estado" class="form-select">
-                  {% for val, lbl in (('ABIERTO','Abiertos'), ('CERRADO','Cerrados'), ('TODOS','Todos')) %}
-                  <option value="{{ val }}" {{ 'selected' if estado == val }}>{{ lbl }}</option>
-                  {% endfor %}
-                </select>
-              </div>
               <div class="col-lg-3 col-md-6">
                 <label class="form-label">Tipo de caso</label>
                 <select name="tipo" class="form-select">
@@ -49,7 +57,7 @@
               </div>
               <div class="col-lg-3 col-md-12 d-flex gap-2">
                 <button class="btn btn-primary" type="submit"><i class="bi bi-search me-1"></i>Buscar</button>
-                <a class="btn btn-outline-secondary" href="{{ url_for('casos_legales.casos_lista') }}">
+                <a class="btn btn-outline-secondary" href="{{ url_for('casos_legales.casos_lista', estado=estado) }}">
                   <i class="bi bi-x-circle me-1"></i>Limpiar
                 </a>
               </div>

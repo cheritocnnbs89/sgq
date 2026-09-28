@@ -52,20 +52,31 @@
     actualizarTercero();
   }
 
-  // ── Confirmación antes de enviar (cerrar caso) ──
-  document.querySelectorAll('form[data-casos-confirm]').forEach(function (form) {
-    form.addEventListener('submit', function (ev) {
-      if (!window.confirm(form.getAttribute('data-casos-confirm'))) { ev.preventDefault(); }
-    });
-  });
+  // ── Formularios: validación por botón, confirmación y evitar doble envío ──
+  // Un mismo <form> puede tener varios botones "submit" (p. ej. "Agregar avance" y
+  // "Cerrar caso" con formaction distinto) — ev.submitter identifica cuál se pulsó.
+  document.querySelectorAll('form').forEach(function (form) {
+    if ((form.getAttribute('method') || 'get').toLowerCase() !== 'post') { return; }
 
-  // ── Evitar doble envío ──
-  document.querySelectorAll('form[enctype="multipart/form-data"]').forEach(function (form) {
     form.addEventListener('submit', function (ev) {
-      if (ev.defaultPrevented) { return; }
-      form.querySelectorAll('button[type="submit"]').forEach(function (b) {
-        window.setTimeout(function () { b.disabled = true; }, 0);
-      });
+      var btn = ev.submitter || null;
+
+      if (btn && btn.hasAttribute('data-requiere-observacion')) {
+        var obs = form.querySelector('[name="observacion"]');
+        if (obs && !obs.value.trim()) {
+          ev.preventDefault();
+          window.alert('Escribe la observación del avance.');
+          obs.focus();
+          return;
+        }
+      }
+
+      var msg = (btn && btn.getAttribute('data-confirm')) || form.getAttribute('data-casos-confirm');
+      if (msg && !window.confirm(msg)) { ev.preventDefault(); return; }
+
+      window.setTimeout(function () {
+        form.querySelectorAll('button[type="submit"]').forEach(function (b) { b.disabled = true; });
+      }, 0);
     });
   });
 })();

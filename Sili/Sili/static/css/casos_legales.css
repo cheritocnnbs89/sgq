@@ -28,3 +28,35 @@
   .casos-dl { grid-template-columns: 1fr; gap: .1rem; }
   .casos-dl dd { margin-bottom: .5rem; }
 }
+
+/* Tabs Abiertos/Cerrados */
+.casos-tabs .nav-link {
+  color: #475569;
+  font-weight: 600;
+  font-size: .85rem;
+  border-radius: 10px 10px 0 0;
+}
+.casos-tabs .nav-link.active {
+  color: var(--brand-primary, #0d6efd);
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+/* Información del caso: grid de fichas con icono */
+.casos-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.casos-info-item { display: flex; gap: .6rem; align-items: flex-start; }
+.casos-info-item > i { font-size: 1.05rem; color: var(--brand-primary, #0d6efd); margin-top: .2rem; flex: 0 0 auto; }
+.casos-info-item strong { display: block; font-size: .92rem; color: #1f2937; font-weight: 600; }
+.casos-info-label {
+  display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .04em;
+  color: #8a94a6; font-weight: 700; margin-bottom: .15rem;
+}
+.casos-info-full { margin-top: .9rem; }
+.casos-obs-box {
+  background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: .65rem .85rem; margin-top: .3rem;
+}
