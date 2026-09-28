@@ -211,9 +211,7 @@ def casos_nuevo():
                 flash(e, "warning")
             try:
                 caso = repo.get_caso(caso_id)
-                n = notif.notif_caso_creado(caso, u["id"], u["nombre"], archivos)
-                if not n:
-                    flash("Tu usuario no tiene jefe directo configurado: nadie fue notificado.", "warning")
+                notif.notif_caso_creado(caso, u["id"], u["nombre"], archivos)
             except Exception:
                 current_app.logger.exception("Casos legales: fallo al notificar caso %s", caso_id)
             flash(f"Caso #{caso_id} registrado.", "success")

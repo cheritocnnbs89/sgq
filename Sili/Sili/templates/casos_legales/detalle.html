@@ -48,60 +48,53 @@
 
   <div class="card card-elev accent-left mb-3">
     <div class="card-body">
-      <div class="fieldset-title"><i class="bi bi-view-list"></i> Información del caso</div>
+      <div class="fieldset-title"><i class="bi bi-journal-text"></i> Información del caso</div>
 
-      <div class="casos-info-grid">
-        <div class="casos-info-item">
-          <i class="bi bi-calendar-event"></i>
-          <div><span class="casos-info-label">Fecha</span><strong>{{ caso.fecha }}</strong></div>
-        </div>
-        <div class="casos-info-item">
-          <i class="bi bi-tag"></i>
-          <div><span class="casos-info-label">Tipo de tarea</span><strong>{{ caso.tipo_tarea }}</strong></div>
-        </div>
-        <div class="casos-info-item">
-          <i class="bi bi-person"></i>
-          <div><span class="casos-info-label">Usuario solicitante</span><strong>{{ caso.requirente or '—' }}</strong></div>
-        </div>
-        <div class="casos-info-item">
-          <i class="bi bi-building"></i>
-          <div>
-            <span class="casos-info-label">Cliente / Proveedor</span>
+      <div class="casos-info-panel">
+        <div class="casos-info-col">
+          <div class="casos-info-row">
+            <span class="casos-info-key"><i class="bi bi-calendar-event"></i>Fecha</span>
+            <strong>{{ caso.fecha }}</strong>
+          </div>
+          <div class="casos-info-row">
+            <span class="casos-info-key"><i class="bi bi-tag"></i>Tipo de tarea</span>
+            <strong>{{ caso.tipo_tarea }}</strong>
+          </div>
+          <div class="casos-info-row">
+            <span class="casos-info-key"><i class="bi bi-person"></i>Usuario solicitante</span>
+            <strong>{{ caso.requirente or '—' }}</strong>
+          </div>
+          <div class="casos-info-row">
+            <span class="casos-info-key"><i class="bi bi-person-badge"></i>Cliente / Proveedor</span>
             <strong>
               {% if caso.cliente_proveedor %}
                 <span class="badge bg-light text-dark border me-1">{{ 'Cliente' if caso.tercero_tipo == 'C' else 'Proveedor' }}</span>{{ caso.cliente_proveedor }}
               {% else %}—{% endif %}
             </strong>
           </div>
-        </div>
-        <div class="casos-info-item">
-          <i class="bi bi-clock-history"></i>
-          <div>
-            <span class="casos-info-label">Tiempo asignado</span>
+          <div class="casos-info-row">
+            <span class="casos-info-key"><i class="bi bi-clock-history"></i>Tiempo asignado</span>
             <strong>{% if caso.tiempo_asignado is not none %}{{ '%g'|format(caso.tiempo_asignado|float) }} h{% else %}—{% endif %}</strong>
           </div>
         </div>
-        <div class="casos-info-item">
-          <i class="bi bi-person-check"></i>
-          <div>
-            <span class="casos-info-label">Registrado por</span>
-            <strong>{{ caso.creado_por_nombre }}</strong>
-            <span class="hint d-block">{{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</span>
+
+        <div class="casos-info-col casos-info-col--right">
+          <div class="casos-info-block">
+            <span class="casos-info-key"><i class="bi bi-shield-check"></i>Registrado por</span>
+            <div class="casos-info-block-value"><strong>{{ caso.creado_por_nombre }}</strong> · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</div>
           </div>
+          <div class="casos-info-block">
+            <span class="casos-info-key"><i class="bi bi-file-text"></i>Descripción</span>
+            <div class="casos-info-block-value casos-texto">{{ caso.descripcion }}</div>
+          </div>
+          {% if adj_registro %}
+          <div class="casos-info-block">
+            <span class="casos-info-key"><i class="bi bi-paperclip"></i>Adjuntos</span>
+            <div class="casos-info-block-value">{{ lista_adjuntos(adj_registro) }}</div>
+          </div>
+          {% endif %}
         </div>
       </div>
-
-      <div class="casos-info-full">
-        <span class="casos-info-label"><i class="bi bi-file-text me-1"></i>Descripción</span>
-        <div class="casos-obs-box casos-texto">{{ caso.descripcion }}</div>
-      </div>
-
-      {% if adj_registro %}
-      <div class="casos-info-full">
-        <span class="casos-info-label"><i class="bi bi-paperclip me-1"></i>Adjuntos</span>
-        {{ lista_adjuntos(adj_registro) }}
-      </div>
-      {% endif %}
     </div>
   </div>
 

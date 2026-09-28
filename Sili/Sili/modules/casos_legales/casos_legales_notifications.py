@@ -22,13 +22,13 @@ def _esc(v) -> str:
 
 
 def _destinatarios(caso: dict, actor_id: int) -> list[dict]:
-    """Jefe directo de quien registró el caso + quien lo registró, sin el que ejecuta la acción."""
+    """Usuario solicitante (elegido en el formulario) + quien registró el caso, sin el que
+    ejecuta la acción (para no notificarse a sí mismo)."""
     vistos, lista = set(), []
-    candidatos = []
-    jefe_id = repo.get_jefe_id(caso["creado_por_id"])
-    if jefe_id:
-        candidatos.append(repo.get_usuario_contacto(jefe_id))
-    candidatos.append(repo.get_usuario_contacto(caso["creado_por_id"]))
+    candidatos = [
+        repo.get_usuario_contacto(caso.get("requirente_id")),
+        repo.get_usuario_contacto(caso.get("creado_por_id")),
+    ]
     for u in candidatos:
         if not u:
             continue
@@ -104,7 +104,7 @@ def notif_caso_creado(caso: dict, usuario_id: int, usuario_nombre: str, archivos
     return _enviar(
         caso, usuario_id,
         f"[Casos Legales] Nuevo caso #{caso['id']} — {caso['tipo_tarea']}",
-        "CASOS LEGALES — NUEVO CASO", f"Caso #{caso['id']} registrado",
+        "CASOS LEGALES", f"Caso #{caso['id']} registrado",
         f"<strong>{_esc(usuario_nombre)}</strong> registró un nuevo caso.",
         filas, f"Nuevo caso #{caso['id']} ({caso['tipo_tarea']}) registrado por {usuario_nombre}.",
         archivos,
@@ -120,7 +120,7 @@ def notif_caso_avance(caso: dict, usuario_id: int, usuario_nombre: str,
     return _enviar(
         caso, usuario_id,
         f"[Casos Legales] Avance en el caso #{caso['id']}",
-        "CASOS LEGALES — AVANCE", f"Nuevo avance en el caso #{caso['id']}",
+        "CASOS LEGALES", f"Nuevo avance en el caso #{caso['id']}",
         f"<strong>{_esc(usuario_nombre)}</strong> registró un avance.",
         filas, f"Nuevo avance en el caso #{caso['id']} ({caso['tipo_tarea']}).",
         archivos,
@@ -136,7 +136,7 @@ def notif_caso_cerrado(caso: dict, usuario_id: int, usuario_nombre: str,
     return _enviar(
         caso, usuario_id,
         f"[Casos Legales] Caso #{caso['id']} cerrado",
-        "CASOS LEGALES — CIERRE", f"Caso #{caso['id']} cerrado",
+        "CASOS LEGALES", f"Caso #{caso['id']} cerrado",
         f"<strong>{_esc(usuario_nombre)}</strong> cerró el caso.",
         filas, f"El caso #{caso['id']} ({caso['tipo_tarea']}) fue cerrado.",
         archivos,
