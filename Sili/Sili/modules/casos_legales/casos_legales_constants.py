@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 
 ACTIVE_KEY = "casos_legales"
-PERM_CASOS = "casos_legales"          # ver · crear · editar (editar caso, avances, cierre) · eliminar
+PERM_CASOS = "casos_legales"          # ver · crear · editar (caso, avances, cierre) · eliminar · exportar
+
+# Prefijo del código correlativo del caso (CASLEG001, CASLEG002, ...). El número sale de la
+# tabla compartida secuencias_sap (misma que usan Contratos y Reembolsos), clave 'casos_legales'.
+CODIGO_PREFIJO = "CASLEG"
 
 ESTADO_ABIERTO = "ABIERTO"
 ESTADO_CERRADO = "CERRADO"

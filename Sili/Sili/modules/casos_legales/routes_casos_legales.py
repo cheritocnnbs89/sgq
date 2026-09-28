@@ -3,11 +3,14 @@
 import os
 import uuid
 from datetime import date, datetime
+from io import BytesIO
 
 from flask import (
     Blueprint, render_template, request, redirect, url_for, flash,
-    session, abort, current_app, send_from_directory,
+    session, abort, current_app, send_from_directory, send_file,
 )
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font, PatternFill
 from werkzeug.utils import secure_filename
 
 from modules.auth.routes_auth import require_login, require_permission
@@ -206,6 +209,8 @@ def casos_nuevo():
             flash(error, "warning")
         else:
             caso_id = repo.crear_caso(tipo, datos, u["id"], u["nombre"])
+            codigo = repo.siguiente_codigo_caso()
+            repo.set_codigo_caso(caso_id, codigo)
             archivos, errores = _guardar_adjuntos(caso_id, None, ETAPA_REGISTRO, u)
             for e in errores:
                 flash(e, "warning")
@@ -214,7 +219,7 @@ def casos_nuevo():
                 notif.notif_caso_creado(caso, u["id"], u["nombre"], archivos)
             except Exception:
                 current_app.logger.exception("Casos legales: fallo al notificar caso %s", caso_id)
-            flash(f"Caso #{caso_id} registrado.", "success")
+            flash(f"Caso {codigo} registrado.", "success")
             return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
     else:
         form = {"fecha": date.today().isoformat()}
@@ -307,7 +312,7 @@ def casos_cerrar(caso_id):
         notif.notif_caso_cerrado(caso, u["id"], u["nombre"], observacion, archivos)
     except Exception:
         current_app.logger.exception("Casos legales: fallo al notificar cierre del caso %s", caso_id)
-    flash(f"Caso #{caso_id} cerrado.", "success")
+    flash(f"Caso {caso.get('codigo') or ('#' + str(caso_id))} cerrado.", "success")
     if request.form.get("next") == "lista":
         return redirect(url_for("casos_legales.casos_lista"))
     return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
@@ -365,8 +370,91 @@ def casos_eliminar(caso_id):
     if not _puede_gestionar(caso, u):
         abort(403)
     repo.eliminar_caso(caso_id)
-    flash(f"Caso #{caso_id} eliminado.", "success")
+    flash(f"Caso {caso.get('codigo') or ('#' + str(caso_id))} eliminado.", "success")
     return redirect(url_for("casos_legales.casos_lista"))
+
+
+# ── Exportar a Excel ──────────────────────────────────────────
+
+@casos_legales_bp.route("/exportar", endpoint="casos_exportar")
+@require_login
+@require_permission(PERM_CASOS, "exportar")
+def casos_exportar():
+    u = _user()
+    estado = (request.args.get("estado") or ESTADO_ABIERTO).upper()
+    if estado not in (ESTADO_ABIERTO, ESTADO_CERRADO, "TODOS"):
+        estado = ESTADO_ABIERTO
+    tipo = (request.args.get("tipo") or "").upper()
+    if tipo not in TIPOS_CASO:
+        tipo = ""
+    casos = repo.get_casos(
+        estado=None if estado == "TODOS" else estado,
+        tipo=tipo or None,
+        visible_para=None if _es_admin(u) else u["id"],
+    )
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Casos Legales"
+
+    headers = [
+        "Caso", "Tipo", "Fecha", "Tipo de tarea", "Descripción", "Cliente/Proveedor",
+        "Usuario solicitante", "Tiempo asignado (h)", "Registrado por", "Fecha de registro",
+        "Estado", "Seguimientos", "Cerrado por", "Fecha de cierre", "Observación de cierre",
+    ]
+    ws.append(headers)
+
+    for c in casos:
+        tercero = ""
+        if c.get("cliente_proveedor"):
+            tercero = ("Cliente " if c.get("tercero_tipo") == "C" else "Proveedor ") + c["cliente_proveedor"]
+        ws.append([
+            c.get("codigo") or f"#{c['id']}",
+            TIPOS_CASO.get(c["tipo"], {}).get("label", c["tipo"]),
+            c["fecha"],
+            c["tipo_tarea"],
+            c["descripcion"],
+            tercero,
+            c.get("requirente") or "",
+            float(c["tiempo_asignado"]) if c.get("tiempo_asignado") is not None else None,
+            c["creado_por_nombre"],
+            c["fecha_creacion"],
+            "Abierto" if c["estado"] == ESTADO_ABIERTO else "Cerrado",
+            c["n_avances"],
+            c.get("cerrado_por_nombre") or "",
+            c.get("fecha_cierre"),
+            c.get("observacion_cierre") or "",
+        ])
+
+    header_fill = PatternFill("solid", fgColor="D9EAF7")
+    header_font = Font(bold=True)
+    for cell in ws[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+
+    ws.freeze_panes = "A2"
+    ws.auto_filter.ref = ws.dimensions
+
+    for column_cells in ws.columns:
+        max_length = 0
+        column_letter = column_cells[0].column_letter
+        for cell in column_cells:
+            value = cell.value
+            if value is not None:
+                max_length = max(max_length, len(str(value)))
+        ws.column_dimensions[column_letter].width = min(max_length + 2, 60)
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    return send_file(
+        output,
+        as_attachment=True,
+        download_name="reporte_casos_legales.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
 
 
 # ── Descarga de adjuntos (autenticada) ───────────────────────

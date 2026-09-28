@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from modules.db import get_db
-from .casos_legales_constants import ESTADO_ABIERTO, ESTADO_CERRADO
+from .casos_legales_constants import ESTADO_ABIERTO, ESTADO_CERRADO, CODIGO_PREFIJO
 
 
 def _rows(cur) -> list[dict]:
@@ -38,10 +38,15 @@ def get_casos(estado: str | None = None, tipo: str | None = None,
     """visible_para=None -> todos (admin). Si no, casos que registró ese usuario o
     que registraron los usuarios cuyo jefe directo es él."""
     sql = """
-        SELECT c.id, c.tipo, c.fecha, c.tipo_tarea, c.descripcion, c.tercero_tipo, c.cliente_proveedor,
-               c.tiempo_asignado, c.requirente, c.estado, c.creado_por_id, c.creado_por_nombre, c.fecha_creacion,
-               (SELECT COUNT(*) FROM casos_legales_avances a
-                 WHERE a.caso_id = c.id AND a.activo = 1) AS n_avances
+        SELECT c.id, c.codigo, c.tipo, c.fecha, c.tipo_tarea, c.descripcion, c.tercero_tipo,
+               c.cliente_proveedor, c.tiempo_asignado, c.requirente, c.estado, c.creado_por_id,
+               c.creado_por_nombre, c.fecha_creacion, c.cerrado_por_nombre, c.fecha_cierre,
+               c.observacion_cierre,
+               (
+                   (SELECT COUNT(*) FROM casos_legales_avances a
+                     WHERE a.caso_id = c.id AND a.activo = 1)
+                   + CASE WHEN c.estado = 'CERRADO' THEN 1 ELSE 0 END
+               ) AS n_avances
         FROM casos_legales c
         WHERE c.activo = 1
     """
@@ -101,6 +106,30 @@ def get_tercero_nombre(tipo: str, tercero_id: int) -> str | None:
                 (tercero_id, tipo))
     row = cur.fetchone()
     return row[0] if row else None
+
+
+def siguiente_codigo_caso() -> str:
+    """Código correlativo del caso (CASLEG001, CASLEG002, ...), usando la tabla compartida
+    secuencias_sap (misma que ya usan Contratos y Reembolsos) bajo el nombre 'casos_legales'."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        IF NOT EXISTS (SELECT 1 FROM secuencias_sap WHERE nombre = 'casos_legales')
+            INSERT INTO secuencias_sap (nombre, ultimo_valor) VALUES ('casos_legales', 0)
+    """)
+    cur.execute("UPDATE secuencias_sap SET ultimo_valor = ultimo_valor + 1 WHERE nombre = 'casos_legales'")
+    cur.execute("SELECT ultimo_valor FROM secuencias_sap WHERE nombre = 'casos_legales'")
+    row = cur.fetchone()
+    conn.commit()
+    n = int(row[0]) if row else 1
+    return f"{CODIGO_PREFIJO}{n:03d}"
+
+
+def set_codigo_caso(caso_id: int, codigo: str) -> None:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("UPDATE casos_legales SET codigo = ? WHERE id = ?", (codigo, caso_id))
+    conn.commit()
 
 
 def get_tipos_tarea() -> list[str]:

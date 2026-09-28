@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Caso legal #{{ caso.id }}{% endblock %}
+{% block title %}Caso legal {{ caso.codigo or ('#' ~ caso.id) }}{% endblock %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
@@ -25,7 +25,7 @@
 
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
     <div>
-      <h4 class="mb-1">Caso #{{ caso.id }} — {{ caso.tipo_tarea }}</h4>
+      <h4 class="mb-1">Caso {{ caso.codigo or ('#' ~ caso.id) }} — {{ caso.tipo_tarea }}</h4>
       <span class="badge casos-badge-{{ caso.tipo|lower }}"><i class="bi {{ tipo_info.icon }} me-1"></i>{{ tipo_info.label }}</span>
       {% if abierto %}<span class="badge bg-success">Abierto</span>{% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
     </div>
@@ -37,7 +37,7 @@
       {% endif %}
       {% if puede_eliminar %}
       <form method="post" action="{{ url_for('casos_legales.casos_eliminar', caso_id=caso.id) }}"
-            data-casos-confirm="¿Eliminar el caso #{{ caso.id }}? Dejará de mostrarse en el sistema.">
+            data-casos-confirm="¿Eliminar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Dejará de mostrarse en el sistema.">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Eliminar</button>
       </form>
@@ -101,7 +101,7 @@
   <div class="card card-elev accent-left mb-3">
     <div class="card-body">
       <div class="fieldset-title"><i class="bi bi-clock-history"></i> Seguimiento
-        <span class="badge rounded-pill bg-secondary ms-1">{{ avances|length }}</span>
+        <span class="badge rounded-pill bg-secondary ms-1">{{ avances|length + (0 if abierto else 1) }}</span>
       </div>
 
       {% if puede_avanzar %}
@@ -124,7 +124,7 @@
           </button>
           <button type="submit" class="btn btn-danger"
                   formaction="{{ url_for('casos_legales.casos_cerrar', caso_id=caso.id) }}"
-                  data-confirm="¿Cerrar el caso #{{ caso.id }}? Ya no se podrán registrar más avances.">
+                  data-confirm="¿Cerrar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Ya no se podrán registrar más avances.">
             <i class="bi bi-check2-circle me-1"></i>Cerrar caso
           </button>
         </div>

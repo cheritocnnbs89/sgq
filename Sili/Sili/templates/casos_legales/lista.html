@@ -13,6 +13,11 @@
     <div class="d-flex align-items-center justify-content-between mb-3">
       <h4 class="mb-0">Casos Legales</h4>
       <div class="d-flex align-items-center gap-2">
+        {% if has_permission('casos_legales','exportar') %}
+        <a href="{{ url_for('casos_legales.casos_exportar', estado=estado, tipo=tipo) }}" class="btn btn-outline-success btn-sm">
+          <i class="bi bi-file-earmark-excel me-1"></i>Exportar Excel
+        </a>
+        {% endif %}
         {% if has_permission('casos_legales','crear') %}
         <a href="{{ url_for('casos_legales.casos_nuevo') }}" class="btn btn-primary btn-sm">Nuevo caso</a>
         {% endif %}
@@ -72,7 +77,7 @@
         <table class="table table-sm table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
-              <th>#</th><th>Tipo</th><th>Fecha</th><th>Tipo de tarea</th><th>Descripción</th>
+              <th>Caso</th><th>Tipo</th><th>Fecha</th><th>Tipo de tarea</th><th>Descripción</th>
               <th>Cliente / Proveedor</th><th>Usuario solicitante</th><th class="text-end">Tiempo</th>
               <th>Registrado por</th><th class="text-center">Avances</th><th>Estado</th><th></th>
             </tr>
@@ -80,7 +85,7 @@
           <tbody>
             {% for c in casos %}
             <tr>
-              <td>{{ c.id }}</td>
+              <td class="text-nowrap fw-semibold">{{ c.codigo or ('#' ~ c.id) }}</td>
               <td><span class="badge casos-badge-{{ c.tipo|lower }}">{{ tipos[c.tipo].label if c.tipo in tipos else c.tipo }}</span></td>
               <td class="text-nowrap">{{ c.fecha }}</td>
               <td>{{ c.tipo_tarea }}</td>
@@ -101,7 +106,7 @@
               <td class="text-end text-nowrap">
                 {% if c.puede_cerrar %}
                 <form method="post" class="d-inline" action="{{ url_for('casos_legales.casos_cerrar', caso_id=c.id) }}"
-                      data-casos-confirm="¿Cerrar el caso #{{ c.id }}? Ya no se podrán registrar más avances.">
+                      data-casos-confirm="¿Cerrar el caso {{ c.codigo or ('#' ~ c.id) }}? Ya no se podrán registrar más avances.">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                   <input type="hidden" name="next" value="lista">
                   <button type="submit" class="btn btn-outline-danger btn-sm" title="Cerrar caso">

@@ -83,9 +83,15 @@ def _fmt_horas(v) -> str:
     return f"{float(v):g} h" if v not in (None, "") else "—"
 
 
+def _id_txt(caso: dict) -> str:
+    """Código correlativo del caso (CASLEG001...) para mostrar en asunto/título/avisos;
+    si el caso aún no tiene código asignado, cae al id interno."""
+    return caso.get("codigo") or f"#{caso['id']}"
+
+
 def _filas_base(caso: dict) -> list[tuple]:
     return [
-        ("N° de caso", f"#{caso['id']}"),
+        ("N° de caso", _esc(_id_txt(caso))),
         ("Tipo de caso", _esc(TIPOS_CASO.get(caso["tipo"], {}).get("label", caso["tipo"]))),
         ("Tipo de tarea", _esc(caso["tipo_tarea"])),
         ("Cliente" if caso.get("tercero_tipo") == "C" else "Proveedor" if caso.get("tercero_tipo") == "P"
@@ -103,10 +109,10 @@ def notif_caso_creado(caso: dict, usuario_id: int, usuario_nombre: str, archivos
     ]
     return _enviar(
         caso, usuario_id,
-        f"[Casos Legales] Nuevo caso #{caso['id']} — {caso['tipo_tarea']}",
-        "CASOS LEGALES", f"Caso #{caso['id']} registrado",
+        f"[Casos Legales] Nuevo caso {_id_txt(caso)} — {caso['tipo_tarea']}",
+        "CASOS LEGALES", f"Caso {_id_txt(caso)} registrado",
         f"<strong>{_esc(usuario_nombre)}</strong> registró un nuevo caso.",
-        filas, f"Nuevo caso #{caso['id']} ({caso['tipo_tarea']}) registrado por {usuario_nombre}.",
+        filas, f"Nuevo caso {_id_txt(caso)} ({caso['tipo_tarea']}) registrado por {usuario_nombre}.",
         archivos,
     )
 
@@ -119,10 +125,10 @@ def notif_caso_avance(caso: dict, usuario_id: int, usuario_nombre: str,
     ]
     return _enviar(
         caso, usuario_id,
-        f"[Casos Legales] Avance en el caso #{caso['id']}",
-        "CASOS LEGALES", f"Nuevo avance en el caso #{caso['id']}",
+        f"[Casos Legales] Avance en el caso {_id_txt(caso)}",
+        "CASOS LEGALES", f"Nuevo avance en el caso {_id_txt(caso)}",
         f"<strong>{_esc(usuario_nombre)}</strong> registró un avance.",
-        filas, f"Nuevo avance en el caso #{caso['id']} ({caso['tipo_tarea']}).",
+        filas, f"Nuevo avance en el caso {_id_txt(caso)} ({caso['tipo_tarea']}).",
         archivos,
     )
 
@@ -135,9 +141,9 @@ def notif_caso_cerrado(caso: dict, usuario_id: int, usuario_nombre: str,
     ]
     return _enviar(
         caso, usuario_id,
-        f"[Casos Legales] Caso #{caso['id']} cerrado",
-        "CASOS LEGALES", f"Caso #{caso['id']} cerrado",
+        f"[Casos Legales] Caso {_id_txt(caso)} cerrado",
+        "CASOS LEGALES", f"Caso {_id_txt(caso)} cerrado",
         f"<strong>{_esc(usuario_nombre)}</strong> cerró el caso.",
-        filas, f"El caso #{caso['id']} ({caso['tipo_tarea']}) fue cerrado.",
+        filas, f"El caso {_id_txt(caso)} ({caso['tipo_tarea']}) fue cerrado.",
         archivos,
     )
