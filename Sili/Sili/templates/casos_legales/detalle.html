@@ -98,10 +98,13 @@
     </div>
   </div>
 
-  {% if puede_avanzar %}
   <div class="card card-elev accent-left mb-3">
     <div class="card-body">
-      <div class="fieldset-title"><i class="bi bi-plus-circle"></i> Registrar avance</div>
+      <div class="fieldset-title"><i class="bi bi-clock-history"></i> Seguimiento
+        <span class="badge rounded-pill bg-secondary ms-1">{{ avances|length }}</span>
+      </div>
+
+      {% if puede_avanzar %}
       <form method="post" enctype="multipart/form-data" id="formAvanceCierre"
             action="{{ url_for('casos_legales.casos_avance', caso_id=caso.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -126,17 +129,13 @@
           </button>
         </div>
       </form>
-    </div>
-  </div>
-  {% endif %}
+      <hr class="my-3">
+      {% endif %}
 
-  <div class="card card-elev accent-left mb-3">
-    <div class="card-body">
-      <button type="button" class="fieldset-title fieldset-toggle" data-bs-toggle="collapse"
+      <button type="button" class="btn btn-outline-secondary btn-sm fieldset-toggle" data-bs-toggle="collapse"
               data-bs-target="#colSeguimientoCaso" aria-expanded="false" aria-controls="colSeguimientoCaso">
-        <i class="bi bi-clock-history"></i> Seguimiento
-        <span class="badge rounded-pill bg-secondary ms-1">{{ avances|length }}</span>
-        <i class="bi bi-chevron-down fieldset-toggle-icon"></i>
+        <i class="bi bi-list-ul me-1"></i>Ver historial
+        <i class="bi bi-chevron-down fieldset-toggle-icon ms-1"></i>
       </button>
       <div class="collapse" id="colSeguimientoCaso">
         <ul class="casos-timeline mt-3">
