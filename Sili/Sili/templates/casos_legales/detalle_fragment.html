@@ -1,17 +1,9 @@
-{% extends "base.html" %}
-{% block title %}Caso legal {{ caso.codigo or ('#' ~ caso.id) }}{% endblock %}
-
-{% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/casos_legales.css') }}">
-{% endblock %}
-
-{% block content %}
+{# casos_legales/detalle_fragment.html — sin extends: se inyecta dentro del modal de la lista. #}
 <div class="theme-compras">
 
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
     <div>
-      <h4 class="mb-1">Caso {{ caso.codigo or ('#' ~ caso.id) }} — {{ caso.tipo_tarea }}</h4>
+      <h5 class="mb-1">Caso {{ caso.codigo or ('#' ~ caso.id) }} — {{ caso.tipo_tarea }}</h5>
       <span class="badge casos-badge-{{ caso.tipo|lower }}"><i class="bi {{ tipo_info.icon }} me-1"></i>{{ tipo_info.label }}</span>
       {% if abierto %}<span class="badge bg-success">Abierto</span>{% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
     </div>
@@ -28,15 +20,9 @@
         <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Eliminar</button>
       </form>
       {% endif %}
-      <a href="{{ url_for('casos_legales.casos_lista') }}" class="btn btn-outline-secondary btn-sm">Volver</a>
     </div>
   </div>
 
   {% include "casos_legales/_info_caso.html" %}
   {% include "casos_legales/_seguimiento.html" %}
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/casos_legales.js') }}"></script>
-{% endblock %}

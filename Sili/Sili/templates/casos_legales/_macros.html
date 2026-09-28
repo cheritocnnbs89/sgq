@@ -1,0 +1,13 @@
+{% macro lista_adjuntos(items) %}
+  {% if items %}
+  <ul class="casos-adjuntos list-unstyled">
+    {% for a in items %}
+    <li>
+      <i class="bi bi-paperclip"></i>
+      <a href="{{ url_for('casos_legales.casos_adjunto', adjunto_id=a.id) }}">{{ a.nombre_original }}</a>
+      <span class="hint">({{ (a.tamano / 1024)|round|int }} KB)</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+{% endmacro %}

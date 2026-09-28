@@ -202,6 +202,39 @@ def add_avance(caso_id: int, observacion: str, usuario_id: int, usuario_nombre: 
     return int(row[0])
 
 
+def get_avance(avance_id: int) -> dict | None:
+    cur = get_db().cursor()
+    cur.execute("""
+        SELECT id, caso_id, observacion, usuario_id, usuario_nombre, fecha
+        FROM casos_legales_avances
+        WHERE id = ? AND activo = 1
+    """, (avance_id,))
+    row = cur.fetchone()
+    return dict(row) if row else None
+
+
+def editar_avance(avance_id: int, observacion: str) -> bool:
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE casos_legales_avances SET observacion = ?
+         WHERE id = ? AND activo = 1
+    """, (observacion, avance_id))
+    ok = cur.rowcount > 0
+    conn.commit()
+    return ok
+
+
+def eliminar_avance(avance_id: int) -> bool:
+    """Eliminación lógica (activo = 0)."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("UPDATE casos_legales_avances SET activo = 0 WHERE id = ? AND activo = 1", (avance_id,))
+    ok = cur.rowcount > 0
+    conn.commit()
+    return ok
+
+
 def get_avances(caso_id: int) -> list[dict]:
     cur = get_db().cursor()
     cur.execute("""

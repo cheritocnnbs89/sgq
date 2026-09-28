@@ -7,7 +7,7 @@ from io import BytesIO
 
 from flask import (
     Blueprint, render_template, request, redirect, url_for, flash,
-    session, abort, current_app, send_from_directory, send_file,
+    session, abort, current_app, send_from_directory, send_file, get_flashed_messages,
 )
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
@@ -181,10 +181,6 @@ def casos_lista():
         tipo=tipo or None,
         visible_para=None if _es_admin(u) else u["id"],
     )
-    puede_editar_perm = _permiso(u, "editar")
-    for c in casos:
-        c["puede_cerrar"] = (c["estado"] == ESTADO_ABIERTO and puede_editar_perm
-                             and _puede_gestionar(c, u))
     return render_template(
         "casos_legales/lista.html", active_page=ACTIVE_KEY, casos=casos,
         estado=estado, tipo=tipo, tipos=TIPOS_CASO, es_admin=_es_admin(u),
@@ -231,36 +227,70 @@ def casos_nuevo():
 
 # ── Detalle ──────────────────────────────────────────────────
 
-@casos_legales_bp.route("/<int:caso_id>", endpoint="casos_detalle")
-@require_login
-@require_permission(PERM_CASOS, "ver")
-def casos_detalle(caso_id):
-    u = _user()
+def _contexto_detalle(caso_id: int, u: dict):
+    """Datos para el detalle de un caso (página completa o fragmento del popup). None si no existe
+    o el usuario no puede verlo."""
     caso = repo.get_caso(caso_id)
     if not caso or not _puede_ver(caso, u):
-        abort(404)
+        return None
     avances = repo.get_avances(caso_id)
     adjuntos = repo.get_adjuntos(caso_id)
     por_avance = {}
     for a in adjuntos:
         por_avance.setdefault(a["avance_id"], []).append(a)
-    return render_template(
-        "casos_legales/detalle.html", active_page=ACTIVE_KEY, caso=caso,
+    gestiona = _puede_gestionar(caso, u)
+    return dict(
+        active_page=ACTIVE_KEY, caso=caso,
         tipo_info=TIPOS_CASO.get(caso["tipo"], {"label": caso["tipo"], "icon": "bi-folder"}),
         avances=avances,
         adj_registro=[a for a in adjuntos if a["etapa"] == ETAPA_REGISTRO],
         adj_cierre=[a for a in adjuntos if a["etapa"] == ETAPA_CIERRE],
         adj_por_avance=por_avance,
         abierto=caso["estado"] == ESTADO_ABIERTO,
-        puede_avanzar=(caso["estado"] == ESTADO_ABIERTO and _puede_gestionar(caso, u)
-                       and _permiso(u, "editar")),
-        puede_editar=(caso["estado"] == ESTADO_ABIERTO and _puede_gestionar(caso, u)
-                      and _permiso(u, "editar")),
-        puede_eliminar=_puede_gestionar(caso, u) and _permiso(u, "eliminar"),
+        puede_avanzar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
+        # Editar/eliminar un avance ya registrado no depende de que el caso siga abierto
+        # (corregir un texto o quitar un avance mal cargado debe poder hacerse igual). Se separan
+        # los permisos: alguien puede tener "editar" sin "eliminar" (o viceversa).
+        puede_editar_avances=gestiona and _permiso(u, "editar"),
+        puede_eliminar_avances=gestiona and _permiso(u, "eliminar"),
+        puede_editar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
+        puede_eliminar=gestiona and _permiso(u, "eliminar"),
     )
 
 
+@casos_legales_bp.route("/<int:caso_id>", endpoint="casos_detalle")
+@require_login
+@require_permission(PERM_CASOS, "ver")
+def casos_detalle(caso_id):
+    ctx = _contexto_detalle(caso_id, _user())
+    if ctx is None:
+        abort(404)
+    return render_template("casos_legales/detalle.html", **ctx)
+
+
+@casos_legales_bp.route("/<int:caso_id>/fragment", endpoint="casos_detalle_fragment")
+@require_login
+@require_permission(PERM_CASOS, "ver")
+def casos_detalle_fragment(caso_id):
+    """Mismo detalle que casos_detalle, sin el layout de la página: se inyecta en el
+    popup de la lista."""
+    get_flashed_messages()
+    session.pop("_flashes", None)
+    ctx = _contexto_detalle(caso_id, _user())
+    if ctx is None:
+        abort(404)
+    return render_template("casos_legales/detalle_fragment.html", es_modal=True, **ctx)
+
+
 # ── Avance / Cierre ──────────────────────────────────────────
+
+def _redirigir_tras_accion(caso_id: int):
+    """A la lista si la acción vino del popup (formulario con next=lista), o al detalle
+    de siempre si vino de la página completa."""
+    if request.form.get("next") == "lista":
+        return redirect(url_for("casos_legales.casos_lista"))
+    return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
+
 
 @casos_legales_bp.route("/<int:caso_id>/avance", methods=["POST"], endpoint="casos_avance")
 @require_login
@@ -274,11 +304,11 @@ def casos_avance(caso_id):
         abort(403)
     if caso["estado"] != ESTADO_ABIERTO:
         flash("El caso ya está cerrado.", "warning")
-        return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
+        return _redirigir_tras_accion(caso_id)
     observacion = (request.form.get("observacion") or "").strip()
     if not observacion:
         flash("Escribe la observación del avance.", "warning")
-        return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
+        return _redirigir_tras_accion(caso_id)
     avance_id = repo.add_avance(caso_id, observacion, u["id"], u["nombre"])
     archivos, errores = _guardar_adjuntos(caso_id, avance_id, ETAPA_AVANCE, u)
     for e in errores:
@@ -288,7 +318,7 @@ def casos_avance(caso_id):
     except Exception:
         current_app.logger.exception("Casos legales: fallo al notificar avance del caso %s", caso_id)
     flash("Avance registrado.", "success")
-    return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
+    return _redirigir_tras_accion(caso_id)
 
 
 @casos_legales_bp.route("/<int:caso_id>/cerrar", methods=["POST"], endpoint="casos_cerrar")
@@ -304,7 +334,7 @@ def casos_cerrar(caso_id):
     observacion = (request.form.get("observacion") or "").strip()
     if not repo.cerrar_caso(caso_id, observacion, u["id"], u["nombre"]):
         flash("El caso ya estaba cerrado.", "warning")
-        return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
+        return _redirigir_tras_accion(caso_id)
     archivos, errores = _guardar_adjuntos(caso_id, None, ETAPA_CIERRE, u)
     for e in errores:
         flash(e, "warning")
@@ -313,9 +343,47 @@ def casos_cerrar(caso_id):
     except Exception:
         current_app.logger.exception("Casos legales: fallo al notificar cierre del caso %s", caso_id)
     flash(f"Caso {caso.get('codigo') or ('#' + str(caso_id))} cerrado.", "success")
-    if request.form.get("next") == "lista":
-        return redirect(url_for("casos_legales.casos_lista"))
-    return redirect(url_for("casos_legales.casos_detalle", caso_id=caso_id))
+    return _redirigir_tras_accion(caso_id)
+
+
+@casos_legales_bp.route("/<int:caso_id>/avance/<int:avance_id>/editar", methods=["POST"], endpoint="casos_avance_editar")
+@require_login
+@require_permission(PERM_CASOS, "editar")
+def casos_avance_editar(caso_id, avance_id):
+    u = _user()
+    caso = repo.get_caso(caso_id)
+    if not caso or not _puede_ver(caso, u):
+        abort(404)
+    if not _puede_gestionar(caso, u) or not _permiso(u, "editar"):
+        abort(403)
+    avance = repo.get_avance(avance_id)
+    if not avance or avance["caso_id"] != caso_id:
+        abort(404)
+    observacion = (request.form.get("observacion") or "").strip()
+    if not observacion:
+        flash("Escribe la observación del avance.", "warning")
+        return _redirigir_tras_accion(caso_id)
+    repo.editar_avance(avance_id, observacion)
+    flash("Avance actualizado.", "success")
+    return _redirigir_tras_accion(caso_id)
+
+
+@casos_legales_bp.route("/<int:caso_id>/avance/<int:avance_id>/eliminar", methods=["POST"], endpoint="casos_avance_eliminar")
+@require_login
+@require_permission(PERM_CASOS, "eliminar")
+def casos_avance_eliminar(caso_id, avance_id):
+    u = _user()
+    caso = repo.get_caso(caso_id)
+    if not caso or not _puede_ver(caso, u):
+        abort(404)
+    if not _puede_gestionar(caso, u) or not _permiso(u, "eliminar"):
+        abort(403)
+    avance = repo.get_avance(avance_id)
+    if not avance or avance["caso_id"] != caso_id:
+        abort(404)
+    repo.eliminar_avance(avance_id)
+    flash("Avance eliminado.", "success")
+    return _redirigir_tras_accion(caso_id)
 
 
 # ── Editar / Eliminar ────────────────────────────────────────
