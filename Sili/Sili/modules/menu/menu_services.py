@@ -146,7 +146,18 @@ def fetch_menu_tree(conn, permissions, active_page=None, is_admin=False):
 
         for node in sorted(grouped.get(parent_id, []), key=lambda x: (x.get("order_no", 0), x.get("id"))):
             children = build(node["id"])
-            show_self = can_show(node)
+
+            # Un nodo "grupo" (is_group=1, ej. "Registro Automático") es un contenedor
+            # puro -- nunca tiene endpoint/permission propios (ver insert_menu_root /
+            # insert_menu_group_child), asi que can_show() lo dejaba pasar siempre por
+            # no tener permission_key, y el grupo aparecia vacio en el menu para
+            # cualquier rol sin acceso a NINGUNO de sus hijos. Un grupo solo se muestra
+            # si le quedo al menos un hijo visible; un nodo normal (hoja), por su
+            # propio permiso de "ver".
+            if node.get("is_group"):
+                show_self = bool(children)
+            else:
+                show_self = can_show(node)
 
             if not show_self and not children:
                 continue
