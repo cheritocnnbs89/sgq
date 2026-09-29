@@ -163,18 +163,17 @@ def _safe_name(u: dict) -> str:
 
 # =============== Links ===============
 
-def _link_ver_gasto(gasto_id: int) -> str:
-    try:
-        return url_for("ver_gasto", gid=gasto_id, _external=True)
-    except Exception:
-        return "http://bitacoraquimpac.com.ec:5000/"
+def _link_ver_gasto(gasto_id: int = None) -> str:
+    """Enlace de los correos de Gastos con Tarjeta -- siempre la base del
+    sistema, no un deep-link al gasto puntual: url_for(_external=True) podia
+    resolver a 127.0.0.1 segun el contexto de quien disparaba el correo, y
+    de momento este modulo no tiene aprobacion habilitada por correo (el
+    usuario debe entrar al sistema, no aprobar desde el mail)."""
+    return "http://bitacoraquimpac.com.ec:5000/"
 
 
 def _link_bandeja_aprobar() -> str:
-    try:
-        return url_for("lista_gastos", _external=True) + "?pendientes=1"
-    except Exception:
-        return "http://bitacoraquimpac.com.ec:5000/"
+    return "http://bitacoraquimpac.com.ec:5000/"
 
 
 def _gasto_public_url(app, gasto_id: int) -> str:
@@ -834,7 +833,7 @@ def _send_creator_gasto_created(app, g: dict):
     saludo = f"Hola {usuario}, tu gasto fue registrado correctamente."
 
     link = _link_ver_gasto(g["id"])
-    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Ver gasto", link)
+    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Ir al sistema", link)
 
     subject = f"[Gastos] ✅ Gasto registrado #{g['id']}"
     text = (
@@ -865,7 +864,7 @@ def _send_manager_gasto_created(app, g: dict, gerente_email: str):
     saludo = f"El usuario {usuario} registró un gasto que requiere tu aprobación."
 
     link = _link_ver_gasto(g["id"])
-    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Revisar y aprobar gasto", link)
+    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Ir al sistema", link)
 
     subject = f"[Gastos] ⏳ Aprobación requerida – Gasto #{g['id']}"
     text = (
@@ -953,7 +952,7 @@ def _send_coordinador_gasto_pending(app, g: dict, coordinador_email: str):
     saludo = f"El usuario {usuario} registró un gasto de tarjeta que requiere tu revisión antes de enviarlo a gerencia."
 
     link = _link_ver_gasto(g["id"])
-    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Revisar gasto", link)
+    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Ir al sistema", link)
 
     subject = f"[Gastos] 🔍 Revisión requerida – Gasto #{g['id']}"
     text = (
@@ -1065,7 +1064,7 @@ def notify_gasto_sap_contabilizado(app, gasto_id: int, doc: str, by_user_id: int
     titulo = f"Gasto #{gasto_id} contabilizado en SAP"
     saludo = f"Hola {usuario}, tu gasto fue enviado y contabilizado en SAP correctamente."
     link = _link_ver_gasto(gasto_id)
-    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Ver gasto", link)
+    html_body = _build_gastos_html_blue(titulo, saludo, rows, "Ir al sistema", link)
 
     subject = f"[Gastos] ✅ Contabilizado en SAP – Gasto #{gasto_id} · Doc {doc_txt}"
     text = (
@@ -1133,7 +1132,7 @@ def _build_user_approved_html(g, area_txt):
     titulo = f"Gasto aprobado #{g['id']}"
     saludo = f"Hola {usuario}, tu gasto fue aprobado por {area_txt}."
 
-    return _build_gastos_html_blue(titulo, saludo, rows, "Ver gasto", link)
+    return _build_gastos_html_blue(titulo, saludo, rows, "Ir al sistema", link)
 
 
 def _build_next_step_html(g, approved_area_txt, next_area_txt):
@@ -1153,7 +1152,7 @@ def _build_next_step_html(g, approved_area_txt, next_area_txt):
     titulo = f"Acción requerida — Gasto #{g['id']}"
     saludo = f"{approved_area_txt} aprobó este gasto. Debes continuar con la aprobación ({next_area_txt})."
 
-    return _build_gastos_html_blue(titulo, saludo, rows, "Revisar y aprobar gasto", link)
+    return _build_gastos_html_blue(titulo, saludo, rows, "Ir al sistema", link)
 
 
 def _build_gasto_approved_html(g: Dict[str, Any], area_key: str, approver: Optional[Dict[str, Any]]):
@@ -1176,7 +1175,7 @@ def _build_gasto_approved_html(g: Dict[str, Any], area_key: str, approver: Optio
     titulo = f"Gasto aprobado #{g['id']}"
     saludo = f"El gasto fue aprobado por {area_txt}."
 
-    return _build_gastos_html_blue(titulo, saludo, rows, "Ver gasto", link)
+    return _build_gastos_html_blue(titulo, saludo, rows, "Ir al sistema", link)
 
 
 def notify_gasto_approved(app, gasto_id: int, area: str, approved_by_user_id: int | None):
@@ -1210,7 +1209,7 @@ def notify_gasto_approved(app, gasto_id: int, area: str, approved_by_user_id: in
                 f"Fecha: {g.get('fecha')}\n"
                 f"Motivo: {g.get('motivo')}\n"
                 f"Total con IVA: {_money(g.get('total_con_iva'))}\n"
-                f"Ver gasto: {_link_ver_gasto(g['id'])}\n"
+                f"Ir al sistema: {_link_ver_gasto(g['id'])}\n"
             )
             html_user = _build_user_approved_html(g, area_txt)
             sent_any = _send_mail_safe(creator_email, subject_user, text_user, html_body=html_user) or sent_any
@@ -1243,7 +1242,7 @@ def notify_gasto_approved(app, gasto_id: int, area: str, approved_by_user_id: in
                 f"Fecha: {g.get('fecha')}\n"
                 f"Motivo: {g.get('motivo')}\n"
                 f"Total con IVA: {_money(g.get('total_con_iva'))}\n"
-                f"Revisar: {_link_ver_gasto(g['id'])}\n"
+                f"Ir al sistema: {_link_ver_gasto(g['id'])}\n"
             )
             html_next = _build_next_step_html(g, area_txt, next_area_txt)
             sent_any = _send_email(app, subject_next, text_next, next_emails, html_body=html_next) or sent_any
@@ -1309,8 +1308,8 @@ def notify_gasto_expiry_warning(app, gasto: dict, usuario: dict, gerente: dict):
 
     subject = f"[Sistema de Reembolso] Aviso: Gasto #{gid} se inactivará si no se aprueba (día 14)"
 
-    cta_link = _abs_url(app, f"/reembolsos/gastos/{gid}/ver")
-    cta_text = "Ver gasto"
+    cta_link = "http://bitacoraquimpac.com.ec:5000/"
+    cta_text = "Ir al sistema"
 
     titulo = f"Aviso de expiración — #{gid}"
     saludo = (
@@ -1342,7 +1341,7 @@ Detalle:
 - Gerente: {_safe_name(gerente)}
 - Estado: Aviso (día 6): se inactivará si no se aprueba.
 
-Ver gasto: {cta_link}
+Ir al sistema: {cta_link}
 
 Saludos,
 Sistema Reembolso de Gasto
@@ -1364,8 +1363,8 @@ def notify_gasto_expired_inactivated(app, gasto: dict, usuario: dict, gerente: d
 
     subject = f"[Sistema de Reembolso] Gasto #{gid} eliminado por política (15 días sin aprobación)"
 
-    cta_link = _abs_url(app, f"/reembolsos/gastos/{gid}/ver")
-    cta_text = "Ver gasto"
+    cta_link = "http://bitacoraquimpac.com.ec:5000/"
+    cta_text = "Ir al sistema"
 
     titulo = f"Gasto eliminado — #{gid}"
     saludo = "Por política de control, tu gasto fue inactivado automáticamente por no registrar aprobaciones (GA/GG/GF) durante 15 días."
@@ -1395,7 +1394,7 @@ Detalle:
 
 Si se requiere cargar nuevamente el gasto, debe ingresarse un nuevo registro cumpliendo el flujo de aprobaciones.
 
-Ver gasto: {cta_link}
+Ir al sistema: {cta_link}
 
 Saludos,
 Sistema Reembolso de Gastos
