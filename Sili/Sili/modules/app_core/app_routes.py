@@ -102,9 +102,14 @@ def register_all_routes(app):
         register_empresas_routes = None
 
     try:
-        from modules.cartera import register_cartera_routes
+        from modules.importaciones import register_importaciones_routes
     except Exception:
-        register_cartera_routes = None
+        register_importaciones_routes = None
+
+    try:
+        from modules.obligaciones import register_obligaciones_routes
+    except Exception:
+        register_obligaciones_routes = None
 
     try:
         from modules.routes_puestos import register_puestos_routes
@@ -173,11 +178,17 @@ def register_all_routes(app):
         except Exception as e:
             app.logger.exception("Fallo register_empresas_routes: %s", e)
 
-    if register_cartera_routes:
+    if register_importaciones_routes:
         try:
-            register_cartera_routes(app)
+            register_importaciones_routes(app)
         except Exception as e:
-            app.logger.exception("Fallo register_cartera_routes: %s", e)
+            app.logger.exception("Fallo register_importaciones_routes: %s", e)
+
+    if register_obligaciones_routes:
+        try:
+            register_obligaciones_routes(app)
+        except Exception as e:
+            app.logger.exception("Fallo register_obligaciones_routes: %s", e)
 
     # ------------------------------------------------------
     # Registro de módulos basados en función register_*.
