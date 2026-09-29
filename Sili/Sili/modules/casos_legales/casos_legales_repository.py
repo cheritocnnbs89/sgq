@@ -46,7 +46,9 @@ def get_casos(estado: str | None = None, tipo: str | None = None,
                    (SELECT COUNT(*) FROM casos_legales_avances a
                      WHERE a.caso_id = c.id AND a.activo = 1)
                    + CASE WHEN c.estado = 'CERRADO' THEN 1 ELSE 0 END
-               ) AS n_avances
+               ) AS n_avances,
+               (SELECT COUNT(*) FROM casos_legales_adjuntos ad
+                 WHERE ad.caso_id = c.id AND ad.activo = 1) AS n_adjuntos
         FROM casos_legales c
         WHERE c.activo = 1
     """

@@ -549,5 +549,20 @@ def casos_adjunto(adjunto_id):
                                as_attachment=True, download_name=adj["nombre_original"])
 
 
+@casos_legales_bp.route("/<int:caso_id>/adjuntos-popup", endpoint="casos_adjuntos_popup")
+@require_login
+@require_permission(PERM_CASOS, "ver")
+def casos_adjuntos_popup(caso_id):
+    """Fragmento HTML con todos los adjuntos del caso (registro, avances y cierre juntos),
+    para el modal que abre el ícono de clip en la lista -- mismo patrón que Gastos con
+    Tarjeta (ver_gasto_adjuntos)."""
+    u = _user()
+    caso = repo.get_caso(caso_id)
+    if not caso or not _puede_ver(caso, u):
+        abort(404)
+    adjuntos = repo.get_adjuntos(caso_id)
+    return render_template("casos_legales/_adjuntos_popup.html", adjuntos=adjuntos)
+
+
 def register_casos_legales_routes(app):
     app.register_blueprint(casos_legales_bp)

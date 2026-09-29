@@ -104,6 +104,16 @@
                 {% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
               </td>
               <td class="text-end text-nowrap">
+                {% if (c.n_adjuntos|default(0))|int > 0 %}
+                <button type="button" class="btn btn-outline-secondary btn-sm js-ver-adjuntos-caso"
+                        data-caso-id="{{ c.id }}" title="Ver adjuntos">
+                  <i class="bi bi-paperclip"></i>
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Sin adjuntos">
+                  <i class="bi bi-paperclip"></i>
+                </button>
+                {% endif %}
                 <button type="button" class="btn btn-outline-primary btn-sm js-open-caso-detalle" data-caso-id="{{ c.id }}">
                   <i class="bi bi-eye me-1"></i>Detalle
                 </button>
@@ -117,6 +127,20 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<div class="modal fade" id="modalCasoAdjuntos" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-paperclip me-2"></i>Adjuntos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="casoAdjuntosBody">
+        <div class="text-muted">Cargando…</div>
+      </div>
+    </div>
   </div>
 </div>
 

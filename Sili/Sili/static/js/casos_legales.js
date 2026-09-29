@@ -116,4 +116,35 @@
   document.querySelectorAll('.js-open-caso-detalle').forEach(function (btn) {
     btn.addEventListener('click', function () { abrirCasoDetalle(btn.dataset.casoId); });
   });
+
+  // ── Lista: ícono de clip abre un popup con TODOS los adjuntos del caso ──
+  function abrirAdjuntosCaso(casoId) {
+    var body = document.getElementById('casoAdjuntosBody');
+    var modalEl = document.getElementById('modalCasoAdjuntos');
+    if (!body || !modalEl || typeof bootstrap === 'undefined') { return; }
+
+    body.textContent = 'Cargando…';
+    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+
+    fetch('/casos-legales/' + encodeURIComponent(casoId) + '/adjuntos-popup', {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      cache: 'no-store'
+    }).then(function (resp) {
+      if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
+      return resp.text();
+    }).then(function (html) {
+      body.innerHTML = html;
+    }).catch(function () {
+      body.innerHTML = '';
+      var errDiv = document.createElement('div');
+      errDiv.className = 'alert alert-danger mb-0';
+      errDiv.textContent = 'No se pudieron cargar los adjuntos.';
+      body.appendChild(errDiv);
+    });
+  }
+
+  document.querySelectorAll('.js-ver-adjuntos-caso').forEach(function (btn) {
+    btn.addEventListener('click', function () { abrirAdjuntosCaso(btn.dataset.casoId); });
+  });
 })();
