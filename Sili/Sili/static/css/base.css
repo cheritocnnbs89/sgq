@@ -619,18 +619,13 @@ textarea.form-control.filled {
     display: block;
   }
 
-  #btnOpen {
-    display: grid;
-  }
-
-  .app-shell.open ~ #btnOpen {
-    left: 14px;
-    top: 14px;
-  }
-
-  .app-shell.open .sidebar #btnClose {
-    display: none;
-  }
+  /* #btnOpen y #btnClose ya se muestran/ocultan bien con las reglas generales
+     (.app-shell:not(.open) ~ #btnOpen / .app-shell.open .sidebar #btnClose) --
+     antes, acá se forzaba #btnOpen siempre visible (aun con el sidebar ya
+     abierto, tapándolo encima con z-index mayor) y #btnClose siempre oculto,
+     así que en pantallas chicas/tablets el botón para CERRAR el menú
+     desaparecía y el que quedaba a la vista solo sabía abrir -- tocarlo de
+     nuevo no hacía nada. */
 
   .content {
     padding: 18px;
