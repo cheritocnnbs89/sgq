@@ -254,7 +254,10 @@ def _contexto_detalle(caso_id: int, u: dict):
         puede_editar_avances=gestiona and _permiso(u, "editar"),
         puede_eliminar_avances=gestiona and _permiso(u, "eliminar"),
         puede_editar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
-        puede_eliminar=gestiona and _permiso(u, "eliminar"),
+        # Un caso cerrado ya no lo puede eliminar quien lo registró -- solo el admin.
+        puede_eliminar=_permiso(u, "eliminar") and (
+            _es_admin(u) if caso["estado"] == ESTADO_CERRADO else gestiona
+        ),
     )
 
 
@@ -435,7 +438,11 @@ def casos_eliminar(caso_id):
     caso = repo.get_caso(caso_id)
     if not caso or not _puede_ver(caso, u):
         abort(404)
-    if not _puede_gestionar(caso, u):
+    if caso["estado"] == ESTADO_CERRADO:
+        # Un caso cerrado ya no lo puede eliminar quien lo registró -- solo el admin.
+        if not _es_admin(u):
+            abort(403)
+    elif not _puede_gestionar(caso, u):
         abort(403)
     repo.eliminar_caso(caso_id)
     flash(f"Caso {caso.get('codigo') or ('#' + str(caso_id))} eliminado.", "success")
