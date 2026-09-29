@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Reclamos Seguros – Nuevo caso{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="theme-compras">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0">Nuevo caso de reclamo de seguro</h4>
+    <span class="section-chip">Registro, seguimiento y cierre</span>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="card card-elev accent-left mb-3">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-view-list"></i> Datos de ingreso</div>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label req" for="tipo_caso">Tipo de caso</label>
+            <select class="form-select" id="tipo_caso" name="tipo_caso" required>
+              <option value="">Selecciona…</option>
+              {% for t in tipos %}
+              <option value="{{ t }}" {% if form.get('tipo_caso') == t %}selected{% endif %}>{{ t }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label req" for="fecha">Fecha</label>
+            <input type="date" class="form-control" id="fecha" name="fecha" value="{{ form.get('fecha', '') }}" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="broker_tercero_id">Broker / Aseguradora</label>
+            <select class="form-select" id="broker_tercero_id" name="broker_tercero_id">
+              <option value="">Selecciona…</option>
+              {% for b in brokers %}
+              <option value="{{ b.id }}" {% if form.get('broker_tercero_id') | string == b.id | string %}selected{% endif %}
+                      {% if not b.email %}disabled{% endif %}>
+                {{ b.nombre }}{% if not b.email %} (sin correo configurado){% endif %}
+              </option>
+              {% endfor %}
+            </select>
+            <div class="hint">Solo se listan proveedores con correo — ahí se notifica el caso.</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label req" for="solicitante_id">Usuario solicitante</label>
+            <select name="solicitante_id" id="solicitante_id" class="form-select" required>
+              <option value="">Selecciona…</option>
+              {% for u in usuarios %}
+              <option value="{{ u.id }}" {% if form.get('solicitante_id') | string == u.id | string %}selected{% endif %}>
+                {{ u.nombre }}{% if u.departamento %} — {{ u.departamento }}{% endif %}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-elev accent-left mb-3">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-chat-left-text"></i> Descripción</div>
+        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required>{{ form.get('descripcion', '') }}</textarea>
+      </div>
+    </div>
+
+    <div class="card card-elev accent-left mb-4">
+      <div class="card-body">
+        <div class="fieldset-title"><i class="bi bi-paperclip"></i> Adjuntos</div>
+        <label class="form-label" for="adjuntos">Documentos requeridos por el broker</label>
+        <input type="file" class="form-control" id="adjuntos" name="adjuntos" multiple>
+        <div class="hint mt-1">Hasta 10 archivos de 10 MB. Formatos: {{ extensiones }}.</div>
+      </div>
+    </div>
+
+    <div class="sticky-actions d-flex gap-2 justify-content-end">
+      <a href="{{ url_for('reclamos_seguros.reclamos_seguros_lista') }}" class="btn btn-outline-secondary">Volver</a>
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

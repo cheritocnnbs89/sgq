@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Reclamos Seguros – Configuración{% endblock %}
+
+{% block content %}
+<div class="theme-compras">
+  <h4 class="mb-3">Configuración de Reclamos Seguros</h4>
+
+  <div class="card card-elev accent-left mb-3">
+    <div class="card-body">
+      <div class="fieldset-title"><i class="bi bi-person-check"></i> Coordinador del módulo</div>
+      <p class="hint">Persona que gestiona y da seguimiento a los casos día a día.</p>
+      <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_configuracion_coordinador') }}"
+            class="row g-3 align-items-end">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-md-6">
+          <label class="form-label">Usuario</label>
+          <select name="usuario_id" class="form-select">
+            <option value="">Sin coordinador asignado</option>
+            {% for u in usuarios %}
+            <option value="{{ u.id }}" {% if coordinador and coordinador.usuario_id == u.id %}selected{% endif %}>{{ u.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+      {% if coordinador %}
+      <p class="hint mt-2 mb-0">Coordinador actual: <strong>{{ coordinador.usuario_nombre }}</strong></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card card-elev accent-left mb-3">
+    <div class="card-body">
+      <div class="fieldset-title"><i class="bi bi-eye"></i> Roles con visibilidad total</div>
+      <p class="hint">Además del admin y el coordinador, estos roles ven TODOS los casos (no solo los propios).</p>
+      <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_configuracion_roles') }}"
+            class="row g-3 align-items-end">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-md-8">
+          <label class="form-label">Roles (separados por coma)</label>
+          <input type="text" class="form-control" name="roles" value="{{ roles_visibilidad_total | join(', ') }}"
+                 placeholder="ej: gerente general, gerente financiero">
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card card-elev accent-left mb-3">
+    <div class="card-body">
+      <div class="fieldset-title"><i class="bi bi-envelope"></i> Cuenta de correo del módulo</div>
+      <p class="hint">A esta cuenta se envían las notificaciones a la aseguradora, y de aquí se leen sus respuestas.</p>
+      <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_configuracion_correo') }}"
+            class="row g-3 align-items-end">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-md-6">
+          <label class="form-label">Correo</label>
+          <input type="email" class="form-control" name="cuenta_correo" value="{{ cuenta_correo }}">
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

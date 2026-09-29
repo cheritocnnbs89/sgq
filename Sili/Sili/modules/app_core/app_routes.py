@@ -138,6 +138,11 @@ def register_all_routes(app):
         register_casos_legales_routes = None
 
     try:
+        from modules.reclamos_seguros import register_reclamos_seguros_routes
+    except Exception:
+        register_reclamos_seguros_routes = None
+
+    try:
         from modules.contratos import register_contratos_routes
     except Exception:
         register_contratos_routes = None
@@ -301,6 +306,12 @@ def register_all_routes(app):
             register_casos_legales_routes(app)
         except Exception as e:
             app.logger.exception("Fallo register_casos_legales_routes: %s", e)
+
+    if register_reclamos_seguros_routes:
+        try:
+            register_reclamos_seguros_routes(app)
+        except Exception as e:
+            app.logger.exception("Fallo register_reclamos_seguros_routes: %s", e)
 
     if register_contratos_routes:
         try:

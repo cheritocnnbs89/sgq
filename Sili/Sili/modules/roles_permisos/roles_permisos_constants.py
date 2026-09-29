@@ -37,5 +37,6 @@ DEFAULT_OPCIONES = (
     "planificador.solicitudes",
     "planificador.configuracion",
     "casos_legales",
+    "reclamos_seguros",
 
 )

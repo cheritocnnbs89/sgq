@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Reclamos Seguros{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/compras_lista.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="theme-compras">
+  <div class="compras-shell">
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0">Reclamos Seguros</h4>
+      <div class="d-flex align-items-center gap-2">
+        {% if has_permission('reclamos_seguros','crear') %}
+        <a href="{{ url_for('reclamos_seguros.reclamos_seguros_nuevo') }}" class="btn btn-primary btn-sm">Nuevo caso</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <a class="nav-link {{ 'active' if estado == 'ABIERTO' else '' }}"
+           href="{{ url_for('reclamos_seguros.reclamos_seguros_lista', estado='ABIERTO', tipo_caso=tipo_caso) }}">
+          <i class="bi bi-folder2-open me-1"></i>Abiertos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ 'active' if estado == 'CERRADO' else '' }}"
+           href="{{ url_for('reclamos_seguros.reclamos_seguros_lista', estado='CERRADO', tipo_caso=tipo_caso) }}">
+          <i class="bi bi-folder2 me-1"></i>Cerrados
+        </a>
+      </li>
+    </ul>
+
+    <div class="card card-elev mb-3">
+      <div class="card-body">
+        <form class="filters-panel" method="GET">
+          <input type="hidden" name="estado" value="{{ estado }}">
+          <div class="row g-3 align-items-end">
+            <div class="col-lg-3 col-md-6">
+              <label class="form-label">Tipo de caso</label>
+              <select name="tipo_caso" class="form-select">
+                <option value="">Todos</option>
+                {% for t in tipos %}
+                <option value="{{ t }}" {{ 'selected' if tipo_caso == t }}>{{ t }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-12 d-flex gap-2">
+              <button class="btn btn-primary" type="submit"><i class="bi bi-search me-1"></i>Buscar</button>
+              <a class="btn btn-outline-secondary" href="{{ url_for('reclamos_seguros.reclamos_seguros_lista', estado=estado) }}">
+                <i class="bi bi-x-circle me-1"></i>Limpiar
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card card-elev">
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Caso</th><th>Tipo</th><th>Fecha</th><th>Broker / Aseguradora</th>
+              <th>Solicitante</th><th>Registrado por</th><th class="text-center">Seguimiento</th>
+              <th>Estado</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in casos %}
+            <tr>
+              <td class="text-nowrap fw-semibold">{{ c.codigo or ('#' ~ c.id) }}</td>
+              <td>{{ c.tipo_caso }}</td>
+              <td class="text-nowrap">{{ c.fecha }}</td>
+              <td>{{ c.broker_nombre or '—' }}</td>
+              <td>{{ c.solicitante_nombre }}</td>
+              <td>{{ c.creado_por_nombre }}</td>
+              <td class="text-center">{{ c.n_seguimiento }}</td>
+              <td>
+                {% if c.estado == 'ABIERTO' %}<span class="badge bg-success">Abierto</span>
+                {% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
+              </td>
+              <td class="text-end text-nowrap">
+                <a href="{{ url_for('reclamos_seguros.reclamos_seguros_detalle', caso_id=c.id) }}"
+                   class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-eye me-1"></i>Detalle
+                </a>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="9" class="text-center text-muted py-4">No hay casos para mostrar.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
