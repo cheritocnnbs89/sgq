@@ -5104,6 +5104,23 @@ def register_gastos_routes(app):
         try:
             current_app.logger.warning("DB PATH=%s", current_app.config.get("DATABASE"))
 
+            # Al rechazar (de cualquier nivel: GA/GG/GF), el gasto regresa a revisión
+            # del coordinador -- antes esto solo mandaba el correo de "rechazado" pero
+            # nunca tocaba el gasto en la BD, así que se quedaba atorado en la misma
+            # etapa de aprobación donde lo rechazaron, sin que el coordinador lo viera
+            # ni pudiera editarlo. Se limpian también las aprobaciones ya dadas: al
+            # volver a editarlo y reenviarlo, debe pasar de nuevo por toda la cadena.
+            cur_rechazo = conn.cursor()
+            cur_rechazo.execute(f"""
+                UPDATE {TABLE_GASTOS}
+                   SET coord_revisado = 0, coord_revisado_por = NULL, coord_revisado_at = NULL,
+                       ga_aprobado = 0, ga_aprobado_por = NULL, ga_aprobado_at = NULL,
+                       gg_aprobado = 0, gg_aprobado_por = NULL, gg_aprobado_at = NULL,
+                       gf_aprobado = 0, gf_aprobado_por = NULL, gf_aprobado_at = NULL
+                 WHERE id = ?
+            """, (gasto_id,))
+            conn.commit()
+
             from modules.scheduler_jobs import enqueue_gasto_rejected_gg
 
             enqueue_gasto_rejected_gg(
