@@ -5110,13 +5110,13 @@ def register_gastos_routes(app):
             # etapa de aprobación donde lo rechazaron, sin que el coordinador lo viera
             # ni pudiera editarlo. Se limpian también las aprobaciones ya dadas: al
             # volver a editarlo y reenviarlo, debe pasar de nuevo por toda la cadena.
+            # Solo se tocan los flags -- son los únicos que gatillan el flujo (ver
+            # aprobar_gasto/enviar_gasto_gerencia); *_aprobado_por/_at son auditoría y
+            # se dejan como quedaron (ga_aprobado_por no admite NULL en la BD).
             cur_rechazo = conn.cursor()
             cur_rechazo.execute(f"""
                 UPDATE {TABLE_GASTOS}
-                   SET coord_revisado = 0, coord_revisado_por = NULL, coord_revisado_at = NULL,
-                       ga_aprobado = 0, ga_aprobado_por = NULL, ga_aprobado_at = NULL,
-                       gg_aprobado = 0, gg_aprobado_por = NULL, gg_aprobado_at = NULL,
-                       gf_aprobado = 0, gf_aprobado_por = NULL, gf_aprobado_at = NULL
+                   SET coord_revisado = 0, ga_aprobado = 0, gg_aprobado = 0, gf_aprobado = 0
                  WHERE id = ?
             """, (gasto_id,))
             conn.commit()
