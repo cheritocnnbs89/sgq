@@ -24,7 +24,10 @@ from modules.app_core.app_startup import run_startup_tasks
 from modules.app_core.app_routes import register_all_routes
 from modules.app_core.app_menu import register_context_processors
 from modules.app_core.app_gateway import register_gateway
-from modules.app_core.app_usuarios_activos import register_usuarios_activos
+try:
+    from modules.app_core.app_usuarios_activos import register_usuarios_activos
+except Exception:
+    register_usuarios_activos = None
 from modules.app_core.app_logging import (
     configure_app_logging,
     attach_file_logger, 
@@ -151,8 +154,13 @@ def create_app():
 
     # ------------------------------------------------------
     # Log en terminal de qué usuarios están conectados/activos.
+    # (nunca debe tumbar el arranque de la app si algo falla acá)
     # ------------------------------------------------------
-    register_usuarios_activos(app)
+    if register_usuarios_activos:
+        try:
+            register_usuarios_activos(app)
+        except Exception as e:
+            app.logger.exception("Fallo register_usuarios_activos: %s", e)
 
     # ------------------------------------------------------
     # Configuración del logging principal.
@@ -275,6 +283,7 @@ if __name__ == "__main__":
         debug=False,
         threaded=True
     )   
+
 
 
     
