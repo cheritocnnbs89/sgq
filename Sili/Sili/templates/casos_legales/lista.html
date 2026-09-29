@@ -14,7 +14,8 @@
       <h4 class="mb-0">Casos Legales</h4>
       <div class="d-flex align-items-center gap-2">
         {% if has_permission('casos_legales','exportar') %}
-        <a href="{{ url_for('casos_legales.casos_exportar', estado=estado, tipo=tipo) }}" class="btn btn-outline-success btn-sm">
+        <a href="{{ url_for('casos_legales.casos_exportar', estado='TODOS', tipo=tipo) }}" class="btn btn-outline-success btn-sm"
+           title="Exporta abiertos y cerrados juntos">
           <i class="bi bi-file-earmark-excel me-1"></i>Exportar Excel
         </a>
         {% endif %}
