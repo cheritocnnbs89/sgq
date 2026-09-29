@@ -24,6 +24,7 @@ from modules.app_core.app_startup import run_startup_tasks
 from modules.app_core.app_routes import register_all_routes
 from modules.app_core.app_menu import register_context_processors
 from modules.app_core.app_gateway import register_gateway
+from modules.app_core.app_usuarios_activos import register_usuarios_activos
 from modules.app_core.app_logging import (
     configure_app_logging,
     attach_file_logger, 
@@ -149,6 +150,11 @@ def create_app():
     register_gateway(app)
 
     # ------------------------------------------------------
+    # Log en terminal de qué usuarios están conectados/activos.
+    # ------------------------------------------------------
+    register_usuarios_activos(app)
+
+    # ------------------------------------------------------
     # Configuración del logging principal.
     # ------------------------------------------------------
     configure_app_logging(app)
@@ -269,7 +275,6 @@ if __name__ == "__main__":
         debug=False,
         threaded=True
     )   
-
 
 
     
