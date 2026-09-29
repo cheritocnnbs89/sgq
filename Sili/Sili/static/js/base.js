@@ -211,11 +211,13 @@ window.TableKit = (function () {
     let tId = null;
 
     const applyFilterNow = () => {
-      const term = norm(qEl?.value || "").trim();
+      const terms = norm(qEl?.value || "").trim().split(/\s+/).filter(Boolean);
 
       rows.forEach((r) => {
         const txt = norm(r.innerText);
-        r.style.display = term ? (txt.includes(term) ? "" : "none") : "";
+        r.style.display = terms.length
+          ? (terms.every((t) => txt.includes(t)) ? "" : "none")
+          : "";
       });
 
       go(1);
@@ -306,4 +308,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 3000);
     }
   });
+});
+/* 2026-08-06: fusion manual desde sync (Paso 8) -- handler global exclusivo LOCAL, usado por multiples modulos (data-confirm) */
+document.addEventListener("submit", function (e) {
+  const msg = e.target && e.target.dataset ? e.target.dataset.confirm : null;
+  if (msg && !confirm(msg)) { e.preventDefault(); }
 });
