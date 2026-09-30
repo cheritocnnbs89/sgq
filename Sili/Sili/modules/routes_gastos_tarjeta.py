@@ -3447,19 +3447,27 @@ def register_gastos_routes(app):
 
             gasto_id = row['gasto_id']
 
-            # No dejar el gasto sin ningún adjunto: debe subirse uno nuevo antes de
-            # poder eliminar el último que queda.
-            cur.execute(
-                "SELECT COUNT(*) FROM gastos_tarjeta_archivos WHERE gasto_id = ? AND activo = 1",
-                (gasto_id,)
-            )
-            n_row = cur.fetchone()
-            n_activos = n_row[0] if n_row else 0
-            if n_activos <= 1:
-                return jsonify(
-                    ok=False,
-                    msg='No puede eliminar el único adjunto del gasto. Suba un nuevo documento antes de eliminar este.'
-                ), 400
+            # En el formulario de edición el usuario puede tener ya un archivo nuevo
+            # seleccionado (aún no guardado) para reemplazarlo, así que ahí no se
+            # bloquea aquí: la validación de "al menos un adjunto" se hace al Guardar.
+            # En el popup de solo-lectura (ícono de la lista) sí se bloquea, porque
+            # ese popup no permite subir un reemplazo.
+            es_desde_formulario = request.args.get('ctx') == 'form'
+
+            if not es_desde_formulario:
+                # No dejar el gasto sin ningún adjunto: debe subirse uno nuevo antes de
+                # poder eliminar el último que queda.
+                cur.execute(
+                    "SELECT COUNT(*) FROM gastos_tarjeta_archivos WHERE gasto_id = ? AND activo = 1",
+                    (gasto_id,)
+                )
+                n_row = cur.fetchone()
+                n_activos = n_row[0] if n_row else 0
+                if n_activos <= 1:
+                    return jsonify(
+                        ok=False,
+                        msg='No puede eliminar el único adjunto del gasto. Suba un nuevo documento antes de eliminar este.'
+                    ), 400
 
             cur.execute("UPDATE gastos_tarjeta_archivos SET activo = 0 WHERE id = ?", (adjunto_id,))
 

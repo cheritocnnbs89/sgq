@@ -2844,7 +2844,7 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.disabled = true;
 
     try {
-      const resp = await fetch(`/reembolsos/gastos/adjunto/${adjuntoId}/eliminar`, {
+      const resp = await fetch(`/reembolsos/gastos/adjunto/${adjuntoId}/eliminar?ctx=form`, {
         method: 'POST',
         credentials: 'same-origin',
         headers: {
