@@ -597,7 +597,7 @@
                 </button>
                 {% endif %}
 
-                {% set is_owner = (session.get('user_id')|int == (g.get('usuario_id')|int)) %}
+                {% set is_owner = ((session.get('usuario_id') or session.get('user_id'))|int == (g.get('usuario_id')|int)) %}
                 {% set can_edit_delete = (role_lower in ['admin','usuario'] or is_coord or is_ga_role or is_owner) and
                 (role_lower != rol_gf) %}
 
