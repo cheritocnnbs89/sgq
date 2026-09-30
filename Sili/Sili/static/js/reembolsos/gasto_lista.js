@@ -468,6 +468,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, true);
 
+  document.addEventListener('click', async function (ev) {
+    const btn = ev.target.closest('.js-eliminar-adjunto-gasto');
+    if (!btn) return;
+    ev.preventDefault();
+
+    const adjuntoId = btn.getAttribute('data-adjunto-id');
+    if (!adjuntoId) return;
+    if (!window.confirm('¿Eliminar este adjunto?')) return;
+
+    const row = btn.closest('.list-group-item') || btn.closest('li');
+    btn.disabled = true;
+
+    try {
+      const resp = await fetch(`/reembolsos/gastos/adjunto/${adjuntoId}/eliminar`, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data.ok) throw new Error(data.msg || ('HTTP ' + resp.status));
+      if (row) row.remove();
+      showToast('Adjunto eliminado.');
+    } catch (err) {
+      showToast('No se pudo eliminar el adjunto: ' + err.message);
+      btn.disabled = false;
+    }
+  }, true);
+
   (function initTheme() {
     const key = 'ui_theme';
     const root = document.documentElement;

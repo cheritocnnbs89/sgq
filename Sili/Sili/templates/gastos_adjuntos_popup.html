@@ -12,7 +12,7 @@
   <div class="container-fluid p-3">
     <h4 class="mb-3">Detalle de gasto #{{ g['id'] }}</h4>
 
- 
+
   </div>
   <div class="card mb-3">
     <div class="card-header fw-semibold">Adjuntos</div>
@@ -20,14 +20,23 @@
       {% if adjuntos and adjuntos|length > 0 %}
       <div class="list-group">
         {% for a in adjuntos %}
-        {% set fname = a.split('/')[-1] %}
-        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-          href="{{ url_for('static', filename='uploads/' + a) }}" target="_blank" rel="noopener">
-          <span class="text-truncate">
+        {% set fname = a.filename.split('/')[-1] %}
+        <div class="list-group-item d-flex justify-content-between align-items-center"
+          {% if a.id %}id="adj-popup-row-{{ a.id }}"{% endif %}>
+          <a class="text-truncate text-decoration-none flex-grow-1"
+            href="{{ url_for('static', filename='uploads/' + a.filename) }}" target="_blank" rel="noopener">
             <i class="bi bi-paperclip me-2"></i>{{ fname }}
-          </span>
-          <span class="badge bg-primary rounded-pill">Abrir</span>
-        </a>
+          </a>
+          <div class="d-flex align-items-center gap-2 ms-2">
+            <span class="badge bg-primary rounded-pill">Abrir</span>
+            {% if puede_eliminar and a.id %}
+            <button type="button" class="btn btn-outline-danger btn-sm py-0 px-1 js-eliminar-adjunto-gasto"
+              data-adjunto-id="{{ a.id }}" title="Eliminar adjunto">
+              <i class="bi bi-trash"></i>
+            </button>
+            {% endif %}
+          </div>
+        </div>
         {% endfor %}
       </div>
       <small class="text-muted d-block mt-2">

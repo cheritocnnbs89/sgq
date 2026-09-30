@@ -423,10 +423,17 @@
           <ul class="mb-0">
             {% for a in lista_adj %}
               {% set fname = a.filename if a is mapping else a %}
-              <li>
+              {% set aid = (a.id if (a is mapping and a.id is defined) else None) %}
+              <li id="{{ ('adj-form-row-' ~ aid) if aid else '' }}">
                 <a href="{{ url_for('static', filename='uploads/' ~ fname) }}" target="_blank">{{ fname }}</a>
                 {% if a is mapping and a.uploaded_at %}
                   <small class="text-muted">({{ a.uploaded_at }})</small>
+                {% endif %}
+                {% if modo == 'editar' and puede_eliminar_adjuntos and aid %}
+                <button type="button" class="btn btn-sm btn-outline-danger py-0 px-1 ms-1 js-eliminar-adjunto-gasto"
+                  data-adjunto-id="{{ aid }}" title="Eliminar adjunto">
+                  <i class="bi bi-trash"></i>
+                </button>
                 {% endif %}
               </li>
             {% endfor %}

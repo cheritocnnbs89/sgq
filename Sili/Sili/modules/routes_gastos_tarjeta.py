@@ -2088,7 +2088,7 @@ def register_gastos_routes(app):
                     WHEN EXISTS (
                         SELECT TOP 1 1
                         FROM gastos_tarjeta_archivos a
-                        WHERE a.gasto_id = g.id
+                        WHERE a.gasto_id = g.id AND a.activo = 1
                     ) THEN 1
                     ELSE 0
                 END AS has_adjuntos
@@ -2519,7 +2519,7 @@ def register_gastos_routes(app):
                 WHEN TRIM(COALESCE(g.archivo,'')) <> '' THEN 1
                 WHEN EXISTS (
                     SELECT TOP 1 1 FROM gastos_tarjeta_archivos a
-                    WHERE a.gasto_id = g.id
+                    WHERE a.gasto_id = g.id AND a.activo = 1
                      
                 ) THEN 1
                 ELSE 0
@@ -3070,7 +3070,7 @@ def register_gastos_routes(app):
                     WHEN EXISTS (
                         SELECT TOP 1 1
                         FROM gastos_tarjeta_archivos a
-                        WHERE a.gasto_id = g.id
+                        WHERE a.gasto_id = g.id AND a.activo = 1
                     ) THEN 1
                     ELSE 0
                 END AS has_adjuntos
@@ -3330,6 +3330,23 @@ def register_gastos_routes(app):
     from flask import render_template, request
     from jinja2 import TemplateNotFound
 
+    def _gasto_tipo_tarjeta_adj(g):
+        return not bool(g.get('es_caja_chica')) and not bool(g.get('reembolso_vendedor'))
+
+    def _gasto_sin_aprobacion_gerencia_adj(g):
+        return (not bool(g.get('ga_aprobado')) and not bool(g.get('gg_aprobado'))
+                and not bool(g.get('gf_aprobado')))
+
+    def _puede_eliminar_adjuntos_gasto(g, uid, role_name):
+        # Dueño: solo antes de revisión del coordinador y sin aprobación de gerencia.
+        # Coordinador/admin: mientras ninguna gerencia haya aprobado (sin importar coord_revisado).
+        # Aplica solo a gastos tipo tarjeta (no caja chica ni reembolso de vendedor).
+        if not _gasto_tipo_tarjeta_adj(g) or not _gasto_sin_aprobacion_gerencia_adj(g):
+            return False
+        if (role_name == 'admin') or gh.es_coordinador_gastos(uid, role_name):
+            return True
+        return (g.get('usuario_id') == uid) and not bool(g.get('coord_revisado'))
+
     @app.route('/reembolsos/gastos/<int:gid>/adjuntos', methods=['GET'], endpoint='ver_gasto_adjuntos')
     @require_login
     @require_permission('gastos_tarjeta', 'ver')
@@ -3341,31 +3358,40 @@ def register_gastos_routes(app):
             pass
         cur = conn.cursor()
 
-        # Traer gasto (para validar existencia y legacy archivo)
-        cur.execute(f"SELECT id, archivo FROM {TABLE_GASTOS} WHERE id=?", (gid,))
+        # Traer gasto (para validar existencia, legacy archivo y estado de aprobación)
+        cur.execute(f"""
+            SELECT id, archivo, usuario_id, es_caja_chica, reembolso_vendedor,
+                   coord_revisado, ga_aprobado, gg_aprobado, gf_aprobado
+            FROM {TABLE_GASTOS} WHERE id=?
+        """, (gid,))
         g = cur.fetchone()
         if not g:
             try: conn.close()
             except Exception: pass
             return "<div class='text-muted'>Gasto no encontrado.</div>", 404
 
+        g = dict(g)
+        uid = session.get('usuario_id') or session.get('user_id')
+        role_name = (session.get('rol') or '').lower()
+        puede_eliminar = _puede_eliminar_adjuntos_gasto(g, uid, role_name)
+
         # Multi-adjuntos
         adjuntos = []
         try:
             cur.execute("""
-                SELECT filename
+                SELECT id, filename
                 FROM gastos_tarjeta_archivos
-                WHERE gasto_id=?
+                WHERE gasto_id=? AND activo=1
                 ORDER BY id
             """, (gid,))
-            adjuntos = [r["filename"] for r in cur.fetchall() if r and r["filename"]]
+            adjuntos = [{"id": r["id"], "filename": r["filename"]} for r in cur.fetchall() if r and r["filename"]]
         except Exception:
             adjuntos = []
 
-        # Legacy archivo (columna gastos_tarjeta.archivo)
-        legacy = (g["archivo"] or "").strip()
-        if legacy and legacy not in adjuntos:
-            adjuntos.insert(0, legacy)
+        # Legacy archivo (columna gastos_tarjeta.archivo) — no se puede eliminar individualmente
+        legacy = (g.get("archivo") or "").strip()
+        if legacy and not any(a["filename"] == legacy for a in adjuntos):
+            adjuntos.insert(0, {"id": None, "filename": legacy})
 
         try:
             conn.close()
@@ -3374,19 +3400,62 @@ def register_gastos_routes(app):
 
         # Render como “fragmento” para meter dentro del modal
         try:
-            return render_template("gastos_adjuntos_popup.html", gid=gid, adjuntos=adjuntos)
+            return render_template("gastos_adjuntos_popup.html", gid=gid, adjuntos=adjuntos,
+                                    puede_eliminar=puede_eliminar)
         except TemplateNotFound:
             # fallback simple si no creas template
             items = "".join(
                 f"<a class='list-group-item list-group-item-action d-flex justify-content-between align-items-center' "
-                f"href='/static/uploads/{a}' target='_blank' rel='noopener'>"
-                f"<span class='text-truncate'><i class='bi bi-paperclip me-2'></i>{a.split('/')[-1]}</span>"
+                f"href='/static/uploads/{a['filename']}' target='_blank' rel='noopener'>"
+                f"<span class='text-truncate'><i class='bi bi-paperclip me-2'></i>{a['filename'].split('/')[-1]}</span>"
                 f"<span class='badge bg-primary rounded-pill'>Abrir</span></a>"
                 for a in adjuntos
             )
             if not items:
                 return "<div class='text-muted'>Sin adjuntos.</div>"
             return f"<div class='list-group'>{items}</div><small class='text-muted d-block mt-2'>Se abrirán en una nueva pestaña.</small>"
+
+    @app.route('/reembolsos/gastos/adjunto/<int:adjunto_id>/eliminar', methods=['POST'], endpoint='eliminar_gasto_adjunto')
+    @require_login
+    @require_permission('gastos_tarjeta', 'editar')
+    def eliminar_gasto_adjunto(adjunto_id):
+        uid = session.get('usuario_id') or session.get('user_id')
+        role_name = (session.get('rol') or '').lower()
+
+        conn = get_db()
+        cur = conn.cursor()
+        try:
+            cur.execute(f"""
+                SELECT a.id, a.gasto_id, a.filename,
+                       g.usuario_id, g.es_caja_chica, g.reembolso_vendedor,
+                       g.coord_revisado, g.ga_aprobado, g.gg_aprobado, g.gf_aprobado
+                FROM gastos_tarjeta_archivos a
+                JOIN {TABLE_GASTOS} g ON g.id = a.gasto_id
+                WHERE a.id = ? AND a.activo = 1
+            """, (adjunto_id,))
+            row = cur.fetchone()
+            if not row:
+                return jsonify(ok=False, msg='Adjunto no encontrado.'), 404
+
+            row = dict(row)
+            if not _puede_eliminar_adjuntos_gasto(row, uid, role_name):
+                return jsonify(ok=False, msg='No tiene permiso para eliminar este adjunto en el estado actual del gasto.'), 403
+
+            cur.execute("UPDATE gastos_tarjeta_archivos SET activo = 0 WHERE id = ?", (adjunto_id,))
+            conn.commit()
+            return jsonify(ok=True)
+        except Exception as e:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+            current_app.logger.exception("Error eliminando adjunto de gasto: %s", e)
+            return jsonify(ok=False, msg=str(e)), 500
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
 
   
   
@@ -6123,16 +6192,16 @@ def register_gastos_routes(app):
         proveedores = cur.fetchall()
 
         cur.execute("""
-            SELECT filename, uploaded_at
+            SELECT id, filename, uploaded_at
             FROM gastos_tarjeta_archivos
-            WHERE gasto_id = ?
+            WHERE gasto_id = ? AND activo = 1
             ORDER BY id
         """, (gasto_id,))
         adjuntos = [dict(r) for r in cur.fetchall()]
 
         legacy = (g.get('archivo') or '').strip()
         if legacy and not any(a.get('filename') == legacy for a in adjuntos):
-            adjuntos.insert(0, {"filename": legacy, "uploaded_at": None})
+            adjuntos.insert(0, {"id": None, "filename": legacy, "uploaded_at": None})
 
         cur.execute("""
             SELECT COALESCE(tipo_caja_chica, 'NINGUNA') AS tipo_caja_chica
@@ -6148,6 +6217,8 @@ def register_gastos_routes(app):
 
         if not es_cc:
             tipo_caja_chica = 'NINGUNA'
+
+        puede_eliminar_adjuntos = _puede_eliminar_adjuntos_gasto(g, uid, role_name)
 
         conn.close()
 
@@ -6165,6 +6236,7 @@ def register_gastos_routes(app):
             rol=session.get('rol'),
             active_page='gastos_tarjeta',
             adjuntos=adjuntos,
+            puede_eliminar_adjuntos=puede_eliminar_adjuntos,
         )
 
 
