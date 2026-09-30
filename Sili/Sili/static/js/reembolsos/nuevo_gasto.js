@@ -2855,6 +2855,17 @@ document.addEventListener('DOMContentLoaded', function () {
       const data = await resp.json().catch(() => ({}));
       if (!resp.ok || !data.ok) throw new Error(data.msg || ('HTTP ' + resp.status));
       if (li) li.remove();
+
+      // El conteo de adjuntos existentes bajó uno: re-evaluar si sigue habiendo
+      // al menos un archivo (existente o recién seleccionado) antes de permitir guardar.
+      const adjCountEl = document.getElementById('adj_count');
+      if (adjCountEl) {
+        const n = Math.max(0, (parseInt(adjCountEl.value, 10) || 0) - 1);
+        adjCountEl.value = String(n);
+      }
+      if (typeof window.__validateAdjuntos === 'function') {
+        window.__validateAdjuntos();
+      }
     } catch (err) {
       window.alert('No se pudo eliminar el adjunto: ' + err.message);
       btn.disabled = false;

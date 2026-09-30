@@ -3345,7 +3345,11 @@ def register_gastos_routes(app):
             return False
         if (role_name == 'admin') or gh.es_coordinador_gastos(uid, role_name):
             return True
-        return (g.get('usuario_id') == uid) and not bool(g.get('coord_revisado'))
+        try:
+            es_dueno = int(g.get('usuario_id') or 0) == int(uid or 0)
+        except (TypeError, ValueError):
+            es_dueno = False
+        return es_dueno and not bool(g.get('coord_revisado'))
 
     @app.route('/reembolsos/gastos/<int:gid>/adjuntos', methods=['GET'], endpoint='ver_gasto_adjuntos')
     @require_login
