@@ -2866,6 +2866,34 @@ document.addEventListener('DOMContentLoaded', function () {
       if (typeof window.__validateAdjuntos === 'function') {
         window.__validateAdjuntos();
       }
+
+      // Si ya no queda ningún adjunto guardado, avisar que hace falta uno nuevo
+      // (salvo que el usuario ya haya seleccionado un reemplazo en el dropzone).
+      const listaAdj = document.getElementById('listaAdjuntosActuales');
+      const wrapAdj = document.getElementById('archivosActualesWrap');
+      const msgVacio = document.getElementById('archivosActualesVacioMsg');
+      const fileInputEl = document.getElementById('archivo');
+      const yaHayReemplazo = !!(fileInputEl && fileInputEl.files && fileInputEl.files.length > 0);
+
+      if (listaAdj && !listaAdj.querySelector('li')) {
+        if (wrapAdj) wrapAdj.classList.add('d-none');
+
+        if (msgVacio) {
+          if (yaHayReemplazo) {
+            msgVacio.classList.add('d-none');
+          } else {
+            msgVacio.classList.remove('d-none');
+            if (fileInputEl) {
+              fileInputEl.addEventListener('change', function ocultarMsgVacio() {
+                if (fileInputEl.files && fileInputEl.files.length > 0) {
+                  msgVacio.classList.add('d-none');
+                }
+                fileInputEl.removeEventListener('change', ocultarMsgVacio);
+              });
+            }
+          }
+        }
+      }
     } catch (err) {
       window.alert('No se pudo eliminar el adjunto: ' + err.message);
       btn.disabled = false;

@@ -418,9 +418,9 @@
       <ul id="selectedFiles" class="mt-2 small"></ul>
 
       {% if lista_adj %}
-        <div class="mt-2">
+        <div class="mt-2" id="archivosActualesWrap">
           <span class="text-white">Archivos actuales:</span>
-          <ul class="mb-0">
+          <ul class="mb-0" id="listaAdjuntosActuales">
             {% for a in lista_adj %}
               {% set fname = a.filename if a is mapping else a %}
               {% set aid = (a.id if (a is mapping and a.id is defined) else None) %}
@@ -438,6 +438,9 @@
               </li>
             {% endfor %}
           </ul>
+        </div>
+        <div class="mt-2 small text-warning d-none" id="archivosActualesVacioMsg">
+          Se eliminó el adjunto guardado. Seleccione un archivo de reemplazo para poder guardar.
         </div>
       {% elif archivo %}
         <div class="mt-2">
