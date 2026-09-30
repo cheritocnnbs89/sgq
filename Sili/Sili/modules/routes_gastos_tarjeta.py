@@ -3432,7 +3432,7 @@ def register_gastos_routes(app):
             cur.execute(f"""
                 SELECT a.id, a.gasto_id, a.filename,
                        g.usuario_id, g.es_caja_chica, g.reembolso_vendedor,
-                       g.coord_revisado, g.ga_aprobado, g.gg_aprobado, g.gf_aprobado
+                       g.coord_revisado, g.ga_aprobado, g.gg_aprobado, g.gf_aprobado, g.archivo
                 FROM gastos_tarjeta_archivos a
                 JOIN {TABLE_GASTOS} g ON g.id = a.gasto_id
                 WHERE a.id = ? AND a.activo = 1
@@ -3445,7 +3445,37 @@ def register_gastos_routes(app):
             if not _puede_eliminar_adjuntos_gasto(row, uid, role_name):
                 return jsonify(ok=False, msg='No tiene permiso para eliminar este adjunto en el estado actual del gasto.'), 403
 
+            gasto_id = row['gasto_id']
+
+            # No dejar el gasto sin ningún adjunto: debe subirse uno nuevo antes de
+            # poder eliminar el último que queda.
+            cur.execute(
+                "SELECT COUNT(*) FROM gastos_tarjeta_archivos WHERE gasto_id = ? AND activo = 1",
+                (gasto_id,)
+            )
+            n_row = cur.fetchone()
+            n_activos = n_row[0] if n_row else 0
+            if n_activos <= 1:
+                return jsonify(
+                    ok=False,
+                    msg='No puede eliminar el único adjunto del gasto. Suba un nuevo documento antes de eliminar este.'
+                ), 400
+
             cur.execute("UPDATE gastos_tarjeta_archivos SET activo = 0 WHERE id = ?", (adjunto_id,))
+
+            # Si el campo legacy (gastos_tarjeta.archivo) apuntaba justo al archivo
+            # que se está eliminando, resincronizarlo con otro adjunto activo que
+            # quede — si no, ese nombre "reaparece" como si siguiera adjunto.
+            if (row.get('archivo') or '').strip() == row['filename']:
+                cur.execute("""
+                    SELECT TOP 1 filename FROM gastos_tarjeta_archivos
+                    WHERE gasto_id = ? AND activo = 1
+                    ORDER BY id
+                """, (gasto_id,))
+                nuevo_legacy_row = cur.fetchone()
+                nuevo_legacy = nuevo_legacy_row[0] if nuevo_legacy_row else None
+                cur.execute(f"UPDATE {TABLE_GASTOS} SET archivo = ? WHERE id = ?", (nuevo_legacy, gasto_id))
+
             conn.commit()
             return jsonify(ok=True)
         except Exception as e:
@@ -3556,7 +3586,7 @@ def register_gastos_routes(app):
             cur.execute("""
                 SELECT filename
                 FROM gastos_tarjeta_archivos
-                WHERE gasto_id = ?
+                WHERE gasto_id = ? AND activo = 1
                 ORDER BY id
             """, (gid,))
             adjuntos = [r['filename'] for r in cur.fetchall() if r and r['filename']]
