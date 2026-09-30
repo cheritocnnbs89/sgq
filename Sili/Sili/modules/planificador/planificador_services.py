@@ -206,13 +206,18 @@ def puede_marcar_realizado_vuelo(solicitud, usuario_id, ctx):
 
 
 def puede_liquidar_vuelo(solicitud, usuario_id, ctx):
-    """Coordinador ingresa costos reales por tipo de gasto (pasa a COMPLETADA)."""
+    """Coordinador ingresa costos reales por tipo de gasto (pasa a COMPLETADA).
+    El admin puede además volver a liquidar (corregir costos/notas) una
+    solicitud que ya quedó COMPLETADA -- el resto de roles no, una vez
+    completada ya no se puede modificar nada."""
     if solicitud.get("tipo") != "Vuelo":
         return False
-    if solicitud.get("estado") != "PENDIENTE_LIQUIDACION":
+    estado = solicitud.get("estado")
+    if ctx["es_admin"]:
+        return estado in ("PENDIENTE_LIQUIDACION", "COMPLETADA")
+    if estado != "PENDIENTE_LIQUIDACION":
         return False
-    es_coordinador = solicitud.get("tipo") in ctx["tipos_coordinador"]
-    return ctx["es_admin"] or es_coordinador
+    return solicitud.get("tipo") in ctx["tipos_coordinador"]
 
 
 def puede_aprobar_jefe_voucher(solicitud, usuario_id, ctx):
@@ -284,7 +289,7 @@ def puede_aprobar_gerente(solicitud, usuario_id, ctx):
 def puede_eliminar(solicitud, usuario_id, ctx):
     """
     Reglas:
-    - COMPLETADA: nadie puede eliminar.
+    - COMPLETADA: solo admin puede eliminar.
     - COORDINADA / PENDIENTE_LIQUIDACION: solo admin.
     - Admin: puede en cualquier otro estado.
     - Coordinador: puede si estado NO es APROBADA ni COMPLETADA. Para Voucher, puede eliminar
@@ -295,12 +300,12 @@ def puede_eliminar(solicitud, usuario_id, ctx):
       PENDIENTE_APROBACION_JEFE mientras el jefe aún no aprueba) y es su propia solicitud.
     """
     estado = solicitud["estado"]
+    if ctx["es_admin"]:
+        return True
     if estado == "COMPLETADA":
         return False
     if estado in ("COORDINADA", "PENDIENTE_LIQUIDACION", "PENDIENTE_LIQUIDACION_VOUCHER"):
-        return ctx["es_admin"]
-    if ctx["es_admin"]:
-        return True
+        return False
     if solicitud["tipo"] in ctx["tipos_coordinador"]:
         return estado not in ("APROBADA", "COMPLETADA")
     if solicitud["tipo"] in ctx["tipos_aprobador"]:

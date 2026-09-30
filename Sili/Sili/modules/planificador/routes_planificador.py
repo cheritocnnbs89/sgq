@@ -1852,10 +1852,15 @@ def vuelo_liquidar(sid):
 
     desglose = ", ".join(f"{t}: ${v:,.2f}" for t, v in costos_por_tipo.items())
     notas_full = f"{desglose}\n{notas}".strip() if notas else desglose
+    # Si el admin está corrigiendo una solicitud que ya estaba COMPLETADA, no
+    # se vuelve a deducir del presupuesto -- ya se dedujo la vez que se
+    # liquidó originalmente y no se lleva el detalle por tipo para calcular
+    # la diferencia; solo se actualizan costo_real/notas_liquidacion.
+    ya_estaba_completada = (s.get("estado") == "COMPLETADA")
     repo.liquidar_vuelo(sid, u["id"], u["nombre"], costo_real, notas_full)
 
-    # Deducir del presupuesto por tipo de gasto
-    if s.get("centro_costo_id"):
+    # Deducir del presupuesto por tipo de gasto (solo en la liquidación original)
+    if s.get("centro_costo_id") and not ya_estaba_completada:
         try:
             empresa_id = repo.get_empresa_by_usuario(s["solicitante_id"])
             if empresa_id:
@@ -1878,7 +1883,10 @@ def vuelo_liquidar(sid):
     except Exception:
         pass
 
-    flash("Vuelo completado y costos registrados. El presupuesto fue actualizado.", "success")
+    if ya_estaba_completada:
+        flash("Costos y notas de liquidación corregidos. No se volvió a descontar del presupuesto.", "success")
+    else:
+        flash("Vuelo completado y costos registrados. El presupuesto fue actualizado.", "success")
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
@@ -2461,28 +2469,52 @@ def adjunto_subir(sid):
     if not es_involucrado:
         abort(403)
 
-    archivo = request.files.get("adjunto")
-    if not archivo or not archivo.filename:
+    MAX_ADJUNTOS_SOLICITUD = 5
+
+    archivos = [f for f in request.files.getlist("adjunto") if f and f.filename]
+    if not archivos:
         flash("No se seleccionó ningún archivo.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
 
-    archivo.seek(0, 2)
-    tamano = archivo.tell()
-    archivo.seek(0)
-    if tamano > 5 * 1024 * 1024:
-        flash("El archivo supera el límite de 5 MB.", "warning")
+    existentes = len(repo.get_adjuntos(sid))
+    disponibles = MAX_ADJUNTOS_SOLICITUD - existentes
+    if disponibles <= 0:
+        flash(f"Esta solicitud ya tiene el máximo de {MAX_ADJUNTOS_SOLICITUD} archivos adjuntos.", "warning")
         return redirect(url_for("planificador.planificador_solicitudes"))
-
-    nombre_original = secure_filename(archivo.filename)
-    ext = os.path.splitext(nombre_original)[1]
-    nombre_guardado = f"{uuid.uuid4().hex}{ext}"
+    if len(archivos) > disponibles:
+        flash(
+            f"Solo puede adjuntar {disponibles} archivo(s) más "
+            f"(máximo {MAX_ADJUNTOS_SOLICITUD} por solicitud). No se guardó ninguno.",
+            "warning"
+        )
+        return redirect(url_for("planificador.planificador_solicitudes"))
 
     carpeta = os.path.join(current_app.config["UPLOAD_FOLDER"], "planificador", str(sid))
     os.makedirs(carpeta, exist_ok=True)
-    archivo.save(os.path.join(carpeta, nombre_guardado))
 
-    repo.insert_adjunto(sid, nombre_original, nombre_guardado, tamano, u["id"], u["nombre"])
-    flash("Archivo adjuntado correctamente.", "success")
+    guardados = 0
+    for archivo in archivos:
+        archivo.seek(0, 2)
+        tamano = archivo.tell()
+        archivo.seek(0)
+        if tamano > 5 * 1024 * 1024:
+            flash(f"El archivo {archivo.filename} supera el límite de 5 MB y no se adjuntó.", "warning")
+            continue
+
+        nombre_original = secure_filename(archivo.filename)
+        ext = os.path.splitext(nombre_original)[1]
+        nombre_guardado = f"{uuid.uuid4().hex}{ext}"
+        archivo.save(os.path.join(carpeta, nombre_guardado))
+
+        repo.insert_adjunto(sid, nombre_original, nombre_guardado, tamano, u["id"], u["nombre"])
+        guardados += 1
+
+    if guardados:
+        flash(
+            "Archivo adjuntado correctamente." if guardados == 1
+            else f"{guardados} archivos adjuntados correctamente.",
+            "success"
+        )
     return redirect(url_for("planificador.planificador_solicitudes"))
 
 
