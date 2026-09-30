@@ -499,6 +499,59 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, true);
 
+  document.addEventListener('click', async function (ev) {
+    const btn = ev.target.closest('.js-subir-adjunto-gasto');
+    if (!btn) return;
+    ev.preventDefault();
+
+    const gid = btn.getAttribute('data-gasto-id');
+    const fileInput = document.getElementById('popupNuevoAdjunto');
+    if (!gid || !fileInput || !fileInput.files || !fileInput.files.length) {
+      showToast('Seleccione al menos un archivo para subir.');
+      return;
+    }
+
+    const fd = new FormData();
+    Array.from(fileInput.files).forEach((f) => fd.append('archivo', f));
+
+    const prevHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+    try {
+      const resp = await fetch(`/reembolsos/gastos/${gid}/adjuntos/subir`, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: fd
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data.ok) throw new Error(data.msg || ('HTTP ' + resp.status));
+
+      showToast('Adjunto(s) subido(s) correctamente.');
+
+      const bodyEl = document.getElementById('adjuntos-body');
+      if (bodyEl) {
+        bodyEl.innerHTML = "<div class='text-muted'>Cargando…</div>";
+        const resp2 = await fetch(`/reembolsos/gastos/${gid}/adjuntos`, {
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+        bodyEl.innerHTML = await resp2.text();
+      }
+    } catch (err) {
+      showToast('No se pudo subir el adjunto: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = prevHTML;
+    }
+  }, true);
+
   (function initTheme() {
     const key = 'ui_theme';
     const root = document.documentElement;

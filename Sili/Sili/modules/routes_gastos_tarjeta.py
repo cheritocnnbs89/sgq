@@ -3499,6 +3499,75 @@ def register_gastos_routes(app):
             except Exception:
                 pass
 
+    @app.route('/reembolsos/gastos/<int:gid>/adjuntos/subir', methods=['POST'], endpoint='subir_gasto_adjunto')
+    @require_login
+    @require_permission('gastos_tarjeta', 'editar')
+    def subir_gasto_adjunto(gid):
+        uid = session.get('usuario_id') or session.get('user_id')
+        role_name = (session.get('rol') or '').lower()
+
+        conn = get_db()
+        cur = conn.cursor()
+        try:
+            cur.execute(f"""
+                SELECT id, archivo, usuario_id, es_caja_chica, reembolso_vendedor,
+                       coord_revisado, ga_aprobado, gg_aprobado, gf_aprobado
+                FROM {TABLE_GASTOS} WHERE id=?
+            """, (gid,))
+            g_row = cur.fetchone()
+            if not g_row:
+                return jsonify(ok=False, msg='Gasto no encontrado.'), 404
+
+            g = dict(g_row)
+            if not _puede_eliminar_adjuntos_gasto(g, uid, role_name):
+                return jsonify(ok=False, msg='No tiene permiso para agregar adjuntos en el estado actual del gasto.'), 403
+
+            files = [f for f in request.files.getlist('archivo') if f and f.filename]
+            if not files:
+                return jsonify(ok=False, msg='Debe seleccionar al menos un archivo.'), 400
+
+            UPLOAD_DIR = os.path.join(current_app.root_path, "static", "uploads")
+            os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+            nuevos = []
+            for f in files:
+                original = secure_filename(f.filename)
+                base, ext = os.path.splitext(original)
+                ext = (ext or '').lower()
+                MAX_BASE = 60
+                base = (base or 'archivo')[:MAX_BASE].rstrip(' ._-')
+                new_name = f"{base}__{uuid.uuid4().hex}{ext}"
+                disk_path = os.path.join(UPLOAD_DIR, new_name)
+
+                f.save(disk_path)
+                cur.execute(
+                    "INSERT INTO gastos_tarjeta_archivos(gasto_id, filename) OUTPUT INSERTED.id VALUES (?, ?)",
+                    (gid, new_name)
+                )
+                new_id_row = cur.fetchone()
+                new_id = new_id_row[0] if new_id_row else None
+                nuevos.append({"id": new_id, "filename": new_name})
+
+            # Si el legacy no tenía ningún archivo (gasto que se había quedado sin
+            # adjuntos), sincronizarlo con el primero recién subido.
+            if not (g.get('archivo') or '').strip() and nuevos:
+                cur.execute(f"UPDATE {TABLE_GASTOS} SET archivo = ? WHERE id = ?", (nuevos[0]['filename'], gid))
+
+            conn.commit()
+            return jsonify(ok=True, adjuntos=nuevos)
+        except Exception as e:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+            current_app.logger.exception("Error subiendo adjunto de gasto: %s", e)
+            return jsonify(ok=False, msg=str(e)), 500
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
   
   
   
