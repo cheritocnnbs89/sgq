@@ -3351,6 +3351,24 @@ def register_gastos_routes(app):
             es_dueno = False
         return es_dueno and not bool(g.get('coord_revisado'))
 
+    def _puede_editar_gasto_cabecera(g, uid, role_name):
+        # Cualquier gerencia ya aprobó: nadie edita/elimina el registro completo
+        # (coincide con el bloqueo visual ya existente en la lista para ese estado).
+        if not _gasto_sin_aprobacion_gerencia_adj(g):
+            return False
+        if not _gasto_tipo_tarjeta_adj(g):
+            return True
+        if (role_name == 'admin') or gh.es_coordinador_gastos(uid, role_name):
+            return True
+        try:
+            es_dueno = int(g.get('usuario_id') or 0) == int(uid or 0)
+        except (TypeError, ValueError):
+            es_dueno = False
+        # Solo se bloquea al dueño una vez que el coordinador ya revisó y envió
+        # el gasto a gerencia; otros roles con acceso (p.ej. gerente de un
+        # subordinado) mantienen el comportamiento previo.
+        return (not es_dueno) or (not bool(g.get('coord_revisado')))
+
     @app.route('/reembolsos/gastos/<int:gid>/adjuntos', methods=['GET'], endpoint='ver_gasto_adjuntos')
     @require_login
     @require_permission('gastos_tarjeta', 'ver')
@@ -3734,6 +3752,14 @@ def register_gastos_routes(app):
             row = cur.fetchone()
             if row:
                 snapshot = dict(row)
+
+            if snapshot:
+                uid_del = session.get('usuario_id') or session.get('user_id')
+                role_del = (session.get('rol') or '').lower()
+                if not _puede_editar_gasto_cabecera(snapshot, uid_del, role_del):
+                    conn.close()
+                    flash('No puede eliminar este gasto: ya fue enviado a gerencia o ya tiene una aprobación.', 'warning')
+                    return redirect(url_for('lista_gastos'))
 
             factura_xml_id = snapshot.get('factura_xml_id')
 
@@ -5948,6 +5974,11 @@ def register_gastos_routes(app):
         if allowed_ids is not None and gasto_uid not in allowed_ids:
             conn.close()
             flash('No tiene acceso para editar este gasto.', 'danger')
+            return redirect(url_for('lista_gastos'))
+
+        if not _puede_editar_gasto_cabecera(g, uid, role_name):
+            conn.close()
+            flash('No puede editar este gasto: ya fue enviado a gerencia o ya tiene una aprobación.', 'warning')
             return redirect(url_for('lista_gastos'))
 
         # ==========================================================

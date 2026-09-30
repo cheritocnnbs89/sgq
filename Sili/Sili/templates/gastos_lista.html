@@ -601,12 +601,20 @@
                 {% set can_edit_delete = (role_lower in ['admin','usuario'] or is_coord or is_ga_role or is_owner) and
                 (role_lower != rol_gf) %}
 
+                {# El dueño (que no sea admin/coordinador) ya no puede editar ni eliminar
+                   un gasto tipo tarjeta una vez que el coordinador lo envió a gerencia. #}
+                {% set bloqueado_por_revision = is_owner and (role_lower != 'admin') and (not is_coord)
+                and es_tarjeta_row and ((g.get('coord_revisado')|default(0))|int == 1) %}
+                {% set edit_locked = actions_locked or bloqueado_por_revision %}
+                {% set edit_locked_title = 'Bloqueado: el registro ya tiene una aprobación' if actions_locked
+                else 'Bloqueado: ya fue enviado a gerencia por el coordinador' %}
+
                 {% if can_edit_delete %}
                 <a href="{{ url_for('editar_gasto', gasto_id=g['id']) }}"
-                  class="btn btn-outline-secondary btn-sm btn-icon {% if actions_locked %}disabled-link{% endif %}"
+                  class="btn btn-outline-secondary btn-sm btn-icon {% if edit_locked %}disabled-link{% endif %}"
                   aria-label="Editar"
-                  {% if actions_locked %}tabindex="-1" aria-disabled="true"
-                  title="Bloqueado: el registro ya tiene una aprobación"{% endif %}>
+                  {% if edit_locked %}tabindex="-1" aria-disabled="true"
+                  title="{{ edit_locked_title }}"{% endif %}>
                   <i class="bi bi-pencil"></i>
                 </a>
 
@@ -617,7 +625,7 @@
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                   <button type="submit" class="btn btn-outline-danger btn-sm btn-icon" aria-label="Eliminar"
-                    {% if actions_locked %}disabled title="Bloqueado: el registro ya tiene una aprobación"{% endif %}>
+                    {% if edit_locked %}disabled title="{{ edit_locked_title }}"{% endif %}>
                     <i class="bi bi-trash"></i>
                   </button>
                 </form>
