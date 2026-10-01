@@ -84,23 +84,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function syncBoletosRow(row) {
+    // "Solo boletos aéreos" es solo una bandera adicional -- el % se
+    // mantiene editable y sigue contando en la distribución de reembolso
+    // (un mismo centro de costo puede tener % Y usarse para boletos del
+    // Planificador a la vez; ver modules/users/user_repository.py).
     const check = row.querySelector('.cc-boletos-check');
     const hidden = row.querySelector('.cc-boletos-hidden');
-    const pctInput = row.querySelector('input[name="cc_pct[]"]');
 
     if (!check || !hidden) {
       return;
     }
 
     hidden.value = check.checked ? '1' : '0';
-
-    if (pctInput) {
-      pctInput.disabled = check.checked;
-
-      if (check.checked) {
-        pctInput.value = '0.00';
-      }
-    }
   }
 
   addButton.addEventListener('click', function () {

@@ -118,25 +118,20 @@ def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str],
     cc_boletos = cc_boletos or []
     items = []  # (cc_id, pct, es_boletos_aereos)
 
-    # cc_id[] y cc_boletos[] siempre traen un valor por fila (select y hidden
-    # nunca se deshabilitan), pero cc_pct[] NO: editar_usuario.js deshabilita
-    # ese <input> cuando la fila se marca "Solo boletos aéreos", y un input
-    # disabled no se envía en el POST. Antes esto se recorría con
-    # zip(cc_ids, cc_pcts), que desalinea (o directamente descarta) las filas
-    # siguientes apenas aparece una fila de boletos -- por eso una fila nueva
-    # marcada como boletos aéreos podía "guardarse" (return True) sin llegar
-    # a insertarse nada. Se recorre cc_ids/cc_boletos (siempre 1 a 1 con las
-    # filas) y solo se consume cc_pcts para las filas que sí lo enviaron.
-    pct_idx = 0
+    # "Solo boletos aéreos" es una bandera adicional sobre la fila, no un
+    # tipo de fila excluyente: el mismo centro de costo puede tener un % de
+    # la distribución de reembolso Y estar marcado como el que usa el
+    # Planificador para boletos de avión. El front-end (nuevo_usuario.js /
+    # editar_usuario.js) ya no deshabilita el <input> de % al marcar la
+    # casilla, así que cc_pct[] siempre trae un valor 1 a 1 con cc_ids[].
+    # Antes se forzaba el % a 0 y se excluía de la suma de 100% apenas se
+    # marcaba la casilla, lo que además chocaba con la PK (usuario_id,
+    # centro_costo_id) de usuarios_cc si se intentaba agregar el mismo
+    # centro de costo en una segunda fila solo para marcarlo de boletos.
     for idx, cc_raw in enumerate(cc_ids):
         cc_raw = (cc_raw or "").strip()
         es_boletos = (cc_boletos[idx].strip() if idx < len(cc_boletos) else "0") == "1"
-
-        if es_boletos:
-            pct_raw = ""
-        else:
-            pct_raw = (cc_pcts[pct_idx].strip() if pct_idx < len(cc_pcts) else "")
-            pct_idx += 1
+        pct_raw = (cc_pcts[idx].strip() if idx < len(cc_pcts) else "")
 
         if not cc_raw:
             continue
@@ -146,19 +141,16 @@ def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str],
         except ValueError:
             continue
 
-        if es_boletos:
-            # Exclusivo de Planificador/Boletos de avión: el % nunca se usa
-            # para reembolso, se fuerza a 0 sin importar lo que llegó del
-            # formulario y no entra en la suma de 100%.
+        try:
+            pct = float(pct_raw.replace(",", ".")) if pct_raw else 0.0
+        except ValueError:
             pct = 0.0
-        else:
-            try:
-                pct = float(pct_raw.replace(",", ".")) if pct_raw else 0.0
-            except ValueError:
-                pct = 0.0
 
-            if pct <= 0:
-                return False, "Cada centro de costo de reembolso debe tener un % mayor a 0 (o marcarse como exclusivo de boletos aéreos)."
+        # Una fila exclusiva de boletos aéreos puede quedarse en 0% (no
+        # participa del reembolso); cualquier otra fila sí necesita un %
+        # mayor a 0.
+        if not es_boletos and pct <= 0:
+            return False, "Cada centro de costo de reembolso debe tener un % mayor a 0 (o marcarse como exclusivo de boletos aéreos)."
 
         items.append((cc_id, pct, es_boletos))
 
@@ -175,8 +167,11 @@ def save_user_cc_dist(conn, user_id: int, cc_ids: list[str], cc_pcts: list[str],
         if cc_id not in valid_ids:
             return False, f"Centro de costo inválido (id={cc_id}). Revise Parametrización (grupo Centro de Costo)."
 
-    total_reembolso = sum(p for _, p, es_boletos in items if not es_boletos)
-    hay_reembolso = any(not es_boletos for _, _, es_boletos in items)
+    # Todas las filas cuentan ahora en la suma (boletos aéreos incluido, si
+    # tiene %); si ninguna fila tiene % (todo exclusivo de boletos, 0%), no
+    # se exige el 100%.
+    total_reembolso = sum(p for _, p, _ in items)
+    hay_reembolso = any(p > 0 for _, p, _ in items)
 
     if hay_reembolso and abs(total_reembolso - 100.0) > 0.01:
         return False, f"La distribución de centros de costo debe sumar 100%. Actualmente suma: {total_reembolso:.2f}%"

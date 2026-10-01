@@ -42,23 +42,22 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function syncBoletosRow(row) {
+    // "Solo boletos aéreos" ahora es solo una bandera adicional sobre la
+    // fila -- el % se mantiene editable y sigue contando en la distribución
+    // de reembolso (un mismo centro de costo puede tener % Y usarse para
+    // boletos del Planificador a la vez). Antes se deshabilitaba el input
+    // y se forzaba a 0.00, lo que además impedía reusar un centro de costo
+    // ya en la distribución para marcarlo también como de boletos (quedaba
+    // sin %, y encima la tabla usuarios_cc tiene PK (usuario_id,
+    // centro_costo_id): agregarlo de nuevo en otra fila violaba la llave).
     const check = row.querySelector('.cc-boletos-check');
     const hidden = row.querySelector('.cc-boletos-hidden');
-    const pctInput = row.querySelector('input[name="cc_pct[]"]');
 
     if (!check || !hidden) {
       return;
     }
 
     hidden.value = check.checked ? '1' : '0';
-
-    if (pctInput) {
-      pctInput.disabled = check.checked;
-
-      if (check.checked) {
-        pctInput.value = '0.00';
-      }
-    }
   }
 
   function addCCRow() {
@@ -96,15 +95,11 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function ccSum() {
+    // Todas las filas cuentan ahora -- "Solo boletos aéreos" ya no excluye
+    // la fila de la suma (ver syncBoletosRow).
     let total = 0;
 
     document.querySelectorAll('.cc-row').forEach(function (row) {
-      const check = row.querySelector('.cc-boletos-check');
-
-      if (check && check.checked) {
-        return;
-      }
-
       const input = row.querySelector('input[name="cc_pct[]"]');
 
       if (!input) {
