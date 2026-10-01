@@ -1519,12 +1519,15 @@ def get_centros_costo_con_presupuesto(empresa_id: int, anio: int) -> list[dict]:
 
 
 def get_cc_usuario(usuario_id: int) -> dict | None:
-    """Retorna el centro de costo del usuario marcado como exclusivo de
-    Planificador/Boletos de avión (usuarios_cc.es_boletos_aereos = 1).
+    """Retorna el centro de costo del usuario marcado para Planificador/
+    Boletos de avión (usuarios_cc.es_boletos_aereos = 1).
 
-    Ya no se elige por "mayor porcentaje": ese campo se fuerza siempre a 0
-    en los CC marcados como boletos aéreos, así que el criterio ahora es
-    explícito (el checkbox en la ficha del usuario), no un heurístico.
+    El criterio es explícito (el checkbox "Solo boletos aéreos" en la
+    ficha del usuario), no un heurístico de "mayor porcentaje" -- esta
+    consulta no lee ni depende de usuarios_cc.porcentaje, así que es
+    indistinto si esa fila también tiene % asignado en la distribución
+    de reembolso (puede tener 0% si es exclusiva de boletos, o un % real
+    si el mismo centro de costo se usa para ambas cosas).
     """
     conn = get_db()
     cur = conn.cursor()
