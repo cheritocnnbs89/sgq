@@ -1,12 +1,18 @@
 {# templates/partials/menu_macros.html #}
 
-{# Render recursivo de nodos. Cada nivel tiene su propio "parent" #}
-{% macro render_nodes(nodes, parent_key) -%}
+{# Render recursivo de nodos. Cada nivel tiene su propio "parent".
+   "depth" indica el nivel de anidamiento (0 = raíz) y define la sangría,
+   tanto para botones de grupo como para ítems finales -- antes solo los
+   ítems finales recibían sangría (ps-4 fijo) y los subgrupos anidados
+   dentro de otro grupo quedaban sin ningún margen extra, por lo que se
+   veían al mismo nivel que el grupo raíz. #}
+{% macro render_nodes(nodes, parent_key, depth=0) -%}
 <ul class="nav flex-column ms-0" id="grp-{{ parent_key }}">
   {% for n in nodes %}
     {% set is_group = n.is_group or n['is_group'] %}
     {% set has_children = n.children and n.children|length > 0 %}
     {% set collapse_id = 'mgrp-' ~ n.id %}
+    {% set indent_style = 'padding-left: calc(0.75rem + ' ~ depth ~ ' * 1rem);' %}
 
     <li class="nav-item">
       {% if is_group %}
@@ -14,6 +20,7 @@
         <button
           class="nav-link-simple d-flex w-100 justify-content-between align-items-center btn btn-toggle rounded {% if not n.active %}collapsed{% endif %}"
           type="button"
+          style="{{ indent_style }}"
           data-bs-toggle="collapse"
           data-bs-target="#{{ collapse_id }}"
           aria-expanded="{{ 'true' if n.active else 'false' }}"
@@ -28,10 +35,11 @@
         <div id="{{ collapse_id }}"
              class="collapse {% if n.active %}show{% endif %}"
              data-bs-parent="#grp-{{ parent_key }}">
-          {{ render_nodes(n.children, collapse_id) }}
+          {{ render_nodes(n.children, collapse_id, depth + 1) }}
         </div>
       {% else %}
-        <a class="nav-link-simple ps-4{% if n.active %} active{% endif %}"
+        <a class="nav-link-simple{% if n.active %} active{% endif %}"
+           style="{{ indent_style }}"
            href="{{ n.href or '#' }}">
           {% if n.icon %}<i class="{{ n.icon }} me-2"></i>{% endif %}
           {{ n.label }}
