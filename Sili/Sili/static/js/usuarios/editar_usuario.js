@@ -176,24 +176,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
   wrap.querySelectorAll('.cc-row').forEach(syncBoletosRow);
 
+  // Alerta estilo Bootstrap (igual que los mensajes flash del servidor)
+  // para avisar que el guardado se bloqueó -- antes era un window.alert()
+  // del navegador, que se ve como un diálogo ajeno al sistema.
+  const ccAlertContainer = document.getElementById('cc-alert-container');
+
+  function showCCBlockedAlert(message) {
+    if (!ccAlertContainer) {
+      window.alert('No se guardaron los cambios: ' + message);
+      return;
+    }
+
+    ccAlertContainer.innerHTML = '';
+
+    const alertEl = document.createElement('div');
+    alertEl.className = 'alert alert-danger alert-dismissible fade show';
+    alertEl.setAttribute('role', 'alert');
+
+    const text = document.createElement('span');
+    text.textContent = 'No se guardaron los cambios: ' + message;
+    alertEl.appendChild(text);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'btn-close';
+    closeBtn.setAttribute('data-bs-dismiss', 'alert');
+    closeBtn.setAttribute('aria-label', 'Close');
+    alertEl.appendChild(closeBtn);
+
+    ccAlertContainer.appendChild(alertEl);
+    alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   if (saveButton) {
     saveButton.addEventListener('click', function (event) {
       const ok = checkCCSum();
 
       if (!ok) {
         event.preventDefault();
-
-        if (hint) {
-          hint.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        // El aviso junto a "Agregar fila" es chico y fácil de pasar por
-        // alto -- sin esto, el clic en Guardar simplemente "no hacía nada"
-        // visible, sin que quedara claro que el guardado se bloqueó por la
-        // suma de centros de costo.
-        window.alert(
-          'No se guardaron los cambios: ' + (hint ? hint.textContent : 'la distribución de centros de costo debe sumar 100%.')
-        );
+        showCCBlockedAlert(hint ? hint.textContent : 'la distribución de centros de costo debe sumar 100%.');
       }
     });
   }

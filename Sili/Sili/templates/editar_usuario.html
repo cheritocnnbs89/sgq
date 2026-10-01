@@ -17,6 +17,11 @@
     {% endif %}
     {% endwith %}
 
+    {# Alerta JS (p.ej. "suma de centros de costo debe ser 100%" al bloquear
+       Guardar) se inyecta aquí -- mismo estilo que los mensajes flash de
+       arriba, en vez de un window.alert() del navegador. #}
+    <div id="cc-alert-container"></div>
+
     <form method="POST" action="{{ url_for('editar_usuario', user_id=u['id']) }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
