@@ -256,6 +256,16 @@ textarea.form-control.filled {
   transition: background 0.15s ease;
 }
 
+/* Sangría del menú lateral según nivel de anidamiento (ver
+   templates/partials/menu_macros.html). Clases, no estilo inline -- la CSP
+   del sitio bloquea style="" inline. */
+.menu-indent-0 { padding-left: 0.75rem; }
+.menu-indent-1 { padding-left: 2.25rem; }
+.menu-indent-2 { padding-left: 3.75rem; }
+.menu-indent-3 { padding-left: 5.25rem; }
+.menu-indent-4 { padding-left: 6.75rem; }
+.menu-indent-5 { padding-left: 8.25rem; }
+
 .nav-link-simple:hover,
 .nav-link-simple.active {
   background: #eef2ff;
