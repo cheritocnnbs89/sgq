@@ -263,6 +263,53 @@ def get_adjuntos(caso_id: int) -> list[dict]:
     return _rows(cur)
 
 
+# ── Fase 2: correo entrante / vencimiento ───────────────────────
+
+def existe_seguimiento_con_message_id(message_id: str) -> bool:
+    if not message_id:
+        return False
+    cur = get_db().cursor()
+    cur.execute("SELECT 1 FROM reclamos_seguros_seguimiento WHERE message_id = ?", (message_id,))
+    return cur.fetchone() is not None
+
+
+def get_casos_para_alerta_vencimiento(umbral_dias: int, columna_notificado: str) -> list[dict]:
+    """Casos ABIERTOS con más de umbral_dias desde fecha_creacion, que aún no se
+    notificaron por esa columna. columna_notificado solo llega desde
+    UMBRALES_VENCIMIENTO_DIAS (reclamos_seguros_constants.py), nunca de entrada
+    externa -- por eso es seguro armar el SQL con f-string aquí."""
+    cur = get_db().cursor()
+    cur.execute(f"""
+        SELECT id, codigo, tipo_caso, solicitante_nombre, fecha, fecha_creacion
+        FROM reclamos_seguros_casos
+        WHERE activo = 1 AND estado = ? AND {columna_notificado} = 0
+          AND fecha_creacion <= DATEADD(day, -?, GETDATE())
+        ORDER BY fecha_creacion
+    """, (ESTADO_ABIERTO, umbral_dias))
+    return _rows(cur)
+
+
+def marcar_notificado_vencimiento(caso_id: int, columna_notificado: str) -> None:
+    """columna_notificado: ver nota en get_casos_para_alerta_vencimiento."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(f"UPDATE reclamos_seguros_casos SET {columna_notificado} = 1 WHERE id = ?", (caso_id,))
+    conn.commit()
+
+
+def get_destinatarios_notificacion_vencimiento(roles: list[str]) -> list[str]:
+    if not roles:
+        return []
+    placeholders = ",".join("?" for _ in roles)
+    cur = get_db().cursor()
+    cur.execute(f"""
+        SELECT DISTINCT email FROM usuarios
+        WHERE COALESCE(disabled, 0) = 0 AND email IS NOT NULL AND TRIM(email) <> ''
+          AND LOWER(rol) IN ({placeholders})
+    """, [r.lower() for r in roles])
+    return [r[0] for r in cur.fetchall()]
+
+
 # ── Combinar casos (fase 5 -- placeholder de datos, la UI se hace después) ────
 
 def combinar_casos(principal_id: int, secundario_id: int, usuario_id: int, usuario_nombre: str) -> None:

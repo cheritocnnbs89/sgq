@@ -144,6 +144,21 @@ JOB_REGISTRY: dict[str, dict] = {
         "intervalo_min": 5,
         "hora_inicio": None,
     },
+    # ── Reclamos Seguros (correo con el broker) ───────────
+    "process_incoming_seguros_emails": {
+        "modulo": "reclamos_seguros",
+        "descripcion": "Lee respuestas del broker en segurosqp@quimpac.com.ec y las enlaza al caso",
+        "tipo": "intervalo",
+        "intervalo_min": 2,
+        "hora_inicio": None,
+    },
+    "notificar_casos_seguros_vencidos": {
+        "modulo": "reclamos_seguros",
+        "descripcion": "Alerta de reclamos de seguro abiertos hace +30/45/60 días",
+        "tipo": "intervalo",
+        "intervalo_min": 30,
+        "hora_inicio": None,
+    },
     # ── SeedBilling ───────────────────────────────────────
     "seedbilling_xml": {
         "modulo": "facturacion",

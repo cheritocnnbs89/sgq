@@ -23,6 +23,7 @@ MODULO_LABELS = {
     "planilla": "Planilla",
     "soporte": "Soporte / Email",
     "facturacion": "Facturación",
+    "reclamos_seguros": "Reclamos Seguros",
 }
 
 MODULO_ICONS = {
@@ -33,6 +34,7 @@ MODULO_ICONS = {
     "planilla": "bi-people",
     "soporte": "bi-envelope",
     "facturacion": "bi-receipt",
+    "reclamos_seguros": "bi-shield-exclamation",
 }
 
 
@@ -135,6 +137,8 @@ def _run_job(job_key: str) -> str:
         "encolar_notificaciones_garantias_multi_dia": _run_garantias,
         "encolar_notificaciones_contratos_comerciales_vencen": _run_contratos_comerciales,
         "notify_unassigned_tickets": _run_unassigned_tickets,
+        "process_incoming_seguros_emails": _run_seguros_poll,
+        "notificar_casos_seguros_vencidos": _run_seguros_vencimiento,
     }
 
     fn = runners.get(job_key)
@@ -233,6 +237,16 @@ def _run_contratos_comerciales():
 def _run_unassigned_tickets():
     from .email_to_task.email_inbox_service import notify_unassigned_tickets
     n = notify_unassigned_tickets()
+    return f"Alertados: {n}"
+
+def _run_seguros_poll():
+    from .reclamos_seguros.reclamos_seguros_email_service import process_incoming_seguros_emails
+    n = process_incoming_seguros_emails()
+    return f"Procesados: {n}"
+
+def _run_seguros_vencimiento():
+    from .reclamos_seguros.reclamos_seguros_email_service import notificar_casos_vencidos
+    n = notificar_casos_vencidos()
     return f"Alertados: {n}"
 
 

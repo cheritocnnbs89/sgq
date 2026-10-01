@@ -138,6 +138,20 @@ except Exception as _e2t_err:
         "[email_to_task] No se pudo importar email_inbox_service: %s", _e2t_err
     )
 
+# ── Reclamos Seguros (correo con el broker, Graph API) ─────────────
+try:
+    from modules.reclamos_seguros.reclamos_seguros_email_service import (
+        process_incoming_seguros_emails,
+        notificar_casos_vencidos as notificar_casos_seguros_vencidos,
+    )
+    _RECLAMOS_SEGUROS_EMAIL_ENABLED = True
+except Exception as _rs_err:
+    _RECLAMOS_SEGUROS_EMAIL_ENABLED = False
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "[reclamos_seguros] No se pudo importar reclamos_seguros_email_service: %s", _rs_err
+    )
+
 _worker_started = False
 
 
@@ -345,6 +359,8 @@ def start_scheduler(app=None):
             last_email_poll        = 0.0     # ← control lectura correos soporteti (cada 2 min)
             last_unassigned_check  = 0.0     # ← control alerta tickets sin asignar +3h (cada 30 min)
             last_aws_tickets       = 0.0     # ← control tickets WhatsApp (cada 2 min)
+            last_seguros_poll       = 0.0     # ← control lectura correos segurosqp@ (cada 2 min)
+            last_seguros_vencimiento = 0.0    # ← control alerta reclamos seguro vencidos (cada 30 min)
 
             # Crear tabla email_tickets_inbox si no existe
             if _EMAIL_TO_TASK_ENABLED:
@@ -551,6 +567,40 @@ def start_scheduler(app=None):
                             _log("debug", "Worker: sin tickets con +3h sin asignar")
                     except Exception:
                         target_app.logger.exception("Worker: notify_unassigned_tickets falló")
+
+                # ==================================================
+                # Reclamos Seguros: correo entrante del broker — cada 2 min
+                # ==================================================
+                now_ts6 = time.time()
+                if (_RECLAMOS_SEGUROS_EMAIL_ENABLED and (now_ts6 - last_seguros_poll >= 120)
+                        and _job_activo("process_incoming_seguros_emails")):
+                    try:
+                        _log("info", "Worker: Ejecutando lectura de correos segurosqp@...")
+                        count = process_incoming_seguros_emails()
+                        last_seguros_poll = now_ts6
+                        if count:
+                            _log("info", "Worker: reclamos_seguros procesó %d correo(s) nuevos", count)
+                        else:
+                            _log("debug", "Worker: reclamos_seguros — sin correos nuevos")
+                    except Exception:
+                        target_app.logger.exception("Worker: process_incoming_seguros_emails falló")
+
+                # ==================================================
+                # Reclamos Seguros: alerta de casos vencidos — cada 30 min
+                # ==================================================
+                now_ts7 = time.time()
+                if (_RECLAMOS_SEGUROS_EMAIL_ENABLED and (now_ts7 - last_seguros_vencimiento >= 1800)
+                        and _job_activo("notificar_casos_seguros_vencidos")):
+                    try:
+                        _log("info", "Worker: Verificando reclamos de seguro vencidos...")
+                        alertados = notificar_casos_seguros_vencidos()
+                        last_seguros_vencimiento = now_ts7
+                        if alertados:
+                            _log("info", "Worker: alerta enviada por %d reclamo(s) de seguro vencido(s)", alertados)
+                        else:
+                            _log("debug", "Worker: sin reclamos de seguro vencidos")
+                    except Exception:
+                        target_app.logger.exception("Worker: notificar_casos_seguros_vencidos falló")
 
                 # ==================================================
                 # AWS Tickets WhatsApp — cada 2 min

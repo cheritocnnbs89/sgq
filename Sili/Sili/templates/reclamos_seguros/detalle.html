@@ -50,6 +50,28 @@
     </div>
   </div>
 
+  {% if puede_combinar %}
+  <div class="card card-elev accent-left mb-3">
+    <div class="card-body">
+      <div class="fieldset-title"><i class="bi bi-union"></i> Combinar con otro caso</div>
+      <p class="hint">Si este reclamo se duplicó con otro caso abierto, combínalos aquí: el
+        seguimiento y los adjuntos del caso secundario se mueven a este, y el secundario
+        queda cerrado con una nota de fusión.</p>
+      <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_combinar', caso_id=caso.id) }}"
+            class="row g-2 align-items-end" data-confirm="¿Combinar el caso indicado dentro de {{ caso.codigo or ('#' ~ caso.id) }}? El caso secundario quedará cerrado.">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-auto">
+          <label class="form-label">Código del caso secundario</label>
+          <input class="form-control" name="caso_secundario" placeholder="SEGxxx" required>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-outline-primary"><i class="bi bi-union me-1"></i>Combinar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+
   <div class="card card-elev accent-left mb-3">
     <div class="card-body">
       <div class="fieldset-title"><i class="bi bi-clock-history"></i> Seguimiento
@@ -136,4 +158,8 @@
     <i class="bi bi-arrow-left me-1"></i>Volver a la lista
   </a>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/reclamos_seguros.js') }}"></script>
 {% endblock %}

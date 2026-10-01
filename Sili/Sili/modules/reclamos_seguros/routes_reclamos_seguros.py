@@ -198,6 +198,19 @@ def reclamos_seguros_nuevo():
             archivos, errores = _guardar_adjuntos(caso_id, None, u)
             for e in errores:
                 flash(e, "warning")
+
+            if datos.get("broker_tercero_id"):
+                caso = repo.get_caso(caso_id)
+                if caso and caso.get("broker_email"):
+                    from . import reclamos_seguros_email_service as rses
+                    try:
+                        if not rses.notificar_broker_nuevo_caso(caso, caso["broker_email"], caso["broker_nombre"]):
+                            flash("Caso registrado, pero no se pudo notificar al broker por correo.", "warning")
+                    except Exception:
+                        current_app.logger.exception(
+                            "reclamos_seguros: fallo notificando al broker caso_id=%s", caso_id)
+                        flash("Caso registrado, pero no se pudo notificar al broker por correo.", "warning")
+
             flash(f"Caso {codigo} registrado.", "success")
             return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
     else:
@@ -233,6 +246,7 @@ def reclamos_seguros_detalle(caso_id):
         puede_avanzar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
         puede_cerrar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
         puede_eliminar=_permiso(u, "eliminar") and (_es_admin(u) if caso["estado"] == ESTADO_CERRADO else gestiona),
+        puede_combinar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
     )
 
 
@@ -297,6 +311,39 @@ def reclamos_seguros_eliminar(caso_id):
     repo.eliminar_caso(caso_id)
     flash(f"Caso {caso.get('codigo') or ('#' + str(caso_id))} eliminado.", "success")
     return redirect(url_for("reclamos_seguros.reclamos_seguros_lista"))
+
+
+@reclamos_seguros_bp.route("/<int:caso_id>/combinar", methods=["POST"], endpoint="reclamos_seguros_combinar")
+@require_login
+@require_permission(PERM_RECLAMOS_SEGUROS, "editar")
+def reclamos_seguros_combinar(caso_id):
+    u = _user()
+    principal = repo.get_caso(caso_id)
+    if not principal or not _puede_ver(principal, u):
+        abort(404)
+    if principal["estado"] != ESTADO_ABIERTO or not _puede_gestionar(principal, u):
+        abort(403)
+
+    ref = (request.form.get("caso_secundario") or "").strip()
+    secundario = None
+    if ref:
+        secundario = repo.buscar_caso_por_codigo(ref.upper()) if not ref.isdigit() else repo.get_caso(int(ref))
+    if not secundario:
+        flash("No se encontró el caso secundario a combinar.", "warning")
+        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+    if secundario["id"] == principal["id"]:
+        flash("No puedes combinar un caso consigo mismo.", "warning")
+        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+    if not _puede_ver(secundario, u) or not _puede_gestionar(secundario, u):
+        abort(403)
+    if secundario["estado"] == ESTADO_CERRADO:
+        flash(f"El caso {secundario.get('codigo') or ('#' + str(secundario['id']))} ya está cerrado y no se puede combinar.", "warning")
+        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+
+    repo.combinar_casos(principal["id"], secundario["id"], u["id"], u["nombre"])
+    flash(f"Caso {secundario.get('codigo') or ('#' + str(secundario['id']))} combinado dentro de "
+          f"{principal.get('codigo') or ('#' + str(principal['id']))}.", "success")
+    return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
 
 
 @reclamos_seguros_bp.route("/adjunto/<int:adjunto_id>", endpoint="reclamos_seguros_adjunto")
