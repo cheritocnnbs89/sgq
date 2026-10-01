@@ -258,13 +258,17 @@ textarea.form-control.filled {
 
 /* Sangría del menú lateral según nivel de anidamiento (ver
    templates/partials/menu_macros.html). Clases, no estilo inline -- la CSP
-   del sitio bloquea style="" inline. */
-.menu-indent-0 { padding-left: 0.75rem; }
-.menu-indent-1 { padding-left: 2.25rem; }
-.menu-indent-2 { padding-left: 3.75rem; }
-.menu-indent-3 { padding-left: 5.25rem; }
-.menu-indent-4 { padding-left: 6.75rem; }
-.menu-indent-5 { padding-left: 8.25rem; }
+   del sitio bloquea style="" inline. Encadenadas con .nav-link-simple para
+   ganarle en especificidad a la regla .nav-link-simple{padding:7px 9px}
+   de más abajo ("Sidebar más compacto") -- esa, al ser una sola clase
+   igual que .menu-indent-N pero declarada después, ganaba por orden y
+   dejaba la sangría en 9px fijos sin importar el nivel. */
+.nav-link-simple.menu-indent-0 { padding-left: 0.75rem; }
+.nav-link-simple.menu-indent-1 { padding-left: 2.25rem; }
+.nav-link-simple.menu-indent-2 { padding-left: 3.75rem; }
+.nav-link-simple.menu-indent-3 { padding-left: 5.25rem; }
+.nav-link-simple.menu-indent-4 { padding-left: 6.75rem; }
+.nav-link-simple.menu-indent-5 { padding-left: 8.25rem; }
 
 .nav-link-simple:hover,
 .nav-link-simple.active {
