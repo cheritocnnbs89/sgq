@@ -186,6 +186,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (hint) {
           hint.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+
+        // El aviso junto a "Agregar fila" es chico y fácil de pasar por
+        // alto -- sin esto, el clic en Guardar simplemente "no hacía nada"
+        // visible, sin que quedara claro que el guardado se bloqueó por la
+        // suma de centros de costo.
+        window.alert(
+          'No se guardaron los cambios: ' + (hint ? hint.textContent : 'la distribución de centros de costo debe sumar 100%.')
+        );
       }
     });
   }
