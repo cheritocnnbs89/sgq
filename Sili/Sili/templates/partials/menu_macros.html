@@ -12,7 +12,7 @@
     {% set is_group = n.is_group or n['is_group'] %}
     {% set has_children = n.children and n.children|length > 0 %}
     {% set collapse_id = 'mgrp-' ~ n.id %}
-    {% set indent_style = 'padding-left: calc(0.75rem + ' ~ depth ~ ' * 1rem);' %}
+    {% set indent_style = 'padding-left: calc(0.75rem + ' ~ depth ~ ' * 1.5rem);' %}
 
     <li class="nav-item">
       {% if is_group %}
