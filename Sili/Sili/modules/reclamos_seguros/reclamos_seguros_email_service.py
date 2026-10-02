@@ -130,25 +130,37 @@ def _enviar_correo(to_email: str, asunto: str, cuerpo: str, imagenes=None) -> di
     return _enviar_correo_smtp(to_email, asunto, cuerpo, imagenes)
 
 
+def _correo_normal_html(codigo: str, caso: dict, desc_html: str) -> str:
+    """Correo al broker (externo) con apariencia de correo normal: sin tarjeta de ancho fijo
+    ni tabla, para que el texto y las capturas se ajusten solos al ancho del lector. Los
+    avisos internos siguen usando el formato de tarjeta SGQ (_email_html)."""
+    solicitante = _esc(caso.get("solicitante_nombre"))
+    cod = _esc(codigo)
+    return (
+        '<div style="font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#0f172a;line-height:1.5">'
+        '<p>Estimados,</p>'
+        f'<p>Se registró un nuevo reclamo de seguro con el código <strong>{cod}</strong>.</p>'
+        f'<p><strong>Tipo de caso:</strong> {_esc(caso.get("tipo_caso"))}<br>'
+        f'<strong>Fecha:</strong> {_esc(caso.get("fecha"))}<br>'
+        f'<strong>Usuario solicitante:</strong> {solicitante}</p>'
+        '<p><strong>Descripción:</strong></p>'
+        f'<div>{desc_html}</div>'
+        f'<p>Por favor responda este correo con la gestión o novedades del caso, '
+        f'manteniendo el código <strong>{cod}</strong> en el asunto.</p>'
+        f'<p>Saludos cordiales,<br>{solicitante}<br>Quimpac</p>'
+        '<p style="color:#64748b;font-size:12px">Mensaje enviado desde SGQ Quimpac — Reclamos Seguros.</p>'
+        '</div>'
+    )
+
+
 def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: str | None) -> bool:
     """Nunca lanza -- el caller trata False como advertencia no bloqueante."""
     if not broker_email:
         return False
     codigo = caso.get("codigo") or f"#{caso['id']}"
-    from modules.planificador.planificador_notifications import _email_html
     desc_html, imagenes = rhtml.para_correo(caso.get("descripcion"))
     asunto = f"[Reclamos Seguros] Nuevo reclamo {codigo} — {caso.get('tipo_caso', '')}"
-    cuerpo = _email_html(
-        "Reclamos Seguros", f"Nuevo reclamo {codigo} registrado",
-        "Se registró un nuevo reclamo de seguro:",
-        [("N° de caso", _esc(codigo)),
-         ("Tipo de caso", _esc(caso.get("tipo_caso"))),
-         ("Fecha", _esc(caso.get("fecha"))),
-         ("Usuario solicitante", _esc(caso.get("solicitante_nombre"))),
-         ("Descripción", desc_html)],
-        nota="Por favor responda este correo con la gestión o novedades del caso.",
-        pie="Mensaje enviado desde SGQ Quimpac. Responda a este correo para dar seguimiento al caso.",
-    )
+    cuerpo = _correo_normal_html(codigo, caso, desc_html)
     try:
         result = _enviar_correo(broker_email, asunto, cuerpo, imagenes)
         if not result:
