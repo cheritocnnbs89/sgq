@@ -3,6 +3,8 @@
 
 ACTIVE_KEY = "reclamos_seguros"
 PERM_RECLAMOS_SEGUROS = "reclamos_seguros"   # ver · crear · editar · eliminar · exportar
+# Clave de resaltado en el menu de la pantalla de configuracion (opcion propia, solo admin)
+ACTIVE_KEY_CONFIG = "reclamos_seguros_config"
 
 # Prefijo del código correlativo del caso (SEG001, SEG002, ...). El número sale de la
 # tabla compartida secuencias_sap (misma que usan Contratos, Reembolsos y Casos Legales),

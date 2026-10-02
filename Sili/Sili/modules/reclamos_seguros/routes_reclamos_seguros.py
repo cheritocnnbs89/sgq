@@ -20,7 +20,7 @@ from . import reclamos_seguros_repository as repo
 from . import reclamos_seguros_helpers as rsh
 from . import reclamos_seguros_html as rhtml
 from .reclamos_seguros_constants import (
-    ACTIVE_KEY, PERM_RECLAMOS_SEGUROS, TIPOS_CASO, ESTADO_ABIERTO, ESTADO_CERRADO,
+    ACTIVE_KEY, ACTIVE_KEY_CONFIG, PERM_RECLAMOS_SEGUROS, TIPOS_CASO, ESTADO_ABIERTO, ESTADO_CERRADO,
     SUB_ESTADOS_SUGERIDOS, EXTENSIONES_PERMITIDAS, MAX_ADJUNTO_BYTES, MAX_ADJUNTOS_POR_ENVIO,
     MAX_IMAGEN_BYTES, MAX_DESCRIPCION_CHARS,
 )
@@ -500,7 +500,7 @@ def reclamos_seguros_configuracion():
     if not _es_admin(u):
         abort(403)
     return render_template(
-        "reclamos_seguros/configuracion.html", active_page=ACTIVE_KEY,
+        "reclamos_seguros/configuracion.html", active_page=ACTIVE_KEY_CONFIG,
         coordinador=rsh.get_coordinador_reclamos_seguros(),
         roles_visibilidad_total=rsh.get_roles_visibilidad_total(),
         cuenta_correo=rsh.get_cuenta_correo_reclamos_seguros(),
