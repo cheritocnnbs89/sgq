@@ -26,19 +26,13 @@ log = logging.getLogger(__name__)
 
 
 def _credenciales_smtp() -> tuple[str, str]:
-    """Usuario/clave SMTP del modulo (claves reclamos_seguros_smtp_user/_pass en la tabla
-    configuracion) si estan definidas; si no, las smtp_user/smtp_pass generales. El modulo
-    necesita las del buzon que lee el poller (p. ej. jchavez@) porque la cuenta SMTP general
-    (control@) no tiene permiso 'enviar como' ese buzon."""
+    """Usuario/clave SMTP generales del sistema (smtp_user/smtp_pass, p. ej. control@)."""
     from modules.db import get_config_value
-    u = (get_config_value("reclamos_seguros_smtp_user", "") or "").strip()
-    if u:
-        return u, (get_config_value("reclamos_seguros_smtp_pass", "") or "").strip()
     return ((get_config_value("smtp_user", "") or "").strip(),
             (get_config_value("smtp_pass", "") or "").strip())
 
 
-def _smtp_enviar(remitente: str, to_email: str, msg) -> bool:
+def _smtp_enviar(remitente: str, destinatarios: list[str], msg) -> bool:
     from modules.db import get_config_value
     host = (get_config_value("smtp_host", "") or "").strip()
     port = int(get_config_value("smtp_port", "") or 587)
@@ -55,7 +49,7 @@ def _smtp_enviar(remitente: str, to_email: str, msg) -> bool:
                 server.starttls()
             if user and pwd:
                 server.login(user, pwd)
-            server.sendmail(remitente, [to_email], msg.as_string())
+            server.sendmail(remitente, destinatarios, msg.as_string())
         return True
     except smtplib.SMTPAuthenticationError as exc:
         log.error("[reclamos_seguros_email_service] Error de autenticacion SMTP (%s): %s", user, exc)
@@ -65,30 +59,40 @@ def _smtp_enviar(remitente: str, to_email: str, msg) -> bool:
 
 
 def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str) -> dict | None:
-    """Respaldo cuando Graph no puede enviar (falta Mail.Send): envia por SMTP con la
-    configuracion smtp_* existente (la clave vive en la BD/config, no en codigo) y luego
-    recupera el conversationId desde Enviados via Graph. Para que las respuestas lleguen
-    al buzon que lee el poller, el usuario SMTP debe ser el mismo buzon del modulo."""
+    """Respaldo cuando Graph no puede enviar (falta Mail.Send): envia por SMTP con la cuenta
+    general del sistema (smtp_*, p. ej. control@) -- la unica con permiso de envio. Las
+    respuestas y el hilo se manejan en el buzon del modulo (el que lee el poller):
+      - Reply-To = buzon del modulo, para que el broker responda ahi.
+      - Copia oculta (Bcc) al buzon del modulo, para que el hilo nazca tambien alli y su
+        conversationId (que es por buzon) coincida con el de las respuestas.
+    Luego se busca esa copia via Graph (Mail.Read) para capturar message_id/conversation_id."""
+    from email.utils import parseaddr
+    from modules.db import get_config_value
+
     mailbox = graph._mailbox()
-    smtp_user = _credenciales_smtp()[0].lower()
-    if smtp_user and smtp_user != mailbox.strip().lower():
-        log.warning("[reclamos_seguros_email_service] smtp_user (%s) distinto al buzon del modulo (%s): "
-                    "las respuestas no llegaran al buzon que lee el poller", smtp_user, mailbox)
+    smtp_user, _ = _credenciales_smtp()
+    from_header = (get_config_value("smtp_from", "") or "").strip() or smtp_user
+    remitente = parseaddr(from_header)[1] or smtp_user
 
     msg = MIMEText(cuerpo, "html", "utf-8")
     msg["Subject"] = asunto
-    msg["From"] = mailbox
+    msg["From"] = from_header
     msg["To"] = to_email
+    msg["Reply-To"] = mailbox
     msg["Date"] = formatdate(localtime=True)
-    msg["Message-ID"] = make_msgid(domain=mailbox.split("@")[-1])
+    msg["Message-ID"] = make_msgid(domain=(remitente.split("@")[-1] or "quimpac.com.ec"))
 
-    if not _smtp_enviar(mailbox, to_email, msg):
+    destinatarios = [to_email]
+    if mailbox.strip().lower() not in (to_email.strip().lower(), remitente.lower()):
+        destinatarios.append(mailbox)
+
+    if not _smtp_enviar(remitente, destinatarios, msg):
         return None
     sent = graph.find_sent_message(msg["Message-ID"])
     if sent:
         return sent
-    log.warning("[reclamos_seguros_email_service] Correo enviado por SMTP pero no se hallo en Enviados; "
-                "sin conversation_id las respuestas no se enlazaran solas")
+    log.warning("[reclamos_seguros_email_service] Correo enviado por SMTP pero la copia no aparecio en %s; "
+                "sin conversation_id las respuestas no se enlazaran solas", mailbox)
     return {"message_id": msg["Message-ID"], "conversation_id": ""}
 
 
