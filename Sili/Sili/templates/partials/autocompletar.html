@@ -1,0 +1,13 @@
+{# Campo con busqueda mientras se escribe (para catalogos grandes: proveedores, usuarios, clientes...).
+   Nunca cargar todo el catalogo en un <select>. Cargar css/autocompletar.css y js/autocompletar.js.
+   url: ruta que devuelve JSON {items: [{id, texto, detalle}]} y recibe ?q= ; name: campo oculto con el id
+   (el texto visible se envia como <name>_texto para poder repintarlo si el formulario vuelve con error). #}
+{% macro autocompletar(uid, name, url, valor_id='', valor_texto='', placeholder='', requerido=False, etiqueta='un valor', min=2, vacio='Sin resultados') -%}
+<div class="ac" data-ac="1" data-url="{{ url }}" data-min="{{ min }}" data-etiqueta="{{ etiqueta }}" data-vacio="{{ vacio }}"{% if requerido %} data-requerido="1"{% endif %}>
+  <input type="text" class="form-control ac-texto" id="ac-{{ uid }}" name="{{ name }}_texto" value="{{ valor_texto }}"
+         placeholder="{{ placeholder }}" autocomplete="off" role="combobox" aria-expanded="false">
+  <input type="hidden" class="ac-id" name="{{ name }}" value="{{ valor_id }}">
+  <ul class="list-group ac-lista d-none" role="listbox"></ul>
+  <div class="ac-estado"></div>
+</div>
+{%- endmacro %}

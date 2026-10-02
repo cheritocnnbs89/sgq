@@ -10,6 +10,12 @@ def _rows(cur) -> list[dict]:
     return [dict(r) for r in cur.fetchall()]
 
 
+def _like_escape(texto: str) -> str:
+    """Escapa los comodines de LIKE (usar con ESCAPE '!')."""
+    return (texto.replace("!", "!!").replace("%", "!%")
+            .replace("_", "!_").replace("[", "!["))
+
+
 # ── Casos ────────────────────────────────────────────────────
 
 def crear_caso(d: dict, usuario_id: int, usuario_nombre: str) -> int:
@@ -101,17 +107,39 @@ def get_caso(caso_id: int) -> dict | None:
     return dict(row) if row else None
 
 
-def get_brokers_combo() -> list[dict]:
-    """Aseguradoras/brokers = terceros tipo 'P' (proveedor). Solo tiene sentido elegir uno
-    que tenga correo configurado -- la notificación al broker se envía a esa dirección."""
+def buscar_brokers(q: str, limite: int = 20) -> list[dict]:
+    """Busqueda para el autocompletado: proveedores (terceros tipo 'P') activos y CON correo (la
+    notificacion se envia a ese correo). Por nombre (desde 3 letras en cualquier parte, con 2 solo
+    al inicio) o por RUC/identificacion al inicio; primero los que empiezan por lo escrito."""
+    q = (q or "").strip()
+    if len(q) < 2:
+        return []
+    p = _like_escape(q)
+    nombre = f"%{p}%" if len(q) >= 3 else f"{p}%"
+    cur = get_db().cursor()
+    cur.execute(f"""
+        SELECT TOP ({int(limite)}) id, nombre, email, identificacion
+        FROM terceros
+        WHERE tipo = 'P' AND COALESCE(activo, 1) = 1
+          AND email IS NOT NULL AND LTRIM(RTRIM(email)) <> ''
+          AND (nombre LIKE ? ESCAPE '!' OR identificacion LIKE ? ESCAPE '!')
+        ORDER BY CASE WHEN nombre LIKE ? ESCAPE '!' OR identificacion LIKE ? ESCAPE '!' THEN 0 ELSE 1 END,
+                 nombre
+    """, (nombre, f"{p}%", f"{p}%", f"{p}%"))
+    return _rows(cur)
+
+
+def get_broker(broker_id: int) -> dict | None:
+    """Valida el broker elegido (por id, sin cargar el catalogo): debe ser proveedor activo con correo."""
     cur = get_db().cursor()
     cur.execute("""
         SELECT id, nombre, email
         FROM terceros
-        WHERE tipo = 'P' AND COALESCE(activo, 1) = 1
-        ORDER BY nombre
-    """)
-    return _rows(cur)
+        WHERE id = ? AND tipo = 'P' AND COALESCE(activo, 1) = 1
+          AND email IS NOT NULL AND LTRIM(RTRIM(email)) <> ''
+    """, (broker_id,))
+    row = cur.fetchone()
+    return dict(row) if row else None
 
 
 def get_usuario_nombre(usuario_id: int) -> str | None:
@@ -131,6 +159,25 @@ def get_usuarios_combo() -> list[dict]:
         WHERE COALESCE(u.disabled, 0) = 0 AND TRIM(COALESCE(u.nombre_completo, '')) <> ''
         ORDER BY u.nombre_completo
     """)
+    return _rows(cur)
+
+
+def buscar_usuarios(q: str, limite: int = 20) -> list[dict]:
+    """Busqueda para el autocompletado de usuarios activos por nombre (primero los que empiezan por lo escrito)."""
+    q = (q or "").strip()
+    if len(q) < 2:
+        return []
+    p = _like_escape(q)
+    patron = f"%{p}%" if len(q) >= 3 else f"{p}%"
+    cur = get_db().cursor()
+    cur.execute(f"""
+        SELECT TOP ({int(limite)}) u.id, u.nombre_completo AS nombre, COALESCE(d.nombre, '') AS departamento
+        FROM usuarios u
+        LEFT JOIN departamentos d ON d.id = u.departamento_id
+        WHERE COALESCE(u.disabled, 0) = 0 AND TRIM(COALESCE(u.nombre_completo, '')) <> ''
+          AND u.nombre_completo LIKE ? ESCAPE '!'
+        ORDER BY CASE WHEN u.nombre_completo LIKE ? ESCAPE '!' THEN 0 ELSE 1 END, u.nombre_completo
+    """, (patron, f"{p}%"))
     return _rows(cur)
 
 

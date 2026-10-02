@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "reclamos_seguros/_editor.html" import rs_editor %}
 {% from "partials/dropzone.html" import dropzone %}
+{% from "partials/autocompletar.html" import autocompletar %}
 {% block title %}Reclamos Seguros – Nuevo caso{% endblock %}
 
 {% block head_extra %}
@@ -8,6 +9,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='vendor/quill/quill.snow.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reclamos_seguros.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone_archivos.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/autocompletar.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -38,29 +40,19 @@
             <input type="date" class="form-control" id="fecha" name="fecha" value="{{ form.get('fecha', '') }}" required>
           </div>
           <div class="col-md-4">
-            <label class="form-label" for="broker_tercero_id">Broker / Aseguradora</label>
-            <select class="form-select" id="broker_tercero_id" name="broker_tercero_id">
-              <option value="">Selecciona…</option>
-              {% for b in brokers %}
-              <option value="{{ b.id }}" {% if form.get('broker_tercero_id') | string == b.id | string %}selected{% endif %}
-                      {% if not b.email %}disabled{% endif %}>
-                {{ b.nombre }}{% if not b.email %} (sin correo configurado){% endif %}
-              </option>
-              {% endfor %}
-            </select>
-            <div class="hint">Solo se listan proveedores con correo — ahí se notifica el caso.</div>
+            <label class="form-label" for="ac-broker">Broker / Aseguradora</label>
+            {{ autocompletar('broker', 'broker_tercero_id', url_for('reclamos_seguros.reclamos_seguros_buscar_brokers'),
+                             form.get('broker_tercero_id', ''), form.get('broker_tercero_id_texto', ''),
+                             'Escribe nombre o RUC…', etiqueta='un broker/aseguradora',
+                             vacio='Sin resultados (solo se buscan proveedores con correo)') }}
+            <div class="hint">Escribe al menos 2 letras. Solo proveedores con correo: ahí se notifica el caso.</div>
           </div>
 
           <div class="col-md-6">
-            <label class="form-label req" for="solicitante_id">Usuario solicitante</label>
-            <select name="solicitante_id" id="solicitante_id" class="form-select" required>
-              <option value="">Selecciona…</option>
-              {% for u in usuarios %}
-              <option value="{{ u.id }}" {% if form.get('solicitante_id') | string == u.id | string %}selected{% endif %}>
-                {{ u.nombre }}{% if u.departamento %} — {{ u.departamento }}{% endif %}
-              </option>
-              {% endfor %}
-            </select>
+            <label class="form-label req" for="ac-solicitante">Usuario solicitante</label>
+            {{ autocompletar('solicitante', 'solicitante_id', url_for('reclamos_seguros.reclamos_seguros_buscar_usuarios'),
+                             form.get('solicitante_id', ''), form.get('solicitante_id_texto', ''),
+                             'Escribe el nombre del usuario…', requerido=True, etiqueta='un usuario solicitante') }}
           </div>
         </div>
       </div>
@@ -98,4 +90,5 @@
 <script src="{{ url_for('static', filename='js/reclamos_seguros.js') }}"></script>
 <script src="{{ url_for('static', filename='js/reclamos_seguros_editor.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dropzone_archivos.js') }}"></script>
+<script src="{{ url_for('static', filename='js/autocompletar.js') }}"></script>
 {% endblock %}

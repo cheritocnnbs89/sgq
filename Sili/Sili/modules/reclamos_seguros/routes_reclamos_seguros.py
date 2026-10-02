@@ -163,11 +163,7 @@ def _adjuntos_ctx() -> dict:
 
 
 def _combos():
-    return {
-        "usuarios": repo.get_usuarios_combo(),
-        "brokers": repo.get_brokers_combo(),
-        "sub_estados_sugeridos": SUB_ESTADOS_SUGERIDOS,
-    }
+    return {"sub_estados_sugeridos": SUB_ESTADOS_SUGERIDOS}
 
 
 def _leer_formulario(form):
@@ -193,9 +189,8 @@ def _leer_formulario(form):
 
     broker_id = _to_int(form.get("broker_tercero_id"))
     if broker_id:
-        brokers = {b["id"]: b for b in repo.get_brokers_combo()}
-        if broker_id not in brokers:
-            return "El broker/aseguradora seleccionado no es válido.", datos
+        if not repo.get_broker(broker_id):
+            return "El broker/aseguradora seleccionado no es válido o no tiene correo configurado.", datos
         datos["broker_tercero_id"] = broker_id
     return None, datos
 
@@ -436,6 +431,26 @@ def _ext_imagen(cabecera: bytes):
     if cabecera[:4] == b"RIFF" and cabecera[8:12] == b"WEBP":
         return ".webp"
     return None
+
+
+@reclamos_seguros_bp.route("/buscar/brokers", endpoint="reclamos_seguros_buscar_brokers")
+@require_login
+@require_permission(PERM_RECLAMOS_SEGUROS, "crear")
+def reclamos_seguros_buscar_brokers():
+    """Autocompletado de broker/aseguradora: maximo 20, solo proveedores con correo."""
+    items = [{"id": b["id"], "texto": b["nombre"], "detalle": b["email"]}
+             for b in repo.buscar_brokers(request.args.get("q", ""))]
+    return jsonify(ok=True, items=items)
+
+
+@reclamos_seguros_bp.route("/buscar/usuarios", endpoint="reclamos_seguros_buscar_usuarios")
+@require_login
+@require_permission(PERM_RECLAMOS_SEGUROS, "crear")
+def reclamos_seguros_buscar_usuarios():
+    """Autocompletado de usuario solicitante: maximo 20 usuarios activos."""
+    items = [{"id": u["id"], "texto": u["nombre"], "detalle": u["departamento"]}
+             for u in repo.buscar_usuarios(request.args.get("q", ""))]
+    return jsonify(ok=True, items=items)
 
 
 @reclamos_seguros_bp.route("/imagen", methods=["POST"], endpoint="reclamos_seguros_imagen_subir")
