@@ -404,8 +404,12 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
+        // can-sap aplica a coordinador Y a admin (la plantilla marca can-sap para ambos,
+        // pero is_coord es falso para admin) -- antes solo se respetaba si isCoord.
+        const canSap = chk.dataset.canSap === '1';
+
         if (isCoord) {
-          chk.checked = (chk.dataset.canSap === '1' || chk.dataset.canGerencia === '1');
+          chk.checked = (canSap || chk.dataset.canGerencia === '1');
           return;
         }
 
@@ -413,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const canGG = chk.dataset.canGg === '1';
         const canGF = chk.dataset.canGf === '1';
         const free = chk.dataset.freeSelect === '1';
-        chk.checked = free || canGA || canGG || canGF;
+        chk.checked = free || canGA || canGG || canGF || canSap;
       });
     });
   }
