@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% from "reclamos_seguros/_editor.html" import rs_editor %}
 {% block title %}Reclamos Seguros – {{ caso.codigo or ('#' ~ caso.id) }}{% endblock %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/casos_legales.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/quill/quill.snow.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reclamos_seguros.css') }}">
 {% endblock %}
 
@@ -86,8 +88,9 @@
         <div class="row g-3 mb-2">
           <div class="col-md-8">
             <label class="form-label">Observación</label>
-            <textarea class="form-control" name="observacion" rows="3"
-                      placeholder="Detalle de la gestión, respuesta del broker, etc."></textarea>
+            {{ rs_editor('seguimiento', 'observacion', '',
+                         'Detalle de la gestión, respuesta del broker, etc. Puedes pegar capturas (Ctrl+V).',
+                         'Escribe la observación del seguimiento.', mini=True) }}
           </div>
           <div class="col-md-4">
             <label class="form-label">Estado del caso (opcional)</label>
@@ -113,7 +116,10 @@
             data-confirm="¿Cerrar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Ya no se podrán registrar más seguimientos.">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label class="form-label">Observación de cierre</label>
-        <textarea class="form-control mb-2" name="observacion" rows="2" required></textarea>
+        <div class="mb-2">
+          {{ rs_editor('cierre', 'observacion', '', 'Motivo y detalle del cierre.',
+                       'Indica la observación de cierre.', mini=True) }}
+        </div>
         <button type="submit" class="btn btn-danger"><i class="bi bi-check2-circle me-1"></i>Cerrar caso</button>
       </form>
       {% endif %}
@@ -131,7 +137,7 @@
             · {{ s.fecha.strftime('%Y-%m-%d %H:%M') }}
             {% if s.origen == 'CORREO_ENTRANTE' %}<span class="badge bg-info-subtle text-info-emphasis ms-1">Correo del broker</span>{% endif %}
           </div>
-          <div class="casos-texto">{{ s.observacion }}</div>
+          <div class="casos-texto rs-descripcion">{{ s.observacion|rs_descripcion }}</div>
           {% set adjs = adj_por_seguimiento.get(s.id) %}
           {% if adjs %}
           <ul class="list-unstyled mb-0 mt-1">
@@ -147,7 +153,7 @@
         <li class="casos-avance casos-avance--cierre">
           <div class="hint"><strong class="text-dark">Caso cerrado</strong> por {{ caso.cerrado_por_nombre }}
             · {{ caso.fecha_cierre.strftime('%Y-%m-%d %H:%M') }}</div>
-          {% if caso.observacion_cierre %}<div class="casos-texto">{{ caso.observacion_cierre }}</div>{% endif %}
+          {% if caso.observacion_cierre %}<div class="casos-texto rs-descripcion">{{ caso.observacion_cierre|rs_descripcion }}</div>{% endif %}
         </li>
         {% endif %}
       </ul>
@@ -162,5 +168,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='vendor/quill/quill.js') }}"></script>
 <script src="{{ url_for('static', filename='js/reclamos_seguros.js') }}"></script>
+<script src="{{ url_for('static', filename='js/reclamos_seguros_editor.js') }}"></script>
 {% endblock %}

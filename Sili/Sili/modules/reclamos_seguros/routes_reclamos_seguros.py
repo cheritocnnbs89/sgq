@@ -265,9 +265,9 @@ def reclamos_seguros_seguimiento(caso_id):
         abort(404)
     if not _puede_gestionar(caso, u) or caso["estado"] != ESTADO_ABIERTO:
         abort(403)
-    observacion = (request.form.get("observacion") or "").strip()
+    observacion = rhtml.limpiar_html(request.form.get("observacion") or "")
     sub_estado = (request.form.get("sub_estado") or "").strip()
-    if not observacion:
+    if not rhtml.tiene_contenido(observacion) or len(observacion) > MAX_DESCRIPCION_CHARS:
         flash("Escribe la observación del seguimiento.", "warning")
         return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
     seg_id = repo.add_seguimiento(caso_id, observacion, u["id"], u["nombre"])
@@ -290,8 +290,8 @@ def reclamos_seguros_cerrar(caso_id):
         abort(404)
     if not _puede_gestionar(caso, u):
         abort(403)
-    observacion = (request.form.get("observacion") or "").strip()
-    if not observacion:
+    observacion = rhtml.limpiar_html(request.form.get("observacion") or "")
+    if not rhtml.tiene_contenido(observacion) or len(observacion) > MAX_DESCRIPCION_CHARS:
         flash("Indica la observación de cierre.", "warning")
         return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
     repo.add_seguimiento(caso_id, observacion, u["id"], u["nombre"])
@@ -369,9 +369,11 @@ def _ext_imagen(cabecera: bytes):
 
 @reclamos_seguros_bp.route("/imagen", methods=["POST"], endpoint="reclamos_seguros_imagen_subir")
 @require_login
-@require_permission(PERM_RECLAMOS_SEGUROS, "crear")
 def reclamos_seguros_imagen_subir():
-    """Sube una imagen pegada/arrastrada en el editor de la descripcion."""
+    """Sube una imagen pegada/arrastrada en un editor (descripcion, seguimiento o cierre)."""
+    u = _user()
+    if not (_permiso(u, "crear") or _permiso(u, "editar")):
+        return jsonify(ok=False, msg="No tienes permiso para subir im\u00e1genes."), 403
     f = request.files.get("imagen")
     if not f:
         return jsonify(ok=False, msg="No se recibi\u00f3 ninguna imagen."), 400

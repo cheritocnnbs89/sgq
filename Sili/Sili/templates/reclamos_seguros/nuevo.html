@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "reclamos_seguros/_editor.html" import rs_editor %}
 {% block title %}Reclamos Seguros – Nuevo caso{% endblock %}
 
 {% block head_extra %}
@@ -66,32 +67,9 @@
     <div class="card card-elev accent-left mb-3">
       <div class="card-body">
         <div class="fieldset-title"><i class="bi bi-chat-left-text"></i> Descripción</div>
-        <div id="rs-editor-alertas"></div>
-        <div class="rs-editor-wrap">
-          <div id="rs-editor-toolbar">
-            <span class="ql-formats">
-              <button type="button" class="ql-bold" title="Negrita"></button>
-              <button type="button" class="ql-italic" title="Cursiva"></button>
-              <button type="button" class="ql-underline" title="Subrayado"></button>
-              <button type="button" class="ql-strike" title="Tachado"></button>
-            </span>
-            <span class="ql-formats">
-              <button type="button" class="ql-list" value="ordered" title="Lista numerada"></button>
-              <button type="button" class="ql-list" value="bullet" title="Lista con viñetas"></button>
-              <button type="button" class="ql-blockquote" title="Cita"></button>
-            </span>
-            <span class="ql-formats">
-              <button type="button" class="ql-image" title="Insertar imagen"></button>
-            </span>
-            <span class="ql-formats">
-              <button type="button" class="ql-clean" title="Quitar formato"></button>
-            </span>
-          </div>
-          <div id="rs-editor" class="rs-editor"
-               data-upload-url="{{ url_for('reclamos_seguros.reclamos_seguros_imagen_subir') }}"
-               data-placeholder="Describe el caso. Puedes pegar capturas de pantalla (Ctrl+V) o arrastrar imágenes aquí."></div>
-        </div>
-        <input type="hidden" id="descripcion" name="descripcion" value="{{ form.get('descripcion', '') }}">
+        {{ rs_editor('descripcion', 'descripcion', form.get('descripcion', ''),
+                     'Describe el caso. Puedes pegar capturas de pantalla (Ctrl+V) o arrastrar imágenes aquí.',
+                     'La descripción es obligatoria.') }}
         <div class="hint mt-1">Puedes pegar (Ctrl+V) o arrastrar imágenes dentro del texto. Hasta 5 MB por imagen.</div>
       </div>
     </div>

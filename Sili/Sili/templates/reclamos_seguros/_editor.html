@@ -1,0 +1,33 @@
+{# Editor de texto enriquecido (Quill) de Reclamos Seguros. Requiere cargar quill.js y
+   reclamos_seguros_editor.js en el bloque scripts de la pagina. uid: identificador unico
+   dentro de la pagina; name: nombre del campo que se envia con el formulario. #}
+{% macro rs_editor(uid, name, valor='', placeholder='', mensaje_vacio='Este campo es obligatorio.', mini=False) -%}
+<div id="rs-al-{{ uid }}"></div>
+<div class="rs-editor-wrap{% if mini %} rs-editor-wrap--mini{% endif %}">
+  <div id="rs-tb-{{ uid }}">
+    <span class="ql-formats">
+      <button type="button" class="ql-bold" title="Negrita"></button>
+      <button type="button" class="ql-italic" title="Cursiva"></button>
+      <button type="button" class="ql-underline" title="Subrayado"></button>
+      <button type="button" class="ql-strike" title="Tachado"></button>
+    </span>
+    <span class="ql-formats">
+      <button type="button" class="ql-list" value="ordered" title="Lista numerada"></button>
+      <button type="button" class="ql-list" value="bullet" title="Lista con viñetas"></button>
+      <button type="button" class="ql-blockquote" title="Cita"></button>
+    </span>
+    <span class="ql-formats">
+      <button type="button" class="ql-image" title="Insertar imagen"></button>
+    </span>
+    <span class="ql-formats">
+      <button type="button" class="ql-clean" title="Quitar formato"></button>
+    </span>
+  </div>
+  <div id="rs-ed-{{ uid }}" class="rs-editor" data-rs-editor="1"
+       data-toolbar="rs-tb-{{ uid }}" data-input="rs-in-{{ uid }}" data-alertas="rs-al-{{ uid }}"
+       data-mensaje-vacio="{{ mensaje_vacio }}"
+       data-upload-url="{{ url_for('reclamos_seguros.reclamos_seguros_imagen_subir') }}"
+       data-placeholder="{{ placeholder }}"></div>
+</div>
+<input type="hidden" id="rs-in-{{ uid }}" name="{{ name }}" value="{{ valor }}">
+{%- endmacro %}
