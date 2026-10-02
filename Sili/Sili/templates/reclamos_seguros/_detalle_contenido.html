@@ -1,4 +1,5 @@
 {% from "reclamos_seguros/_editor.html" import rs_editor %}
+{% from "partials/dropzone.html" import dropzone %}
 <div class="theme-compras">
   <div class="d-flex align-items-center justify-content-between mb-3">
     <h4 class="mb-0">Caso {{ caso.codigo or ('#' ~ caso.id) }} — {{ caso.tipo_caso }}</h4>
@@ -43,23 +44,32 @@
   </div>
 
   {% if puede_combinar %}
-  <div class="card card-elev accent-left mb-3">
-    <div class="card-body">
-      <div class="fieldset-title"><i class="bi bi-union"></i> Combinar con otro caso</div>
-      <p class="hint">Si este reclamo se duplicó con otro caso abierto, combínalos aquí: el
-        seguimiento y los adjuntos del caso secundario se mueven a este, y el secundario
-        queda cerrado con una nota de fusión.</p>
-      <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_combinar', caso_id=caso.id) }}"
-            class="row g-2 align-items-end" data-confirm="¿Combinar el caso indicado dentro de {{ caso.codigo or ('#' ~ caso.id) }}? El caso secundario quedará cerrado.">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="col-auto">
-          <label class="form-label">Código del caso secundario</label>
-          <input class="form-control" name="caso_secundario" placeholder="SEGxxx" required>
+  <div class="accordion mb-3" id="rsAcordeonCombinar">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#rsCombinar" aria-expanded="false" aria-controls="rsCombinar">
+          <i class="bi bi-union me-2"></i>Combinar con otro caso
+        </button>
+      </h2>
+      <div id="rsCombinar" class="accordion-collapse collapse" data-bs-parent="#rsAcordeonCombinar">
+        <div class="accordion-body">
+          <p class="hint">Si este reclamo se duplicó con otro caso abierto, combínalos aquí: el
+            seguimiento y los adjuntos del caso secundario se mueven a este, y el secundario
+            queda cerrado con una nota de fusión.</p>
+          <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_combinar', caso_id=caso.id) }}"
+                class="row g-2 align-items-end" data-confirm="¿Combinar el caso indicado dentro de {{ caso.codigo or ('#' ~ caso.id) }}? El caso secundario quedará cerrado.">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="col-auto">
+              <label class="form-label">Código del caso secundario</label>
+              <input class="form-control" name="caso_secundario" placeholder="SEGxxx" required>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-outline-primary"><i class="bi bi-union me-1"></i>Combinar</button>
+            </div>
+          </form>
         </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-outline-primary"><i class="bi bi-union me-1"></i>Combinar</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
   {% endif %}
@@ -71,15 +81,17 @@
       </div>
 
       {% if puede_avanzar %}
+      {# Un solo formulario y un solo campo de observación: "Agregar seguimiento" y "Cerrar caso" son
+         solo dos botones (el de cerrar envía a su ruta con formaction), sin cuadros duplicados. #}
       <form method="post" enctype="multipart/form-data"
             action="{{ url_for('reclamos_seguros.reclamos_seguros_seguimiento', caso_id=caso.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="row g-3 mb-2">
           <div class="col-md-8">
             <label class="form-label">Observación</label>
-            {{ rs_editor('seguimiento', 'observacion', '',
-                         'Detalle de la gestión, respuesta del broker, etc. Puedes pegar capturas (Ctrl+V).',
-                         'Escribe la observación del seguimiento.', mini=True) }}
+            {{ rs_editor('accion', 'observacion', '',
+                         'Detalle de la gestión, respuesta del broker, motivo del cierre, etc. Puedes pegar capturas (Ctrl+V).',
+                         'Escribe la observación antes de continuar.', mini=True) }}
           </div>
           <div class="col-md-4">
             <label class="form-label">Estado del caso (opcional)</label>
@@ -92,26 +104,20 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Archivos adjuntos</label>
-          <input type="file" class="form-control" name="adjuntos" multiple>
+          {{ dropzone('accion', 'adjuntos', accept=accept_adjuntos, hint=hint_adjuntos,
+                      max_mb=max_mb_adjuntos, max_archivos=max_adjuntos) }}
         </div>
         <div class="d-flex flex-wrap gap-2">
           <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Agregar seguimiento</button>
+          {% if puede_cerrar %}
+          <button type="submit" class="btn btn-danger"
+                  formaction="{{ url_for('reclamos_seguros.reclamos_seguros_cerrar', caso_id=caso.id) }}"
+                  data-confirm="¿Cerrar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Ya no se podrán registrar más seguimientos.">
+            <i class="bi bi-check2-circle me-1"></i>Cerrar caso
+          </button>
+          {% endif %}
         </div>
       </form>
-
-      {% if puede_cerrar %}
-      <hr class="my-3">
-      <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_cerrar', caso_id=caso.id) }}"
-            data-confirm="¿Cerrar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Ya no se podrán registrar más seguimientos.">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <label class="form-label">Observación de cierre</label>
-        <div class="mb-2">
-          {{ rs_editor('cierre', 'observacion', '', 'Motivo y detalle del cierre.',
-                       'Indica la observación de cierre.', mini=True) }}
-        </div>
-        <button type="submit" class="btn btn-danger"><i class="bi bi-check2-circle me-1"></i>Cerrar caso</button>
-      </form>
-      {% endif %}
       <hr class="my-3">
       {% endif %}
 

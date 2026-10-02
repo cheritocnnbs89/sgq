@@ -4,12 +4,16 @@
 
   var TEXTO_PROCESANDO = 'Procesando\u2026';
 
-  function bloquear(form) {
+  // Deshabilita todos los botones de envio del formulario; el que se pulso (submitter) muestra
+  // "Procesando..." (un formulario puede tener varios botones, p. ej. Agregar seguimiento / Cerrar caso).
+  function bloquear(form, submitter) {
     form.dataset.enviando = '1';
     form.querySelectorAll('button[type="submit"]').forEach(function (b) {
       b.dataset.htmlOriginal = b.innerHTML;
       b.disabled = true;
-      b.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>' + TEXTO_PROCESANDO;
+      if (!submitter || b === submitter) {
+        b.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>' + TEXTO_PROCESANDO;
+      }
     });
   }
 
@@ -31,12 +35,13 @@
     if (!(form instanceof HTMLFormElement)) { return; }
     if ((form.getAttribute('method') || 'get').toLowerCase() !== 'post') { return; }
 
-    var msg = form.getAttribute('data-confirm');
+    var btn = ev.submitter || null;
+    var msg = (btn && btn.getAttribute('data-confirm')) || form.getAttribute('data-confirm');
     if (msg && !window.confirm(msg)) { ev.preventDefault(); return; }
 
     if (form.dataset.enviando === '1') { ev.preventDefault(); return; }
     form.dataset.enviando = '1';
-    window.setTimeout(function () { bloquear(form); }, 0);
+    window.setTimeout(function () { bloquear(form, btn); }, 0);
   });
 
   // Si el navegador restaura la pagina desde cache (boton Atras), reactivar los botones.

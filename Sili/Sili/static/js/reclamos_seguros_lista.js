@@ -39,6 +39,7 @@
   function pintar(html, mensajes) {
     body.innerHTML = html;
     if (window.RSEditores) { window.RSEditores.iniciar(body); }
+    if (window.Dropzones) { window.Dropzones.iniciar(body); }
     mostrarMensajes(mensajes);
     var cuerpo = modalEl.querySelector('.modal-body');
     if (cuerpo) { cuerpo.scrollTop = 0; }
@@ -79,12 +80,15 @@
     if (ev.defaultPrevented) { return; }   // p. ej. el editor encontro el campo vacio y ya aviso
     ev.preventDefault();
 
-    var msg = form.getAttribute('data-confirm');
+    var btn = ev.submitter || null;
+    var msg = (btn && btn.getAttribute('data-confirm')) || form.getAttribute('data-confirm');
     if (msg && !window.confirm(msg)) { return; }
     if (form.dataset.enviando === '1') { return; }
 
-    window.RSForm.bloquear(form);
-    fetch(form.action, {
+    // Un boton puede apuntar a otra ruta (formaction), p. ej. Cerrar caso.
+    var destino = (btn && btn.getAttribute('formaction')) ? btn.formAction : form.action;
+    window.RSForm.bloquear(form, btn);
+    fetch(destino, {
       method: 'POST', body: new FormData(form), credentials: 'same-origin',
       headers: { 'X-CSRFToken': csrf, 'X-Requested-With': 'XMLHttpRequest' }
     }).then(function (r) {

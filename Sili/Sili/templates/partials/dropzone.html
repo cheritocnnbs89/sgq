@@ -1,0 +1,17 @@
+{# Zona de carga de archivos: arrastrar y soltar o hacer clic para seleccionar (componente
+   compartido; cargar css/dropzone_archivos.css y js/dropzone_archivos.js en la pagina).
+   uid: id unico en la pagina; name: nombre del campo file; accept: extensiones con punto
+   separadas por coma (vacio = cualquiera); max_mb/max_archivos: limites (0 = sin limite). #}
+{% macro dropzone(uid, name='adjuntos', accept='', hint='', max_mb=10, max_archivos=10, multiple=True) -%}
+<div class="dz" data-dz="1" data-max-bytes="{{ (max_mb * 1048576)|int }}" data-max-archivos="{{ max_archivos }}"
+     data-extensiones="{{ accept }}">
+  <label for="dz-{{ uid }}" class="dz-zona">
+    <i class="bi bi-cloud-arrow-up dz-icono"></i>
+    <span class="dz-texto"><strong>Arrastre archivos aquí</strong> o haga clic para seleccionar</span>
+    {% if hint %}<span class="dz-ayuda">{{ hint }}</span>{% endif %}
+  </label>
+  <input type="file" class="visually-hidden" id="dz-{{ uid }}" name="{{ name }}"{% if multiple %} multiple{% endif %}{% if accept %} accept="{{ accept }}"{% endif %}>
+  <ul class="dz-lista list-unstyled small mt-2 mb-0"></ul>
+  <div class="dz-alertas"></div>
+</div>
+{%- endmacro %}

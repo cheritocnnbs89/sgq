@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% from "reclamos_seguros/_editor.html" import rs_editor %}
+{% from "partials/dropzone.html" import dropzone %}
 {% block title %}Reclamos Seguros – Nuevo caso{% endblock %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='vendor/quill/quill.snow.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reclamos_seguros.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone_archivos.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -77,9 +79,9 @@
     <div class="card card-elev accent-left mb-4">
       <div class="card-body">
         <div class="fieldset-title"><i class="bi bi-paperclip"></i> Adjuntos</div>
-        <label class="form-label" for="adjuntos">Documentos requeridos por el broker</label>
-        <input type="file" class="form-control" id="adjuntos" name="adjuntos" multiple>
-        <div class="hint mt-1">Hasta 10 archivos de 10 MB. Formatos: {{ extensiones }}.</div>
+        <div class="form-label">Documentos requeridos por el broker</div>
+        {{ dropzone('adjuntos', 'adjuntos', accept=accept_adjuntos, hint=hint_adjuntos,
+                    max_mb=max_mb_adjuntos, max_archivos=max_adjuntos) }}
       </div>
     </div>
 
@@ -95,4 +97,5 @@
 <script src="{{ url_for('static', filename='vendor/quill/quill.js') }}"></script>
 <script src="{{ url_for('static', filename='js/reclamos_seguros.js') }}"></script>
 <script src="{{ url_for('static', filename='js/reclamos_seguros_editor.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dropzone_archivos.js') }}"></script>
 {% endblock %}

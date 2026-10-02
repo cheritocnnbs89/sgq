@@ -1,0 +1,26 @@
+/* Zona de carga de archivos (arrastrar y soltar o seleccionar). Componente compartido, mismo aspecto
+   que la de Gastos con Tarjeta. Sin estilos inline (CSP). */
+.dz-zona {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  margin: 0;
+  text-align: center;
+  cursor: pointer;
+  padding: 1.25rem 1rem;
+  border: 2px dashed rgba(37, 99, 235, .45);
+  border-radius: 10px;
+  background: rgba(37, 99, 235, .06);
+  color: #2563eb;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.dz-zona:hover { background: rgba(37, 99, 235, .1); border-color: rgba(37, 99, 235, .65); }
+.dz.is-dragover .dz-zona { background: rgba(37, 99, 235, .16); border-color: #2563eb; }
+.dz.is-invalid .dz-zona { border-color: #dc3545; background: rgba(220, 53, 69, .06); color: #dc3545; }
+.dz-icono { font-size: 1.6rem; line-height: 1; }
+.dz-texto { font-size: .92rem; }
+.dz-ayuda { font-size: .78rem; opacity: .8; }
+.dz-lista li { display: flex; align-items: center; gap: .5rem; }
+.dz-lista .dz-quitar { font-size: .6rem; }

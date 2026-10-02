@@ -149,6 +149,19 @@ def _volver_lista():
     return jsonify(ok=True, cerrado=True, mensajes=_mensajes_flash())
 
 
+def _adjuntos_ctx() -> dict:
+    """Parametros de la zona de carga de adjuntos (macro partials/dropzone.html)."""
+    exts = sorted(EXTENSIONES_PERMITIDAS)
+    max_mb = MAX_ADJUNTO_BYTES // (1024 * 1024)
+    return {
+        "accept_adjuntos": ",".join(exts),
+        "max_mb_adjuntos": max_mb,
+        "max_adjuntos": MAX_ADJUNTOS_POR_ENVIO,
+        "hint_adjuntos": (f"Hasta {MAX_ADJUNTOS_POR_ENVIO} archivos de {max_mb} MB. "
+                          f"Formatos: {', '.join(e.lstrip('.') for e in exts)}."),
+    }
+
+
 def _combos():
     return {
         "usuarios": repo.get_usuarios_combo(),
@@ -250,7 +263,7 @@ def reclamos_seguros_nuevo():
         form = {"fecha": date.today().isoformat()}
 
     return render_template("reclamos_seguros/nuevo.html", active_page=ACTIVE_KEY,
-                           tipos=TIPOS_CASO, form=form, **_combos(),
+                           tipos=TIPOS_CASO, form=form, **_combos(), **_adjuntos_ctx(),
                            extensiones=", ".join(sorted(e.lstrip(".") for e in EXTENSIONES_PERMITIDAS)))
 
 
@@ -278,6 +291,7 @@ def _contexto_detalle(caso_id, u):
         puede_cerrar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
         puede_eliminar=_permiso(u, "eliminar") and (_es_admin(u) if caso["estado"] == ESTADO_CERRADO else gestiona),
         puede_combinar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
+        **_adjuntos_ctx(),
     )
 
 
@@ -341,9 +355,14 @@ def reclamos_seguros_cerrar(caso_id):
     if not rhtml.tiene_contenido(observacion) or len(observacion) > MAX_DESCRIPCION_CHARS:
         flash("Indica la observación de cierre.", "warning")
         return _volver_detalle(caso_id)
-    repo.add_seguimiento(caso_id, observacion, u["id"], u["nombre"])
+    seg_id = repo.add_seguimiento(caso_id, observacion, u["id"], u["nombre"])
+    _, errores = _guardar_adjuntos(caso_id, seg_id, u)
+    for e in errores:
+        flash(e, "warning")
     if repo.cerrar_caso(caso_id, observacion, u["id"], u["nombre"]):
         flash(f"Caso {caso.get('codigo') or ('#' + str(caso_id))} cerrado.", "success")
+    else:
+        flash("El caso ya estaba cerrado.", "warning")
     return _volver_detalle(caso_id)
 
 
