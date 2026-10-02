@@ -28,6 +28,8 @@
   }
 
   function iniciar(cont) {
+    if (cont.getAttribute('data-rs-listo') === '1') { return; }
+    cont.setAttribute('data-rs-listo', '1');
     var hidden = document.getElementById(cont.getAttribute('data-input'));
     var avisos = document.getElementById(cont.getAttribute('data-alertas'));
     if (!hidden) { return; }
@@ -181,5 +183,11 @@
     });
   }
 
-  document.querySelectorAll('[data-rs-editor]').forEach(iniciar);
+  // Los editores de contenido inyectado (ventana de detalle) se inician con RSEditores.iniciar(raiz).
+  window.RSEditores = {
+    iniciar: function (raiz) {
+      (raiz || document).querySelectorAll('[data-rs-editor]').forEach(iniciar);
+    }
+  };
+  window.RSEditores.iniciar(document);
 })();

@@ -11,7 +11,7 @@ from datetime import date, datetime
 
 from flask import (
     Blueprint, render_template, request, redirect, url_for, flash,
-    session, abort, current_app, send_from_directory, jsonify,
+    session, abort, current_app, send_from_directory, jsonify, get_flashed_messages,
 )
 from werkzeug.utils import secure_filename
 
@@ -121,6 +121,34 @@ def _to_int(txt):
         return None
 
 
+def _es_ajax() -> bool:
+    return request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+
+def _mensajes_flash() -> list:
+    return [[cat, msg] for cat, msg in get_flashed_messages(with_categories=True)]
+
+
+def _volver_detalle(caso_id):
+    """Tras una accion sobre el caso: en la pagina completa redirige al detalle; en la ventana
+    de la lista (AJAX) devuelve JSON con los mensajes y el fragmento actualizado, para no salir
+    de la lista."""
+    if not _es_ajax():
+        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+    ctx = _contexto_detalle(caso_id, _user())
+    mensajes = _mensajes_flash()
+    if ctx is None:
+        return jsonify(ok=True, cerrado=True, mensajes=mensajes)
+    return jsonify(ok=True, mensajes=mensajes,
+                   html=render_template("reclamos_seguros/detalle_fragment.html", es_modal=True, **ctx))
+
+
+def _volver_lista():
+    if not _es_ajax():
+        return redirect(url_for("reclamos_seguros.reclamos_seguros_lista"))
+    return jsonify(ok=True, cerrado=True, mensajes=_mensajes_flash())
+
+
 def _combos():
     return {
         "usuarios": repo.get_usuarios_combo(),
@@ -217,7 +245,7 @@ def reclamos_seguros_nuevo():
                         flash("Caso registrado, pero no se pudo notificar al broker por correo.", "warning")
 
             flash(f"Caso {codigo} registrado.", "success")
-            return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+            return _volver_detalle(caso_id)
     else:
         form = {"fecha": date.today().isoformat()}
 
@@ -228,22 +256,20 @@ def reclamos_seguros_nuevo():
 
 # ── Detalle ──────────────────────────────────────────────────
 
-@reclamos_seguros_bp.route("/<int:caso_id>", endpoint="reclamos_seguros_detalle")
-@require_login
-@require_permission(PERM_RECLAMOS_SEGUROS, "ver")
-def reclamos_seguros_detalle(caso_id):
-    u = _user()
+def _contexto_detalle(caso_id, u):
+    """Datos del detalle de un caso (pagina completa y ventana de la lista). None si no existe
+    o el usuario no puede verlo."""
     caso = repo.get_caso(caso_id)
     if not caso or not _puede_ver(caso, u):
-        abort(404)
+        return None
     seguimiento = repo.get_seguimiento(caso_id)
     adjuntos = repo.get_adjuntos(caso_id)
     por_seguimiento = {}
     for a in adjuntos:
         por_seguimiento.setdefault(a["seguimiento_id"], []).append(a)
     gestiona = _puede_gestionar(caso, u)
-    return render_template(
-        "reclamos_seguros/detalle.html", active_page=ACTIVE_KEY, caso=caso,
+    return dict(
+        active_page=ACTIVE_KEY, caso=caso,
         seguimiento=seguimiento, adj_caso=[a for a in adjuntos if a["seguimiento_id"] is None],
         adj_por_seguimiento=por_seguimiento,
         abierto=caso["estado"] == ESTADO_ABIERTO,
@@ -253,6 +279,27 @@ def reclamos_seguros_detalle(caso_id):
         puede_eliminar=_permiso(u, "eliminar") and (_es_admin(u) if caso["estado"] == ESTADO_CERRADO else gestiona),
         puede_combinar=(caso["estado"] == ESTADO_ABIERTO and gestiona and _permiso(u, "editar")),
     )
+
+
+@reclamos_seguros_bp.route("/<int:caso_id>", endpoint="reclamos_seguros_detalle")
+@require_login
+@require_permission(PERM_RECLAMOS_SEGUROS, "ver")
+def reclamos_seguros_detalle(caso_id):
+    ctx = _contexto_detalle(caso_id, _user())
+    if ctx is None:
+        abort(404)
+    return render_template("reclamos_seguros/detalle.html", **ctx)
+
+
+@reclamos_seguros_bp.route("/<int:caso_id>/fragment", endpoint="reclamos_seguros_detalle_fragment")
+@require_login
+@require_permission(PERM_RECLAMOS_SEGUROS, "ver")
+def reclamos_seguros_detalle_fragment(caso_id):
+    """Contenido del detalle para la ventana (modal) de la lista."""
+    ctx = _contexto_detalle(caso_id, _user())
+    if ctx is None:
+        abort(404)
+    return render_template("reclamos_seguros/detalle_fragment.html", es_modal=True, **ctx)
 
 
 @reclamos_seguros_bp.route("/<int:caso_id>/seguimiento", methods=["POST"], endpoint="reclamos_seguros_seguimiento")
@@ -269,7 +316,7 @@ def reclamos_seguros_seguimiento(caso_id):
     sub_estado = (request.form.get("sub_estado") or "").strip()
     if not rhtml.tiene_contenido(observacion) or len(observacion) > MAX_DESCRIPCION_CHARS:
         flash("Escribe la observación del seguimiento.", "warning")
-        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+        return _volver_detalle(caso_id)
     seg_id = repo.add_seguimiento(caso_id, observacion, u["id"], u["nombre"])
     if sub_estado:
         repo.actualizar_sub_estado(caso_id, sub_estado)
@@ -277,7 +324,7 @@ def reclamos_seguros_seguimiento(caso_id):
     for e in errores:
         flash(e, "warning")
     flash("Seguimiento registrado.", "success")
-    return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+    return _volver_detalle(caso_id)
 
 
 @reclamos_seguros_bp.route("/<int:caso_id>/cerrar", methods=["POST"], endpoint="reclamos_seguros_cerrar")
@@ -293,11 +340,11 @@ def reclamos_seguros_cerrar(caso_id):
     observacion = rhtml.limpiar_html(request.form.get("observacion") or "")
     if not rhtml.tiene_contenido(observacion) or len(observacion) > MAX_DESCRIPCION_CHARS:
         flash("Indica la observación de cierre.", "warning")
-        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+        return _volver_detalle(caso_id)
     repo.add_seguimiento(caso_id, observacion, u["id"], u["nombre"])
     if repo.cerrar_caso(caso_id, observacion, u["id"], u["nombre"]):
         flash(f"Caso {caso.get('codigo') or ('#' + str(caso_id))} cerrado.", "success")
-    return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+    return _volver_detalle(caso_id)
 
 
 @reclamos_seguros_bp.route("/<int:caso_id>/eliminar", methods=["POST"], endpoint="reclamos_seguros_eliminar")
@@ -315,7 +362,7 @@ def reclamos_seguros_eliminar(caso_id):
         abort(403)
     repo.eliminar_caso(caso_id)
     flash(f"Caso {caso.get('codigo') or ('#' + str(caso_id))} eliminado.", "success")
-    return redirect(url_for("reclamos_seguros.reclamos_seguros_lista"))
+    return _volver_lista()
 
 
 @reclamos_seguros_bp.route("/<int:caso_id>/combinar", methods=["POST"], endpoint="reclamos_seguros_combinar")
@@ -335,20 +382,20 @@ def reclamos_seguros_combinar(caso_id):
         secundario = repo.buscar_caso_por_codigo(ref.upper()) if not ref.isdigit() else repo.get_caso(int(ref))
     if not secundario:
         flash("No se encontró el caso secundario a combinar.", "warning")
-        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+        return _volver_detalle(caso_id)
     if secundario["id"] == principal["id"]:
         flash("No puedes combinar un caso consigo mismo.", "warning")
-        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+        return _volver_detalle(caso_id)
     if not _puede_ver(secundario, u) or not _puede_gestionar(secundario, u):
         abort(403)
     if secundario["estado"] == ESTADO_CERRADO:
         flash(f"El caso {secundario.get('codigo') or ('#' + str(secundario['id']))} ya está cerrado y no se puede combinar.", "warning")
-        return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+        return _volver_detalle(caso_id)
 
     repo.combinar_casos(principal["id"], secundario["id"], u["id"], u["nombre"])
     flash(f"Caso {secundario.get('codigo') or ('#' + str(secundario['id']))} combinado dentro de "
           f"{principal.get('codigo') or ('#' + str(principal['id']))}.", "success")
-    return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
+    return _volver_detalle(caso_id)
 
 
 _FIRMAS_IMAGEN = (
