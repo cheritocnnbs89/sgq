@@ -8,6 +8,8 @@ from __future__ import annotations
 import logging
 import os
 import uuid
+from email.mime.text import MIMEText
+from email.utils import formatdate, make_msgid
 
 from modules.email_utils import send_email_async
 from . import reclamos_seguros_graph as graph
@@ -20,6 +22,45 @@ from .reclamos_seguros_constants import (
 )
 
 log = logging.getLogger(__name__)
+
+
+def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str) -> dict | None:
+    """Respaldo cuando Graph no puede enviar (falta Mail.Send): envia por SMTP con la
+    configuracion smtp_* existente (la clave vive en la BD/config, no en codigo) y luego
+    recupera el conversationId desde Enviados via Graph. Para que las respuestas lleguen
+    al buzon que lee el poller, el usuario SMTP debe ser el mismo buzon del modulo."""
+    from modules.email_to_task.email_inbox_service import _smtp_send
+    from modules.db import get_config_value
+
+    mailbox = graph._mailbox()
+    smtp_user = (get_config_value("smtp_user", "") or "").strip().lower()
+    if smtp_user and smtp_user != mailbox.strip().lower():
+        log.warning("[reclamos_seguros_email_service] smtp_user (%s) distinto al buzon del modulo (%s): "
+                    "las respuestas no llegaran al buzon que lee el poller", smtp_user, mailbox)
+
+    msg = MIMEText(cuerpo, "html", "utf-8")
+    msg["Subject"] = asunto
+    msg["From"] = mailbox
+    msg["To"] = to_email
+    msg["Date"] = formatdate(localtime=True)
+    msg["Message-ID"] = make_msgid(domain=mailbox.split("@")[-1])
+
+    if not _smtp_send(mailbox, to_email, msg):
+        return None
+    sent = graph.find_sent_message(msg["Message-ID"])
+    if sent:
+        return sent
+    log.warning("[reclamos_seguros_email_service] Correo enviado por SMTP pero no se hallo en Enviados; "
+                "sin conversation_id las respuestas no se enlazaran solas")
+    return {"message_id": msg["Message-ID"], "conversation_id": ""}
+
+
+def _enviar_correo(to_email: str, asunto: str, cuerpo: str) -> dict | None:
+    result = graph.send_seguros_email_graph(to_email, asunto, cuerpo)
+    if result:
+        return result
+    log.info("[reclamos_seguros_email_service] Graph no pudo enviar; se intenta por SMTP")
+    return _enviar_correo_smtp(to_email, asunto, cuerpo)
 
 
 def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: str | None) -> bool:
@@ -39,7 +80,7 @@ def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: st
         f"<p>Por favor responda este correo con la gestion/novedades del caso.</p>"
     )
     try:
-        result = graph.send_seguros_email_graph(broker_email, asunto, cuerpo)
+        result = _enviar_correo(broker_email, asunto, cuerpo)
         if not result:
             log.warning("[reclamos_seguros_email_service] No se pudo notificar al broker %s del caso %s",
                         broker_email, codigo)
@@ -48,7 +89,7 @@ def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: st
             caso["id"], "Notificacion enviada al broker por correo.",
             usuario_id=None, usuario_nombre="Sistema", origen=ORIGEN_CORREO_SALIENTE,
             remitente_email=rsh.get_cuenta_correo_reclamos_seguros(),
-            message_id=result["message_id"], conversation_id=result["conversation_id"],
+            message_id=result["message_id"], conversation_id=result["conversation_id"] or None,
         )
         return True
     except Exception:

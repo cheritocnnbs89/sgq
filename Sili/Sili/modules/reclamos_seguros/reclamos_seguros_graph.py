@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 import os
+import time
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -167,6 +168,33 @@ def mark_seguros_email_as_read(message_id: str) -> bool:
     except Exception as exc:
         log.warning("[reclamos_seguros_graph] No se pudo marcar mensaje %s como leido: %s", message_id[:20], exc)
         return False
+
+
+def find_sent_message(internet_id: str, attempts: int = 6, wait: float = 2.0) -> Optional[dict]:
+    """Busca por Message-ID (RFC) un correo ya enviado por SMTP para obtener su id y
+    conversationId de Graph (solo requiere Mail.Read). La copia en Enviados puede tardar
+    unos segundos en aparecer, por eso reintenta."""
+    token = _get_access_token()
+    if not token or not internet_id:
+        return None
+    url = f"https://graph.microsoft.com/v1.0/users/{_mailbox()}/messages"
+    params = {"$filter": f"internetMessageId eq '{internet_id}'", "$select": "id,conversationId"}
+    headers = {"Authorization": f"Bearer {token}"}
+    for i in range(attempts):
+        try:
+            resp = requests.get(url, headers=headers, params=params, timeout=10)
+            if resp.ok:
+                vals = resp.json().get("value", [])
+                if vals:
+                    return {"message_id": vals[0]["id"],
+                            "conversation_id": (vals[0].get("conversationId") or "").strip()}
+            else:
+                log.warning("[reclamos_seguros_graph] Busqueda de enviado HTTP %d", resp.status_code)
+        except Exception as exc:
+            log.warning("[reclamos_seguros_graph] Busqueda de enviado fallo: %s", exc)
+        if i < attempts - 1:
+            time.sleep(wait)
+    return None
 
 
 def send_seguros_email_graph(to_email: str, subject: str, html_body: str) -> Optional[dict]:
