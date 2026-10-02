@@ -63,7 +63,8 @@ def _email(to_list: list[str], subject: str, html: str, attachments=None) -> Non
 # ── HTML email en formato SGQ (igual al estilo OM vencida) ──────────────
 
 def _email_html(categoria: str, titulo: str, saludo: str, filas: list[tuple],
-                nota: str = "", boton: tuple[str, str] | None = None) -> str:
+                nota: str = "", boton: tuple[str, str] | None = None,
+                pie: str | None = None) -> str:
     """
     Genera HTML de email con el estilo de las notificaciones SGQ:
     Header azul, tabla con filas (label, valor), pie de página.
@@ -114,7 +115,7 @@ def _email_html(categoria: str, titulo: str, saludo: str, filas: list[tuple],
   <div style="background:#f1f5f9;padding:10px 20px;border:1px solid #e2e8f0;
               border-top:none;border-radius:0 0 10px 10px">
     <p style="margin:0;font-size:.75rem;color:#64748b">
-      Este es un mensaje automático generado por SGQ Quimpac. No responda a este correo.
+      {pie or "Este es un mensaje automático generado por SGQ Quimpac. No responda a este correo."}
     </p>
   </div>
 </div>

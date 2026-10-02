@@ -5,6 +5,7 @@ por conversation_id (Decision 1 del plan -- sin respaldo por codigo en el asunto
 Tambien el aviso de casos abiertos hace demasiado tiempo (30/45/60 dias)."""
 from __future__ import annotations
 
+import html as _html
 import logging
 import os
 import smtplib
@@ -23,6 +24,19 @@ from .reclamos_seguros_constants import (
 )
 
 log = logging.getLogger(__name__)
+
+
+def _esc(v) -> str:
+    return _html.escape(str(v)) if v not in (None, "") else "—"
+
+
+def _link_lista() -> str | None:
+    """URL absoluta de la lista de casos; None si no hay contexto para construirla (scheduler)."""
+    from flask import url_for
+    try:
+        return url_for("reclamos_seguros.reclamos_seguros_lista", _external=True)
+    except Exception:
+        return None
 
 
 def _credenciales_smtp() -> tuple[str, str]:
@@ -109,16 +123,18 @@ def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: st
     if not broker_email:
         return False
     codigo = caso.get("codigo") or f"#{caso['id']}"
-    asunto = f"[{codigo}] Nuevo reclamo de seguro registrado \u2014 {caso.get('tipo_caso', '')}"
-    cuerpo = (
-        f"<p>Se registro un nuevo reclamo de seguro:</p>"
-        f"<ul>"
-        f"<li><strong>Codigo:</strong> {codigo}</li>"
-        f"<li><strong>Tipo:</strong> {caso.get('tipo_caso', '')}</li>"
-        f"<li><strong>Fecha:</strong> {caso.get('fecha', '')}</li>"
-        f"<li><strong>Descripcion:</strong> {caso.get('descripcion', '')}</li>"
-        f"</ul>"
-        f"<p>Por favor responda este correo con la gestion/novedades del caso.</p>"
+    from modules.planificador.planificador_notifications import _email_html
+    asunto = f"[Reclamos Seguros] Nuevo reclamo {codigo} — {caso.get('tipo_caso', '')}"
+    cuerpo = _email_html(
+        "Reclamos Seguros", f"Nuevo reclamo {codigo} registrado",
+        "Se registró un nuevo reclamo de seguro:",
+        [("N° de caso", _esc(codigo)),
+         ("Tipo de caso", _esc(caso.get("tipo_caso"))),
+         ("Fecha", _esc(caso.get("fecha"))),
+         ("Usuario solicitante", _esc(caso.get("solicitante_nombre"))),
+         ("Descripción", _esc(caso.get("descripcion")))],
+        nota="Por favor responda este correo con la gestión o novedades del caso.",
+        pie="Mensaje enviado desde SGQ Quimpac. Responda a este correo para dar seguimiento al caso.",
     )
     try:
         result = _enviar_correo(broker_email, asunto, cuerpo)
@@ -235,17 +251,18 @@ def notificar_casos_vencidos() -> int:
         casos = repo.get_casos_para_alerta_vencimiento(umbral, columna)
         if not casos:
             continue
-        filas = "".join(
-            f"<tr><td>{c.get('codigo') or c['id']}</td><td>{c.get('tipo_caso', '')}</td>"
-            f"<td>{c.get('solicitante_nombre', '')}</td><td>{c.get('fecha', '')}</td></tr>"
-            for c in casos
+        from modules.planificador.planificador_notifications import _email_html
+        link = _link_lista()
+        cuerpo = _email_html(
+            "Reclamos Seguros", f"Reclamos abiertos hace más de {umbral} días",
+            f"Hay {len(casos)} reclamo(s) de seguro abierto(s) hace más de {umbral} días:",
+            [(_esc(c.get("codigo") or c["id"]),
+              _esc(f"{c.get('tipo_caso', '')} · {c.get('solicitante_nombre', '')} · {c.get('fecha', '')}"))
+             for c in casos],
+            nota="Ingresa al SGQ → Reclamos Seguros para ver el detalle.",
+            boton=("Ver casos", link) if link else None,
         )
-        cuerpo = (
-            f"<p>Los siguientes reclamos de seguro llevan mas de {umbral} dias abiertos:</p>"
-            f"<table border='1' cellpadding='4' cellspacing='0'>"
-            f"<tr><th>Codigo</th><th>Tipo</th><th>Solicitante</th><th>Fecha</th></tr>{filas}</table>"
-        )
-        send_email_async(destinatarios, f"Reclamos de seguro abiertos +{umbral} dias", cuerpo)
+        send_email_async(destinatarios, f"[Reclamos Seguros] Casos abiertos +{umbral} días", cuerpo)
         for c in casos:
             repo.marcar_notificado_vencimiento(c["id"], columna)
         total_notificados += len(casos)
