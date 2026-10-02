@@ -60,7 +60,7 @@
 
     <div class="card card-elev">
       <div class="table-responsive">
-        <table class="table table-sm table-hover align-middle mb-0">
+        <table class="table table-sm table-hover align-middle mb-0" data-paginar>
           <thead class="table-light">
             <tr>
               <th>Caso</th><th>Tipo</th><th>Fecha</th><th>Broker / Aseguradora</th>
@@ -90,7 +90,7 @@
               </td>
             </tr>
             {% else %}
-            <tr><td colspan="9" class="text-center text-muted py-4">No hay casos para mostrar.</td></tr>
+            <tr data-no-paginar><td colspan="9" class="text-center text-muted py-4">No hay casos para mostrar.</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -99,4 +99,8 @@
 
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tabla_paginacion.js') }}"></script>
 {% endblock %}

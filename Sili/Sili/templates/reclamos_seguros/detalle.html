@@ -15,7 +15,7 @@
       {% else %}<span class="badge bg-secondary">Cerrado</span>{% endif %}
       {% if puede_eliminar %}
       <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_eliminar', caso_id=caso.id) }}"
-            onsubmit="return confirm('¿Eliminar este caso? No se puede deshacer.');">
+            data-confirm="¿Eliminar este caso? No se puede deshacer.">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Eliminar</button>
       </form>
@@ -109,7 +109,7 @@
       {% if puede_cerrar %}
       <hr class="my-3">
       <form method="post" action="{{ url_for('reclamos_seguros.reclamos_seguros_cerrar', caso_id=caso.id) }}"
-            onsubmit="return confirm('¿Cerrar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Ya no se podrán registrar más seguimientos.');">
+            data-confirm="¿Cerrar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Ya no se podrán registrar más seguimientos.">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label class="form-label">Observación de cierre</label>
         <textarea class="form-control mb-2" name="observacion" rows="2" required></textarea>
