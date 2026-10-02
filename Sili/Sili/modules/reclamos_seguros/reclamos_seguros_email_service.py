@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 import os
+import smtplib
 import uuid
 from email.mime.text import MIMEText
 from email.utils import formatdate, make_msgid
@@ -24,16 +25,52 @@ from .reclamos_seguros_constants import (
 log = logging.getLogger(__name__)
 
 
+def _credenciales_smtp() -> tuple[str, str]:
+    """Usuario/clave SMTP del modulo (claves reclamos_seguros_smtp_user/_pass en la tabla
+    configuracion) si estan definidas; si no, las smtp_user/smtp_pass generales. El modulo
+    necesita las del buzon que lee el poller (p. ej. jchavez@) porque la cuenta SMTP general
+    (control@) no tiene permiso 'enviar como' ese buzon."""
+    from modules.db import get_config_value
+    u = (get_config_value("reclamos_seguros_smtp_user", "") or "").strip()
+    if u:
+        return u, (get_config_value("reclamos_seguros_smtp_pass", "") or "").strip()
+    return ((get_config_value("smtp_user", "") or "").strip(),
+            (get_config_value("smtp_pass", "") or "").strip())
+
+
+def _smtp_enviar(remitente: str, to_email: str, msg) -> bool:
+    from modules.db import get_config_value
+    host = (get_config_value("smtp_host", "") or "").strip()
+    port = int(get_config_value("smtp_port", "") or 587)
+    use_tls = str(get_config_value("smtp_tls", "1") or "1").strip() == "1"
+    user, pwd = _credenciales_smtp()
+    if not host:
+        log.warning("[reclamos_seguros_email_service] SMTP no configurado (smtp_host vacio)")
+        return False
+    try:
+        cls = smtplib.SMTP if use_tls else smtplib.SMTP_SSL
+        with cls(host, port, timeout=20) as server:
+            if use_tls:
+                server.ehlo()
+                server.starttls()
+            if user and pwd:
+                server.login(user, pwd)
+            server.sendmail(remitente, [to_email], msg.as_string())
+        return True
+    except smtplib.SMTPAuthenticationError as exc:
+        log.error("[reclamos_seguros_email_service] Error de autenticacion SMTP (%s): %s", user, exc)
+    except Exception as exc:
+        log.error("[reclamos_seguros_email_service] Error SMTP: %s", str(exc)[:300])
+    return False
+
+
 def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str) -> dict | None:
     """Respaldo cuando Graph no puede enviar (falta Mail.Send): envia por SMTP con la
     configuracion smtp_* existente (la clave vive en la BD/config, no en codigo) y luego
     recupera el conversationId desde Enviados via Graph. Para que las respuestas lleguen
     al buzon que lee el poller, el usuario SMTP debe ser el mismo buzon del modulo."""
-    from modules.email_to_task.email_inbox_service import _smtp_send
-    from modules.db import get_config_value
-
     mailbox = graph._mailbox()
-    smtp_user = (get_config_value("smtp_user", "") or "").strip().lower()
+    smtp_user = _credenciales_smtp()[0].lower()
     if smtp_user and smtp_user != mailbox.strip().lower():
         log.warning("[reclamos_seguros_email_service] smtp_user (%s) distinto al buzon del modulo (%s): "
                     "las respuestas no llegaran al buzon que lee el poller", smtp_user, mailbox)
@@ -45,7 +82,7 @@ def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str) -> dict | None:
     msg["Date"] = formatdate(localtime=True)
     msg["Message-ID"] = make_msgid(domain=mailbox.split("@")[-1])
 
-    if not _smtp_send(mailbox, to_email, msg):
+    if not _smtp_enviar(mailbox, to_email, msg):
         return None
     sent = graph.find_sent_message(msg["Message-ID"])
     if sent:
