@@ -197,7 +197,8 @@ def find_sent_message(internet_id: str, attempts: int = 6, wait: float = 2.0) ->
     return None
 
 
-def send_seguros_email_graph(to_email: str, subject: str, html_body: str) -> Optional[dict]:
+def send_seguros_email_graph(to_email: str, subject: str, html_body: str,
+                             imagenes: Optional[list] = None) -> Optional[dict]:
     """Envia un correo desde el buzon del modulo via Graph API, en dos pasos para
     capturar el conversation_id ANTES de que pueda llegar una respuesta:
     1) crea el borrador (POST .../messages), 2) lo despacha (POST .../send).
@@ -215,6 +216,14 @@ def send_seguros_email_graph(to_email: str, subject: str, html_body: str) -> Opt
         "body": {"contentType": "HTML", "content": html_body},
         "toRecipients": [{"emailAddress": {"address": to_email}}],
     }
+    if imagenes:
+        import base64
+        draft_payload["attachments"] = [{
+            "@odata.type": "#microsoft.graph.fileAttachment",
+            "name": f"{cid}.{subtipo}", "contentType": f"image/{subtipo}",
+            "contentBytes": base64.b64encode(data).decode("ascii"),
+            "isInline": True, "contentId": cid,
+        } for cid, data, subtipo in imagenes]
     try:
         resp = requests.post(
             f"https://graph.microsoft.com/v1.0/users/{mailbox}/messages",

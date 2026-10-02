@@ -10,12 +10,15 @@ import logging
 import os
 import smtplib
 import uuid
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate, make_msgid
 
 from modules.email_utils import send_email_async
 from . import reclamos_seguros_graph as graph
 from . import reclamos_seguros_helpers as rsh
+from . import reclamos_seguros_html as rhtml
 from . import reclamos_seguros_repository as repo
 from .reclamos_seguros_constants import (
     ORIGEN_CORREO_SALIENTE, ORIGEN_CORREO_ENTRANTE, ESTADO_ABIERTO,
@@ -72,7 +75,7 @@ def _smtp_enviar(remitente: str, destinatarios: list[str], msg) -> bool:
     return False
 
 
-def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str) -> dict | None:
+def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str, imagenes=None) -> dict | None:
     """Respaldo cuando Graph no puede enviar (falta Mail.Send): envia por SMTP con la cuenta
     general del sistema (smtp_*, p. ej. control@) -- la unica con permiso de envio. Las
     respuestas y el hilo se manejan en el buzon del modulo (el que lee el poller):
@@ -88,7 +91,16 @@ def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str) -> dict | None:
     from_header = (get_config_value("smtp_from", "") or "").strip() or smtp_user
     remitente = parseaddr(from_header)[1] or smtp_user
 
-    msg = MIMEText(cuerpo, "html", "utf-8")
+    if imagenes:
+        msg = MIMEMultipart("related")
+        msg.attach(MIMEText(cuerpo, "html", "utf-8"))
+        for cid, data, subtipo in imagenes:
+            parte = MIMEImage(data, _subtype=subtipo)
+            parte.add_header("Content-ID", f"<{cid}>")
+            parte.add_header("Content-Disposition", "inline", filename=f"{cid}.{subtipo}")
+            msg.attach(parte)
+    else:
+        msg = MIMEText(cuerpo, "html", "utf-8")
     msg["Subject"] = asunto
     msg["From"] = from_header
     msg["To"] = to_email
@@ -110,12 +122,12 @@ def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str) -> dict | None:
     return {"message_id": msg["Message-ID"], "conversation_id": ""}
 
 
-def _enviar_correo(to_email: str, asunto: str, cuerpo: str) -> dict | None:
-    result = graph.send_seguros_email_graph(to_email, asunto, cuerpo)
+def _enviar_correo(to_email: str, asunto: str, cuerpo: str, imagenes=None) -> dict | None:
+    result = graph.send_seguros_email_graph(to_email, asunto, cuerpo, imagenes)
     if result:
         return result
     log.info("[reclamos_seguros_email_service] Graph no pudo enviar; se intenta por SMTP")
-    return _enviar_correo_smtp(to_email, asunto, cuerpo)
+    return _enviar_correo_smtp(to_email, asunto, cuerpo, imagenes)
 
 
 def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: str | None) -> bool:
@@ -124,6 +136,7 @@ def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: st
         return False
     codigo = caso.get("codigo") or f"#{caso['id']}"
     from modules.planificador.planificador_notifications import _email_html
+    desc_html, imagenes = rhtml.para_correo(caso.get("descripcion"))
     asunto = f"[Reclamos Seguros] Nuevo reclamo {codigo} — {caso.get('tipo_caso', '')}"
     cuerpo = _email_html(
         "Reclamos Seguros", f"Nuevo reclamo {codigo} registrado",
@@ -132,12 +145,12 @@ def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: st
          ("Tipo de caso", _esc(caso.get("tipo_caso"))),
          ("Fecha", _esc(caso.get("fecha"))),
          ("Usuario solicitante", _esc(caso.get("solicitante_nombre"))),
-         ("Descripción", _esc(caso.get("descripcion")))],
+         ("Descripción", desc_html)],
         nota="Por favor responda este correo con la gestión o novedades del caso.",
         pie="Mensaje enviado desde SGQ Quimpac. Responda a este correo para dar seguimiento al caso.",
     )
     try:
-        result = _enviar_correo(broker_email, asunto, cuerpo)
+        result = _enviar_correo(broker_email, asunto, cuerpo, imagenes)
         if not result:
             log.warning("[reclamos_seguros_email_service] No se pudo notificar al broker %s del caso %s",
                         broker_email, codigo)

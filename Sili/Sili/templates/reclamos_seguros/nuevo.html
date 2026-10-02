@@ -3,6 +3,8 @@
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/quill/quill.snow.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reclamos_seguros.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -64,7 +66,33 @@
     <div class="card card-elev accent-left mb-3">
       <div class="card-body">
         <div class="fieldset-title"><i class="bi bi-chat-left-text"></i> Descripción</div>
-        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required>{{ form.get('descripcion', '') }}</textarea>
+        <div id="rs-editor-alertas"></div>
+        <div class="rs-editor-wrap">
+          <div id="rs-editor-toolbar">
+            <span class="ql-formats">
+              <button type="button" class="ql-bold" title="Negrita"></button>
+              <button type="button" class="ql-italic" title="Cursiva"></button>
+              <button type="button" class="ql-underline" title="Subrayado"></button>
+              <button type="button" class="ql-strike" title="Tachado"></button>
+            </span>
+            <span class="ql-formats">
+              <button type="button" class="ql-list" value="ordered" title="Lista numerada"></button>
+              <button type="button" class="ql-list" value="bullet" title="Lista con viñetas"></button>
+              <button type="button" class="ql-blockquote" title="Cita"></button>
+            </span>
+            <span class="ql-formats">
+              <button type="button" class="ql-image" title="Insertar imagen"></button>
+            </span>
+            <span class="ql-formats">
+              <button type="button" class="ql-clean" title="Quitar formato"></button>
+            </span>
+          </div>
+          <div id="rs-editor" class="rs-editor"
+               data-upload-url="{{ url_for('reclamos_seguros.reclamos_seguros_imagen_subir') }}"
+               data-placeholder="Describe el caso. Puedes pegar capturas de pantalla (Ctrl+V) o arrastrar imágenes aquí."></div>
+        </div>
+        <input type="hidden" id="descripcion" name="descripcion" value="{{ form.get('descripcion', '') }}">
+        <div class="hint mt-1">Puedes pegar (Ctrl+V) o arrastrar imágenes dentro del texto. Hasta 5 MB por imagen.</div>
       </div>
     </div>
 
@@ -86,5 +114,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='vendor/quill/quill.js') }}"></script>
 <script src="{{ url_for('static', filename='js/reclamos_seguros.js') }}"></script>
+<script src="{{ url_for('static', filename='js/reclamos_seguros_editor.js') }}"></script>
 {% endblock %}

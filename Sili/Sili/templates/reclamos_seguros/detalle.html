@@ -4,6 +4,7 @@
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/contrato/contrato.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/casos_legales.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reclamos_seguros.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -31,7 +32,7 @@
         <div class="col-md-3"><div class="hint">Broker / Aseguradora</div><div>{{ caso.broker_nombre or '—' }}</div></div>
         <div class="col-md-3"><div class="hint">Usuario solicitante</div><div>{{ caso.solicitante_nombre }}</div></div>
         <div class="col-md-3"><div class="hint">Registrado por</div><div>{{ caso.creado_por_nombre }} · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</div></div>
-        <div class="col-md-12"><div class="hint">Descripción</div><div>{{ caso.descripcion }}</div></div>
+        <div class="col-md-12"><div class="hint">Descripción</div><div class="rs-descripcion">{{ caso.descripcion|rs_descripcion }}</div></div>
         {% if caso.sub_estado %}
         <div class="col-md-6"><div class="hint">Estado del caso</div><div>{{ caso.sub_estado }}</div></div>
         {% endif %}

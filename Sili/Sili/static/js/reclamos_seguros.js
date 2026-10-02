@@ -6,6 +6,7 @@
 
   // Todo formulario POST: confirmacion opcional (data-confirm) y bloqueo anti doble envio.
   document.addEventListener('submit', function (ev) {
+    if (ev.defaultPrevented) { return; }
     var form = ev.target;
     if (!(form instanceof HTMLFormElement)) { return; }
     if ((form.getAttribute('method') || 'get').toLowerCase() !== 'post') { return; }

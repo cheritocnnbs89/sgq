@@ -43,6 +43,10 @@ EXTENSIONES_PERMITIDAS = {
 MAX_ADJUNTO_BYTES = 10 * 1024 * 1024
 MAX_ADJUNTOS_POR_ENVIO = 10
 
+# Imagenes pegadas dentro de la descripcion (editor tipo correo)
+MAX_IMAGEN_BYTES = 5 * 1024 * 1024
+MAX_DESCRIPCION_CHARS = 500_000
+
 # Configuración del módulo (tabla genérica `configuracion`, clave/valor)
 CLAVE_COORDINADOR_ID = "reclamos_seguros_coordinador_id"
 CLAVE_COORDINADOR_NOMBRE = "reclamos_seguros_coordinador_nombre"

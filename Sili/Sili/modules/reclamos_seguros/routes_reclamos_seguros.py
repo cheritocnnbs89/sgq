@@ -5,21 +5,24 @@ ver conversación): notificación saliente al broker con el código en el asunto
 correo entrante (reutilizando modules/email_to_task), combinar casos duplicados, y
 (v2) semáforo/informe de desempeño."""
 import os
+import re
 import uuid
 from datetime import date, datetime
 
 from flask import (
     Blueprint, render_template, request, redirect, url_for, flash,
-    session, abort, current_app, send_from_directory,
+    session, abort, current_app, send_from_directory, jsonify,
 )
 from werkzeug.utils import secure_filename
 
 from modules.auth.routes_auth import require_login, require_permission
 from . import reclamos_seguros_repository as repo
 from . import reclamos_seguros_helpers as rsh
+from . import reclamos_seguros_html as rhtml
 from .reclamos_seguros_constants import (
     ACTIVE_KEY, PERM_RECLAMOS_SEGUROS, TIPOS_CASO, ESTADO_ABIERTO, ESTADO_CERRADO,
     SUB_ESTADOS_SUGERIDOS, EXTENSIONES_PERMITIDAS, MAX_ADJUNTO_BYTES, MAX_ADJUNTOS_POR_ENVIO,
+    MAX_IMAGEN_BYTES, MAX_DESCRIPCION_CHARS,
 )
 
 reclamos_seguros_bp = Blueprint("reclamos_seguros", __name__, url_prefix="/reclamos-seguros")
@@ -130,14 +133,16 @@ def _leer_formulario(form):
     datos = {
         "fecha": _parse_fecha(form.get("fecha")) or date.today(),
         "tipo_caso": (form.get("tipo_caso") or "").strip(),
-        "descripcion": (form.get("descripcion") or "").strip(),
+        "descripcion": rhtml.limpiar_html(form.get("descripcion") or ""),
         "broker_tercero_id": None,
         "solicitante_id": None, "solicitante_nombre": None,
     }
     if datos["tipo_caso"] not in TIPOS_CASO:
         return "Selecciona el tipo de caso.", datos
-    if not datos["descripcion"]:
+    if not rhtml.tiene_contenido(datos["descripcion"]):
         return "La descripción es obligatoria.", datos
+    if len(datos["descripcion"]) > MAX_DESCRIPCION_CHARS:
+        return "La descripción es demasiado extensa.", datos
 
     sol_id = _to_int(form.get("solicitante_id"))
     nombre = repo.get_usuario_nombre(sol_id) if sol_id else None
@@ -346,6 +351,54 @@ def reclamos_seguros_combinar(caso_id):
     return redirect(url_for("reclamos_seguros.reclamos_seguros_detalle", caso_id=caso_id))
 
 
+_FIRMAS_IMAGEN = (
+    (b"\x89PNG\r\n\x1a\n", ".png"), (b"\xff\xd8\xff", ".jpg"),
+    (b"GIF87a", ".gif"), (b"GIF89a", ".gif"),
+)
+
+
+def _ext_imagen(cabecera: bytes):
+    """Extension segun los primeros bytes reales del archivo (no se confia en el nombre/MIME)."""
+    for firma, ext in _FIRMAS_IMAGEN:
+        if cabecera.startswith(firma):
+            return ext
+    if cabecera[:4] == b"RIFF" and cabecera[8:12] == b"WEBP":
+        return ".webp"
+    return None
+
+
+@reclamos_seguros_bp.route("/imagen", methods=["POST"], endpoint="reclamos_seguros_imagen_subir")
+@require_login
+@require_permission(PERM_RECLAMOS_SEGUROS, "crear")
+def reclamos_seguros_imagen_subir():
+    """Sube una imagen pegada/arrastrada en el editor de la descripcion."""
+    f = request.files.get("imagen")
+    if not f:
+        return jsonify(ok=False, msg="No se recibi\u00f3 ninguna imagen."), 400
+    datos = f.read(MAX_IMAGEN_BYTES + 1)
+    if not datos:
+        return jsonify(ok=False, msg="La imagen est\u00e1 vac\u00eda."), 400
+    if len(datos) > MAX_IMAGEN_BYTES:
+        return jsonify(ok=False, msg=f"La imagen supera {MAX_IMAGEN_BYTES // (1024 * 1024)} MB."), 400
+    ext = _ext_imagen(datos[:16])
+    if not ext:
+        return jsonify(ok=False, msg="El archivo no es una imagen v\u00e1lida (PNG, JPG, GIF o WEBP)."), 400
+    nombre = f"{uuid.uuid4().hex}{ext}"
+    with open(os.path.join(rhtml.carpeta_imagenes(), nombre), "wb") as out:
+        out.write(datos)
+    return jsonify(ok=True, url=url_for("reclamos_seguros.reclamos_seguros_imagen", nombre=nombre))
+
+
+@reclamos_seguros_bp.route("/imagen/<nombre>", endpoint="reclamos_seguros_imagen")
+@require_login
+@require_permission(PERM_RECLAMOS_SEGUROS, "ver")
+def reclamos_seguros_imagen(nombre):
+    # Nombre = uuid4 imposible de adivinar; ademas exige sesion y permiso de lectura del modulo.
+    if not re.fullmatch(r"[0-9a-f]{32}\.(?:png|jpg|jpeg|gif|webp)", nombre):
+        abort(404)
+    return send_from_directory(rhtml.carpeta_imagenes(), nombre)
+
+
 @reclamos_seguros_bp.route("/adjunto/<int:adjunto_id>", endpoint="reclamos_seguros_adjunto")
 @require_login
 @require_permission(PERM_RECLAMOS_SEGUROS, "ver")
@@ -430,4 +483,5 @@ def reclamos_seguros_configuracion_correo():
 
 
 def register_reclamos_seguros_routes(app):
+    app.add_template_filter(rhtml.visible, "rs_descripcion")
     app.register_blueprint(reclamos_seguros_bp)

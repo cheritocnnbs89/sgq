@@ -1,0 +1,8 @@
+/* Reclamos Seguros: editor de descripcion tipo correo y vista de la descripcion. Sin estilos inline (CSP). */
+.rs-editor-wrap .ql-toolbar.ql-snow { border-radius: .375rem .375rem 0 0; background: #f8fafc; }
+.rs-editor-wrap .ql-container.ql-snow { border-radius: 0 0 .375rem .375rem; font-size: .95rem; background: #fff; }
+.rs-editor .ql-editor { min-height: 220px; max-height: 480px; overflow-y: auto; }
+.rs-editor .ql-editor img,
+.rs-descripcion img { max-width: 100%; height: auto; }
+.rs-descripcion p { margin-bottom: .5rem; }
+.rs-descripcion blockquote { border-left: 3px solid #cbd5e1; padding-left: .75rem; color: #475569; }
