@@ -250,8 +250,13 @@ def reclamos_seguros_nuevo():
                 if caso and caso.get("broker_email"):
                     from . import reclamos_seguros_email_service as rses
                     try:
-                        if not rses.notificar_broker_nuevo_caso(caso, caso["broker_email"], caso["broker_nombre"]):
+                        enviado, omitidos = rses.notificar_broker_nuevo_caso(
+                            caso, caso["broker_email"], caso["broker_nombre"])
+                        if not enviado:
                             flash("Caso registrado, pero no se pudo notificar al broker por correo.", "warning")
+                        elif omitidos:
+                            flash("El broker fue notificado, pero estos documentos no se adjuntaron al correo por su "
+                                  "tamaño (hay que enviárselos por separado): " + ", ".join(omitidos) + ".", "warning")
                     except Exception:
                         current_app.logger.exception(
                             "reclamos_seguros: fallo notificando al broker caso_id=%s", caso_id)

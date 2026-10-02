@@ -7,9 +7,12 @@ from __future__ import annotations
 
 import html as _html
 import logging
+import mimetypes
 import os
 import smtplib
 import uuid
+from email import encoders
+from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -27,6 +30,9 @@ from .reclamos_seguros_constants import (
 )
 
 log = logging.getLogger(__name__)
+
+# Tope de adjuntos por correo (Exchange Online rechaza mensajes de mas de ~25-35 MB; el base64 suma ~33%).
+MAX_TOTAL_CORREO_BYTES = 20 * 1024 * 1024
 
 
 def _esc(v) -> str:
@@ -75,7 +81,7 @@ def _smtp_enviar(remitente: str, destinatarios: list[str], msg) -> bool:
     return False
 
 
-def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str, imagenes=None) -> dict | None:
+def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str, imagenes=None, archivos=None) -> dict | None:
     """Respaldo cuando Graph no puede enviar (falta Mail.Send): envia por SMTP con la cuenta
     general del sistema (smtp_*, p. ej. control@) -- la unica con permiso de envio. Las
     respuestas y el hilo se manejan en el buzon del modulo (el que lee el poller):
@@ -92,15 +98,27 @@ def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str, imagenes=None) 
     remitente = parseaddr(from_header)[1] or smtp_user
 
     if imagenes:
-        msg = MIMEMultipart("related")
-        msg.attach(MIMEText(cuerpo, "html", "utf-8"))
+        cuerpo_msg = MIMEMultipart("related")
+        cuerpo_msg.attach(MIMEText(cuerpo, "html", "utf-8"))
         for cid, data, subtipo in imagenes:
             parte = MIMEImage(data, _subtype=subtipo)
             parte.add_header("Content-ID", f"<{cid}>")
             parte.add_header("Content-Disposition", "inline", filename=f"{cid}.{subtipo}")
+            cuerpo_msg.attach(parte)
+    else:
+        cuerpo_msg = MIMEText(cuerpo, "html", "utf-8")
+    if archivos:
+        msg = MIMEMultipart("mixed")
+        msg.attach(cuerpo_msg)
+        for nombre, data, mime in archivos:
+            tipo, _, sub = mime.partition("/")
+            parte = MIMEBase(tipo or "application", sub or "octet-stream")
+            parte.set_payload(data)
+            encoders.encode_base64(parte)
+            parte.add_header("Content-Disposition", "attachment", filename=("utf-8", "", nombre))
             msg.attach(parte)
     else:
-        msg = MIMEText(cuerpo, "html", "utf-8")
+        msg = cuerpo_msg
     msg["Subject"] = asunto
     msg["From"] = from_header
     msg["To"] = to_email
@@ -122,20 +140,27 @@ def _enviar_correo_smtp(to_email: str, asunto: str, cuerpo: str, imagenes=None) 
     return {"message_id": msg["Message-ID"], "conversation_id": ""}
 
 
-def _enviar_correo(to_email: str, asunto: str, cuerpo: str, imagenes=None) -> dict | None:
-    result = graph.send_seguros_email_graph(to_email, asunto, cuerpo, imagenes)
+def _enviar_correo(to_email: str, asunto: str, cuerpo: str, imagenes=None, archivos=None) -> dict | None:
+    result = graph.send_seguros_email_graph(to_email, asunto, cuerpo, imagenes, archivos)
     if result:
         return result
     log.info("[reclamos_seguros_email_service] Graph no pudo enviar; se intenta por SMTP")
-    return _enviar_correo_smtp(to_email, asunto, cuerpo, imagenes)
+    return _enviar_correo_smtp(to_email, asunto, cuerpo, imagenes, archivos)
 
 
-def _correo_normal_html(codigo: str, caso: dict, desc_html: str) -> str:
+def _correo_normal_html(codigo: str, caso: dict, desc_html: str,
+                        nombres_adjuntos: list[str] | None = None, omitidos: list[str] | None = None) -> str:
     """Correo al broker (externo) con apariencia de correo normal: sin tarjeta de ancho fijo
     ni tabla, para que el texto y las capturas se ajusten solos al ancho del lector. Los
     avisos internos siguen usando el formato de tarjeta SGQ (_email_html)."""
     solicitante = _esc(caso.get("solicitante_nombre"))
     cod = _esc(codigo)
+    extra = ""
+    if nombres_adjuntos:
+        extra += "<p><strong>Documentos adjuntos:</strong> " + ", ".join(_esc(n) for n in nombres_adjuntos) + "</p>"
+    if omitidos:
+        extra += ("<p>Algunos documentos no se adjuntaron por su tamaño y se los haremos llegar por separado: "
+                  + ", ".join(_esc(n) for n in omitidos) + ".</p>")
     return (
         '<div style="font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#0f172a;line-height:1.5">'
         '<p>Estimados,</p>'
@@ -144,7 +169,7 @@ def _correo_normal_html(codigo: str, caso: dict, desc_html: str) -> str:
         f'<strong>Fecha:</strong> {_esc(caso.get("fecha"))}<br>'
         f'<strong>Usuario solicitante:</strong> {solicitante}</p>'
         '<p><strong>Descripción:</strong></p>'
-        f'<div>{desc_html}</div>'
+        f'<div>{desc_html}</div>{extra}'
         f'<p>Por favor responda este correo con la gestión o novedades del caso, '
         f'manteniendo el código <strong>{cod}</strong> en el asunto.</p>'
         f'<p>Saludos cordiales,<br>{solicitante}<br>Quimpac</p>'
@@ -153,30 +178,61 @@ def _correo_normal_html(codigo: str, caso: dict, desc_html: str) -> str:
     )
 
 
-def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: str | None) -> bool:
-    """Nunca lanza -- el caller trata False como advertencia no bloqueante."""
+def _adjuntos_del_caso(caso_id: int):
+    """Documentos subidos al registrar el caso (sin seguimiento) listos para adjuntar al correo:
+    ([(nombre, bytes, mime)], [nombres omitidos]). Los que no caben en el tope o no se pueden
+    leer se devuelven en 'omitidos' para avisar al usuario."""
+    from flask import current_app
+    archivos, omitidos, total = [], [], 0
+    for a in repo.get_adjuntos(caso_id):
+        if a["seguimiento_id"] is not None:
+            continue
+        ruta = os.path.join(current_app.root_path, "uploads_privados", "reclamos_seguros",
+                            str(caso_id), a["nombre_guardado"])
+        try:
+            with open(ruta, "rb") as f:
+                data = f.read()
+        except OSError:
+            log.warning("[reclamos_seguros_email_service] No se pudo leer el adjunto %s del caso %s", ruta, caso_id)
+            omitidos.append(a["nombre_original"])
+            continue
+        if total + len(data) > MAX_TOTAL_CORREO_BYTES:
+            omitidos.append(a["nombre_original"])
+            continue
+        total += len(data)
+        mime = mimetypes.guess_type(a["nombre_original"])[0] or "application/octet-stream"
+        archivos.append((a["nombre_original"], data, mime))
+    return archivos, omitidos
+
+
+def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: str | None):
+    """Devuelve (enviado, omitidos): omitidos = documentos que no se adjuntaron por tamaño.
+    Nunca lanza -- el caller trata enviado=False como advertencia no bloqueante."""
     if not broker_email:
-        return False
+        return False, []
     codigo = caso.get("codigo") or f"#{caso['id']}"
-    desc_html, imagenes = rhtml.para_correo(caso.get("descripcion"))
-    asunto = f"[Reclamos Seguros] Nuevo reclamo {codigo} — {caso.get('tipo_caso', '')}"
-    cuerpo = _correo_normal_html(codigo, caso, desc_html)
+    omitidos: list[str] = []
     try:
-        result = _enviar_correo(broker_email, asunto, cuerpo, imagenes)
+        desc_html, imagenes = rhtml.para_correo(caso.get("descripcion"))
+        archivos, omitidos = _adjuntos_del_caso(caso["id"])
+        asunto = f"[Reclamos Seguros] Nuevo reclamo {codigo} — {caso.get('tipo_caso', '')}"
+        cuerpo = _correo_normal_html(codigo, caso, desc_html, [a[0] for a in archivos], omitidos)
+        result = _enviar_correo(broker_email, asunto, cuerpo, imagenes, archivos)
         if not result:
             log.warning("[reclamos_seguros_email_service] No se pudo notificar al broker %s del caso %s",
                         broker_email, codigo)
-            return False
+            return False, omitidos
         repo.add_seguimiento(
-            caso["id"], "Notificacion enviada al broker por correo.",
+            caso["id"], "Notificacion enviada al broker por correo."
+            + (f" Documentos adjuntos: {len(archivos)}." if archivos else ""),
             usuario_id=None, usuario_nombre="Sistema", origen=ORIGEN_CORREO_SALIENTE,
             remitente_email=rsh.get_cuenta_correo_reclamos_seguros(),
             message_id=result["message_id"], conversation_id=result["conversation_id"] or None,
         )
-        return True
+        return True, omitidos
     except Exception:
         log.exception("[reclamos_seguros_email_service] Fallo notificando al broker caso_id=%s", caso.get("id"))
-        return False
+        return False, omitidos
 
 
 def _guardar_adjuntos_entrantes(caso_id: int, seguimiento_id: int, message_id: str) -> None:

@@ -198,7 +198,8 @@ def find_sent_message(internet_id: str, attempts: int = 6, wait: float = 2.0) ->
 
 
 def send_seguros_email_graph(to_email: str, subject: str, html_body: str,
-                             imagenes: Optional[list] = None) -> Optional[dict]:
+                             imagenes: Optional[list] = None,
+                             archivos: Optional[list] = None) -> Optional[dict]:
     """Envia un correo desde el buzon del modulo via Graph API, en dos pasos para
     capturar el conversation_id ANTES de que pueda llegar una respuesta:
     1) crea el borrador (POST .../messages), 2) lo despacha (POST .../send).
@@ -216,14 +217,26 @@ def send_seguros_email_graph(to_email: str, subject: str, html_body: str,
         "body": {"contentType": "HTML", "content": html_body},
         "toRecipients": [{"emailAddress": {"address": to_email}}],
     }
-    if imagenes:
+    if imagenes or archivos:
         import base64
-        draft_payload["attachments"] = [{
+        # Al crear el borrador con adjuntos Graph admite ~3 MB; si hay mas, se devuelve None
+        # para que el llamador use el respaldo SMTP (sin ese limite practico).
+        if archivos and sum(len(d) for _, d, _ in archivos) > 3 * 1024 * 1024:
+            log.info("[reclamos_seguros_graph] Adjuntos > 3 MB: se usa el respaldo SMTP")
+            return None
+        adjuntos = [{
             "@odata.type": "#microsoft.graph.fileAttachment",
             "name": f"{cid}.{subtipo}", "contentType": f"image/{subtipo}",
             "contentBytes": base64.b64encode(data).decode("ascii"),
             "isInline": True, "contentId": cid,
-        } for cid, data, subtipo in imagenes]
+        } for cid, data, subtipo in (imagenes or [])]
+        adjuntos += [{
+            "@odata.type": "#microsoft.graph.fileAttachment",
+            "name": nombre, "contentType": mime,
+            "contentBytes": base64.b64encode(data).decode("ascii"),
+            "isInline": False,
+        } for nombre, data, mime in (archivos or [])]
+        draft_payload["attachments"] = adjuntos
     try:
         resp = requests.post(
             f"https://graph.microsoft.com/v1.0/users/{mailbox}/messages",
