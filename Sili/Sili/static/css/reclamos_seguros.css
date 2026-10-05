@@ -7,8 +7,34 @@
 .rs-descripcion img { max-width: 100%; height: auto; }
 .rs-descripcion p { margin-bottom: .5rem; }
 .rs-descripcion blockquote { border-left: 3px solid #cbd5e1; padding-left: .75rem; color: #475569; }
-/* Mensajes largos del seguimiento (correos): alto limitado con scroll, se pueden expandir. */
+/* Seguimiento: cada mensaje es un acordeon (cabecera con resumen; el cuerpo se despliega con scroll). */
+.rs-msg-cab {
+  display: flex;
+  align-items: baseline;
+  gap: .4rem;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.rs-msg-cab .rs-msg-chev { font-size: .75rem; transition: transform .15s ease; }
+.rs-msg-cab[aria-expanded="true"] .rs-msg-chev { transform: rotate(90deg); }
+.rs-msg-resumen {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #64748b;
+  font-size: .85rem;
+}
+.rs-msg-cab[aria-expanded="true"] .rs-msg-resumen { display: none; }
+.rs-msg-cuerpo { max-height: 28rem; overflow-y: auto; padding: .35rem .5rem 0 1.15rem; }
 .casos-texto.rs-descripcion { white-space: normal; overflow-wrap: anywhere; }
-.rs-msg--colapsado { max-height: 14rem; overflow-y: auto; padding-right: .5rem; }
-.rs-msg table { max-width: 100%; }
-.rs-msg-toggle { font-size: .8rem; }
+.rs-descripcion table { border-collapse: collapse; max-width: 100%; }
+.rs-descripcion td, .rs-descripcion th { border: 1px solid #cbd5e1; padding: .15rem .5rem; }
+.rs-descripcion th { background: #f1f5f9; }

@@ -27,7 +27,7 @@ _RE_IMG = re.compile(r"^/reclamos-seguros/imagen/[0-9a-f]{32}\.(?:png|jpg|jpeg|g
 _ESQUEMAS_LINK = ("http://", "https://", "mailto:")
 _RE_ES_HTML = re.compile(r"^\s*<(p|h[1-3]|ul|ol|blockquote|img|div|table)\b", re.IGNORECASE)
 _RE_IMG_LIMPIA = re.compile(
-    r'<img src="/reclamos-seguros/imagen/([0-9a-f]{32})\.(png|jpg|jpeg|gif|webp)" alt="">')
+    r'<img src="/reclamos-seguros/imagen/([0-9a-f]{32})\.(png|jpg|jpeg|gif|webp)" alt=""(?: width="(\d+)")?>')
 
 
 class _Limpiador(HTMLParser):
@@ -53,7 +53,11 @@ class _Limpiador(HTMLParser):
         if tag == "img":
             src = (a.get("src") or "").strip()
             if _RE_IMG.match(src):
-                self.out.append(f'<img src="{src}" alt="">')
+                # Se conserva el ancho que declara el correo (p. ej. firmas de 483 px); sin esto las
+                # imagenes se verian a su tamano original, a veces enorme. El alto se calcula solo.
+                w = (a.get("width") or "").strip()
+                ancho = f' width="{int(w)}"' if w.isdigit() and 16 <= int(w) <= 1600 else ""
+                self.out.append(f'<img src="{src}" alt=""{ancho}>')
             return
         if tag in ("br", "hr"):
             self.out.append(f"<{tag}>")
@@ -65,6 +69,11 @@ class _Limpiador(HTMLParser):
                 self.out.append('<a href="%s" target="_blank" rel="noopener noreferrer">'
                                 % _html.escape(href, quote=True))
             self.pila.append(("a", ok))
+            return
+        if tag == "ol":
+            st = (a.get("start") or "").strip()
+            self.out.append(f'<ol start="{int(st)}">' if st.isdigit() and int(st) < 10000 else "<ol>")
+            self.pila.append(("ol", True))
             return
         self.out.append(f"<{tag}>")
         self.pila.append((tag, True))
@@ -130,6 +139,14 @@ def a_texto(h) -> str:
     return re.sub(r"\n{3,}", "\n\n", _html.unescape(s)).strip()
 
 
+def resumen(descripcion, largo: int = 140) -> str:
+    """Primera linea de texto (sin formato) para la cabecera de un mensaje colapsado."""
+    d = (descripcion or "").replace("\r\n", "\n")
+    t = a_texto(d) if es_html(d) else d
+    t = " ".join(t.split())
+    return t if len(t) <= largo else t[: largo - 1].rstrip() + "\u2026"
+
+
 def tiene_contenido(h) -> bool:
     return bool(a_texto(h)) or "<img " in (h or "")
 
@@ -171,6 +188,7 @@ def para_correo(descripcion):
             return ""
         cid = f"img{len(imagenes) + 1}@sgq"
         imagenes.append((cid, data, "jpeg" if m.group(2) in ("jpg", "jpeg") else m.group(2)))
-        return f'<img src="cid:{cid}" alt="" style="max-width:100%;height:auto">'
+        ancho = f' width="{m.group(3)}"' if m.group(3) else ""
+        return f'<img src="cid:{cid}" alt=""{ancho} style="max-width:100%;height:auto">'
 
     return _RE_IMG_LIMPIA.sub(_sub, limpio), imagenes

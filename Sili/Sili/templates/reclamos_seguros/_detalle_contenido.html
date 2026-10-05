@@ -126,23 +126,31 @@
           <div class="hint"><strong class="text-dark">Caso registrado</strong> · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</div>
         </li>
         {% for s in seguimiento %}
+        {# Cada mensaje es un acordeon: cabecera con autor/fecha/resumen y cuerpo desplegable (con scroll).
+           Todos contraidos salvo el mas reciente. #}
+        {% set msg_abierto = loop.last %}
         <li class="casos-avance">
-          <div class="hint">
+          <button type="button" class="rs-msg-cab" data-bs-toggle="collapse"
+                  data-bs-target="#rsMsg{{ s.id }}" aria-controls="rsMsg{{ s.id }}"
+                  aria-expanded="{{ 'true' if msg_abierto else 'false' }}">
+            <i class="bi bi-chevron-right rs-msg-chev"></i>
             <strong class="text-dark">{{ s.usuario_nombre or s.remitente_email or 'Sistema' }}</strong>
-            · {{ s.fecha.strftime('%Y-%m-%d %H:%M') }}
-            {% if s.origen == 'CORREO_ENTRANTE' %}<span class="badge bg-info-subtle text-info-emphasis ms-1">Correo del broker</span>{% endif %}
+            <span class="hint">· {{ s.fecha.strftime('%Y-%m-%d %H:%M') }}</span>
+            {% if s.origen == 'CORREO_ENTRANTE' %}<span class="badge bg-info-subtle text-info-emphasis">Correo del broker</span>{% endif %}
+            <span class="rs-msg-resumen">{{ s.observacion|rs_resumen }}</span>
+          </button>
+          <div id="rsMsg{{ s.id }}" class="collapse{% if msg_abierto %} show{% endif %}">
+            <div class="casos-texto rs-descripcion rs-msg-cuerpo">{{ s.observacion|rs_descripcion }}</div>
+            {% set adjs = adj_por_seguimiento.get(s.id) %}
+            {% if adjs %}
+            <ul class="list-unstyled mb-0 mt-1 ps-3">
+              {% for a in adjs %}
+              <li><a href="{{ url_for('reclamos_seguros.reclamos_seguros_adjunto', adjunto_id=a.id) }}">
+                <i class="bi bi-paperclip me-1"></i>{{ a.nombre_original }}</a></li>
+              {% endfor %}
+            </ul>
+            {% endif %}
           </div>
-          <div class="casos-texto rs-descripcion rs-msg rs-msg--colapsado">{{ s.observacion|rs_descripcion }}</div>
-          <button type="button" class="btn btn-link btn-sm p-0 rs-msg-toggle d-none">Ver mensaje completo</button>
-          {% set adjs = adj_por_seguimiento.get(s.id) %}
-          {% if adjs %}
-          <ul class="list-unstyled mb-0 mt-1">
-            {% for a in adjs %}
-            <li><a href="{{ url_for('reclamos_seguros.reclamos_seguros_adjunto', adjunto_id=a.id) }}">
-              <i class="bi bi-paperclip me-1"></i>{{ a.nombre_original }}</a></li>
-            {% endfor %}
-          </ul>
-          {% endif %}
         </li>
         {% endfor %}
         {% if not abierto %}

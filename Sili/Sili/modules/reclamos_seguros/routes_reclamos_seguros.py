@@ -556,4 +556,5 @@ def reclamos_seguros_configuracion_correo():
 
 def register_reclamos_seguros_routes(app):
     app.add_template_filter(rhtml.visible, "rs_descripcion")
+    app.add_template_filter(rhtml.resumen, "rs_resumen")
     app.register_blueprint(reclamos_seguros_bp)

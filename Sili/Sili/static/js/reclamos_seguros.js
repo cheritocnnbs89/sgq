@@ -49,31 +49,4 @@
     if (!ev.persisted) { return; }
     document.querySelectorAll('form[data-enviando="1"]').forEach(restaurar);
   });
-
-  // Mensajes largos del seguimiento: se muestran con alto limitado y scroll; el boton los expande.
-  // El boton solo aparece si el mensaje desborda (se mide al cargar, al cargar cada imagen y al
-  // inyectar el detalle en la ventana de la lista).
-  function medirMensajes(raiz) {
-    (raiz || document).querySelectorAll('.rs-msg--colapsado').forEach(function (m) {
-      var btn = m.nextElementSibling;
-      if (!btn || !btn.classList.contains('rs-msg-toggle')) { return; }
-      btn.classList.toggle('d-none', !(m.scrollHeight > m.clientHeight + 4));
-    });
-  }
-
-  document.addEventListener('click', function (ev) {
-    var btn = ev.target.closest ? ev.target.closest('.rs-msg-toggle') : null;
-    if (!btn) { return; }
-    var msg = btn.previousElementSibling;
-    if (!msg) { return; }
-    var colapsado = msg.classList.toggle('rs-msg--colapsado');
-    btn.textContent = colapsado ? 'Ver mensaje completo' : 'Contraer';
-  });
-
-  document.addEventListener('load', function (ev) {
-    if (ev.target && ev.target.tagName === 'IMG') { medirMensajes(document); }
-  }, true);
-
-  window.RSMensajes = { medir: medirMensajes };
-  document.addEventListener('DOMContentLoaded', function () { medirMensajes(document); });
 })();
