@@ -5,10 +5,12 @@ por conversation_id (Decision 1 del plan -- sin respaldo por codigo en el asunto
 Tambien el aviso de casos abiertos hace demasiado tiempo (30/45/60 dias)."""
 from __future__ import annotations
 
+import base64
 import html as _html
 import logging
 import mimetypes
 import os
+import re
 import smtplib
 import uuid
 from email import encoders
@@ -17,6 +19,7 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate, make_msgid
+from urllib.parse import unquote
 
 from modules.email_utils import send_email_async
 from . import reclamos_seguros_graph as graph
@@ -26,6 +29,7 @@ from . import reclamos_seguros_repository as repo
 from .reclamos_seguros_constants import (
     ORIGEN_CORREO_SALIENTE, ORIGEN_CORREO_ENTRANTE, ESTADO_ABIERTO,
     EXTENSIONES_PERMITIDAS, MAX_ADJUNTO_BYTES, MAX_ADJUNTOS_POR_ENVIO,
+    MAX_IMAGEN_BYTES, MAX_DESCRIPCION_CHARS,
     UMBRALES_VENCIMIENTO_DIAS,
 )
 
@@ -269,6 +273,72 @@ def _guardar_adjuntos_entrantes(caso_id: int, seguimiento_id: int, message_id: s
                   guardados, message_id[:20], caso_id)
 
 
+_RE_CID = re.compile(r"""src\s*=\s*["']cid:([^"']+)["']""", re.IGNORECASE)
+_RE_DATA_IMG = re.compile(r"""src\s*=\s*["']data:image/[a-z+.\-]+;base64,([A-Za-z0-9+/=\s]+)["']""", re.IGNORECASE)
+
+
+def _guardar_imagen_correo(data: bytes) -> str | None:
+    """Guarda una imagen del correo en la carpeta de imagenes y devuelve su URL interna
+    (solo si por sus bytes reales es PNG/JPG/GIF/WEBP y no supera el tope)."""
+    if not data or len(data) > MAX_IMAGEN_BYTES:
+        return None
+    ext = rhtml.ext_imagen(data[:16])
+    if not ext:
+        return None
+    nombre = f"{uuid.uuid4().hex}{ext}"
+    with open(os.path.join(rhtml.carpeta_imagenes(), nombre), "wb") as f:
+        f.write(data)
+    return f"/reclamos-seguros/imagen/{nombre}"
+
+
+def _resolver_imagenes_correo(html: str, message_id: str) -> str:
+    """Las firmas/logos de un correo vienen incrustados (cid: o base64). Se descargan al servidor y
+    se reemplazan por la URL interna; el sanitizador descarta cualquier otra imagen (externas)."""
+    bajo = html.lower()
+    if "cid:" not in bajo and "data:image" not in bajo:
+        return html
+    por_cid: dict[str, str] = {}
+    if "cid:" in bajo:
+        for a in graph.fetch_seguros_attachments_list(message_id)[:30]:
+            if not a.get("is_inline") or not a.get("content_id"):
+                continue
+            if a.get("size", 0) > MAX_IMAGEN_BYTES:
+                continue
+            cont = graph.fetch_seguros_attachment_content(message_id, a["attachment_id"])
+            url = _guardar_imagen_correo(cont["content_bytes"]) if cont else None
+            if url:
+                por_cid[a["content_id"].strip().lower()] = url
+
+    def _por_cid(m):
+        url = por_cid.get(unquote(m.group(1)).strip().lower())
+        return f'src="{url}"' if url else 'src=""'
+
+    def _por_data(m):
+        try:
+            data = base64.b64decode(re.sub(r"\s+", "", m.group(1)))
+        except Exception:
+            return 'src=""'
+        url = _guardar_imagen_correo(data)
+        return f'src="{url}"' if url else 'src=""'
+
+    return _RE_DATA_IMG.sub(_por_data, _RE_CID.sub(_por_cid, html))
+
+
+def _observacion_de_correo(em: dict, message_id: str) -> str:
+    """Texto del seguimiento para un correo entrante: su cuerpo HTML limpio (con formato e imagenes
+    como firmas); si no hay HTML util, el texto plano."""
+    html = em.get("body_html") or ""
+    if html:
+        try:
+            limpio = rhtml.limpiar_html(_resolver_imagenes_correo(html, message_id))
+        except Exception:
+            log.exception("[reclamos_seguros_email_service] No se pudo procesar el HTML del correo %s", message_id[:20])
+            limpio = ""
+        if rhtml.tiene_contenido(limpio) and len(limpio) <= MAX_DESCRIPCION_CHARS:
+            return f"<div>{limpio}</div>"
+    return em.get("body_text") or "(sin contenido)"
+
+
 def process_incoming_seguros_emails() -> int:
     """Lee el buzon del modulo y enlaza cada respuesta por conversation_id. Si no hay
     caso relacionado, se ignora (Decision 1: no crea casos nuevos desde correo)."""
@@ -287,7 +357,7 @@ def process_incoming_seguros_emails() -> int:
                 graph.mark_seguros_email_as_read(message_id)
                 continue
 
-            observacion = em.get("body_text") or "(sin contenido)"
+            observacion = _observacion_de_correo(em, message_id)
             seg_id = repo.add_seguimiento(
                 caso["id"], observacion, usuario_id=None, usuario_nombre=None,
                 origen=ORIGEN_CORREO_ENTRANTE, remitente_email=em.get("from_email"),

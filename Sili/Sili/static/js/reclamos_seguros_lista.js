@@ -40,6 +40,7 @@
     body.innerHTML = html;
     if (window.RSEditores) { window.RSEditores.iniciar(body); }
     if (window.Dropzones) { window.Dropzones.iniciar(body); }
+    if (window.RSMensajes) { window.RSMensajes.medir(body); }
     mostrarMensajes(mensajes);
     var cuerpo = modalEl.querySelector('.modal-body');
     if (cuerpo) { cuerpo.scrollTop = 0; }

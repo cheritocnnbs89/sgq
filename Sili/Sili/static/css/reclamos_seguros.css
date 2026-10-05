@@ -7,3 +7,8 @@
 .rs-descripcion img { max-width: 100%; height: auto; }
 .rs-descripcion p { margin-bottom: .5rem; }
 .rs-descripcion blockquote { border-left: 3px solid #cbd5e1; padding-left: .75rem; color: #475569; }
+/* Mensajes largos del seguimiento (correos): alto limitado con scroll, se pueden expandir. */
+.casos-texto.rs-descripcion { white-space: normal; overflow-wrap: anywhere; }
+.rs-msg--colapsado { max-height: 14rem; overflow-y: auto; padding-right: .5rem; }
+.rs-msg table { max-width: 100%; }
+.rs-msg-toggle { font-size: .8rem; }

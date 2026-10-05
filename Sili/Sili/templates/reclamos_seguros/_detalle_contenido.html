@@ -132,7 +132,8 @@
             · {{ s.fecha.strftime('%Y-%m-%d %H:%M') }}
             {% if s.origen == 'CORREO_ENTRANTE' %}<span class="badge bg-info-subtle text-info-emphasis ms-1">Correo del broker</span>{% endif %}
           </div>
-          <div class="casos-texto rs-descripcion">{{ s.observacion|rs_descripcion }}</div>
+          <div class="casos-texto rs-descripcion rs-msg rs-msg--colapsado">{{ s.observacion|rs_descripcion }}</div>
+          <button type="button" class="btn btn-link btn-sm p-0 rs-msg-toggle d-none">Ver mensaje completo</button>
           {% set adjs = adj_por_seguimiento.get(s.id) %}
           {% if adjs %}
           <ul class="list-unstyled mb-0 mt-1">

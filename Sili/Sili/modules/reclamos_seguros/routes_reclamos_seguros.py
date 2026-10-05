@@ -417,22 +417,6 @@ def reclamos_seguros_combinar(caso_id):
     return _volver_detalle(caso_id)
 
 
-_FIRMAS_IMAGEN = (
-    (b"\x89PNG\r\n\x1a\n", ".png"), (b"\xff\xd8\xff", ".jpg"),
-    (b"GIF87a", ".gif"), (b"GIF89a", ".gif"),
-)
-
-
-def _ext_imagen(cabecera: bytes):
-    """Extension segun los primeros bytes reales del archivo (no se confia en el nombre/MIME)."""
-    for firma, ext in _FIRMAS_IMAGEN:
-        if cabecera.startswith(firma):
-            return ext
-    if cabecera[:4] == b"RIFF" and cabecera[8:12] == b"WEBP":
-        return ".webp"
-    return None
-
-
 @reclamos_seguros_bp.route("/buscar/brokers", endpoint="reclamos_seguros_buscar_brokers")
 @require_login
 @require_permission(PERM_RECLAMOS_SEGUROS, "crear")
@@ -468,7 +452,7 @@ def reclamos_seguros_imagen_subir():
         return jsonify(ok=False, msg="La imagen est\u00e1 vac\u00eda."), 400
     if len(datos) > MAX_IMAGEN_BYTES:
         return jsonify(ok=False, msg=f"La imagen supera {MAX_IMAGEN_BYTES // (1024 * 1024)} MB."), 400
-    ext = _ext_imagen(datos[:16])
+    ext = rhtml.ext_imagen(datos[:16])
     if not ext:
         return jsonify(ok=False, msg="El archivo no es una imagen v\u00e1lida (PNG, JPG, GIF o WEBP)."), 400
     nombre = f"{uuid.uuid4().hex}{ext}"

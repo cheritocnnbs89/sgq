@@ -16,14 +16,16 @@ from flask import current_app
 from markupsafe import Markup
 
 _ETIQUETAS = {"p", "br", "strong", "b", "em", "i", "u", "s", "ul", "ol", "li",
-              "blockquote", "h1", "h2", "h3", "a", "img"}
-_VACIAS = {"br", "img"}
+              "blockquote", "h1", "h2", "h3", "a", "img",
+              # estructura de correos recibidos (sin atributos, se descartan estilos/anchos)
+              "div", "table", "thead", "tbody", "tr", "td", "th", "hr", "pre"}
+_VACIAS = {"br", "img", "hr"}
 _NORMALIZA = {"b": "strong", "i": "em"}
 _DESCARTAR_CONTENIDO = {"script", "style", "iframe", "object", "embed", "noscript",
                         "template", "textarea", "title", "head", "svg", "math", "select"}
 _RE_IMG = re.compile(r"^/reclamos-seguros/imagen/[0-9a-f]{32}\.(?:png|jpg|jpeg|gif|webp)$")
 _ESQUEMAS_LINK = ("http://", "https://", "mailto:")
-_RE_ES_HTML = re.compile(r"^\s*<(p|h[1-3]|ul|ol|blockquote|img)\b", re.IGNORECASE)
+_RE_ES_HTML = re.compile(r"^\s*<(p|h[1-3]|ul|ol|blockquote|img|div|table)\b", re.IGNORECASE)
 _RE_IMG_LIMPIA = re.compile(
     r'<img src="/reclamos-seguros/imagen/([0-9a-f]{32})\.(png|jpg|jpeg|gif|webp)" alt="">')
 
@@ -53,8 +55,8 @@ class _Limpiador(HTMLParser):
             if _RE_IMG.match(src):
                 self.out.append(f'<img src="{src}" alt="">')
             return
-        if tag == "br":
-            self.out.append("<br>")
+        if tag in ("br", "hr"):
+            self.out.append(f"<{tag}>")
             return
         if tag == "a":
             href = (a.get("href") or "").strip()
@@ -94,6 +96,22 @@ class _Limpiador(HTMLParser):
             t, emitido = self.pila.pop()
             if emitido:
                 self.out.append(f"</{t}>")
+
+
+_FIRMAS_IMAGEN = (
+    (b"\x89PNG\r\n\x1a\n", ".png"), (b"\xff\xd8\xff", ".jpg"),
+    (b"GIF87a", ".gif"), (b"GIF89a", ".gif"),
+)
+
+
+def ext_imagen(cabecera: bytes):
+    """Extension segun los primeros bytes reales del archivo (no se confia en el nombre/MIME)."""
+    for firma, ext in _FIRMAS_IMAGEN:
+        if cabecera.startswith(firma):
+            return ext
+    if cabecera[:4] == b"RIFF" and cabecera[8:12] == b"WEBP":
+        return ".webp"
+    return None
 
 
 def limpiar_html(raw) -> str:
