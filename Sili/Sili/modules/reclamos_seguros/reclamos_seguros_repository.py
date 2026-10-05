@@ -320,6 +320,22 @@ def existe_seguimiento_con_message_id(message_id: str) -> bool:
     return cur.fetchone() is not None
 
 
+def get_seguimiento_por_message_id(message_id: str) -> dict | None:
+    if not message_id:
+        return None
+    cur = get_db().cursor()
+    cur.execute("SELECT TOP 1 id, caso_id FROM reclamos_seguros_seguimiento WHERE message_id = ? AND activo = 1",
+                (message_id,))
+    row = cur.fetchone()
+    return dict(row) if row else None
+
+
+def tiene_adjuntos_seguimiento(seguimiento_id: int) -> bool:
+    cur = get_db().cursor()
+    cur.execute("SELECT 1 FROM reclamos_seguros_adjuntos WHERE seguimiento_id = ? AND activo = 1", (seguimiento_id,))
+    return cur.fetchone() is not None
+
+
 def get_casos_para_alerta_vencimiento(umbral_dias: int, columna_notificado: str) -> list[dict]:
     """Casos ABIERTOS con más de umbral_dias desde fecha_creacion, que aún no se
     notificaron por esa columna. columna_notificado solo llega desde

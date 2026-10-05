@@ -342,6 +342,19 @@ def _observacion_de_correo(em: dict, message_id: str) -> str:
     return em.get("body_text") or "(sin contenido)"
 
 
+def _completar_adjuntos_pendientes(em: dict, message_id: str) -> None:
+    """Un correo ya registrado cuyos adjuntos no se guardaron (error anterior al pedirlos a Graph) se
+    completa aqui. Es idempotente: solo actua si el correo trae adjuntos y su seguimiento no tiene ninguno."""
+    if not em.get("has_attachments"):
+        return
+    try:
+        seg = repo.get_seguimiento_por_message_id(message_id)
+        if seg and not repo.tiene_adjuntos_seguimiento(seg["id"]):
+            _guardar_adjuntos_entrantes(seg["caso_id"], seg["id"], message_id)
+    except Exception:
+        log.exception("[reclamos_seguros_email_service] No se pudieron completar los adjuntos de %s", message_id[:20])
+
+
 def process_incoming_seguros_emails() -> int:
     """Lee el buzon del modulo y enlaza cada respuesta por conversation_id. Si no hay
     caso relacionado, se ignora (Decision 1: no crea casos nuevos desde correo)."""
@@ -350,6 +363,7 @@ def process_incoming_seguros_emails() -> int:
         message_id = em["message_id"]
         try:
             if repo.existe_seguimiento_con_message_id(message_id):
+                _completar_adjuntos_pendientes(em, message_id)
                 graph.mark_seguros_email_as_read(message_id)
                 continue
 

@@ -53,3 +53,10 @@
 .rs-img-tools-t { font-size: .8rem; color: #475569; margin-right: .25rem; }
 .rs-editor .ql-editor img { cursor: pointer; }
 .rs-editor .ql-editor img.rs-img-sel { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Fila de cabecera del mensaje: acordeon + clip de adjuntos. */
+.rs-msg-fila { display: flex; align-items: baseline; gap: .5rem; }
+.rs-msg-fila .rs-msg-cab { flex: 1 1 auto; min-width: 0; width: auto; }
+.rs-msg-clip { display: inline-flex; align-items: center; gap: .25rem; padding: .05rem .45rem; font-size: .8rem; }
+.rs-msg-adj .dropdown-menu { max-width: 24rem; font-size: .85rem; }
+.rs-msg-adj .dropdown-item { white-space: normal; overflow-wrap: anywhere; }
