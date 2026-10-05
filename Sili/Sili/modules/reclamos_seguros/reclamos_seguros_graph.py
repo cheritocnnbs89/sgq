@@ -108,7 +108,9 @@ def fetch_seguros_attachments_list(message_id: str) -> list[dict]:
     url = (
         f"https://graph.microsoft.com/v1.0/users/{mailbox}"
         f"/messages/{message_id}/attachments"
-        f"?$select=id,name,contentType,size,isInline,contentId"
+        # contentId NO se puede pedir en $select de la lista (solo existe en fileAttachment y Graph
+        # responde 400); se obtiene al descargar cada adjunto.
+        f"?$select=id,name,contentType,size,isInline"
     )
     try:
         resp = requests.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=10)
@@ -148,6 +150,7 @@ def fetch_seguros_attachment_content(message_id: str, attachment_id: str) -> Opt
                 "content_bytes": base64.b64decode(raw_b64) if raw_b64 else b"",
                 "content_type": data.get("contentType", "application/octet-stream"),
                 "name": data.get("name", "adjunto"),
+                "content_id": (data.get("contentId") or "").strip("<>"),
             }
     except Exception as exc:
         log.error("[reclamos_seguros_graph] Error descargando adjunto %s: %s", attachment_id[:20], exc)

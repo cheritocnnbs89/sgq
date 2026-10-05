@@ -300,14 +300,17 @@ def _resolver_imagenes_correo(html: str, message_id: str) -> str:
     por_cid: dict[str, str] = {}
     if "cid:" in bajo:
         for a in graph.fetch_seguros_attachments_list(message_id)[:30]:
-            if not a.get("is_inline") or not a.get("content_id"):
+            if not a.get("is_inline"):
                 continue
             if a.get("size", 0) > MAX_IMAGEN_BYTES:
                 continue
             cont = graph.fetch_seguros_attachment_content(message_id, a["attachment_id"])
-            url = _guardar_imagen_correo(cont["content_bytes"]) if cont else None
-            if url:
-                por_cid[a["content_id"].strip().lower()] = url
+            if not cont:
+                continue
+            url = _guardar_imagen_correo(cont["content_bytes"])
+            cid = (cont.get("content_id") or "").strip().lower()
+            if url and cid:
+                por_cid[cid] = url
 
     def _por_cid(m):
         url = por_cid.get(unquote(m.group(1)).strip().lower())
