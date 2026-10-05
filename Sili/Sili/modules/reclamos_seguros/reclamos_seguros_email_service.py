@@ -157,7 +157,6 @@ def _correo_normal_html(codigo: str, caso: dict, desc_html: str,
     """Correo al broker (externo) con apariencia de correo normal: sin tarjeta de ancho fijo
     ni tabla, para que el texto y las capturas se ajusten solos al ancho del lector. Los
     avisos internos siguen usando el formato de tarjeta SGQ (_email_html)."""
-    solicitante = _esc(caso.get("solicitante_nombre"))
     cod = _esc(codigo)
     extra = ""
     if nombres_adjuntos:
@@ -170,13 +169,12 @@ def _correo_normal_html(codigo: str, caso: dict, desc_html: str,
         '<p>Estimados,</p>'
         f'<p>Se registró un nuevo reclamo de seguro con el código <strong>{cod}</strong>.</p>'
         f'<p><strong>Tipo de caso:</strong> {_esc(caso.get("tipo_caso"))}<br>'
-        f'<strong>Fecha:</strong> {_esc(caso.get("fecha"))}<br>'
-        f'<strong>Usuario solicitante:</strong> {solicitante}</p>'
+        f'<strong>Fecha:</strong> {_esc(caso.get("fecha"))}</p>'
         '<p><strong>Descripción:</strong></p>'
         f'<div>{desc_html}</div>{extra}'
         f'<p>Por favor responda este correo con la gestión o novedades del caso, '
         f'manteniendo el código <strong>{cod}</strong> en el asunto.</p>'
-        f'<p>Saludos cordiales,<br>{solicitante}<br>Quimpac</p>'
+        '<p>Saludos cordiales,<br>Quimpac</p>'
         '<p style="color:#64748b;font-size:12px">Mensaje enviado desde SGQ Quimpac — Reclamos Seguros.</p>'
         '</div>'
     )
@@ -239,7 +237,8 @@ def notificar_broker_nuevo_caso(caso: dict, broker_email: str, broker_nombre: st
         return False, omitidos
 
 
-def _guardar_adjuntos_entrantes(caso_id: int, seguimiento_id: int, message_id: str) -> None:
+def _guardar_adjuntos_entrantes(caso_id: int, seguimiento_id: int, message_id: str,
+                                existentes: set[str] | None = None) -> None:
     """Descarga y guarda los adjuntos de un correo entrante ya vinculado a un caso, con
     los mismos limites que los adjuntos subidos manualmente (ver routes_reclamos_seguros._guardar_adjuntos)."""
     from flask import current_app
@@ -252,11 +251,20 @@ def _guardar_adjuntos_entrantes(caso_id: int, seguimiento_id: int, message_id: s
     for a in lista[:MAX_ADJUNTOS_POR_ENVIO]:
         if a.get("is_inline"):
             continue
+        if a.get("tipo") == "#microsoft.graph.referenceAttachment":
+            continue   # enlace a un archivo en la nube: no hay archivo que guardar
         nombre_original = a.get("name") or "archivo"
+        if a.get("tipo") == "#microsoft.graph.itemAttachment":
+            # Correo/elemento de Outlook adjunto: se guarda como .eml
+            nombre_original = re.sub(r'[\\/:*?"<>|]', "_", nombre_original).strip() + ".eml"
+        if existentes and nombre_original in existentes:
+            continue
         ext = os.path.splitext(nombre_original)[1].lower()
         if ext not in EXTENSIONES_PERMITIDAS:
+            log.warning("[reclamos_seguros_email_service] Adjunto omitido (tipo no permitido): %s", nombre_original)
             continue
         if not a.get("size") or a["size"] > MAX_ADJUNTO_BYTES:
+            log.warning("[reclamos_seguros_email_service] Adjunto omitido (tamano): %s", nombre_original)
             continue
         contenido = graph.fetch_seguros_attachment_content(message_id, a["attachment_id"])
         if not contenido or not contenido.get("content_bytes"):
@@ -343,14 +351,16 @@ def _observacion_de_correo(em: dict, message_id: str) -> str:
 
 
 def _completar_adjuntos_pendientes(em: dict, message_id: str) -> None:
-    """Un correo ya registrado cuyos adjuntos no se guardaron (error anterior al pedirlos a Graph) se
-    completa aqui. Es idempotente: solo actua si el correo trae adjuntos y su seguimiento no tiene ninguno."""
+    """Un correo ya registrado cuyos adjuntos no se guardaron todos (error anterior al pedirlos a Graph,
+    o un tipo de adjunto no soportado entonces) se completa aqui. Es idempotente: solo guarda los que
+    faltan, comparando por nombre con los que ya tiene su seguimiento."""
     if not em.get("has_attachments"):
         return
     try:
         seg = repo.get_seguimiento_por_message_id(message_id)
-        if seg and not repo.tiene_adjuntos_seguimiento(seg["id"]):
-            _guardar_adjuntos_entrantes(seg["caso_id"], seg["id"], message_id)
+        if seg:
+            _guardar_adjuntos_entrantes(seg["caso_id"], seg["id"], message_id,
+                                        repo.get_nombres_adjuntos_seguimiento(seg["id"]))
     except Exception:
         log.exception("[reclamos_seguros_email_service] No se pudieron completar los adjuntos de %s", message_id[:20])
 

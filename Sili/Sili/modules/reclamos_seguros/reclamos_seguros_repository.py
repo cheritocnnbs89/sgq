@@ -330,10 +330,11 @@ def get_seguimiento_por_message_id(message_id: str) -> dict | None:
     return dict(row) if row else None
 
 
-def tiene_adjuntos_seguimiento(seguimiento_id: int) -> bool:
+def get_nombres_adjuntos_seguimiento(seguimiento_id: int) -> set[str]:
     cur = get_db().cursor()
-    cur.execute("SELECT 1 FROM reclamos_seguros_adjuntos WHERE seguimiento_id = ? AND activo = 1", (seguimiento_id,))
-    return cur.fetchone() is not None
+    cur.execute("SELECT nombre_original FROM reclamos_seguros_adjuntos WHERE seguimiento_id = ? AND activo = 1",
+                (seguimiento_id,))
+    return {r[0] for r in cur.fetchall()}
 
 
 def get_casos_para_alerta_vencimiento(umbral_dias: int, columna_notificado: str) -> list[dict]:

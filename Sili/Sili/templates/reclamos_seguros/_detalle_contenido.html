@@ -159,32 +159,40 @@
             <span class="rs-msg-resumen">{{ s.observacion|rs_resumen }}</span>
           </button>
           {% if adjs %}
-          {# Clip con el numero de adjuntos de este mensaje; al pulsarlo lista los archivos para abrirlos #}
-          <div class="dropdown rs-msg-adj">
-            <button type="button" class="btn btn-outline-secondary btn-sm rs-msg-clip" data-bs-toggle="dropdown"
-                    aria-expanded="false" title="Ver adjuntos de este mensaje">
-              <i class="bi bi-paperclip"></i><span>{{ adjs|length }}</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              {% for a in adjs %}
-              <li><a class="dropdown-item" href="{{ url_for('reclamos_seguros.reclamos_seguros_adjunto', adjunto_id=a.id) }}">
-                <i class="bi bi-file-earmark me-1"></i>{{ a.nombre_original }}
-                <span class="text-muted small">({{ (a.tamano / 1024) | round(1) }} KB)</span></a></li>
-              {% endfor %}
-            </ul>
-          </div>
+          {# Clip con el numero de adjuntos: despliega las tarjetas de archivos de este mensaje #}
+          <button type="button" class="btn btn-outline-secondary btn-sm rs-msg-clip" data-bs-toggle="collapse"
+                  data-bs-target="#rsAdj{{ s.id }}" aria-expanded="false" aria-controls="rsAdj{{ s.id }}"
+                  title="Ver adjuntos de este mensaje">
+            <i class="bi bi-paperclip"></i><span>{{ adjs|length }}</span>
+          </button>
           {% endif %}
           </div>
+          {% if adjs %}
+          <div id="rsAdj{{ s.id }}" class="collapse">
+            <div class="rs-adj-tarjetas">
+              {% for a in adjs %}
+              {% set ext = (a.nombre_original.rsplit('.', 1)[-1] if '.' in a.nombre_original else '')|lower %}
+              {% set icono = {'pdf': 'bi-file-earmark-pdf text-danger', 'xls': 'bi-file-earmark-excel text-success',
+                              'xlsx': 'bi-file-earmark-excel text-success', 'doc': 'bi-file-earmark-word text-primary',
+                              'docx': 'bi-file-earmark-word text-primary', 'ppt': 'bi-file-earmark-ppt text-warning',
+                              'pptx': 'bi-file-earmark-ppt text-warning', 'png': 'bi-file-earmark-image',
+                              'jpg': 'bi-file-earmark-image', 'jpeg': 'bi-file-earmark-image',
+                              'gif': 'bi-file-earmark-image', 'msg': 'bi-envelope', 'eml': 'bi-envelope',
+                              'zip': 'bi-file-earmark-zip', 'txt': 'bi-file-earmark-text'}.get(ext, 'bi-file-earmark') %}
+              <a class="rs-adj-tarjeta" title="{{ a.nombre_original }}"
+                 href="{{ url_for('reclamos_seguros.reclamos_seguros_adjunto', adjunto_id=a.id) }}">
+                <i class="bi {{ icono }} rs-adj-icono"></i>
+                <span class="rs-adj-texto">
+                  <span class="rs-adj-nombre">{{ a.nombre_original }}</span>
+                  <span class="rs-adj-tam">{{ ((a.tamano / 1024) | round(0) | int) if a.tamano < 1048576 else ((a.tamano / 1048576) | round(1)) }} {{ 'KB' if a.tamano < 1048576 else 'MB' }}</span>
+                </span>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
           <div id="rsMsg{{ s.id }}" class="collapse{% if msg_abierto %} show{% endif %}">
             <div class="casos-texto rs-descripcion rs-msg-cuerpo">{{ s.observacion|rs_descripcion }}</div>
-            {% if adjs %}
-            <ul class="list-unstyled mb-0 mt-1 ps-3">
-              {% for a in adjs %}
-              <li><a href="{{ url_for('reclamos_seguros.reclamos_seguros_adjunto', adjunto_id=a.id) }}">
-                <i class="bi bi-paperclip me-1"></i>{{ a.nombre_original }}</a></li>
-              {% endfor %}
-            </ul>
-            {% endif %}
           </div>
         </li>
         {% endfor %}

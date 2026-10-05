@@ -123,6 +123,9 @@ def fetch_seguros_attachments_list(message_id: str) -> list[dict]:
                     "size": a.get("size", 0),
                     "is_inline": bool(a.get("isInline")),
                     "content_id": (a.get("contentId") or "").strip("<>"),
+                    # fileAttachment (archivo), itemAttachment (correo/elemento de Outlook adjunto)
+                    # o referenceAttachment (enlace a la nube)
+                    "tipo": a.get("@odata.type", ""),
                 }
                 for a in resp.json().get("value", [])
             ]
@@ -145,6 +148,16 @@ def fetch_seguros_attachment_content(message_id: str, attachment_id: str) -> Opt
         resp = requests.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=15)
         if resp.ok:
             data = resp.json()
+            if data.get("@odata.type") == "#microsoft.graph.itemAttachment":
+                # Un correo/elemento de Outlook adjunto no trae contentBytes: su MIME completo (.eml)
+                # se obtiene con /$value.
+                raw = requests.get(url + "/$value", headers={"Authorization": f"Bearer {token}"}, timeout=30)
+                return {
+                    "content_bytes": raw.content if raw.ok else b"",
+                    "content_type": "message/rfc822",
+                    "name": data.get("name", "mensaje"),
+                    "content_id": "",
+                }
             raw_b64 = data.get("contentBytes", "")
             return {
                 "content_bytes": base64.b64decode(raw_b64) if raw_b64 else b"",
