@@ -160,6 +160,42 @@
       imgs.forEach(function (f, i) { insertarImagen(f, idx + i); });
     }, true);
 
+    // Ajuste de tamano: al hacer clic en una imagen aparece la barra de tamano. El ancho se guarda
+    // como atributo width de la imagen (el servidor lo conserva); el alto se calcula solo.
+    var herramientas = document.getElementById(cont.getAttribute('data-img-tools'));
+    var imgSel = null;
+
+    function seleccionarImagen(img) {
+      if (imgSel === img) { return; }
+      if (imgSel) { imgSel.classList.remove('rs-img-sel'); }
+      imgSel = img;
+      if (img) { img.classList.add('rs-img-sel'); }
+      if (herramientas) { herramientas.classList.toggle('d-none', !img); }
+    }
+
+    quill.root.addEventListener('click', function (e) {
+      seleccionarImagen(e.target && e.target.tagName === 'IMG' ? e.target : null);
+    });
+    document.addEventListener('click', function (e) {
+      if (imgSel && !cont.parentNode.contains(e.target)) { seleccionarImagen(null); }
+    });
+
+    if (herramientas) {
+      herramientas.addEventListener('click', function (e) {
+        var b = e.target.closest ? e.target.closest('button') : null;
+        if (!b || !imgSel) { return; }
+        var ancho = b.getAttribute('data-rs-ancho');
+        var paso = b.getAttribute('data-rs-paso');
+        if (ancho !== null) {
+          if (ancho === '0') { imgSel.removeAttribute('width'); } else { imgSel.setAttribute('width', ancho); }
+        } else if (paso !== null) {
+          var actual = imgSel.getBoundingClientRect().width;
+          imgSel.setAttribute('width', String(Math.max(32, Math.min(1600, Math.round(actual + parseInt(paso, 10))))));
+        }
+        quill.update('user');
+      });
+    }
+
     if (hidden.value && hidden.value.trim()) {
       quill.clipboard.dangerouslyPasteHTML(hidden.value, 'silent');
     }
@@ -179,6 +215,7 @@
         quill.focus();
         return;
       }
+      seleccionarImagen(null);
       hidden.value = quill.getSemanticHTML();
     });
   }

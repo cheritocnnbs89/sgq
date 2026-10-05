@@ -38,3 +38,18 @@
 .rs-descripcion table { border-collapse: collapse; max-width: 100%; }
 .rs-descripcion td, .rs-descripcion th { border: 1px solid #cbd5e1; padding: .15rem .5rem; }
 .rs-descripcion th { background: #f1f5f9; }
+
+/* Editor: barra de tamano de imagen y resaltado de la imagen seleccionada. */
+.rs-img-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem;
+  padding: .3rem .5rem;
+  border: 1px solid #ccc;
+  border-top: 0;
+  background: #f8fafc;
+}
+.rs-img-tools-t { font-size: .8rem; color: #475569; margin-right: .25rem; }
+.rs-editor .ql-editor img { cursor: pointer; }
+.rs-editor .ql-editor img.rs-img-sel { outline: 2px solid #2563eb; outline-offset: 2px; }

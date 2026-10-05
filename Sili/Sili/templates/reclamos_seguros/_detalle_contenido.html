@@ -83,52 +83,69 @@
       {% if puede_avanzar %}
       {# Un solo formulario y un solo campo de observación: "Agregar seguimiento" y "Cerrar caso" son
          solo dos botones (el de cerrar envía a su ruta con formaction), sin cuadros duplicados. #}
-      <form method="post" enctype="multipart/form-data"
-            action="{{ url_for('reclamos_seguros.reclamos_seguros_seguimiento', caso_id=caso.id) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="row g-3 mb-2">
-          <div class="col-12">
-            <label class="form-label">Observación</label>
-            {{ rs_editor('accion', 'observacion', '',
-                         'Detalle de la gestión, respuesta del broker, motivo del cierre, etc. Puedes pegar capturas (Ctrl+V).',
-                         'Escribe la observación antes de continuar.', mini=True) }}
+      <div class="accordion mb-3" id="rsAcordeonResponder">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#rsResponder" aria-expanded="false" aria-controls="rsResponder">
+              <i class="bi bi-reply me-2"></i>Responder / agregar seguimiento
+            </button>
+          </h2>
+          <div id="rsResponder" class="accordion-collapse collapse" data-bs-parent="#rsAcordeonResponder">
+            <div class="accordion-body">
+              <form method="post" enctype="multipart/form-data"
+                    action="{{ url_for('reclamos_seguros.reclamos_seguros_seguimiento', caso_id=caso.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="row g-3 mb-2">
+                  <div class="col-12">
+                    <label class="form-label">Observación</label>
+                    {{ rs_editor('accion', 'observacion', '',
+                                 'Detalle de la gestión, respuesta del broker, motivo del cierre, etc. Puedes pegar capturas (Ctrl+V).',
+                                 'Escribe la observación antes de continuar.', mini=True) }}
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Estado del caso (opcional)</label>
+                    <input class="form-control" name="sub_estado" list="listaSubEstados" autocomplete="off"
+                           value="{{ caso.sub_estado or '' }}">
+                    <datalist id="listaSubEstados">
+                      {% for s in sub_estados_sugeridos %}<option value="{{ s }}">{% endfor %}
+                    </datalist>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Archivos adjuntos</label>
+                  {{ dropzone('accion', 'adjuntos', accept=accept_adjuntos, hint=hint_adjuntos,
+                              max_mb=max_mb_adjuntos, max_archivos=max_adjuntos) }}
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Agregar seguimiento</button>
+                  {% if puede_cerrar %}
+                  <button type="submit" class="btn btn-danger"
+                          formaction="{{ url_for('reclamos_seguros.reclamos_seguros_cerrar', caso_id=caso.id) }}"
+                          data-confirm="¿Cerrar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Ya no se podrán registrar más seguimientos.">
+                    <i class="bi bi-check2-circle me-1"></i>Cerrar caso
+                  </button>
+                  {% endif %}
+                </div>
+              </form>
+            </div>
           </div>
-          <div class="col-md-6">
-            <label class="form-label">Estado del caso (opcional)</label>
-            <input class="form-control" name="sub_estado" list="listaSubEstados" autocomplete="off"
-                   value="{{ caso.sub_estado or '' }}">
-            <datalist id="listaSubEstados">
-              {% for s in sub_estados_sugeridos %}<option value="{{ s }}">{% endfor %}
-            </datalist>
-          </div>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Archivos adjuntos</label>
-          {{ dropzone('accion', 'adjuntos', accept=accept_adjuntos, hint=hint_adjuntos,
-                      max_mb=max_mb_adjuntos, max_archivos=max_adjuntos) }}
-        </div>
-        <div class="d-flex flex-wrap gap-2">
-          <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Agregar seguimiento</button>
-          {% if puede_cerrar %}
-          <button type="submit" class="btn btn-danger"
-                  formaction="{{ url_for('reclamos_seguros.reclamos_seguros_cerrar', caso_id=caso.id) }}"
-                  data-confirm="¿Cerrar el caso {{ caso.codigo or ('#' ~ caso.id) }}? Ya no se podrán registrar más seguimientos.">
-            <i class="bi bi-check2-circle me-1"></i>Cerrar caso
-          </button>
-          {% endif %}
-        </div>
-      </form>
-      <hr class="my-3">
+      </div>
       {% endif %}
 
       <ul class="casos-timeline mt-3">
-        <li class="casos-avance casos-avance--inicio">
-          <div class="hint"><strong class="text-dark">Caso registrado</strong> · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</div>
+        {% if not abierto %}
+        <li class="casos-avance casos-avance--cierre">
+          <div class="hint"><strong class="text-dark">Caso cerrado</strong> por {{ caso.cerrado_por_nombre }}
+            · {{ caso.fecha_cierre.strftime('%Y-%m-%d %H:%M') }}</div>
+          {% if caso.observacion_cierre %}<div class="casos-texto rs-descripcion">{{ caso.observacion_cierre|rs_descripcion }}</div>{% endif %}
         </li>
-        {% for s in seguimiento %}
+        {% endif %}
+        {% for s in seguimiento|reverse %}
         {# Cada mensaje es un acordeon: cabecera con autor/fecha/resumen y cuerpo desplegable (con scroll).
-           Todos contraidos salvo el mas reciente. #}
-        {% set msg_abierto = loop.last %}
+           Orden: del mas reciente al mas antiguo; solo el primero abierto. #}
+        {% set msg_abierto = loop.first %}
         <li class="casos-avance">
           <button type="button" class="rs-msg-cab" data-bs-toggle="collapse"
                   data-bs-target="#rsMsg{{ s.id }}" aria-controls="rsMsg{{ s.id }}"
@@ -153,13 +170,9 @@
           </div>
         </li>
         {% endfor %}
-        {% if not abierto %}
-        <li class="casos-avance casos-avance--cierre">
-          <div class="hint"><strong class="text-dark">Caso cerrado</strong> por {{ caso.cerrado_por_nombre }}
-            · {{ caso.fecha_cierre.strftime('%Y-%m-%d %H:%M') }}</div>
-          {% if caso.observacion_cierre %}<div class="casos-texto rs-descripcion">{{ caso.observacion_cierre|rs_descripcion }}</div>{% endif %}
+        <li class="casos-avance casos-avance--inicio">
+          <div class="hint"><strong class="text-dark">Caso registrado</strong> · {{ caso.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</div>
         </li>
-        {% endif %}
       </ul>
       {% if not seguimiento and abierto %}<p class="hint mb-0 mt-2">Aún no hay seguimiento registrado.</p>{% endif %}
     </div>

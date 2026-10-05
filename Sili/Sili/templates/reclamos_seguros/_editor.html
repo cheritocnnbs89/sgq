@@ -23,7 +23,17 @@
       <button type="button" class="ql-clean" title="Quitar formato"></button>
     </span>
   </div>
-  <div id="rs-ed-{{ uid }}" class="rs-editor" data-rs-editor="1"
+  {# Barra de tamano: solo aparece al hacer clic sobre una imagen del texto #}
+  <div id="rs-it-{{ uid }}" class="rs-img-tools d-none">
+    <span class="rs-img-tools-t">Imagen:</span>
+    <button type="button" class="btn btn-outline-secondary btn-sm" data-rs-ancho="150">Pequeña</button>
+    <button type="button" class="btn btn-outline-secondary btn-sm" data-rs-ancho="300">Mediana</button>
+    <button type="button" class="btn btn-outline-secondary btn-sm" data-rs-ancho="500">Grande</button>
+    <button type="button" class="btn btn-outline-secondary btn-sm" data-rs-ancho="0">Original</button>
+    <button type="button" class="btn btn-outline-secondary btn-sm" data-rs-paso="-50" aria-label="Reducir"><i class="bi bi-dash-lg"></i></button>
+    <button type="button" class="btn btn-outline-secondary btn-sm" data-rs-paso="50" aria-label="Ampliar"><i class="bi bi-plus-lg"></i></button>
+  </div>
+  <div id="rs-ed-{{ uid }}" class="rs-editor" data-rs-editor="1" data-img-tools="rs-it-{{ uid }}"
        data-toolbar="rs-tb-{{ uid }}" data-input="rs-in-{{ uid }}" data-alertas="rs-al-{{ uid }}"
        data-mensaje-vacio="{{ mensaje_vacio }}"
        data-upload-url="{{ url_for('reclamos_seguros.reclamos_seguros_imagen_subir') }}"
