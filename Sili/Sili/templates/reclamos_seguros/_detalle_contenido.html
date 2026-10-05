@@ -87,13 +87,13 @@
             action="{{ url_for('reclamos_seguros.reclamos_seguros_seguimiento', caso_id=caso.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="row g-3 mb-2">
-          <div class="col-md-8">
+          <div class="col-12">
             <label class="form-label">Observación</label>
             {{ rs_editor('accion', 'observacion', '',
                          'Detalle de la gestión, respuesta del broker, motivo del cierre, etc. Puedes pegar capturas (Ctrl+V).',
                          'Escribe la observación antes de continuar.', mini=True) }}
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">Estado del caso (opcional)</label>
             <input class="form-control" name="sub_estado" list="listaSubEstados" autocomplete="off"
                    value="{{ caso.sub_estado or '' }}">
