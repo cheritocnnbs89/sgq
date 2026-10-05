@@ -103,7 +103,7 @@ def _run_obligaciones_job(target_app):
 
 # ── AWS Sync (DynamoDB) ───────────────────────────────────────
 try:
-    from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws, push_gerentes_auth_a_aws, push_vouchers_taxi_a_aws
+    from modules.aws_sync import push_gastos_a_aws, pull_aprobaciones_de_aws, push_gerentes_auth_a_aws, push_vouchers_taxi_a_aws, push_vuelos_a_aws
     _AWS_SYNC_ENABLED = True
 except Exception as _aws_err:
     _AWS_SYNC_ENABLED = False
@@ -780,6 +780,8 @@ def start_aws_sync_worker(app=None):
                         push_gastos_a_aws(target_app)
                         _log("info", "AwsSyncWorker: push vouchers de taxi...")
                         push_vouchers_taxi_a_aws(target_app)
+                        _log("info", "AwsSyncWorker: push vuelos...")
+                        push_vuelos_a_aws(target_app)
                         _log("info", "AwsSyncWorker: pull aprobaciones...")
                         pull_aprobaciones_de_aws(target_app)
                         _log("info", "AwsSyncWorker: push auth gerentes...")

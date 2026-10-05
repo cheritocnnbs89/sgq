@@ -533,7 +533,9 @@ def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
                                 descripcion: str, motivo: str,
                                 solicitante_nombre: str,
                                 jefe_id: int | None, jefe_nombre: str,
-                                es_reagenda: bool = False) -> None:
+                                es_reagenda: bool = False,
+                                magic_url: str | None = None,
+                                magic_minutos: int | None = None) -> None:
     if not jefe_id:
         return
     accion = "reagendada — nuevo ciclo de aprobación" if es_reagenda else "registrada"
@@ -551,8 +553,16 @@ def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
         ("Motivo",            motivo or "—"),
         ("Solicitante",       solicitante_nombre),
     ]
-    nota = "Ingresa al SGQ para aprobar o rechazar esta solicitud."
-    html = _email_html("PLANIFICADOR · VUELO — APROBACIÓN JEFE", titulo, saludo, filas, nota)
+    # Con la bandera de vuelos en AWS encendida, el envio inmediato genera un enlace magico de un clic
+    # (mismo mecanismo que vouchers): el jefe recibe un solo correo con el boton.
+    boton = ("Aprobar directo", magic_url) if magic_url else None
+    nota = (
+        f"Este link es válido por {magic_minutos} minutos. Después de eso, "
+        "ingresa al SGQ para aprobar o rechazar esta solicitud."
+        if magic_url else
+        "Ingresa al SGQ para aprobar o rechazar esta solicitud."
+    )
+    html = _email_html("PLANIFICADOR · VUELO — APROBACIÓN JEFE", titulo, saludo, filas, nota, boton)
     _inapp(jefe_id, subject,
            f"Solicitud de Vuelo #{solicitud_id} de {solicitante_nombre} — {fecha} requiere su aprobación")
     email_j = repo.get_email_by_usuario_id(jefe_id)
@@ -566,7 +576,8 @@ def notif_vuelo_pendiente_jefe(solicitud_id: int, area: str, fecha: str,
 def notif_vuelo_pendiente_gg(solicitud_id: int, area: str, fecha: str,
                               descripcion: str, valor_cotizado: str,
                               solicitante_nombre: str, coordinador_nombre: str,
-                              gg_id: int | None, gg_nombre: str) -> None:
+                              gg_id: int | None, gg_nombre: str,
+                              portal_url: str | None = None) -> None:
     if not gg_id:
         return
     subject = f"[Planificador] Vuelo #{solicitud_id} cotizado — requiere su aprobación"
@@ -585,6 +596,8 @@ def notif_vuelo_pendiente_gg(solicitud_id: int, area: str, fecha: str,
         ("Cotizado por",       coordinador_nombre),
     ]
     nota = "Ingresa al SGQ para aprobar o rechazar esta solicitud."
+    if portal_url:
+        nota += f" También puedes hacerlo desde el portal de aprobaciones: {portal_url}"
     html = _email_html("PLANIFICADOR · VUELO — APROBACIÓN GERENTE DE PRESUPUESTO", titulo, saludo, filas, nota)
     _inapp(gg_id, subject,
            f"Vuelo #{solicitud_id} de {solicitante_nombre} cotizado — requiere su aprobación")

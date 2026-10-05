@@ -767,11 +767,22 @@ def crear():
 
     if tipo == "Vuelo":
         if estado_inicial == "PENDIENTE_APROBACION_JEFE":
+            # Con la bandera de vuelos en AWS encendida se empuja el paso del jefe de inmediato para
+            # incluir el boton de aprobacion directa en este mismo correo (si AWS no responde queda
+            # magic_url=None y el ciclo de 5 min lo reintenta). Nunca bloquea la creacion.
+            magic_url, magic_minutos = None, None
+            try:
+                from modules.aws_sync import push_vuelo_jefe_inmediato, MAGIC_LINK_MINUTOS
+                magic_url = push_vuelo_jefe_inmediato(sid)
+                magic_minutos = MAGIC_LINK_MINUTOS if magic_url else None
+            except Exception:
+                current_app.logger.exception("[VUELO] Error en push inmediato a AWS sid=%s", sid)
             # Notificar al jefe directo para que apruebe
             try:
                 notif.notif_vuelo_pendiente_jefe(
                     sid, area, fecha, desc, motivo_vuelo or "—",
                     u["nombre"], jefe_id_vuelo, jefe_nombre_vuelo or "—",
+                    magic_url=magic_url, magic_minutos=magic_minutos,
                 )
             except Exception:
                 pass
@@ -1286,6 +1297,12 @@ def reagendar(sid):
         repo.reagendar_vuelo_a_jefe(sid, nueva_fecha, nueva_fecha_retorno, u["id"], u["nombre"], motivo)
         if penalizacion > 0:
             repo.set_penalizacion(sid, penalizacion)
+        # Vuelve a aprobacion del jefe: hay que volver a empujarlo a AWS (el ciclo nuevo reemplaza el item viejo).
+        try:
+            from modules.aws_sync import reset_vuelo_aws
+            reset_vuelo_aws(sid)
+        except Exception:
+            current_app.logger.exception("[VUELO] Error reiniciando envio a AWS sid=%s", sid)
         # Verificar si el solicitante tiene rol que auto-aprueba el paso de jefe
         roles_autoaprobar = repo.get_roles_autoaprobar_jefe_vuelo()
         sol_rol = repo.get_rol_usuario(s["solicitante_id"])
@@ -1295,6 +1312,13 @@ def reagendar(sid):
             flash(f"Vuelo reagendado para el {nueva_fecha}. Auto-aprobado por rol del solicitante.", "success")
         else:
             # Renotificar al jefe para que vuelva a aprobar con la nueva fecha
+            magic_url, magic_minutos = None, None
+            try:
+                from modules.aws_sync import push_vuelo_jefe_inmediato, MAGIC_LINK_MINUTOS
+                magic_url = push_vuelo_jefe_inmediato(sid)
+                magic_minutos = MAGIC_LINK_MINUTOS if magic_url else None
+            except Exception:
+                current_app.logger.exception("[VUELO] Error en push inmediato a AWS (reagenda) sid=%s", sid)
             try:
                 jefe_id   = s.get("gerente_id")
                 jefe_nom  = s.get("gerente_nombre", "—")
@@ -1304,6 +1328,7 @@ def reagendar(sid):
                     s.get("motivo_vuelo") or "—",
                     s["solicitante_nombre"], jefe_id, jefe_nom,
                     es_reagenda=True,
+                    magic_url=magic_url, magic_minutos=magic_minutos,
                 )
             except Exception:
                 pass
@@ -1492,6 +1517,17 @@ def vuelo_cotizar(sid):
             repo.set_cotizacion_hospedaje(sid, hosp_val)
     except Exception:
         pass
+    # Con la bandera de vuelos en AWS encendida, el gerente de presupuesto tambien puede aprobar/rechazar la
+    # cotizacion desde el portal. Se reinicia la bandera de envio (puede ser una recotizacion tras un rechazo)
+    # y se empuja de inmediato; el put_item reemplaza cualquier decision vieja.
+    portal_url = None
+    try:
+        from modules.aws_sync import reset_vuelo_aws, push_vuelo_presupuesto_inmediato, PORTAL_URL
+        reset_vuelo_aws(sid, incluir_jefe=False)
+        if push_vuelo_presupuesto_inmediato(sid):
+            portal_url = PORTAL_URL
+    except Exception:
+        current_app.logger.exception("[VUELO] Error en push a AWS (cotizacion) sid=%s", sid)
     try:
         valor_correo = f"Hospedaje ${hosp_val:.2f}" if solo_hospedaje else valor
         gg_lista = repo.get_gerentes_presupuesto_para_tipo("Vuelo")
@@ -1501,6 +1537,7 @@ def vuelo_cotizar(sid):
                 s.get("descripcion", ""), valor_correo,
                 s["solicitante_nombre"], u["nombre"],
                 gg.get("id"), gg.get("nombre", "—"),
+                portal_url=portal_url,
             )
     except Exception:
         pass

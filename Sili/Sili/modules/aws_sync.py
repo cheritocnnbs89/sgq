@@ -309,6 +309,15 @@ PLANIFICADOR_VOUCHER_MAGIC_LINK_ENABLED = (
     in ("1", "true", "yes")
 )
 
+# Bandera propia para la aprobacion de VUELOS por AWS (portal + enlace magico del jefe), independiente
+# de la de vouchers y apagada por defecto con la misma semantica: apagada, los vuelos nunca se empujan a
+# AWS y el jefe / gerente de presupuesto solo reciben el correo normal de Planificador. Ver bloque
+# "VUELOS (Planificador)" mas abajo.
+PLANIFICADOR_VUELO_MAGIC_LINK_ENABLED = (
+    os.environ.get("PLANIFICADOR_VUELO_MAGIC_LINK_ENABLED", "0").strip().lower()
+    in ("1", "true", "yes")
+)
+
 # Banderas independientes por tipo de gasto para push_gastos_a_aws --
 # encendidas por defecto (mismo comportamiento historico) para no
 # afectar ambientes que ya dependen de que gastos/reembolsos se
@@ -1490,6 +1499,17 @@ def push_gerentes_auth_a_aws(app=None):
         # sea jefe_id de al menos otro usuario activo -- un jefe directo
         # (para vouchers de Planificador) puede tener cualquier rol de
         # sistema, no solo uno de los roles de aprobación configurados.
+        # Gerentes de presupuesto de Vuelo (usuario configurado en Planificador, con cualquier rol):
+        # solo se incluyen con la bandera de vuelos encendida; apagada, la consulta es la de siempre.
+        _gp_ids = ("SELECT DISTINCT usuario_id FROM planificador_config "
+                   "WHERE tipo = 'Vuelo' AND rol_config = 'GERENTE_PRESUPUESTO' AND activo = 1")
+        if _vuelo_activo():
+            _gp_col = f"CASE WHEN id IN ({_gp_ids}) THEN 1 ELSE 0 END AS es_gerente_presupuesto"
+            _gp_where = f"OR id IN ({_gp_ids})"
+        else:
+            _gp_col = "0 AS es_gerente_presupuesto"
+            _gp_where = ""
+
         try:
             rows = conn.execute(
                 f"""
@@ -1499,13 +1519,15 @@ def push_gerentes_auth_a_aws(app=None):
                        CASE WHEN id IN (
                            SELECT DISTINCT jefe_id FROM usuarios
                            WHERE jefe_id IS NOT NULL AND COALESCE(disabled, 0) = 0
-                       ) THEN 1 ELSE 0 END AS es_jefe_directo
+                       ) THEN 1 ELSE 0 END AS es_jefe_directo,
+                       {_gp_col}
                 FROM usuarios
                 WHERE LOWER(LTRIM(RTRIM(rol))) IN ({",".join("?" for _ in roles_gerente_auth)})
                    OR id IN (
                        SELECT DISTINCT jefe_id FROM usuarios
                        WHERE jefe_id IS NOT NULL AND COALESCE(disabled, 0) = 0
                    )
+                   {_gp_where}
                 """,
                 roles_gerente_auth,
             ).fetchall()
@@ -1559,6 +1581,10 @@ def push_gerentes_auth_a_aws(app=None):
                 continue
 
             rol_aprobacion = _rol_aprobacion(u["rol"])
+            if int(u["es_gerente_presupuesto"] or 0):
+                # Aprueba (y puede rechazar) cotizaciones de vuelo desde el portal, sea cual sea su rol de
+                # sistema: GF si ya lo es; si no, GG (el nivel GA no puede rechazar).
+                rol_aprobacion = "GF" if rol_aprobacion == "GF" else "GG"
             if not rol_aprobacion and int(u["es_jefe_directo"] or 0):
                 # No tiene un rol GA/GF/GG formal, pero es jefe_id de al
                 # menos otro usuario activo -- entra como "GA" para poder
@@ -1889,6 +1915,388 @@ def _pull_voucher_item(conn, g, local_id, sys_id, now_str, run_id):
     return "updated"
 
 
+# ============================================================
+# VUELOS (Planificador) — aprobación por AWS (portal + enlace mágico)
+# ============================================================
+# Dos pasos; cada uno es un ítem propio en gastos_aprobacion con tipo "Vuelo":
+#   1) vuelo_jefe#<id>               -> jefe directo (nivel ga; admite enlace mágico de un clic).
+#   2) vuelo_pres#<id>#<usuario_id>  -> cada gerente de presupuesto configurado para el tipo Vuelo
+#      (nivel gg, o gf si su rol ya es GF). El portal solo se lo muestra con ga_aprobado=1, por eso el
+#      ítem se arma con ga_aprobado=1 (el paso del jefe ya ocurrió, en la app o en AWS).
+# gastos-push usa put_item: volver a empujar un ítem lo REEMPLAZA entero (decisiones incluidas), que es
+# exactamente lo que se quiere al reagendar o recotizar. Todo esto solo actúa con
+# PLANIFICADOR_VUELO_MAGIC_LINK_ENABLED=1 (apagado por defecto, igual que el de vouchers); la
+# recepción de decisiones (_pull_vuelo_item) no depende de la bandera.
+
+_SQL_VUELO_SOL = """
+    SELECT s.*, u.email AS solicitante_email, jefe.email AS jefe_email
+    FROM planificador_solicitudes s
+    LEFT JOIN usuarios u ON u.id = s.solicitante_id
+    LEFT JOIN usuarios jefe ON jefe.id = s.gerente_id
+    WHERE s.activo = 1 AND s.tipo = 'Vuelo'
+"""
+
+
+def _vuelo_activo() -> bool:
+    return bool(AWS_SYNC_ENABLED and PLANIFICADOR_VUELO_MAGIC_LINK_ENABLED)
+
+
+def _nivel_portal_presupuesto(rol_sistema: str) -> str:
+    """Nivel con el que el gerente de presupuesto entra al portal: 'gf' si su rol ya es GF; en cualquier
+    otro caso 'gg' (puede aprobar y rechazar; el nivel 'ga' no puede rechazar). Debe coincidir con el
+    nivel que push_gerentes_auth_a_aws le registra."""
+    return "gf" if _rol_aprobacion(rol_sistema) == "GF" else "gg"
+
+
+def _num(v) -> float:
+    try:
+        return float(str(v).replace(",", ".").strip())
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _ruta_vuelo(s: dict) -> str:
+    destino = s.get("punto_destino") or s.get("lugar_destino") or s.get("ciudad") or ""
+    return " → ".join(p for p in ((s.get("punto_salida") or ""), destino) if p) or "—"
+
+
+def _descripcion_vuelo(s: dict) -> str:
+    es_hospedaje = (s.get("modo_viaje") or "") == "hospedaje"
+    fechas = str(s.get("fecha") or "")
+    if s.get("fecha_retorno"):
+        fechas += f" a {s['fecha_retorno']}"
+    partes = [("Hospedaje " if es_hospedaje else "Vuelo ") + _ruta_vuelo(s), fechas]
+    if s.get("motivo_vuelo"):
+        partes.append(f"Motivo: {s['motivo_vuelo']}")
+    if s.get("descripcion"):
+        partes.append(str(s["descripcion"]))
+    return " | ".join(p for p in partes if p)
+
+
+def _monto_cotizado(s: dict) -> float:
+    """Pasaje (datos_ticket, numérico en la etapa de aprobación) + hospedaje cotizado."""
+    return _num(s.get("datos_ticket")) + _num(s.get("cotizacion_hospedaje"))
+
+
+def _item_vuelo_base(s: dict, paso: str) -> dict:
+    return {
+        "tipo": "Vuelo",
+        "local_id": str(s["id"]),
+        "fecha": str(s.get("fecha") or ""),
+        "descripcion": _descripcion_vuelo(s),
+        "proveedor": _ruta_vuelo(s),
+        "usuario_nombre": s.get("solicitante_nombre") or "",
+        "usuario_email": s.get("solicitante_email") or "",
+        "paso": paso,
+        "flask_sincronizado": "true",
+    }
+
+
+def _item_vuelo_jefe(s: dict, jefe_email: str, cerrado: bool = False) -> dict:
+    it = _item_vuelo_base(s, "jefe")
+    it.update({
+        "gasto_id": f"vuelo_jefe#{s['id']}",
+        "monto": "0",
+        "ga_aprobador_email": jefe_email,
+        # cerrado=1 oculta el ítem del portal (ya se resolvió en la app); sin ga_at no se vuelve a aplicar
+        "ga_aprobado": 1 if cerrado else 0,
+    })
+    return it
+
+
+def _item_vuelo_presupuesto(s: dict, gerente: dict, cerrado: bool = False) -> dict:
+    nivel = _nivel_portal_presupuesto(gerente.get("rol"))
+    it = _item_vuelo_base(s, "presupuesto")
+    it.update({
+        "gasto_id": f"vuelo_pres#{s['id']}#{gerente['usuario_id']}",
+        "monto": f"{_monto_cotizado(s):.2f}",
+        "nivel_pres": nivel,
+        "ga_aprobado": 1,
+        f"{nivel}_aprobador_email": gerente["email"],
+        f"{nivel}_aprobado": 1 if cerrado else 0,
+    })
+    return it
+
+
+def _gerentes_presupuesto_vuelo(conn) -> list[dict]:
+    """Gerentes de presupuesto configurados para el tipo Vuelo (cualquier rol de sistema) con correo."""
+    rows = conn.execute(
+        """
+        SELECT DISTINCT pc.usuario_id, u.nombre_completo AS nombre, u.email, u.rol
+        FROM planificador_config pc
+        JOIN usuarios u ON u.id = pc.usuario_id
+        WHERE pc.tipo = 'Vuelo' AND pc.activo = 1 AND pc.rol_config = 'GERENTE_PRESUPUESTO'
+          AND COALESCE(u.disabled, 0) = 0
+          AND u.email IS NOT NULL AND LTRIM(RTRIM(u.email)) <> ''
+        """
+    ).fetchall()
+    return [
+        {"usuario_id": r["usuario_id"], "nombre": r["nombre"], "email": (r["email"] or "").strip(), "rol": r["rol"]}
+        for r in rows
+    ]
+
+
+def _post_items(items: list[dict], run_id: str, etiqueta: str, timeout: int = 10) -> bool:
+    res = requests.post(f"{AWS_API_URL}/sync/push", json={"gastos": items}, headers=HEADERS, timeout=timeout)
+    if res.status_code != 200:
+        logger.warning(
+            "[AWS SYNC][VUELO][%s][HTTP_ERROR] run_id=%s | items=%d | status=%s",
+            etiqueta, run_id, len(items), res.status_code,
+        )
+        return False
+    return True
+
+
+def _empujar_vuelo_jefe(conn, s: dict, run_id: str, *, enviar_email: bool) -> str | None:
+    """Empuja el paso del jefe y genera su enlace mágico. Devuelve la URL (o None)."""
+    jefe_email = (s.get("jefe_email") or "").strip()
+    if not jefe_email:
+        logger.warning("[AWS SYNC][VUELO][JEFE][SKIP] run_id=%s | solicitud_id=%s | motivo=jefe_sin_email",
+                       run_id, s["id"])
+        return None
+    item = _item_vuelo_jefe(s, jefe_email)
+    if not _post_items([item], run_id, "JEFE"):
+        return None
+    conn.execute("UPDATE planificador_solicitudes SET aws_enviado = 1 WHERE id = ?", (s["id"],))
+    conn.commit()
+    return _notificar_aprobacion_pendiente(
+        run_id, conn, item["gasto_id"], item["tipo"], jefe_email,
+        item["usuario_nombre"], _tipo_label_legible("Vuelo"), _ruta_vuelo(s),
+        enviar_email=enviar_email,
+    )
+
+
+def _empujar_vuelo_presupuesto(conn, s: dict, run_id: str) -> int:
+    """Empuja el paso del gerente de presupuesto (uno por gerente configurado). Devuelve cuántos."""
+    gerentes = _gerentes_presupuesto_vuelo(conn)
+    if not gerentes:
+        logger.warning("[AWS SYNC][VUELO][PRESUPUESTO][SKIP] run_id=%s | solicitud_id=%s | "
+                       "motivo=sin_gerentes_presupuesto_con_email", run_id, s["id"])
+        return 0
+    items = [_item_vuelo_presupuesto(s, g) for g in gerentes]
+    if not _post_items(items, run_id, "PRESUPUESTO"):
+        return 0
+    try:
+        conn.execute("UPDATE planificador_solicitudes SET aws_gg_enviado = 1 WHERE id = ?", (s["id"],))
+        conn.commit()
+    except Exception:
+        logger.error("[AWS SYNC][VUELO][PRESUPUESTO] run_id=%s | falta la columna "
+                     "planificador_solicitudes.aws_gg_enviado (DDL pendiente)", run_id)
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+    return len(items)
+
+
+def push_vuelo_jefe_inmediato(solicitud_id: int) -> str | None:
+    """Empuja de inmediato el paso del jefe (al crear o reagendar un vuelo) y devuelve el enlace mágico
+    para incluirlo en el correo de Planificador. Best-effort: nunca lanza ni demora la solicitud."""
+    if not _vuelo_activo():
+        return None
+    run_id = _new_run_id()
+    try:
+        conn = _get_db()
+        s = conn.execute(
+            _SQL_VUELO_SOL + " AND s.id = ? AND s.estado = 'PENDIENTE_APROBACION_JEFE' "
+                             "AND COALESCE(s.aws_enviado, 0) = 0",
+            (solicitud_id,),
+        ).fetchone()
+        if not s:
+            return None
+        return _empujar_vuelo_jefe(conn, dict(s), run_id, enviar_email=False)
+    except Exception:
+        logger.exception("[AWS SYNC][VUELO][JEFE_INMEDIATO][ERROR] run_id=%s | solicitud_id=%s", run_id, solicitud_id)
+        return None
+
+
+def push_vuelo_presupuesto_inmediato(solicitud_id: int) -> int:
+    """Empuja de inmediato el paso del gerente de presupuesto (al cotizar). Devuelve cuántos ítems."""
+    if not _vuelo_activo():
+        return 0
+    run_id = _new_run_id()
+    try:
+        conn = _get_db()
+        s = conn.execute(
+            _SQL_VUELO_SOL + " AND s.id = ? AND s.estado = 'PENDIENTE_APROBACION_GG_VUELO'",
+            (solicitud_id,),
+        ).fetchone()
+        if not s:
+            return 0
+        return _empujar_vuelo_presupuesto(conn, dict(s), run_id)
+    except Exception:
+        logger.exception("[AWS SYNC][VUELO][PRESUPUESTO_INMEDIATO][ERROR] run_id=%s | solicitud_id=%s",
+                         run_id, solicitud_id)
+        return 0
+
+
+def push_vuelos_a_aws(app=None):
+    """Respaldo del ciclo de 5 min (AwsSyncWorker): empuja los vuelos pendientes de aprobación que el
+    envío inmediato no pudo enviar (AWS caído en ese momento)."""
+    if not _vuelo_activo():
+        return
+    run_id = _new_run_id()
+    ctx = app.app_context() if app else None
+    if ctx:
+        ctx.push()
+    try:
+        conn = _get_db()
+        jefe = conn.execute(
+            _SQL_VUELO_SOL + " AND s.estado = 'PENDIENTE_APROBACION_JEFE' AND COALESCE(s.aws_enviado, 0) = 0"
+        ).fetchall()
+        for s in jefe:
+            try:
+                _empujar_vuelo_jefe(conn, dict(s), run_id, enviar_email=True)
+            except Exception:
+                logger.exception("[AWS SYNC][VUELO][CICLO][JEFE][ERROR] run_id=%s | solicitud_id=%s", run_id, s["id"])
+        try:
+            pres = conn.execute(
+                _SQL_VUELO_SOL + " AND s.estado = 'PENDIENTE_APROBACION_GG_VUELO' "
+                                 "AND COALESCE(s.aws_gg_enviado, 0) = 0"
+            ).fetchall()
+        except Exception:
+            logger.error("[AWS SYNC][VUELO][CICLO] run_id=%s | falta la columna "
+                         "planificador_solicitudes.aws_gg_enviado (DDL pendiente)", run_id)
+            pres = []
+        for s in pres:
+            try:
+                _empujar_vuelo_presupuesto(conn, dict(s), run_id)
+            except Exception:
+                logger.exception("[AWS SYNC][VUELO][CICLO][PRESUPUESTO][ERROR] run_id=%s | solicitud_id=%s",
+                                 run_id, s["id"])
+        if jefe or pres:
+            logger.info("[AWS SYNC][VUELO][CICLO][OK] run_id=%s | jefe=%d | presupuesto=%d", run_id, len(jefe), len(pres))
+    except Exception:
+        logger.exception("[AWS SYNC][VUELO][CICLO][ERROR] run_id=%s", run_id)
+    finally:
+        if ctx:
+            ctx.pop()
+
+
+def reset_vuelo_aws(solicitud_id: int, *, incluir_jefe: bool = True) -> None:
+    """Al reagendar (incluir_jefe=True) o recotizar (False) hay que volver a empujar: se reinician las
+    banderas de envío. Best-effort; el put_item del nuevo envío reemplaza el ítem viejo entero."""
+    if not _vuelo_activo():
+        return
+    columnas = (["aws_enviado"] if incluir_jefe else []) + ["aws_gg_enviado"]
+    try:
+        conn = _get_db()
+    except Exception:
+        return
+    for col in columnas:
+        try:
+            conn.execute(f"UPDATE planificador_solicitudes SET {col} = 0 WHERE id = ?", (solicitud_id,))
+            conn.commit()
+        except Exception:
+            logger.debug("[AWS SYNC][VUELO][RESET] no se pudo reiniciar %s (¿DDL pendiente?)", col)
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+
+
+def cerrar_vuelo_aws(solicitud_id: int, paso: str) -> None:
+    """Tras decidir un paso EN LA APP (o aplicar la decisión llegada de AWS) se marca el ítem como resuelto
+    en AWS para que deje de salir como pendiente en el portal. Solo si ese paso se había empujado (nunca
+    crea ítems nuevos) y sin ga_at/gg_at, así que el pull no lo vuelve a aplicar. Best-effort."""
+    if not _vuelo_activo():
+        return
+    try:
+        conn = _get_db()
+        row = conn.execute(_SQL_VUELO_SOL + " AND s.id = ?", (solicitud_id,)).fetchone()
+        if not row:
+            return
+        s = dict(row)
+        if paso == "jefe":
+            jefe_email = (s.get("jefe_email") or "").strip()
+            if not int(s.get("aws_enviado") or 0) or not jefe_email:
+                return
+            items = [_item_vuelo_jefe(s, jefe_email, cerrado=True)]
+        else:
+            if not int(s.get("aws_gg_enviado") or 0):
+                return
+            items = [_item_vuelo_presupuesto(s, g, cerrado=True) for g in _gerentes_presupuesto_vuelo(conn)]
+        if items:
+            _post_items(items, "cerrar", "CERRAR", timeout=5)
+    except Exception:
+        logger.exception("[AWS SYNC][VUELO][CERRAR][ERROR] solicitud_id=%s | paso=%s", solicitud_id, paso)
+
+
+def _pull_vuelo_item(conn, g, local_id, sys_id, now_str, run_id):
+    """Aplica una decisión llegada de AWS (portal o enlace mágico) sobre un vuelo, usando las mismas
+    funciones y notificaciones que las rutas en-app, para que el resultado sea idéntico venga de donde venga.
+    Devuelve "updated", "no_change" o "not_found"."""
+    row = conn.execute(
+        "SELECT * FROM planificador_solicitudes WHERE id = ? AND tipo = 'Vuelo'", (local_id,)
+    ).fetchone()
+    if not row:
+        logger.warning("[AWS SYNC][PULL][NOT_FOUND] run_id=%s | tabla=planificador_solicitudes | local_id=%s",
+                       run_id, local_id)
+        return "not_found"
+    row = dict(row)
+
+    from modules.planificador import planificador_repository as prepo
+    from modules.planificador import planificador_notifications as pnotif
+
+    gasto_id = g.get("gasto_id") or ""
+    area, fecha = row.get("area_solicitante"), str(row.get("fecha"))
+    descripcion = row.get("descripcion") or ""
+
+    if gasto_id.startswith("vuelo_jefe#"):
+        if row["estado"] != "PENDIENTE_APROBACION_JEFE" or not g.get("ga_at"):
+            return "no_change"
+        obs = g.get("ga_obs") or ""
+        actor = g.get("ga_aprobador_email") or "Sistema (AWS)"
+        if int(g.get("ga_aprobado") or 0):
+            prepo.aprobar_jefe_vuelo(local_id, sys_id, actor, obs)
+            try:
+                pnotif.notif_vuelo_aprobada_coordinacion(
+                    local_id, area, fecha, descripcion,
+                    row["solicitante_id"], row["solicitante_nombre"], actor,
+                )
+            except Exception:
+                logger.exception("[AWS SYNC][PULL][NOTIFY_ERROR] run_id=%s | vuelo=%s | paso=jefe", run_id, local_id)
+        else:
+            prepo.rechazar_vuelo(local_id, sys_id, actor, obs)
+            try:
+                pnotif.notif_vuelo_rechazada(
+                    local_id, area, fecha, obs, row["solicitante_nombre"], row["solicitante_id"], actor,
+                )
+            except Exception:
+                logger.exception("[AWS SYNC][PULL][NOTIFY_ERROR] run_id=%s | vuelo=%s | paso=jefe", run_id, local_id)
+    else:
+        nivel = (g.get("nivel_pres") or "gg").lower()
+        if nivel not in ("gg", "gf"):
+            nivel = "gg"
+        if row["estado"] != "PENDIENTE_APROBACION_GG_VUELO" or not g.get(f"{nivel}_at"):
+            return "no_change"
+        obs = g.get(f"{nivel}_obs") or ""
+        actor = g.get(f"{nivel}_aprobador_email") or "Sistema (AWS)"
+        if int(g.get(f"{nivel}_aprobado") or 0):
+            from modules.db import get_config_value
+            a_liquidacion = (get_config_value("vuelo_gg_directo_liquidacion", "0") or "0").strip() == "1"
+            prepo.aprobar_gg_vuelo(local_id, sys_id, actor, obs, a_liquidacion=a_liquidacion)
+            try:
+                pnotif.notif_vuelo_gg_aprobo_pendiente_info(
+                    local_id, area, fecha, descripcion, row["solicitante_nombre"], actor,
+                    a_liquidacion=a_liquidacion,
+                )
+            except Exception:
+                logger.exception("[AWS SYNC][PULL][NOTIFY_ERROR] run_id=%s | vuelo=%s | paso=presupuesto", run_id, local_id)
+        else:
+            prepo.rechazar_gg_vuelo(local_id, sys_id, actor, obs)
+            try:
+                pnotif.notif_vuelo_gg_rechazo_coordinador(
+                    local_id, area, fecha, obs, row["solicitante_nombre"], actor,
+                )
+            except Exception:
+                logger.exception("[AWS SYNC][PULL][NOTIFY_ERROR] run_id=%s | vuelo=%s | paso=presupuesto", run_id, local_id)
+
+    logger.info("[AWS SYNC][PULL][UPDATED] run_id=%s | tabla=planificador_solicitudes | local_id=%s | gasto_id=%s",
+                run_id, local_id, gasto_id)
+    return "updated"
+
+
 def pull_aprobaciones_de_aws(app=None):
     """
     Lee de DynamoDB los gastos aprobados o rechazados y actualiza
@@ -2036,6 +2444,8 @@ def pull_aprobaciones_de_aws(app=None):
             try:
                 if gasto_id_full.startswith("voucher_taxi#"):
                     status = _pull_voucher_item(conn, g, local_id, sys_id, now_str, run_id)
+                elif gasto_id_full.startswith(("vuelo_jefe#", "vuelo_pres#")):
+                    status = _pull_vuelo_item(conn, g, local_id, sys_id, now_str, run_id)
                 else:
                     status = _pull_gasto_tarjeta_item(conn, g, local_id, sys_id, now_str, run_id)
             except Exception:

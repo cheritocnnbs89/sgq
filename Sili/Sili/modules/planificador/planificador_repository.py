@@ -404,6 +404,16 @@ def reagendar_solicitud(solicitud_id: int, nueva_fecha: str,
     )
 
 
+def _aws_cerrar_vuelo(solicitud_id: int, paso: str) -> None:
+    """Si el vuelo se habia empujado a AWS, marca ese paso como resuelto para que deje de salir pendiente
+    en el portal. No hace nada con la bandera de vuelos apagada; nunca interrumpe la decision."""
+    try:
+        from modules.aws_sync import cerrar_vuelo_aws
+        cerrar_vuelo_aws(solicitud_id, paso)
+    except Exception:
+        pass
+
+
 def aprobar_jefe_vuelo(solicitud_id: int, jefe_id: int, jefe_nombre: str, obs: str) -> None:
     conn = get_db()
     cur = conn.cursor()
@@ -411,6 +421,7 @@ def aprobar_jefe_vuelo(solicitud_id: int, jefe_id: int, jefe_nombre: str, obs: s
     conn.commit()
     insert_solicitud_log(solicitud_id, "APROBADA_JEFE", jefe_id, jefe_nombre,
                          "Jefe aprueba vuelo. Pasa al coordinador para cotizar.")
+    _aws_cerrar_vuelo(solicitud_id, "jefe")
 
 
 def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs: str) -> None:
@@ -420,6 +431,7 @@ def rechazar_vuelo(solicitud_id: int, usuario_id: int, usuario_nombre: str, obs:
     conn.commit()
     insert_solicitud_log(solicitud_id, "RECHAZADA", usuario_id, usuario_nombre,
                          f"Solicitud rechazada. Motivo: {obs or '—'}")
+    _aws_cerrar_vuelo(solicitud_id, "jefe")
 
 
 def cotizar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
@@ -450,6 +462,7 @@ def aprobar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str,
                if a_liquidacion else "Pasa al coordinador para info del vuelo.")
     insert_solicitud_log(solicitud_id, "APROBADA_GG", gg_id, gg_nombre,
                          f"GG aprueba la cotización del vuelo. {destino} {obs or ''}")
+    _aws_cerrar_vuelo(solicitud_id, "presupuesto")
 
 
 def rechazar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -> None:
@@ -460,6 +473,7 @@ def rechazar_gg_vuelo(solicitud_id: int, gg_id: int, gg_nombre: str, obs: str) -
     conn.commit()
     insert_solicitud_log(solicitud_id, "COTIZACION_RECHAZADA_GG", gg_id, gg_nombre,
                          f"GG rechaza la cotización del vuelo. Vuelve al coordinador. Motivo: {obs or '—'}")
+    _aws_cerrar_vuelo(solicitud_id, "presupuesto")
 
 
 def completar_vuelo(solicitud_id: int, coordinador_id: int, coordinador_nombre: str,
