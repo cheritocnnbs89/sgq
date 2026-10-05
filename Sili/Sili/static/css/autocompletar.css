@@ -2,16 +2,32 @@
 .ac { position: relative; }
 .ac-lista {
   position: absolute;
+  top: 100%;
   left: 0;
   right: 0;
   z-index: 1060;
   max-height: 260px;
   overflow-y: auto;
-  margin-top: 2px;
+  margin: 2px 0 0;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #cbd5e1;
   border-radius: .375rem;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, .15);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, .18);
+  font-size: .85rem;
 }
-.ac-lista .list-group-item { cursor: pointer; }
-.ac-lista .list-group-item.ac-vacio { cursor: default; color: #64748b; }
+.ac-lista .list-group-item {
+  cursor: pointer;
+  background: #fff;
+  color: #0f172a;
+  border: 0;
+  border-bottom: 1px solid #eef2f7;
+  border-radius: 0;
+  padding: .45rem .75rem;
+}
+.ac-lista .list-group-item:last-child { border-bottom: 0; }
+.ac-lista .list-group-item:hover,
 .ac-lista .list-group-item.ac-activo { background: #e8f0fe; }
-.ac-detalle { display: block; font-size: .78rem; color: #64748b; }
+.ac-lista .list-group-item.ac-vacio { cursor: default; color: #64748b; }
+.ac-lista .list-group-item.ac-vacio:hover { background: #fff; }
+.ac-detalle { display: block; font-size: .75rem; color: #64748b; }
